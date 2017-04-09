@@ -1,0 +1,24 @@
+$background-color: #23b7e5;
+$border-color: #dde6e9;
+
+.info-block {
+    margin-right: 17px;
+}
+
+.info-block-content {
+    &:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+}
+
+.info-block-item {
+    float: left;
+    width: 33.3333333%;
+    text-align: center;
+    padding: 4px 0;
+    background-color: $background-color;
+    color: white;
+    border-right: 1px solid $border-color;
+}

@@ -19,9 +19,16 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.scss"
+        "app/core/preloader/preloader.scss",
+        "styles.scss",
+        "../node_modules/font-awesome/css/font-awesome.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.js",
+        "app/core/preloader/preloader.ts",
+        "../node_modules/moment/moment.js",
+        "modernizr.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -52,6 +59,23 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {}
-  }
+    "class": {
+      "spec": false
+    },
+    "component": {
+      "spec": false
+    },
+    "directive": {
+      "spec": false
+    },
+    "guard": {
+      "spec": false
+    },
+    "service": {},
+    "pipe": {},
+    "interface": {
+      "prefix": "I"
+    }
+  },
+  "packageManager": "npm"
 }
