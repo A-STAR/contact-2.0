@@ -1,0 +1,26 @@
+<div class="content-heading">
+    Data Table components
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="pull-right text-muted">
+          <em class="fa fa-user mr-sm"></em>
+          <strong>{{rows?.length}}</strong> users
+        </div>
+        User information
+    </div>
+    <div class="panel-body">
+      <ngx-datatable
+        class="material"
+        [columnMode]="'force'"
+        [rowHeight]="'auto'"
+        [rows]="rows"
+        [columns]="columns"
+        [limit]="15"
+        [selected]="selected"
+        [selectionType]="'multiClick'"
+      >
+      </ngx-datatable>
+    </div>
+</div>

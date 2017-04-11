@@ -11,13 +11,32 @@ const Grids = {
     icon: 'icon-list'
 };
 
-// const headingMain = {
-//     text: 'Main Navigation',
-//     heading: true
-// };
+const Tables = {
+    text: 'Tables',
+    link: '/tables',
+    icon: 'icon-grid',
+    submenu: [
+        {
+            text: 'Ngx Datatable',
+            link: '/tables/ngxdatatable'
+        },
+        // {
+        //     text: 'Extended',
+        //     link: '/tables/extended'
+        // },
+        // {
+        //     text: 'Data-Tables',
+        //     link: '/tables/datatable'
+        // },
+        // {
+        //     text: 'Angular Grid',
+        //     link: '/tables/aggrid'
+        // }
+    ]
+};
 
 export const menu = [
-    // headingMain,
     Home,
     Grids,
+    Tables,
 ];
