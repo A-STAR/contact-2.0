@@ -18,6 +18,6 @@ export const routes = [
     { path: 'login', component: LoginComponent },
 
     // Not found
-    { path: '**', redirectTo: 'home' }
+    { path: '**', redirectTo: 'LoginComponent' }
 
 ];

@@ -108,21 +108,21 @@
             </li>
             <!-- END Alert menu-->
             <!-- START Offsidebar button-->
-            <li>
+            <li *ngIf="false">
                 <a (click)="toggleOffsidebar()">
                     <em class="icon-notebook"></em>
                 </a>
             </li>
             <!-- END Offsidebar menu-->
             <!-- START lock screen-->
-            <li>
-                <a  title="Lock screen" [routerLink]="'/lock'">
+            <li *ngIf="isAuthenticated()">
+                <a  title="Lock screen" [routerLink]="'/logout'">
                     <em class="icon-lock"></em>
                 </a>
             </li>
             <!-- END lock screen-->
             <!-- START User avatar toggle-->
-            <li>
+            <li *ngIf="!isAuthenticated()">
                 <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
                 <a (click)="toggleUserBlock($event)">
                     <em class="icon-user"></em>

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 const screenfull = require('screenfull');
 const browser = require('jquery.browser');
-declare var $: any;
 
 import { UserblockService } from '../sidebar/userblock/userblock.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
     selector: 'app-header',
@@ -12,16 +12,24 @@ import { SettingsService } from '../../core/settings/settings.service';
     styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-    isNavSearchVisible: boolean;
     @ViewChild('fsbutton') fsbutton;  // the fullscreen button
+    isNavSearchVisible: boolean;
 
-    constructor(private userblockService: UserblockService, private settings: SettingsService) { }
+    constructor(
+        private userblockService: UserblockService,
+        private settings: SettingsService,
+        private authService: AuthService
+        ) { }
 
     ngOnInit() {
         this.isNavSearchVisible = false;
         if (browser.msie) { // Not supported under IE
             this.fsbutton.nativeElement.style.display = 'none';
         }
+    }
+
+    isAuthenticated() {
+        return this.authService.isAuthenticated();
     }
 
     toggleUserBlock(event) {
@@ -62,11 +70,10 @@ export class HeaderComponent implements OnInit {
             screenfull.toggle();
         }
         // Switch icon indicator
-        let el = $(this.fsbutton.nativeElement);
+        const el = $(this.fsbutton.nativeElement);
         if (screenfull.isFullscreen) {
             el.children('em').removeClass('fa-expand').addClass('fa-compress');
-        }
-        else {
+        } else {
             el.children('em').removeClass('fa-compress').addClass('fa-expand');
         }
     }
