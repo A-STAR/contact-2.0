@@ -8,4 +8,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+const app = platformBrowserDynamic().bootstrapModule(AppModule);
+// tslint:disable-next-line:no-unused-expression
+app.then(() => { (<any>window).appBootstrap && (<any>window).appBootstrap(); });

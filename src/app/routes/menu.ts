@@ -5,6 +5,12 @@ const Home = {
     icon: 'icon-home'
 };
 
+const Grids = {
+    text: 'Grids',
+    link: '/grids',
+    icon: 'icon-list'
+};
+
 // const headingMain = {
 //     text: 'Main Navigation',
 //     heading: true
@@ -12,5 +18,6 @@ const Home = {
 
 export const menu = [
     // headingMain,
-    Home
+    Home,
+    Grids,
 ];
