@@ -13,14 +13,13 @@ import { TableData } from './ngxdatatable.data';
 export class NgxDatatableComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
-  // @ViewChild(DatatableComponent) table: DatatableComponent;
 
   ngAfterViewInit() {
     // set up the height of datatable - it does not work with height specified
     const height = this.element.offsetHeight;
     // this.dataTableRef.nativeElement.style.height = `${height}px`;
     // this.dataTable.recalculate();
-    // this.table.bodyHeight = 400;
+    // this.dataTable.bodyHeight = 400;
   }
 
   element: HTMLElement;
@@ -38,13 +37,14 @@ export class NgxDatatableComponent implements OnInit, AfterViewInit {
         });
   }
 
-  // public columns: Array<any> = [
-  //   { prop: 'name' },
-  //   { name: 'City' },
-  //   { name: 'Age' },
-  //   { name: 'Email' },
-  //   { name: 'RegDate' },
-  // ];
+  public columns: Array<any> = [
+    { prop: 'id', name: "#", minWidth: 30, maxWidth: 70 },
+    { name: 'Name', width: 150 },
+    { name: 'Gender', minWidth: 80, maxWidth: 100 },
+    { name: 'Age', width: 50, maxWidth: 50 },
+    { name: 'City', prop: "address.city", minWidth: 200, maxWidth: 200 },
+    { name: 'State', prop: "address.state", minWidth: 200 },
+  ];
 
   public length: number = 0;
 
@@ -53,9 +53,8 @@ export class NgxDatatableComponent implements OnInit, AfterViewInit {
   }
 
   public onSelect({ selected }): void {
-    // console.log(event.selected);
-    this.selected = this.selected.splice(0, this.selected.length);
-    this.selected.concat(selected);
+    // console.log(selected);
+    this.selected = [].concat(selected);
   }
 
   public getRowHeight(row): number {
