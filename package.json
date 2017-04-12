@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@swimlane/ngx-datatable": "^7.3.0",
+    "@swimlane/ngx-datatable": "git://github.com/swimlane/ngx-datatable/#7.3.1",
     "angular2-color-picker": "git://github.com/zefoy/angular2-color-picker.git#npm-package",
     "angular2-datatable": "0.5.2",
     "angular2-google-maps": "0.17.0",

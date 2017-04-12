@@ -1,5 +1,5 @@
 <div class="content-heading">
-    Data Table components
+    Data Table Components
 </div>
 
 <div class="panel panel-default">
@@ -8,19 +8,26 @@
           <em class="fa fa-user mr-sm"></em>
           <strong>{{rows?.length}}</strong> users
         </div>
-        User information
+        <h4>Users</h4>
     </div>
     <div class="panel-body">
       <ngx-datatable
         class="material"
         [columnMode]="'force'"
-        [rowHeight]="'auto'"
+        [rowHeight]="25"
         [rows]="rows"
-        [columns]="columns"
         [limit]="15"
         [selected]="selected"
         [selectionType]="'multiClick'"
-      >
+        [scrollbarV]="true"
+        [scrollbarH]="false"
+        (select)="onSelect($event)">
+        <ngx-datatable-column name="#" prop="id" [minWidth]="30" [maxWidth]="70"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" [width]="150"></ngx-datatable-column>
+        <ngx-datatable-column name="Gender" [minWidth]="80" [maxWidth]="100"></ngx-datatable-column>
+        <ngx-datatable-column name="Age" [width]="50" [maxWidth]="50"></ngx-datatable-column>
+        <ngx-datatable-column name="City" prop="address.city" [minWidth]="200" [maxWidth]="200"></ngx-datatable-column>
+        <ngx-datatable-column name="State" prop="address.state" [minWidth]="200"></ngx-datatable-column>
       </ngx-datatable>
     </div>
 </div>

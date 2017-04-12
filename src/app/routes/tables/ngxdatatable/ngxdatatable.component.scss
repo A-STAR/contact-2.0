@@ -1,3 +1,12 @@
-@import '~@swimlane/ngx-datatable/release/index.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
-@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+.ngx-datatable {
+  height: 450px;
+
+  &.material .datatable-body .datatable-body-row .datatable-body-cell {
+    text-align: left;
+    padding: .2rem 1.2rem;
+    vertical-align: top;
+    border-top: 0;
+    -webkit-transition: width 0.3s ease;
+    transition: width 0.3s ease;
+  }
+}

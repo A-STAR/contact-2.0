@@ -1,64 +1,65 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Http } from '@angular/http';
 
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TableData } from './ngxdatatable.data';
 
 @Component({
-    selector: 'app-datatable',
-    templateUrl: './ngxdatatable.component.html',
-    styleUrls: ['./ngxdatatable.component.scss']
+  selector: 'app-datatable',
+  templateUrl: './ngxdatatable.component.html',
+  styleUrls: ['./ngxdatatable.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class NgxDatatableComponent implements OnInit {
+export class NgxDatatableComponent implements OnInit, AfterViewInit {
+  @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
+  @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  // @ViewChild(DatatableComponent) table: DatatableComponent;
 
-    rows: Array<any> = [];
-    selected: Array<any> = [];
+  ngAfterViewInit() {
+    // set up the height of datatable - it does not work with height specified
+    const height = this.element.offsetHeight;
+    // this.dataTableRef.nativeElement.style.height = `${height}px`;
+    // this.dataTable.recalculate();
+    // this.table.bodyHeight = 400;
+  }
 
-    constructor(private http: Http) {
+  element: HTMLElement;
+  rows: Array<any> = [];
+  selected: Array<any> = [];
 
-        http.get('assets/server/datatable.json')
-            .subscribe((data) => {
-                setTimeout(() => {
-                    this.rows = data.json();
-                }, 1000);
-            });
-    }
+  constructor(private http: Http, element: ElementRef) {
 
-    private sortByWordLength = (a: any) => {
-        return a.name.length;
-    }
+    this.element = element.nativeElement;
+    http.get('assets/server/100k.json')
+        .subscribe((data) => {
+          setTimeout(() => {
+            this.rows = data.json();
+          }, 1000);
+        });
+  }
 
-    public removeItem(item: any) {
-        this.rows = this.rows.filter((elem) => elem !== item);
-        console.log('Remove: ', item.email);
-    }
+  // public columns: Array<any> = [
+  //   { prop: 'name' },
+  //   { name: 'City' },
+  //   { name: 'Age' },
+  //   { name: 'Email' },
+  //   { name: 'RegDate' },
+  // ];
 
-    public columns: Array<any> = [
-      { prop: 'name' },
-      { name: 'City' },
-      { name: 'Age' },
-      { name: 'Email' },
-      { name: 'RegDate' },
-    ];
+  public length: number = 0;
 
-    public length: number = 0;
+  public ngOnInit(): void {
+    // this.onChangeTable(this.config);
+  }
 
-    public config: any = {
-        paging: true,
-        sorting: { columns: this.columns },
-        filtering: { filterString: '' },
-        className: ['table-striped', 'table-bordered', 'mb0', 'd-table-fixed'] // mb0=remove margin -/- .d-table-fixed=fix column width
-    };
+  public onSelect({ selected }): void {
+    // console.log(event.selected);
+    this.selected = this.selected.splice(0, this.selected.length);
+    this.selected.concat(selected);
+  }
 
-    public ngOnInit(): void {
-        // this.onChangeTable(this.config);
-    }
-
-    public onCellClick(data: any): any {
-        console.log(data);
-    }
-
-    public getRowHeight(row): number {
-      return row.height;
-    }
+  public getRowHeight(row): number {
+    return row.height;
+  }
 
 }

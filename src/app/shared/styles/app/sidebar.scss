@@ -295,6 +295,6 @@ $tablet-landscape: 1025px;
     &.opening {
         height: auto;
         transition: height .2s ease;
-        @include animation(fadeInLeft .5s);
+        // @include animation(fadeInLeft .5s);
     }
 }
