@@ -7,24 +7,24 @@ import { LoginComponent } from './login/login.component';
 // import { RecoverComponent } from './recover/recover.component';
 // import { LockComponent } from './lock/lock.component';
 // import { MaintenanceComponent } from './maintenance/maintenance.component';
-// import { Error404Component } from './error404/error404.component';
+import { Error404Component } from './error404/error404.component';
 // import { Error500Component } from './error500/error500.component';
 
 /* Use this routes definition in case you want to make them lazy-loaded */
-/*const routes: Routes = [
+const routes: Routes = [
     { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'recover', component: RecoverComponent },
-    { path: 'lock', component: LockComponent },
-    { path: 'maintenance', component: MaintenanceComponent },
+    // { path: 'register', component: RegisterComponent },
+    // { path: 'recover', component: RecoverComponent },
+    // { path: 'lock', component: LockComponent },
+    // { path: 'maintenance', component: MaintenanceComponent },
     { path: '404', component: Error404Component },
-    { path: '500', component: Error500Component },
-];*/
+    // { path: '500', component: Error500Component },
+];
 
 @NgModule({
     imports: [
         SharedModule,
-        // RouterModule.forChild(routes)
+        RouterModule.forChild(routes)
     ],
     declarations: [
         LoginComponent,
@@ -32,7 +32,7 @@ import { LoginComponent } from './login/login.component';
         // RecoverComponent,
         // LockComponent,
         // MaintenanceComponent,
-        // Error404Component,
+        Error404Component,
         // Error500Component
     ],
     exports: [
@@ -42,7 +42,7 @@ import { LoginComponent } from './login/login.component';
         // RecoverComponent,
         // LockComponent,
         // MaintenanceComponent,
-        // Error404Component,
+        Error404Component,
         // Error500Component
     ]
 })

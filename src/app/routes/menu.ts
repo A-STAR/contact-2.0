@@ -5,10 +5,10 @@ const Home = {
     icon: 'icon-home'
 };
 
-const Grids = {
-    text: 'Grids',
-    link: '/grids',
-    icon: 'icon-list'
+const Tree = {
+    text: 'Tree',
+    link: '/tree',
+    icon: 'icon-graph'
 };
 
 const Tables = {
@@ -37,6 +37,6 @@ const Tables = {
 
 export const menu = [
     Home,
-    Grids,
+    Tree,
     Tables,
 ];
