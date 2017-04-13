@@ -1,12 +1,17 @@
 .ngx-datatable {
   height: 450px;
-
-  &.material .datatable-body .datatable-body-row .datatable-body-cell {
+  & .datatable-body-cell {
     text-align: left;
-    padding: .2rem 1.2rem;
-    vertical-align: top;
-    border-top: 0;
+    padding: 0 1.2rem;
+    vertical-align: middle;
+    border-top: 1px solid lightgrey;
     -webkit-transition: width 0.3s ease;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease; 
+    line-height: 1.825;
   }
+}
+
+
+.ngx-datatable.material .datatable-body .datatable-row-wrapper .datatable-body-row {
+  border-top: 1px solid lightgrey;
 }
