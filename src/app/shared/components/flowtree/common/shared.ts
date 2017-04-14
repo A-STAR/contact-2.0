@@ -1,4 +1,18 @@
-import {NgModule,EventEmitter,Directive,ViewContainerRef,Input,Output,ContentChildren,ContentChild,TemplateRef,OnInit,OnDestroy,AfterContentInit,QueryList,EmbeddedViewRef} from '@angular/core';
+import {
+  NgModule,
+  EventEmitter,
+  Directive,
+  ViewContainerRef,
+  Input,
+  Output,
+  ContentChildren,
+  ContentChild,
+  TemplateRef,
+  OnInit,
+  OnDestroy,
+  AfterContentInit,
+  QueryList,
+  EmbeddedViewRef } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
 
@@ -16,8 +30,7 @@ export class Footer {}
 
 @Directive({
     selector: '[pTemplate]',
-    host: {
-    }
+    host: {}
 })
 export class PrimeTemplate {
 
@@ -28,11 +41,10 @@ export class PrimeTemplate {
     constructor(public template: TemplateRef<any>) {}
 
     getType(): string {
-        if(this.type) {
+        if (this.type) {
             console.log('Defining a pTemplate with type property is deprecated use pTemplate="type" instead.');
             return this.type;
-        }
-        else {
+        } else {
             return this.name;
         }
     }
@@ -61,8 +73,8 @@ export class TemplateWrapper implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		this.view.destroy();
-	}
+      this.view.destroy();
+    }
 }
 
 @Component({
@@ -204,8 +216,8 @@ export class ColumnHeaderTemplateLoader implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		this.view.destroy();
-	}
+      this.view.destroy();
+    }
 }
 
 @Component({
@@ -227,8 +239,8 @@ export class ColumnFooterTemplateLoader implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		this.view.destroy();
-	}
+      this.view.destroy();
+    }
 }
 
 @Component({
@@ -250,8 +262,8 @@ export class ColumnFilterTemplateLoader implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		this.view.destroy();
-	}
+      this.view.destroy();
+    }
 }
 
 @Component({
@@ -279,8 +291,8 @@ export class ColumnEditorTemplateLoader implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		this.view.destroy();
-	}
+      this.view.destroy();
+    }
 }
 
 @Component({
@@ -306,13 +318,43 @@ export class TemplateLoader implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-		if (this.view) this.view.destroy();
-	}
+      if (this.view) { this.view.destroy(); }
+    }
 }
 
 @NgModule({
     imports: [CommonModule],
-    exports: [Header,Footer,Column,TemplateWrapper,ColumnHeaderTemplateLoader,ColumnBodyTemplateLoader,ColumnFooterTemplateLoader,ColumnFilterTemplateLoader,PrimeTemplate,TemplateLoader,Row,HeaderColumnGroup,FooterColumnGroup,ColumnEditorTemplateLoader],
-    declarations: [Header,Footer,Column,TemplateWrapper,ColumnHeaderTemplateLoader,ColumnBodyTemplateLoader,ColumnFooterTemplateLoader,ColumnFilterTemplateLoader,PrimeTemplate,TemplateLoader,Row,HeaderColumnGroup,FooterColumnGroup,ColumnEditorTemplateLoader]
+    exports: [
+      Header,
+      Footer,
+      Column,
+      TemplateWrapper,
+      ColumnHeaderTemplateLoader,
+      ColumnBodyTemplateLoader,
+      ColumnFooterTemplateLoader,
+      ColumnFilterTemplateLoader,
+      PrimeTemplate,
+      TemplateLoader,
+      Row,
+      HeaderColumnGroup,
+      FooterColumnGroup,
+      ColumnEditorTemplateLoader
+    ],
+    declarations: [
+      Header,
+      Footer,
+      Column,
+      TemplateWrapper,
+      ColumnHeaderTemplateLoader,
+      ColumnBodyTemplateLoader,
+      ColumnFooterTemplateLoader,
+      ColumnFilterTemplateLoader,
+      PrimeTemplate,
+      TemplateLoader,
+      Row,
+      HeaderColumnGroup,
+      FooterColumnGroup,
+      ColumnEditorTemplateLoader
+    ]
 })
 export class SharedModule { }

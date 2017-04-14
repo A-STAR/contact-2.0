@@ -10,11 +10,12 @@ export const routes = [
             // { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
-            { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
+            { path: 'workflow', loadChildren: './tree/flow.module#FlowModule' },
+            { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
         ]
     },
 
-    // Not lazy-loaded routes
+    // Eagerly-loaded routes
     { path: 'login', component: LoginComponent },
 
     // Not found

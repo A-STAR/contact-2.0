@@ -6,20 +6,20 @@ const Home = {
 };
 
 const Tree = {
-    text: 'Tree',
-    link: '/tree',
+    text: 'Workflow',
+    link: '/workflow',
     icon: 'icon-graph'
 };
 
-const Tables = {
-    text: 'Tables',
-    link: '/tables',
+const Grid = {
+    text: 'Grid',
+    link: '/grid',
     icon: 'icon-grid',
-    submenu: [
-        {
-            text: 'Ngx Datatable',
-            link: '/tables/ngxdatatable'
-        },
+    // submenu: [
+    //     {
+    //         text: 'Ngx Datatable',
+    //         link: '/tables/ngxdatatable'
+    //     },
         // {
         //     text: 'Extended',
         //     link: '/tables/extended'
@@ -32,11 +32,11 @@ const Tables = {
         //     text: 'Angular Grid',
         //     link: '/tables/aggrid'
         // }
-    ]
+    // ]
 };
 
 export const menu = [
     Home,
     Tree,
-    Tables,
+    Grid,
 ];

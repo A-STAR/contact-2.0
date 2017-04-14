@@ -1,0 +1,20 @@
+<div class="content-heading">
+    Workflow Tree Component
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4>Workflow</h4>
+    </div>
+    <div class="panel-body">
+      <p-tree
+        #tree
+        [value]="value"
+        layout="horizontal"
+        selectionMode="single"
+        (onNodeSelect)="onNodeSelect($event)"
+        (onNodeExpand)="onNodeExpand($event)"
+        [(selection)]="selection">
+      </p-tree>
+    </div>
+</div>

@@ -2,9 +2,12 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+
+// Our modules
+
+// Vendor modules
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
-
 import { AccordionModule } from 'ng2-bootstrap/accordion';
 import { AlertModule } from 'ng2-bootstrap/alert';
 import { ButtonsModule } from 'ng2-bootstrap/buttons';
@@ -48,7 +51,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         ButtonsModule.forRoot(),
         CarouselModule.forRoot(),
         CollapseModule.forRoot(),
-        //.forRoot() DatepickerModule,
+        // .forRoot() DatepickerModule,
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
         PaginationModule.forRoot(),
