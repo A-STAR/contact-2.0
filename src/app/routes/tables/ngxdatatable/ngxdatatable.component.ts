@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -8,9 +8,8 @@ import { TableData } from './ngxdatatable.data';
   selector: 'app-datatable',
   templateUrl: './ngxdatatable.component.html',
   styleUrls: ['./ngxdatatable.component.scss'],
-  // encapsulation: ViewEncapsulation.None
 })
-export class NgxDatatableComponent implements OnInit, AfterViewInit {
+export class NgxDatatableComponent implements AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
 
@@ -43,10 +42,6 @@ export class NgxDatatableComponent implements OnInit, AfterViewInit {
     // this.dataTableRef.nativeElement.style.height = `${height}px`;
     // this.dataTable.recalculate();
     // this.dataTable.bodyHeight = 400;
-  }
-
-  public ngOnInit(): void {
-    // this.onChangeTable(this.config);
   }
 
   public onSelect({ selected }): void {

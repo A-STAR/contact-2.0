@@ -1,12 +1,12 @@
 .ngx-datatable {
-  height: 450px;
+  height: 500px;
   & .datatable-body-cell {
     text-align: left;
     padding: 0 1.2rem;
     vertical-align: middle;
     border-top: 1px solid lightgrey;
     -webkit-transition: width 0.3s ease;
-    transition: width 0.3s ease; 
+    transition: width 0.3s ease;
     line-height: 1.825;
   }
 }

@@ -1,28 +1,26 @@
-<div class="content-heading">
-    Data Table Components
-</div>
-
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="pull-right text-muted">
-          <em class="fa fa-user mr-sm"></em>
-          <strong>{{rows?.length}}</strong> users
-        </div>
-        <h4>Users</h4>
-    </div>
-    <div class="panel-body">
-      <ngx-datatable
-        class="material"
-        [columns]="columns"
-        [columnMode]="'force'"
-        [rowHeight]="25"
-        [rows]="rows"
-        [limit]="15"
-        [selected]="selected"
-        [selectionType]="'multiClick'"
-        [scrollbarV]="true"
-        [scrollbarH]="false"
-        (select)="onSelect($event)">
-      </ngx-datatable>
-    </div>
-</div>
+  <div class="panel-heading">
+      <div class="pull-right text-muted">
+        <em class="fa fa-user mr-sm"></em>
+        <strong>{{rows?.length}}</strong> users
+      </div>
+      <h4>Users</h4>
+  </div>
+
+  <div class="panel-body">
+    <ngx-datatable
+      class="material"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [rowHeight]="25"
+      [rows]="rows"
+      [limit]="15"
+      [selected]="selected"
+      [selectionType]="'multiClick'"
+      [scrollbarV]="true"
+      [scrollbarH]="false"
+      (select)="onSelect($event)">
+    </ngx-datatable>
+  </div>
+
+</div><!--panel-->
