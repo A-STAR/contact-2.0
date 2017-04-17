@@ -39,12 +39,16 @@ export class FlowDemoComponent implements OnInit {
 
   onNodeSelect({ node }) {
     // use for node selection, could operate on selection collection as well
+    const parent = this.findParentRecursive(node);
+    console.log(parent);
+    this.collapseSiblings(parent);
   }
 
   onNodeExpand({ node }) {
     const parent = this.findParentRecursive(node);
-    // console.log(`on find recursive`, parent);
+    console.log(parent);
     this.collapseSiblings(parent);
+    // console.log(`on find recursive`, parent);
   }
 
   private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {

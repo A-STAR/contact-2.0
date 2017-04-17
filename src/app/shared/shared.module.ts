@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 
 // Vendor modules
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-import { ToasterModule } from 'angular2-toaster/angular2-toaster';
+// import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
 import { AlertModule } from 'ng2-bootstrap/alert';
 import { ButtonsModule } from 'ng2-bootstrap/buttons';
@@ -61,7 +61,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         TimepickerModule.forRoot(),
         TooltipModule.forRoot(),
         TypeaheadModule.forRoot(),
-        ToasterModule
+        // ToasterModule
     ],
     providers: [
         ColorsService
@@ -97,7 +97,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         TimepickerModule,
         TooltipModule,
         TypeaheadModule,
-        ToasterModule,
+        // ToasterModule,
         FlotDirective,
         SparklineDirective,
         EasypiechartDirective,

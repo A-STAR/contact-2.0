@@ -17,16 +17,12 @@ const Grid = {
     icon: 'icon-grid',
     // submenu: [
     //     {
-    //         text: 'Ngx Datatable',
-    //         link: '/tables/ngxdatatable'
+    //         text: 'Datatable',
+    //         link: '/tables/datatable'
     //     },
         // {
         //     text: 'Extended',
         //     link: '/tables/extended'
-        // },
-        // {
-        //     text: 'Data-Tables',
-        //     link: '/tables/datatable'
         // },
         // {
         //     text: 'Angular Grid',

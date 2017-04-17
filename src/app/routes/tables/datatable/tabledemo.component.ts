@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
-import { NgxDatatableComponent } from '../../../routes/tables/ngxdatatable/ngxdatatable.component';
+import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatable.component';
 
 @Component({
   selector: 'app-tabledemo',

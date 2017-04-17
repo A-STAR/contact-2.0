@@ -2,12 +2,12 @@ import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { TableData } from './ngxdatatable.data';
+import { TableData } from './datatable.data';
 
 @Component({
   selector: 'app-datatable',
-  templateUrl: './ngxdatatable.component.html',
-  styleUrls: ['./ngxdatatable.component.scss'],
+  templateUrl: './datatable.component.html',
+  styleUrls: ['./datatable.component.scss'],
 })
 export class NgxDatatableComponent implements AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
