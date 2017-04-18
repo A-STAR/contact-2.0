@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { TableData } from './datatable.data';
+import { GridService } from '../grid.service';
 
 @Component({
   selector: 'app-datatable',
@@ -25,15 +25,12 @@ export class NgxDatatableComponent implements AfterViewInit {
     { name: 'State', prop: 'address.state', minWidth: 200 },
   ];
 
-  constructor(private http: Http, element: ElementRef) {
+  constructor(private gridService: GridService, element: ElementRef) {
 
     this.element = element.nativeElement;
-    http.get('assets/server/100k.json')
-        .subscribe((data) => {
-          setTimeout(() => {
-            this.rows = data.json();
-          }, 1000);
-        });
+    this.gridService
+      .fetchData()
+      .then(data => this.rows = data);
   }
 
   ngAfterViewInit() {

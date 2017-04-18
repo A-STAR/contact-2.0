@@ -1,0 +1,32 @@
+<div class="content-heading">
+    Data Grid
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <div class="pull-right text-muted">
+        <em class="fa fa-user mr-sm"></em>
+        <strong>{{value?.length}}</strong> users
+      </div>
+      <h4>Users</h4>
+  </div>
+
+  <div class="panel-body">
+    <p-header>
+      <div style="text-align:left">
+        <p-multiSelect [options]="columnOptions" [(ngModel)]="columns"></p-multiSelect>
+      </div>
+    </p-header>
+    <p-dataTable
+      [value]="value"
+      sortMode="multiple"
+      scrollable="true"
+      scrollHeight="400px"
+      [rows]="40"
+      [totalRecords]="totalRecords">
+      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [sortable]="true"></p-column>
+    </p-dataTable>
+  </div>
+
+</div><!--panel-->
+<!-- virtualScroll="virtualScroll" [lazy]="true" (onLazyLoad)="loadCarsLazy($event)" -->

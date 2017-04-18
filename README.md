@@ -31,7 +31,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### Git global setup
 ```
-git config --global user.name "Тымчук Александр"
+git config --global user.name "Tymchuk Alexander"
 git config --global user.email "a.tymchuk@crif.com"
 ```
 
@@ -45,8 +45,24 @@ git commit -m "add README"
 git push -u origin master
 ```
 
-## Questions to Biz
-* Implement record blocking
-* Transaction isolation for large datasets
-* SVG Logo
-* Menu icons
+## Production build
+
+### Prerequisites
+* install node.js engine
+* install git bash
+* clone this repository
+
+### Building
+ * cd to this repository
+ * run `npm install`, ensure there are no errors in the console
+ * run `npm build -- --environment=production --aot` (this will output the compiled bundle to `/dist`)
+
+### Running
+* cd to the `/dist` folder
+* serve the folder contents with any http server, i.e. `python -m SimpleHTTPServer 9000 .`
+
+## Questions
+* Implement record blocking for preventing concurrent edits
+* <del>Transaction isolation for large datasets</del> - withheld
+* App logo in svg
+* Menu icons designed in svg
