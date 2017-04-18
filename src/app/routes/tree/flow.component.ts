@@ -42,11 +42,11 @@ export class FlowDemoComponent implements OnInit {
     const parent = this.findParentRecursive(node);
     console.log(parent);
     this.collapseSiblings(parent);
+    node.expanded = true;
   }
 
   onNodeExpand({ node }) {
     const parent = this.findParentRecursive(node);
-    console.log(parent);
     this.collapseSiblings(parent);
     // console.log(`on find recursive`, parent);
   }
