@@ -63,6 +63,6 @@ git push -u origin master
 
 ## Questions
 * Implement record blocking for preventing concurrent edits
-* Transaction isolation for large datasets - withheld
+* <del>Transaction isolation for large datasets</del> - withheld
 * App logo in svg
-* Menu icons design
+* Menu icons designed in svg

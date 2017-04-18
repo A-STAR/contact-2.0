@@ -1,0 +1,39 @@
+import { Component, OnInit } from '@angular/core';
+import { SelectItem, MultiSelect } from 'primeng/primeng';
+
+import { GridService } from '../grid.service';
+
+@Component({
+  selector: 'app-sortable',
+  templateUrl: 'sortable.component.html',
+  styleUrls: ['./sortable.component.scss']
+})
+
+export class SortableComponent implements OnInit {
+
+  value: Array<any> = [];
+  totalRecords = 300;
+  columns: Array<any> = [
+    { field: 'id', header: '#', minWidth: 30, maxWidth: 70 },
+    { field: 'name', header: 'Name', width: 150 },
+    { field: 'gender', header: 'Gender', minWidth: 80, maxWidth: 100 },
+    { field: 'age', header: 'Age', width: 50, maxWidth: 50 },
+    { field: 'address.city', header: 'City', minWidth: 200, maxWidth: 200 },
+    { field: 'address.state', header: 'State', minWidth: 200 },
+  ];
+  columnOptions: SelectItem[] = [];
+
+  constructor(private gridService: GridService) {
+    for (let i = 0; i < this.columns.length; i++) {
+      this.columnOptions.push({label: this.columns[i].header, value: this.columns[i]});
+    }
+  }
+
+  ngOnInit() {
+    this.gridService
+      .fetchData()
+      .then(data => {
+        this.value = data.slice(0, this.totalRecords);
+      });
+  }
+}
