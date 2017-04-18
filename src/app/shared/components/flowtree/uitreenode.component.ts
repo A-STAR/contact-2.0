@@ -10,6 +10,9 @@ export class UITreeNodeComponent implements OnInit {
 
     static ICON_CLASS = 'ui-treenode-icon fa fa-fw';
 
+    static DEFAULT_BG_COLOR = '#fff';
+    static DEFAULT_SELECTED_BG_COLOR = '#def';
+
     draghoverPrev: boolean;
     draghoverNext: boolean;
     draghoverNode: boolean;
@@ -42,6 +45,12 @@ export class UITreeNodeComponent implements OnInit {
         }
 
         return UITreeNodeComponent.ICON_CLASS + ' ' + icon;
+    }
+
+    getBgColor() {
+        return this.isSelected() ?
+            this.node.selectedBgColor || UITreeNodeComponent.DEFAULT_SELECTED_BG_COLOR :
+            this.node.bgColor || UITreeNodeComponent.DEFAULT_BG_COLOR;
     }
 
     isLeaf() {
