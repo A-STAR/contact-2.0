@@ -1,20 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-
-// import { FlowService } from './flow.service';
-// import { TreeNode } from '../../shared/components/flowtree/common/api';
-import { TreeNode } from 'primeng/components/common/api';
-import { Tree } from 'primeng/primeng';
+import { TreeNode } from '../../shared/components/flowtree/common/api';
+import { TreeComponent } from '../../shared/components/flowtree/tree.component';
 
 @Component({
   selector: 'app-workflow',
   templateUrl: './flow.component.html',
-  styleUrls: ['./flow.component.scss'],
-  // encapsulation: ViewEncapsulation.None
+  styleUrls: ['./flow.component.scss']
 })
 export class FlowDemoComponent implements OnInit {
-  @ViewChild(Tree) tree: Tree;
+  @ViewChild('tree') tree: TreeComponent;
   selection: TreeNode;
   value: TreeNode[];
 
@@ -40,7 +36,6 @@ export class FlowDemoComponent implements OnInit {
   onNodeSelect({ node }) {
     // use for node selection, could operate on selection collection as well
     const parent = this.findParentRecursive(node);
-    console.log(parent);
     const isExpanded = node.expanded;
     this.collapseSiblings(parent);
     if (node.children) {
@@ -50,7 +45,6 @@ export class FlowDemoComponent implements OnInit {
 
   onNodeExpand({ node }) {
     const parent = this.findParentRecursive(node);
-    console.log(parent);
     this.collapseSiblings(parent);
     this.selection = node;
   }

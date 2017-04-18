@@ -46,6 +46,7 @@ interface SelectItem {
 }
 
 interface TreeNode {
+    id?: number;
     label?: string;
     data?: any;
     icon?: any;

@@ -7,73 +7,23 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  EmbeddedViewRef,
-  ViewContainerRef,
   ContentChildren,
   QueryList,
   TemplateRef,
   Optional,
-  Host } from '@angular/core';
-
+  ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { TreeNode } from './common/api';
 import { TreeDragDropService } from './common/treedragdrop.service';
-import { PrimeTemplate } from './common/shared';
-import { Subscription } from 'rxjs/Subscription';
+import { PrimeTemplate, SharedModule } from './common/shared';
 
 @Component({
-    selector: 'p-treeNodeTemplateLoader',
-    template: ``,
+    selector: 'app-tree',
+    styleUrls: ['./tree.component.scss'],
+    templateUrl: './tree.component.html',
+    encapsulation: ViewEncapsulation.None
 })
-export class TreeNodeTemplateLoader implements OnInit, OnDestroy {
-
-    @Input() node: any;
-
-    @Input() template: TemplateRef<any>;
-
-    view: EmbeddedViewRef<any>;
-
-    constructor(public viewContainer: ViewContainerRef) {}
-
-    ngOnInit() {
-        this.view = this.viewContainer.createEmbeddedView(this.template, {
-            '\$implicit': this.node
-        });
-    }
-
-    ngOnDestroy() {
-        this.view.destroy();
-    }
-}
-
-@Component({
-    selector: 'p-tree',
-    template: `
-        <div
-            [ngClass]="{'ui-tree ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode,'ui-treenode-dragover':dragHover}"
-            [ngStyle]="style"
-            [class]="styleClass"
-            *ngIf="!horizontal"
-            (drop)="onDrop($event)"
-            (dragover)="onDragOver($event)"
-            (dragenter)="onDragEnter($event)"
-            (dragleave)="onDragLeave($event)">
-            <ul class="ui-tree-container">
-                <p-treeNode *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index" [node]="node"
-                [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></p-treeNode>
-            </ul>
-        </div>
-        <div
-          [ngClass]="{'ui-tree ui-tree-horizontal ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
-          [ngStyle]="style"
-          [class]="styleClass"
-          *ngIf="horizontal">
-            <table *ngIf="value && value[0]">
-                <p-treeNode [node]="value[0]" [root]="true"></p-treeNode>
-            </table>
-        </div>
-    `
-})
-export class Tree implements OnInit, AfterContentInit, OnDestroy {
+export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
 
     @Input() value: TreeNode[];
 
@@ -123,7 +73,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
 
     public nodeTouched: boolean;
 
-    public dragNodeTree: Tree;
+    public dragNodeTree: TreeComponent;
 
     public dragNode: TreeNode;
 
@@ -183,8 +133,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
 
         if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
             return;
-        }
-        else if (this.selectionMode) {
+        } else if (this.selectionMode) {
             if (node.selectable === false) {
                 return;
             }
@@ -192,23 +141,21 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
             const index = this.findIndexInSelection(node);
             const selected = (index >= 0);
 
-            if(this.isCheckboxSelectionMode()) {
+            if (this.isCheckboxSelectionMode()) {
                 if (selected) {
                     if (this.propagateSelectionDown) {
                         this.propagateDown(node, false);
-                    }
-                    else {
+                    } else {
                         this.selection = this.selection.filter((val, i) => i !== index);
                     }
 
-                    if(this.propagateSelectionUp && node.parent) {
+                    if (this.propagateSelectionUp && node.parent) {
                         this.propagateUp(node.parent, false);
                     }
 
                     this.selectionChange.emit(this.selection);
                     this.onNodeUnselect.emit({originalEvent: event, node: node});
-                }
-                else {
+                } else {
                     if (this.propagateSelectionDown) {
                         this.propagateDown(node, true);
                     } else {
@@ -222,29 +169,25 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
                     this.selectionChange.emit(this.selection);
                     this.onNodeSelect.emit({originalEvent: event, node: node});
                 }
-            }
-            else {
-                let metaSelection = this.nodeTouched ? false : this.metaKeySelection;
+            } else {
+                const metaSelection = this.nodeTouched ? false : this.metaKeySelection;
 
-                if(metaSelection) {
-                    let metaKey = (event.metaKey || event.ctrlKey);
+                if (metaSelection) {
+                    const metaKey = (event.metaKey || event.ctrlKey);
 
                     if (selected && metaKey) {
                         if (this.isSingleSelectionMode()) {
                             this.selectionChange.emit(null);
-                        }
-                        else {
+                        } else {
                             this.selection = this.selection.filter((val, i) => i !== index);
                             this.selectionChange.emit(this.selection);
                         }
 
                         this.onNodeUnselect.emit({originalEvent: event, node: node});
-                    }
-                    else {
+                    } else {
                         if (this.isSingleSelectionMode()) {
                             this.selectionChange.emit(node);
-                        }
-                        else if (this.isMultipleSelectionMode()) {
+                        } else if (this.isMultipleSelectionMode()) {
                             this.selection = (!metaKey) ? [] : this.selection || [];
                             this.selection = [...this.selection, node];
                             this.selectionChange.emit(this.selection);
@@ -252,24 +195,20 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
 
                         this.onNodeSelect.emit({originalEvent: event, node: node});
                     }
-                }
-                else {
+                } else {
                     if (this.isSingleSelectionMode()) {
                         if (selected) {
                             this.selection = null;
                             this.onNodeUnselect.emit({originalEvent: event, node: node});
-                        }
-                        else {
+                        } else {
                             this.selection = node;
                             this.onNodeSelect.emit({originalEvent: event, node: node});
                         }
-                    }
-                    else {
+                    } else {
                         if (selected) {
                             this.selection = this.selection.filter((val, i) => i !== index);
                             this.onNodeUnselect.emit({originalEvent: event, node: node});
-                        }
-                        else {
+                        } else {
                             this.selection = [...this.selection || [], node];
                             this.onNodeSelect.emit({originalEvent: event, node: node});
                         }
@@ -334,7 +273,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
         if (node.children && node.children.length) {
             let selectedCount = 0;
             let childPartialSelected = false;
-            for (let child of node.children) {
+            for (const child of node.children) {
                 if (this.isSelected(child)) {
                     selectedCount++;
                 } else if(child.partialSelected) {
@@ -342,7 +281,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
                 }
             }
 
-            if(select && selectedCount === node.children.length) {
+            if (select && selectedCount === node.children.length) {
                 this.selection = [...this.selection || [], node];
                 node.partialSelected = false;
             } else {
@@ -378,7 +317,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
 
         node.partialSelected = false;
 
-        if(node.children && node.children.length) {
+        if (node.children && node.children.length) {
             for (const child of node.children) {
                 this.propagateDown(child, select);
             }
@@ -410,7 +349,7 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
     }
 
     onDragOver(event) {
-        if(this.droppableNodes && (!this.value || this.value.length === 0)) {
+        if (this.droppableNodes && (!this.value || this.value.length === 0)) {
             event.dataTransfer.dropEffect = 'move';
             event.preventDefault();
         }
@@ -449,68 +388,57 @@ export class Tree implements OnInit, AfterContentInit, OnDestroy {
     }
 
     allowDrop(dragNode: TreeNode, dropNode: TreeNode, dragNodeScope: any): boolean {
-        if (this.isValidDragScope(dragNodeScope)) {
-            let allow = true;
+        if (!this.isValidDragScope(dragNodeScope)) {
+            return false;
+        }
 
-            if (dropNode) {
-                if (dragNode === dropNode) {
-                    allow = false;
-                } else {
-                    let parent = dropNode.parent;
-                    while (parent != null) {
-                        if (parent === dragNode) {
-                            allow = false;
-                            break;
-                        }
-                        parent = parent.parent;
+        let allow = true;
+
+        if (dropNode) {
+            if (dragNode === dropNode) {
+                allow = false;
+            } else {
+                let parent = dropNode.parent;
+                while (parent != null) {
+                    if (parent === dragNode) {
+                        allow = false;
+                        break;
                     }
+                    parent = parent.parent;
                 }
             }
-
-            return allow;
-
-        } else {
-
-            return false;
-
         }
+
+        return allow;
     }
 
     isValidDragScope(dragScope: any): boolean {
         const dropScope = this.droppableScope;
 
-        if (dropScope) {
+        if (!dropScope) {
+            return true;
+        }
 
-            if (typeof dropScope === 'string') {
-
-                if (typeof dragScope === 'string') {
-                    return dropScope === dragScope;
-                } else if (dragScope instanceof Array) {
-                    return (<Array<any>>dragScope).indexOf(dropScope) !== -1;
-                }
-
-            } else if (dropScope instanceof Array) {
-
-                if (typeof dragScope === 'string') {
-                    return (<Array<any>>dropScope).indexOf(dragScope) !== -1;
-                } else if (dragScope instanceof Array) {
-                    for (const s of dropScope) {
-                        for (const ds of dragScope) {
-                            if (s === ds) {
-                                return true;
-                            }
+        if (typeof dropScope === 'string') {
+            if (typeof dragScope === 'string') {
+                return dropScope === dragScope;
+            } else if (dragScope instanceof Array) {
+                return (<Array<any>>dragScope).indexOf(dropScope) !== -1;
+            }
+        } else if (dropScope instanceof Array) {
+            if (typeof dragScope === 'string') {
+                return (<Array<any>>dropScope).indexOf(dragScope) !== -1;
+            } else if (dragScope instanceof Array) {
+                for (const s of dropScope) {
+                    for (const ds of dragScope) {
+                        if (s === ds) {
+                            return true;
                         }
                     }
                 }
             }
-
-            return false;
-
-        } else {
-
-            return true;
-
         }
+        return false;
     }
 
     ngOnDestroy() {
