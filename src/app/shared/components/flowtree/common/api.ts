@@ -52,6 +52,8 @@ interface TreeNode {
     icon?: any;
     expandedIcon?: any;
     collapsedIcon?: any;
+    bgColor?: string;
+    selectedBgColor?: string;
     children?: TreeNode[];
     leaf?: boolean;
     expanded?: boolean;

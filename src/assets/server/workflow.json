@@ -7,27 +7,42 @@
             "data": "Documents Folder",
             "expandedIcon": "fa-folder-open",
             "collapsedIcon": "fa-folder",
+            "bgColor": "#fea",
+            "selectedBgColor": "#fc8",
             "children": [{
-                    "id": 2,
-                    "label": "Work",
-                    "data": "Work Folder",
-                    "expandedIcon": "fa-folder-open",
-                    "collapsedIcon": "fa-folder",
-                    "children": [
-                      {"id": 3, "label": "Expenses.doc", "icon": "fa-file-word-o", "data": "Expenses Document"},
-                      {"id": 4, "label": "Resume.doc", "icon": "fa-file-word-o", "data": "Resume Document"}
-                    ]
-                },
-                {
-                    "id": 5,
-                    "label": "Home",
-                    "data": "Home Folder",
-                    "expandedIcon": "fa-folder-open",
-                    "collapsedIcon": "fa-folder",
-                    "children": [
-                      {"id": 6, "label": "Invoices.txt", "icon": "fa-file-word-o", "data": "Invoices for this month"}
-                    ]
+                "id": 2,
+                "label": "Work",
+                "data": "Work Folder",
+                "expandedIcon": "fa-folder-open",
+                "collapsedIcon": "fa-folder",
+                "bgColor": "#fea",
+                "selectedBgColor": "#fc8",
+                "children": [{
+                    "id": 3,
+                    "label": "Expenses.doc",
+                    "icon": "fa-file-word-o",
+                    "bgColor": "#fea",
+                    "selectedBgColor": "#fc8",
+                    "data": "Expenses Document"
+                }, {
+                    "id": 4,
+                    "label": "Resume.doc",
+                    "icon": "fa-file-word-o",
+                    "data": "Resume Document"
                 }]
+            },
+            {
+                "id": 5,
+                "label": "Home",
+                "data": "Home Folder",
+                "expandedIcon": "fa-folder-open",
+                "collapsedIcon": "fa-folder",
+                "bgColor": "#fea",
+                "selectedBgColor": "#fc8",
+                "children": [
+                  {"id": 6, "label": "Invoices.txt", "icon": "fa-file-word-o", "data": "Invoices for this month"}
+                ]
+            }]
         },
         {
             "id": 7,
@@ -35,10 +50,26 @@
             "data": "Pictures Folder",
             "expandedIcon": "fa-folder-open",
             "collapsedIcon": "fa-folder",
-            "children": [
-                {"id": 8, "label": "barcelona.jpg", "icon": "fa-file-image-o", "data": "Barcelona Photo"},
-                {"id": 9, "label": "logo.jpg", "icon": "fa-file-image-o", "data": "PrimeFaces Logo"},
-                {"id": 10, "label": "primeui.png", "icon": "fa-file-image-o", "data": "PrimeUI Logo"}]
+            "bgColor": "#fea",
+            "selectedBgColor": "#fc8",
+            "children": [{
+                "id": 8,
+                "label": "barcelona.jpg",
+                "icon": "fa-file-image-o",
+                "data": "Barcelona Photo"
+            }, {
+                "id": 9,
+                "label": "logo.jpg",
+                "icon": "fa-file-image-o",
+                "bgColor": "#fea",
+                "selectedBgColor": "#fc8",
+                "data": "PrimeFaces Logo"
+            }, {
+                "id": 10,
+                "label": "primeui.png",
+                "icon": "fa-file-image-o",
+                "data": "PrimeUI Logo"
+            }]
         },
         {
             "id": 11,
@@ -47,23 +78,39 @@
             "expandedIcon": "fa-folder-open",
             "collapsedIcon": "fa-folder",
             "children": [{
-                    "id": 12,
-                    "label": "Al Pacino",
-                    "data": "Pacino Movies",
-                    "children": [
-                      {"id": 13, "label": "Scarface", "icon": "fa-file-video-o", "data": "Scarface Movie"},
-                      {"id": 14, "label": "Serpico", "icon": "fa-file-video-o", "data": "Serpico Movie"}
-                    ]
-                },
-                {
-                    "id": 15,
-                    "label": "Robert De Niro",
-                    "data": "De Niro Movies",
-                    "children": [
-                      {"id": 16, "label": "Goodfellas", "icon": "fa-file-video-o", "data": "Goodfellas Movie"},
-                      {"id": 17, "label": "Untouchables", "icon": "fa-file-video-o", "data": "Untouchables Movie"}
-                    ]
+                "id": 12,
+                "label": "Al Pacino",
+                "data": "Pacino Movies",
+                "children": [{
+                    "id": 13,
+                    "label": "Scarface",
+                    "icon": "fa-file-video-o",
+                    "data": "Scarface Movie"
+                }, {
+                    "id": 14,
+                    "label": "Serpico",
+                    "icon": "fa-file-video-o",
+                    "bgColor": "#fea",
+                    "selectedBgColor": "#fc8",
+                    "data": "Serpico Movie"
                 }]
+            },
+            {
+                "id": 15,
+                "label": "Robert De Niro",
+                "data": "De Niro Movies",
+                "children": [{
+                    "id": 16,
+                    "label": "Goodfellas",
+                    "icon": "fa-file-video-o",
+                    "data": "Goodfellas Movie"
+                }, {
+                    "id": 17,
+                    "label": "Untouchables",
+                    "icon": "fa-file-video-o",
+                    "data": "Untouchables Movie"
+                }]
+            }]
         }
     ]
 }

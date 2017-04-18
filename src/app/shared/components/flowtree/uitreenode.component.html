@@ -64,7 +64,8 @@
                 </td>
                 <td class="ui-treenode" [ngClass]="{'ui-treenode-collapsed':!node.expanded}">
                     <div class="ui-treenode-content ui-state-default ui-corner-all"
-                        [ngClass]="{'ui-treenode-selectable':tree.selectionMode,'ui-state-highlight':isSelected()}"
+                        [ngStyle]="{'background-color':getBgColor()}"
+                        [ngClass]="{'ui-treenode-selectable':tree.selectionMode}"
                         (click)="onNodeClick($event)"
                         (contextmenu)="onNodeRightClick($event)"
                         (touchend)="onNodeTouchEnd()">
