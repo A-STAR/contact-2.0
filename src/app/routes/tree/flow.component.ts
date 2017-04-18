@@ -1,20 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-
-// import { FlowService } from './flow.service';
-// import { TreeNode } from '../../shared/components/flowtree/common/api';
-import { TreeNode } from 'primeng/components/common/api';
-import { Tree } from 'primeng/primeng';
+import { TreeNode } from '../../shared/components/flowtree/common/api';
+import { TreeComponent } from '../../shared/components/flowtree/tree.component';
 
 @Component({
   selector: 'app-workflow',
   templateUrl: './flow.component.html',
-  styleUrls: ['./flow.component.scss'],
-  // encapsulation: ViewEncapsulation.None
+  styleUrls: ['./flow.component.scss']
 })
 export class FlowDemoComponent implements OnInit {
-  @ViewChild(Tree) tree: Tree;
+  @ViewChild('tree') tree: TreeComponent;
   selection: TreeNode;
   value: TreeNode[];
 
@@ -40,14 +36,17 @@ export class FlowDemoComponent implements OnInit {
   onNodeSelect({ node }) {
     // use for node selection, could operate on selection collection as well
     const parent = this.findParentRecursive(node);
+    const isExpanded = node.expanded;
     this.collapseSiblings(parent);
-    node.expanded = true;
+    if (node.children) {
+      node.expanded = !isExpanded;
+    }
   }
 
   onNodeExpand({ node }) {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
-    // console.log(`on find recursive`, parent);
+    this.selection = node;
   }
 
   private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {
@@ -70,13 +69,23 @@ export class FlowDemoComponent implements OnInit {
     }, null);
   }
 
-  private collapseSiblings(node: TreeNode[] | null): void {
-    // console.log('collapse this', node);
-    if (!node || !node.length) {
+  private collapseSiblings(nodes: TreeNode[]): void {
+    if (!nodes || !nodes.length) {
       return;
     }
-    node.forEach(childNode => {
-        childNode.expanded = false;
+    nodes.forEach(childNode => {
+      childNode.expanded = false;
+      this.collapseChildrenRecursive(childNode);
+    });
+  }
+
+  private collapseChildrenRecursive(node: TreeNode): void {
+    if (!node || !node.children) {
+      return;
+    }
+    node.children.forEach(childNode => {
+      childNode.expanded = false;
+      this.collapseChildrenRecursive(childNode);
     });
   }
 

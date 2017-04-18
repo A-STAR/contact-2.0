@@ -7,7 +7,7 @@
         <h4>Workflow</h4>
     </div>
     <div class="panel-body">
-      <p-tree
+      <app-tree
         #tree
         [value]="value"
         layout="horizontal"
@@ -15,6 +15,6 @@
         (onNodeSelect)="onNodeSelect($event)"
         (onNodeExpand)="onNodeExpand($event)"
         [(selection)]="selection">
-      </p-tree>
+      </app-tree>
     </div>
 </div>

@@ -46,11 +46,14 @@ interface SelectItem {
 }
 
 interface TreeNode {
+    id?: number;
     label?: string;
     data?: any;
     icon?: any;
     expandedIcon?: any;
     collapsedIcon?: any;
+    bgColor?: string;
+    selectedBgColor?: string;
     children?: TreeNode[];
     leaf?: boolean;
     expanded?: boolean;
