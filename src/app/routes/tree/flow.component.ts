@@ -41,14 +41,18 @@ export class FlowDemoComponent implements OnInit {
     // use for node selection, could operate on selection collection as well
     const parent = this.findParentRecursive(node);
     console.log(parent);
+    const isExpanded = node.expanded;
     this.collapseSiblings(parent);
+    if (node.children) {
+      node.expanded = !isExpanded;
+    }
   }
 
   onNodeExpand({ node }) {
     const parent = this.findParentRecursive(node);
     console.log(parent);
     this.collapseSiblings(parent);
-    // console.log(`on find recursive`, parent);
+    this.selection = node;
   }
 
   private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {
@@ -71,13 +75,23 @@ export class FlowDemoComponent implements OnInit {
     }, null);
   }
 
-  private collapseSiblings(node: TreeNode[] | null): void {
-    // console.log('collapse this', node);
-    if (!node || !node.length) {
+  private collapseSiblings(nodes: TreeNode[]): void {
+    if (!nodes || !nodes.length) {
       return;
     }
-    node.forEach(childNode => {
-        childNode.expanded = false;
+    nodes.forEach(childNode => {
+      childNode.expanded = false;
+      this.collapseChildrenRecursive(childNode);
+    });
+  }
+
+  private collapseChildrenRecursive(node: TreeNode): void {
+    if (!node || !node.children) {
+      return;
+    }
+    node.children.forEach(childNode => {
+      childNode.expanded = false;
+      this.collapseChildrenRecursive(childNode);
     });
   }
 
