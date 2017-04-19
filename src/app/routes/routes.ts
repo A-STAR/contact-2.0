@@ -10,6 +10,7 @@ export const routes = [
             // { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
+            { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
             { path: 'workflow', loadChildren: './tree/flow.module#FlowModule' },
             { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
         ]
