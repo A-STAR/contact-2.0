@@ -1,5 +1,39 @@
-  <h1>{{name}}</h1>
-
-  <div id="builder"></div>
-  <button class="btn btn-warning" (click)="reset()">Reset</button>
-  <button class="btn btn-info" (click)="getRules()">Show Rules</button>
+<div class="group">
+  <div class="form-inline">
+    <select [(ngModel)]="group.operator" class="form-control input-sm">
+        <option *ngFor="let o of operators" [value]="o.name">{{o.name}}</option>
+    </select>
+    <button (click)="addCondition()" class="btn btn-sm btn-success">
+      <span class="fa fa-plus"></span> Add Condition
+    </button>
+    <button (click)="addGroup()" class="btn btn-sm btn-success">
+      <span class="fa fa-plus"></span> Add Group
+      </button>
+    <button *ngIf="!!group.parent" (click)="removeGroup(group)" class="btn btn-sm btn-danger">
+      <span class="fa fa-minus"></span> Remove Group
+    </button>
+  </div>
+  <div class="group-conditions">
+    <div *ngFor="let rule of group.rules; index as i; trackBy: trackByFn" class="condition">
+      <div [ngSwitch]="rule.hasOwnProperty('rules')">
+        <div *ngSwitchCase="true">
+          <app-qbuilder [group]="rule"></app-qbuilder>
+        </div>
+        <div *ngSwitchDefault>
+          <div class="form-inline">
+            <select [(ngModel)]="rule.field" class="form-control input-sm">
+              <option *ngFor="let t of fields" [value]="t.name">{{t.name}}</option>
+            </select>
+            <select [(ngModel)]="rule.condition" class="form-control input-sm">
+              <option *ngFor="let c of conditions" [value]="c.name">{{c.name}}</option>
+            </select>
+            <input [(ngModel)]="rule.data" type="text" class="form-control input-sm"/>
+            <button (click)="removeCondition(i)" class="btn btn-sm btn-danger">
+              <span class="fa fa-minus"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,12 @@ const Tree = {
   icon: 'icon-graph'
 };
 
+const QueryBuilder = {
+  text: 'Query Builder',
+  link: '/query-builder',
+  icon: 'icon-list'
+};
+
 const Grid = {
   text: 'Grids',
   link: '/grid',
@@ -33,5 +39,6 @@ const Grid = {
 export const menu = [
   Home,
   Tree,
+  QueryBuilder,
   Grid,
 ];
