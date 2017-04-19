@@ -1,0 +1,21 @@
+.condition, .group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+}
+
+.group {
+    padding: 15px;
+    border-radius: 5px;
+    border: solid 1px #ddd;
+}
+
+.group-conditions {
+    margin-left: 20px;
+}
+
+.fa {
+    font-size: 0.8em;
+}
