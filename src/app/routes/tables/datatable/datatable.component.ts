@@ -26,7 +26,6 @@ export class NgxDatatableComponent implements AfterViewInit {
   ];
 
   constructor(private gridService: GridService, element: ElementRef) {
-
     this.element = element.nativeElement;
     this.gridService
       .fetchData()
@@ -42,7 +41,6 @@ export class NgxDatatableComponent implements AfterViewInit {
   }
 
   public onSelect({ selected }): void {
-    // console.log(selected);
     this.selected = [].concat(selected);
   }
 

@@ -1,0 +1,42 @@
+<div class="content-heading">
+    Toggleable Row Groups with Footers
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <div class="pull-right text-muted">
+        <em class="fa fa-user mr-sm"></em>
+        <strong>{{value?.length}}</strong> users
+      </div>
+      <h4>Users by State</h4>
+  </div>
+
+  <div class="panel-body">
+    <p-dataTable
+      #dt
+      [value]="value"
+      scrollHeight="589px"
+      [rows]="20"
+      [totalRecords]="totalRecords"
+      selectionMode="multiple"
+      [(selection)]="selected"
+      dataKey="id"
+      sortField="address.state"
+      rowGroupMode="subheader"
+      groupField="address.state"
+      expandableRowGroups="true"
+      [sortableRowGroup]="false">
+
+      <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData.address.state}}</ng-template>
+
+      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [style]="column.style"></p-column>
+
+      <ng-template pTemplate="rowgroupfooter" let-row>
+          <td colspan="4" style="text-align:right">Average age</td>
+          <td><strong>{{ calculateGroupAvg(row.address['state']) }}</strong></td>
+      </ng-template>
+
+    </p-dataTable>
+  </div>
+
+</div><!--panel-->
