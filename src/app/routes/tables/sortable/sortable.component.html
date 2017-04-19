@@ -1,5 +1,5 @@
 <div class="content-heading">
-    Data Grid
+    Hideable Columns & Multi Sorting
 </div>
 
 <div class="panel panel-default">
@@ -19,10 +19,11 @@
     </p-header>
     <p-dataTable
       [value]="value"
+      [loading]="loading"
       sortMode="multiple"
       scrollable="true"
-      scrollHeight="400px"
-      [rows]="40"
+      scrollHeight="589px"
+      [rows]="20"
       [totalRecords]="totalRecords">
       <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [sortable]="true"></p-column>
     </p-dataTable>

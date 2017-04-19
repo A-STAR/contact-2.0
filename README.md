@@ -55,7 +55,7 @@ git push -u origin master
 ### Building
  * cd to this repository
  * run `npm install`, ensure there are no errors in the console
- * run `npm build -- --environment=production --aot` (this will output the compiled bundle to `/dist`)
+ * run `npm run build -- --environment=production --aot` (this will output the compiled bundle to `/dist`)
 
 ### Running
 * cd to the `/dist` folder

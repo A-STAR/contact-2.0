@@ -1,5 +1,5 @@
 .ngx-datatable {
-  height: 500px;
+  height: 600px;
   & .datatable-body-cell {
     text-align: left;
     padding: 0 1.2rem;
@@ -10,7 +10,6 @@
     line-height: 1.825;
   }
 }
-
 
 .ngx-datatable.material .datatable-body .datatable-row-wrapper .datatable-body-row {
   border-top: 1px solid lightgrey;

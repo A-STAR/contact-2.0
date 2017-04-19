@@ -20,13 +20,17 @@ const Grid = {
       link: '/grid/large'
     },
     {
-      text: 'Sortable columns',
+      text: 'Sortable',
       link: '/grid/sortable'
     },
-    // {
-    //   text: 'Angular Grid',
-    //   link: '/tables/aggrid'
-    // }
+    {
+      text: 'Reorderable',
+      link: '/grid/reorderable'
+    },
+    {
+      text: 'Groupable',
+      link: '/grid/groupable'
+    },
   ]
 };
 

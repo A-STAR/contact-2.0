@@ -4,15 +4,16 @@ import { SelectItem, MultiSelect } from 'primeng/primeng';
 import { GridService } from '../grid.service';
 
 @Component({
-  selector: 'app-sortable',
-  templateUrl: 'sortable.component.html',
-  styleUrls: ['./sortable.component.scss']
+  selector: 'app-reorderable',
+  templateUrl: 'reorderable.component.html',
+  styleUrls: ['./reorderable.component.scss']
 })
 
-export class SortableComponent implements OnInit {
-  loading: boolean;
+export class ReorderableComponent implements OnInit {
+
   value: Array<any> = [];
-  totalRecords = 100;
+  selected: Array<any> = [];
+  totalRecords = 50;
   columns: Array<any> = [
     { field: 'id', header: '#', minWidth: 30, maxWidth: 70 },
     { field: 'name', header: 'Name', width: 150 },
@@ -30,12 +31,10 @@ export class SortableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loading = true;
     this.gridService
       .fetchData()
       .then(data => {
         this.value = data.slice(0, this.totalRecords);
-        this.loading = false;
       });
   }
 }
