@@ -15,7 +15,7 @@ export class ReorderableComponent implements OnInit {
   selected: Array<any> = [];
   totalRecords = 50;
   columns: Array<any> = [
-    { field: 'id', header: '#', minWidth: 30, maxWidth: 70 },
+    { field: 'id', header: '#', minWidth: 30, maxWidth: 70, style: { width: '70px' } },
     { field: 'name', header: 'Name', width: 150 },
     { field: 'gender', header: 'Gender', minWidth: 80, maxWidth: 100 },
     { field: 'age', header: 'Age', width: 50, maxWidth: 50 },

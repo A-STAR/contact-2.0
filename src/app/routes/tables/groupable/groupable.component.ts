@@ -34,9 +34,7 @@ export class GroupableComponent implements OnInit {
   }
 
   calculateGroupAvg(state: string): string {
-    const group = this.value
-      .filter(row => row.address.state === state);
-
+    const group = this.value.filter(row => row.address.state === state);
     const total = group.reduce((acc, row) => acc + row.age, 0);
 
     return total ? (total / group.length).toFixed() : '0';

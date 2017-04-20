@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --port 4200",
+    "start": "ng serve  --port 4200",
     "start:proxy": "npm start -- --proxy-config proxy.conf.json",
+    "start:ext": "npm start -- --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

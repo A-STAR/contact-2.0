@@ -1,5 +1,5 @@
 <div class="content-heading">
-    Hideable Columns & Multi Sorting
+    Hideable Columns & Multi Sorting, Pagination
 </div>
 
 <div class="panel panel-default">
@@ -20,12 +20,15 @@
     <p-dataTable
       [value]="value"
       [loading]="loading"
+      selectionMode="multiple"
+      [(selection)]="selected"
       sortMode="multiple"
-      scrollable="true"
+      scrollable="false"
       scrollHeight="589px"
       [rows]="20"
-      [totalRecords]="totalRecords">
-      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [sortable]="true"></p-column>
+      [totalRecords]="totalRecords"
+      [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]="[10, 20, 50]">
+      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [sortable]="true" [style]="column.style"></p-column>
     </p-dataTable>
   </div>
 

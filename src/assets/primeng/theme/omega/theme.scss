@@ -235,6 +235,12 @@ $invalidInputBorderColor: #f44336;
 
 /* DataTable  */
 .ui-datatable {
+    .ui-datatable-tablewrapper {
+      table {
+        table-layout: auto;
+      }
+    }
+
     th {
         &.ui-state-default {
             background: #ebedf0;

@@ -1,5 +1,5 @@
 <div class="content-heading">
-    Reorderable Columns & Export to CSV
+    Reorderable & Resizable Columns, Export to CSV
 </div>
 
 <div class="panel panel-default">
@@ -21,14 +21,15 @@
       selectionMode="multiple"
       [(selection)]="selected"
       dataKey="id"
-      reorderableColumns="true">
+      reorderableColumns="true"
+      resizableColumns="true">
       <p-header>
         <div class="ui-helper-clearfix" style="text-align:left">
           <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:left"></button>
         </div>
       </p-header>
 
-      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header"></p-column>
+      <p-column *ngFor="let column of columns" [field]="column.field" [header]="column.header" [style]="column.style"></p-column>
 
     </p-dataTable>
   </div>

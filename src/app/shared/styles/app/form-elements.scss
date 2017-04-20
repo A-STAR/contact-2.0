@@ -272,7 +272,6 @@ $switch-sm-hg: $switch-sm-wd/2;
 // form feedback variants
 
 .form-control-feedback {
-  // top: 10px;
   left: $padding-base-horizontal;
   right: auto;
 
@@ -280,7 +279,7 @@ $switch-sm-hg: $switch-sm-wd/2;
   .form-control + .parsley-errors-list + & {
     right: 0;
     left: auto;
-    // top: 10px;
+    transform: translateY(25%);
   }
 
   .input-sm + &,

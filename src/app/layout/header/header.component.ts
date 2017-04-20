@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
 
     constructor(
         private userblockService: UserblockService,
-        private settings: SettingsService,
+        public settings: SettingsService,
         private authService: AuthService
         ) { }
 
