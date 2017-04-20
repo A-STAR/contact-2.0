@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 // Our modules
 
 // Vendor modules
-import { TranslateModule } from 'ng2-translate/ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 // import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
 import { AlertModule } from 'ng2-bootstrap/alert';

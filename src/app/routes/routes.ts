@@ -19,6 +19,7 @@ export const routes = [
 
   // Eagerly-loaded routes
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LoginComponent },
 
   // Not found
   { path: '**', redirectTo: 'LoginComponent' },
