@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthService implements CanActivate {
@@ -10,7 +11,8 @@ export class AuthService implements CanActivate {
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({'Content-Type': 'application/json', 'X-Auth-Token': ''});
+  private options = new RequestOptions({ headers: this.headers });
 
   constructor(private http: Http, private router: Router) { }
 
@@ -30,20 +32,23 @@ export class AuthService implements CanActivate {
     return false;
   }
 
-  authenticate(login: string, password: string): Promise<boolean> {
+  authenticate(login: string, password: string): Observable<boolean> {
     const body = JSON.stringify({ username: login, password });
-    // return this.http.post('/api/auth/login', body, this.headers)
-    return this.http.post('http://localhost:8080/auth/login', body, this.headers)
-      .toPromise()
-      .then(resp => {
-        const auth = resp.json();
-        console.log(auth);
-        return this.authenticated = true;
-      })
-      .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
+    // const options: RequestOptionsArgs = { headers: this.headers };
+    return this.http.post('http://localhost:8080/auth/login', body, this.options)
+      // .toPromise()
+      .map((resp: Response) => {
+        // const token = resp.headers();
+        console.log('resp', resp);
+        console.log('token 2', resp.headers.get('X-Auth-Token'));
+        console.log('token 3', resp.headers.get('X-Xss-Protection'));
+        // const auth = resp.json();
         return this.authenticated = true;
       });
+      // .catch(error => {
+      //   console.log(error.statusText || error.status || 'Request error');
+      //   return this.authenticated = true;
+      // });
   }
 
   logout(): void {

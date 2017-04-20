@@ -3,7 +3,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
-import { TranslateService, TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/ng2-translate';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
 
@@ -11,10 +12,11 @@ import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
+// import { requestOptionsProvider } from './core/request-options/request-options.service';
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: Http) {
-    return new TranslateStaticLoader(http, './assets/i18n', '.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -31,12 +33,14 @@ export function createTranslateLoader(http: Http) {
     SharedModule.forRoot(),
     RoutesModule,
     TranslateModule.forRoot({
+      loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),
         deps: [Http]
+      }
     })
   ],
-  providers: [],
+  providers: [/*requestOptionsProvider*/],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
