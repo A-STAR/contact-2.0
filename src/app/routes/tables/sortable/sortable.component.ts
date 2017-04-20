@@ -12,9 +12,10 @@ import { GridService } from '../grid.service';
 export class SortableComponent implements OnInit {
   loading: boolean;
   value: Array<any> = [];
+  selected: Array<any> = [];
   totalRecords = 100;
   columns: Array<any> = [
-    { field: 'id', header: '#', minWidth: 30, maxWidth: 70 },
+    { field: 'id', header: '#', minWidth: 30, maxWidth: 70, style: { width: '70px' } },
     { field: 'name', header: 'Name', width: 150 },
     { field: 'gender', header: 'Gender', minWidth: 80, maxWidth: 100 },
     { field: 'age', header: 'Age', width: 50, maxWidth: 50 },
@@ -34,8 +35,11 @@ export class SortableComponent implements OnInit {
     this.gridService
       .fetchData()
       .then(data => {
-        this.value = data.slice(0, this.totalRecords);
-        this.loading = false;
-      });
+        setTimeout(() => {
+          this.value = data.slice(0, this.totalRecords);
+          this.loading = false;
+        }, 2000);
+      })
+      .catch(() => this.loading = false );
   }
 }

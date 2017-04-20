@@ -5,7 +5,7 @@ declare var $: any;
 export class SettingsService {
 
     private user: any;
-    private app: any;
+    public app: any;
     public layout: any;
 
     constructor() {
@@ -21,8 +21,8 @@ export class SettingsService {
         // App Settings
         // -----------------------------------
         this.app = {
-            name: 'Angle',
-            description: 'Angular Bootstrap Admin Template',
+            name: 'CRIF',
+            description: 'Contact v2.0',
             year: ((new Date()).getFullYear())
         };
 

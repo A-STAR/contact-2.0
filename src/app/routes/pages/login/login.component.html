@@ -1,49 +1,50 @@
 <div class="wrapper">
-    <div class="block-center mt-xl wd-xl">
-        <!-- START panel-->
-        <div class="panel panel-dark panel-flat">
-            <div class="panel-heading text-center">
-                <a href="#">
-                    <img class="block-center img-rounded" src="assets/img/logo.png" alt="Image" />
-                </a>
+  <div class="block-center mt-xl wd-xl">
+    <!-- START panel-->
+    <div class="panel panel-dark panel-flat">
+      <div class="panel-heading text-center">
+        <a href="#">
+            <img class="block-center img-rounded" src="assets/img/crif.svg" width="120" alt="CRIF Logo" />
+        </a>
+      </div>
+      <div class="panel-body">
+        <p class="text-center pv">PLEASE AUTHENTICATE</p>
+        <form [formGroup]="valForm" class="form-validate mb-lg" role="form" name="loginForm" novalidate="" (submit)="submitForm($event, valForm.value)">
+          <div class="form-group has-feedback">
+            <input class="form-control" type="text" name="login" placeholder="Enter login" autocomplete="off" minlength="2" formControlName="login" required="" />
+            <span class="fa fa-envelope form-control-feedback text-muted"></span>
+            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('required') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">This field is required</span>
+            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('minlength') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">This field must have a minimum of 2(!) characters</span>
+          </div>
+          <div class="form-group has-feedback">
+            <input class="form-control" type="password" name="password" placeholder="Password" formControlName="password" required="" />
+            <span class="fa fa-lock form-control-feedback text-muted"></span>
+            <span class="text-danger" *ngIf="valForm.controls['password'].hasError('required') && (valForm.controls['password'].dirty || valForm.controls['password'].touched)">This field is required</span>
+          </div>
+          <div class="clearfix">
+            <div class="checkbox c-checkbox pull-left mt0">
+              <label>
+                <input type="checkbox" value="" name="account_remember"/>
+                <span class="fa fa-check"></span>Remember Me
+              </label>
             </div>
-            <div class="panel-body">
-                <p class="text-center pv">SIGN IN TO CONTINUE.</p>
-                <form [formGroup]="valForm" class="form-validate mb-lg" role="form" name="loginForm" novalidate="" (submit)="submitForm($event, valForm.value)">
-                    <div class="form-group has-feedback">
-                        <input class="form-control" id="exampleInputEmail1" type="email" name="email" placeholder="Enter email" autocomplete="off" formControlName="email" required="" />
-                        <span class="fa fa-envelope form-control-feedback text-muted"></span>
-                        <span class="text-danger" *ngIf="valForm.controls['email'].hasError('required') && (valForm.controls['email'].dirty || valForm.controls['email'].touched)">This field is required</span>
-                        <span class="text-danger" *ngIf="valForm.controls['email'].hasError('email') && (valForm.controls['email'].dirty || valForm.controls['email'].touched)">This field must be a valid email address</span>
-                    </div>
-                    <div class="form-group has-feedback">
-                        <input class="form-control" id="exampleInputPassword1" type="password" name="password" placeholder="Password" formControlName="password" required="" />
-                        <span class="fa fa-lock form-control-feedback text-muted"></span>
-                        <span class="text-danger" *ngIf="valForm.controls['password'].hasError('required') && (valForm.controls['password'].dirty || valForm.controls['password'].touched)">This field is required</span>
-                    </div>
-                    <div class="clearfix">
-                        <div class="checkbox c-checkbox pull-left mt0">
-                            <label>
-                                <input type="checkbox" value="" name="account_remember"/>
-                                <span class="fa fa-check"></span>Remember Me</label>
-                        </div>
-                        <div class="pull-right"><a class="text-muted" [routerLink]="'/recover'">Forgot your password?</a>
-                        </div>
-                    </div>
-                    <button class="btn btn-block btn-primary mt-lg" type="submit">Login</button>
-                </form>
-                <!-- <div class="alert alert-danger text-center" ></div> -->
-                <p class="pt-lg text-center">Need to Signup?</p><a class="btn btn-block btn-default" [routerLink]="'/register'">Register Now</a>
+            <div class="pull-right"><a class="text-muted" [routerLink]="'/recover'">Forgot your password?</a>
             </div>
-        </div>
-        <!-- END panel-->
-        <div class="p-lg text-center">
-            <span>&copy;</span>
-            <span>{{ settings.app.year }}</span>
-            <span>-</span>
-            <span>{{ settings.app.name }}</span>
-            <br/>
-            <span>{{ settings.app.description }}</span>
-        </div>
+          </div>
+          <button class="btn btn-block btn-primary mt-lg" type="submit">Login</button>
+        </form>
+        <!-- <div class="alert alert-danger text-center" ></div> -->
+        <p class="pt-lg text-center">Don't have an account?</p><a class="btn btn-block btn-default" [routerLink]="'/register'">Register Now</a>
+      </div>
     </div>
+    <!-- END panel-->
+    <div class="p-lg text-center">
+      <span>{{ settings.app.description }}</span>
+      <span>&copy;</span>
+      <span>{{ settings.app.year }}</span>
+      <span>-</span>
+      <span>{{ settings.app.name }}</span>
+      <br/>
+    </div>
+  </div>
 </div>
