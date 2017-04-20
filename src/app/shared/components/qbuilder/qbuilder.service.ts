@@ -65,6 +65,10 @@ export class QBuilderService {
     });
   }
 
+  toJson(group: IGroup): string {
+    return JSON.stringify(group, (key, value) => key === 'parent' ? undefined : value, 2);
+  }
+
   toString(group): string {
     if (!group) { return ''; }
     const str = group.rules.reduce((acc, rule, i) => {
