@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
         const { login, password } = value;
         this.authService
           .authenticate(login, password)
-          .toPromise()
           .then(success => {
             this.router.navigate(['/home']);
           });

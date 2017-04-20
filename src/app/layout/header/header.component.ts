@@ -28,8 +28,8 @@ export class HeaderComponent implements OnInit {
         }
     }
 
-    isAuthenticated() {
-        return this.authService.isAuthenticated();
+    get isAuthenticated() {
+        return this.authService.isAuthenticated;
     }
 
     toggleUserBlock(event) {
@@ -76,5 +76,10 @@ export class HeaderComponent implements OnInit {
         } else {
             el.children('em').removeClass('fa-compress').addClass('fa-expand');
         }
+    }
+
+    logout(event) {
+      event.preventDefault();
+      this.authService.logout();
     }
 }

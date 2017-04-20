@@ -125,14 +125,14 @@
             </li>
             <!-- END Offsidebar menu-->
             <!-- START lock screen-->
-            <li *ngIf="isAuthenticated()">
-                <a  title="Lock screen" [routerLink]="'/logout'">
+            <li *ngIf="isAuthenticated">
+                <a title="Logout" (click)="logout($event)">
                     <em class="icon-lock"></em>
                 </a>
             </li>
             <!-- END lock screen-->
             <!-- START User avatar toggle-->
-            <li *ngIf="!isAuthenticated()">
+            <li *ngIf="!isAuthenticated">
                 <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
                 <a (click)="toggleUserBlock($event)">
                     <em class="icon-user"></em>

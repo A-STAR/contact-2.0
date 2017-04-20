@@ -11,10 +11,16 @@ export class AuthService implements CanActivate {
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
-  private headers = new Headers({'Content-Type': 'application/json', 'X-Auth-Token': ''});
+  private headers = new Headers({'Content-Type': 'application/json'});
   private options = new RequestOptions({ headers: this.headers });
+  private authorities: Array<string> = [];
+  private tokenName = 'auth/token';
 
   constructor(private http: Http, private router: Router) { }
+
+  get isAuthenticated(): boolean {
+    return this.authenticated;
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const url: string = state.url;
@@ -22,7 +28,13 @@ export class AuthService implements CanActivate {
   }
 
   checkLogin(url: string): boolean {
-    if (this.authenticated) { return true; }
+    if (this.isAuthenticated) { return true; }
+
+    const token = window.localStorage.getItem(this.tokenName);
+    if (token) {
+      // TODO: check this token for expiration with angular-jwt
+      return this.authenticated = true;
+    }
 
     // Store the attempted URL for redirecting
     this.redirectUrl = url;
@@ -32,31 +44,27 @@ export class AuthService implements CanActivate {
     return false;
   }
 
-  authenticate(login: string, password: string): Observable<boolean> {
+  authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ username: login, password });
-    // const options: RequestOptionsArgs = { headers: this.headers };
+
     return this.http.post('http://localhost:8080/auth/login', body, this.options)
-      // .toPromise()
-      .map((resp: Response) => {
-        // const token = resp.headers();
-        console.log('resp', resp);
-        console.log('token 2', resp.headers.get('X-Auth-Token'));
-        console.log('token 3', resp.headers.get('X-Xss-Protection'));
-        // const auth = resp.json();
+      .toPromise()
+      .then((resp: Response) => {
+        const token = resp.headers.get('X-Auth-Token');
+        window.localStorage.setItem(this.tokenName, token);
+        this.authorities = resp.json().authorities;
+        return this.authenticated = true;
+      })
+      .catch(error => {
+        console.log(error.statusText || error.status || 'Request error');
         return this.authenticated = true;
       });
-      // .catch(error => {
-      //   console.log(error.statusText || error.status || 'Request error');
-      //   return this.authenticated = true;
-      // });
   }
 
   logout(): void {
+    window.localStorage.removeItem(this.tokenName);
     this.authenticated = false;
-  }
-
-  isAuthenticated(): boolean {
-    return this.authenticated;
+    this.router.navigate(['/login']);
   }
 
 }
