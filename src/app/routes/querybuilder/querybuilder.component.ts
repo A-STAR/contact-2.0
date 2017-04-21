@@ -29,7 +29,7 @@ export class QueryBuilderComponent {
 
   resetGroup() {
     this.group = {
-      operator: 'AND',
+      operator: null,
       rules: []
     }
   }

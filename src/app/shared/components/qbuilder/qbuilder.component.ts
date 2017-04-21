@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IGroup, IField, IOperator, ICondition } from './qbuilder.interface';
+import { IGroup, IField, ILogicalOperator, IComparisonOperator, ICondition } from './qbuilder.interface';
 import { QBuilderService } from './qbuilder.service';
 
 @Component({
@@ -16,12 +16,12 @@ export class QBuilderComponent {
     return this.builderService.getFields();
   }
 
-  get operators(): Array<IOperator> {
-    return this.builderService.getOperators();
+  get logicalOperators(): Array<ILogicalOperator> {
+    return this.builderService.getLogicalOperators();
   }
 
-  get conditions(): Array<IField> {
-    return this.builderService.getConditions();
+  getComparisonOperators(condition: ICondition): Array<IComparisonOperator> {
+    return this.builderService.getComparisonOperators(condition);
   }
 
   addCondition(): void {
@@ -38,6 +38,18 @@ export class QBuilderComponent {
 
   removeGroup(group: IGroup): void {
     this.builderService.removeGroup(group);
+  }
+
+  isGroup(rule: ICondition | IGroup): boolean {
+    return rule.hasOwnProperty('rules');
+  }
+
+  isDictionary(condition: ICondition): boolean {
+    return condition.field.type instanceof Array;
+  }
+
+  onFieldChange(condition: ICondition): void {
+    condition.value = null;
   }
 
   trackByFn(index: number, item: any): number {
