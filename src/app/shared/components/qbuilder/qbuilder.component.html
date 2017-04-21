@@ -1,39 +1,46 @@
 <div class="group">
   <div class="form-inline">
     <select [(ngModel)]="group.operator" class="form-control input-sm">
-        <option *ngFor="let o of operators" [value]="o.name">{{o.name}}</option>
+      <option *ngFor="let operator of logicalOperators" [ngValue]="operator">{{ operator.name }}</option>
     </select>
     <button (click)="addCondition()" class="btn btn-sm btn-success">
       <span class="fa fa-plus"></span> Add Condition
     </button>
     <button (click)="addGroup()" class="btn btn-sm btn-success">
       <span class="fa fa-plus"></span> Add Group
-      </button>
+    </button>
     <button *ngIf="!!group.parent" (click)="removeGroup(group)" class="btn btn-sm btn-danger">
       <span class="fa fa-minus"></span> Remove Group
     </button>
   </div>
-  <div class="group-conditions">
-    <div *ngFor="let rule of group.rules; index as i; trackBy: trackByFn" class="condition">
-      <div [ngSwitch]="rule.hasOwnProperty('rules')">
+  <ul class="group-conditions">
+    <li *ngFor="let rule of group.rules; index as i; trackBy: trackByFn" class="condition">
+      <div [ngSwitch]="isGroup(rule)">
         <div *ngSwitchCase="true">
           <app-qbuilder [group]="rule"></app-qbuilder>
         </div>
-        <div *ngSwitchDefault>
-          <div class="form-inline">
-            <select [(ngModel)]="rule.field" class="form-control input-sm">
-              <option *ngFor="let t of fields" [value]="t.name">{{t.name}}</option>
-            </select>
-            <select [(ngModel)]="rule.condition" class="form-control input-sm">
-              <option *ngFor="let c of conditions" [value]="c.name">{{c.name}}</option>
-            </select>
-            <input [(ngModel)]="rule.data" type="text" class="form-control input-sm"/>
-            <button (click)="removeCondition(i)" class="btn btn-sm btn-danger">
-              <span class="fa fa-minus"></span>
-            </button>
-          </div>
+        <div *ngSwitchDefault class="form-inline">
+          <select [(ngModel)]="rule.field" (change)="onFieldChange(rule)" class="form-control input-sm">
+            <option *ngFor="let field of fields" [ngValue]="field">{{ field.name }}</option>
+          </select>
+          <select [(ngModel)]="rule.operator" class="form-control input-sm">
+            <option *ngFor="let operator of getComparisonOperators(rule)" [ngValue]="operator">{{ operator.name }}</option>
+          </select>
+          <span [ngSwitch]="isDictionary(rule)">
+            <span *ngSwitchCase="true">
+              <select [(ngModel)]="rule.value" class="form-control input-sm">
+                <option *ngFor="let value of rule.field.type" [value]="value">{{ value }}</option>
+              </select>
+            </span>
+            <span *ngSwitchDefault>
+              <input [(ngModel)]="rule.value" type="text" class="form-control input-sm"/>
+            </span>
+          </span>
+          <button (click)="removeCondition(i)" class="btn btn-sm btn-danger">
+            <span class="fa fa-minus"></span>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
 </div>

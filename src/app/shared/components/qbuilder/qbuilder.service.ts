@@ -1,68 +1,108 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 
-import { IGroup, IField, IOperator, ICondition } from './qbuilder.interface';
+import { IGroup, IField, ILogicalOperator, ICondition, IMetadata, IComparisonOperator } from './qbuilder.interface';
+
+const metadata: IMetadata = {
+  fields: [{
+    code: 'first_name',
+    name: 'First Name',
+    type: 'string',
+    operators: [
+      { name: '==' },
+      { name: '!=' },
+      { name: '<' },
+      { name: '>' }
+    ]
+  }, {
+    code: 'last_name',
+    name: 'Last Name',
+    type: 'string',
+    operators: [
+      { name: '==' },
+      { name: '!=' },
+      { name: '<' },
+      { name: '>' }
+    ]
+  }, {
+    code: 'birthdate',
+    name: 'Birthdate',
+    type: 'date',
+    operators: [
+      { name: '==' },
+      { name: '!=' },
+      { name: '<' },
+      { name: '>' }
+    ]
+  }, {
+    code: 'gender',
+    name: 'Gender',
+    type: [
+      'Male',
+      'Female'
+    ],
+    operators: [
+      { name: '==' },
+      { name: '!=' }
+    ]
+  }, {
+    code: 'city',
+    name: 'City',
+    type: [ 'New York', 'Boston', 'Los Angeles', 'San Francisco' ],
+    operators: [
+      { name: '==' },
+      { name: '!=' }
+    ]
+  }]
+}
 
 @Injectable()
 export class QBuilderService {
+  private metadata: IMetadata = metadata;
+
+  private logicalOperators: Array<ILogicalOperator> = [
+    { name: 'AND' },
+    { name: 'OR' }
+  ];
 
   constructor() { }
 
   getFields(): Array<IField> {
-    return [
-      { name: 'Firstname' },
-      { name: 'Lastname' },
-      { name: 'Birthdate' },
-      { name: 'City' },
-      { name: 'Country' }
-    ];
+    return this.metadata.fields;
   }
 
-  getOperators(): Array<IOperator> {
-    return [
-      { name: 'AND' },
-      { name: 'OR' }
-    ];
+  getLogicalOperators(): Array<ILogicalOperator> {
+    return this.logicalOperators;
   }
 
-  getConditions(): Array<IField> {
-    return [
-      { name: '=' },
-      { name: '<>' },
-      { name: '<' },
-      { name: '<=' },
-      { name: '>' },
-      { name: '>=' }
-    ];
+  getComparisonOperators(condition: ICondition): Array<IComparisonOperator> {
+    return condition.field.operators;
   }
 
-  addCondition(group: IGroup): void {
-    const field = this.getFields()[0].name;
-    group.rules.push({
-      condition: '=',
-      field: field,
-      data: ''
+  addCondition(parent: IGroup): void {
+    parent.rules.push({
+      field: this.metadata.fields[0],
+      operator: null,
+      value: null
     });
   }
 
-  removeCondition(group: IGroup, index: number): void {
-    group.rules.splice(index, 1);
+  removeCondition(parent: IGroup, index: number): void {
+    parent.rules.splice(index, 1);
   }
 
-  addGroup(group: IGroup): void {
-    group.rules.push({
-      parent: group,
-      operator: 'AND',
-      rules: []
+  addGroup(parent: IGroup): void {
+    parent.rules.push({
+      parent,
+      operator: this.logicalOperators[0],
+      rules: [],
     });
   }
 
-  removeGroup(group: IGroup) {
-    if (!group.parent) { return; }
-    group.parent.rules = group.parent.rules.filter(el => {
-      return Object.hasOwnProperty.call(el, 'rules') && el === group
-        ? false
-        : true;
-    });
+  removeGroup(group: IGroup): void {
+    if (!group.parent) {
+      return;
+    }
+    group.parent.rules = group.parent.rules.filter(rule => !Object.hasOwnProperty.call(rule, 'rules') || rule !== group);
   }
 
   toJson(group: IGroup): string {
@@ -73,16 +113,11 @@ export class QBuilderService {
     if (!group) { return ''; }
     const str = group.rules.reduce((acc, rule, i) => {
       if (i > 0) {
-        acc += ` ${group.operator} `;
+        acc += ` ${group.operator.name} `;
       }
-      return acc + (
-        rule.rules
-        ? this.toString(rule)
-        : `${rule.field} ${rule.condition} ${rule.data}`
-      );
+      return acc + (rule.rules ? this.toString(rule) : `${rule.field.code} ${rule.operator.name} ${rule.value}`);
     }, '');
 
     return `(${str})`;
   }
-
 }
