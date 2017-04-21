@@ -12,7 +12,7 @@
     </p-header>
     <div style="width: 720px; height: 400px; overflow-y: auto;" [ngSwitch]="isQueryBuilderShown">
         <app-qbuilder *ngSwitchCase="true" [(group)]="group"></app-qbuilder>
-        <pre *ngSwitchCase="false">{{ toJson(group) }}</pre>
+        <pre *ngSwitchDefault>{{ toJson(group) }}</pre>
     </div>
     <p-footer>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
