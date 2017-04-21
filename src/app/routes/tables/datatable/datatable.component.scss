@@ -1,3 +1,16 @@
 .ngx-datatable {
   height: 600px;
 }
+
+.ngx-datatable {
+  .col-visibility-selector {
+    width: 17px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ececec;
+    border-bottom: 1px solid lightgrey;
+  }
+}
