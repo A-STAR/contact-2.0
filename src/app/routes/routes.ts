@@ -8,9 +8,8 @@ export const routes = [
     component: LayoutComponent,
     canActivate: [AuthService],
     children: [
-      // { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', loadChildren: './home/home.module#HomeModule' },
+      { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
       { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
       { path: 'workflow', loadChildren: './tree/flow.module#FlowModule' },
       { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
@@ -21,7 +20,7 @@ export const routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LoginComponent },
 
-  // Not found
-  { path: '**', redirectTo: 'LoginComponent' },
+  // Redirect home, if the path is not found
+  { path: '**', redirectTo: '' },
 
 ];
