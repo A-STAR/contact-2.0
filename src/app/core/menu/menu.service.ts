@@ -1,22 +1,28 @@
 import { Injectable } from '@angular/core';
-
+import { Http } from '@angular/http';
 import { MenuItem } from './menu-item.interface';
 
 @Injectable()
 export class MenuService {
+  private menuItems: Array<MenuItem> = [];
 
-    menuItems: Array<MenuItem>;
+  constructor(private http: Http) {
+    this.menuItems = [];
+  }
 
-    constructor() {
-        this.menuItems = [];
-    }
+  loadMenu() {
+    return this.http
+      .get('assets/server/menu.json')
+      .toPromise()
+      .then(response => response.json())
+      .then(data => this.menuItems = data.menu)
+      .catch(error => {
+        // TODO
+        console.error('Could not load menu.', error);
+      })
+  }
 
-    addMenu(items: Array<MenuItem>) {
-        this.menuItems = this.menuItems.concat(items);
-    }
-
-    getMenu() {
-        return this.menuItems;
-    }
-
+  getMenu() {
+    return this.menuItems;
+  }
 }

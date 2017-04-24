@@ -48,12 +48,14 @@ $scrollbar-wd:                    17px;
     letter-spacing: .035em;
     pointer-events: none;
     cursor: default;
+    white-space: nowrap;
   }
 
   // Items
   // First main level
   > .nav {
     position: relative;
+    margin-top: 14px;
 
     // Only the first item in sidebar
     > .nav-heading:first-child {
@@ -66,11 +68,12 @@ $scrollbar-wd:                    17px;
 
       > a,
       > .nav-item {
-        padding: 12px 24px;
+        padding: 10px 20px;
         color: $sidebar-item-color;
         letter-spacing: .025em;
         font-weight: normal;
         cursor: pointer;
+        white-space: nowrap;
 
         &:focus, &:hover {
           text-decoration: none;
@@ -142,10 +145,12 @@ $tablet-landscape: 1025px;
       display: block;
       position: relative;
       padding: 10px 20px;
-      padding-left: 53px;
+      padding-left: 49px;
       font-weight: normal;
       background-color: transparent !important;
       color: $sidebar-item-color;
+      white-space: normal;
+
       &:focus, &:hover {
         color: $sidebar-item-color-active;
       }

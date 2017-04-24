@@ -1,0 +1,111 @@
+{
+  "menu": [{
+    "icon": "icon-speedometer",
+    "text": "Администрирование",
+    "link": "/admin",
+    "submenu": [{
+      "text": "Роли и доступы",
+      "link": "/admin"
+    }, {
+      "text": "Пользователи",
+      "link": "/admin"
+    }, {
+      "text": "Лог действий",
+      "link": "/admin"
+    }, {
+      "text": "Значения констант",
+      "link": "/admin"
+    }, {
+      "text": "Словари",
+      "link": "/admin"
+    }, {
+      "text": "Клиенты и портфели",
+      "link": "/admin"
+    }, {
+      "text": "Структура предприятия",
+      "link": "/admin"
+    }]
+  }, {
+    "icon": "icon-settings",
+    "text": "Утилиты",
+    "link": "/utils",
+    "submenu": [{
+      "text": "Шаблоны загрузки",
+      "link": "/utils"
+    }, {
+      "text": "Загрузка данных",
+      "link": "/utils"
+    }, {
+      "text": "Произвольные атрибуты",
+      "link": "/utils"
+    }, {
+      "text": "Дерево контактов",
+      "link": "/utils"
+    }, {
+      "text": "Сценарии сообщений",
+      "link": "/utils"
+    }, {
+      "text": "Группы",
+      "link": "/utils"
+    }, {
+      "text": "Кампании обзвона",
+      "link": "/utils"
+    }, {
+      "text": "Расписание",
+      "link": "/utils"
+    }, {
+      "text": "Формулы",
+      "link": "/utils"
+    }, {
+      "text": "Суды и ФССП",
+      "link": "/utils"
+    }]
+  }, {
+    "icon": "icon-earphones-alt",
+    "text": "Рабочие места",
+    "link": "/workplaces",
+    "submenu": [{
+      "text": "Список долгов",
+      "link": "/workplaces"
+    }, {
+      "text": "Постановка задач",
+      "link": "/workplaces"
+    }, {
+      "text": "Обработка долгов",
+      "link": "/workplaces"
+    }, {
+      "text": "Протокол контактов",
+      "link": "/workplaces"
+    }, {
+      "text": "Центр обзвона",
+      "link": "/workplaces"
+    }, {
+      "text": "Исходящее информирование",
+      "link": "/workplaces"
+    }, {
+      "text": "Платежи",
+      "link": "/workplaces"
+    }, {
+      "text": "Судебное и исполнительное производство",
+      "link": "/workplaces"
+    }, {
+      "text": "Группы свободного поиска",
+      "link": "/workplaces"
+    }, {
+      "text": "Почта",
+      "link": "/workplaces"
+    }]
+  }, {
+    "icon": "icon-briefcase",
+    "text": "Отчеты",
+    "link": "/reports",
+    "submenu": [{
+      "text": "Произвольные отчеты",
+      "link": "/reports"
+    }]
+  }, {
+    "icon": "icon-support",
+    "text": "Справка",
+    "link": "/help"
+  }]
+}
