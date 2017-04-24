@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
         this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
     }
 
-    toggleCollapsedSideabar() {
+    toggleCollapsedSidebar() {
         this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
     }
 
