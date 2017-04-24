@@ -53,7 +53,7 @@
     "simple-line-icons": "^2.4.1",
     "weather-icons": "github:erikflowers/weather-icons",
     "web-animations-js": "^2.2.2",
-    "zone.js": "^0.8.4"
+    "zone.js": "0.8.5"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0",

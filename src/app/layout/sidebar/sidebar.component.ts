@@ -38,8 +38,9 @@ export class SidebarComponent implements OnInit {
         if (!this.isSidebarCollapsed() && !this.isSidebarCollapsedText() && !this.isEnabledHover()) {
             event.preventDefault();
 
-            let target = $(event.target || event.srcElement || event.currentTarget);
-            let ul, anchor = target;
+            const target = $(event.target || event.srcElement || event.currentTarget);
+            let ul;
+            let anchor = target;
 
             // find the UL
             if (!target.is('a')) {
@@ -48,9 +49,9 @@ export class SidebarComponent implements OnInit {
             ul = anchor.next();
 
             // hide other submenus
-            let parentNav = ul.parents('.sidebar-subnav');
+            const parentNav = ul.parents('.sidebar-subnav');
             $('.sidebar-subnav').each((idx, el) => {
-                let $el = $(el);
+                const $el = $(el);
                 // if element is not a parent or self ul
                 if (!$el.is(parentNav) && !$el.is(ul)) {
                     this.closeMenu($el);
@@ -70,8 +71,7 @@ export class SidebarComponent implements OnInit {
             // toggle UL height
             if (parseInt(ul.height(), 0)) {
                 this.closeMenu(ul);
-            }
-            else {
+            } else {
                 // expand menu
                 ul.on('transitionend', () => {
                     ul.height('auto').off('transitionend');
@@ -92,14 +92,15 @@ export class SidebarComponent implements OnInit {
     }
 
     toggleSubmenuHover(event) {
-        let self = this;
+        const self = this;
         if (this.isSidebarCollapsed() || this.isSidebarCollapsedText() || this.isEnabledHover()) {
             event.preventDefault();
 
             this.removeFloatingNav();
 
-            let target = $(event.target || event.srcElement || event.currentTarget);
-            let ul, anchor = target;
+            const target = $(event.target || event.srcElement || event.currentTarget);
+            let ul;
+            let anchor = target;
             // find the UL
             if (!target.is('a')) {
                 anchor = target.parent('a');
@@ -110,19 +111,20 @@ export class SidebarComponent implements OnInit {
                 return; // if not submenu return
             }
 
-            let $aside = $('.aside');
-            let $asideInner = $aside.children('.aside-inner'); // for top offset calculation
-            let $sidebar = $asideInner.children('.sidebar');
-            let mar = parseInt( $asideInner.css('padding-top'), 0) + parseInt( $aside.css('padding-top'), 0);
-            let itemTop = ((anchor.parent().position().top) + mar) - $sidebar.scrollTop();
+            const $aside = $('.aside');
+            const $asideInner = $aside.children('.aside-inner'); // for top offset calculation
+            const $sidebar = $asideInner.children('.sidebar');
+            const padding = parseInt( $asideInner.css('padding-top'), 0) + parseInt( $aside.css('padding-top'), 0);
+            const itemTop = ((anchor.parent().position().top) + padding) - $sidebar.scrollTop();
 
-            let floatingNav = ul.clone().appendTo($aside);
-            let vwHeight = $(window).height();
+            const floatingNav = ul.clone().appendTo($aside);
+            const vwHeight = $(window).height();
 
             // let itemTop = anchor.position().top || anchor.offset().top;
 
             floatingNav
-                .removeClass('opening') // necesary for demo if switched between normal//collapsed mode
+                // necesary for demo if switched between normal/collapsed mode
+                .removeClass('opening')
                 .addClass('nav-floating')
                 .css({
                     position: this.settings.layout.isFixed ? 'fixed' : 'absolute',
@@ -133,7 +135,8 @@ export class SidebarComponent implements OnInit {
             floatingNav
                 .on('mouseleave', () => { floatingNav.remove(); })
                 .find('a').on('click', function(e) {
-                    e.preventDefault(); // prevents page reload on click
+                    // prevents page reload on click
+                    e.preventDefault();
                     // get the exact route path to navigate
                     self.router.navigate([$(this).attr('route')]);
                 });
@@ -145,7 +148,7 @@ export class SidebarComponent implements OnInit {
     }
 
     listenForExternalClicks() {
-        let $doc = $(document).on('click.sidebar', (e) => {
+        const $doc = $(document).on('click.sidebar', (e) => {
             if (!$(e.target).parents('.aside').length) {
                 this.removeFloatingNav();
                 $doc.off('click.sidebar');
