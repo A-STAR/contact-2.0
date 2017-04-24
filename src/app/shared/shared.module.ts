@@ -27,7 +27,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
         https://github.com/angular/angular-cli/issues/2496
         https://github.com/valor-software/ng2-bootstrap/issues/1187
 */
-import { DatepickerModule } from 'ngx-bootstrap/datepicker';
+// import { DatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
@@ -51,7 +51,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         ButtonsModule.forRoot(),
         CarouselModule.forRoot(),
         CollapseModule.forRoot(),
-        DatepickerModule.forRoot(),
+        // DatepickerModule.forRoot(),
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
         PaginationModule.forRoot(),
@@ -87,7 +87,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         ButtonsModule,
         CarouselModule,
         CollapseModule,
-        DatepickerModule,
+        // DatepickerModule,
         DropdownModule,
         ModalModule,
         PaginationModule,
