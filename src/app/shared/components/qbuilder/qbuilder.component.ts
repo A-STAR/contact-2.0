@@ -10,6 +10,16 @@ import { QBuilderService } from './qbuilder.service';
 export class QBuilderComponent {
   @Input() group: IGroup;
 
+  datepickerOptions = {
+    dayLabels: {mo: 'Пн', tu: 'Вт', we: 'Ср', th: 'Чт', fr: 'Пт', sa: 'Сб', su: 'Вс'},
+    monthLabels: [0, 'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    dateFormat: 'dd mmm yyyy',
+    todayBtnTxt: 'Сегодня',
+    firstDayOfWeek: 'mo',
+    minYear: 1900,
+    showWeekNumbers: true
+  };
+
   constructor(private builderService: QBuilderService) { }
 
   get fields(): Array<IField> {
@@ -44,8 +54,8 @@ export class QBuilderComponent {
     return rule.hasOwnProperty('rules');
   }
 
-  isDictionary(condition: ICondition): boolean {
-    return condition.field.type instanceof Array;
+  getType(condition: ICondition): string {
+    return condition.field.type instanceof Array ? 'dictionary' : condition.field.type;
   }
 
   onFieldChange(condition: ICondition): void {

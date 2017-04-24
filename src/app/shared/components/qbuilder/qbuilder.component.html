@@ -26,11 +26,24 @@
           <select [(ngModel)]="rule.operator" class="form-control input-sm">
             <option *ngFor="let operator of getComparisonOperators(rule)" [ngValue]="operator">{{ operator.name }}</option>
           </select>
-          <span [ngSwitch]="isDictionary(rule)">
-            <span *ngSwitchCase="true">
+          <span [ngSwitch]="getType(rule)">
+            <span *ngSwitchCase="'dictionary'">
               <select [(ngModel)]="rule.value" class="form-control input-sm">
                 <option *ngFor="let value of rule.field.type" [value]="value">{{ value }}</option>
               </select>
+            </span>
+            <span *ngSwitchCase="'date'">
+              <span style="display: inline-block;">
+                <input
+                  ngx-mydatepicker
+                  #dp="ngx-mydatepicker"
+                  class="form-control input-sm"
+                  locale="ru"
+                  [(ngModel)]="rule.value"
+                  [options]="datepickerOptions"
+                  (click)="dp.openCalendar()"
+                />
+              </span>
             </span>
             <span *ngSwitchDefault>
               <input [(ngModel)]="rule.value" type="text" class="form-control input-sm"/>
