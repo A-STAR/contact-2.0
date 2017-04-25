@@ -1,0 +1,20 @@
+<p-dialog
+    appendTo="body"
+    header="Edit"
+    [modal]="true"
+    [resizable]="false"
+    [responsive]="true"
+    [(visible)]="editedRecord"
+>
+    <pre>{{ editedRecord | json }}</pre>
+</p-dialog>
+
+<div class="content-heading">
+    Data Grid
+</div>
+
+<app-tabstrip>
+    <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
+        <app-datatable (onEdit)="onEdit($event)"></app-datatable>
+    </app-tab>
+</app-tabstrip>

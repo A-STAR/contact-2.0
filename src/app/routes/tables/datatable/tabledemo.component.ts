@@ -6,20 +6,12 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 
 @Component({
   selector: 'app-tabledemo',
-  template: `
-    <div class="content-heading">
-        Data Grid
-    </div>
-
-    <app-tabstrip>
-      <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-        <app-datatable (onEdit)="onEdit($event)"></app-datatable>
-      </app-tab>
-    </app-tabstrip>
-  `
+  templateUrl: './tabledemo.component.html'
 })
 
 export class TabledemoComponent implements OnInit {
+  editedRecord = null;
+
   tabs: Array<any> = [
     { id: 0, title: 'Admins', active: true },
     { id: 1, title: 'Users', active: false },
@@ -41,8 +33,7 @@ export class TabledemoComponent implements OnInit {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  onEdit(event) {
-    console.log('onEdit event captured');
+  onEdit(record) {
+    this.editedRecord = record;
   }
-
 }

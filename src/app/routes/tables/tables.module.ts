@@ -6,6 +6,7 @@ import {
   SharedModule as PngSharedModule,
   MultiSelectModule,
   ButtonModule,
+  DialogModule
 } from 'primeng/primeng';
 
 import { NgxDatatableComponent } from './datatable/datatable.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
     imports: [
         ButtonModule,
         DataTableModule,
+        DialogModule,
         MultiSelectModule,
         NgxDatatableModule,
         PngSharedModule,
