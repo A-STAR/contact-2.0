@@ -18,6 +18,9 @@ export class NgxDatatableComponent implements AfterViewInit {
   rows: Array<any> = [];
   selected: Array<any> = [];
   columns: Array<any> = [
+    // { width: 20, maxWidth: 20, sortable: false, draggable: false,
+    //   resizeable: false, canAutoResize: true, headerCheckboxable: false, checkboxable: false
+    // },
     { prop: 'id', name: '#', minWidth: 30, maxWidth: 70 },
     { name: 'Name', width: 150 },
     { name: 'Gender', minWidth: 80, maxWidth: 100 },
@@ -25,6 +28,14 @@ export class NgxDatatableComponent implements AfterViewInit {
     { name: 'City', prop: 'address.city', minWidth: 200, maxWidth: 200 },
     { name: 'State', prop: 'address.state', minWidth: 200 },
   ];
+  cssClasses: object = {
+    sortAscending: 'fa fa-angle-down',
+    sortDescending: 'fa fa-angle-up',
+    pagerLeftArrow: 'fa fa-angle-left',
+    pagerRightArrow: 'fa fa-angle-right',
+    pagerPrevious: 'fa fa-angle-double-left',
+    pagerNext: 'fa fa-angle-double-right',
+  };
 
   constructor(private gridService: GridService, element: ElementRef) {
     this.element = element.nativeElement;
@@ -41,18 +52,25 @@ export class NgxDatatableComponent implements AfterViewInit {
     // this.dataTable.bodyHeight = 400;
   }
 
-  public onSelect({ selected }): void {
+  onSelect({ selected }): void {
     this.selected = [].concat(selected);
   }
 
-  public onActivate(event): void {
-    // console.log('Activate event', event);
+  onSelectCheck(row, col, value): boolean {
+    return true;
+  }
+
+  onActivate(event): void {
     if (event.type === 'dblclick') {
       this.onEdit.emit(event.row);
+      // workaround for rows getting unselected on dblclick
+      if (!this.selected.find(row => row.$$id === event.row.$$id)) {
+        this.selected = this.selected.concat(event.row);
+      }
     }
   }
 
-  public getRowHeight(row): number {
+  getRowHeight(row): number {
     return row.height;
   }
 

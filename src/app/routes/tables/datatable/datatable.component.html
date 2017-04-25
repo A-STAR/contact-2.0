@@ -3,8 +3,10 @@
   <div class="panel-body">
     <ngx-datatable
       class="material"
+      [cssClasses]="cssClasses"
       [columns]="columns"
       [columnMode]="'force'"
+      [footerHeight]="50"
       [rowHeight]="25"
       [rows]="rows"
       [limit]="20"

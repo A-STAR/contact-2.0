@@ -10,7 +10,7 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 })
 
 export class TabledemoComponent implements OnInit {
-  editedRecord = null;
+  editedRecord: any = null;
 
   tabs: Array<any> = [
     { id: 0, title: 'Admins', active: true },
@@ -29,11 +29,11 @@ export class TabledemoComponent implements OnInit {
 
   ngOnInit() { }
 
-  onClose(id) {
+  onClose(id): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  onEdit(record) {
+  onEdit(record): void {
     this.editedRecord = record;
   }
 }
