@@ -12,6 +12,10 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 export class TabledemoComponent implements OnInit {
   editedRecord: any = null;
 
+  date = '01-01-2016';
+
+  currency = 0;
+
   tabs: Array<any> = [
     { id: 0, title: 'Admins', active: true },
     { id: 1, title: 'Users', active: false },
@@ -35,5 +39,9 @@ export class TabledemoComponent implements OnInit {
 
   onEdit(record): void {
     this.editedRecord = record;
+  }
+
+  get popupTitle() {
+    return this.editedRecord && this.editedRecord.name ? this.editedRecord.name : null;
   }
 }

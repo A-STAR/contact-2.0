@@ -33,17 +33,7 @@
               </select>
             </span>
             <span *ngSwitchCase="'date'">
-              <span style="display: inline-block;">
-                <input
-                  ngx-mydatepicker
-                  #dp="ngx-mydatepicker"
-                  class="form-control input-sm"
-                  locale="ru"
-                  [(ngModel)]="rule.value"
-                  [options]="datepickerOptions"
-                  (click)="dp.openCalendar()"
-                />
-              </span>
+              <app-input-datepicker name="fake-form-date" [(value)]="rule.value"></app-input-datepicker>
             </span>
             <span *ngSwitchDefault>
               <input [(ngModel)]="rule.value" type="text" class="form-control input-sm"/>

@@ -1,12 +1,58 @@
 <p-dialog
     appendTo="body"
-    header="Edit"
+    [header]="popupTitle"
     [modal]="true"
     [resizable]="false"
     [responsive]="true"
     [(visible)]="editedRecord"
 >
-    <pre>{{ editedRecord | json }}</pre>
+    <form>
+        <div class="form-group">
+            <label>Number</label>
+            <div>
+                <input type="number" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Date</label>
+            <div>
+                <app-input-datepicker name="fake-form-date" [(value)]="date"></app-input-datepicker>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>String</label>
+            <div>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Boolean</label>
+            <div>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions"> True
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions"> False
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Currency</label>
+            <div>
+                <input currencyMask name="currency" [(ngModel)]="currency" [options]="{ align: 'left', prefix: '', suffix: '', thousands: ' ', decimal: '.' }" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Dictionary</label>
+            <div>
+                <select class="form-control">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
+        </div>
+    </form>
 </p-dialog>
 
 <div class="content-heading">

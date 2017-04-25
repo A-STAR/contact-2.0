@@ -1,0 +1,12 @@
+<span style="display: inline-block;">
+  <input
+    ngx-mydatepicker
+    class="form-control"
+    #dp="ngx-mydatepicker"
+    [name]="name"
+    [ngModel]="value"
+    [options]="options"
+    (click)="dp.openCalendar()"
+    (ngModelChange)="onValueChange($event)"
+  />
+</span>

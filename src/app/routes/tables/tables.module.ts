@@ -9,6 +9,7 @@ import {
   ButtonModule,
   DialogModule
 } from 'primeng/primeng';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 import { NgxDatatableComponent } from './datatable/datatable.component';
 import { TabledemoComponent } from './datatable/tabledemo.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
 @NgModule({
     imports: [
         ButtonModule,
+        CurrencyMaskModule,
         DataTableModule,
         DialogModule,
         MultiSelectModule,
@@ -45,7 +47,7 @@ const routes: Routes = [
         SortableComponent,
         TabComponent,
         TabledemoComponent,
-        TabstripComponent,
+        TabstripComponent
     ],
     exports: [
         RouterModule

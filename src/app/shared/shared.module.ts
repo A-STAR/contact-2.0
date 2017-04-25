@@ -28,6 +28,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
         https://github.com/valor-software/ng2-bootstrap/issues/1187
 */
 // import { DatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
 
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
@@ -38,6 +39,10 @@ import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
 import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
+
+import { DatePickerComponent } from './components/input/datepicker.component';
+import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
+import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -54,6 +59,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         // DatepickerModule.forRoot(),
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
+        NgxMyDatePickerModule,
         PaginationModule.forRoot(),
         ProgressbarModule.forRoot(),
         RatingModule.forRoot(),
@@ -64,7 +70,9 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         // ToasterModule
     ],
     providers: [
-        ColorsService
+        ColorsService,
+
+        QBuilderService
     ],
     declarations: [
         FlotDirective,
@@ -74,7 +82,10 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         VectormapDirective,
         NowDirective,
         ScrollableDirective,
-        JqcloudDirective
+        JqcloudDirective,
+
+        DatePickerComponent,
+        QBuilderComponent
     ],
     exports: [
         CommonModule,
@@ -90,6 +101,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         // DatepickerModule,
         DropdownModule,
         ModalModule,
+        NgxMyDatePickerModule,
         PaginationModule,
         ProgressbarModule,
         RatingModule,
@@ -105,7 +117,10 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
         VectormapDirective,
         NowDirective,
         ScrollableDirective,
-        JqcloudDirective
+        JqcloudDirective,
+
+        DatePickerComponent,
+        QBuilderComponent
     ]
 })
 
