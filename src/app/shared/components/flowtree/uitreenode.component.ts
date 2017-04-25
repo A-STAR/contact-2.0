@@ -8,8 +8,6 @@ import { TreeComponent } from './tree.component';
 })
 export class UITreeNodeComponent implements OnInit {
 
-    static ICON_CLASS = 'ui-treenode-icon fa fa-fw';
-
     static DEFAULT_BG_COLOR = '#fff';
     static DEFAULT_SELECTED_BG_COLOR = '#def';
 
@@ -33,18 +31,6 @@ export class UITreeNodeComponent implements OnInit {
 
     ngOnInit() {
         this.node.parent = this.parentNode;
-    }
-
-    getIcon() {
-        let icon: string;
-
-        if (this.node.icon) {
-            icon = this.node.icon;
-        } else {
-            icon = this.node.expanded && this.node.children && this.node.children.length ? this.node.expandedIcon : this.node.collapsedIcon;
-        }
-
-        return UITreeNodeComponent.ICON_CLASS + ' ' + icon;
     }
 
     getBgColor() {
