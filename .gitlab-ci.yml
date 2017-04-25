@@ -1,0 +1,15 @@
+stages:
+  - build
+job_build:
+  stage: build
+  script:
+    - cd $CI_PROJECT_DIR
+    - echo $CI_PROJECT_DIR    
+    - npm install
+    - npm run build -- --prod --aot
+  artifacts:
+    name: "frontend_default_build"
+    paths:
+      - dist/
+  only:
+    - dev
