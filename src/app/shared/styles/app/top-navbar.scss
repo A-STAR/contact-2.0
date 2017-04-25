@@ -212,15 +212,15 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
     }
     // re locate and center feedback
     .has-feedback .form-control-feedback {
-      height: 30px;
       cursor: pointer;
       top: 50%;
-      margin-top: -15px;
-      line-height: 30px;
+      line-height: 1.5em;
       margin-right: 10px;
       color: #c1c2c3;
       font-size: 1.5em;
       pointer-events: auto; // make icon clickable
+      transform: translateY(-50%);
+
     }
   }
 

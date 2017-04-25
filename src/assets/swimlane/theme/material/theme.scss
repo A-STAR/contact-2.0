@@ -1,3 +1,6 @@
+$active-selection-bg: #23B7E5;
+$active-selection-hover-bg: #19AAD7;
+
 .ngx-datatable.material {
 	background:#FFF;
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
@@ -16,19 +19,19 @@
     .datatable-body-row {
 			&.active,
 			&.active .datatable-row-group {
-				background-color: #304FFE;
+				background-color: $active-selection-bg;
         color: #FFF;
 			}
 
 			&.active:hover,
 			&.active:hover .datatable-row-group {
-				background-color: #193AE4;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
 
 			&.active:focus,
 			&.active:focus .datatable-row-group {
-				background-color: #2041EF;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
     }
@@ -68,19 +71,19 @@
 
 			&.active,
 			&.active .datatable-row-group {
-				background-color: #304FFE;
+				background-color: $active-selection-bg;
         color: #FFF;
 			}
 
 			&.active:hover,
 			&.active:hover .datatable-row-group {
-				background-color: #193AE4;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
 
 			&.active:focus,
 			&.active:focus .datatable-row-group {
-				background-color: #2041EF;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
     }

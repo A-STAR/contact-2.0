@@ -21,8 +21,8 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 
 export class TabledemoComponent implements OnInit {
   tabs: Array<any> = [
-    { id: 0, title: 'Tab 1', active: true },
-    // { id: 1, title: 'Tab 2', active: false },
+    { id: 0, title: 'Admins', active: true },
+    { id: 1, title: 'Users', active: false },
     // { id: 2, title: 'Tab 3', active: false },
     // { id: 3, title: 'Tab 4', active: false },
     // { id: 4, title: 'Tab 5', active: false },

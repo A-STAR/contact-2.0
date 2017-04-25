@@ -63,7 +63,7 @@ hr {
     }
   }
   &.panel-default {
-    border-top-width: 3px;    
+    border-top-width: 0;
   }
 }
 
@@ -273,7 +273,7 @@ fieldset {
 }
 
 // Angular UI.Bootstrap
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title a { cursor: auto; }
 
 .nav-tabs.nav-justified > .active > a, .nav-tabs.nav-justified > .active > a:hover, .nav-tabs.nav-justified > .active > a:focus {
   border-bottom: 0;

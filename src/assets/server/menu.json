@@ -96,7 +96,7 @@
       "link": "/workplaces"
     }]
   }, {
-    "icon": "icon-briefcase",
+    "icon": "fa fa-bar-chart-o",
     "text": "Отчеты",
     "link": "/reports",
     "submenu": [{

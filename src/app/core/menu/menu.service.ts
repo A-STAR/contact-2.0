@@ -50,7 +50,8 @@ export class MenuService {
       .catch(error => {
         // TODO
         console.error('Could not load menu.', error);
-      })
+        return [];
+      });
   }
 
   getMenu() {
