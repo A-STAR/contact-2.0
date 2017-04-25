@@ -134,8 +134,8 @@
       text-align: left;
       padding: .5rem 1.2rem;
       border-right: 1px solid #f2f2f2;
-      font-weight: 400;
-      color: #757575;
+      font-weight: 600;
+      background-color: #E8E8E8;
       vertical-align: bottom;
 
       .datatable-header-cell-wrapper {
@@ -298,6 +298,15 @@
 			}
 		}
 	}
+}
+
+/**
+ * Adjust default style for Fira Sans Extra Condensed font
+ * TODO: get rid of !important
+**/
+.ngx-datatable .datatable-body-cell,
+.ngx-datatable .datatable-header-cell {
+  line-height: 1.825!important;
 }
 
 /**

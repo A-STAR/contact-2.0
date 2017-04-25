@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -12,6 +12,7 @@ import { GridService } from '../grid.service';
 export class NgxDatatableComponent implements AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Output() onEdit: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
   rows: Array<any> = [];
@@ -42,6 +43,13 @@ export class NgxDatatableComponent implements AfterViewInit {
 
   public onSelect({ selected }): void {
     this.selected = [].concat(selected);
+  }
+
+  public onActivate(event): void {
+    // console.log('Activate event', event);
+    if (event.type === 'dblclick') {
+      this.onEdit.emit(event.row);
+    }
   }
 
   public getRowHeight(row): number {

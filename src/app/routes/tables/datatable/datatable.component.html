@@ -19,6 +19,7 @@
       [selectionType]="'multiClick'"
       [scrollbarV]="true"
       [scrollbarH]="false"
+      (activate)="onActivate($event)"
       (select)="onSelect($event)">
     </ngx-datatable>
   </div>

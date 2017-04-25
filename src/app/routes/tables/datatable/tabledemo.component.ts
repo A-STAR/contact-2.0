@@ -13,7 +13,7 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 
     <app-tabstrip>
       <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-        <app-datatable></app-datatable>
+        <app-datatable (onEdit)="onEdit($event)"></app-datatable>
       </app-tab>
     </app-tabstrip>
   `
@@ -37,8 +37,12 @@ export class TabledemoComponent implements OnInit {
 
   ngOnInit() { }
 
-  public onClose(id) {
+  onClose(id) {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
+  }
+
+  onEdit(event) {
+    console.log('onEdit event captured');
   }
 
 }
