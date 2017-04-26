@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
@@ -10,12 +11,10 @@ import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatabl
 })
 
 export class TabledemoComponent implements OnInit {
+  form: FormGroup;
+  display = false;
   editedRecord: any = null;
-
   date = '01-01-2016';
-
-  currency = 0;
-
   tabs: Array<any> = [
     { id: 0, title: 'Admins', active: true },
     { id: 1, title: 'Users', active: false },
@@ -29,16 +28,31 @@ export class TabledemoComponent implements OnInit {
     // { id: 9, title: 'Tab 10', active: false },
   ];
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() { }
 
-  onClose(id): void {
+  createForm(record: any) {
+    this.form = this.fb.group({
+      id: new FormControl({ value: record.id, disabled: true }, Validators.required),
+      name: [ record.name, Validators.required ],
+      city:  [ record.address.city, Validators.required ],
+      state: [ record.address.state, Validators.required ],
+      age: [ record.age, Validators.required ],
+      isAdmin: ['0'],
+      gender: [ record.gender, Validators.required ],
+      birthdate: new FormControl()
+    });
+  }
+
+  onClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  onEdit(record): void {
+  onEdit(record: any): void {
     this.editedRecord = record;
+    this.createForm(record);
+    this.display = true;
   }
 
   get popupTitle() {

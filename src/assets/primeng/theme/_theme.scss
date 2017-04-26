@@ -46,6 +46,12 @@
     a {
         color: $contentTextColor;
     }
+
+    .form-group {
+      label:not([class^="radio"]) {
+        width: 100%;
+      }
+    }
 }
 
 .ui-widget-header {

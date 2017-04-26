@@ -1,12 +1,20 @@
-<span style="display: inline-block;">
+<div>
+<div class="input-group" [formGroup]="form">
   <input
     ngx-mydatepicker
     class="form-control"
+    [formControlName]="controlName"
     #dp="ngx-mydatepicker"
-    [name]="name"
+    [name]="controlName"
     [ngModel]="value"
     [options]="options"
     (click)="dp.openCalendar()"
     (ngModelChange)="onValueChange($event)"
+    placeholder="Select a date"
+    style="float:none"
   />
-</span>
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)="dp.toggleCalendar()"><i class="fa fa-calendar"></i></button>
+  </span>
+</div>
+</div>
