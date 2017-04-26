@@ -6,7 +6,7 @@ job_build:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR    
     - npm install
-    - npm run build -- --prod --aot
+    - npm run build -- --prod --aot --progress=false
   artifacts:
     name: "frontend_default_build"
     paths:
