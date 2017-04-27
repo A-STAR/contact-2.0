@@ -15,6 +15,15 @@ export const routes = [
       { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
     ]
   },
+  {
+    path: 'admin',
+    component: LayoutComponent,
+    canActivate: [AuthService],
+    children: [
+      { path: '', redirectTo: '../home', pathMatch: 'full' },
+      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' }
+    ]
+  },
 
   // Eagerly-loaded routes
   { path: 'login', component: LoginComponent },
