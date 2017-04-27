@@ -20,7 +20,7 @@ deploy_dev:
   script:
     - rm -rf /var/www/html/angular-java-dev/dist
     - cp -R dist/ /var/www/html/angular-java-dev/
-    - cp -R /var/www/configs/angular-java-dist/* /var/www/html/angular-java-dev/
+    - cp -R /var/www/configs/angular-java-dev/* /var/www/html/angular-java-dev/
   environment:
     name: dev    
   only:
