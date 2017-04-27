@@ -1,0 +1,14 @@
+<div class="overlay" *ngIf="display">
+  <div class="dialog">
+    <div class="dialog_header">
+      <span class="dialog_close" (click)="onCloseClick()">&#10005;</span>
+      <ng-content select="[dialog-header]"></ng-content>
+    </div>
+    <div class="dialog_content">
+      <ng-content></ng-content>
+    </div>
+    <div class="dialog_footer">
+      <ng-content select="[dialog-footer]"></ng-content>
+    </div>
+  </div>
+</div>
