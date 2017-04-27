@@ -1,15 +1,15 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, EventEmitter, Input, Output } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { GridService } from '../grid.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Component({
-  selector: 'app-datatable',
-  templateUrl: './datatable.component.html',
-  styleUrls: ['./datatable.component.scss'],
+  selector: 'app-grid',
+  templateUrl: './grid.component.html',
+  styleUrls: ['./grid.component.scss'],
 })
-export class NgxDatatableComponent implements AfterViewInit {
+export class GridComponent implements AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Output() onEdit: EventEmitter<any> = new EventEmitter();

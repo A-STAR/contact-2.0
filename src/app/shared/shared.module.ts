@@ -40,7 +40,9 @@ import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
 import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 
-import { DatePickerComponent } from './components/input/datepicker.component';
+// app imports
+import { DatePickerComponent } from './components/form/datepicker/datepicker.component';
+import { GridModule } from './components/grid/grid.module';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
@@ -50,6 +52,7 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        // framework module
         TranslateModule,
         AccordionModule.forRoot(),
         AlertModule.forRoot(),
@@ -68,10 +71,11 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
         TooltipModule.forRoot(),
         TypeaheadModule.forRoot(),
         // ToasterModule
+        // app modules
+        GridModule,
     ],
     providers: [
         ColorsService,
-
         QBuilderService
     ],
     declarations: [
@@ -118,7 +122,8 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
         NowDirective,
         ScrollableDirective,
         JqcloudDirective,
-
+        // app Components & Modules
+        GridModule,
         DatePickerComponent,
         QBuilderComponent
     ]

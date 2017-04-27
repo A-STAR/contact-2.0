@@ -5,9 +5,17 @@ import { UITreeNodeComponent } from './uitreenode.component';
 import { TreeNodeTemplateLoaderComponent } from './treenodetemplateloader.component';
 
 @NgModule({
-    imports: [CommonModule],
-    exports: [TreeComponent],
-    declarations: [TreeComponent, UITreeNodeComponent, TreeNodeTemplateLoaderComponent]
+    imports: [
+      CommonModule
+    ],
+    exports: [
+      TreeComponent
+    ],
+    declarations: [
+      TreeComponent,
+      UITreeNodeComponent,
+      TreeNodeTemplateLoaderComponent
+    ]
 })
 export class TreeModule {
 }

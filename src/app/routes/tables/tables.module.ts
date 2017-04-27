@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {
   DataTableModule,
   SharedModule as PngSharedModule,
@@ -10,7 +9,8 @@ import {
 } from 'primeng/primeng';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
-import { NgxDatatableComponent } from './datatable/datatable.component';
+// import { GridModule } from '../../shared/components/grid/grid.module';
+// import { GridComponent } from '../../shared/components/grid/grid.component';
 import { TabledemoComponent } from './datatable/tabledemo.component';
 import { GroupableComponent } from './groupable/groupable.component';
 import { ReorderableComponent } from './reorderable/reorderable.component';
@@ -18,7 +18,7 @@ import { SortableComponent } from './sortable/sortable.component';
 import { TabComponent } from '../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../shared/components/tabstrip/tabstrip.component';
 import { SharedModule } from '../../shared/shared.module';
-import { GridService } from './grid.service';
+// import { GridService } from '../../shared/components/grid/grid.service';
 
 const routes: Routes = [
     { path: 'large', component: TabledemoComponent },
@@ -34,13 +34,13 @@ const routes: Routes = [
         DataTableModule,
         DialogModule,
         MultiSelectModule,
-        NgxDatatableModule,
+        // GridModule,
         PngSharedModule,
         RouterModule.forChild(routes),
         SharedModule,
     ],
     declarations: [
-        NgxDatatableComponent,
+        // GridComponent,
         GroupableComponent,
         ReorderableComponent,
         SortableComponent,
@@ -49,10 +49,10 @@ const routes: Routes = [
         TabstripComponent
     ],
     exports: [
-        RouterModule
+        RouterModule,
     ],
     providers: [
-      GridService
+      // GridService
     ]
 })
 export class TablesModule { }

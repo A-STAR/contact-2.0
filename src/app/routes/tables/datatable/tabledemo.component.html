@@ -73,6 +73,6 @@
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-    <app-datatable (onEdit)="onEdit($event)"></app-datatable>
+    <app-grid (onEdit)="onEdit($event)"></app-grid>
   </app-tab>
 </app-tabstrip>

@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class DatePickerComponent {
   @Input() controlName: string;
+  @Input() name: string;
   @Input() value: string;
   @Input() form: any;
   @Output() valueChange = new EventEmitter();
@@ -19,6 +20,12 @@ export class DatePickerComponent {
     minYear: 1900,
     showWeekNumbers: true
   };
+
+  constructor() {
+    if (this.controlName && this.name) {
+      throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
+    }
+  }
 
   onValueChange(newValue) {
     this.value = newValue;
