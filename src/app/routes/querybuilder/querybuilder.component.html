@@ -1,27 +1,17 @@
-<!-- See https://github.com/primefaces/primeng/issues/276 -->
-<p-dialog
-    appendTo="body"
-    [modal]="true"
-    [resizable]="false"
-    [responsive]="true"
-    [(visible)]="isQueryBuilderDialogVisible"
-    (onHide)="onQueryBuilderDialogHide()"
->
-    <p-header [ngStyle]="{'user-select': 'none'}">
-        Query Builder
-    </p-header>
-    <div style="width: 720px; height: 400px; overflow-y: auto;" [ngSwitch]="isQueryBuilderShown">
-        <app-qbuilder *ngSwitchCase="true" [(group)]="group"></app-qbuilder>
-        <pre *ngSwitchDefault>{{ toJson(group) }}</pre>
-    </div>
-    <p-footer>
-        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-            <button class="btn btn-primary" (click)="toggleBetweenQueryBuilderAndResultingJson()">
-                {{ isQueryBuilderShown ? 'Get Query' : 'Back to Query Builder' }}
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
+<app-dialog [(display)]="isQueryBuilderDialogVisible" (onClose)="onQueryBuilderDialogHide()">
+  <div dialog-header>
+    <h3>Query Builder</h3>
+  </div>
+  <div [ngSwitch]="isQueryBuilderShown">
+    <app-qbuilder *ngSwitchCase="true" [(group)]="group"></app-qbuilder>
+    <pre *ngSwitchDefault>{{ toJson(group) }}</pre>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-primary" (click)="toggleBetweenQueryBuilderAndResultingJson()">
+      {{ isQueryBuilderShown ? 'Get Query' : 'Back to Query Builder' }}
+    </button>
+  </div>
+</app-dialog>
 
 <div class="content-heading">
     Query Builder

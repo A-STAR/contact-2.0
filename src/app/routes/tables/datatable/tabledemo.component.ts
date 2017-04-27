@@ -48,4 +48,8 @@ export class TabledemoComponent implements OnInit {
   get popupTitle() {
     return this.editedRecord && this.editedRecord.name ? this.editedRecord.name : null;
   }
+
+  onHide(dialog) {
+    dialog.hide();
+  }
 }
