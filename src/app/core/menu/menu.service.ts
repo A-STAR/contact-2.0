@@ -5,24 +5,34 @@ import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interf
 
 const { root } = require('../../../assets/server/root.json');
 
-const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
-  name: 'menuItemHome'
-}, {
-  name: 'menuItemWorkflow'
-}, {
-  name: 'menuItemQueryBuilder',
-}, {
-  name: 'menuItemGrids',
-  children: [{
-    name: 'menuItemLargeDataset'
-  }, {
-    name: 'menuItemSortable'
-  }, {
-    name: 'menuItemReorderable'
-  }, {
-    name: 'menuItemGroupable'
-  }]
-}];
+const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
+  {
+    name: 'menuItemHome'
+  },
+  {
+    name: 'menuItemWorkflow'
+  },
+  {
+    name: 'menuItemQueryBuilder',
+  },
+  {
+    name: 'menuItemGrids',
+    children: [
+      // {
+      //   name: 'menuItemLargeDataset'
+      // },
+      {
+        name: 'menuItemSortable'
+      },
+      {
+        name: 'menuItemReorderable'
+      },
+      {
+        name: 'menuItemGroupable'
+      }
+    ]
+  }
+];
 
 @Injectable()
 export class MenuService {

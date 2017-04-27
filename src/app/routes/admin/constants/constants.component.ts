@@ -17,6 +17,18 @@ export class ConstantsComponent implements OnInit {
     { id: 0, title: 'Constants', active: true },
   ];
 
+  columns: Array<any> = [
+    // { width: 20, maxWidth: 20, sortable: false, draggable: false,
+    //   resizeable: false, canAutoResize: true, headerCheckboxable: false, checkboxable: false
+    // },
+    { prop: 'id', name: '#', minWidth: 30, maxWidth: 70 },
+    { name: 'Name', width: 150 },
+    { name: 'Gender', minWidth: 80, maxWidth: 100 },
+    { name: 'Age', width: 50, maxWidth: 50 },
+    { name: 'City', prop: 'address.city', minWidth: 200, maxWidth: 200 },
+    { name: 'State', prop: 'address.state', minWidth: 200 },
+  ];
+
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() { }

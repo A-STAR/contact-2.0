@@ -12,22 +12,12 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 export class GridComponent implements AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Input() columns: Array<any> = [];
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
   rows: Array<any> = [];
   selected: Array<any> = [];
-  columns: Array<any> = [
-    // { width: 20, maxWidth: 20, sortable: false, draggable: false,
-    //   resizeable: false, canAutoResize: true, headerCheckboxable: false, checkboxable: false
-    // },
-    { prop: 'id', name: '#', minWidth: 30, maxWidth: 70 },
-    { name: 'Name', width: 150 },
-    { name: 'Gender', minWidth: 80, maxWidth: 100 },
-    { name: 'Age', width: 50, maxWidth: 50 },
-    { name: 'City', prop: 'address.city', minWidth: 200, maxWidth: 200 },
-    { name: 'State', prop: 'address.state', minWidth: 200 },
-  ];
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -48,12 +38,13 @@ export class GridComponent implements AfterViewInit {
     // set up the height of datatable - it does not work with height specified
     const height = this.element.offsetHeight;
     // this.dataTableRef.nativeElement.style.height = `${height}px`;
-    // this.dataTable.recalculate();
+    this.dataTable.recalculate();
     // this.dataTable.bodyHeight = 400;
   }
 
   onSelect({ selected }): void {
-    this.selected = [].concat(selected);
+    // this.selected = [].concat(selected);
+    // console.log(this.selected.length);
   }
 
   onSelectCheck(row, col, value): boolean {
@@ -68,6 +59,10 @@ export class GridComponent implements AfterViewInit {
         this.selected = this.selected.concat(event.row);
       }
     }
+  }
+
+  onPage({ count, pageSize, limit, offset }): void {
+    // console.log('offset', offset);
   }
 
   getRowHeight(row): number {

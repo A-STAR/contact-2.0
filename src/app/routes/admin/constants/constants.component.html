@@ -1,5 +1,8 @@
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-    <app-grid (onEdit)="onEdit($event)"></app-grid>
+    <app-grid
+      (onEdit)="onEdit($event)"
+      [columns]="columns">
+    </app-grid>
   </app-tab>
 </app-tabstrip>
