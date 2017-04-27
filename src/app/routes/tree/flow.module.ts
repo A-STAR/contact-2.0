@@ -15,18 +15,12 @@ const routes: Routes = [
       RouterModule.forChild(routes),
     ],
     exports: [
-      // Tree,
-      // SharedModule,
       TreeModule,
       RouterModule,
     ],
     providers: [
-      // NodeService
     ],
     declarations: [
-      // TreeNode,
-      // UITreeNode,
-      // TreeNodeTemplateLoader,
       FlowDemoComponent,
     ]
 })

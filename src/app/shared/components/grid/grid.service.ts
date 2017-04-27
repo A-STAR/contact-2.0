@@ -7,8 +7,8 @@ export class GridService {
 
   constructor(private http: Http) { }
 
-  fetchData() {
-    return this.http.get('assets/server/100k.json')
+  fetchData(url: string = 'assets/server/100k.json') {
+    return this.http.get(url)
       .toPromise()
       .then(data => data.json());
   }

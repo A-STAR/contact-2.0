@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
-import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatable.component';
+// import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-tabledemo',
