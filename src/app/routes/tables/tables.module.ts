@@ -13,8 +13,6 @@ import { TabledemoComponent } from './datatable/tabledemo.component';
 import { GroupableComponent } from './groupable/groupable.component';
 import { ReorderableComponent } from './reorderable/reorderable.component';
 import { SortableComponent } from './sortable/sortable.component';
-import { TabComponent } from '../../shared/components/tabstrip/tab.component';
-import { TabstripComponent } from '../../shared/components/tabstrip/tabstrip.component';
 import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
@@ -39,9 +37,7 @@ const routes: Routes = [
     GroupableComponent,
     ReorderableComponent,
     SortableComponent,
-    TabComponent,
     TabledemoComponent,
-    TabstripComponent
   ],
   exports: [
     RouterModule,

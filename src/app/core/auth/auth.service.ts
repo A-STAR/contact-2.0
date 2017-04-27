@@ -4,6 +4,7 @@ import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { AuthHttp } from 'angular2-jwt';
+const { root } = require('../../../assets/server/root.json');
 
 const TOKEN_NAME = 'auth/token';
 
@@ -53,7 +54,7 @@ export class AuthService implements CanActivate {
   authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ login, password });
 
-    return this.http.post('http://localhost:8080/auth/login', body)
+    return this.http.post(`${root}/auth/login`, body)
       .toPromise()
       .then((resp: Response) => {
         setToken(resp.headers.get('X-Auth-Token'));
@@ -67,7 +68,7 @@ export class AuthService implements CanActivate {
   }
 
   logout(): Promise<boolean> {
-    return this.http.get('http://localhost:8080/auth/logout')
+    return this.http.get(`${root}/auth/logout`)
       .toPromise()
       .then((response: Response) => {
         removeToken();
