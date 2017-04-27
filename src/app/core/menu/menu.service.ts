@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
-import { menu } from '../../routes/menu';
-import { IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
+import { menuConfig } from '../../routes/menu-config';
+import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
   name: 'menuItemHome'
@@ -24,7 +24,7 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
 
 @Injectable()
 export class MenuService {
-  private menuItems: Array<IMenuApiResponseItem> = [];
+  private menuItems: Array<IMenuItem> = [];
 
   constructor(private http: AuthHttp) {
     this.menuItems = [];
@@ -54,9 +54,9 @@ export class MenuService {
       .map(item => this.prepareMenuNode(item));
   }
 
-  private prepareMenuNode(node: IMenuApiResponseItem) {
+  private prepareMenuNode(node: IMenuApiResponseItem): IMenuItem {
     return {
-      ...menu[node.name],
+      ...menuConfig[node.name],
       children: node.children ? node.children.map(child => this.prepareMenuNode(child)) : undefined
     };
   }

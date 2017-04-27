@@ -1,4 +1,6 @@
-export const menu = {
+import { IMenuConfig } from './menu-config.interface';
+
+export const menuConfig: IMenuConfig = {
 
   // Компоненты:
   menuItemHome: {
