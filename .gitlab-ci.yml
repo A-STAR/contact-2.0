@@ -13,3 +13,13 @@ job_build:
       - dist/
   only:
     - dev
+
+deploy_dev:
+  stage: deploy
+  script:
+    - rm -rf /var/www/html/angular-java-dev/dist
+    - cp -R dist/ /var/www/html/angular-java-dev/
+  environment:
+    name: dev    
+  only:
+    - dev
