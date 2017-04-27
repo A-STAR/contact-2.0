@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 job_build:
   stage: build
   script:
@@ -11,5 +12,17 @@ job_build:
     name: "frontend_default_build"
     paths:
       - dist/
+  only:
+    - dev
+
+deploy_dev:
+  stage: deploy
+  script:
+    - pwd
+    - ls
+    - rm -rf /var/www/html/angular-java-dev/dist
+    - cp -R dist/ /var/www/html/angular-java-dev/
+  environment:
+    name: dev    
   only:
     - dev
