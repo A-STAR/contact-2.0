@@ -1,49 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { IMenuItem, IMenuApiResponse } from './menu.interface';
+import { AuthHttp } from 'angular2-jwt';
+import { menu } from '../../routes/menu';
+import { IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
 
-const ADDITIONAL_MENU_ITEMS: Array<IMenuItem> = [{
-  text: 'Home',
-  link: '/home',
-  icon: 'icon-home'
+const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
+  name: 'menuItemHome'
 }, {
-  text: 'Workflow',
-  link: '/workflow',
-  icon: 'icon-graph'
+  name: 'menuItemWorkflow'
 }, {
-  text: 'Query Builder',
-  link: '/query-builder',
-  icon: 'icon-list'
+  name: 'menuItemQueryBuilder',
 }, {
-  text: 'Grids',
-  link: '/grid',
-  icon: 'icon-grid',
-  submenu: [{
-    text: 'Large dataset',
-    link: '/grid/large'
+  name: 'menuItemGrids',
+  children: [{
+    name: 'menuItemLargeDataset'
   }, {
-    text: 'Sortable',
-    link: '/grid/sortable'
+    name: 'menuItemSortable'
   }, {
-    text: 'Reorderable',
-    link: '/grid/reorderable'
+    name: 'menuItemReorderable'
   }, {
-    text: 'Groupable',
-    link: '/grid/groupable'
+    name: 'menuItemGroupable'
   }]
 }];
 
 @Injectable()
 export class MenuService {
-  private menuItems: Array<IMenuItem> = [];
+  private menuItems: Array<IMenuApiResponseItem> = [];
 
-  constructor(private http: Http) {
+  constructor(private http: AuthHttp) {
     this.menuItems = [];
   }
 
   loadMenu() {
     return this.http
       .get('assets/server/menu.json')
+      // .get('http://localhost:8080/api/menu/getMenu?path=menu')
       .toPromise()
       .then(response => response.json())
       .then(response => this.prepareMenu(response))
@@ -59,6 +49,15 @@ export class MenuService {
   }
 
   private prepareMenu(response: IMenuApiResponse) {
-    this.menuItems = ADDITIONAL_MENU_ITEMS.concat(response.menu);
+    this.menuItems = response.appGuiObjects
+      .concat(ADDITIONAL_MENU_ITEMS)
+      .map(item => this.prepareMenuNode(item));
+  }
+
+  private prepareMenuNode(node: IMenuApiResponseItem) {
+    return {
+      ...menu[node.name],
+      children: node.children ? node.children.map(child => this.prepareMenuNode(child)) : undefined
+    };
   }
 }

@@ -1,111 +1,44 @@
 {
-  "menu": [{
-    "icon": "icon-speedometer",
-    "text": "Администрирование",
-    "link": "/admin",
-    "submenu": [{
-      "text": "Роли и доступы",
-      "link": "/admin"
+  "success": true,
+  "appGuiObjects": [{
+    "name": "menuGroupAdministration",
+    "children": [{
+      "name": "menuItemRoles"
     }, {
-      "text": "Пользователи",
-      "link": "/admin"
+      "name": "menuItemUsers"
     }, {
-      "text": "Лог действий",
-      "link": "/admin"
+      "name": "menuItemActions"
     }, {
-      "text": "Значения констант",
-      "link": "/admin"
+      "name": "menuItemConstants"
     }, {
-      "text": "Словари",
-      "link": "/admin"
+      "name": "menuItemDictionaries"
     }, {
-      "text": "Клиенты и портфели",
-      "link": "/admin"
+      "name": "menuItemBanks"
     }, {
-      "text": "Структура предприятия",
-      "link": "/admin"
+      "name": "menuItemDepartments"
     }]
   }, {
-    "icon": "icon-settings",
-    "text": "Утилиты",
-    "link": "/utils",
-    "submenu": [{
-      "text": "Шаблоны загрузки",
-      "link": "/utils"
+    "name": "menuGroupUtilities",
+    "children": [{
+      "name": "menuItemLoadTemplates"
     }, {
-      "text": "Загрузка данных",
-      "link": "/utils"
+      "name": "menuItemLoadData"
     }, {
-      "text": "Произвольные атрибуты",
-      "link": "/utils"
+      "name": "menuItemRandomValues"
     }, {
-      "text": "Дерево контактов",
-      "link": "/utils"
+      "name": "menuItemContactTrees"
     }, {
-      "text": "Сценарии сообщений",
-      "link": "/utils"
+      "name": "menuItemMessageScenarios"
     }, {
-      "text": "Группы",
-      "link": "/utils"
+      "name": "menuItemGroups"
     }, {
-      "text": "Кампании обзвона",
-      "link": "/utils"
+      "name": "menuItemCampaigns"
     }, {
-      "text": "Расписание",
-      "link": "/utils"
+      "name": "menuItemSchedule"
     }, {
-      "text": "Формулы",
-      "link": "/utils"
+      "name": "menuItemFormulas"
     }, {
-      "text": "Суды и ФССП",
-      "link": "/utils"
+      "name": "menuItemCourtsBailiffs"
     }]
-  }, {
-    "icon": "icon-earphones-alt",
-    "text": "Рабочие места",
-    "link": "/workplaces",
-    "submenu": [{
-      "text": "Список долгов",
-      "link": "/workplaces"
-    }, {
-      "text": "Постановка задач",
-      "link": "/workplaces"
-    }, {
-      "text": "Обработка долгов",
-      "link": "/workplaces"
-    }, {
-      "text": "Протокол контактов",
-      "link": "/workplaces"
-    }, {
-      "text": "Центр обзвона",
-      "link": "/workplaces"
-    }, {
-      "text": "Исходящее информирование",
-      "link": "/workplaces"
-    }, {
-      "text": "Платежи",
-      "link": "/workplaces"
-    }, {
-      "text": "Судебное и исполнительное производство",
-      "link": "/workplaces"
-    }, {
-      "text": "Группы свободного поиска",
-      "link": "/workplaces"
-    }, {
-      "text": "Почта",
-      "link": "/workplaces"
-    }]
-  }, {
-    "icon": "fa fa-bar-chart-o",
-    "text": "Отчеты",
-    "link": "/reports",
-    "submenu": [{
-      "text": "Произвольные отчеты",
-      "link": "/reports"
-    }]
-  }, {
-    "icon": "icon-support",
-    "text": "Справка",
-    "link": "/help"
   }]
 }

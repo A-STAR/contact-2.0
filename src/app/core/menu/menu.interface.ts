@@ -1,3 +1,4 @@
+/*
 export interface IMenuItem {
   text: string;
   heading?: boolean;
@@ -6,7 +7,14 @@ export interface IMenuItem {
   alert?: string;
   submenu?: Array<any>;
 }
+*/
+
+export interface IMenuApiResponseItem {
+  name: string;
+  children?: Array<IMenuApiResponseItem>;
+}
 
 export interface IMenuApiResponse {
-  menu: Array<IMenuItem>;
+  success: boolean;
+  appGuiObjects: Array<IMenuApiResponseItem>;
 };
