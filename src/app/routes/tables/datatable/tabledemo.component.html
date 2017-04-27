@@ -1,75 +1,67 @@
-<p-dialog
-    appendTo="body"
-    [header]="popupTitle"
-    [modal]="true"
-    [resizable]="false"
-    [responsive]="false"
-    [width]="500"
-    [(visible)]="display"
->
-    <form *ngIf="display" [formGroup]="form" novalidate>
-      <div class="form-group">
-        <label>Id
-          <input type="number" class="form-control" formControlName="id">
+<app-dialog [(display)]="display">
+  <div dialog-header>
+    <h3>{{ popupTitle }}</h3>
+  </div>
+  <form *ngIf="display" [formGroup]="form" novalidate>
+    <div class="form-group">
+      <label>Id
+        <input type="number" class="form-control" formControlName="id">
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <div>
+        <input type="text" class="form-control" formControlName="name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <div>
+        <input type="text" class="form-control" formControlName="city">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <div>
+        <app-input-datepicker [form]="form" controlName="birthdate"></app-input-datepicker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Is administrator?</label>
+      <div>
+        <label class="radio-inline">
+          <input type="radio" formControlName="isAdmin" value="1"> True
+        </label>
+        <label class="radio-inline">
+          <input type="radio" formControlName="isAdmin" value="0"> False
         </label>
       </div>
-      <div class="form-group">
-        <label>Name</label>
-        <div>
-          <input type="text" class="form-control" formControlName="name">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>City</label>
-        <div>
-          <input type="text" class="form-control" formControlName="city">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Date</label>
-        <div>
-          <app-input-datepicker [form]="form" controlName="birthdate"></app-input-datepicker>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Is administrator?</label>
-        <div>
-          <label class="radio-inline">
-            <input type="radio" formControlName="isAdmin" value="1"> True
-          </label>
-          <label class="radio-inline">
-            <input type="radio" formControlName="isAdmin" value="0"> False
-          </label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Age
-          <input
-            type="number"
-            formControlName="age"
-            class="form-control"
-            currencyMask
-            [options]="{ align: 'left', prefix: '', suffix: '', thousands: ' ', decimal: '.' }"
-          >
-        </label>
-      </div>
-      <div class="form-group">
-        <label>Gender
-          <select class="form-control" formControlName="gender">
-            <option value="male">male</option>
-            <option value="female">female</option>
-          </select>
-        </label>
-      </div>
-    </form>
-
-    <p-footer>
-      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
-        <button type="button" class="ui-button-success" pButton icon="fa-check" (click)="display=false" label="Save"></button>
-      </div>
-    </p-footer>
-</p-dialog>
+    </div>
+    <div class="form-group">
+      <label>Age
+        <input
+          type="number"
+          formControlName="age"
+          class="form-control"
+          currencyMask
+          [options]="{ align: 'left', prefix: '', suffix: '', thousands: ' ', decimal: '.' }"
+        >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Gender
+        <select class="form-control" formControlName="gender">
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
+      </label>
+    </div>
+  </form>
+  <div dialog-footer>
+    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
+    <button type="button" class="ui-button-success" pButton icon="fa-check" (click)="display=false" label="Save"></button>
+  </div>
+</app-dialog>
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">

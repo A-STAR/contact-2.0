@@ -42,6 +42,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 
 // app imports
 import { DatePickerComponent } from './components/form/datepicker/datepicker.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 import { GridModule } from './components/grid/grid.module';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -94,6 +95,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     TabComponent,
     TabstripComponent,
     DatePickerComponent,
+    DialogComponent,
     QBuilderComponent
   ],
   exports: [
@@ -133,6 +135,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     TabstripComponent,
     DatePickerComponent,
     DatePickerComponent,
+    DialogComponent,
     QBuilderComponent
   ]
 })
