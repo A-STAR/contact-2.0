@@ -45,95 +45,103 @@ import { DatePickerComponent } from './components/form/datepicker/datepicker.com
 import { GridModule } from './components/grid/grid.module';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
+import { TabComponent } from './components/tabstrip/tab.component';
+import { TabstripComponent } from './components/tabstrip/tabstrip.component';
+
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        // framework module
-        TranslateModule,
-        AccordionModule.forRoot(),
-        AlertModule.forRoot(),
-        ButtonsModule.forRoot(),
-        CarouselModule.forRoot(),
-        CollapseModule.forRoot(),
-        // DatepickerModule.forRoot(),
-        DropdownModule.forRoot(),
-        ModalModule.forRoot(),
-        NgxMyDatePickerModule,
-        PaginationModule.forRoot(),
-        ProgressbarModule.forRoot(),
-        RatingModule.forRoot(),
-        TabsModule.forRoot(),
-        TimepickerModule.forRoot(),
-        TooltipModule.forRoot(),
-        TypeaheadModule.forRoot(),
-        // ToasterModule
-        // app modules
-        GridModule,
-    ],
-    providers: [
-        ColorsService,
-        QBuilderService
-    ],
-    declarations: [
-        FlotDirective,
-        SparklineDirective,
-        EasypiechartDirective,
-        CheckallDirective,
-        VectormapDirective,
-        NowDirective,
-        ScrollableDirective,
-        JqcloudDirective,
-
-        DatePickerComponent,
-        QBuilderComponent
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        RouterModule,
-        AccordionModule,
-        AlertModule,
-        ButtonsModule,
-        CarouselModule,
-        CollapseModule,
-        // DatepickerModule,
-        DropdownModule,
-        ModalModule,
-        NgxMyDatePickerModule,
-        PaginationModule,
-        ProgressbarModule,
-        RatingModule,
-        TabsModule,
-        TimepickerModule,
-        TooltipModule,
-        TypeaheadModule,
-        // ToasterModule,
-        FlotDirective,
-        SparklineDirective,
-        EasypiechartDirective,
-        CheckallDirective,
-        VectormapDirective,
-        NowDirective,
-        ScrollableDirective,
-        JqcloudDirective,
-        // app Components & Modules
-        GridModule,
-        DatePickerComponent,
-        QBuilderComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    // framework module
+    TranslateModule,
+    AccordionModule.forRoot(),
+    AlertModule.forRoot(),
+    ButtonsModule.forRoot(),
+    CarouselModule.forRoot(),
+    CollapseModule.forRoot(),
+    // DatepickerModule.forRoot(),
+    DropdownModule.forRoot(),
+    ModalModule.forRoot(),
+    NgxMyDatePickerModule,
+    PaginationModule.forRoot(),
+    ProgressbarModule.forRoot(),
+    RatingModule.forRoot(),
+    TabsModule.forRoot(),
+    TimepickerModule.forRoot(),
+    TooltipModule.forRoot(),
+    TypeaheadModule.forRoot(),
+    // ToasterModule
+    // app modules
+    GridModule,
+  ],
+  providers: [
+    ColorsService,
+    QBuilderService
+  ],
+  declarations: [
+    FlotDirective,
+    SparklineDirective,
+    EasypiechartDirective,
+    CheckallDirective,
+    VectormapDirective,
+    NowDirective,
+    ScrollableDirective,
+    JqcloudDirective,
+    // app declarations
+    TabComponent,
+    TabstripComponent,
+    DatePickerComponent,
+    QBuilderComponent
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    RouterModule,
+    AccordionModule,
+    AlertModule,
+    ButtonsModule,
+    CarouselModule,
+    CollapseModule,
+    // DatepickerModule,
+    DropdownModule,
+    ModalModule,
+    NgxMyDatePickerModule,
+    PaginationModule,
+    ProgressbarModule,
+    RatingModule,
+    TabsModule,
+    TimepickerModule,
+    TooltipModule,
+    TypeaheadModule,
+    // ToasterModule,
+    FlotDirective,
+    SparklineDirective,
+    EasypiechartDirective,
+    CheckallDirective,
+    VectormapDirective,
+    NowDirective,
+    ScrollableDirective,
+    JqcloudDirective,
+    // app Components & Modules
+    GridModule,
+    TabComponent,
+    TabstripComponent,
+    DatePickerComponent,
+    DatePickerComponent,
+    QBuilderComponent
+  ]
 })
 
 // https://github.com/ocombe/ng2-translate/issues/209
 export class SharedModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: SharedModule
-        };
-    }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SharedModule
+    };
+  }
 }

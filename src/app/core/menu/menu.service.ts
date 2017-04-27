@@ -3,6 +3,8 @@ import { AuthHttp } from 'angular2-jwt';
 import { menuConfig } from '../../routes/menu-config';
 import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
 
+const { root } = require('../../../assets/server/root.json');
+
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
   name: 'menuItemHome'
 }, {
@@ -31,7 +33,7 @@ export class MenuService {
   loadMenu() {
     return this.http
       .get('assets/server/menu.json')
-      // .get('http://localhost:8080/api/menu/getMenu?path=menu')
+      // .get(`${root}/api/menu/getMenu?path=menu`)
       .toPromise()
       .then(response => response.json())
       .then(response => this.prepareMenu(response))
