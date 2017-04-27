@@ -1,51 +1,37 @@
-<!-- START Sidebar (left)-->
 <div class="aside-inner">
-    <nav class="sidebar" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
-
-        <!-- START sidebar nav-->
-        <ul class="nav">
-
-            <!-- START user info-->
-            <li *ngIf="false" class="has-user-block">
-                <app-userblock></app-userblock>
-            </li>
-            <!-- END user info-->
-
-            <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
-                <!-- menu heading -->
-                <span *ngIf="item.heading">{{(item.translate | translate) || item.text}}</span>
-                <!-- single menu item -->
-                <a *ngIf="!item.heading && !item.children" [routerLink]="item.link" [attr.route]="('sidebar.nav.menu.' + item.text | translate).title || item.text" title="{{item.text}}"
-                    (click)="toggleSubmenuClick($event)" (mouseenter)="toggleSubmenuHover($event)">
-                    <span class="pull-right" *ngIf="item.alert" [ngClass]="item.label || 'label label-success'">{{item.alert}}</span>
-                    <em class="{{item.icon}}" *ngIf="item.icon"></em>
-                    <span>{{ item.text || item.name }}</span>
-                    <!-- <span>{{ ('sidebar.nav.menu.' + item.text | translate).title || item.text }}</span> -->
-                </a>
-                <!-- has submenu -->
-                <a *ngIf="!item.heading && item.children" title="{{item.text}}"
-                    (click)="toggleSubmenuClick($event)" (mouseenter)="toggleSubmenuHover($event)">
-                    <span class="pull-right" *ngIf="item.alert" [ngClass]="item.label || 'label label-success'">{{item.alert}}</span>
-                    <em class="{{item.icon}}" *ngIf="item.icon"></em>
-                    <span>{{ item.text || item.name }}</span>
-                    <!-- <span>{{ ('sidebar.nav.menu.' + item.text | translate).title || item.text }}</span> -->
-                </a>
-                <!-- SUBLEVEL -->
-                <ul *ngIf="item.children" class="nav sidebar-subnav" [routerLinkActive]="['opening']">
-                    <li class="sidebar-subnav-header">{{(item.translate | translate) || item.text}}</li>
-                    <li *ngFor='let subitem of item.children' [routerLinkActive]="['active']">
-                        <!-- sublevel: single menu item  -->
-                        <a *ngIf="!subitem.children" [routerLink]="subitem.link" [attr.route]="subitem.link" title="{{subitem.text}}">
-                            <span class="pull-right" *ngIf="subitem.alert" [ngClass]="subitem.label || 'label label-success'">{{subitem.alert}}</span>
-                            <em class="{{subitem.icon}}" *ngIf="subitem.icon"></em>
-                            <span>{{ subitem.text || subitem.name }}</span>
-                            <!-- <span>{{(subitem.translate | translate) || subitem.text}}</span> -->
-                        </a>
-                    <li>
-                </ul>
-            </li>
+  <nav class="sidebar" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
+    <ul class="nav">
+      <li *ngIf="false" class="has-user-block">
+        <app-userblock></app-userblock>
+      </li>
+      <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
+        <a
+          *ngIf="!item.children"
+          [routerLink]="item.link"
+          [attr.route]="item.link"
+          [title]="(item.text | translate) || item.name"
+          (click)="toggleSubmenuClick($event)"
+          (mouseenter)="toggleSubmenuHover($event)"
+        >
+          <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ (item.text | translate) || item.name }}</span>
+        </a>
+        <a
+          *ngIf="item.children"
+          title="(item.text | translate) || item.name"
+          (click)="toggleSubmenuClick($event)"
+          (mouseenter)="toggleSubmenuHover($event)"
+        >
+          <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ (item.text | translate) || item.name }}</span>
+        </a>
+        <ul *ngIf="item.children" class="nav sidebar-subnav" [routerLinkActive]="['opening']">
+          <li class="sidebar-subnav-header">{{ (item.text | translate) || item.name }}</li>
+          <li *ngFor='let subitem of item.children' [routerLinkActive]="['active']">
+            <a *ngIf="!subitem.children" [routerLink]="subitem.link" [attr.route]="subitem.link" [title]="(subitem.text | translate) || subitem.name">
+              <em class="{{subitem.icon}}" *ngIf="subitem.icon"></em><span>{{ (subitem.text | translate) || subitem.name }}</span>
+            </a>
+          <li>
         </ul>
-        <!-- END sidebar nav-->
-    </nav>
+      </li>
+    </ul>
+  </nav>
 </div>
-<!-- END Sidebar (left)-->

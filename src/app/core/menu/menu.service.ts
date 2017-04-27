@@ -49,8 +49,8 @@ export class MenuService {
   }
 
   private prepareMenu(response: IMenuApiResponse) {
-    this.menuItems = response.appGuiObjects
-      .concat(ADDITIONAL_MENU_ITEMS)
+    this.menuItems = ADDITIONAL_MENU_ITEMS
+      .concat(response.appGuiObjects)
       .map(item => this.prepareMenuNode(item));
   }
 

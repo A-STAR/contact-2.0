@@ -2,142 +2,142 @@ export const menu = {
 
   // Компоненты:
   menuItemHome: {
-    text: 'Home',
+    text: 'sidebar.nav.menu.HOME',
     link: '/home',
     icon: 'icon-home'
   },
   menuItemWorkflow: {
-    text: 'Workflow',
+    text: 'sidebar.nav.menu.WORKFLOW',
     link: '/workflow',
     icon: 'icon-graph'
   },
   menuItemQueryBuilder: {
-    text: 'Query Builder',
+    text: 'sidebar.nav.menu.QUERY_BUILDER',
     link: '/query-builder',
     icon: 'icon-list'
   },
   menuItemGrids: {
-    text: 'Grids',
+    text: 'sidebar.nav.menu.GRIDS',
     link: '/grid',
     icon: 'icon-grid'
   },
   menuItemLargeDataset: {
-    text: 'Large dataset',
+    text: 'sidebar.nav.menu.LARGE_DATASET',
     link: '/grid/large',
     icon: 'icon-grid'
   },
   menuItemSortable: {
-    text: 'Sortable',
+    text: 'sidebar.nav.menu.SORTABLE',
     link: '/grid/sortable',
     icon: 'icon-grid'
   },
   menuItemReorderable: {
-    text: 'Reorderable',
+    text: 'sidebar.nav.menu.REORDERABLE',
     link: '/grid/reorderable',
     icon: 'icon-grid'
   },
   menuItemGroupable: {
-    text: 'Groupable',
+    text: 'sidebar.nav.menu.GROUPABLE',
     link: '/grid/groupable',
     icon: 'icon-grid'
   },
 
   // Администрирование:
   menuGroupAdministration: {
-    text: 'Admin Panel',
+    text: 'sidebar.nav.menu.ADMIN_PANEL',
     link: '/admin',
     icon: 'icon-speedometer'
   },
   menuItemRoles: {
-    text: 'Roles and Permissions',
+    text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
     link: '/admin/roles-and-permissions',
-    icon: 'icon-speedometer'
+    icon: 'icon-user-following'
   },
   menuItemUsers: {
-    text: 'Users',
+    text: 'sidebar.nav.menu.USERS',
     link: '/admin/users',
-    icon: 'icon-speedometer'
+    icon: 'icon-people'
   },
   menuItemActions: {
-    text: 'Actions Log',
+    text: 'sidebar.nav.menu.ACTIONS_LOG',
     link: '/admin/action-log',
-    icon: 'icon-speedometer'
+    icon: 'icon-doc'
   },
   menuItemConstants: {
-    text: 'Constants',
+    text: 'sidebar.nav.menu.CONSTANTS',
     link: '/admin/constants',
-    icon: 'icon-speedometer'
+    icon: 'icon-equalizer'
   },
   menuItemDictionaries: {
-    text: 'Dictionaries',
+    text: 'sidebar.nav.menu.DICTIONARIES',
     link: '/admin/dictionaries',
-    icon: 'icon-speedometer'
+    icon: 'icon-book-open'
   },
   menuItemBanks: {
-    text: 'Banks',
+    text: 'sidebar.nav.menu.BANKS',
     link: '/admin/banks',
-    icon: 'icon-speedometer'
+    icon: 'icon-briefcase'
   },
   menuItemDepartments: {
-    text: 'Departments',
+    text: 'sidebar.nav.menu.DEPARTMENTS',
     link: '/admin/departments',
-    icon: 'icon-speedometer'
+    icon: 'icon-link'
   },
 
   // Утилиты:
   menuGroupUtilities: {
-    text: 'Utilities',
+    text: 'sidebar.nav.menu.UTILITIES',
     link: '/utilities',
     icon: 'icon-settings'
   },
   menuItemLoadTemplates: {
-    text: 'Upload Templates',
+    text: 'sidebar.nav.menu.UPLOAD_TEMPLATES',
     link: '/utilities/upload-templates',
-    icon: 'icon-settings'
+    icon: 'icon-docs'
   },
   menuItemLoadData: {
-    text: 'Data Upload',
+    text: 'sidebar.nav.menu.DATA_UPLOAD',
     link: '/utilities/data-upload',
-    icon: 'icon-settings'
+    icon: 'icon-cloud-upload'
   },
   menuItemRandomValues: {
-    text: 'Arbitrary Values',
+    text: 'sidebar.nav.menu.ARBITRARY_VALUES',
     link: '/utilities/arbitrary-values',
-    icon: 'icon-settings'
+    icon: 'icon-equalizer'
   },
   menuItemContactTrees: {
-    text: 'Contact Trees',
+    text: 'sidebar.nav.menu.CONTACT_TREES',
     link: '/utilities/contact-trees',
-    icon: 'icon-settings'
+    icon: 'icon-people'
   },
   menuItemMessageScenarios: {
-    text: 'Message Scenarios',
+    text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
     link: '/utilities/message-scenarios',
-    icon: 'icon-settings'
+    icon: 'icon-bubbles'
   },
   menuItemGroups: {
-    text: 'Groups',
+    text: 'sidebar.nav.menu.GROUPS',
     link: '/utilities/groups',
-    icon: 'icon-settings'
+    icon: 'icon-folder'
   },
   menuItemCampaigns: {
-    text: 'Campaigns',
+    text: 'sidebar.nav.menu.CAMPAIGNS',
     link: '/utilities/capmaigns',
-    icon: 'icon-settings'
+    icon: 'icon-rocket'
   },
   menuItemSchedule: {
-    text: 'Schedule',
+    text: 'sidebar.nav.menu.SCHEDULE',
     link: '/utilities/schedule',
-    icon: 'icon-settings'
+    icon: 'icon-calendar'
   },
   menuItemFormulas: {
-    text: 'Formulas',
+    text: 'sidebar.nav.menu.FORMULAS',
     link: '/utilities/formulas',
-    icon: 'icon-settings'
+    icon: 'icon-note'
   },
   menuItemCourtsBailiffs: {
-    text: 'Courts',
+    text: 'sidebar.nav.menu.COURTS',
     link: '/utilities/courts',
-    icon: 'icon-settings'
+    icon: 'icon-badge'
   }
 };
