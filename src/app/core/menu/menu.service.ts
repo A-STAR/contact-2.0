@@ -26,9 +26,7 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [{
 export class MenuService {
   private menuItems: Array<IMenuItem> = [];
 
-  constructor(private http: AuthHttp) {
-    this.menuItems = [];
-  }
+  constructor(private http: AuthHttp) { }
 
   loadMenu() {
     return this.http
