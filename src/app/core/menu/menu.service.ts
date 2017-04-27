@@ -32,8 +32,7 @@ export class MenuService {
 
   loadMenu() {
     return this.http
-      .get('assets/server/menu.json')
-      // .get(`${root}/api/menu/getMenu?path=menu`)
+      .get(`${root}/api/menu/getMenu?path=/`)
       .toPromise()
       .then(response => response.json())
       .then(response => this.prepareMenu(response))
@@ -57,7 +56,7 @@ export class MenuService {
   private prepareMenuNode(node: IMenuApiResponseItem): IMenuItem {
     return {
       ...menuConfig[node.name],
-      children: node.children ? node.children.map(child => this.prepareMenuNode(child)) : undefined
+      children: node.children && node.children.length ? node.children.map(child => this.prepareMenuNode(child)) : undefined
     };
   }
 }

@@ -43,7 +43,21 @@
                 "CAMPAIGNS": "Campaigns",
                 "SCHEDULE": "Schedule",
                 "FORMULAS": "Formulas",
-                "COURTS": "Coutrs"
+                "COURTS": "Coutrs",
+                "WORKPLACES": "Workplaces",
+                "DEBT_LIST": "Debt List",
+                "TASKS": "Tasks",
+                "DEBTS": "Debts Processing",
+                "CONTACT_PROTOCOL": "Contact Protocol",
+                "CALL_CENTER": "Call Center",
+                "PAYMENTS": "Payments",
+                "COURTS_2": "Courts",
+                "OUTGOING_INFORMATION": "Outgoing Information",
+                "SEARCH_GROUPS": "Search Groups",
+                "MAIL": "Mail",
+                "REPORTS": "Reports",
+                "ARBITRARY_REPORTS": "Arbitrary Reports",
+                "HELP": "Help"
             }
         }
     },
