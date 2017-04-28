@@ -3,4 +3,5 @@ export interface IDataSource {
   read?: string;
   update?: string;
   delete?: string;
+  dataKey: string;
 }

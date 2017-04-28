@@ -8,7 +8,7 @@ export class GridService {
 
   constructor(private http: AuthHttp, private authService: AuthService) { }
 
-  read(url: string = '') {
+  read(url: string = ''): Promise<any> {
     if (!url) {
       return this.http.get('assets/server/100k.json')
       .toPromise()
@@ -24,15 +24,15 @@ export class GridService {
     });
   }
   // TODO: to be implemented
-  create(url: string = '') {
+  create(url: string = ''): Promise<any> {
     return Promise.resolve(false);
   }
 
-  update(url: string = '') {
+  update(url: string = ''): Promise<any> {
     return Promise.resolve(false);
   }
 
-  delete(url: string = '') {
+  delete(url: string = ''): Promise<any> {
     return Promise.resolve(false);
   }
 }

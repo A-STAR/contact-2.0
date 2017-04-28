@@ -21,6 +21,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
+  @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
@@ -39,15 +40,13 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   constructor(private gridService: GridService, element: ElementRef) {
     this.element = element.nativeElement;
+    this.parseFn = this.parseFn || function (data) { return data; };
   }
 
   ngOnInit() {
     if (this.autoLoad) {
-      this.gridService
-        .read(this.dataSource.read)
-        .then(data => this.rows = data)
-        .catch(err => console.error(err));
-      }
+      this.load();
+    }
   }
 
   ngAfterViewInit() {
@@ -56,6 +55,13 @@ export class GridComponent implements OnInit, AfterViewInit {
     // this.dataTableRef.nativeElement.style.height = `${height}px`;
     // this.dataTable.recalculate();
     // this.dataTable.bodyHeight = 400;
+  }
+
+  load() {
+    this.gridService
+      .read(this.dataSource.read)
+      .then(data => this.rows = this.parseFn(data))
+      .catch(err => console.error(err));
   }
 
   onSelect({ selected }): void {
