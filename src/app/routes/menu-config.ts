@@ -45,101 +45,177 @@ export const menuConfig: IMenuConfig = {
   },
 
   // Администрирование:
-  menuGroupAdministration: {
+  administration: {
     text: 'sidebar.nav.menu.ADMIN_PANEL',
     link: '/admin',
     icon: 'icon-speedometer'
   },
-  menuItemRoles: {
+  roles: {
     text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
     link: '/admin/roles-and-permissions',
     icon: 'icon-user-following'
   },
-  menuItemUsers: {
+  users: {
     text: 'sidebar.nav.menu.USERS',
     link: '/admin/users',
     icon: 'icon-people'
   },
-  menuItemActions: {
+  actionLog: {
     text: 'sidebar.nav.menu.ACTIONS_LOG',
     link: '/admin/action-log',
     icon: 'icon-doc'
   },
-  menuItemConstants: {
+  constants: {
     text: 'sidebar.nav.menu.CONSTANTS',
     link: '/admin/constants',
     icon: 'icon-equalizer'
   },
-  menuItemDictionaries: {
+  dictionary: {
     text: 'sidebar.nav.menu.DICTIONARIES',
     link: '/admin/dictionaries',
     icon: 'icon-book-open'
   },
-  menuItemBanks: {
+  clients: {
     text: 'sidebar.nav.menu.BANKS',
     link: '/admin/banks',
     icon: 'icon-briefcase'
   },
-  menuItemDepartments: {
+  structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
     link: '/admin/departments',
     icon: 'icon-link'
   },
 
   // Утилиты:
-  menuGroupUtilities: {
+  utilities: {
     text: 'sidebar.nav.menu.UTILITIES',
     link: '/utilities',
     icon: 'icon-settings'
   },
-  menuItemLoadTemplates: {
+  loadTemplates: {
     text: 'sidebar.nav.menu.UPLOAD_TEMPLATES',
     link: '/utilities/upload-templates',
     icon: 'icon-docs'
   },
-  menuItemLoadData: {
+  dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',
     link: '/utilities/data-upload',
     icon: 'icon-cloud-upload'
   },
-  menuItemRandomValues: {
+  attributes: {
     text: 'sidebar.nav.menu.ARBITRARY_VALUES',
     link: '/utilities/arbitrary-values',
     icon: 'icon-equalizer'
   },
-  menuItemContactTrees: {
+  contacts: {
     text: 'sidebar.nav.menu.CONTACT_TREES',
     link: '/utilities/contact-trees',
     icon: 'icon-people'
   },
-  menuItemMessageScenarios: {
+  messages: {
     text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
     link: '/utilities/message-scenarios',
     icon: 'icon-bubbles'
   },
-  menuItemGroups: {
+  groups: {
     text: 'sidebar.nav.menu.GROUPS',
     link: '/utilities/groups',
     icon: 'icon-folder'
   },
-  menuItemCampaigns: {
+  callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
     link: '/utilities/capmaigns',
     icon: 'icon-rocket'
   },
-  menuItemSchedule: {
+  schedule: {
     text: 'sidebar.nav.menu.SCHEDULE',
     link: '/utilities/schedule',
     icon: 'icon-calendar'
   },
-  menuItemFormulas: {
+  formulas: {
     text: 'sidebar.nav.menu.FORMULAS',
     link: '/utilities/formulas',
     icon: 'icon-note'
   },
-  menuItemCourtsBailiffs: {
+  courts: {
     text: 'sidebar.nav.menu.COURTS',
     link: '/utilities/courts',
     icon: 'icon-badge'
+  },
+
+  // Рабочие места:
+  workplaces: {
+    text: 'sidebar.nav.menu.WORKPLACES',
+    link: '/workplaces',
+    icon: 'icon-earphones-alt'
+  },
+  debtList: {
+    text: 'sidebar.nav.menu.DEBT_LIST',
+    link: '/workplaces/debt-list',
+    icon: 'icon-wallet'
+  },
+  tasks: {
+    text: 'sidebar.nav.menu.TASKS',
+    link: '/workplaces/tasks',
+    icon: 'icon-action-redo'
+  },
+  debts: {
+    text: 'sidebar.nav.menu.DEBTS',
+    link: '/workplaces/debts',
+    icon: 'icon-fire'
+  },
+  contactProtocol: {
+    text: 'sidebar.nav.menu.CONTACT_PROTOCOL',
+    link: '/workplaces/contact-protocol',
+    icon: 'icon-call-in'
+  },
+  callcenter: {
+    text: 'sidebar.nav.menu.CALL_CENTER',
+    link: '/workplaces/call-center',
+    icon: 'icon-phone'
+  },
+  payments: {
+    text: 'sidebar.nav.menu.PAYMENTS',
+    link: '/workplaces/payments',
+    icon: 'icon-wallet'
+  },
+  courts2: {
+    text: 'sidebar.nav.menu.COURTS_2',
+    link: '/workplaces/courts',
+    icon: 'icon-badge'
+  },
+  outgoingInformation: {
+    text: 'sidebar.nav.menu.OUTGOING_INFORMATION',
+    link: '/workplaces/outgoing-information',
+    icon: 'icon-share-alt'
+  },
+  searchGroups: {
+    text: 'sidebar.nav.menu.SEARCH_GROUPS',
+    link: '/workplaces/search-groups',
+    icon: 'icon-eyeglass'
+  },
+  mail: {
+    text: 'sidebar.nav.menu.MAIL',
+    link: '/workplaces/mail',
+    icon: 'icon-envelope-letter'
+  },
+
+  // Отчеты
+  reports: {
+    text: 'sidebar.nav.menu.REPORTS',
+    link: '/reports',
+    icon: 'icon-docs'
+  },
+  anyReports: {
+    text: 'sidebar.nav.menu.ARBITRARY_REPORTS',
+    link: '/reports/arbitrary',
+    icon: 'icon-docs'
+  },
+
+  // Справка
+  help: {
+    text: 'sidebar.nav.menu.HELP',
+    link: '/help',
+    icon: 'icon-support'
   }
 };
