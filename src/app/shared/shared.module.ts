@@ -14,11 +14,11 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
-import { ModalModule } from 'ngx-bootstrap/modal';
+// import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { RatingModule } from 'ngx-bootstrap/rating';
-import { TabsModule } from 'ngx-bootstrap/tabs';
+// import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
@@ -29,6 +29,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 */
 // import { DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
@@ -58,6 +59,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ReactiveFormsModule,
     // framework module
     TranslateModule,
+    CurrencyMaskModule,
     AccordionModule.forRoot(),
     AlertModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -65,12 +67,12 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     CollapseModule.forRoot(),
     // DatepickerModule.forRoot(),
     DropdownModule.forRoot(),
-    ModalModule.forRoot(),
+    // ModalModule.forRoot(),
     NgxMyDatePickerModule,
     PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
     RatingModule.forRoot(),
-    TabsModule.forRoot(),
+    // TabsModule.forRoot(),
     TimepickerModule.forRoot(),
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
@@ -104,6 +106,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ReactiveFormsModule,
     TranslateModule,
     RouterModule,
+    CurrencyMaskModule,
     AccordionModule,
     AlertModule,
     ButtonsModule,
@@ -111,32 +114,31 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     CollapseModule,
     // DatepickerModule,
     DropdownModule,
-    ModalModule,
+    // ModalModule,
     NgxMyDatePickerModule,
     PaginationModule,
     ProgressbarModule,
     RatingModule,
-    TabsModule,
+    // TabsModule,
     TimepickerModule,
     TooltipModule,
     TypeaheadModule,
     // ToasterModule,
-    FlotDirective,
-    SparklineDirective,
-    EasypiechartDirective,
     CheckallDirective,
-    VectormapDirective,
+    EasypiechartDirective,
+    FlotDirective,
+    JqcloudDirective,
     NowDirective,
     ScrollableDirective,
-    JqcloudDirective,
+    SparklineDirective,
+    VectormapDirective,
     // app Components & Modules
-    GridModule,
-    TabComponent,
-    TabstripComponent,
-    DatePickerComponent,
     DatePickerComponent,
     DialogComponent,
-    QBuilderComponent
+    GridModule,
+    QBuilderComponent,
+    TabComponent,
+    TabstripComponent,
   ]
 })
 

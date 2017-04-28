@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
+import { IDataSource } from '../../../shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-constants',
@@ -28,6 +29,10 @@ export class ConstantsComponent implements OnInit {
     { name: 'City', prop: 'address.city', minWidth: 200, maxWidth: 200 },
     { name: 'State', prop: 'address.state', minWidth: 200 },
   ];
+
+  dataSource: IDataSource = {
+    read: '/api/constants',
+  };
 
   constructor(private fb: FormBuilder) { }
 

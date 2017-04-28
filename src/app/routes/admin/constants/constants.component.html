@@ -1,8 +1,85 @@
+<p-dialog
+    appendTo="body"
+    [header]="popupTitle"
+    [draggable]="true"
+    [modal]="true"
+    [resizable]="false"
+    [responsive]="false"
+    [width]="600"
+    [height]="650"
+    [(visible)]="display">
+
+  <form *ngIf="display" [formGroup]="form" novalidate>
+    <div class="form-group">
+      <label>Id
+        <input type="number" class="form-control" formControlName="id">
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <div>
+        <input type="text" class="form-control" formControlName="name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <div>
+        <input type="text" class="form-control" formControlName="city">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <div>
+        <app-input-datepicker [form]="form" controlName="birthdate"></app-input-datepicker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Is administrator?</label>
+      <div>
+        <label class="radio-inline">
+          <input type="radio" formControlName="isAdmin" value="1"> True
+        </label>
+        <label class="radio-inline">
+          <input type="radio" formControlName="isAdmin" value="0"> False
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age
+        <input
+          type="number"
+          formControlName="age"
+          class="form-control"
+          currencyMask
+          [options]="{ align: 'left', prefix: '', suffix: '', thousands: ' ', decimal: '.' }"
+        >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Gender
+        <select class="form-control" formControlName="gender">
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
+      <button type="button" class="ui-button-success" pButton icon="fa-check" (click)="display=false" label="Save"></button>
+    </div>
+  </p-footer>
+
+</p-dialog>
+
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
     <app-grid
-      (onEdit)="onEdit($event)"
-      [columns]="columns">
+      [columns]="columns"
+      [dataSource]="dataSource"
+      (onEdit)="onEdit($event)">
     </app-grid>
   </app-tab>
 </app-tabstrip>

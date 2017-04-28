@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/primeng';
+import { DialogModule, ButtonModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { ConstantsComponent } from './constants.component';
@@ -12,6 +12,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    ButtonModule,
     DialogModule,
     FormsModule,
     RouterModule.forChild(routes),

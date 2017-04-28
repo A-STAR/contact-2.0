@@ -14,7 +14,7 @@ import { GridService } from './grid.service';
     GridComponent
   ],
   declarations: [
-    GridComponent
+    GridComponent,
   ],
   providers: [
     GridService

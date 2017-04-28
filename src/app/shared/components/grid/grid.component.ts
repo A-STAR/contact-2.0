@@ -1,7 +1,15 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, EventEmitter, Input, Output } from '@angular/core';
-import { Http } from '@angular/http';
-
+import { Component,
+  ElementRef,
+  ViewChild,
+  OnInit,
+  AfterViewInit,
+  EventEmitter,
+  Input,
+  Output } from '@angular/core';
+// import { AuthHttp } from 'angular2-jwt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+
+import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Component({
@@ -9,10 +17,12 @@ import { GridService } from '../../../shared/components/grid/grid.service';
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
 })
-export class GridComponent implements AfterViewInit {
+export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Input() autoLoad = true;
   @Input() columns: Array<any> = [];
+  @Input() dataSource: IDataSource;
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
@@ -29,16 +39,22 @@ export class GridComponent implements AfterViewInit {
 
   constructor(private gridService: GridService, element: ElementRef) {
     this.element = element.nativeElement;
-    this.gridService
-      .fetchData()
-      .then(data => this.rows = data);
+  }
+
+  ngOnInit() {
+    if (this.autoLoad) {
+      this.gridService
+        .read(this.dataSource.read)
+        .then(data => this.rows = data)
+        .catch(err => console.error(err));
+      }
   }
 
   ngAfterViewInit() {
     // set up the height of datatable - it does not work with height specified
     const height = this.element.offsetHeight;
     // this.dataTableRef.nativeElement.style.height = `${height}px`;
-    this.dataTable.recalculate();
+    // this.dataTable.recalculate();
     // this.dataTable.bodyHeight = 400;
   }
 

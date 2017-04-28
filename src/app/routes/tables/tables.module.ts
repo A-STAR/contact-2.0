@@ -7,7 +7,6 @@ import {
   ButtonModule,
   DialogModule
 } from 'primeng/primeng';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 import { TabledemoComponent } from './datatable/tabledemo.component';
 import { GroupableComponent } from './groupable/groupable.component';
@@ -25,7 +24,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ButtonModule,
-    CurrencyMaskModule,
     DataTableModule,
     DialogModule,
     MultiSelectModule,

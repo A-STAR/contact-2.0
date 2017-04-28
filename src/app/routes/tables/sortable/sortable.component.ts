@@ -33,7 +33,7 @@ export class SortableComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.gridService
-      .fetchData()
+      .read()
       .then(data => {
         setTimeout(() => {
           this.value = data.slice(0, this.totalRecords);
