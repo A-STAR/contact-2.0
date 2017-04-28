@@ -40,15 +40,17 @@ export class MenuService {
   constructor(private http: AuthHttp, private authService: AuthService) { }
 
   loadMenu() {
-    const root = this.authService.root;
-
-    return this.http
-      .get(`${root}/api/menu/getMenu?path=/`)
-      .toPromise()
-      .then(response => response.json())
-      .then(response => this.prepareMenu(response))
+    return this.authService
+      .getRootUrl()
+      .then(root => {
+        return this.http
+        .get(`${root}/api/menu/getMenu?path=/`)
+        .toPromise()
+        .then(response => response.json())
+        .then(response => this.prepareMenu(response));
+      })
       .catch(error => {
-        // TODO
+        // TODO: display a message
         console.error('Could not load menu.', error);
         return [];
       });

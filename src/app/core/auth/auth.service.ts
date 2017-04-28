@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp } from 'angular2-jwt';
@@ -14,7 +14,7 @@ const setToken = (token: string) => localStorage.setItem(TOKEN_NAME, token);
 const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
-export class AuthService implements CanActivate {
+export class AuthService implements CanActivate, OnInit {
 
   private authenticated = false;
 
@@ -23,19 +23,28 @@ export class AuthService implements CanActivate {
   // backend root url
   private rootUrl = '';
 
-  constructor(private http: AuthHttp, private router: Router) {
-    http.get('./assets/server/root.json')
-      .toPromise()
-      .then(resp => this.rootUrl = resp.json().url)
-      .catch(err => console.error(err));
-  }
+  constructor(private http: AuthHttp, private router: Router) { }
 
   get isAuthenticated(): boolean {
     return this.authenticated;
   }
 
-  get root(): string {
-    return this.rootUrl;
+  ngOnInit() {
+    this.getRootUrl();
+  }
+
+  getRootUrl(): Promise<string> {
+    if (this.rootUrl) {
+      return Promise.resolve(this.rootUrl);
+    }
+
+    return this.http.get('./assets/server/root.json')
+      .toPromise()
+      .then(resp => {
+        this.rootUrl = resp.json().url;
+        return this.rootUrl;
+      })
+      .catch(err => console.error(err));
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -63,7 +72,7 @@ export class AuthService implements CanActivate {
   authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ login, password });
 
-    return this.http.post(`${this.root}/auth/login`, body)
+    return this.http.post(`${this.rootUrl}/auth/login`, body)
       .toPromise()
       .then((resp: Response) => {
         setToken(resp.headers.get('X-Auth-Token'));
@@ -76,7 +85,7 @@ export class AuthService implements CanActivate {
   }
 
   logout(): Promise<boolean> {
-    return this.http.get(`${this.root}/auth/logout`)
+    return this.http.get(`${this.rootUrl}/auth/logout`)
       .toPromise()
       .then((response: Response) => {
         removeToken();
