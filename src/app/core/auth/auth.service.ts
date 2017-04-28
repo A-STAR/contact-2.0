@@ -72,25 +72,32 @@ export class AuthService implements CanActivate, OnInit {
   authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ login, password });
 
-    return this.http.post(`${this.rootUrl}/auth/login`, body)
-      .toPromise()
-      .then((resp: Response) => {
-        setToken(resp.headers.get('X-Auth-Token'));
-        return this.authenticated = true;
+    return this.getRootUrl()
+      .then(root => {
+        return this.http.post(`${root}/auth/login`, body)
+          .toPromise()
+          .then((resp: Response) => {
+            setToken(resp.headers.get('X-Auth-Token'));
+            return this.authenticated = true;
+          });
       })
       .catch(error => {
         console.log(error.statusText || error.status || 'Request error');
-        return this.authenticated = true;  // FIXME
+        // TODO: display a message on the login form
+        return this.authenticated = false;
       });
   }
 
   logout(): Promise<boolean> {
-    return this.http.get(`${this.rootUrl}/auth/logout`)
-      .toPromise()
-      .then((response: Response) => {
-        removeToken();
-        this.router.navigate(['/login']);
-        return this.authenticated = false;
+    return this.getRootUrl()
+      .then(root => {
+        return this.http.get(`${root}/auth/logout`)
+        .toPromise()
+        .then((response: Response) => {
+          removeToken();
+          this.router.navigate(['/login']);
+          return this.authenticated = false;
+        });
       })
       .catch(error => {
         console.log(error.statusText || error.status || 'Request error');
