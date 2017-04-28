@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
-import { menuConfig } from '../../routes/menu-config';
 import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
-
-const { root } = require('../../../assets/server/root.json');
+import { AuthService } from '../auth/auth.service';
+import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
   {
@@ -38,9 +37,11 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
 export class MenuService {
   private menuItems: Array<IMenuItem> = [];
 
-  constructor(private http: AuthHttp) { }
+  constructor(private http: AuthHttp, private authService: AuthService) { }
 
   loadMenu() {
+    const root = this.authService.root;
+
     return this.http
       .get(`${root}/api/menu/getMenu?path=/`)
       .toPromise()

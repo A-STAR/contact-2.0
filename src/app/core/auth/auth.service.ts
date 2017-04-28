@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
 import { AuthHttp } from 'angular2-jwt';
-const { root } = require('../../../assets/server/root.json');
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
 
 const TOKEN_NAME = 'auth/token';
 
@@ -21,15 +20,25 @@ export class AuthService implements CanActivate {
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
-  private authorities: Array<string> = [];
+  // backend root url
+  private rootUrl = '';
 
-  constructor(private http: AuthHttp, private router: Router) { }
+  constructor(private http: AuthHttp, private router: Router) {
+    http.get('./assets/server/root.json')
+      .toPromise()
+      .then(resp => this.rootUrl = resp.json().url)
+      .catch(err => console.error(err));
+  }
 
   get isAuthenticated(): boolean {
     return this.authenticated;
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  get root(): string {
+    return this.rootUrl;
+  }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
     return this.checkLogin(url);
   }
@@ -54,11 +63,10 @@ export class AuthService implements CanActivate {
   authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ login, password });
 
-    return this.http.post(`${root}/auth/login`, body)
+    return this.http.post(`${this.root}/auth/login`, body)
       .toPromise()
       .then((resp: Response) => {
         setToken(resp.headers.get('X-Auth-Token'));
-        this.authorities = resp.json().authorities;
         return this.authenticated = true;
       })
       .catch(error => {
@@ -68,11 +76,10 @@ export class AuthService implements CanActivate {
   }
 
   logout(): Promise<boolean> {
-    return this.http.get(`${root}/auth/logout`)
+    return this.http.get(`${this.root}/auth/logout`)
       .toPromise()
       .then((response: Response) => {
         removeToken();
-        this.authorities = [];
         this.router.navigate(['/login']);
         return this.authenticated = false;
       })
