@@ -43,7 +43,7 @@ export class MenuService {
     const root = this.authService.root;
 
     return this.http
-      .get(`${root}/api/menu/getMenu?path=/`)
+      .get(`${root}/api/guiconfigurations`)
       .toPromise()
       .then(response => response.json())
       .then(response => this.prepareMenu(response))
