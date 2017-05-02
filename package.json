@@ -34,6 +34,7 @@
     "@ngx-translate/http-loader": "0.0.3",
     "@swimlane/ngx-datatable": "^8.2.1",
     "angular2-jwt": "^0.2.2",
+    "angular2-text-mask": "^8.0.1",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.4.1",
     "easy-pie-chart": "^2.1.7",
@@ -54,6 +55,7 @@
     "rxjs": "^5.1.0",
     "screenfull": "^3.0.2",
     "simple-line-icons": "^2.4.1",
+    "text-mask-addons": "^3.5.1",
     "weather-icons": "github:erikflowers/weather-icons",
     "web-animations-js": "^2.2.2",
     "zone.js": "0.8.5"

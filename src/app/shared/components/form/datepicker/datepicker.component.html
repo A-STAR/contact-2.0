@@ -1,35 +1,47 @@
-  <div *ngIf="form" class="input-group" [formGroup]="form">
+<div class="datepicker">
+  <span *ngIf="form" class="input-group" [formGroup]="form">
     <input
-      ngx-mydatepicker
-      class="form-control"
+      #input
+      class="form-control input-sm"
       [formControlName]="controlName"
-      #dp="ngx-mydatepicker"
       [name]="controlName"
       [ngModel]="value"
-      [options]="options"
-      (click)="dp.openCalendar()"
       (ngModelChange)="onValueChange($event)"
       placeholder="Select a date"
       style="float:none"
+      [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button class="btn btn-default" type="button" (click)="dp.toggleCalendar()"><i class="fa fa-calendar"></i></button>
+      <button #trigger class="btn btn-sm btn-default" type="button" (click)="toggleCalendar()"><i class="fa fa-calendar"></i></button>
     </span>
-  </div>
-  <div *ngIf="!form" class="input-group">
+  </span>
+  <span *ngIf="!form" class="input-group">
     <input
-      ngx-mydatepicker
-      class="form-control"
-      #dp="ngx-mydatepicker"
+      #input
+      class="form-control input-sm"
       [name]="name"
       [ngModel]="value"
-      [options]="options"
-      (click)="dp.openCalendar()"
       (ngModelChange)="onValueChange($event)"
       placeholder="Select a date"
       style="float:none"
+      [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button class="btn btn-default" type="button" (click)="dp.toggleCalendar()"><i class="fa fa-calendar"></i></button>
+      <button #trigger class="btn btn-sm btn-default" type="button" (click)="toggleCalendar()"><i class="fa fa-calendar"></i></button>
     </span>
+  </span>
+  <div #dropdown>
+    <div *ngIf="isExpanded" class="dropdown" [ngStyle]="dropdownStyle">
+      <p-calendar
+        [ngModel]="date"
+        (ngModelChange)="onDateChange($event)"
+        [inline]="true"
+        [monthNavigator]="true"
+        [yearNavigator]="true"
+        yearRange="1900:2050"
+        dateFormat="yy-mm-dd"
+        [locale]="locale">
+      </p-calendar>
+    </div>
   </div>
+</div>
