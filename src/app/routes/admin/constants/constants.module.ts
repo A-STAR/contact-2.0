@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { DialogModule, ButtonModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../shared/shared.module';
@@ -14,7 +13,6 @@ const routes: Routes = [
   imports: [
     ButtonModule,
     DialogModule,
-    FormsModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],

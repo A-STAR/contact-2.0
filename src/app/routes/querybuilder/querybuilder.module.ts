@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DialogModule } from 'primeng/primeng';
 import { QueryBuilderComponent } from './querybuilder.component';
@@ -13,9 +11,7 @@ const routes: Routes = [
 @NgModule({
     imports: [
       SharedModule,
-      CommonModule,
       DialogModule,
-      FormsModule,
       RouterModule.forChild(routes),
     ],
     exports: [

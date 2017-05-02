@@ -44,6 +44,7 @@ import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 // app imports
 import { DatePickerComponent } from './components/form/datepicker/datepicker.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -78,6 +79,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     TypeaheadModule.forRoot(),
     // ToasterModule
     // app modules
+    DynamicFormModule,
     GridModule,
   ],
   providers: [
@@ -135,6 +137,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // app Components & Modules
     DatePickerComponent,
     DialogComponent,
+    DynamicFormModule,
     GridModule,
     QBuilderComponent,
     TabComponent,
