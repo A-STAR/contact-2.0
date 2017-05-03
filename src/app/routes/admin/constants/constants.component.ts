@@ -130,7 +130,7 @@ export class ConstantsComponent implements OnInit {
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
 
-  onSave(): void {
+  onSave(event): void {
     const root = 'http://localhost:8080';
     const id = this.getFieldValue('id');
     const typeCode = this.getFieldValue('typeCode');
@@ -164,7 +164,7 @@ export class ConstantsComponent implements OnInit {
       });
   }
 
-  onCancel(): void {
+  onCancel(event): void {
     this.display = false;
     this.form.reset();
   }
