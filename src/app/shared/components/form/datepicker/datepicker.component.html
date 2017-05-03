@@ -5,7 +5,6 @@
       class="form-control input-sm"
       [formControlName]="controlName"
       [name]="controlName"
-      [ngModel]="value"
       (ngModelChange)="onValueChange($event)"
       placeholder="Select a date"
       style="float:none"
@@ -20,7 +19,7 @@
       #input
       class="form-control input-sm"
       [name]="name"
-      [ngModel]="value"
+      [ngModel]="date"
       (ngModelChange)="onValueChange($event)"
       placeholder="Select a date"
       style="float:none"
@@ -39,7 +38,7 @@
         [monthNavigator]="true"
         [yearNavigator]="true"
         yearRange="1900:2050"
-        dateFormat="yy-mm-dd"
+        [dateFormat]="dateFormat"
         [locale]="locale">
       </p-calendar>
     </div>

@@ -46,19 +46,15 @@ export class ConstantsComponent implements OnInit {
       switch (val.typeCode) {
         case 1:
           val.value = String(val.valueN);
-          delete val.valueN;
           break;
         case 2:
           val.value = this.datePipe.transform(new Date(val.valueD), 'dd.MM.yyyy HH:mm:ss');
-          delete val.valueD;
           break;
         case 3:
-          val.value = val.valueS;
-          delete val.valueS;
+          val.value = val.valueS || '';
           break;
         case 4:
-          val.value = Boolean(val.valueB);
-          delete val.valueB;
+          val.value = Boolean(val.valueB) ? 'Истина' : 'Ложь';
           break;
         default:
           val.value = '';
@@ -90,11 +86,25 @@ export class ConstantsComponent implements OnInit {
   }
 
   populateForm(record: any) {
+    let value = record.value;
+    switch (record.typeCode) {
+      case 2:
+        value = this.datePipe.transform(new Date(record.valueD), 'dd.MM.yyyy');
+        break;
+      case 3:
+        value = value || null;
+        break;
+      case 4:
+        value = value === 'Истина' ? '1' : '0';
+        break;
+      case 1:
+      default:
+    }
     this.form.setValue({
       id: record.id,
       name: record.name,
       typeCode: record.typeCode,
-      value:  record.value,
+      value: value,
       dsc: record.dsc,
       altDsc: record.altDsc,
     });
@@ -106,28 +116,42 @@ export class ConstantsComponent implements OnInit {
 
   onEdit(record: any): void {
     this.editedRecord = record;
+    this.createForm();
     this.populateForm(record);
     this.display = true;
   }
 
+  getFieldValue(field: string): any {
+    return this.form.get(field).value;
+  }
+
+  valueToIsoDate(value: any): string {
+    const converted = value.split('.').reverse().map(Number);
+    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  }
+
   onSave(): void {
     const root = 'http://localhost:8080';
-    const id = this.form.get('id').value;
-    const value = this.form.get('value').value;
+    const id = this.getFieldValue('id');
+    const typeCode = this.getFieldValue('typeCode');
+    const value = this.getFieldValue('value');
     const fieldMap: object = {
       1: 'valueN',
       2: 'valueD',
       3: 'valueS',
       4: 'valueB',
     };
-    const field: string = fieldMap[this.form.get('typeCode').value];
+    const field: string = fieldMap[this.getFieldValue('typeCode')];
     const body = { [field]: value };
-    console.log('typecode', this.form.get('typeCode').value);
-    console.log('value', this.form.get('value').value);
 
-    if (this.form.get('typeCode').value === 4) {
+    if (typeCode === 4) {
+      // convert the boolean to a number
       body[field] = Number(value);
+    } else if (typeCode === 2) {
+      // convert the date back to ISO8601
+      body[field] = this.valueToIsoDate(value);
     }
+
     this.http.put(`${root}/api/constants/${id}`, body)
       .toPromise()
       .then(resp => {

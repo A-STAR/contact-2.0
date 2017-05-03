@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
 @Component({
@@ -13,8 +14,8 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   @Input() controlName: string;
   @Input() name: string;
   @Input() value: string;
-  @Input() form: any;
-  @Output() valueChange = new EventEmitter();
+  @Input() form: FormGroup;
+  @Output() valueChange = new EventEmitter<string>();
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
@@ -23,9 +24,11 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
   dropdownStyle = {};
 
+  dateFormat = 'dd.mm.yy';
+
   mask = {
-    mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/],
-    pipe: createAutoCorrectedDatePipe('yyyy-mm-dd'),
+    mask: [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/],
+    pipe: createAutoCorrectedDatePipe('dd.mm.yyyy'),
     keepCharPositions: true
   };
 
@@ -57,6 +60,9 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.controlName && this.form.get(this.controlName).value) {
+      this.value = this.form.get(this.controlName).value;
+    }
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
@@ -73,15 +79,19 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     const d = newValue.getDate();
     const m = newValue.getMonth() + 1;
     const y = newValue.getFullYear();
-    const date = `${y}-${m > 9 ? m : '0' + m}-${d > 9 ? d : '0' + d}`;
+    const date = `${d > 9 ? d : '0' + d}.${m > 9 ? m : '0' + m}.${y}`;
 
-    this.onValueChange(date);
+    if (this.controlName) {
+      this.form.patchValue({ [this.controlName]: date });
+    }
 
+    this.form.markAsDirty();
+    this.value = date;
     this.toggleCalendar(false);
   }
 
   get date() {
-    return Date.parse(this.value) ? this.value : null;
+    return this.value || null;
   }
 
   toggleCalendar(isExpanded?: boolean) {
