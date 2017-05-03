@@ -6,7 +6,6 @@ import { Component,
   EventEmitter,
   Input,
   Output } from '@angular/core';
-// import { AuthHttp } from 'angular2-jwt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 import { IDataSource } from '../../../shared/components/grid/grid.interface';

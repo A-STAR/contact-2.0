@@ -1,14 +1,14 @@
-  <form *ngIf="form" [formGroup]="form" novalidate>
+  <form [formGroup]="form" novalidate>
+
     <div class="form-group">
       <label>Id
         <input type="number" class="form-control" formControlName="id">
       </label>
     </div>
     <div class="form-group">
-      <label>Name</label>
-      <div>
+      <label>Name
         <input type="text" class="form-control" formControlName="name">
-      </div>
+      </label>
     </div>
 
     <div class="form-group">
@@ -23,6 +23,7 @@
         </select>
       </label>
     </div>
+
     <div [ngSwitch]="form.controls['typeCode'].value">
 
       <div *ngSwitchCase="1" class="form-group">
@@ -34,7 +35,7 @@
       <div *ngSwitchCase="2" class="form-group">
         <label>Значение</label>
         <div>
-          <!--<app-input-datepicker [form]="form" controlName="value"></app-input-datepicker>-->
+          <app-input-datepicker [form]="form" controlName="value"></app-input-datepicker>
         </div>
       </div>
 
@@ -80,6 +81,7 @@
         ></textarea>
       </label>
     </div>
+
     <div class="form-group">
       <label>Альтернативный коментарий
         <textarea
@@ -89,4 +91,5 @@
         ></textarea>
       </label>
     </div>
+
   </form>

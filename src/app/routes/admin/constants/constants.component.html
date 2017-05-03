@@ -13,8 +13,16 @@
 
   <p-footer>
     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
-      <button type="button" class="ui-button-success" pButton icon="fa-check" (click)="display=false" label="Save"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" label="Cancel" (click)="onCancel($event)"></button>
+      <button
+        type="button"
+        class="ui-button-success"
+        pButton
+        icon="fa-check"
+        label="Save"
+        [disabled]="!form.dirty"
+        (click)="onSave($event)">
+      </button>
     </div>
   </p-footer>
 

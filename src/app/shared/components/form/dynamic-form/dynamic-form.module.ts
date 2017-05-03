@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { DynamicFormComponent } from './dynamic-form.component';
+import { DatePickerModule } from './../datepicker/datepicker.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    DatePickerModule,
     ReactiveFormsModule,
   ],
   exports: [
     DynamicFormComponent
   ],
   declarations: [
-    DynamicFormComponent
+    DynamicFormComponent,
   ],
   providers: [],
 })

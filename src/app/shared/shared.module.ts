@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-// Our modules
-
-// Vendor modules
+// Angle modules
 import { TranslateModule } from '@ngx-translate/core';
 // import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
@@ -14,24 +12,13 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
-// import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { RatingModule } from 'ngx-bootstrap/rating';
-// import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-/*
-    The presence of moment.js in DatepickerModule breaks lazyload. See:
-        https://github.com/angular/angular-cli/issues/2496
-        https://github.com/valor-software/ng2-bootstrap/issues/1187
-*/
-// import { DatepickerModule } from 'ngx-bootstrap/datepicker';
-import { CalendarModule } from 'primeng/primeng';
-import { CurrencyMaskModule } from 'ng2-currency-mask';  // TODO: probably dump in favour of angular2-text-mask
-import { TextMaskModule } from 'angular2-text-mask';
 
+// Angle directives
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
 import { EasypiechartDirective } from './directives/easypiechart/easypiechart.directive';
@@ -42,8 +29,15 @@ import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
 import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 
-// app imports
-import { DatePickerComponent } from './components/form/datepicker/datepicker.component';
+// App modules
+import { CalendarModule } from 'primeng/primeng';
+import { DatePickerModule } from './components/form/datepicker/datepicker.module';
+// TODO: consider to dump in favour of angular2-text-mask
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MomentModule } from 'angular2-moment';
+import { TextMaskModule } from 'angular2-text-mask';
+
+// App directives
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
@@ -59,30 +53,27 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // framework module
-    TranslateModule,
-    CurrencyMaskModule,
+    // Angle modules
     AccordionModule.forRoot(),
     AlertModule.forRoot(),
     ButtonsModule.forRoot(),
+    CalendarModule,
     CarouselModule.forRoot(),
     CollapseModule.forRoot(),
-    // DatepickerModule.forRoot(),
+    CurrencyMaskModule,
     DropdownModule.forRoot(),
-    // ModalModule.forRoot(),
-    CalendarModule,
-    TextMaskModule,
+    TranslateModule,
     PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
     RatingModule.forRoot(),
-    // TabsModule.forRoot(),
-    TimepickerModule.forRoot(),
+    TextMaskModule,
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
-    // ToasterModule
     // app modules
+    DatePickerModule,
     DynamicFormModule,
     GridModule,
+    MomentModule,
   ],
   providers: [
     ColorsService,
@@ -100,7 +91,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // app declarations
     TabComponent,
     TabstripComponent,
-    DatePickerComponent,
     DialogComponent,
     QBuilderComponent
   ],
@@ -110,25 +100,21 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ReactiveFormsModule,
     TranslateModule,
     RouterModule,
+    // Angle exports
     CurrencyMaskModule,
     AccordionModule,
     AlertModule,
     ButtonsModule,
     CarouselModule,
     CollapseModule,
-    // DatepickerModule,
     DropdownModule,
-    // ModalModule,
     CalendarModule,
     TextMaskModule,
     PaginationModule,
     ProgressbarModule,
     RatingModule,
-    // TabsModule,
-    TimepickerModule,
     TooltipModule,
     TypeaheadModule,
-    // ToasterModule,
     CheckallDirective,
     EasypiechartDirective,
     FlotDirective,
@@ -137,11 +123,12 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ScrollableDirective,
     SparklineDirective,
     VectormapDirective,
-    // app Components & Modules
-    DatePickerComponent,
+    // App exports
+    DatePickerModule,
     DialogComponent,
     DynamicFormModule,
     GridModule,
+    MomentModule,
     QBuilderComponent,
     TabComponent,
     TabstripComponent,

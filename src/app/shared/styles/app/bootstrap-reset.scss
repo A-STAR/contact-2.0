@@ -138,6 +138,12 @@ hr {
   box-shadow: 0 0 0 #000 !important;
 }
 
+input.form-control,
+textarea.form-control,
+select.form-control {
+  font-weight: normal;
+}
+
 .input-sm,
 select.input-sm {
   height: 31px;
