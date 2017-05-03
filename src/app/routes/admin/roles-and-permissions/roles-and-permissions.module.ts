@@ -3,10 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { DialogModule, ButtonModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../shared/shared.module';
+import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 import { RolesComponent } from './roles.component';
 
 const routes: Routes = [
-  { path: '', component: RolesComponent },
+  { path: '', component: RolesAndPermissionsComponent },
 ];
 
 @NgModule({
@@ -20,7 +21,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    RolesComponent,
+    RolesAndPermissionsComponent,
+    RolesComponent
   ]
 })
-export class RolesModule { }
+export class RolesAndPermissionsModule { }

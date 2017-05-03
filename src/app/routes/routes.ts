@@ -20,9 +20,19 @@ export const routes = [
     component: LayoutComponent,
     canActivate: [AuthService],
     children: [
-      { path: '', redirectTo: '../home', pathMatch: 'full' },
-      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
-      { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' }
+      {
+        path: '',
+        redirectTo: '../home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'constants',
+        loadChildren: './admin/constants/constants.module#ConstantsModule'
+      },
+      {
+        path: 'roles-and-permissions',
+        loadChildren: './admin/roles-and-permissions/roles-and-permissions.module#RolesAndPermissionsModule'
+      }
     ]
   },
 
