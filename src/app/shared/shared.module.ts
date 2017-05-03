@@ -41,6 +41,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
+import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 import { TabComponent } from './components/tabstrip/tab.component';
@@ -92,6 +93,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     TabComponent,
     TabstripComponent,
     DialogComponent,
+    NumericInputComponent,
     QBuilderComponent
   ],
   exports: [
@@ -129,6 +131,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DynamicFormModule,
     GridModule,
     MomentModule,
+    NumericInputComponent,
     QBuilderComponent,
     TabComponent,
     TabstripComponent,
