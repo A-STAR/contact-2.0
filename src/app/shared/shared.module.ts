@@ -28,8 +28,9 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
         https://github.com/valor-software/ng2-bootstrap/issues/1187
 */
 // import { DatepickerModule } from 'ngx-bootstrap/datepicker';
-import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { CalendarModule } from 'primeng/primeng';
+import { CurrencyMaskModule } from 'ng2-currency-mask';  // TODO: probably dump in favour of angular2-text-mask
+import { TextMaskModule } from 'angular2-text-mask';
 
 import { FlotDirective } from './directives/flot/flot.directive';
 import { SparklineDirective } from './directives/sparkline/sparkline.directive';
@@ -69,7 +70,8 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // DatepickerModule.forRoot(),
     DropdownModule.forRoot(),
     // ModalModule.forRoot(),
-    NgxMyDatePickerModule,
+    CalendarModule,
+    TextMaskModule,
     PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
     RatingModule.forRoot(),
@@ -117,7 +119,8 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // DatepickerModule,
     DropdownModule,
     // ModalModule,
-    NgxMyDatePickerModule,
+    CalendarModule,
+    TextMaskModule,
     PaginationModule,
     ProgressbarModule,
     RatingModule,
