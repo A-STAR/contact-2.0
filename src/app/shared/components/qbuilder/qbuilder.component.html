@@ -33,7 +33,12 @@
               </select>
             </span>
             <span *ngSwitchCase="'date'">
+              <!-- FIXME: name -->
               <app-input-datepicker name="fake-form-date" [(value)]="rule.value"></app-input-datepicker>
+            </span>
+            <span *ngSwitchCase="'currency'">
+              <!-- FIXME: name -->
+              <app-input-number name="fake-form-number" [(value)]="rule.value" suffix="руб."></app-input-number>
             </span>
             <span *ngSwitchDefault>
               <input [(ngModel)]="rule.value" type="text" class="form-control input-sm"/>

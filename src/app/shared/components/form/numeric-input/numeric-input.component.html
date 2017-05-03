@@ -1,0 +1,30 @@
+<span *ngIf="form" [formGroup]="form" (wheel)="onMouseWheel($event)" class="numeric-input">
+  <input
+    [formControlName]="name"
+    [name]="name"
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    [textMask]="mask"
+    class="form-control input-sm"
+    style="text-align: right;"
+  >
+  <div class="numeric-input_icons">
+    <i (click)="increment()" class="fa fa-angle-up"></i>
+    <i (click)="decrement()" class="fa fa-angle-down"></i>
+  </div>
+</span>
+
+<span *ngIf="!form" (wheel)="onMouseWheel($event)" class="numeric-input">
+  <input
+    [name]="name"
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    [textMask]="mask"
+    class="form-control input-sm"
+    style="text-align: right;"
+  >
+  <div class="numeric-input_icons">
+    <i (click)="increment()" class="fa fa-angle-up"></i>
+    <i (click)="decrement()" class="fa fa-angle-down"></i>
+  </div>
+</span>

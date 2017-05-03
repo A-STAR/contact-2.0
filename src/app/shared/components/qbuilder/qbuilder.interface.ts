@@ -7,7 +7,7 @@ export interface IGroup {
 export interface IField {
   code: string;
   name: string;
-  type: 'boolean' | 'number' | 'date' | 'string' | Array<string>;
+  type: 'boolean' | 'number' | 'currency' | 'date' | 'string' | Array<string>;
   operators?: Array<IComparisonOperator>;
 }
 
