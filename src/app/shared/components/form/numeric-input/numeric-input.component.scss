@@ -1,0 +1,22 @@
+.numeric-input {
+  display: inline-block;
+  position: relative;
+  input {
+    padding-right: 24px;
+  }
+}
+
+.numeric-input_icons {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  i {
+    display: block;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    &:hover {
+      color: #5d9cec;
+    }
+  }
+}

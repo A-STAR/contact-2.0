@@ -52,8 +52,18 @@ const metadata: IMetadata = {
       { name: '==' },
       { name: '!=' }
     ]
+  }, {
+    code: 'foo',
+    name: 'Foo',
+    type: 'currency',
+    operators: [
+      { name: '==' },
+      { name: '!=' },
+      { name: '<' },
+      { name: '>' }
+    ]
   }]
-}
+};
 
 @Injectable()
 export class QBuilderService {
