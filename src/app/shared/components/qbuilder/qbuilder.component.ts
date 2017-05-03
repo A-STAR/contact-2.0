@@ -45,7 +45,7 @@ export class QBuilderComponent {
   }
 
   getType(condition: ICondition): string {
-    return condition.field.type instanceof Array ? 'dictionary' : condition.field.type;
+    return Array.isArray(condition.field.type) ? 'dictionary' : condition.field.type;
   }
 
   onFieldChange(condition: ICondition): void {
