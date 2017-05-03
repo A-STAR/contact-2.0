@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 
@@ -7,6 +7,9 @@ import { IDataSource } from '../../../shared/components/grid/grid.interface';
   templateUrl: './roles.component.html'
 })
 export class RolesComponent {
+  selectedRole: any = null;
+  @Output() onSelect: EventEmitter<number> = new EventEmitter(false);
+
   columns: Array<any> = [
     {
       name: '#',
@@ -15,13 +18,13 @@ export class RolesComponent {
       maxWidth: 70,
     },
     {
-      name: 'Наименование',
+      name: 'Название',
       prop: 'name',
       maxWidth: 350,
     },
     {
-      name: 'Коментарий',
-      prop: 'dsc',
+      name: 'Комментарий',
+      prop: 'obj_comment',
       width: 200,
       maxWidth: 400,
     },
@@ -31,4 +34,12 @@ export class RolesComponent {
     read: '/api/roles',
     dataKey: 'roles',
   };
+
+  parseFn(data) {
+    return data.roles;
+  }
+
+  onSelectedRowChange(event) {
+    this.onSelect.emit(event && event.id);
+  }
 }

@@ -2,4 +2,4 @@
   {{ 'sidebar.nav.menu.ROLES_AND_PERMISSIONS' | translate }}
 </div>
 
-<app-roles></app-roles>
+<app-roles (onSelect)="onSelect($event)"></app-roles>

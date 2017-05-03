@@ -5,5 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
-
+  onSelect(id) {
+    console.log(`Selected role ${id}`);
+  }
 }

@@ -1,4 +1,8 @@
 <app-grid
   [columns]="columns"
-  [dataSource]="dataSource">
+  [dataSource]="dataSource"
+  [parseFn]="parseFn"
+  (onSelectedRowChange)="onSelectedRowChange($event)">
 </app-grid>
+
+<!-- TODO: disable multiple row selection -->
