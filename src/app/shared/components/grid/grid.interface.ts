@@ -5,3 +5,5 @@ export interface IDataSource {
   delete?: string;
   dataKey: string;
 }
+
+export type TSelectionType = 'single' | 'multiClick';
