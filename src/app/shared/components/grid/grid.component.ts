@@ -25,7 +25,7 @@ interface IParameters {
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
-  @Input() selectionType: TSelectionType = 'single';
+  @Input() selectionType: TSelectionType = 'multiClick';
   @Input() autoLoad = true;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];

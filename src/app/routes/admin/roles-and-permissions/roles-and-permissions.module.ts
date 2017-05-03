@@ -4,6 +4,7 @@ import { DialogModule, ButtonModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
+import { PermissionsComponent } from './permissions.component';
 import { RolesComponent } from './roles.component';
 
 const routes: Routes = [
@@ -21,8 +22,9 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
+    PermissionsComponent,
+    RolesComponent,
     RolesAndPermissionsComponent,
-    RolesComponent
   ]
 })
 export class RolesAndPermissionsModule { }
