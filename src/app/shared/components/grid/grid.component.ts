@@ -7,9 +7,15 @@ import { Component,
   Input,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+const format = require('string-format');
 
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { IToolbarAction } from '../toolbar/toolbar.interface';
+
+interface IParameters {
+  [index: string]: any;
+}
 
 @Component({
   selector: 'app-grid',
@@ -23,7 +29,13 @@ export class GridComponent implements OnInit, AfterViewInit {
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Output() onEdit: EventEmitter<any> = new EventEmitter();
+  @Input() selectionType: string;
+  @Input() innerStyles;
+  @Input() initialParameters: IParameters;
+  @Input() bottomActions: IToolbarAction[];
+  @Output() onEdit: EventEmitter<any> = new EventEmitter(false);
+  @Output() onRowSelect: EventEmitter<any> = new EventEmitter(false);
+  @Output() onAction: EventEmitter<any> = new EventEmitter(false);
 
   element: HTMLElement;
   rows: Array<any> = [];
@@ -44,8 +56,9 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     if (this.autoLoad) {
-      this.load();
+      this.load(this.initialParameters);
     }
+    this.selectionType = this.selectionType || 'multiClick';
   }
 
   ngAfterViewInit() {
@@ -56,9 +69,9 @@ export class GridComponent implements OnInit, AfterViewInit {
     // this.dataTable.bodyHeight = 400;
   }
 
-  load() {
+  load(parameters?: IParameters) {
     this.gridService
-      .read(this.dataSource.read)
+      .read(format(this.dataSource.read, parameters || {}))
       .then(data => this.rows = this.parseFn(data))
       .catch(err => console.error(err));
   }
@@ -68,12 +81,17 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   onSelect({ selected }): void {
+    this.onRowSelect.emit(selected);
     // this.selected = [].concat(selected);
     // console.log(this.selected.length);
   }
 
   onSelectCheck(row, col, value): boolean {
     return true;
+  }
+
+  onActionClick(event) {
+    this.onAction.emit(event);
   }
 
   onActivate(event): void {

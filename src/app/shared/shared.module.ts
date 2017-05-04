@@ -46,6 +46,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
+import { ToolbarModule } from './components/toolbar/toolbar.module';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 
 // https://angular.io/styleguide#!#04-10
@@ -74,6 +76,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DatePickerModule,
     DynamicFormModule,
     GridModule,
+    ToolbarModule,
     MomentModule,
   ],
   providers: [
@@ -130,6 +133,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DialogComponent,
     DynamicFormModule,
     GridModule,
+    ToolbarModule,
     MomentModule,
     NumericInputComponent,
     QBuilderComponent,
