@@ -63,6 +63,10 @@ export class GridComponent implements OnInit, AfterViewInit {
       .catch(err => console.error(err));
   }
 
+  update(key: string | number, body: object) {
+    return this.gridService.update(this.dataSource.update, key, body);
+  }
+
   onSelect({ selected }): void {
     // this.selected = [].concat(selected);
     // console.log(this.selected.length);

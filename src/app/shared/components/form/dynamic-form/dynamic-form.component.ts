@@ -1,16 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MomentModule } from 'angular2-moment';
 
+import { IDynamicFormControl } from './dynamic-form-control.interface';
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: 'dynamic-form.component.html'
 })
 
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent {
   @Input() form: FormGroup;
-
-  constructor() { }
-
-  ngOnInit() { }
+  @Input() controls: Array<IDynamicFormControl>;
 }
+

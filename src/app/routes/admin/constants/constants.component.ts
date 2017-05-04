@@ -3,10 +3,10 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthHttp } from 'angular2-jwt';
 import { DatePipe } from '@angular/common';
 
-// import { HttpService } from '../../../core/auth/auth-http.service';
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
@@ -31,8 +31,27 @@ export class ConstantsComponent implements OnInit {
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
   ];
 
+  controls: Array<IDynamicFormControl> = [
+    { label: 'Идентификатор', controlName: 'id', type: 'number', required: true, disabled: true },
+    { label: 'Наименование', controlName: 'name', type: 'text', required: true, disabled: true },
+    { label: 'Тип значения', controlName: 'typeCode', type: 'select', required: true, disabled: true,
+      options: [
+        { label: 'Число', value: 1 } ,
+        { label: 'Дата', value: 2 } ,
+        { label: 'Строка', value: 3 } ,
+        { label: 'Булево', value: 4 } ,
+        { label: 'Деньги', value: 5 } ,
+        { label: 'Словарь', value: 6 } ,
+      ]
+    },
+    { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
+    { label: 'Описание', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2 },
+    { label: 'Альт. описание', controlName: 'altDsc', type: 'textarea', required: true, disabled: true, rows: 2 },
+  ];
+
   dataSource: IDataSource = {
     read: '/api/constants',
+    update: '/api/constants',
     dataKey: 'constants',
   };
 
@@ -70,19 +89,22 @@ export class ConstantsComponent implements OnInit {
   }
 
   createForm(): void {
-    this.form = this.fb.group({
-      id: [ '', Validators.required ],
-      name: [ '', Validators.required ],
-      typeCode: [ '', Validators.required ],
-      value:  [ '', Validators.required ],
-      dsc: '',
-      altDsc: '',
+    const ctrls = this.controls.reduce((arr, ctrl) => {
+      const config = { disabled: !!ctrl.disabled };
+      arr[ctrl.controlName] = ctrl.required
+        ? new FormControl(config, Validators.required)
+        : new FormControl(config);
+      return arr;
+    }, {});
+
+    this.form = this.fb.group(ctrls);
+
+    // disable controls where necessary
+    this.controls.forEach(ctrl => {
+      if (ctrl.disabled) {
+        this.form.get(ctrl.controlName).disable();
+      }
     });
-    this.form.get('id').disable();
-    this.form.get('name').disable();
-    this.form.get('typeCode').disable();
-    this.form.get('dsc').disable();
-    this.form.get('altDsc').disable();
   }
 
   populateForm(record: any) {
@@ -100,14 +122,16 @@ export class ConstantsComponent implements OnInit {
       case 1:
       default:
     }
-    this.form.setValue({
-      id: record.id,
-      name: record.name,
-      typeCode: record.typeCode,
-      value: value,
-      dsc: record.dsc,
-      altDsc: record.altDsc,
-    });
+
+    const values: { [key: string]: any } = this.controls.reduce((arr, ctrl) => {
+      arr[ctrl.controlName] = record[ctrl.controlName];
+      return arr;
+    }, {});
+
+    // NOTE: this is special, to be revised to make more universal
+    values.value = value;
+    console.log('values', values);
+    this.form.setValue(values);
   }
 
   onClose(id: number): void {
@@ -131,7 +155,6 @@ export class ConstantsComponent implements OnInit {
   }
 
   onSave(event): void {
-    const root = 'http://localhost:8080';
     const id = this.getFieldValue('id');
     const typeCode = this.getFieldValue('typeCode');
     const value = this.getFieldValue('value');
@@ -152,8 +175,7 @@ export class ConstantsComponent implements OnInit {
       body[field] = this.valueToIsoDate(value);
     }
 
-    this.http.put(`${root}/api/constants/${id}`, body)
-      .toPromise()
+    this.grid.update(id, body)
       .then(resp => {
         this.display = false;
         this.form.reset();
@@ -170,6 +192,6 @@ export class ConstantsComponent implements OnInit {
   }
 
   get dialogTitle() {
-    return !this.editedRecord ? null : this.editedRecord.name || this.editedRecord.id || 'No title';
+    return !this.editedRecord ? null : this.editedRecord.name || this.editedRecord.id || 'Edit form';
   }
 }

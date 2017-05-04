@@ -5,34 +5,56 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class GridService {
+  // defines wether the request should fetch a resource from the server's root
+  private _localRequest = false;
 
   constructor(private http: AuthHttp, private authService: AuthService) { }
 
-  read(url: string = ''): Promise<any> {
-    if (!url) {
-      return this.http.get('assets/server/100k.json')
-      .toPromise()
-      .then(data => data.json());
+  localRequest(): GridService {
+    this._localRequest = true;
+    return this;
+  }
+
+  read(url: string): Promise<any> {
+    if (this._localRequest) {
+      // this whould not be a default value, so clear the flag for further requests
+      this._localRequest = false;
+      return this.http.get(url)
+        .toPromise()
+        .then(data => data.json());
     }
 
-    return this.authService
-      .getRootUrl()
-      .then(root => {
-        return this.http.get(`${root}${url}`)
+    return this.validateUrl(url)
+      .then(rootUrl => {
+        return this.http.get(`${rootUrl}${url}`)
           .toPromise()
           .then(data => data.json());
-    });
+     });
   }
+
   // TODO: to be implemented
-  create(url: string = ''): Promise<any> {
+  create(url: string): Promise<any> {
     return Promise.resolve(false);
   }
 
-  update(url: string = ''): Promise<any> {
+  update(url: string, key: string | number, body: object): Promise<any> {
+     return this.validateUrl(url)
+      .then(rootUrl => {
+        return this.http.put(`${rootUrl}${url}/${key}`, body)
+          .toPromise()
+          .then(data => data.json());
+     });
+  }
+
+  // TODO: to be implemented
+  delete(url: string): Promise<any> {
     return Promise.resolve(false);
   }
 
-  delete(url: string = ''): Promise<any> {
-    return Promise.resolve(false);
+  private validateUrl(url: string = ''): Promise<any> {
+    if (!url) {
+      return Promise.reject('Error: no url passed to the GridService');
+    }
+    return this.authService.getRootUrl();
   }
 }

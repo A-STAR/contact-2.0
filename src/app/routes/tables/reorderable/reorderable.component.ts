@@ -31,7 +31,8 @@ export class ReorderableComponent implements OnInit {
 
   ngOnInit() {
     this.gridService
-      .read()
+      .localRequest()
+      .read('assets/server/100k.json')
       .then(data => {
         this.value = data.slice(0, this.totalRecords);
       });
