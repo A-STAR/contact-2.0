@@ -1,30 +1,22 @@
 <app-dialog
-  [display]="!!editedRecord"
+  [display]="!!editedRole"
   (displayChange)="onDisplayChange($event)"
 >
   <div dialog-header>
     <h3>{{ title }}</h3>
   </div>
 
-  <!-- TODO: dynamic form -->
-  <form *ngIf="form" [formGroup]="form" novalidate>
-    <div class="form-group">
-      <label>Id</label>
-      <input type="number" class="form-control" formControlName="id">
-    </div>
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" class="form-control" formControlName="name">
-    </div>
-    <div class="form-group">
-      <label>Comment</label>
-      <textarea class="form-control" formControlName="comment"></textarea>
-    </div>
-  </form>
+  <app-dynamic-form *ngIf="!!form" [form]="form" [controls]="controls"></app-dynamic-form>
 
   <div dialog-footer>
-    <button (click)="save()">Save</button>
-    <button (click)="cancel()">Cancel</button>
+    <button class="btn btn-primary" (click)="save()">
+      <i class="fa fa-check"></i>
+      {{ actionButtonTitle }}
+    </button>
+    <button class="btn btn-default" (click)="cancel()">
+      <i class="fa fa-remove"></i>
+      Cancel
+    </button>
   </div>
 </app-dialog>
 
@@ -36,3 +28,16 @@
   (onSelectedRowChange)="onSelectedRowChange($event)"
   (onEdit)="onEdit($event)">
 </app-grid>
+
+<button class="btn btn-sm btn-default" title="Create new role" (click)="create()">
+  <i class="fa fa-plus"></i>
+</button>
+<button class="btn btn-sm btn-default" title="Edit selected role" (click)="edit()" [disabled]="!canEdit()">
+  <i class="fa fa-edit"></i>
+</button>
+<button class="btn btn-sm btn-default" title="Copy selected role" (click)="copy()" [disabled]="!canCopy()">
+  <i class="fa fa-copy"></i>
+</button>
+<button class="btn btn-sm btn-danger" title="Delete selected role" (click)="delete()" [disabled]="!canDelete()">
+  <i class="fa fa-remove"></i>
+</button>
