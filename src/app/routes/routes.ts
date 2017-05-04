@@ -21,7 +21,8 @@ export const routes = [
     canActivate: [AuthService],
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
-      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' }
+      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
+      { path: 'roles-and-permissions', loadChildren: './admin/roles_and_permissions/roles_and_permissions.module#RolesAndPermissionsModule' }
     ]
   },
 

@@ -1,0 +1,36 @@
+<app-edit-permission *ngIf="editPermitDisplay"
+                     [display]="editPermitDisplay"
+                     [record]="editedPermission"
+                     (cancel)="editPermitDisplay = false"
+                     (save)="onEditPermission($event)">
+</app-edit-permission>
+
+<app-add-permission *ngIf="addPermitDisplay"
+                    [display]="addPermitDisplay"
+                    [record]="currentPermissionRole"
+                    (cancel)="addPermitDisplay = false"
+                    (add)="onAddPermissions($event)">
+</app-add-permission>
+
+<app-remove-permission *ngIf="removePermitDisplay"
+                       [display]="removePermitDisplay"
+                       (cancel)="removePermitDisplay = false"
+                       (ok)="onRemovePermission()">
+</app-remove-permission>
+
+<app-tabstrip>
+  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
+    <app-grid
+      #permitsGrid
+      [columns]="columns"
+      [parseFn]="parseFn"
+      [dataSource]="dataSource"
+      [autoLoad]="false"
+      [selectionType]="'single'"
+      [bottomActions]="bottomActions"
+      (onEdit)="beginEditPermission($event)"
+      (onRowSelect)="selectPermission($event)"
+      (onAction)="onAction($event)">
+    </app-grid>
+  </app-tab>
+</app-tabstrip>
