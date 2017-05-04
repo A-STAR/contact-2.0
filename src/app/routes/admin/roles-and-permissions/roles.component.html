@@ -5,7 +5,23 @@
   <div dialog-header>
     <h3>{{ title }}</h3>
   </div>
-  <app-dynamic-form [form]="form"></app-dynamic-form>
+
+  <!-- TODO: dynamic form -->
+  <form *ngIf="form" [formGroup]="form" novalidate>
+    <div class="form-group">
+      <label>Id</label>
+      <input type="number" class="form-control" formControlName="id">
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" class="form-control" formControlName="name">
+    </div>
+    <div class="form-group">
+      <label>Comment</label>
+      <textarea class="form-control" formControlName="comment"></textarea>
+    </div>
+  </form>
+
   <div dialog-footer>
     <button (click)="save()">Save</button>
     <button (click)="cancel()">Cancel</button>

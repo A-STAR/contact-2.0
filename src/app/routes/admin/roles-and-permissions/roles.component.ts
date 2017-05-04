@@ -55,7 +55,7 @@ export class RolesComponent {
 
   onEdit(event: IRoleRecord) {
     this.editedRecord = event;
-    // this.form = this.createForm();
+    this.form = this.createForm();
   }
 
   onDisplayChange(event) {
@@ -65,6 +65,7 @@ export class RolesComponent {
   }
 
   save() {
+    console.log('Saving...');
     this.editedRecord = null;
   }
 
