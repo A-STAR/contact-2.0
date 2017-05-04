@@ -39,7 +39,7 @@
             <div *ngSwitchCase="2" class="form-group">
               <label>{{control.label}}</label>
               <div>
-                <app-input-datepicker [form]="form" controlName="value"></app-input-datepicker>
+                <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
               </div>
             </div>
 

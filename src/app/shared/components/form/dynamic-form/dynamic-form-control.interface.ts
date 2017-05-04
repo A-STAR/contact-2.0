@@ -18,3 +18,7 @@ export interface ISelectOptions {
   value: any;
   selected?: boolean;
 }
+
+export interface IValue {
+  [key: string]: any;
+}

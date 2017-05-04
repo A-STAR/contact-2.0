@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl, IValue } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
@@ -24,11 +24,11 @@ export class ConstantsComponent implements OnInit {
   ];
 
   columns: Array<any> = [
-    { name: '#', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { name: 'Наименование', prop: 'name', maxWidth: 350 },
     { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Коментарий', prop: 'dsc', width: 200, maxWidth: 400 },
-    { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
+    { name: 'Описание', prop: 'dsc', width: 200, maxWidth: 400 },
+    { name: 'Альт. описание', prop: 'altDsc', minWidth: 200 },
   ];
 
   controls: Array<IDynamicFormControl> = [
@@ -36,12 +36,12 @@ export class ConstantsComponent implements OnInit {
     { label: 'Наименование', controlName: 'name', type: 'text', required: true, disabled: true },
     { label: 'Тип значения', controlName: 'typeCode', type: 'select', required: true, disabled: true,
       options: [
-        { label: 'Число', value: 1 } ,
-        { label: 'Дата', value: 2 } ,
-        { label: 'Строка', value: 3 } ,
-        { label: 'Булево', value: 4 } ,
-        { label: 'Деньги', value: 5 } ,
-        { label: 'Словарь', value: 6 } ,
+        { label: 'Число', value: 1 },
+        { label: 'Дата', value: 2 },
+        { label: 'Строка', value: 3 },
+        { label: 'Булево', value: 4 },
+        { label: 'Деньги', value: 5 },
+        { label: 'Словарь', value: 6 },
       ]
     },
     { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
@@ -51,7 +51,7 @@ export class ConstantsComponent implements OnInit {
 
   dataSource: IDataSource = {
     read: '/api/constants',
-    update: '/api/constants',
+    update: '/api/constants/{id}',
     dataKey: 'constants',
   };
 
@@ -123,14 +123,13 @@ export class ConstantsComponent implements OnInit {
       default:
     }
 
-    const values: { [key: string]: any } = this.controls.reduce((arr, ctrl) => {
+    const values: IValue = this.controls.reduce((arr, ctrl) => {
       arr[ctrl.controlName] = record[ctrl.controlName];
       return arr;
     }, {});
 
     // NOTE: this is special, to be revised to make more universal
     values.value = value;
-    console.log('values', values);
     this.form.setValue(values);
   }
 
@@ -175,7 +174,7 @@ export class ConstantsComponent implements OnInit {
       body[field] = this.valueToIsoDate(value);
     }
 
-    this.grid.update(id, body)
+    this.grid.update({ id: id }, body)
       .then(resp => {
         this.display = false;
         this.form.reset();
@@ -188,6 +187,7 @@ export class ConstantsComponent implements OnInit {
 
   onCancel(event): void {
     this.display = false;
+    this.editedRecord = null;
     this.form.reset();
   }
 

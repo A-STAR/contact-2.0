@@ -15,7 +15,7 @@ export class GridService {
     return this;
   }
 
-  read(url: string): Promise<any> {
+  read(url: string, routeParams: object = {}): Promise<any> {
     if (this._localRequest) {
       // this whould not be a default value, so clear the flag for further requests
       this._localRequest = false;
@@ -26,29 +26,47 @@ export class GridService {
 
     return this.validateUrl(url)
       .then(rootUrl => {
-        return this.http.get(`${rootUrl}${url}`)
+        const route = this.createRoute(url, routeParams);
+        return this.http.get(`${rootUrl}${route}`)
           .toPromise()
           .then(data => data.json());
      });
   }
 
-  // TODO: to be implemented
-  create(url: string): Promise<any> {
-    return Promise.resolve(false);
+  /**
+   * NOTE: route params have to be enclosed in curly braces
+   * Example:
+   *  url = '/api/roles/{id}/permits', params = { id: 5 }
+   *  route = '/api/roles/5/permits
+   */
+  create(url: string, routeParams: object = {}, body: object): Promise<any> {
+    return this.validateUrl(url)
+      .then(rootUrl => {
+        const route = this.createRoute(url, routeParams);
+        return this.http.post(`${rootUrl}${route}`, body)
+          .toPromise()
+          .then(data => data.json());
+     });
   }
 
-  update(url: string, key: string | number, body: object): Promise<any> {
+  update(url: string, routeParams: object = {}, body: object): Promise<any> {
      return this.validateUrl(url)
       .then(rootUrl => {
-        return this.http.put(`${rootUrl}${url}/${key}`, body)
+        const route = this.createRoute(url, routeParams);
+        return this.http.put(`${rootUrl}${route}`, body)
           .toPromise()
           .then(data => data.json());
      });
   }
 
-  // TODO: to be implemented
-  delete(url: string): Promise<any> {
-    return Promise.resolve(false);
+  delete(url: string, routeParams: object = {}): Promise<any> {
+     return this.validateUrl(url)
+      .then(rootUrl => {
+        const route = this.createRoute(url, routeParams);
+        return this.http.delete(`${rootUrl}${route}`)
+          .toPromise()
+          .then(data => data.json());
+     });
   }
 
   private validateUrl(url: string = ''): Promise<any> {
@@ -56,5 +74,12 @@ export class GridService {
       return Promise.reject('Error: no url passed to the GridService');
     }
     return this.authService.getRootUrl();
+  }
+
+  private createRoute(url: string, params: object): string {
+    return Object.keys(params).reduce((acc, id) => {
+      const re = RegExp(`{${id}}`, 'gi');
+      return acc.replace(re, params[id]);
+    }, url);
   }
 }
