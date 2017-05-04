@@ -1,9 +1,22 @@
+<app-dialog
+  [display]="!!editedRecord"
+  (displayChange)="onDisplayChange($event)"
+>
+  <div dialog-header>
+    <h3>{{ title }}</h3>
+  </div>
+  <app-dynamic-form [form]="form"></app-dynamic-form>
+  <div dialog-footer>
+    <button (click)="save()">Save</button>
+    <button (click)="cancel()">Cancel</button>
+  </div>
+</app-dialog>
+
 <app-grid
   selectionType="single"
   [columns]="columns"
   [dataSource]="dataSource"
   [parseFn]="parseFn"
-  (onSelectedRowChange)="onSelectedRowChange($event)">
+  (onSelectedRowChange)="onSelectedRowChange($event)"
+  (onEdit)="onEdit($event)">
 </app-grid>
-
-<!-- TODO: disable multiple row selection -->
