@@ -82,7 +82,8 @@ export class RolesComponent {
     return data[dataKey] || [];
   }
 
-  onSelectedRowChange(role: IRoleRecord) {
+  onSelectedRowChange(roles: Array<IRoleRecord>) {
+    const role = roles[0];
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
       this.selectedRole = role;
       this.onSelect.emit(this.selectedRole.id);
