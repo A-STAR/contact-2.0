@@ -81,7 +81,7 @@ export class TemplateWrapper implements OnInit, OnDestroy {
     selector: 'p-column',
     template: ``
 })
-export class Column implements AfterContentInit{
+export class Column implements AfterContentInit {
     @Input() field: string;
     @Input() sortField: string;
     @Input() header: string;
@@ -109,7 +109,7 @@ export class Column implements AfterContentInit{
     public filterTemplate: TemplateRef<any>;
     public editorTemplate: TemplateRef<any>;
 
-    ngAfterContentInit():void {
+    ngAfterContentInit(): void {
         this.templates.forEach((item) => {
             switch(item.getType()) {
                 case 'header':

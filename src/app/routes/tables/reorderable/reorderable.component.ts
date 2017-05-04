@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem, MultiSelect } from 'primeng/primeng';
 
-import { GridService } from '../grid.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-reorderable',
@@ -25,14 +25,14 @@ export class ReorderableComponent implements OnInit {
   columnOptions: SelectItem[] = [];
 
   constructor(private gridService: GridService) {
-    for (let i = 0; i < this.columns.length; i++) {
-      this.columnOptions.push({label: this.columns[i].header, value: this.columns[i]});
-    }
+    const options = this.columns.map(v => ({ label: v.header, value: v }));
+    this.columnOptions.concat(options);
   }
 
   ngOnInit() {
     this.gridService
-      .fetchData()
+      .localRequest()
+      .read('assets/server/100k.json')
       .then(data => {
         this.value = data.slice(0, this.totalRecords);
       });

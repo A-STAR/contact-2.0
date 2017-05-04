@@ -1,26 +1,21 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-      <div class="pull-right text-muted">
-        <em class="fa fa-user mr-sm"></em>
-        <strong>{{rows?.length}}</strong> users
-      </div>
-      <h4>Users</h4>
-  </div>
-
   <div class="panel-body">
     <ngx-datatable
       class="material"
+      [cssClasses]="cssClasses"
       [columns]="columns"
       [columnMode]="'force'"
+      [footerHeight]="50"
       [rowHeight]="25"
       [rows]="rows"
-      [limit]="20"
+      [limit]="25"
       [selected]="selected"
       [selectionType]="'multiClick'"
       [scrollbarV]="true"
       [scrollbarH]="false"
-      (select)="onSelect($event)">
+      (activate)="onActivate($event)"
+      (select)="onSelect($event)"
+      (page)="onPage($event)">
     </ngx-datatable>
   </div>
-
-</div><!--panel-->
+</div>

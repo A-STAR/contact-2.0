@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidators } from 'ng2-validation';
@@ -10,14 +10,14 @@ import { AuthService } from '../../../core/auth/auth.service';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     valForm: FormGroup;
 
     constructor(
       public settings: SettingsService,
+      private fb: FormBuilder,
       private authService: AuthService,
-      fb: FormBuilder,
       private router: Router,
     ) {
 
@@ -43,9 +43,4 @@ export class LoginComponent implements OnInit {
           });
       }
     }
-
-    ngOnInit() {
-
-    }
-
 }

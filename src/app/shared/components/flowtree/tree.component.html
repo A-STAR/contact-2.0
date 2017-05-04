@@ -17,7 +17,12 @@
     [ngStyle]="style"
     [class]="styleClass"
     *ngIf="horizontal">
-    <table *ngIf="value && value[0]">
-        <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
-    </table>
+    <div *ngIf="value && value[0]">
+        <table *ngIf="value[0].children">
+            <app-tree-node [node]="child" [root]="true" *ngFor="let child of value[0].children"></app-tree-node>
+        </table>
+        <table *ngIf="!value[0].children">
+            <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
+        </table>
+    </div>
 </div>

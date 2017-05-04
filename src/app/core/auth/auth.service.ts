@@ -1,28 +1,53 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import 'rxjs/add/operator/toPromise';
+import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
+
+const TOKEN_NAME = 'auth/token';
+
+export const getToken = () => localStorage.getItem(TOKEN_NAME);
+
+const setToken = (token: string) => localStorage.setItem(TOKEN_NAME, token);
+
+const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
-export class AuthService implements CanActivate {
+export class AuthService implements CanActivate, OnInit {
 
   private authenticated = false;
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
-  private headers = new Headers({'Content-Type': 'application/json'});
-  private options = new RequestOptions({ headers: this.headers });
-  private authorities: Array<string> = [];
-  private tokenName = 'auth/token';
+  // backend root url
+  private rootUrl = '';
 
-  constructor(private http: Http, private router: Router) { }
+  constructor(private http: AuthHttp, private router: Router) { }
 
   get isAuthenticated(): boolean {
     return this.authenticated;
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  ngOnInit() {
+    this.getRootUrl();
+  }
+
+  getRootUrl(): Promise<string> {
+    if (this.rootUrl) {
+      return Promise.resolve(this.rootUrl);
+    }
+
+    return this.http.get('./assets/server/root.json')
+      .toPromise()
+      .then(resp => {
+        this.rootUrl = resp.json().url;
+        return this.rootUrl;
+      })
+      .catch(err => console.error(err));
+  }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
     return this.checkLogin(url);
   }
@@ -30,7 +55,7 @@ export class AuthService implements CanActivate {
   checkLogin(url: string): boolean {
     if (this.isAuthenticated) { return true; }
 
-    const token = window.localStorage.getItem(this.tokenName);
+    const token = getToken();
     if (token) {
       // TODO: check this token for expiration with angular-jwt
       return this.authenticated = true;
@@ -45,26 +70,38 @@ export class AuthService implements CanActivate {
   }
 
   authenticate(login: string, password: string): Promise<boolean> {
-    const body = JSON.stringify({ username: login, password });
+    const body = JSON.stringify({ login, password });
 
-    return this.http.post('http://localhost:8080/auth/login', body, this.options)
-      .toPromise()
-      .then((resp: Response) => {
-        const token = resp.headers.get('X-Auth-Token');
-        window.localStorage.setItem(this.tokenName, token);
-        this.authorities = resp.json().authorities;
-        return this.authenticated = true;
+    return this.getRootUrl()
+      .then(root => {
+        return this.http.post(`${root}/auth/login`, body)
+          .toPromise()
+          .then((resp: Response) => {
+            setToken(resp.headers.get('X-Auth-Token'));
+            return this.authenticated = true;
+          });
       })
       .catch(error => {
         console.log(error.statusText || error.status || 'Request error');
-        return this.authenticated = true;
+        // TODO: display a message on the login form
+        return this.authenticated = false;
       });
   }
 
-  logout(): void {
-    window.localStorage.removeItem(this.tokenName);
-    this.authenticated = false;
-    this.router.navigate(['/login']);
+  logout(): Promise<boolean> {
+    return this.getRootUrl()
+      .then(root => {
+        return this.http.get(`${root}/auth/logout`)
+        .toPromise()
+        .then((response: Response) => {
+          removeToken();
+          this.router.navigate(['/login']);
+          return this.authenticated = false;
+        });
+      })
+      .catch(error => {
+        console.log(error.statusText || error.status || 'Request error');
+        return this.authenticated = false;  // FIXME
+      });
   }
-
 }

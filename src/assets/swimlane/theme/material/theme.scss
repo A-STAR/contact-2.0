@@ -1,3 +1,6 @@
+$active-selection-bg: #23B7E5;
+$active-selection-hover-bg: #19AAD7;
+
 .ngx-datatable.material {
 	background:#FFF;
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
@@ -16,19 +19,19 @@
     .datatable-body-row {
 			&.active,
 			&.active .datatable-row-group {
-				background-color: #304FFE;
+				background-color: $active-selection-bg;
         color: #FFF;
 			}
 
 			&.active:hover,
 			&.active:hover .datatable-row-group {
-				background-color: #193AE4;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
 
 			&.active:focus,
 			&.active:focus .datatable-row-group {
-				background-color: #2041EF;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
     }
@@ -68,19 +71,19 @@
 
 			&.active,
 			&.active .datatable-row-group {
-				background-color: #304FFE;
+				background-color: $active-selection-bg;
         color: #FFF;
 			}
 
 			&.active:hover,
 			&.active:hover .datatable-row-group {
-				background-color: #193AE4;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
 
 			&.active:focus,
 			&.active:focus .datatable-row-group {
-				background-color: #2041EF;
+				background-color: $active-selection-hover-bg;
         color: #FFF;
 			}
     }
@@ -134,8 +137,8 @@
       text-align: left;
       padding: .5rem 1.2rem;
       border-right: 1px solid #f2f2f2;
-      font-weight: 400;
-      color: #757575;
+      font-weight: 600;
+      background-color: #E8E8E8;
       vertical-align: bottom;
 
       .datatable-header-cell-wrapper {
@@ -298,6 +301,15 @@
 			}
 		}
 	}
+}
+
+/**
+ * Adjust default style for Fira Sans Extra Condensed font
+ * TODO: get rid of !important
+**/
+.ngx-datatable .datatable-body-cell,
+.ngx-datatable .datatable-header-cell {
+  line-height: 1.825!important;
 }
 
 /**

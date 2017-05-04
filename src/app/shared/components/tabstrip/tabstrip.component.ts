@@ -26,13 +26,12 @@ export class TabstripComponent implements AfterContentInit {
     // deactivate all tabs
     this.tabs.toArray().forEach(el => el.active = false);
 
-    // activate the tab the user has clicked on.
+    // activate the tab the user has clicked on
     tab.active = true;
   }
 
   closeTab(tab: TabComponent) {
     const index = this.tabs.toArray().findIndex(el => el === tab);
     tab.onClose.emit(index);
-    // console.log(index);
   }
 }

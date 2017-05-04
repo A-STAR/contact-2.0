@@ -4,7 +4,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
   selector: 'app-tab',
   styles: [`
     .pane{
-      padding: 1em;
+      padding: 0;
     }
   `],
   template: `

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem, MultiSelect } from 'primeng/primeng';
 
-import { GridService } from '../grid.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-groupable',
@@ -27,7 +27,8 @@ export class GroupableComponent implements OnInit {
 
   ngOnInit() {
     this.gridService
-      .fetchData()
+    .localRequest()
+    .read('assets/server/100k.json')
       .then(data => {
         this.value = data.slice(0, this.totalRecords);
       });

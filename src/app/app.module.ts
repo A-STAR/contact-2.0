@@ -12,7 +12,6 @@ import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
-// import { requestOptionsProvider } from './core/request-options/request-options.service';
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: Http) {
@@ -40,7 +39,7 @@ export function createTranslateLoader(http: Http) {
       }
     })
   ],
-  providers: [/*requestOptionsProvider*/],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

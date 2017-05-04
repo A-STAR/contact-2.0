@@ -1,45 +1,66 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
 import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
-import { NgxDatatableComponent } from '../../../routes/tables/datatable/datatable.component';
 
 @Component({
   selector: 'app-tabledemo',
-  template: `
-    <div class="content-heading">
-        Data Grid
-    </div>
-
-    <app-tabstrip>
-      <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-        <app-datatable></app-datatable>
-      </app-tab>
-    </app-tabstrip>
-  `
+  templateUrl: './tabledemo.component.html'
 })
 
 export class TabledemoComponent implements OnInit {
+  form: FormGroup;
+  display = false;
+  editedRecord: any = null;
   tabs: Array<any> = [
-    { id: 0, title: 'Tab 1', active: true },
-    { id: 1, title: 'Tab 2', active: false },
-    { id: 2, title: 'Tab 3', active: false },
-    { id: 3, title: 'Tab 4', active: false },
-    { id: 4, title: 'Tab 5', active: false },
-    { id: 5, title: 'Tab 6', active: false },
-    { id: 6, title: 'Tab 7', active: false },
-    { id: 7, title: 'Tab 8', active: false },
-    { id: 8, title: 'Tab 9', active: false },
-    { id: 9, title: 'Tab 10', active: false },
+    { id: 0, title: 'Admins', active: true },
+    { id: 1, title: 'Users', active: false },
+  ];
+  columns: Array<any> = [
+    // { width: 20, maxWidth: 20, sortable: false, draggable: false,
+    //   resizeable: false, canAutoResize: true, headerCheckboxable: false, checkboxable: false
+    // },
+    { prop: 'id', name: '#', minWidth: 30, maxWidth: 70 },
+    { name: 'Name', width: 150 },
+    { name: 'Gender', minWidth: 80, maxWidth: 100 },
+    { name: 'Age', width: 50, maxWidth: 50 },
+    { name: 'City', prop: 'address.city', minWidth: 200, maxWidth: 200 },
+    { name: 'State', prop: 'address.state', minWidth: 200 },
   ];
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() { }
 
-  public onClose(id) {
-    console.log('closed', id);
+  createForm(record: any) {
+    this.form = this.fb.group({
+      id: new FormControl({ value: record.id, disabled: true }, Validators.required),
+      name: [ record.name, Validators.required ],
+      city:  [ record.address.city, Validators.required ],
+      state: [ record.address.state, Validators.required ],
+      age: [ record.age, Validators.required ],
+      isAdmin: ['0'],
+      gender: [ record.gender, Validators.required ],
+      birthdate: new FormControl()
+    });
+  }
+
+  onClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
+  onEdit(record: any): void {
+    this.editedRecord = record;
+    this.createForm(record);
+    this.display = true;
+  }
+
+  get popupTitle() {
+    return this.editedRecord && this.editedRecord.name ? this.editedRecord.name : null;
+  }
+
+  onHide(dialog) {
+    dialog.hide();
+  }
 }

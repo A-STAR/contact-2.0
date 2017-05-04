@@ -51,7 +51,6 @@
 
     .ui-treenode-label {
         display: inline-block;
-        padding: 0 .25em;
         vertical-align: middle;
     }
 
@@ -100,18 +99,33 @@
     vertical-align: middle;
 }
 
+.ui-tree.ui-tree-horizontal .ui-treenode-content {
+    position: relative;
+}
+
 .ui-tree.ui-tree-horizontal .ui-tree-toggler {
-    vertical-align: middle;
+    position: absolute;
+    height: 16px;
+    line-height: 16px;
+    left: 2px;
+    top: 50%;
     margin: 0;
+    transform: translateY(-50%);
 }
 
 .ui-tree-horizontal .ui-treenode-content {
+    font-size: 12px;
     font-weight: normal;
-    padding: 0.4em 1em 0.4em 0.2em;
+    padding: 0.5em 1.2em;
 }
 
-.ui-tree.ui-tree-horizontal .ui-tree-node-label {
+.ui-tree.ui-tree-horizontal .ui-treenode-label {
+    display: table-cell;
+    width: 130px;
+    height: 36px;
     margin: 0;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .ui-tree-horizontal .ui-treenode-parent .ui-treenode-content {

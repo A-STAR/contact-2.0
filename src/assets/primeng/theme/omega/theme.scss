@@ -1,6 +1,6 @@
-$fontFamily: Helvetica, Arial, sans-serif;
+$fontFamily: "Fira Sans Extra Condensed", sans-serif;
 $fontSize: 1em;
-$borderRadius: 3px;
+$borderRadius: 0;
 $disabledOpacity: 0.35;
 
 //Header
@@ -531,4 +531,5 @@ $invalidInputBorderColor: #f44336;
 
 .ui-dialog.ui-widget .ui-dialog-content {
     padding: 1em 1.5em;
+    overflow: visible;
 }

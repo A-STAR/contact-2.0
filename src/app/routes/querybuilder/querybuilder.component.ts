@@ -31,7 +31,7 @@ export class QueryBuilderComponent {
     this.group = {
       operator: null,
       rules: []
-    }
+    };
   }
 
   showQueryBuilderDialog() {

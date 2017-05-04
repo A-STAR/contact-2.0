@@ -1,0 +1,40 @@
+<p-dialog
+    appendTo="body"
+    [header]="dialogTitle"
+    [draggable]="true"
+    [modal]="true"
+    [resizable]="false"
+    [responsive]="false"
+    [width]="600"
+    [height]="650"
+    [(visible)]="display">
+
+  <app-dynamic-form [form]="form" [controls]="controls"></app-dynamic-form>
+
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" label="Cancel" (click)="onCancel($event)"></button>
+      <button
+        type="button"
+        class="ui-button-success"
+        pButton
+        icon="fa-check"
+        label="Save"
+        [disabled]="!form.dirty"
+        (click)="onSave($event)">
+      </button>
+    </div>
+  </p-footer>
+
+</p-dialog>
+
+<app-tabstrip>
+  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
+    <app-grid
+      [columns]="columns"
+      [parseFn]="parseFn"
+      [dataSource]="dataSource"
+      (onEdit)="onEdit($event)">
+    </app-grid>
+  </app-tab>
+</app-tabstrip>
