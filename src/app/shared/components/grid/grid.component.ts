@@ -9,7 +9,7 @@ import { Component,
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import * as format from 'string-format';
 
-import { IDataSource } from './grid.interface';
+import { IDataSource, TSelectionType } from './grid.interface';
 import { GridService } from './grid.service';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
 
@@ -25,11 +25,11 @@ interface IParameters {
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Input() selectionType: TSelectionType;
   @Input() autoLoad = true;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Input() selectionType: string;
   @Input() innerStyles;
   @Input() initialParameters: IParameters;
   @Input() bottomActions: IToolbarAction[];

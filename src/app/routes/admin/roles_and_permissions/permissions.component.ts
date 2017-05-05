@@ -70,10 +70,10 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   /**
    * @override
    */
-  public ngAfterViewInit(): void {
-    // TODO this.selectionChange.subscribe((request: IPermissionsRequest) => { this.addPermissionReadParameters =  ... this.permitsGrid.load(request) });
-    this.currentPermissionRole = {roleId: 1};
-    this.loadGrid();
+  ngAfterViewInit(): void {
+    this.selectionChange.subscribe((role: IPermissionRole) => {
+      this.permitsGrid.load(this.currentPermissionRole = role);
+    });
   }
 
   private onAction(action: IToolbarAction) {

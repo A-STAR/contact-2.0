@@ -7,9 +7,11 @@ import {PermissionsComponent} from './permissions.component';
 import {AddPermissionComponent} from './add.permission.component';
 import {EditPermissionComponent} from './edit.permission.component';
 import {RemovePermissionComponent} from './remove.permission.component';
+import { RolesComponent } from './roles.component';
+import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 
 const routes: Routes = [
-  {path: '', component: PermissionsComponent},
+  {path: '', component: RolesAndPermissionsComponent},
 ];
 
 @NgModule({
@@ -23,6 +25,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
+    RolesAndPermissionsComponent,
+    RolesComponent,
     PermissionsComponent,
     AddPermissionComponent,
     EditPermissionComponent,

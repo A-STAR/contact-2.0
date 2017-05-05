@@ -11,7 +11,7 @@ export class DialogComponent implements OnDestroy {
   @Output() onClose: EventEmitter<null> = new EventEmitter();
 
   constructor(private element: ElementRef) {
-    // document.body.appendChild(element.nativeElement);
+    document.body.appendChild(element.nativeElement);
   }
 
   onVisibleChange(value: boolean) {
@@ -25,7 +25,6 @@ export class DialogComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // document.body.removeChild(this.element.nativeElement);
+    document.body.removeChild(this.element.nativeElement);
   }
-
 }
