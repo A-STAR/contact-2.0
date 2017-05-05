@@ -8,7 +8,7 @@ import { IPermissionRole } from './permissions.interface';
 export class RolesAndPermissionsComponent {
   currentRole: IPermissionRole;
 
-  onSelect(roleId) {
-    this.currentRole = {roleId};
+  onSelect(id) {
+    this.currentRole = {id};
   }
 }

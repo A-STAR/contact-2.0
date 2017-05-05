@@ -7,7 +7,6 @@ import { Component,
   Input,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import * as format from 'string-format';
 
 import { IDataSource, TSelectionType } from './grid.interface';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -76,7 +75,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   load(parameters?: IParameters): Promise<any> {
     return this.gridService
-      .read(format(this.dataSource.read, parameters || {}))
+      .read(this.dataSource.read, parameters)
       .then(data => this.rows = this.parseFn(data))
       .catch(err => console.error(err));
   }
