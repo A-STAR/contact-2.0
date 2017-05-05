@@ -32,7 +32,7 @@ export class EditPermissionComponent implements OnInit {
       id: new FormControl({value: this.record.id, disabled: true}, Validators.required),
       typeCode: [this.record.typeCode, Validators.required],
       name: [this.record.name, Validators.required],
-      value: [this.record.value, Validators.required],
+      value: [parseInt(this.record.value, 10) ? '1' : '0', Validators.required], // TODO Make generic preparer for value
       comment: [this.record.comment],
       dsc: [this.record.dsc],
       altDsc: [this.record.altDsc]
@@ -50,11 +50,7 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Значение',
         controlName: 'value',
-        type: 'select',
-        options: [
-          {label: 'TRUE', value: this.prepareSelectOptionValue(this.record, 1)},
-          {label: 'FALSE', value: this.prepareSelectOptionValue(this.record, 0)},
-        ]
+        type: 'boolean'
       },
       {
         label: 'Описание',
@@ -86,16 +82,5 @@ export class EditPermissionComponent implements OnInit {
 
   canSaveChanges(): boolean {
     return this.form.dirty;
-  }
-
-  // TODO Eliminate duplication
-  private prepareSelectOptionValue(record: any, value: any) {
-    switch (record.typeCode) {
-      case 1:
-        return value;
-      case 4:
-        return !!value;
-    }
-    return value;
   }
 }
