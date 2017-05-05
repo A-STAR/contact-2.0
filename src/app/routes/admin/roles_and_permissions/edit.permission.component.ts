@@ -11,8 +11,8 @@ export class EditPermissionComponent implements OnInit {
 
   @Input() displayProperties;
   @Input() record: any;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  @Output() save: EventEmitter<any> = new EventEmitter<any>(false);
+  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() save: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   controls: Array<IDynamicFormControl>;
   private formChanges: any;
@@ -38,9 +38,7 @@ export class EditPermissionComponent implements OnInit {
       altDsc: [this.record.altDsc]
     });
 
-    this.form.valueChanges.subscribe((formChanges) => {
-      this.formChanges = formChanges;
-    });
+    this.form.valueChanges.subscribe((formChanges) => this.formChanges = formChanges);
 
     this.controls = [
       {

@@ -40,21 +40,18 @@ export class BasePermissionsComponent {
 
   // TODO Eliminate duplication
   prepareData = (data) => {
-    const result: IDataValue = {};
-
     switch (data.typeCode) {
       case 1:
-        result.valueN = parseInt(data.value, 10);
+        data.valueN = parseInt(data.value, 10);
         break;
       case 3:
-        result.valueS = data.value;
+        data.valueS = data.value;
         break;
       case 4:
-        result.valueB = data.value ? 1 : 0;
+        data.valueB = data.value ? 1 : 0;
         break;
     }
-
     delete data.value;
-    return result;
+    return data;
   }
 }
