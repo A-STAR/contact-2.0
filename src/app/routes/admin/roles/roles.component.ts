@@ -131,7 +131,7 @@ export class RolesComponent {
   }
 
   callActionByType(type: ToolbarActionTypeEnum) {
-    this.onAction(this.bottomActions.filter((action: IToolbarAction) => type === action.type)[0]);
+    this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
   save() {
