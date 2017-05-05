@@ -7,10 +7,10 @@ import { Component,
   Input,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-const format = require('string-format');
+import * as format from 'string-format';
 
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { IDataSource } from './grid.interface';
+import { GridService } from './grid.service';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
 
 interface IParameters {
@@ -33,9 +33,9 @@ export class GridComponent implements OnInit, AfterViewInit {
   @Input() innerStyles;
   @Input() initialParameters: IParameters;
   @Input() bottomActions: IToolbarAction[];
-  @Output() onEdit: EventEmitter<any> = new EventEmitter(false);
-  @Output() onRowSelect: EventEmitter<any> = new EventEmitter(false);
-  @Output() onAction: EventEmitter<any> = new EventEmitter(false);
+  @Output() onEdit: EventEmitter<any> = new EventEmitter();
+  @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onAction: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
   rows: Array<any> = [];
@@ -69,8 +69,8 @@ export class GridComponent implements OnInit, AfterViewInit {
     // this.dataTable.bodyHeight = 400;
   }
 
-  load(parameters?: IParameters) {
-    this.gridService
+  load(parameters?: IParameters): Promise<any> {
+    return this.gridService
       .read(format(this.dataSource.read, parameters || {}))
       .then(data => this.rows = this.parseFn(data))
       .catch(err => console.error(err));

@@ -9,10 +9,10 @@ import {IDynamicFormControl} from '../../../shared/components/form/dynamic-form/
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() display;
+  @Input() displayProperties;
   @Input() record: any;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  @Output() save: EventEmitter<any> = new EventEmitter<any>(false);
+  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() save: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   controls: Array<IDynamicFormControl>;
   private formChanges: any;
@@ -38,9 +38,7 @@ export class EditPermissionComponent implements OnInit {
       altDsc: [this.record.altDsc]
     });
 
-    this.form.valueChanges.subscribe((formChanges) => {
-      this.formChanges = formChanges;
-    });
+    this.form.valueChanges.subscribe((formChanges) => this.formChanges = formChanges);
 
     this.controls = [
       {
@@ -53,10 +51,9 @@ export class EditPermissionComponent implements OnInit {
         label: 'Значение',
         controlName: 'value',
         type: 'select',
-        disabled: true,
         options: [
-          {label: 'TRUE', value: 1},
-          {label: 'FALSE', value: 0},
+          {label: 'TRUE', value: this.prepareSelectOptionValue(this.record, 1)},
+          {label: 'FALSE', value: this.prepareSelectOptionValue(this.record, 0)},
         ]
       },
       {
@@ -79,19 +76,22 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  private onCancel() {
+  onCancel() {
     this.cancel.emit(false);
   }
 
-  private onSave() {
+  onSave() {
     this.save.emit(this.formChanges);
   }
 
-  get visibility(): boolean {
-    return this.display;
-  }
-
-  set visibility(visible: boolean) {
-    this.cancel.emit(visible);
+  // TODO Eliminate duplication
+  private prepareSelectOptionValue(record: any, value: any) {
+    switch (record.typeCode) {
+      case 1:
+        return value;
+      case 4:
+        return !!value;
+    }
+    return value;
   }
 }

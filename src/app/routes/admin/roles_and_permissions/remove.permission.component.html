@@ -1,16 +1,16 @@
 <p-dialog
   appendTo="body"
-  [header]="'Удаление доступов у роли'"
+  [header]="'Удаление доступа у роли'"
   [draggable]="true"
   [modal]="true"
   [resizable]="false"
   [responsive]="false"
   [width]="600"
   [height]="180"
-  [(visible)]="visibility">
+  [(visible)]="displayProperties.removePermit">
 
   <span>
-    Вы действительно хотите удалить выделенные доступы из данной роли?
+    Вы действительно хотите удалить выделенный доступ у данной роли?
   </span>
 
   <p-footer>
@@ -18,8 +18,8 @@
       <button type="button"
               class="ui-button-success"
               pButton icon="fa-check"
-              label="Ok"
-              (click)="onRemovePermission()"></button>
+              label="Удалить"
+              (click)="onConfirm()"></button>
     </div>
   </p-footer>
 </p-dialog>

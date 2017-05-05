@@ -9,13 +9,13 @@ import {GridComponent} from '../../../shared/components/grid/grid.component';
 })
 export class AddPermissionComponent extends BasePermissionsComponent implements AfterViewInit {
 
-  @Input() display;
+  @Input() displayProperties;
   @Input() record: any;
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>(false);
+  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
 
-  private accessiblePermissions: Array<any>;
+  private selectedPermissions: Array<any>;
 
   columns: Array<any> = [
     {name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350},
@@ -36,23 +36,19 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     this.addPermitGrid.load(this.record);
   }
 
-  private selectAccessiblePermissions(records: any[]) {
-    this.accessiblePermissions = records;
+  onSelectPermissions(permissions: any[]) {
+    this.selectedPermissions = permissions;
   }
 
-  private onCancelAddPermission() {
+  onCancel() {
     this.cancel.emit(false);
   }
 
-  private onAddPermission() {
-    this.add.emit(this.accessiblePermissions);
+  onAddPermissions() {
+    this.add.emit(this.selectedPermissions);
   }
 
-  get visibility(): boolean {
-    return this.display;
-  }
-
-  set visibility(visible: boolean) {
-    this.cancel.emit(visible);
+  canAddPermissions(): boolean {
+    return this.selectedPermissions && this.selectedPermissions.length > 0;
   }
 }

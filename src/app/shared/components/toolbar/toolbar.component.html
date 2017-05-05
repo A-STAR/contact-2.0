@@ -2,7 +2,7 @@
   <i *ngFor="let action of actions"
      [ngStyle]="{display: action.visible === false && 'none' || 'inline-block'}"
      (click)="onActionClick(action)"
-     class="fa fa-{{ toIconCls(action) }} fa-2x"
+     class="fa fa-{{ toIconCls(action) }}"
      style="padding: 0 8px 0 0; cursor: pointer;"
      aria-hidden="true"></i>
 </div>

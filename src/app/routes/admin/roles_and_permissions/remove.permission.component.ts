@@ -6,19 +6,10 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class RemovePermissionComponent {
 
-  @Input() display;
-  @Output() ok: EventEmitter<void> = new EventEmitter<void>(false);
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+  @Input() displayProperties;
+  @Output() confirm: EventEmitter<void> = new EventEmitter<void>();
 
-  private onRemovePermission() {
-    this.ok.emit(null);
-  }
-
-  get visibility(): boolean {
-    return this.display;
-  }
-
-  set visibility(visible: boolean) {
-    this.cancel.emit(visible);
+  onConfirm() {
+    this.confirm.emit(null);
   }
 }
