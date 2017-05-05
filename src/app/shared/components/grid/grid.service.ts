@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class GridService {
-  // defines wether the request should fetch a resource from the server's root
+  // defines whether the request should fetch a resource from the server's root
   private _localRequest = false;
 
   constructor(private http: AuthHttp, private authService: AuthService) { }
@@ -17,7 +17,7 @@ export class GridService {
 
   read(url: string, routeParams: object = {}): Promise<any> {
     if (this._localRequest) {
-      // this whould not be a default value, so clear the flag for further requests
+      // this would not be a default value, so clear the flag for further requests
       this._localRequest = false;
       return this.http.get(url)
         .toPromise()
