@@ -22,7 +22,7 @@ export const routes = [
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
-      { path: 'roles-and-permissions', loadChildren: './admin/roles_and_permissions/roles_and_permissions.module#RolesAndPermissionsModule' }
+      { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#Roles' }
     ]
   },
 

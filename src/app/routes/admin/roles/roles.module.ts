@@ -33,5 +33,5 @@ const routes: Routes = [
     RemovePermissionComponent,
   ]
 })
-export class RolesAndPermissionsModule {
+export class Roles {
 }
