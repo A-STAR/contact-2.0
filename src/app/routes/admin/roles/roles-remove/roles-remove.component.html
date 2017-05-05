@@ -1,0 +1,12 @@
+<app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
+  <p>Вы действительно хотите удалить роль {{ role.name }}?</p>
+
+  <div dialog-footer>
+    <button class="btn btn-danger" (click)="onActionClick()">
+      <i class="fa fa-check"></i> Да
+    </button>
+    <button class="btn btn-default" (click)="onCancelClick()">
+      <i class="fa fa-remove"></i> Нет
+    </button>
+  </div>
+</app-dialog>

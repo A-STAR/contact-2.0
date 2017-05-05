@@ -1,24 +1,6 @@
-<app-dialog
-  [display]="!!editedRole"
-  (displayChange)="onDisplayChange($event)"
->
-  <div dialog-header>
-    <h3>{{ title }}</h3>
-  </div>
+<app-roles-edit [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingCreatedOrEdited"></app-roles-edit>
 
-  <app-dynamic-form *ngIf="!!form" [form]="form" [controls]="controls"></app-dynamic-form>
-
-  <div dialog-footer>
-    <button class="btn btn-primary" (click)="save()">
-      <i class="fa fa-check"></i>
-      OK
-    </button>
-    <button class="btn btn-default" (click)="cancel()">
-      <i class="fa fa-remove"></i>
-      Cancel
-    </button>
-  </div>
-</app-dialog>
+<app-roles-remove [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingRemoved"></app-roles-remove>
 
 <app-grid
   selectionType="single"
@@ -30,4 +12,3 @@
   [bottomActions]="bottomActions"
   (onAction)="onAction($event)">
 </app-grid>
-

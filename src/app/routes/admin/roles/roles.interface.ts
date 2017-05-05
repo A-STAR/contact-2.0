@@ -1,8 +1,7 @@
 export interface IRoleRecord {
-  id: number;
+  id?: number;
   name: string;
-  obj_comment: string;
-  original?: string;
+  comment: string;
 }
 
 export interface IDisplayProperties {
@@ -10,4 +9,3 @@ export interface IDisplayProperties {
   addPermit: boolean;
   editPermit: boolean;
 }
-

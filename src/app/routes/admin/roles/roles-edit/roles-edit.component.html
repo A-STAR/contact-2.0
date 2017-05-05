@@ -1,0 +1,16 @@
+<app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>{{ popupTitle }}</h3>
+  </div>
+
+  <app-dynamic-form *ngIf="form" [form]="form" [controls]="controls"></app-dynamic-form>
+
+  <div dialog-footer>
+    <button class="btn btn-primary" (click)="onActionClick()">
+      <i class="fa fa-check"></i> Save
+    </button>
+    <button class="btn btn-default" (click)="onCancelClick()">
+      <i class="fa fa-remove"></i> Cancel
+    </button>
+  </div>
+</app-dialog>
