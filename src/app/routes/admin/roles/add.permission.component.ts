@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {BasePermissionsComponent} from './base.permissions.component';
+import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
 import {GridComponent} from '../../../shared/components/grid/grid.component';
 
 @Component({
@@ -9,7 +9,7 @@ import {GridComponent} from '../../../shared/components/grid/grid.component';
 })
 export class AddPermissionComponent extends BasePermissionsComponent implements AfterViewInit {
 
-  @Input() displayProperties;
+  @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -24,7 +24,7 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
 
   constructor() {
     super({
-      read: '/api/roles/{roleId}/permits/notadded',
+      read: '/api/roles/{id}/permits/notadded',
       dataKey: 'permits',
     });
   }
@@ -33,7 +33,13 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
    * @template
    */
   public ngAfterViewInit(): void {
-    this.addPermitGrid.load(this.record);
+    this.addPermitGrid.load(this.record)
+      .then((records: Array<any>) => {
+        if (!records.length) {
+          // TODO Temp solution. The component should be only displayed after the request has been performed
+          this.displayProperties.addPermit = false;
+        }
+      });
   }
 
   onSelectPermissions(permissions: any[]) {

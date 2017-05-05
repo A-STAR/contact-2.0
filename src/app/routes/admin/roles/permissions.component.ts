@@ -9,14 +9,8 @@ import {GridComponent} from '../../../shared/components/grid/grid.component';
 import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
 
 import {IPermissionRole} from './permissions.interface';
-import {BasePermissionsComponent} from './base.permissions.component';
+import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
 import {AuthService} from '../../../core/auth/auth.service';
-
-interface IDisplayProperties {
-  removePermit: boolean;
-  addPermit: boolean;
-  editPermit: boolean;
-}
 
 @Component({
   selector: 'app-permissions',
@@ -47,13 +41,12 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   bottomActions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
+    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
   ];
 
   bottomActionsSinglePermitGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.CLONE,
     ToolbarActionTypeEnum.REMOVE
   ];
 
@@ -63,7 +56,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   constructor(private http: AuthHttp, private authService: AuthService) {
     super({
-      read: '/api/roles/{roleId}/permits',
+      read: '/api/roles/{id}/permits',
       dataKey: 'permits',
     });
   }
@@ -118,7 +111,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     const permitId: number = this.editedPermission.id;
 
     this.remoteUrl().then(rootUrl => {
-      const url: string = format(`${rootUrl}/api/roles/{roleId}/permits/${permitId}`, this.currentRole);
+      const url: string = format(`${rootUrl}/api/roles/{id}/permits/${permitId}`, this.currentRole);
 
       this.http.put(url, this.prepareData(changes))
         .toPromise()
@@ -131,7 +124,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   private onAddPermissions(addedPermissions: Array<any>) {
     this.remoteUrl().then(rootUrl => {
-      this.http.post(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentRole), {
+      this.http.post(format(`${rootUrl}/api/roles/{id}/permits`, this.currentRole), {
         permitIds: addedPermissions.map((rec: any) => rec.id)
       }).toPromise()
         .then(() => {
@@ -143,7 +136,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   onRemovePermission() {
     this.remoteUrl().then(rootUrl => {
-      this.http.request(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentRole), {
+      this.http.request(format(`${rootUrl}/api/roles/{id}/permits`, this.currentRole), {
         method: RequestMethod.Delete,
         body: {
           permitIds: [this.editedPermission.id]

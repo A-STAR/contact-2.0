@@ -130,6 +130,10 @@ export class RolesComponent {
     this.createForm();
   }
 
+  callActionByType(type: ToolbarActionTypeEnum) {
+    this.onAction(this.bottomActions.filter((action: IToolbarAction) => type === action.type)[0]);
+  }
+
   save() {
     this.createFormAction()
       .then(result => {
