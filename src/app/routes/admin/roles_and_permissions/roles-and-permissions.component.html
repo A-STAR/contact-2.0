@@ -8,4 +8,5 @@
 <br>
 <br>
 
-<app-permissions [selectionChange]="selectionChange"></app-permissions>
+<app-permissions *ngIf="currentRole"
+                 [currentRole]="currentRole"></app-permissions>

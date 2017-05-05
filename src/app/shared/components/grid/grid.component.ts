@@ -76,6 +76,10 @@ export class GridComponent implements OnInit, AfterViewInit {
       .catch(err => console.error(err));
   }
 
+  clear() {
+    this.rows = [];
+  }
+
   update(key: string | number, body: object) {
     return this.gridService.update(this.dataSource.update, key, body);
   }

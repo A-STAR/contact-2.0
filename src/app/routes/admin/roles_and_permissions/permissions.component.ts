@@ -1,4 +1,6 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
+} from '@angular/core';
 import {RequestMethod} from '@angular/http';
 import {AuthHttp} from 'angular2-jwt';
 import * as format from 'string-format';
@@ -20,7 +22,7 @@ interface IDisplayProperties {
   selector: 'app-permissions',
   templateUrl: './permissions.component.html'
 })
-export class PermissionsComponent extends BasePermissionsComponent implements AfterViewInit {
+export class PermissionsComponent extends BasePermissionsComponent implements AfterViewInit, OnChanges {
 
   displayProperties: IDisplayProperties = {
     removePermit: false,
@@ -28,11 +30,10 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     editPermit: false
   };
   private editedPermission: any;
-  private currentPermissionRole: IPermissionRole;
 
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
-  @Input() selectionChange: EventEmitter<IPermissionRole>;
-  @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>(false);
+  @Input() currentRole: IPermissionRole;
+  @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>();
 
   columns: Array<any> = [
     { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -70,10 +71,15 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   /**
    * @override
    */
-  ngAfterViewInit(): void {
-    this.selectionChange.subscribe((role: IPermissionRole) => {
-      this.permitsGrid.load(this.currentPermissionRole = role);
-    });
+  public ngAfterViewInit() {
+    this.refreshGrid();
+  }
+
+  /**
+   * @override
+   */
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+    this.refreshGrid();
   }
 
   private onAction(action: IToolbarAction) {
@@ -92,7 +98,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
         this.displayProperties.removePermit = true;
         break;
       case ToolbarActionTypeEnum.CLONE:
-        this.cloneRole.emit(this.currentPermissionRole); // TODO Object.freeze?
+        this.cloneRole.emit(this.currentRole);
         break;
     }
   }
@@ -112,7 +118,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     const permitId: number = this.editedPermission.id;
 
     this.remoteUrl().then(rootUrl => {
-      const url: string = format(`${rootUrl}/api/roles/{roleId}/permits/${permitId}`, this.currentPermissionRole);
+      const url: string = format(`${rootUrl}/api/roles/{roleId}/permits/${permitId}`, this.currentRole);
 
       this.http.put(url, this.prepareData(changes))
         .toPromise()
@@ -125,7 +131,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   private onAddPermissions(addedPermissions: Array<any>) {
     this.remoteUrl().then(rootUrl => {
-      this.http.post(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentPermissionRole), {
+      this.http.post(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentRole), {
         permitIds: addedPermissions.map((rec: any) => rec.id)
       }).toPromise()
         .then(() => {
@@ -137,7 +143,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   onRemovePermission() {
     this.remoteUrl().then(rootUrl => {
-      this.http.request(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentPermissionRole), {
+      this.http.request(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentRole), {
         method: RequestMethod.Delete,
         body: {
           permitIds: [this.editedPermission.id]
@@ -155,8 +161,20 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private loadGrid() {
-    this.permitsGrid.load(this.currentPermissionRole)
+    this.permitsGrid.load(this.currentRole)
       .then(() => this.refreshToolbar([]));
+  }
+
+  private refreshGrid() {
+    if (!this.permitsGrid) {
+      return;
+    }
+
+    if (this.currentRole) {
+      this.loadGrid();
+    } else {
+      this.permitsGrid.clear();
+    }
   }
 
   private refreshToolbar(records: any[]) {
