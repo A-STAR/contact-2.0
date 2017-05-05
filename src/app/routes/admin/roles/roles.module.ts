@@ -8,6 +8,8 @@ import {AddPermissionComponent} from './add.permission.component';
 import {EditPermissionComponent} from './edit.permission.component';
 import {RemovePermissionComponent} from './remove.permission.component';
 import { RolesComponent } from './roles.component';
+import { RolesEditComponent } from './roles-edit/roles-edit.component';
+import { RolesRemoveComponent } from './roles-remove/roles-remove.component';
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 
 const routes: Routes = [
@@ -27,6 +29,8 @@ const routes: Routes = [
   declarations: [
     RolesAndPermissionsComponent,
     RolesComponent,
+    RolesEditComponent,
+    RolesRemoveComponent,
     PermissionsComponent,
     AddPermissionComponent,
     EditPermissionComponent,
