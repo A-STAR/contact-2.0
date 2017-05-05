@@ -66,7 +66,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     // 43px - tab height,
     // 2x15px - top & bottom padding around the grid
     // 8px => ? tbd
-    if (!this.styles) {
+    if (this.styles) {
       return;
     }
     const offset = 43 + 15 + 15 + 8;
