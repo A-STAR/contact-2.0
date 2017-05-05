@@ -29,8 +29,8 @@
       [autoLoad]="false"
       [selectionType]="'single'"
       [bottomActions]="bottomActions"
-      (onEdit)="beginEditPermission($event)"
-      (onRowSelect)="selectPermission($event)"
+      (onEdit)="onBeginEditPermission($event)"
+      (onRowSelect)="onSelectPermissions($event)"
       (onAction)="onAction($event)">
     </app-grid>
   </app-tab>
