@@ -14,7 +14,7 @@ describe('Component: Footer', () => {
     });
 
     it('should create an instance', async(inject([SettingsService], (settingsService) => {
-        let component = new FooterComponent(settingsService);
+        const component = new FooterComponent(settingsService);
         expect(component).toBeTruthy();
     })));
 });

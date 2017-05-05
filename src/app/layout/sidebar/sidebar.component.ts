@@ -1,6 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-declare var $: any;
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';

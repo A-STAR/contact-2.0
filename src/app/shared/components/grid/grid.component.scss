@@ -1,5 +1,5 @@
 .ngx-datatable {
-  height: 700px;
+  min-height: 500px;
 }
 
 .ngx-datatable {
@@ -13,4 +13,8 @@
     background-color: #ececec;
     border-bottom: 1px solid lightgrey;
   }
+}
+
+:host /deep/ .panel {
+  margin-bottom: 0;
 }

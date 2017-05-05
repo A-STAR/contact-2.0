@@ -8,8 +8,9 @@ import { Component,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { IDataSource } from './grid.interface';
+import { GridService } from './grid.service';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-grid',
@@ -37,8 +38,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     pagerNext: 'fa fa-angle-double-right',
   };
 
-  constructor(private gridService: GridService, element: ElementRef) {
-    this.element = element.nativeElement;
+  constructor(private gridService: GridService, public settings: SettingsService) {
     this.parseFn = this.parseFn || function (data) { return data; };
   }
 
@@ -49,11 +49,11 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // set up the height of datatable - it does not work with height specified
-    const height = this.element.offsetHeight;
-    // this.dataTableRef.nativeElement.style.height = `${height}px`;
-    // this.dataTable.recalculate();
-    // this.dataTable.bodyHeight = 400;
+    // set up the height of datatable
+    // 43px - tab height, 2x15px - top & bottom padding around the grid
+    const offset = 43 + 15 + 15;
+    const height = this.settings.getContentHeight() - offset;
+    this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
   load() {
@@ -67,14 +67,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  onSelect({ selected }): void {
-    // this.selected = [].concat(selected);
-    // console.log(this.selected.length);
-  }
-
-  onSelectCheck(row, col, value): boolean {
-    return true;
-  }
+  onSelect({ selected }): void {}
 
   onActivate(event): void {
     if (event.type === 'dblclick') {
