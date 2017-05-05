@@ -19,7 +19,7 @@ export class NumericInputComponent implements OnInit {
   @Input() prefix = null;
   @Input() suffix = null;
   @Input() value = 0;
-  @Output() valueChange: EventEmitter<number> = new EventEmitter(false);
+  @Output() valueChange: EventEmitter<number> = new EventEmitter();
 
   mask = {};
 
