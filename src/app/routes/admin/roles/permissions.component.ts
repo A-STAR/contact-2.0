@@ -1,16 +1,14 @@
 import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
-import {RequestMethod} from '@angular/http';
-import {AuthHttp} from 'angular2-jwt';
-import * as format from 'string-format';
 
 import {GridComponent} from '../../../shared/components/grid/grid.component';
 import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
+import {GridService} from '../../../shared/components/grid/grid.service';
 
 import {IPermissionRole} from './permissions.interface';
-import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
-import {AuthService} from '../../../core/auth/auth.service';
+import {BasePermissionsComponent} from './base.permissions.component';
+import {IDisplayProperties} from './roles.interface';
 
 @Component({
   selector: 'app-permissions',
@@ -54,7 +52,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private http: AuthHttp, private authService: AuthService) {
+  constructor(private gridService: GridService) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
@@ -96,61 +94,43 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     }
   }
 
-  private beginEditPermission() {
+  onBeginEditPermission() {
     this.displayProperties.editPermit = true;
   }
 
-  private selectPermission(records: any[]) {
+  onSelectPermissions(records: any[]) {
     if (records.length) {
       this.editedPermission = records[0];
     }
     this.refreshToolbar(records);
   }
 
-  private onEditPermission(changes) {
+  onEditPermission(changes) {
     const permitId: number = this.editedPermission.id;
 
-    this.remoteUrl().then(rootUrl => {
-      const url: string = format(`${rootUrl}/api/roles/{id}/permits/${permitId}`, this.currentRole);
-
-      this.http.put(url, this.prepareData(changes))
-        .toPromise()
-        .then(() => {
-          this.displayProperties.editPermit = false;
-          this.loadGrid();
-        });
-    });
+    this.gridService.update(`/api/roles/{id}/permits/${permitId}`, this.currentRole, this.prepareData(changes))
+      .then(() => {
+        this.displayProperties.editPermit = false;
+        this.loadGrid();
+      });
   }
 
-  private onAddPermissions(addedPermissions: Array<any>) {
-    this.remoteUrl().then(rootUrl => {
-      this.http.post(format(`${rootUrl}/api/roles/{id}/permits`, this.currentRole), {
-        permitIds: addedPermissions.map((rec: any) => rec.id)
-      }).toPromise()
-        .then(() => {
-          this.displayProperties.addPermit = false;
-          this.loadGrid();
-        });
+  onAddPermissions(addedPermissions: Array<any>) {
+    this.gridService.create(`/api/roles/{id}/permits`, this.currentRole, {
+      permitIds: addedPermissions.map((rec: any) => rec.id)
+    }).then(() => {
+      this.displayProperties.addPermit = false;
+      this.loadGrid();
     });
   }
 
   onRemovePermission() {
-    this.remoteUrl().then(rootUrl => {
-      this.http.request(format(`${rootUrl}/api/roles/{id}/permits`, this.currentRole), {
-        method: RequestMethod.Delete,
-        body: {
-          permitIds: [this.editedPermission.id]
-        }
-      }).toPromise()
-        .then(() => {
-          this.displayProperties.removePermit = false;
-          this.loadGrid();
-        });
+    this.gridService.delete(`/api/roles/{id}/permits`, this.currentRole, {
+      permitIds: [this.editedPermission.id]
+    }).then(() => {
+      this.displayProperties.removePermit = false;
+      this.loadGrid();
     });
-  }
-
-  private remoteUrl(): Promise<string> {
-    return this.authService.getRootUrl().then(rootUrl => rootUrl);
   }
 
   private loadGrid() {
