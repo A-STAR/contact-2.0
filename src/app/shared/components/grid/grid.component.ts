@@ -25,12 +25,11 @@ interface IParameters {
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
-  @Input() selectionType: TSelectionType = 'multiClick';
+  @Input() selectionType: TSelectionType;
   @Input() autoLoad = true;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Input() selectionType: string;
   @Input() innerStyles;
   @Input() initialParameters: IParameters;
   @Input() bottomActions: IToolbarAction[];
