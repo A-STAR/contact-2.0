@@ -40,7 +40,7 @@ export class RolesComponent {
     { label: 'Комментарий', controlName: 'obj_comment', type: 'textarea', required: true, disabled: false, rows: 2 },
   ];
 
-  @Output() onSelect: EventEmitter<number> = new EventEmitter(false);
+  @Output() onSelect: EventEmitter<number> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
   form: FormGroup;
