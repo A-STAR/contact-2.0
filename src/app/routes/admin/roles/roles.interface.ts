@@ -1,6 +1,12 @@
 export interface IRoleRecord {
   id: number;
   name: string;
-  obj_comment: string;
+  comment: string;
   original?: string;
+};
+
+export interface IRoleEditForm {
+  id?: string;
+  name: string;
+  comment: string;
 };
