@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { IPermissionRole } from './permissions.interface';
 
 @Component({
@@ -6,11 +6,9 @@ import { IPermissionRole } from './permissions.interface';
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
-  selectionChange: EventEmitter<IPermissionRole> = new EventEmitter();
+  currentRole: IPermissionRole;
 
   onSelect(roleId) {
-    this.selectionChange.emit({
-      roleId
-    });
+    this.currentRole = {roleId};
   }
 }
