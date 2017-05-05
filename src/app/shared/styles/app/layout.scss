@@ -175,7 +175,7 @@ app-root, .wrapper {
     padding: 0;
     //overflow: auto; // required for portlets
     .content-heading {
-      margin: -$content-padding;
+      margin: 0;
       margin-bottom: $content-padding;
       padding: $content-padding;
     }

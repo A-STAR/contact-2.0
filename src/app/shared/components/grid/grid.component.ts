@@ -31,7 +31,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Input() innerStyles;
+  @Input() styles: { [key: string]: any };
   @Input() initialParameters: IParameters;
   @Input() bottomActions: IToolbarAction[];
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
@@ -66,9 +66,12 @@ export class GridComponent implements OnInit, AfterViewInit {
     // 43px - tab height,
     // 2x15px - top & bottom padding around the grid
     // 8px => ? tbd
-    // const offset = 43 + 15 + 15 + 8;
-    // const height = this.settings.getContentHeight() - offset;
-    // this.dataTableRef.nativeElement.style.height = `${height}px`;
+    if (!this.styles) {
+      return;
+    }
+    const offset = 43 + 15 + 15 + 8;
+    const height = this.settings.getContentHeight() - offset;
+    this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
   load(parameters?: IParameters): Promise<any> {
