@@ -6,7 +6,7 @@ import { IPermissionRole } from './permissions.interface';
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
-  private selectionChange: EventEmitter<IPermissionRole> = new EventEmitter(false);
+  private selectionChange: EventEmitter<IPermissionRole> = new EventEmitter();
 
   onSelect(roleId) {
     this.selectionChange.emit({
