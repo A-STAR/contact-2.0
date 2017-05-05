@@ -18,12 +18,13 @@
       <button type="button"
               class="ui-button-secondary"
               pButton icon="fa-close"
-              label="Cancel"
+              label="Отмена"
               (click)="onCancel()"></button>
       <button type="button"
               class="ui-button-success"
               pButton icon="fa-check"
-              label="Save"
+              label="Сохранить"
+              [disabled]="!canSaveChanges()"
               (click)="onSave()"></button>
     </div>
   </p-footer>

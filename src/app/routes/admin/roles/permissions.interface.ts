@@ -1,5 +1,5 @@
 export interface IPermissionRole {
-  roleId: number;
+  id: number;
 }
 
 export interface IDataValue {

@@ -84,6 +84,10 @@ export class EditPermissionComponent implements OnInit {
     this.save.emit(this.formChanges);
   }
 
+  canSaveChanges(): boolean {
+    return this.form.dirty;
+  }
+
   // TODO Eliminate duplication
   private prepareSelectOptionValue(record: any, value: any) {
     switch (record.typeCode) {
