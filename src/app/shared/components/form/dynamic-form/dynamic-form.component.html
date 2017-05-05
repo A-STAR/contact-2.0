@@ -17,6 +17,15 @@
                  [formControlName]="control.controlName">
         </label>
 
+        <label *ngSwitchCase="'boolean'">{{control.label}}<br>
+          <label class="radio-inline">
+            <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1"> True
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0"> False
+          </label>
+        </label>
+
         <label *ngSwitchCase="'select'">{{control.label}}
           <select class="form-control"
                   [attr.disabled]="control.disabled"
