@@ -7,6 +7,7 @@ import * as format from 'string-format';
 
 import {GridComponent} from '../../../shared/components/grid/grid.component';
 import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
+import {GridService} from '../../../shared/components/grid/grid.service';
 
 import {IPermissionRole} from './permissions.interface';
 import {BasePermissionsComponent} from './base.permissions.component';
@@ -55,7 +56,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private http: AuthHttp, private authService: AuthService) {
+  constructor(private http: AuthHttp, private authService: AuthService, private gridService: GridService) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
@@ -136,17 +137,11 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onRemovePermission() {
-    this.remoteUrl().then(rootUrl => {
-      this.http.request(format(`${rootUrl}/api/roles/{id}/permits`, this.currentRole), {
-        method: RequestMethod.Delete,
-        body: {
-          permitIds: [this.editedPermission.id]
-        }
-      }).toPromise()
-        .then(() => {
-          this.displayProperties.removePermit = false;
-          this.loadGrid();
-        });
+    this.gridService.delete(`/api/roles/{id}/permits`, this.currentRole, {
+      permitIds: [this.editedPermission.id]
+    }).then(() => {
+      this.displayProperties.removePermit = false;
+      this.loadGrid();
     });
   }
 
