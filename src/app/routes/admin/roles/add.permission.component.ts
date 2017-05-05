@@ -36,7 +36,6 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
   public ngAfterViewInit(): void {
     this.addPermitGrid.load(this.record)
       .then((records: Array<any>) => {
-        console.log('sldhfsdhf');
         if (!records.length) {
           // TODO Temp solution. The component should be only displayed after the request has been performed
           this.displayProperties.addPermit = false;

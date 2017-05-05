@@ -12,9 +12,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { RatingModule } from 'ngx-bootstrap/rating';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
@@ -66,9 +64,9 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     CurrencyMaskModule,
     DropdownModule.forRoot(),
     TranslateModule,
-    PaginationModule.forRoot(),
+    // PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
-    RatingModule.forRoot(),
+    // RatingModule.forRoot(),
     TextMaskModule,
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
@@ -115,9 +113,9 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     DropdownModule,
     CalendarModule,
     TextMaskModule,
-    PaginationModule,
+    // PaginationModule,
     ProgressbarModule,
-    RatingModule,
+    // RatingModule,
     TooltipModule,
     TypeaheadModule,
     CheckallDirective,
