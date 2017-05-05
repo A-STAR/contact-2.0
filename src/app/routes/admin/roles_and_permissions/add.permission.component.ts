@@ -44,8 +44,8 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     this.cancel.emit(false);
   }
 
-  onAddPermissions(permissions: any[]) {
-    this.add.emit(permissions || this.selectedPermissions);
+  onAddPermissions() {
+    this.add.emit(this.selectedPermissions);
   }
 
   canAddPermissions(): boolean {
