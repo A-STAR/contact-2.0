@@ -110,7 +110,7 @@ export class RolesComponent {
     }
   }
 
-  private onAction(action: IToolbarAction) {
+  onAction(action: IToolbarAction) {
     this.action = action.type;
     switch (action.type) {
       case ToolbarActionTypeEnum.EDIT:
