@@ -3,7 +3,8 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IRoleRecord, TRoleFormAction } from './roles.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IRoleRecord } from './roles.interface';
 
 @Component({
   selector: 'app-roles',
@@ -11,27 +12,23 @@ import { IRoleRecord, TRoleFormAction } from './roles.interface';
 })
 export class RolesComponent {
   static ACTIONS = {
-    CREATE: {
+    [ToolbarActionTypeEnum.ADD]: {
       popupTitle: () => 'Новая роль',
-      actionButton: 'Добавить',
       controls: ['name', 'obj_comment'],
       formAction: () => Promise.resolve()
     },
-    EDIT: {
+    [ToolbarActionTypeEnum.EDIT]: {
       popupTitle: name => name,
-      actionButton: 'Сохранить',
       controls: ['name', 'obj_comment'],
       formAction: (grid: GridComponent, role: IRoleRecord) => grid.update(role.id, role)
     },
-    COPY: {
+    [ToolbarActionTypeEnum.CLONE]: {
       popupTitle: () => 'Копирование роли',
-      actionButton: 'Копировать',
       controls: ['name', 'original', 'obj_comment'],
       formAction: () => Promise.resolve()
     },
-    DELETE: {
+    [ToolbarActionTypeEnum.REMOVE]: {
       popupTitle: name => `Вы уверены, что хотите удалить роль ${name}?`,
-      actionButton: 'Удалить',
       controls: [],
       formAction: () => Promise.resolve()
     },
@@ -49,7 +46,20 @@ export class RolesComponent {
   form: FormGroup;
   editedRole: IRoleRecord = null;
   selectedRole: IRoleRecord = null;
-  action: TRoleFormAction = null;
+  action: ToolbarActionTypeEnum = null;
+
+  bottomActions: Array<IToolbarAction> = [
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
+    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
+  ];
+
+  bottomActionsSinglePermitGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.EDIT,
+    ToolbarActionTypeEnum.CLONE,
+    ToolbarActionTypeEnum.REMOVE
+  ];
 
   columns: Array<any> = [
     { name: '#', prop: 'id', minWidth: 30, maxWidth: 70 },
@@ -65,16 +75,12 @@ export class RolesComponent {
     dataKey: 'roles',
   };
 
-  // TODO: move http logic into data service
   constructor(private formBuilder: FormBuilder) {
   }
 
   get title() {
-    return RolesComponent.ACTIONS[this.action] && RolesComponent.ACTIONS[this.action].popupTitle.call(this, this.editedRole && this.editedRole.name);
-  }
-
-  get actionButtonTitle() {
-    return RolesComponent.ACTIONS[this.action] && RolesComponent.ACTIONS[this.action].actionButton;
+    return RolesComponent.ACTIONS[this.action] &&
+      RolesComponent.ACTIONS[this.action].popupTitle.call(this, this.editedRole && this.editedRole.name);
   }
 
   parseFn(data): Array<IRoleRecord> {
@@ -87,11 +93,12 @@ export class RolesComponent {
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
       this.selectedRole = role;
       this.onSelect.emit(this.selectedRole.id);
+      this.refreshToolbar();
     }
   }
 
   onEdit(role: IRoleRecord) {
-    this.action = 'EDIT';
+    this.action = ToolbarActionTypeEnum.EDIT;
     this.editedRole = role;
     this.createForm();
   }
@@ -103,16 +110,24 @@ export class RolesComponent {
     }
   }
 
-  canEdit() {
-    return !!this.selectedRole;
-  }
-
-  canCopy() {
-    return !!this.selectedRole;
-  }
-
-  canDelete() {
-    return !!this.selectedRole;
+  private onAction(action: IToolbarAction) {
+    this.action = action.type;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.EDIT:
+      case ToolbarActionTypeEnum.REMOVE:
+        this.editedRole = this.selectedRole;
+        break;
+      case ToolbarActionTypeEnum.ADD:
+        this.editedRole = this.createEmptyRole();
+        break;
+      case ToolbarActionTypeEnum.CLONE:
+        this.editedRole = {
+          ...this.createEmptyRole(),
+          original: this.selectedRole.name
+        };
+        break;
+    }
+    this.createForm();
   }
 
   save() {
@@ -129,33 +144,6 @@ export class RolesComponent {
   cancel() {
     this.editedRole = null;
     this.action = null;
-  }
-
-  create() {
-    this.action = 'CREATE';
-    this.editedRole = this.createEmptyRole();
-    this.createForm();
-  }
-
-  edit() {
-    this.action = 'EDIT';
-    this.editedRole = this.selectedRole;
-    this.createForm();
-  }
-
-  copy() {
-    this.action = 'COPY';
-    this.editedRole = {
-      ...this.createEmptyRole(),
-      original: this.selectedRole.name
-    };
-    this.createForm();
-  }
-
-  delete() {
-    this.action = 'DELETE';
-    this.editedRole = this.selectedRole;
-    this.createForm();
   }
 
   private createEmptyRole(): IRoleRecord {
@@ -185,8 +173,15 @@ export class RolesComponent {
     return RolesComponent.CONTROLS
       .filter(control => names.includes(control.controlName))
       .reduce((acc, control) => {
-        acc[control.controlName] = new FormControl({ value: this.editedRole[control.controlName], disabled: control.disabled }, Validators.required);
+        acc[control.controlName] = new FormControl({
+          value: this.editedRole[control.controlName], disabled: control.disabled
+        }, Validators.required);
         return acc;
       }, {});
+  }
+
+  private refreshToolbar() {
+    // TODO: load user permissions
+    this.bottomActions.forEach(action => action.visible = true);
   }
 }

@@ -26,18 +26,8 @@
   [dataSource]="dataSource"
   [parseFn]="parseFn"
   (onRowSelect)="onSelectedRowChange($event)"
-  (onEdit)="onEdit($event)">
+  (onEdit)="onEdit($event)"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
 </app-grid>
 
-<button class="btn btn-sm btn-default" title="Create new role" (click)="create()">
-  <i class="fa fa-plus"></i>
-</button>
-<button class="btn btn-sm btn-default" title="Edit selected role" (click)="edit()" [disabled]="!canEdit()">
-  <i class="fa fa-edit"></i>
-</button>
-<button class="btn btn-sm btn-default" title="Copy selected role" (click)="copy()" [disabled]="!canCopy()">
-  <i class="fa fa-copy"></i>
-</button>
-<button class="btn btn-sm btn-danger" title="Delete selected role" (click)="delete()" [disabled]="!canDelete()">
-  <i class="fa fa-remove"></i>
-</button>

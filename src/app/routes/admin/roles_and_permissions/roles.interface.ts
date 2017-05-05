@@ -4,5 +4,3 @@ export interface IRoleRecord {
   obj_comment: string;
   original?: string;
 };
-
-export type TRoleFormAction = 'CREATE' | 'EDIT' | 'COPY' | 'DELETE';
