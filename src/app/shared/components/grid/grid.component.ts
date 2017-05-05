@@ -69,8 +69,8 @@ export class GridComponent implements OnInit, AfterViewInit {
     // this.dataTable.bodyHeight = 400;
   }
 
-  load(parameters?: IParameters) {
-    this.gridService
+  load(parameters?: IParameters): Promise<void> {
+    return this.gridService
       .read(format(this.dataSource.read, parameters || {}))
       .then(data => this.rows = this.parseFn(data))
       .catch(err => console.error(err));

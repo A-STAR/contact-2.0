@@ -12,10 +12,10 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
   @Input() displayProperties;
   @Input() record: any;
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>(false);
+  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
 
-  private accessiblePermissions: Array<any>;
+  private selectedPermissions: Array<any>;
 
   columns: Array<any> = [
     {name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350},
@@ -36,15 +36,19 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     this.addPermitGrid.load(this.record);
   }
 
-  selectAccessiblePermissions(records: any[]) {
-    this.accessiblePermissions = records;
+  onSelectPermissions(permissions: any[]) {
+    this.selectedPermissions = permissions;
   }
 
   onCancel() {
     this.cancel.emit(false);
   }
 
-  onAddPermission() {
-    this.add.emit(this.accessiblePermissions);
+  onAddPermissions(permissions: any[]) {
+    this.add.emit(permissions || this.selectedPermissions);
+  }
+
+  canAddPermissions(): boolean {
+    return this.selectedPermissions && this.selectedPermissions.length > 0;
   }
 }

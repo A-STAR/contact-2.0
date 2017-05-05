@@ -104,13 +104,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     if (records.length) {
       this.editedPermission = records[0];
     }
-
-    // TODO Move these functionality inside ToolbarComponent
-    this.bottomActions.forEach((action: IToolbarAction) => {
-      if (this.bottomActionsSinglePermitGroup.filter((actionType: ToolbarActionTypeEnum) => action.type === actionType).length) {
-        action.visible = records.length > 0;
-      }
-    });
+    this.refreshToolbar(records);
   }
 
   private onEditPermission(changes) {
@@ -160,6 +154,16 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private loadGrid() {
-    this.permitsGrid.load(this.currentPermissionRole);
+    this.permitsGrid.load(this.currentPermissionRole)
+      .then(() => this.refreshToolbar([]));
+  }
+
+  private refreshToolbar(records: any[]) {
+    // TODO Move these functionality inside ToolbarComponent
+    this.bottomActions.forEach((action: IToolbarAction) => {
+      if (this.bottomActionsSinglePermitGroup.filter((actionType: ToolbarActionTypeEnum) => action.type === actionType).length) {
+        action.visible = records.length > 0;
+      }
+    });
   }
 }
