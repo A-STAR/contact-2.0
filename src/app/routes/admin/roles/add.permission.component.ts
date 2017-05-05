@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
-import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
-import {GridComponent} from '../../../shared/components/grid/grid.component';
+import { BasePermissionsComponent } from './base.permissions.component';
+import { IDisplayProperties } from './permissions.interface';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-add-permission',

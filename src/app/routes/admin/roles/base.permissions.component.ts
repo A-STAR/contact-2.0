@@ -1,10 +1,4 @@
-import {IDataSource} from '../../../shared/components/grid/grid.interface';
-
-export interface IDisplayProperties {
-  removePermit: boolean;
-  addPermit: boolean;
-  editPermit: boolean;
-}
+import { IDataSource } from '../../../shared/components/grid/grid.interface';
 
 export class BasePermissionsComponent {
 

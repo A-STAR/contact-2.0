@@ -7,3 +7,9 @@ export interface IDataValue {
   valueB?: number;
   valueN?: number;
 }
+
+export interface IDisplayProperties {
+  removePermit: boolean;
+  addPermit: boolean;
+  editPermit: boolean;
+}

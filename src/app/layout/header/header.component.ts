@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 const screenfull = require('screenfull');
 const browser = require('jquery.browser');
 
-import { UserblockService } from '../sidebar/userblock/userblock.service';
 import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -16,7 +15,6 @@ export class HeaderComponent implements OnInit {
     isNavSearchVisible: boolean;
 
     constructor(
-        private userblockService: UserblockService,
         public settings: SettingsService,
         private authService: AuthService
         ) { }
@@ -32,9 +30,8 @@ export class HeaderComponent implements OnInit {
         return this.authService.isAuthenticated;
     }
 
-    toggleUserBlock(event) {
+    toggleUserSettings(event) {
         event.preventDefault();
-        this.userblockService.toggleVisibility();
     }
 
     openNavSearch(event) {

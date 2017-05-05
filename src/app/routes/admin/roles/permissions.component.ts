@@ -1,16 +1,15 @@
 import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
-import {RequestMethod} from '@angular/http';
-import {AuthHttp} from 'angular2-jwt';
+import { RequestMethod } from '@angular/http';
+import { AuthHttp } from 'angular2-jwt';
 import * as format from 'string-format';
 
-import {GridComponent} from '../../../shared/components/grid/grid.component';
-import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
-
-import {IPermissionRole} from './permissions.interface';
-import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
-import {AuthService} from '../../../core/auth/auth.service';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IPermissionRole, IDisplayProperties } from './permissions.interface';
+import { BasePermissionsComponent } from './base.permissions.component';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-permissions',

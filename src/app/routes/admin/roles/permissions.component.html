@@ -22,6 +22,7 @@
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
     <app-grid
       #permitsGrid
+      [styles]="{height: '200px'}"
       [columns]="columns"
       [parseFn]="parseFn"
       [dataSource]="dataSource"

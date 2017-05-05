@@ -3,19 +3,19 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 
-import { UserblockService } from '../sidebar/userblock/userblock.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 describe('Component: Header', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [UserblockService, SettingsService]
+            providers: [SettingsService, AuthService]
         }).compileComponents();
     });
 
-    it('should create an instance', async(inject([UserblockService, SettingsService], (userblockService, settingsService) => {
-        let component = new HeaderComponent(userblockService, settingsService);
+    it('should create an instance', async(inject([SettingsService, AuthService], (settingsService, authService) => {
+        const component = new HeaderComponent(settingsService, authService);
         expect(component).toBeTruthy();
     })));
 });

@@ -62,9 +62,9 @@ export class RolesComponent {
   ];
 
   columns: Array<any> = [
-    { name: '#', prop: 'id', minWidth: 30, maxWidth: 70 },
+    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70 },
     { name: 'Название', prop: 'name', maxWidth: 400 },
-    { name: 'Комментарий', prop: 'obj_comment', width: 200, maxWidth: 500 },
+    { name: 'Комментарий', prop: 'obj_comment', width: 200 },
   ];
 
   controls: Array<IDynamicFormControl> = [];
