@@ -94,11 +94,11 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     }
   }
 
-  private beginEditPermission() {
+  onBeginEditPermission() {
     this.displayProperties.editPermit = true;
   }
 
-  private selectPermission(records: any[]) {
+  onSelectPermissions(records: any[]) {
     if (records.length) {
       this.editedPermission = records[0];
     }
