@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { RequestMethod } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../../../core/auth/auth.service';
 import 'rxjs/add/operator/toPromise';
@@ -24,13 +25,7 @@ export class GridService {
         .then(data => data.json());
     }
 
-    return this.validateUrl(url)
-      .then(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        return this.http.get(`${rootUrl}${route}`)
-          .toPromise()
-          .then(data => data.json());
-     });
+    return this.request(url, RequestMethod.Get, routeParams);
   }
 
   /**
@@ -40,33 +35,27 @@ export class GridService {
    *  route = '/api/roles/5/permits
    */
   create(url: string, routeParams: object = {}, body: object): Promise<any> {
-    return this.validateUrl(url)
-      .then(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        return this.http.post(`${rootUrl}${route}`, body)
-          .toPromise()
-          .then(data => data.json());
-     });
+    return this.request(url, RequestMethod.Post, routeParams, body);
   }
 
   update(url: string, routeParams: object = {}, body: object): Promise<any> {
-     return this.validateUrl(url)
-      .then(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        return this.http.put(`${rootUrl}${route}`, body)
-          .toPromise()
-          .then(data => data.json());
-     });
+    return this.request(url, RequestMethod.Put, routeParams, body);
   }
 
-  delete(url: string, routeParams: object = {}): Promise<any> {
-     return this.validateUrl(url)
+  delete(url: string, routeParams: object = {}, bodyParams: object = {}): Promise<any> {
+    return this.request(url, RequestMethod.Delete, routeParams, bodyParams);
+  }
+
+  private request(url: string, method: RequestMethod, routeParams: object = {}, body: object = {}): Promise<any> {
+    return this.validateUrl(url)
       .then(rootUrl => {
         const route = this.createRoute(url, routeParams);
-        return this.http.delete(`${rootUrl}${route}`)
-          .toPromise()
+        return this.http.request(`${rootUrl}${route}`, {
+          method: method,
+          body: body
+        }).toPromise()
           .then(data => data.json());
-     });
+      });
   }
 
   private validateUrl(url: string = ''): Promise<any> {
