@@ -9,7 +9,7 @@ import {GridComponent} from '../../../shared/components/grid/grid.component';
 })
 export class AddPermissionComponent extends BasePermissionsComponent implements AfterViewInit {
 
-  @Input() display;
+  @Input() displayProperties;
   @Input() record: any;
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
@@ -36,23 +36,15 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     this.addPermitGrid.load(this.record);
   }
 
-  private selectAccessiblePermissions(records: any[]) {
+  selectAccessiblePermissions(records: any[]) {
     this.accessiblePermissions = records;
   }
 
-  private onCancelAddPermission() {
+  onCancel() {
     this.cancel.emit(false);
   }
 
-  private onAddPermission() {
+  onAddPermission() {
     this.add.emit(this.accessiblePermissions);
-  }
-
-  get visibility(): boolean {
-    return this.display;
-  }
-
-  set visibility(visible: boolean) {
-    this.cancel.emit(visible);
   }
 }

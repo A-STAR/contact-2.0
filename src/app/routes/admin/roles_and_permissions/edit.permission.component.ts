@@ -9,7 +9,7 @@ import {IDynamicFormControl} from '../../../shared/components/form/dynamic-form/
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() display;
+  @Input() displayProperties;
   @Input() record: any;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   @Output() save: EventEmitter<any> = new EventEmitter<any>(false);
@@ -79,19 +79,11 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  private onCancel() {
+  onCancel() {
     this.cancel.emit(false);
   }
 
-  private onSave() {
+  onSave() {
     this.save.emit(this.formChanges);
-  }
-
-  get visibility(): boolean {
-    return this.display;
-  }
-
-  set visibility(visible: boolean) {
-    this.cancel.emit(visible);
   }
 }

@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {RequestMethod} from '@angular/http';
 import {AuthHttp} from 'angular2-jwt';
-
-const format = require('string-format');
+import * as format from 'string-format';
 
 import {GridComponent} from '../../../shared/components/grid/grid.component';
 import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
@@ -11,15 +10,23 @@ import {IPermissionRole} from './permissions.interface';
 import {BasePermissionsComponent} from './base.permissions.component';
 import {AuthService} from '../../../core/auth/auth.service';
 
+interface IDisplayProperties {
+  removePermit: boolean;
+  addPermit: boolean;
+  editPermit: boolean;
+}
+
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html'
 })
 export class PermissionsComponent extends BasePermissionsComponent implements AfterViewInit {
 
-  private removePermitDisplay: boolean;
-  private addPermitDisplay: boolean;
-  private editPermitDisplay: boolean;
+  displayProperties: IDisplayProperties = {
+    removePermit: false,
+    addPermit: false,
+    editPermit: false
+  };
   private editedPermission: any;
   private currentPermissionRole: IPermissionRole;
 
@@ -69,19 +76,19 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private onAction(action: IToolbarAction) {
-    this.editPermitDisplay = false;
-    this.addPermitDisplay = false;
-    this.removePermitDisplay = false;
+    this.displayProperties.editPermit = false;
+    this.displayProperties.addPermit = false;
+    this.displayProperties.removePermit = false;
 
     switch (action.type) {
       case ToolbarActionTypeEnum.EDIT:
-        this.editPermitDisplay = true;
+        this.displayProperties.editPermit = true;
         break;
       case ToolbarActionTypeEnum.ADD:
-        this.addPermitDisplay = true;
+        this.displayProperties.addPermit = true;
         break;
       case ToolbarActionTypeEnum.REMOVE:
-        this.removePermitDisplay = true;
+        this.displayProperties.removePermit = true;
         break;
       case ToolbarActionTypeEnum.CLONE:
         this.cloneRole.emit(this.currentPermissionRole); // TODO Object.freeze?
@@ -90,7 +97,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private beginEditPermission() {
-    this.editPermitDisplay = true;
+    this.displayProperties.editPermit = true;
   }
 
   private selectPermission(records: any[]) {
@@ -110,11 +117,12 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     const permitId: number = this.editedPermission.id;
 
     this.remoteUrl().then(rootUrl => {
-      this.http.put(format(`${rootUrl}/api/roles/{roleId}/permits/${permitId}`, this.currentPermissionRole), {
-        valueB: changes.value
-      }).toPromise()
+      const url: string = format(`${rootUrl}/api/roles/{roleId}/permits/${permitId}`, this.currentPermissionRole);
+
+      this.http.put(url, this.prepareData(changes))
+        .toPromise()
         .then(() => {
-          this.editPermitDisplay = false;
+          this.displayProperties.editPermit = false;
           this.loadGrid();
         });
     });
@@ -126,13 +134,13 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
         permitIds: addedPermissions.map((rec: any) => rec.id)
       }).toPromise()
         .then(() => {
-          this.addPermitDisplay = false;
+          this.displayProperties.addPermit = false;
           this.loadGrid();
         });
     });
   }
 
-  private onRemovePermission() {
+  onRemovePermission() {
     this.remoteUrl().then(rootUrl => {
       this.http.request(format(`${rootUrl}/api/roles/{roleId}/permits`, this.currentPermissionRole), {
         method: RequestMethod.Delete,
@@ -141,7 +149,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
         }
       }).toPromise()
         .then(() => {
-          this.removePermitDisplay = false;
+          this.displayProperties.removePermit = false;
           this.loadGrid();
         });
     });

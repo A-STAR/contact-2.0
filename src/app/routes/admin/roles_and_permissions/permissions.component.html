@@ -1,21 +1,21 @@
-<app-edit-permission *ngIf="editPermitDisplay"
-                     [display]="editPermitDisplay"
+<app-edit-permission *ngIf="displayProperties.editPermit"
+                     [displayProperties]="displayProperties"
                      [record]="editedPermission"
-                     (cancel)="editPermitDisplay = false"
+                     (cancel)="displayProperties.editPermit = false"
                      (save)="onEditPermission($event)">
 </app-edit-permission>
 
-<app-add-permission *ngIf="addPermitDisplay"
-                    [display]="addPermitDisplay"
+<app-add-permission *ngIf="displayProperties.addPermit"
+                    [displayProperties]="displayProperties"
                     [record]="currentPermissionRole"
-                    (cancel)="addPermitDisplay = false"
+                    (cancel)="displayProperties.addPermit = false"
                     (add)="onAddPermissions($event)">
 </app-add-permission>
 
-<app-remove-permission *ngIf="removePermitDisplay"
-                       [display]="removePermitDisplay"
-                       (cancel)="removePermitDisplay = false"
-                       (ok)="onRemovePermission()">
+<app-remove-permission *ngIf="displayProperties.removePermit"
+                       [displayProperties]="displayProperties"
+                       (cancel)="displayProperties.removePermit = false"
+                       (confirm)="onRemovePermission()">
 </app-remove-permission>
 
 <app-tabstrip>

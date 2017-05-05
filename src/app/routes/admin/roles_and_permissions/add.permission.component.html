@@ -7,7 +7,7 @@
   [responsive]="false"
   [width]="800"
   [height]="400"
-  [(visible)]="visibility">
+  [(visible)]="displayProperties.addPermit">
 
   <app-grid
     #addPermitGrid
@@ -25,7 +25,7 @@
               class="ui-button-secondary"
               pButton icon="fa-close"
               label="Cancel"
-              (click)="onCancelAddPermission()"></button>
+              (click)="onCancel()"></button>
       <button type="button"
               class="ui-button-success"
               pButton icon="fa-check"

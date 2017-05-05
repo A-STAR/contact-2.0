@@ -1,12 +1,13 @@
 import {IDataSource} from '../../../shared/components/grid/grid.interface';
+import {IDataValue} from './permissions.interface';
 
 export class BasePermissionsComponent {
 
-  constructor(protected dataSource: IDataSource) {
+  constructor(public dataSource: IDataSource) {
   }
 
   // TODO Eliminate duplication
-  protected parseFn = (data) => {
+  parseFn = (data) => {
     const {dataKey} = this.dataSource;
     const dataSet = data[dataKey];
     if (!dataSet) {
@@ -35,5 +36,25 @@ export class BasePermissionsComponent {
       }
       return val;
     });
+  }
+
+  // TODO Eliminate duplication
+  prepareData = (data) => {
+    const result: IDataValue = {};
+
+    switch (data.typeCode) {
+      case 1:
+        result.valueN = parseInt(data.value, 10);
+        break;
+      case 3:
+        result.valueS = data.value;
+        return data.value;
+      case 4:
+        result.valueB = data.value ? 1 : 0;
+        return data.value;
+    }
+
+    delete data.value;
+    return result;
   }
 }
