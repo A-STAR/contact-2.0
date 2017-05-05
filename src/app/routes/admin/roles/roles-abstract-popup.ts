@@ -7,6 +7,7 @@ import { IRoleRecord } from './roles.interface';
 export abstract class AbstractRolesPopup implements OnChanges {
   @Input() role: IRoleRecord;
   @Output() roleChange: EventEmitter<IRoleRecord> = new EventEmitter();
+  @Output() onUpdate: EventEmitter<null> = new EventEmitter();
 
   form: FormGroup;
 
@@ -32,6 +33,7 @@ export abstract class AbstractRolesPopup implements OnChanges {
           if (data.ok) {
             // TODO: check success === true in data.json()
             // TODO: reload grid
+            this.onUpdate.emit();
             this.close();
           }
         })

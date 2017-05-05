@@ -96,6 +96,11 @@ export class RolesComponent {
     }
   }
 
+  onUpdate() {
+    this.selectedRole = null;
+    this.grid.load().then(() => this.refreshToolbar());
+  }
+
   callActionByType(type: ToolbarActionTypeEnum) {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
