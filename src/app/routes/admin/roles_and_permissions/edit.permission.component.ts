@@ -53,10 +53,9 @@ export class EditPermissionComponent implements OnInit {
         label: 'Значение',
         controlName: 'value',
         type: 'select',
-        disabled: true,
         options: [
-          {label: 'TRUE', value: 1},
-          {label: 'FALSE', value: 0},
+          {label: 'TRUE', value: this.prepareSelectOptionValue(this.record, 1)},
+          {label: 'FALSE', value: this.prepareSelectOptionValue(this.record, 0)},
         ]
       },
       {
@@ -85,5 +84,16 @@ export class EditPermissionComponent implements OnInit {
 
   onSave() {
     this.save.emit(this.formChanges);
+  }
+
+  // TODO Eliminate duplication
+  private prepareSelectOptionValue(record: any, value: any) {
+    switch (record.typeCode) {
+      case 1:
+        return value;
+      case 4:
+        return !!value;
+    }
+    return value;
   }
 }

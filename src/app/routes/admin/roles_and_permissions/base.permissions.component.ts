@@ -48,10 +48,10 @@ export class BasePermissionsComponent {
         break;
       case 3:
         result.valueS = data.value;
-        return data.value;
+        break;
       case 4:
         result.valueB = data.value ? 1 : 0;
-        return data.value;
+        break;
     }
 
     delete data.value;
