@@ -1,25 +1,33 @@
   <form [formGroup]="form">
-
     <div *ngFor="let control of controls" class="form-group">
 
       <div [ngSwitch]="control.type" class="form-group">
 
         <label *ngSwitchCase="'number'">{{control.label}}
-          <input type="number" class="form-control" [formControlName]="control.controlName">
+          <input type="number"
+                 class="form-control"
+                 [attr.disabled]="control.disabled"
+                 [formControlName]="control.controlName">
         </label>
 
         <label *ngSwitchCase="'text'">{{control.label}}
-          <input type="text" class="form-control" [formControlName]="control.controlName">
+          <input type="text"
+                 class="form-control"
+                 [attr.disabled]="control.disabled"
+                 [formControlName]="control.controlName">
         </label>
 
         <label *ngSwitchCase="'select'">{{control.label}}
-          <select class="form-control" [formControlName]="control.controlName">
+          <select class="form-control"
+                  [attr.disabled]="control.disabled"
+                  [formControlName]="control.controlName">
             <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
           </select>
         </label>
 
         <label *ngSwitchCase="'textarea'">{{control.label}}
           <textarea
+            [attr.disabled]="control.disabled"
             [formControlName]="control.controlName"
             class="form-control"
             rows="control.rows || 2"
@@ -32,7 +40,10 @@
 
             <div *ngSwitchCase="1" class="form-group">
               <label>{{control.label}}
-                <input type="number" class="form-control" [formControlName]="control.controlName">
+                <input type="number"
+                       class="form-control"
+                       [attr.disabled]="control.disabled"
+                       [formControlName]="control.controlName">
               </label>
             </div>
 
@@ -47,10 +58,10 @@
               <label>{{control.label}}</label>
               <div>
                 <label class="radio-inline">
-                  <input type="radio" [formControlName]="control.controlName" value="1"> True
+                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1"> True
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" [formControlName]="control.controlName" value="0"> False
+                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0"> False
                 </label>
               </div>
             </div>
@@ -58,7 +69,10 @@
             <div *ngSwitchDefault class="form-group">
               <label>{{control.label}}</label>
               <div>
-                <input type="text" class="form-control" [formControlName]="control.controlName">
+                <input type="text"
+                       class="form-control"
+                       [attr.disabled]="control.disabled"
+                       [formControlName]="control.controlName">
               </div>
             </div>
 

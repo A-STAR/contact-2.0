@@ -7,10 +7,16 @@ import { Component,
   Input,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import * as format from 'string-format';
 
-import { IDataSource } from './grid.interface';
-import { GridService } from './grid.service';
+import { IDataSource, TSelectionType } from './grid.interface';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { GridService } from './grid.service';
+import { IToolbarAction } from '../toolbar/toolbar.interface';
+
+interface IParameters {
+  [index: string]: any;
+}
 
 @Component({
   selector: 'app-grid',
@@ -20,11 +26,17 @@ import { SettingsService } from '../../../core/settings/settings.service';
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Input() selectionType: TSelectionType;
   @Input() autoLoad = true;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
+  @Input() innerStyles;
+  @Input() initialParameters: IParameters;
+  @Input() bottomActions: IToolbarAction[];
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
+  @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onAction: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
   rows: Array<any> = [];
@@ -44,21 +56,24 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     if (this.autoLoad) {
-      this.load();
+      this.load(this.initialParameters);
     }
+    this.selectionType = this.selectionType || 'multiClick';
   }
 
   ngAfterViewInit() {
-    // set up the height of datatable
-    // 43px - tab height, 2x15px - top & bottom padding around the grid
-    const offset = 43 + 15 + 15;
-    const height = this.settings.getContentHeight() - offset;
-    this.dataTableRef.nativeElement.style.height = `${height}px`;
+    // Define a possible height of the datatable
+    // 43px - tab height,
+    // 2x15px - top & bottom padding around the grid
+    // 8px => ? tbd
+    // const offset = 43 + 15 + 15 + 8;
+    // const height = this.settings.getContentHeight() - offset;
+    // this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
-  load() {
-    this.gridService
-      .read(this.dataSource.read)
+  load(parameters?: IParameters): Promise<any> {
+    return this.gridService
+      .read(format(this.dataSource.read, parameters || {}))
       .then(data => this.rows = this.parseFn(data))
       .catch(err => console.error(err));
   }
@@ -67,7 +82,17 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  onSelect({ selected }): void {}
+  onSelect({ selected }): void {
+    this.onRowSelect.emit(selected);
+  }
+
+  clear() {
+    this.rows = [];
+  }
+
+  onActionClick(event) {
+    this.onAction.emit(event);
+  }
 
   onActivate(event): void {
     if (event.type === 'dblclick') {

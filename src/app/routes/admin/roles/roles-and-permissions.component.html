@@ -1,0 +1,10 @@
+<div class="content-heading">
+  {{ 'sidebar.nav.menu.ROLES_AND_PERMISSIONS' | translate }}
+</div>
+
+<app-roles (onSelect)="onSelect($event)"></app-roles>
+
+<br>
+
+<app-permissions *ngIf="currentRole"
+                 [currentRole]="currentRole"></app-permissions>

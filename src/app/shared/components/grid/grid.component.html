@@ -2,6 +2,7 @@
   <div class="panel-body">
     <ngx-datatable
       class="material"
+      [ngStyle]="innerStyles"
       [cssClasses]="cssClasses"
       [columns]="columns"
       [columnMode]="'force'"
@@ -10,12 +11,15 @@
       [rows]="rows"
       [limit]="25"
       [selected]="selected"
-      [selectionType]="'multiClick'"
+      [selectionType]="selectionType"
       [scrollbarV]="true"
       [scrollbarH]="false"
       (activate)="onActivate($event)"
       (select)="onSelect($event)"
       (page)="onPage($event)">
     </ngx-datatable>
+    <app-toolbar [actions]="bottomActions"
+                 (actionClick)="onActionClick($event)">
+    </app-toolbar>
   </div>
 </div>
