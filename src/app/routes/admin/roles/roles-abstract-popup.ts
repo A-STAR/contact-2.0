@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from
 import { FormGroup } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRoleEditForm } from './roles.interface';
+import { IRoleRecord } from './roles.interface';
 
 export abstract class AbstractRolesPopup implements OnChanges {
-  @Input() role: IRoleEditForm;
-  @Output() roleChange: EventEmitter<IRoleEditForm> = new EventEmitter();
+  @Input() role: IRoleRecord;
+  @Output() roleChange: EventEmitter<IRoleRecord> = new EventEmitter();
 
   form: FormGroup;
 
@@ -15,7 +15,7 @@ export abstract class AbstractRolesPopup implements OnChanges {
   protected authService: AuthService;
 
   ngOnChanges(changes: SimpleChanges) {
-    this.form = this.role && this.role.name ? this.createForm(changes.role.currentValue) : null;
+    this.form = this.createForm(changes.role.currentValue);
   }
 
   onDisplayChange(event) {
@@ -48,7 +48,7 @@ export abstract class AbstractRolesPopup implements OnChanges {
     this.roleChange.emit(null);
   }
 
-  protected abstract createForm(role: IRoleEditForm): FormGroup;
+  protected abstract createForm(role: IRoleRecord): FormGroup;
 
   protected abstract httpAction(baseUrl: string);
 }

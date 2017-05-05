@@ -11,13 +11,6 @@ import { IRoleRecord } from './roles.interface';
   templateUrl: './roles.component.html'
 })
 export class RolesComponent {
-  /*
-  roles = {
-    edit: null,
-    remove: null,
-  };
-  */
-
   @Output() onSelect: EventEmitter<number> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
@@ -76,6 +69,7 @@ export class RolesComponent {
   }
 
   onEdit(role: IRoleRecord) {
+    this.action = ToolbarActionTypeEnum.EDIT;
     this.currentRole = this.selectedRole;
   }
 
@@ -103,7 +97,7 @@ export class RolesComponent {
   }
 
   callActionByType(type: ToolbarActionTypeEnum) {
-    this.onAction(this.bottomActions.filter((action: IToolbarAction) => type === action.type)[0]);
+    this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
   private createEmptyRole() {

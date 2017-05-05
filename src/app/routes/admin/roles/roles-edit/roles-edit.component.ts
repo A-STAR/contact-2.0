@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRoleEditForm } from '../roles.interface';
+import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
 @Component({
@@ -35,7 +35,7 @@ export class RolesEditComponent extends AbstractRolesPopup {
     return this.isUpdating() ? this.role.name : 'Новая роль';
   }
 
-  protected createForm(role: IRoleEditForm) {
+  protected createForm(role: IRoleRecord) {
     return this.formBuilder.group({
       name: [ this.role.name, Validators.required ],
       comment: [ this.role.comment, Validators.required ],

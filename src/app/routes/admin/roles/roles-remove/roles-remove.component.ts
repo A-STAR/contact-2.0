@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { IRoleEditForm } from '../roles.interface';
+import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
 @Component({
@@ -15,7 +15,7 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
     super();
   }
 
-  protected createForm(role: IRoleEditForm) {
+  protected createForm(role: IRoleRecord) {
     return null;
   }
 
