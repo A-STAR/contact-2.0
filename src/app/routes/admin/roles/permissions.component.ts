@@ -9,8 +9,9 @@ import {GridComponent} from '../../../shared/components/grid/grid.component';
 import {IToolbarAction, ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
 
 import {IPermissionRole} from './permissions.interface';
-import {BasePermissionsComponent, IDisplayProperties} from './base.permissions.component';
+import {BasePermissionsComponent} from './base.permissions.component';
 import {AuthService} from '../../../core/auth/auth.service';
+import {IDisplayProperties} from './roles.interface';
 
 @Component({
   selector: 'app-permissions',
