@@ -5,11 +5,11 @@ import {
   ButtonModule,
 } from 'primeng/primeng';
 
-import {SharedModule} from '../../../../shared/shared.module';
-import {PermissionsComponent} from './permissions.component';
-import {AddPermissionComponent} from './permissions-add/add.permission.component';
-import {EditPermissionComponent} from './permissions-edit/edit.permission.component';
-import {RemovePermissionComponent} from './permissions-remove/remove.permission.component';
+import { SharedModule } from '../../../../shared/shared.module';
+import { PermissionsComponent } from './permissions.component';
+import { AddPermissionComponent } from './permissions-add/add.permission.component';
+import { EditPermissionComponent } from './permissions-edit/edit.permission.component';
+import { RemovePermissionComponent } from './permissions-remove/remove.permission.component';
 
 @NgModule({
   imports: [
