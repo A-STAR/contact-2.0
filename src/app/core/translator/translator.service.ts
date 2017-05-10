@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class TranslatorService {
@@ -15,13 +16,10 @@ export class TranslatorService {
       { code: 'en', text: 'English' },
       { code: 'es_AR', text: 'Spanish' }
     ];
-
-    this.useLanguage();
-
   }
 
-  useLanguage(lang = this.defaultLanguage) {
-    this.translate.use(lang);
+  useLanguage(lang = this.defaultLanguage): Observable<boolean> {
+    return this.translate.use(lang);
   }
 
   getAvailableLanguages() {

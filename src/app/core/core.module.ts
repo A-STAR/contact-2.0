@@ -8,6 +8,8 @@ import { ThemesService } from './themes/themes.service';
 import { TranslatorService } from './translator/translator.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
+import { UserPermissionsService } from './user/permissions/user-permissions.service';
+import { RouteCanActivateService } from './route/route-can-activate.service';
 
 @NgModule({
   imports: [
@@ -19,6 +21,8 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
     SettingsService,
     ThemesService,
     TranslatorService,
+    UserPermissionsService,
+    RouteCanActivateService,
   ],
   declarations: [
   ],
