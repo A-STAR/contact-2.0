@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthHttp } from 'angular2-jwt';
+import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
@@ -15,15 +15,27 @@ const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
 export class AuthService implements CanActivate, OnInit {
-
-  private authenticated = false;
+  static JWT_EXPIRATION_THRESHOLD = 60e3;
+  static JWT_TIMER_INTERVAL = 10e3;
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
+
+  private authenticated = false;
+
   // backend root url
   private rootUrl = '';
 
-  constructor(private http: AuthHttp, private router: Router) { }
+  private jwtHelper: JwtHelper = new JwtHelper();  // TODO: inject into constructor
+
+  private tokenTimer = null;
+
+  constructor(private http: AuthHttp, private router: Router) {
+    const token = getToken();
+    if (this.isTokenValid(token)) {
+      this.initTokenTimer(token);
+    }
+  }
 
   get isAuthenticated(): boolean {
     return this.authenticated;
@@ -52,23 +64,6 @@ export class AuthService implements CanActivate, OnInit {
     return this.checkLogin(url);
   }
 
-  checkLogin(url: string): boolean {
-    if (this.isAuthenticated) { return true; }
-
-    const token = getToken();
-    if (token) {
-      // TODO: check this token for expiration with angular-jwt
-      return this.authenticated = true;
-    }
-
-    // Store the attempted URL for redirecting
-    this.redirectUrl = url;
-
-    // Navigate to the login page with extras
-    this.router.navigate(['/login']);
-    return false;
-  }
-
   authenticate(login: string, password: string): Promise<boolean> {
     const body = JSON.stringify({ login, password });
 
@@ -77,7 +72,7 @@ export class AuthService implements CanActivate, OnInit {
         return this.http.post(`${root}/auth/login`, body)
           .toPromise()
           .then((resp: Response) => {
-            setToken(resp.headers.get('X-Auth-Token'));
+            this.saveToken(resp);
             return this.authenticated = true;
           });
       })
@@ -98,12 +93,12 @@ export class AuthService implements CanActivate, OnInit {
         .toPromise()
         .then((response: Response) => {
           removeToken();
-          this.router.navigate(['/login']);
+          this.redirectToLogin();
           return this.authenticated = false;
         });
       })
       .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
+        console.error(error.statusText || error.status || 'Request error');
         return this.authenticated = false;  // FIXME
       });
   }
@@ -116,4 +111,68 @@ export class AuthService implements CanActivate, OnInit {
         return 'validation.DEFAULT_ERROR_MESSAGE';
     }
   }
+
+  private isTokenValid(token: string) {
+    return token && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  private redirectToLogin(url = null) {
+    this.clearTokenTimer();
+    this.redirectUrl = url || this.router.url || '/home';
+    this.router.navigate(['/login']);
+  }
+
+  private checkLogin(url: string): boolean {
+    if (this.isAuthenticated) {
+      return true;
+    }
+
+    const token = getToken();
+    if (this.isTokenValid(token)) {
+      return this.authenticated = true;
+    }
+
+    this.redirectToLogin(url);
+    return false;
+  }
+
+  private refreshToken() {
+    return this.getRootUrl()
+      .then(root => {
+        return this.http.post(`${root}/auth/login`, {
+          // FIXME!!!
+          login: 'spring',
+          password: 'spring'
+        })
+          .toPromise()
+          .then((resp: Response) => {
+            this.saveToken(resp);
+          });
+      })
+      .catch(() => this.redirectToLogin());
+  }
+
+  private saveToken(response: Response) {
+    const token = response.headers.get('X-Auth-Token');
+    this.initTokenTimer(token);
+    setToken(token);
+  }
+
+  private initTokenTimer(token: string) {
+    const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+
+    this.clearTokenTimer();
+    this.tokenTimer = setInterval(() => {
+      const timeUntilExpiration = expirationDate.getTime() - Date.now();
+      if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
+        this.refreshToken();
+      }
+    }, AuthService.JWT_TIMER_INTERVAL);
+  }
+
+  private clearTokenTimer() {
+    if (this.tokenTimer) {
+      clearInterval(this.tokenTimer);
+    }
+  };
 }
