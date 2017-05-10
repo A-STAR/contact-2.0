@@ -63,5 +63,11 @@
     },
     "dashboard": {
         "WELCOME": "Welcome"
+    },
+    "validation": {
+        "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+        "login": {
+            "INVALID_CREDENTIALS": "Incorrect login or password"
+        }
     }
 }
