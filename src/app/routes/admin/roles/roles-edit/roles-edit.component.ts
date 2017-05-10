@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -42,14 +42,14 @@ export class RolesEditComponent extends AbstractRolesPopup {
     });
   }
 
-  private isUpdating() {
-    return this.role && this.role.name;
-  }
-
   protected httpAction(baseUrl: string) {
     return this.isUpdating() ?
       this.httpActionUpdate(baseUrl) :
       this.httpActionCreate(baseUrl);
+  }
+
+  private isUpdating() {
+    return this.role && this.role.name;
   }
 
   private httpActionCreate(baseUrl: string) {
