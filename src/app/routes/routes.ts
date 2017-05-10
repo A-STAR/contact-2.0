@@ -1,4 +1,4 @@
-import { RouteCanActivateService } from '../core/route/route-can-activate.service';
+import { AuthService } from '../core/auth/auth.service';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -7,7 +7,7 @@ export const routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [RouteCanActivateService],
+    canActivate: [AuthService],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
@@ -19,7 +19,7 @@ export const routes = [
   {
     path: 'admin',
     component: LayoutComponent,
-    canActivate: [RouteCanActivateService],
+    canActivate: [AuthService],
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
