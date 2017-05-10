@@ -5,7 +5,7 @@ import {
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { IPermissionRole } from './permissions.interface';
+import { IPermissionModel, IPermissionRole } from './permissions.interface';
 import { BasePermissionsComponent } from './base.permissions.component';
 import { IDisplayProperties } from '../roles.interface';
 import { PermissionsService } from './permissions.service';
@@ -21,7 +21,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     addPermit: false,
     editPermit: false
   };
-  private editedPermission: any;
+  private editedPermission: IPermissionModel;
 
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
@@ -103,7 +103,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     this.displayProperties.editPermit = true;
   }
 
-  onSelectPermissions(records: any[]) {
+  onSelectPermissions(records: IPermissionModel[]) {
     if (records.length) {
       this.editedPermission = records[0];
     }
@@ -118,9 +118,9 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
       });
   }
 
-  onAddPermissions(addedPermissions: Array<any>) {
+  onAddPermissions(addedPermissions: IPermissionModel[]) {
     this.permissionsService.addPermission(this.currentRole, {
-      permitIds: addedPermissions.map((rec: any) => rec.id)
+      permitIds: addedPermissions.map((rec: IPermissionModel) => rec.id)
     }).then(() => {
       this.displayProperties.addPermit = false;
       this.loadGrid();
@@ -152,9 +152,9 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     }
   }
 
-  private refreshToolbar(records: any[] = []) {
+  private refreshToolbar(permissions: IPermissionModel[] = []) {
     const isRoleSelected: boolean = !!this.currentRole;
-    const isRolePermissionSelected: boolean = records.length > 0;
+    const isRolePermissionSelected: boolean = permissions.length > 0;
 
     this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
     this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
