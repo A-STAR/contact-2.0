@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
-import { AuthService } from '../../../../core/auth/auth.service';
+import { AuthService } from '../../../../../core/auth/auth.service';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
