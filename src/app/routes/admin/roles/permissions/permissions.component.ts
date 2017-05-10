@@ -46,11 +46,11 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
-    ToolbarActionTypeEnum.ADD
   ];
 
   bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.CLONE
+    ToolbarActionTypeEnum.CLONE,
+    ToolbarActionTypeEnum.ADD,
   ];
 
   tabs: Array<any> = [
