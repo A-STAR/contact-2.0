@@ -10,7 +10,7 @@ import { IconsService } from '../../icons/icons.service';
 export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[];
-  @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>(false);
+  @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
 
   constructor(private iconsService: IconsService) {
   }
