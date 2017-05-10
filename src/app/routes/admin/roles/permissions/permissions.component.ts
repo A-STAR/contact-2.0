@@ -4,11 +4,11 @@ import {
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { IPermissionRole } from './permissions.interface';
 import { BasePermissionsComponent } from './base.permissions.component';
 import { IDisplayProperties } from '../roles.interface';
+import { PermissionsService } from './permissions.service';
 
 @Component({
   selector: 'app-permissions',
@@ -57,7 +57,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private gridService: GridService) {
+  constructor(private permissionsService: PermissionsService) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
@@ -111,9 +111,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onEditPermission(changes) {
-    const permitId: number = this.editedPermission.id;
-
-    this.gridService.update(`/api/roles/{id}/permits/${permitId}`, this.currentRole, this.prepareData(changes))
+    this.permissionsService.editPermission(this.currentRole, this.editedPermission.id, this.prepareData(changes))
       .then(() => {
         this.displayProperties.editPermit = false;
         this.loadGrid();
@@ -121,7 +119,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onAddPermissions(addedPermissions: Array<any>) {
-    this.gridService.create(`/api/roles/{id}/permits`, this.currentRole, {
+    this.permissionsService.addPermission(this.currentRole, {
       permitIds: addedPermissions.map((rec: any) => rec.id)
     }).then(() => {
       this.displayProperties.addPermit = false;
@@ -130,7 +128,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onRemovePermission() {
-    this.gridService.delete(`/api/roles/{id}/permits`, this.currentRole, {
+    this.permissionsService.removePermission(this.currentRole, {
       permitIds: [this.editedPermission.id]
     }).then(() => {
       this.displayProperties.removePermit = false;
