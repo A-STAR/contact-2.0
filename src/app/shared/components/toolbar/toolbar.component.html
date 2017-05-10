@@ -1,7 +1,8 @@
 <div class="app-toolbar">
-  <i *ngFor="let action of actions"
-     [ngStyle]="{display: action.visible === false && 'none' || 'inline-block'}"
-     (click)="onActionClick(action)"
-     class="app-button fa fa-{{ toIconCls(action) }}"
-     aria-hidden="true"></i>
+  <button *ngFor="let action of actions"
+          [disabled]="action.visible === false"
+          (click)="onActionClick(action)"
+          class="app-button fa fa-{{ toIconCls(action) }}"
+          aria-hidden="true">
+  </button>
 </div>
