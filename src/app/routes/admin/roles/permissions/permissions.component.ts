@@ -2,13 +2,13 @@ import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { IPermissionRole } from './permissions.interface';
 import { BasePermissionsComponent } from './base.permissions.component';
-import { IDisplayProperties } from './roles.interface';
+import { IDisplayProperties } from '../roles.interface';
 
 @Component({
   selector: 'app-permissions',

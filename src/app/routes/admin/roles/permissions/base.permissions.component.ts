@@ -1,4 +1,4 @@
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 
 export class BasePermissionsComponent {
 

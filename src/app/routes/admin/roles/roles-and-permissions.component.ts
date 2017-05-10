@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {IPermissionRole} from './permissions.interface';
+import {IPermissionRole} from './permissions/permissions.interface';
 import {RolesComponent} from './roles.component';
 import {ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
 
