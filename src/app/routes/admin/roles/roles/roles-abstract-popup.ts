@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthService } from '../../../core/auth/auth.service';
-import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from './roles.interface';
 
 export abstract class AbstractRolesPopup implements OnChanges {
