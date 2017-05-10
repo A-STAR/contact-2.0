@@ -37,15 +37,20 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   ];
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE },
+    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
   ];
 
-  bottomActionsSinglePermitGroup: Array<ToolbarActionTypeEnum> = [
+  bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE
+    ToolbarActionTypeEnum.REMOVE,
+    ToolbarActionTypeEnum.ADD
+  ];
+
+  bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.CLONE
   ];
 
   tabs: Array<any> = [
@@ -134,8 +139,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private loadGrid() {
-    this.permitsGrid.load(this.currentRole)
-      .then(() => this.refreshToolbar([]));
+    this.permitsGrid.load(this.currentRole).then(() => this.refreshToolbar());
   }
 
   private refreshGrid() {
@@ -150,12 +154,17 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     }
   }
 
-  private refreshToolbar(records: any[]) {
-    // TODO Move these functionality inside ToolbarComponent
-    this.bottomActions.forEach((action: IToolbarAction) => {
-      if (this.bottomActionsSinglePermitGroup.filter((actionType: ToolbarActionTypeEnum) => action.type === actionType).length) {
-        action.visible = records.length > 0;
-      }
+  private refreshToolbar(records: any[] = []) {
+    const isRoleSelected: boolean = !!this.currentRole;
+    const isRolePermissionSelected: boolean = records.length > 0;
+
+    this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
+    this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
+  }
+
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
+      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });
   }
 }
