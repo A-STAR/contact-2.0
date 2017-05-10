@@ -26,13 +26,12 @@ export abstract class AbstractRolesPopup implements OnChanges {
   }
 
   onActionClick() {
-    this.authService.getRootUrl().then(baseUrl => {
+    this.getBaseUrl().then(baseUrl => {
       this.httpAction(baseUrl)
         .toPromise()
         .then(data => {
           if (data.ok) {
             // TODO: check success === true in data.json()
-            // TODO: reload grid
             this.onUpdate.emit();
             this.close();
           }
@@ -45,12 +44,16 @@ export abstract class AbstractRolesPopup implements OnChanges {
     this.close();
   }
 
+  protected abstract createForm(role: IRoleRecord): FormGroup;
+
+  protected abstract httpAction(baseUrl: string);
+
+  protected getBaseUrl(): Promise<string> {
+    return this.authService.getRootUrl();
+  }
+
   private close() {
     this.role = null;
     this.roleChange.emit(null);
   }
-
-  protected abstract createForm(role: IRoleRecord): FormGroup;
-
-  protected abstract httpAction(baseUrl: string);
 }
