@@ -3,7 +3,8 @@ import {IToolbarAction, ToolbarActionTypeEnum} from './toolbar.interface';
 
 @Component({
   selector: 'app-toolbar',
-  templateUrl: 'toolbar.component.html'
+  templateUrl: 'toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss'],
 })
 export class ToolbarComponent {
 
@@ -20,11 +21,11 @@ export class ToolbarComponent {
       case ToolbarActionTypeEnum.CLONE:
         return 'clone';
       case ToolbarActionTypeEnum.EDIT:
-        return 'pencil-square-o';
+        return 'pencil';
       case ToolbarActionTypeEnum.REMOVE:
-        return 'trash-o';
+        return 'trash';
       case ToolbarActionTypeEnum.ADD:
-        return 'plus-square-o';
+        return 'plus';
       default:
         return 'default';
     }
