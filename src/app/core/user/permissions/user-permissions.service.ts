@@ -9,6 +9,8 @@ export class UserPermissionsService {
   private userPermits: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(private gridService: GridService) {
+    // TODO Temp solution
+    this.loadUserPermissions();
   }
 
   public loadUserPermissions(): Observable<boolean> {

@@ -9,7 +9,6 @@ import { TranslatorService } from './translator/translator.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
-import { RouteCanActivateService } from './route/route-can-activate.service';
 
 @NgModule({
   imports: [
@@ -22,9 +21,6 @@ import { RouteCanActivateService } from './route/route-can-activate.service';
     ThemesService,
     TranslatorService,
     UserPermissionsService,
-    RouteCanActivateService,
-  ],
-  declarations: [
   ],
   exports: [
   ]
