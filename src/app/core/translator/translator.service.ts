@@ -16,6 +16,8 @@ export class TranslatorService {
       { code: 'en', text: 'English' },
       { code: 'es_AR', text: 'Spanish' }
     ];
+
+    this.useLanguage();
   }
 
   useLanguage(lang = this.defaultLanguage): Observable<boolean> {
