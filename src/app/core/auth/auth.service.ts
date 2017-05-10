@@ -82,9 +82,12 @@ export class AuthService implements CanActivate, OnInit {
           });
       })
       .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
-        // TODO: display a message on the login form
-        return this.authenticated = false;
+        this.authenticated = false;
+        const { message } = error.json();
+        throw new Error(message);
+      })
+      .catch(error => {
+        throw new Error(this.getErrorMessage(error.message));
       });
   }
 
@@ -103,5 +106,14 @@ export class AuthService implements CanActivate, OnInit {
         console.log(error.statusText || error.status || 'Request error');
         return this.authenticated = false;  // FIXME
       });
+  }
+
+  private getErrorMessage(message = null) {
+    switch (message) {
+      case 'login.invalidCredentials':
+        return 'validation.login.INVALID_CREDENTIALS';
+      default:
+        return 'validation.DEFAULT_ERROR_MESSAGE';
+    }
   }
 }

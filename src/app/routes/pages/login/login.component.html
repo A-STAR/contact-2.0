@@ -32,6 +32,9 @@
             </div>
           </div>
           <button class="btn btn-block btn-primary mt-lg" type="submit">Login</button>
+          <span class="text-danger" *ngIf="error">
+            {{ error | translate }}
+          </span>
         </form>
         <!-- <div class="alert alert-danger text-center" ></div> -->
         <p class="pt-lg text-center">Don't have an account?</p><a class="btn btn-block btn-default" [routerLink]="'/register'">Register Now</a>

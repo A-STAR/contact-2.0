@@ -33,7 +33,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     { name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100 },
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
-    { name: 'Комментарий', prop: 'comment', width: 200, maxWidth: 200 },
+    { name: 'Комментарий', prop: 'comment' },
   ];
 
   bottomActions: Array<IToolbarAction> = [

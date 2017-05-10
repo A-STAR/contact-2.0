@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CustomValidators } from 'ng2-validation';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { TranslatorService } from '../../../core/translator/translator.service';
 
 @Component({
     selector: 'app-login',
@@ -14,33 +15,39 @@ export class LoginComponent {
 
     valForm: FormGroup;
 
+    error: string = null;
+
     constructor(
-      public settings: SettingsService,
-      private fb: FormBuilder,
-      private authService: AuthService,
-      private router: Router,
+        public settings: SettingsService,
+        private fb: FormBuilder,
+        private authService: AuthService,
+        private router: Router,
+        private translator: TranslatorService,
     ) {
+        this.valForm = fb.group({
+            'login': [null, Validators.compose([Validators.required, Validators.minLength(2)])],
+            'password': [null, Validators.required]
+        });
 
-      this.valForm = fb.group({
-        'login': [null, Validators.compose([Validators.required, Validators.minLength(2)])],
-        'password': [null, Validators.required]
-      });
-
+        this.valForm.valueChanges.subscribe(() => this.error = null);
     }
 
     submitForm(event, value: any) {
-      event.preventDefault();
-      [].forEach.call(this.valForm.controls, ctrl => {
-        ctrl.markAsTouched();
-      });
+        this.error = null;
 
-      if (this.valForm.valid) {
-        const { login, password } = value;
-        this.authService
-          .authenticate(login, password)
-          .then(success => {
-            this.router.navigate(['/home']);
-          });
-      }
+        event.preventDefault();
+        [].forEach.call(this.valForm.controls, ctrl => {
+            ctrl.markAsTouched();
+        });
+
+        if (this.valForm.valid) {
+            const { login, password } = value;
+            this.authService
+                .authenticate(login, password)
+                .then(success => {
+                    this.router.navigate(['/home']);
+                })
+                .catch(error => this.error = error.message);
+        }
     }
 }

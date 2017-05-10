@@ -1,8 +1,8 @@
-<div style="padding: 8px 0 0 0;">
-  <i *ngFor="let action of actions"
-     [ngStyle]="{display: action.visible === false && 'none' || 'inline-block'}"
-     (click)="onActionClick(action)"
-     class="fa fa-{{ toIconCls(action) }}"
-     style="padding: 0 8px 0 0; cursor: pointer;"
-     aria-hidden="true"></i>
+<div class="app-toolbar">
+  <button *ngFor="let action of actions"
+          [disabled]="!action.visible"
+          (click)="onActionClick(action)"
+          class="app-button fa fa-{{ toIconCls(action) }}"
+          aria-hidden="true">
+  </button>
 </div>

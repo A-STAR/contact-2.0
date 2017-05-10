@@ -1,32 +1,25 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IToolbarAction, ToolbarActionTypeEnum} from './toolbar.interface';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IToolbarAction } from './toolbar.interface';
+import { IconsService } from '../../icons/icons.service';
 
 @Component({
   selector: 'app-toolbar',
-  templateUrl: 'toolbar.component.html'
+  templateUrl: 'toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss'],
 })
 export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[];
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>(false);
 
+  constructor(private iconsService: IconsService) {
+  }
+
   onActionClick(action: IToolbarAction) {
     this.actionClick.emit(action);
   }
 
   toIconCls(action: IToolbarAction) {
-    // TODO Make it generic
-    switch (action.type) {
-      case ToolbarActionTypeEnum.CLONE:
-        return 'clone';
-      case ToolbarActionTypeEnum.EDIT:
-        return 'pencil-square-o';
-      case ToolbarActionTypeEnum.REMOVE:
-        return 'trash-o';
-      case ToolbarActionTypeEnum.ADD:
-        return 'plus-square-o';
-      default:
-        return 'default';
-    }
+    return this.iconsService.fromActionType(action.type);
   }
 }
