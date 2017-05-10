@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IToolbarAction, ToolbarActionTypeEnum} from './toolbar.interface';
-import {IconsService} from "../../icons/icons.service";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IToolbarAction } from './toolbar.interface';
+import { IconsService } from '../../icons/icons.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -20,6 +20,6 @@ export class ToolbarComponent {
   }
 
   toIconCls(action: IToolbarAction) {
-    return this.iconsService.byIconCls(action.type);
+    return this.iconsService.fromActionType(action.type);
   }
 }
