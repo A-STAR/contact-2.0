@@ -3,12 +3,9 @@ import {Routes, RouterModule} from '@angular/router';
 import {DialogModule, ButtonModule} from 'primeng/primeng';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { RolesComponent } from './roles.component';
-import { RolesEditComponent } from './roles-edit/roles-edit.component';
-import { RolesCopyComponent } from './roles-copy/roles-copy.component';
-import { RolesRemoveComponent } from './roles-remove/roles-remove.component';
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 import { PermissionsModule } from './permissions/permissions.module';
+import { RolesModule as RolesGridModule } from './roles/roles.module';
 
 const routes: Routes = [
   {path: '', component: RolesAndPermissionsComponent},
@@ -21,16 +18,13 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     PermissionsModule,
+    RolesGridModule,
   ],
   exports: [
     RouterModule
   ],
   declarations: [
     RolesAndPermissionsComponent,
-    RolesComponent,
-    RolesEditComponent,
-    RolesCopyComponent,
-    RolesRemoveComponent,
   ]
 })
 export class RolesModule {

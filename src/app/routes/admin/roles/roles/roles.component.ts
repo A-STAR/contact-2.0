@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDataSource } from '../../../../shared/components/grid/grid.interface';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { IRoleRecord } from './roles.interface';
 
 @Component({
@@ -32,7 +32,7 @@ export class RolesComponent {
   ];
 
   columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70 },
+    { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
     { name: 'Название', prop: 'name', maxWidth: 400 },
     { name: 'Комментарий', prop: 'comment', width: 200 },
   ];
