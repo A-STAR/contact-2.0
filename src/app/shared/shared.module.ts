@@ -9,12 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 // Angle directives
 import { FlotDirective } from './directives/flot/flot.directive';
@@ -25,7 +21,6 @@ import { CheckallDirective } from './directives/checkall/checkall.directive';
 import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
-import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 
 // App modules
 import { CalendarModule } from 'primeng/primeng';
@@ -59,17 +54,11 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     AlertModule.forRoot(),
     ButtonsModule.forRoot(),
     CalendarModule,
-    CarouselModule.forRoot(),
-    CollapseModule.forRoot(),
     CurrencyMaskModule,
     DropdownModule.forRoot(),
     TranslateModule,
-    // PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
-    // RatingModule.forRoot(),
     TextMaskModule,
-    TooltipModule.forRoot(),
-    TypeaheadModule.forRoot(),
     // app modules
     DatePickerModule,
     DynamicFormModule,
@@ -89,7 +78,6 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     VectormapDirective,
     NowDirective,
     ScrollableDirective,
-    JqcloudDirective,
     // app declarations
     TabComponent,
     TabstripComponent,
@@ -108,20 +96,13 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     AccordionModule,
     AlertModule,
     ButtonsModule,
-    CarouselModule,
-    CollapseModule,
     DropdownModule,
     CalendarModule,
     TextMaskModule,
-    // PaginationModule,
     ProgressbarModule,
-    // RatingModule,
-    TooltipModule,
-    TypeaheadModule,
     CheckallDirective,
     EasypiechartDirective,
     FlotDirective,
-    JqcloudDirective,
     NowDirective,
     ScrollableDirective,
     SparklineDirective,

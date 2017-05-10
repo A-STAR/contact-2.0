@@ -50,6 +50,10 @@ export class RolesComponent {
     return this.currentRole && (this.action === ToolbarActionTypeEnum.ADD || this.action === ToolbarActionTypeEnum.EDIT);
   }
 
+  get isRoleBeingCopied() {
+    return this.currentRole && this.action === ToolbarActionTypeEnum.CLONE;
+  }
+
   get isRoleBeingRemoved() {
     return this.currentRole && this.action === ToolbarActionTypeEnum.REMOVE;
   }
@@ -83,15 +87,8 @@ export class RolesComponent {
         this.currentRole = this.selectedRole;
         break;
       case ToolbarActionTypeEnum.ADD:
-        this.currentRole = this.createEmptyRole();
-        break;
       case ToolbarActionTypeEnum.CLONE:
-        /*
-        this.editedRole = {
-          ...this.createEmptyRole(),
-          original: this.selectedRole.name
-        };
-        */
+        this.currentRole = this.createEmptyRole();
         break;
     }
   }
@@ -115,6 +112,8 @@ export class RolesComponent {
 
   private refreshToolbar() {
     // TODO: load user permissions
-    this.bottomActions.forEach(action => action.visible = true);
+    this.bottomActions
+      .filter(action => action.type !== ToolbarActionTypeEnum.ADD)
+      .forEach(action => action.visible = !!this.selectedRole);
   }
 }
