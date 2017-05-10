@@ -1,5 +1,5 @@
 <app-roles-edit [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingCreatedOrEdited"></app-roles-edit>
-
+<app-roles-copy [(role)]="currentRole" [originalRole]="selectedRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingCopied"></app-roles-copy>
 <app-roles-remove [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingRemoved"></app-roles-remove>
 
 <app-grid
