@@ -6,7 +6,7 @@ import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissio
 @Injectable()
 export class UserPermissionsService {
 
-  private userPermits: Map<string, IUserPermissionModel> = new Map<string, IUserPermissionModel>();
+  private userPermits: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(private gridService: GridService) {
   }
@@ -17,7 +17,7 @@ export class UserPermissionsService {
       this.gridService.read('/api/userpermits').then(
         (response: IUserPermissionsResponse) => {
           response.userPermits.forEach((userPermission: IUserPermissionModel) => {
-            this.userPermits.set(userPermission.name, userPermission);
+            this.userPermits.set(userPermission.name, this.toUserPermissionValue(userPermission));
           });
 
           observer.next(true);
@@ -30,16 +30,16 @@ export class UserPermissionsService {
   }
 
   public hasPermission(permissionName: string): boolean {
-    const userPermissionModel: IUserPermissionModel = this.userPermits.get(permissionName);
-    if (userPermissionModel) {
-      if (userPermissionModel.valueB !== null) {
-        return userPermissionModel.valueB;
-      } else if (userPermissionModel.valueN !== null) {
-        return !!userPermissionModel.valueN;
-      } else if (userPermissionModel.valueS !== null) {
-        return !!parseInt(userPermissionModel.valueS, 10);
-      }
-      return false;
+    return this.userPermits.get(permissionName) || false;
+  }
+
+  private toUserPermissionValue(userPermissionModel: IUserPermissionModel): boolean {
+    if (userPermissionModel.valueB !== null) {
+      return userPermissionModel.valueB;
+    } else if (userPermissionModel.valueN !== null) {
+      return !!userPermissionModel.valueN;
+    } else if (userPermissionModel.valueS !== null) {
+      return !!parseInt(userPermissionModel.valueS, 10);
     }
     return false;
   }
