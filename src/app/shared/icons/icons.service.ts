@@ -12,6 +12,6 @@ export class IconsService {
   ]);
 
   public fromActionType(actionType: ToolbarActionTypeEnum) {
-    return this.ACTION_ICONS_MAP[actionType] || `default-${actionType}`;
+    return this.ACTION_ICONS_MAP.get(actionType) || `default-${actionType}`;
   }
 }
