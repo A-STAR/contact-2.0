@@ -9,4 +9,5 @@ export interface IToolbarAction {
   text: string;
   type: ToolbarActionTypeEnum;
   visible?: boolean;
+  permission?: string;
 }

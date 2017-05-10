@@ -1,6 +1,6 @@
 <div class="app-toolbar">
   <button *ngFor="let action of actions"
-          [disabled]="!action.visible"
+          [disabled]="!action.visible || !isActionAccessible(action)"
           (click)="onActionClick(action)"
           class="app-button fa fa-{{ toIconCls(action) }}"
           aria-hidden="true">

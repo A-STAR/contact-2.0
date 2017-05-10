@@ -37,10 +37,10 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   ];
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
     { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
   ];
 
   bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
