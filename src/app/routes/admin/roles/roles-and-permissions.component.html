@@ -6,6 +6,5 @@
 
 <br>
 
-<app-permissions *ngIf="currentRole"
-                 (cloneRole)="onRoleClone()"
+<app-permissions (cloneRole)="onRoleClone()"
                  [currentRole]="currentRole"></app-permissions>

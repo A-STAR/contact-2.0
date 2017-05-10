@@ -2,13 +2,13 @@ import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { IPermissionRole } from './permissions.interface';
+import { IPermissionModel, IPermissionRole } from './permissions.interface';
 import { BasePermissionsComponent } from './base.permissions.component';
-import { IDisplayProperties } from './roles.interface';
+import { IDisplayProperties } from '../roles.interface';
+import { PermissionsService } from './permissions.service';
 
 @Component({
   selector: 'app-permissions',
@@ -21,7 +21,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     addPermit: false,
     editPermit: false
   };
-  private editedPermission: any;
+  private editedPermission: IPermissionModel;
 
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
@@ -37,22 +37,27 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   ];
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE },
+    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
   ];
 
-  bottomActionsSinglePermitGroup: Array<ToolbarActionTypeEnum> = [
+  bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE
+    ToolbarActionTypeEnum.REMOVE,
+  ];
+
+  bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.CLONE,
+    ToolbarActionTypeEnum.ADD,
   ];
 
   tabs: Array<any> = [
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private gridService: GridService) {
+  constructor(private permissionsService: PermissionsService) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
@@ -98,7 +103,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     this.displayProperties.editPermit = true;
   }
 
-  onSelectPermissions(records: any[]) {
+  onSelectPermissions(records: IPermissionModel[]) {
     if (records.length) {
       this.editedPermission = records[0];
     }
@@ -106,18 +111,16 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onEditPermission(changes) {
-    const permitId: number = this.editedPermission.id;
-
-    this.gridService.update(`/api/roles/{id}/permits/${permitId}`, this.currentRole, this.prepareData(changes))
+    this.permissionsService.editPermission(this.currentRole, this.editedPermission.id, this.prepareData(changes))
       .then(() => {
         this.displayProperties.editPermit = false;
         this.loadGrid();
       });
   }
 
-  onAddPermissions(addedPermissions: Array<any>) {
-    this.gridService.create(`/api/roles/{id}/permits`, this.currentRole, {
-      permitIds: addedPermissions.map((rec: any) => rec.id)
+  onAddPermissions(addedPermissions: IPermissionModel[]) {
+    this.permissionsService.addPermission(this.currentRole, {
+      permitIds: addedPermissions.map((rec: IPermissionModel) => rec.id)
     }).then(() => {
       this.displayProperties.addPermit = false;
       this.loadGrid();
@@ -125,7 +128,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onRemovePermission() {
-    this.gridService.delete(`/api/roles/{id}/permits`, this.currentRole, {
+    this.permissionsService.removePermission(this.currentRole, {
       permitIds: [this.editedPermission.id]
     }).then(() => {
       this.displayProperties.removePermit = false;
@@ -134,8 +137,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   private loadGrid() {
-    this.permitsGrid.load(this.currentRole)
-      .then(() => this.refreshToolbar([]));
+    this.permitsGrid.load(this.currentRole).then(() => this.refreshToolbar());
   }
 
   private refreshGrid() {
@@ -150,12 +152,17 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     }
   }
 
-  private refreshToolbar(records: any[]) {
-    // TODO Move these functionality inside ToolbarComponent
-    this.bottomActions.forEach((action: IToolbarAction) => {
-      if (this.bottomActionsSinglePermitGroup.filter((actionType: ToolbarActionTypeEnum) => action.type === actionType).length) {
-        action.visible = records.length > 0;
-      }
+  private refreshToolbar(permissions: IPermissionModel[] = []) {
+    const isRoleSelected: boolean = !!this.currentRole;
+    const isRolePermissionSelected: boolean = permissions.length > 0;
+
+    this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
+    this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
+  }
+
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
+      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });
   }
 }
