@@ -9,9 +9,8 @@ export class UserPermissionsService {
       setTimeout(() => {
         // TODO load permissions
         observer.next(true);
-        console.log('PERMISSIOBNS!');
         observer.complete();
-      }, 4000);
+      }, 1000);
     });
   }
 
