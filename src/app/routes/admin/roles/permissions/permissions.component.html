@@ -7,7 +7,7 @@
 
 <app-add-permission *ngIf="displayProperties.addPermit"
                     [displayProperties]="displayProperties"
-                    [record]="currentRole"
+                    [currentRole]="currentRole"
                     (cancel)="displayProperties.addPermit = false"
                     (add)="onAddPermissions($event)">
 </app-add-permission>
