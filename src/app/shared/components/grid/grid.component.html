@@ -1,6 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <app-toolbar class="app-toolbar"
+    <app-toolbar *ngIf="bottomActions"
+                 class="app-toolbar"
                  [actions]="bottomActions"
                  (actionClick)="onActionClick($event)">
     </app-toolbar>
