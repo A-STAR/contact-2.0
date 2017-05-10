@@ -3,6 +3,7 @@ import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from
 import { BasePermissionsComponent } from '../base.permissions.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 import { IDisplayProperties } from '../../roles.interface';
+import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 
 @Component({
   selector: 'app-add-permission',
@@ -10,13 +11,13 @@ import { IDisplayProperties } from '../../roles.interface';
 })
 export class AddPermissionComponent extends BasePermissionsComponent implements AfterViewInit {
 
-  @Input() displayProperties: IDisplayProperties;
-  @Input() record: any;
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
+  @Input() displayProperties: IDisplayProperties;
+  @Input() currentRole: IPermissionRole;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
 
-  private selectedPermissions: Array<any>;
+  private selectedPermissions: IPermissionModel[];
 
   columns: Array<any> = [
     {name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350},
@@ -34,18 +35,18 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
    * @template
    */
   public ngAfterViewInit(): void {
-    this.addPermitGrid.load(this.record);
+    this.addPermitGrid.load(this.currentRole);
   }
 
-  onSelectPermissions(permissions: any[]) {
+  onSelectPermissions(permissions: IPermissionModel[]): void {
     this.selectedPermissions = permissions;
   }
 
-  onCancel() {
+  onCancel(): void {
     this.cancel.emit(false);
   }
 
-  onAddPermissions() {
+  onAddPermissions(): void {
     this.add.emit(this.selectedPermissions);
   }
 
