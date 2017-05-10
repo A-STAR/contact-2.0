@@ -47,7 +47,7 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
 import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { IconsService } from './icons/icons.service';
 
 
 // https://angular.io/styleguide#!#04-10
@@ -81,6 +81,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
   ],
   providers: [
     ColorsService,
+    IconsService,
     QBuilderService
   ],
   declarations: [
