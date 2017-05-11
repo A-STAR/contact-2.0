@@ -2,6 +2,8 @@ import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
+import { DatePipe } from '@angular/common';
+
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
@@ -57,11 +59,11 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private permissionsService: PermissionsService) {
+  constructor(private permissionsService: PermissionsService, datePipe: DatePipe) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
-    });
+    }, datePipe);
   }
 
   /**
