@@ -1,4 +1,6 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 import { JwtHelper } from 'angular2-jwt';
 
 import { AuthHttpService } from './auth/auth-http.service';
@@ -10,6 +12,7 @@ import { TranslatorService } from './translator/translator.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
+import { ValueConverterService } from './converter/value/value-converter.service';
 
 @NgModule({
   imports: [
@@ -17,12 +20,14 @@ import { UserPermissionsService } from './user/permissions/user-permissions.serv
   providers: [
     AuthHttpService,
     AuthService,
+    ValueConverterService,
     JwtHelper,
     MenuService,
     SettingsService,
     ThemesService,
     TranslatorService,
     UserPermissionsService,
+    DatePipe,
   ],
   exports: [
   ]

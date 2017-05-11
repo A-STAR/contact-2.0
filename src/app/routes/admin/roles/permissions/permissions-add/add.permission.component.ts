@@ -1,16 +1,17 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
 
-import { BasePermissionsComponent } from '../base.permissions.component';
+import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 import { IDisplayProperties } from '../../roles.interface';
-import { IPermissionModel, IPermissionRole } from '../permissions.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../permissions.interface';
+import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-add-permission',
   templateUrl: './add.permission.component.html'
 })
-export class AddPermissionComponent extends BasePermissionsComponent implements AfterViewInit {
+export class AddPermissionComponent implements AfterViewInit {
 
   @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
   @Input() displayProperties: IDisplayProperties;
@@ -25,12 +26,15 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     {name: 'Описание', prop: 'dsc', minWidth: 70},
   ];
 
-  constructor(datePipe: DatePipe) {
-    super({
-      read: '/api/roles/{id}/permits/notadded',
-      dataKey: 'permits',
-    }, datePipe);
+  public dataSource: IDataSource = {
+    read: '/api/roles/{id}/permits/notadded',
+    dataKey: 'permits'
+  };
+
+  constructor(private valueConverterService: ValueConverterService) {
   }
+
+  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   /**
    * @template

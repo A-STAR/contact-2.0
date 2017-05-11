@@ -5,6 +5,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
+import { GridColumnDecoratorService } from './grid.column.decorator.service';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { GridService } from './grid.service';
     GridComponent,
   ],
   providers: [
-    GridService
+    GridService,
+    GridColumnDecoratorService,
   ],
 })
 export class GridModule { }

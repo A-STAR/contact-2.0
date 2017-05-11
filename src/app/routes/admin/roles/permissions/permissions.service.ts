@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import {
   IPermissionModel, IPermissionRole, IPermissionsRequest
@@ -8,14 +10,15 @@ import {
 @Injectable()
 export class PermissionsService {
 
-  constructor(private gridService: GridService) {
+  constructor(private gridService: GridService,
+              private valueConverterService: ValueConverterService) {
   }
 
   public editPermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Promise<any> {
     return this.gridService.update(
       `/api/roles/{id}/permits/{permissionId}`,
       { id: role.id, permissionId: permissionId },
-      this.buildRequest(permission)
+      this.valueConverterService.serialize(permission)
     );
   }
 
@@ -29,22 +32,5 @@ export class PermissionsService {
       role,
       { permitIds: permissionsIds }
     );
-  }
-
-  // TODO Eliminate duplication
-  private buildRequest = (data: IPermissionModel): IPermissionModel => {
-    switch (data.typeCode) {
-      case 1:
-        data.valueN = parseInt(data.value as string, 10);
-        break;
-      case 3:
-        data.valueS = data.value as string;
-        break;
-      case 4:
-        data.valueB = data.value ? 1 : 0;
-        break;
-    }
-    delete data.value;
-    return data;
   }
 }
