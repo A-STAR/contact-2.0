@@ -128,7 +128,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     this.permissionsService.addPermission(this.currentRole, permissionsIds)
       .then(() => {
         this.displayProperties.addPermit = false;
-        this.loadGrid();
+        this.refreshGrid();
       });
   }
 
