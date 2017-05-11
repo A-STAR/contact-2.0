@@ -111,23 +111,21 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onEditPermission(permission: IPermissionModel) {
-    this.permissionsService.editPermission({
-      id: this.currentRole.id,
-      permitId: this.editedPermission.id,
-      permission: permission
-    }).then(() => {
-      this.displayProperties.editPermit = false;
-      this.loadGrid();
-    });
+    this.permissionsService.editPermission(this.currentRole, this.editedPermission.id, permission)
+      .then(() => {
+        this.displayProperties.editPermit = false;
+        this.loadGrid();
+      });
   }
 
   onAddPermissions(addedPermissions: IPermissionModel[]) {
-    this.permissionsService.addPermission(this.currentRole, {
-      permitIds: addedPermissions.map((rec: IPermissionModel) => rec.id)
-    }).then(() => {
-      this.displayProperties.addPermit = false;
-      this.loadGrid();
-    });
+    const permissionsIds: number [] = addedPermissions.map((rec: IPermissionModel) => rec.id);
+
+    this.permissionsService.addPermission(this.currentRole, permissionsIds)
+      .then(() => {
+        this.displayProperties.addPermit = false;
+        this.loadGrid();
+      });
   }
 
   onRemovePermission() {
@@ -139,8 +137,8 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     });
   }
 
-  private loadGrid() {
-    this.permitsGrid.load(this.currentRole).then(() => this.refreshToolbar());
+  private loadGrid(): Promise<any> {
+    return this.permitsGrid.load(this.currentRole).then(() => this.refreshToolbar());
   }
 
   private refreshGrid() {

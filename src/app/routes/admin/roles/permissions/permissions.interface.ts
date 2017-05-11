@@ -6,11 +6,6 @@ export interface IPermissionsRequest {
   permitIds: number[];
 }
 
-export interface IPermissionEditRequest extends IPermissionRole {
-  permitId: number;
-  permission: IPermissionModel;
-}
-
 export interface IValueEntity {
   typeCode?: number;
   valueB?: number | boolean;

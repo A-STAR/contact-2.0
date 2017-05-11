@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import {
-  IPermissionEditRequest, IPermissionModel, IPermissionRole, IPermissionsRequest
+  IPermissionModel, IPermissionRole, IPermissionsRequest
 } from './permissions.interface';
 
 @Injectable()
@@ -11,17 +11,24 @@ export class PermissionsService {
   constructor(private gridService: GridService) {
   }
 
-  public editPermission(editRequest: IPermissionEditRequest): Promise<any> {
-    return this.gridService.update(`/api/roles/{id}/permits/{permitId}`, editRequest,
-      this.buildRequest(editRequest.permission));
+  public editPermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Promise<any> {
+    return this.gridService.update(
+      `/api/roles/{id}/permits/{permissionId}`,
+      { id: role.id, permissionId: permissionId },
+      this.buildRequest(permission)
+    );
   }
 
   public removePermission(role: IPermissionRole, request: IPermissionsRequest): Promise<any> {
     return this.gridService.delete(`/api/roles/{id}/permits`, role, request);
   }
 
-  public addPermission(role: IPermissionRole, request: IPermissionsRequest): Promise<any> {
-    return this.gridService.create(`/api/roles/{id}/permits`, role, request);
+  public addPermission(role: IPermissionRole, permissionsIds: number []): Promise<any> {
+    return this.gridService.create(
+      `/api/roles/{id}/permits`,
+      role,
+      { permitIds: permissionsIds }
+    );
   }
 
   // TODO Eliminate duplication
