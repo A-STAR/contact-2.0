@@ -45,20 +45,17 @@ export class MenuService {
       .getRootUrl()
       .then(root => {
         return this.http
-        .get(`${root}/api/guiconfigurations`)
-        .toPromise()
-        .then(response => response.json())
-        .then(response => this.prepareMenu(response));
+          .get(`${root}/api/guiconfigurations`)
+          .toPromise()
+          .then(response => response.json())
+          .then(response => this.prepareMenu(response));
       })
       .catch(error => {
-        /*
-         * TODO:
-         * when /api/guiconfigurations is implemented properly
-         * redirect to /login on 403 error
-         * redirect to /connection-error on 500 error
-         */
-        // this.router.navigate(['/connection-error']);
-        this.router.navigate(['/login']);
+        if (error.status === 401 || error.status === 403) {
+          this.authService.redirectToLogin();
+        } else {
+          this.router.navigate(['/connection-error']);
+        }
       });
   }
 

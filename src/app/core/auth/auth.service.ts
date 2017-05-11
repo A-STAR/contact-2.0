@@ -114,7 +114,7 @@ export class AuthService implements CanActivate, OnInit {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
-  private redirectToLogin(url = null) {
+  public redirectToLogin(url = null) {
     this.clearTokenTimer();
     this.redirectUrl = url || this.router.url || '/home';
     this.router.navigate(['/login']);
