@@ -41,7 +41,7 @@ export class BasePermissionsComponent {
 
   toBooleanColumnValue(val) {
     if (val.typeCode === 4) {
-      return Boolean(parseInt(val.value as string, 10));
+      return parseInt(val.value as string, 10) === 1 ? 'Истина' : 'Ложь';
     }
     return val.value;
   }

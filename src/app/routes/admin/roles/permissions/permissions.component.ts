@@ -66,7 +66,8 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   ];
 
   constructor(private permissionsService: PermissionsService,
-              private columnDecoratorService: GridColumnDecoratorService) {
+              private columnDecoratorService: GridColumnDecoratorService,
+              datePipe: DatePipe) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
