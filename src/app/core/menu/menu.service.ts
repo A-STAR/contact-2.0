@@ -51,6 +51,7 @@ export class MenuService {
           .then(response => this.prepareMenu(response));
       })
       .catch(error => {
+        // TODO: move into wrapper
         if (error.status === 401 || error.status === 403) {
           this.authService.redirectToLogin();
         } else {

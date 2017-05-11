@@ -107,6 +107,12 @@ export class AuthService implements CanActivate, OnInit {
       });
   }
 
+  redirectToLogin(url = null) {
+    this.clearTokenTimer();
+    this.redirectUrl = url || this.router.url || '/home';
+    this.router.navigate(['/login']);
+  }
+
   private getErrorMessage(message = null) {
     switch (message) {
       case 'login.invalidCredentials':
@@ -118,12 +124,6 @@ export class AuthService implements CanActivate, OnInit {
 
   private isTokenValid(token: string) {
     return token && !this.jwtHelper.isTokenExpired(token);
-  }
-
-  public redirectToLogin(url = null) {
-    this.clearTokenTimer();
-    this.redirectUrl = url || this.router.url || '/home';
-    this.router.navigate(['/login']);
   }
 
   private checkLogin(url: string): boolean {
