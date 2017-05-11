@@ -32,7 +32,7 @@ export class EditPermissionComponent implements OnInit {
       id: new FormControl({value: this.record.id, disabled: true}, Validators.required),
       typeCode: [this.record.typeCode, Validators.required],
       name: [this.record.name, Validators.required],
-      value: [parseInt(this.record.value, 10) ? '1' : '0', Validators.required], // TODO Make generic preparer for value
+      value: [String(this.record.value), Validators.required],
       comment: [this.record.comment],
       dsc: [this.record.dsc],
       altDsc: [this.record.altDsc]

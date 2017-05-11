@@ -3,9 +3,12 @@ import {
 } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
+import { TableColumn } from '@swimlane/ngx-datatable';
+
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 
 import { IPermissionModel, IPermissionRole } from './permissions.interface';
 import { BasePermissionsComponent } from './base.permissions.component';
@@ -29,10 +32,13 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   @Input() currentRole: IPermissionRole;
   @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>();
 
-  columns: Array<any> = [
+  columns: Array<TableColumn> = [
     { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
     { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100 },
+    this.columnDecoratorService.decorateColumn(
+      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
+      (row: IPermissionModel) => this.toBooleanColumnValue(row)
+    ),
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
     { name: 'Комментарий', prop: 'comment' },
@@ -59,7 +65,8 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private permissionsService: PermissionsService, datePipe: DatePipe) {
+  constructor(private permissionsService: PermissionsService,
+              private columnDecoratorService: GridColumnDecoratorService) {
     super({
       read: '/api/roles/{id}/permits',
       dataKey: 'permits',
