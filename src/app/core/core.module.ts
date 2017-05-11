@@ -1,4 +1,5 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { JwtHelper } from 'angular2-jwt';
 
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
@@ -16,6 +17,7 @@ import { UserPermissionsService } from './user/permissions/user-permissions.serv
   providers: [
     AuthHttpService,
     AuthService,
+    JwtHelper,
     MenuService,
     SettingsService,
     ThemesService,

@@ -1,7 +1,7 @@
 import { AuthService } from '../core/auth/auth.service';
-
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
 
 export const routes = [
   {
@@ -30,6 +30,7 @@ export const routes = [
   // Eagerly-loaded routes
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LoginComponent },
+  { path: 'connection-error', component: ConnectionErrorComponent },
 
   // Redirect home, if the path is not found
   { path: '**', redirectTo: '' },
