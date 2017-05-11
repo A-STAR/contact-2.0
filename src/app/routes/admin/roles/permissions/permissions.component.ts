@@ -110,12 +110,15 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     this.refreshToolbar(records);
   }
 
-  onEditPermission(changes) {
-    this.permissionsService.editPermission(this.currentRole, this.editedPermission.id, this.prepareData(changes))
-      .then(() => {
-        this.displayProperties.editPermit = false;
-        this.loadGrid();
-      });
+  onEditPermission(permission: IPermissionModel) {
+    this.permissionsService.editPermission({
+      id: this.currentRole.id,
+      permitId: this.editedPermission.id,
+      permission: permission
+    }).then(() => {
+      this.displayProperties.editPermit = false;
+      this.loadGrid();
+    });
   }
 
   onAddPermissions(addedPermissions: IPermissionModel[]) {
