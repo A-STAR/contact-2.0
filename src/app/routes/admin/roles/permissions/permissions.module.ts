@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import {
   DialogModule,
@@ -29,6 +30,7 @@ import { PermissionsService } from './permissions.service';
   ],
   providers: [
     PermissionsService,
+    DatePipe,
   ]
 })
 export class PermissionsModule {

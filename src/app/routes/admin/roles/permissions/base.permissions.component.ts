@@ -1,8 +1,11 @@
+import { DatePipe } from '@angular/common';
+
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 
 export class BasePermissionsComponent {
 
-  constructor(public dataSource: IDataSource) {
+  constructor(public dataSource: IDataSource,
+              private datePipe: DatePipe) {
   }
 
   // TODO Eliminate duplication
@@ -17,21 +20,18 @@ export class BasePermissionsComponent {
 
   toRawValue(val) {
     switch (val.typeCode) {
+
       case 1:
         val.value = String(val.valueN);
-        delete val.valueN;
         break;
       case 2:
-        val.value = Date.parse(val.valueD);
-        delete val.valueD;
+        val.value = this.datePipe.transform(new Date(val.valueD), 'dd.MM.yyyy HH:mm:ss');
         break;
       case 3:
-        val.value = val.valueS;
-        delete val.valueS;
+        val.value = val.valueS || '';
         break;
       case 4:
         val.value = Boolean(val.valueB);
-        delete val.valueB;
         break;
       default:
         val.value = '';
