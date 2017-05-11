@@ -128,9 +128,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onRemovePermission() {
-    this.permissionsService.removePermission(this.currentRole, {
-      permitIds: [this.editedPermission.id]
-    }).then(() => {
+    this.permissionsService.removePermission(this.currentRole).then(() => {
       this.displayProperties.removePermit = false;
       this.loadGrid();
     });

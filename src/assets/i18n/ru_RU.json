@@ -1,0 +1,80 @@
+{
+    "header": {
+        "search": {
+            "PLACEHOLDER": "Введите строку поиска и нажмите ввод..."
+        }
+    },
+    "offsidebar": {
+        "setting": {
+            "SETTINGS": "Установки"
+        }
+    },
+    "sidebar": {
+        "WELCOME": "Добро пожаловать",
+        "heading": {
+            "HEADER": "Menu Heading"
+        },
+        "nav": {
+            "SINGLEVIEW": "Single View",
+            "menu": {
+                "HOME": "Главная",
+                "WORKFLOW": "Процесс",
+                "QUERY_BUILDER": "Построитель запросов",
+                "GRIDS": "Таблицы",
+                "LARGE_DATASET": "Большие таблицы",
+                "SORTABLE": "Сортировка",
+                "REORDERABLE": "Перемещение",
+                "GROUPABLE": "Группировка",
+                "ADMIN_PANEL": "Панель Администрирования",
+                "ROLES_AND_PERMISSIONS": "Роли и доступы",
+                "USERS": "Пользовтели",
+                "ACTIONS_LOG": "Аудит",
+                "CONSTANTS": "Константы",
+                "DICTIONARIES": "Словари",
+                "BANKS": "Банки",
+                "DEPARTMENTS": "Подразделения",
+                "UTILITIES": "Удтилиты",
+                "UPLOAD_TEMPLATES": "Загрузка шаблонов",
+                "DATA_UPLOAD": "Загрузка данных",
+                "ARBITRARY_VALUES": "Произвольные значения",
+                "CONTACT_TREES": "Дерево контактов",
+                "MESSAGE_SCENARIOS": "Сценарии сообщений",
+                "GROUPS": "Группы",
+                "CAMPAIGNS": "Кампании",
+                "SCHEDULE": "Расписание",
+                "FORMULAS": "Формулы",
+                "COURTS": "Суды",
+                "WORKPLACES": "Рабочие места",
+                "DEBT_LIST": "Список долгов",
+                "TASKS": "Задачи",
+                "DEBTS": "Обработка долгов",
+                "CONTACT_PROTOCOL": "Contact Protocol",
+                "CALL_CENTER": "Колл центр",
+                "PAYMENTS": "Платежи",
+                "COURTS_2": "Суды 2",
+                "OUTGOING_INFORMATION": "Исходящая информация",
+                "SEARCH_GROUPS": "Группы поиска",
+                "MAIL": "Почта",
+                "REPORTS": "Отчеты",
+                "ARBITRARY_REPORTS": "Произвольные отчеты",
+                "HELP": "Помощь"
+            }
+        }
+    },
+    "dashboard": {
+        "WELCOME": "Добро пожаловать"
+    },
+    "validation": {
+        "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+        "login": {
+            "INVALID_CREDENTIALS": "Неверный логин или пароль"
+        }
+    },
+    "grid": {
+      "messages": {
+        "emptyMessage": "Нет данных",
+        "totalMessage": "всего",
+        "selectedMessage": "выбрано"
+      }
+    }
+}

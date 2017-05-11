@@ -7,7 +7,7 @@ import { Component,
   Input,
   Output } from '@angular/core';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-
+import { TranslateService } from '@ngx-translate/core';
 import { IDataSource, TSelectionType } from './grid.interface';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { GridService } from './grid.service';
@@ -48,9 +48,21 @@ export class GridComponent implements OnInit, AfterViewInit {
     pagerPrevious: 'fa fa-angle-double-left',
     pagerNext: 'fa fa-angle-double-right',
   };
+  messages: object = {};
 
-  constructor(private gridService: GridService, public settings: SettingsService) {
+  constructor(
+    private gridService: GridService,
+    public settings: SettingsService,
+    private translate: TranslateService,
+  ) {
     this.parseFn = this.parseFn || function (data) { return data; };
+    this.translate.get('grid.messages')
+      .subscribe(
+        messages => {
+          this.messages = messages;
+        },
+        error => console.error(error)
+      );
   }
 
   ngOnInit() {

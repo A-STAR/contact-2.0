@@ -1,9 +1,11 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <app-toolbar *ngIf="bottomActions"
-                 class="app-toolbar"
-                 [actions]="bottomActions"
-                 (actionClick)="onActionClick($event)">
+    <app-toolbar
+      *ngIf="bottomActions"
+      class="app-toolbar"
+      [actions]="bottomActions"
+      (actionClick)="onActionClick($event)"
+    >
     </app-toolbar>
     <ngx-datatable
       class="material"
@@ -15,13 +17,15 @@
       [rowHeight]="25"
       [rows]="rows"
       [limit]="25"
+      [messages]="messages"
       [selected]="selected"
       [selectionType]="selectionType"
       [scrollbarV]="true"
       [scrollbarH]="false"
       (activate)="onActivate($event)"
       (select)="onSelect($event)"
-      (page)="onPage($event)">
+      (page)="onPage($event)"
+    >
     </ngx-datatable>
   </div>
 </div>

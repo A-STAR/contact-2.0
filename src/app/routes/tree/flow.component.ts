@@ -18,19 +18,19 @@ export class FlowDemoComponent implements OnInit {
 
   ngOnInit() {
     this.http.get('assets/server/workflow.json')
-      .toPromise()
-      .then((data) => {
-        setTimeout(() => {
+      .map(data => data.json().data)
+      .subscribe(
+        data => {
           const files = {
             id: 0,
             label: 'Home',
-            children: [].concat(data.json().data),
+            children: [].concat(data),
           };
           this.value = [files];
           this.prepareTree(this.value[0]);
-        }, 0);
-      })
-      .catch(error => console.error(error));
+        },
+        error => console.error(error)
+      );
   }
 
   onNodeSelect({ node }) {

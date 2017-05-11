@@ -13,8 +13,8 @@ export class PermissionsService {
     return this.gridService.update(`/api/roles/{id}/permits/${permitId}`, role, request);
   }
 
-  public removePermission(role: IPermissionRole, request: IPermissionsRequest): Promise<any> {
-    return this.gridService.delete(`/api/roles/{id}/permits`, role, request);
+  public removePermission(role: IPermissionRole): Promise<any> {
+    return this.gridService.delete(`/api/roles/{id}/permits`, role);
   }
 
   public addPermission(role: IPermissionRole, request: IPermissionsRequest): Promise<any> {

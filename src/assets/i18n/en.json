@@ -69,5 +69,12 @@
         "login": {
             "INVALID_CREDENTIALS": "Incorrect login or password"
         }
+    },
+    "grid": {
+      "messages": {
+        "emptyMessage": "No data to display",
+        "totalMessage": "total",
+        "selectedMessage": "selected"
+      }
     }
 }

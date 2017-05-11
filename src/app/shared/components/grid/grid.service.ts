@@ -42,19 +42,20 @@ export class GridService {
     return this.request(url, RequestMethod.Put, routeParams, body);
   }
 
-  delete(url: string, routeParams: object = {}, bodyParams: object = {}): Promise<any> {
-    return this.request(url, RequestMethod.Delete, routeParams, bodyParams);
+  delete(url: string, routeParams: object = {}): Promise<any> {
+    return this.request(url, RequestMethod.Delete, routeParams);
   }
 
-  private request(url: string, method: RequestMethod, routeParams: object = {}, body: object = {}): Promise<any> {
+  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Promise<any> {
     return this.validateUrl(url)
       .then(rootUrl => {
         const route = this.createRoute(url, routeParams);
         return this.http.request(`${rootUrl}${route}`, {
           method: method,
           body: body
-        }).toPromise()
-          .then(data => data.json());
+        })
+        .toPromise()
+        .then(data => data.json());
       });
   }
 
