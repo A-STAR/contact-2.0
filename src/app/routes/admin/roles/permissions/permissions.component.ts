@@ -111,10 +111,12 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   }
 
   onEditPermission(permission: IPermissionModel) {
-    this.permissionsService.editPermission(this.currentRole, this.editedPermission.id, permission)
+    const permissionId: number = this.editedPermission.id;
+
+    this.permissionsService.editPermission(this.currentRole, permissionId, permission)
       .then(() => {
         this.displayProperties.editPermit = false;
-        this.loadGrid();
+        Object.assign(this.permitsGrid.findRowById(permissionId), this.toRawValue(permission));
       });
   }
 

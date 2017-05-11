@@ -101,6 +101,10 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.onAction.emit(event);
   }
 
+  findRowById(id: number) {
+    return this.rows.find((item: { id: number }) => item.id === id);
+  }
+
   onActivate(event): void {
     if (event.type === 'dblclick') {
       if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
