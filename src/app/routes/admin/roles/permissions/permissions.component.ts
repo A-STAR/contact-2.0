@@ -1,7 +1,6 @@
 import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
-
 import { DatePipe } from '@angular/common';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';

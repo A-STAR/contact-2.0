@@ -6,11 +6,11 @@
 
   .app-button {
     margin-left: 1.2rem;
+    min-width: 32px;
     padding: 8px;
     cursor: pointer;
     background: transparent;
     border: 1px solid #d6d6d6;
-    border-radius: 6px;
 
     &[disabled] {
       opacity: .4;
