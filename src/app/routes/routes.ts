@@ -1,6 +1,7 @@
+import { AuthService } from '../core/auth/auth.service';
+
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AuthService } from '../core/auth/auth.service';
 
 export const routes = [
   {

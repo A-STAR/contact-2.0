@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IToolbarAction } from './toolbar.interface';
 import { IconsService } from '../../icons/icons.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -10,13 +11,18 @@ import { IconsService } from '../../icons/icons.service';
 export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[];
-  @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>(false);
+  @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
 
-  constructor(private iconsService: IconsService) {
+  constructor(private iconsService: IconsService,
+              private userPermissionsService: UserPermissionsService) {
   }
 
   onActionClick(action: IToolbarAction) {
     this.actionClick.emit(action);
+  }
+
+  isActionAccessible(action: IToolbarAction): boolean {
+    return !action.permission || this.userPermissionsService.hasPermission(action.permission);
   }
 
   toIconCls(action: IToolbarAction) {

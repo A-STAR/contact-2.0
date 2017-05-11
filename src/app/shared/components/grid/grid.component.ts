@@ -9,6 +9,7 @@ import { Component,
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 import { IDataSource, TSelectionType } from './grid.interface';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { GridService } from './grid.service';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
@@ -27,6 +28,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() selectionType: TSelectionType;
   @Input() autoLoad = true;
+  @Input() editPermission;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
@@ -49,7 +51,9 @@ export class GridComponent implements OnInit, AfterViewInit {
     pagerNext: 'fa fa-angle-double-right',
   };
 
-  constructor(private gridService: GridService, public settings: SettingsService) {
+  constructor(private gridService: GridService,
+              private settings: SettingsService,
+              private userPermissionsService: UserPermissionsService) {
     this.parseFn = this.parseFn || function (data) { return data; };
   }
 
@@ -97,8 +101,15 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.onAction.emit(event);
   }
 
+  findRowById(id: number) {
+    return this.rows.find((item: { id: number }) => item.id === id);
+  }
+
   onActivate(event): void {
     if (event.type === 'dblclick') {
+      if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
+        return;
+      }
       this.onEdit.emit(event.row);
       // workaround for rows getting unselected on dblclick
       if (!this.selected.find(row => row.$$id === event.row.$$id)) {

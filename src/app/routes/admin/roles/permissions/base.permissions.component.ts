@@ -12,45 +12,30 @@ export class BasePermissionsComponent {
     if (!dataSet) {
       return [];
     }
-    return dataSet.map(val => {
-      switch (val.typeCode) {
-        case 1:
-          val.value = String(val.valueN);
-          delete val.valueN;
-          break;
-        case 2:
-          val.value = Date.parse(val.valueD);
-          delete val.valueD;
-          break;
-        case 3:
-          val.value = val.valueS;
-          delete val.valueS;
-          break;
-        case 4:
-          val.value = Boolean(val.valueB);
-          delete val.valueB;
-          break;
-        default:
-          val.value = '';
-      }
-      return val;
-    });
+    return dataSet.map(val => this.toRawValue(val));
   }
 
-  // TODO Eliminate duplication
-  prepareData = (data) => {
-    switch (data.typeCode) {
+  toRawValue(val) {
+    switch (val.typeCode) {
       case 1:
-        data.valueN = parseInt(data.value, 10);
+        val.value = String(val.valueN);
+        delete val.valueN;
+        break;
+      case 2:
+        val.value = Date.parse(val.valueD);
+        delete val.valueD;
         break;
       case 3:
-        data.valueS = data.value;
+        val.value = val.valueS;
+        delete val.valueS;
         break;
       case 4:
-        data.valueB = data.value ? 1 : 0;
+        val.value = Boolean(val.valueB);
+        delete val.valueB;
         break;
+      default:
+        val.value = '';
     }
-    delete data.value;
-    return data;
+    return val;
   }
 }
