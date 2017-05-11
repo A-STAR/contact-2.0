@@ -5,6 +5,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { TableColumn } from '@swimlane/ngx-datatable';
 
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -37,7 +38,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
     this.columnDecoratorService.decorateColumn(
       {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
-      (row: IPermissionModel) => this.toBooleanColumnValue(row)
+      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanValue(permission)
     ),
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
@@ -67,6 +68,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   constructor(private permissionsService: PermissionsService,
               private columnDecoratorService: GridColumnDecoratorService,
+              private valueConverterService: ValueConverterService,
               datePipe: DatePipe) {
     super({
       read: '/api/roles/{id}/permits',
@@ -122,11 +124,10 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   onEditPermission(permission: IPermissionModel) {
     const permissionId: number = this.editedPermission.id;
-
     this.permissionsService.editPermission(this.currentRole, permissionId, permission)
       .then(() => {
         this.displayProperties.editPermit = false;
-        Object.assign(this.permitsGrid.findRowById(permissionId), this.toRawValue(permission));
+        this.refreshGrid();
       });
   }
 

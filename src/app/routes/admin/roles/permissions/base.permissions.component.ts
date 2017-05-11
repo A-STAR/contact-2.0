@@ -20,7 +20,6 @@ export class BasePermissionsComponent {
 
   toRawValue(val) {
     switch (val.typeCode) {
-
       case 1:
         val.value = val.valueN;
         break;
@@ -37,12 +36,5 @@ export class BasePermissionsComponent {
         val.value = '';
     }
     return val;
-  }
-
-  toBooleanColumnValue(val) {
-    if (val.typeCode === 4) {
-      return parseInt(val.value as string, 10) === 1 ? 'Истина' : 'Ложь';
-    }
-    return val.value;
   }
 }

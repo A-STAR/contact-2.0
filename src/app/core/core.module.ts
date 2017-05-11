@@ -10,6 +10,7 @@ import { TranslatorService } from './translator/translator.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
+import { ValueConverterService } from './converter/value/value-converter.service';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { UserPermissionsService } from './user/permissions/user-permissions.serv
   providers: [
     AuthHttpService,
     AuthService,
+    ValueConverterService,
     JwtHelper,
     MenuService,
     SettingsService,
