@@ -23,7 +23,7 @@ export class ValueConverterService {
     return valueEntity;
   }
 
-  public deserializeBooleanValue(valueEntity: IValueEntity): ValueType {
+  public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
     const booleanValue: number = this.toNumber(valueEntity.value);
     if (valueEntity.typeCode === 4) {
       return booleanValue === 1 ? 'Истина' : 'Ложь'; // TODO translator

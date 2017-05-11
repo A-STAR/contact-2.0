@@ -38,7 +38,7 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
     this.columnDecoratorService.decorateColumn(
       {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
-      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanValue(permission)
+      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
     ),
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
