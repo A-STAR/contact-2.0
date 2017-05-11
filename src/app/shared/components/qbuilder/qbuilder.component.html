@@ -4,13 +4,13 @@
       <option *ngFor="let operator of logicalOperators" [ngValue]="operator">{{ operator.name }}</option>
     </select>
     <button (click)="addCondition()" class="btn btn-sm btn-success">
-      <span class="fa fa-plus"></span> Add Condition
+      <span class="fa fa-plus"></span> {{ 'queryBuilder.ADD_CONDITION' | translate }}
     </button>
     <button (click)="addGroup()" class="btn btn-sm btn-success">
-      <span class="fa fa-plus"></span> Add Group
+      <span class="fa fa-plus"></span> {{ 'queryBuilder.ADD_GROUP' | translate }}
     </button>
     <button *ngIf="!!group.parent" (click)="removeGroup(group)" class="btn btn-sm btn-danger">
-      <span class="fa fa-minus"></span> Remove Group
+      <span class="fa fa-minus"></span> {{ 'queryBuilder.REMOVE_GROUP' | translate }}
     </button>
   </div>
   <ul class="group-conditions">
