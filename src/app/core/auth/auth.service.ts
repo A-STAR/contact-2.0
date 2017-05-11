@@ -59,7 +59,13 @@ export class AuthService implements CanActivate, OnInit {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
-    return this.checkLogin(url);
+
+    if (this.checkLogin(url)) {
+      return true;
+    }
+
+    this.redirectToLogin(url);
+    return false;
   }
 
   authenticate(login: string, password: string): Promise<boolean> {
@@ -101,6 +107,12 @@ export class AuthService implements CanActivate, OnInit {
       });
   }
 
+  redirectToLogin(url = null) {
+    this.clearTokenTimer();
+    this.redirectUrl = url || this.router.url || '/home';
+    this.router.navigate(['/login']);
+  }
+
   private getErrorMessage(message = null) {
     switch (message) {
       case 'login.invalidCredentials':
@@ -114,12 +126,6 @@ export class AuthService implements CanActivate, OnInit {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
-  public redirectToLogin(url = null) {
-    this.clearTokenTimer();
-    this.redirectUrl = url || this.router.url || '/home';
-    this.router.navigate(['/login']);
-  }
-
   private checkLogin(url: string): boolean {
     if (this.isAuthenticated) {
       return true;
@@ -130,18 +136,13 @@ export class AuthService implements CanActivate, OnInit {
       return this.authenticated = true;
     }
 
-    this.redirectToLogin(url);
-    return false;
+    return this.authenticated = false;
   }
 
   private refreshToken() {
     return this.getRootUrl()
       .then(root => {
-        return this.http.post(`${root}/auth/login`, {
-          // FIXME!!!
-          login: 'spring',
-          password: 'spring'
-        })
+        return this.http.get(`${root}/api/refresh`)
           .toPromise()
           .then((resp: Response) => {
             this.saveToken(resp);
