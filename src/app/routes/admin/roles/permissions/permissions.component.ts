@@ -9,9 +9,9 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import {IDataSource} from '../../../../shared/components/grid/grid.interface';
+import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 
-import {IPermissionModel, IPermissionRole, IPermissionsResponse} from './permissions.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
 import { IDisplayProperties } from '../roles.interface';
 import { PermissionsService } from './permissions.service';
 
@@ -75,9 +75,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
               private valueConverterService: ValueConverterService) {
   }
 
-  public parseFn(data: IPermissionsResponse) {
-    return this.valueConverterService.deserializeSet(data.permits);
-  }
+  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   /**
    * @override

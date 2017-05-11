@@ -4,8 +4,8 @@ import { ValueConverterService } from '../../../../../core/converter/value/value
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 import { IDisplayProperties } from '../../roles.interface';
-import {IPermissionModel, IPermissionRole, IPermissionsResponse} from '../permissions.interface';
-import {IDataSource} from '../../../../../shared/components/grid/grid.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../permissions.interface';
+import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-add-permission',
@@ -34,9 +34,7 @@ export class AddPermissionComponent implements AfterViewInit {
   constructor(private valueConverterService: ValueConverterService) {
   }
 
-  public parseFn(data: IPermissionsResponse) {
-    return this.valueConverterService.deserializeSet(data.permits);
-  }
+  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   /**
    * @template
