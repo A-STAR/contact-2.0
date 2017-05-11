@@ -26,7 +26,6 @@ export class RolesComponent {
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD,
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.CLONE,
     ToolbarActionTypeEnum.REMOVE,
@@ -112,8 +111,7 @@ export class RolesComponent {
   }
 
   private refreshToolbar() {
-    const isRoleSelected = !!this.currentRole;
-    this.setActionsVisibility(this.bottomActionsGroup, isRoleSelected);
+    this.setActionsVisibility(this.bottomActionsGroup, !!this.selectedRole);
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
