@@ -69,5 +69,8 @@
         "login": {
             "INVALID_CREDENTIALS": "Incorrect login or password"
         }
+    },
+    "misc": {
+        "CONNECTION_ERROR": "Connection Error"
     }
 }

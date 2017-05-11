@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthHttp } from 'angular2-jwt';
 import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
 import { AuthService } from '../auth/auth.service';
@@ -37,7 +38,7 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
 export class MenuService {
   private menuItems: Array<IMenuItem> = [];
 
-  constructor(private http: AuthHttp, private authService: AuthService) { }
+  constructor(private http: AuthHttp, private authService: AuthService, private router: Router) { }
 
   loadMenu() {
     return this.authService
@@ -50,9 +51,14 @@ export class MenuService {
         .then(response => this.prepareMenu(response));
       })
       .catch(error => {
-        // TODO: display a message
-        console.error('Could not load menu.', error);
-        return [];
+        /*
+         * TODO:
+         * when /api/guiconfigurations is implemented properly
+         * redirect to /login on 403 error
+         * redirect to /connection-error on 500 error
+         */
+        // this.router.navigate(['/connection-error']);
+        this.router.navigate(['/login']);
       });
   }
 
