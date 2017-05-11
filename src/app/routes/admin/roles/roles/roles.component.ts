@@ -19,16 +19,17 @@ export class RolesComponent {
   action: ToolbarActionTypeEnum = null;
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
+    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
   ];
 
-  bottomActionsSinglePermitGroup: Array<ToolbarActionTypeEnum> = [
+  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.ADD,
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.CLONE,
-    ToolbarActionTypeEnum.REMOVE
+    ToolbarActionTypeEnum.REMOVE,
   ];
 
   columns: Array<any> = [
@@ -111,9 +112,13 @@ export class RolesComponent {
   }
 
   private refreshToolbar() {
-    // TODO: load user permissions
-    this.bottomActions
-      .filter(action => action.type !== ToolbarActionTypeEnum.ADD)
-      .forEach(action => action.visible = !!this.selectedRole);
+    const isRoleSelected = !!this.currentRole;
+    this.setActionsVisibility(this.bottomActionsGroup, isRoleSelected);
+  }
+
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
+      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
+    });
   }
 }
