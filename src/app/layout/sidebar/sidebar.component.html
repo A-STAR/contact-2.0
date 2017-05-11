@@ -14,7 +14,7 @@
         </a>
         <a
           *ngIf="item.children"
-          title="(item.text | translate) || item.name"
+          [title]="(item.text | translate) || item.name"
           (click)="toggleSubmenuClick($event)"
           (mouseenter)="toggleSubmenuHover($event)"
         >
