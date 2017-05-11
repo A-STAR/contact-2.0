@@ -70,7 +70,7 @@
             "INVALID_CREDENTIALS": "Incorrect login or password"
         }
     },
-    "misc": {
+    "network": {
         "CONNECTION_ERROR": "Connection Error"
     }
 }
