@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Inject, Injectable, OnInit } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
@@ -26,11 +26,9 @@ export class AuthService implements CanActivate, OnInit {
   // backend root url
   private rootUrl = '';
 
-  private jwtHelper: JwtHelper = new JwtHelper();  // TODO: inject into constructor
-
   private tokenTimer = null;
 
-  constructor(private http: AuthHttp, private router: Router) {
+  constructor(private http: AuthHttp, private router: Router, private jwtHelper: JwtHelper) {
     const token = getToken();
     if (this.isTokenValid(token)) {
       this.initTokenTimer(token);
