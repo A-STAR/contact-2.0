@@ -76,5 +76,15 @@
         "totalMessage": "всего",
         "selectedMessage": "выбрано"
       }
+    },
+    "queryBuilder": {
+      "TITLE": "Построитель запросов",
+      "ADD_CONDITION": "Добавить условие",
+      "ADD_GROUP": "Добавить группу",
+      "REMOVE_GROUP": "Удалить группу",
+      "buttons": {
+        "GET_QUERY": "Получить запрос",
+        "BACK": "Вернуться к построителю запросов"
+      }
     }
 }
