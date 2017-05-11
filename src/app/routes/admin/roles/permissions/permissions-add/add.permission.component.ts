@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import { BasePermissionsComponent } from '../base.permissions.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
@@ -24,11 +25,11 @@ export class AddPermissionComponent extends BasePermissionsComponent implements 
     {name: 'Описание', prop: 'dsc', minWidth: 70},
   ];
 
-  constructor() {
+  constructor(datePipe: DatePipe) {
     super({
       read: '/api/roles/{id}/permits/notadded',
       dataKey: 'permits',
-    });
+    }, datePipe);
   }
 
   /**

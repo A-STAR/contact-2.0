@@ -70,11 +70,16 @@
             "INVALID_CREDENTIALS": "Incorrect login or password"
         }
     },
+<<<<<<< HEAD
     "grid": {
       "messages": {
         "emptyMessage": "No data to display",
         "totalMessage": "total",
         "selectedMessage": "selected"
       }
+=======
+    "network": {
+        "CONNECTION_ERROR": "Connection Error"
+>>>>>>> 12f665af0ef3564db8a4127ddc66af92a0364136
     }
 }

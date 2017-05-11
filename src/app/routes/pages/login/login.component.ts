@@ -45,7 +45,8 @@ export class LoginComponent {
             this.authService
                 .authenticate(login, password)
                 .then(success => {
-                    this.router.navigate(['/home']);
+                    const redirectUrl = this.authService.redirectUrl || '/home';
+                    this.router.navigate([redirectUrl]);
                 })
                 .catch(error => this.error = error.message);
         }
