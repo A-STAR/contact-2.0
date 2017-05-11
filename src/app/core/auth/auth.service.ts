@@ -59,7 +59,13 @@ export class AuthService implements CanActivate, OnInit {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
-    return this.checkLogin(url);
+
+    if (this.checkLogin(url)) {
+      return true;
+    }
+
+    this.redirectToLogin(url);
+    return false;
   }
 
   authenticate(login: string, password: string): Promise<boolean> {
@@ -130,18 +136,13 @@ export class AuthService implements CanActivate, OnInit {
       return this.authenticated = true;
     }
 
-    this.redirectToLogin(url);
-    return false;
+    return this.authenticated = false;
   }
 
   private refreshToken() {
     return this.getRootUrl()
       .then(root => {
-        return this.http.post(`${root}/auth/login`, {
-          // FIXME!!!
-          login: 'spring',
-          password: 'spring'
-        })
+        return this.http.get(`${root}/api/refresh`)
           .toPromise()
           .then((resp: Response) => {
             this.saveToken(resp);
