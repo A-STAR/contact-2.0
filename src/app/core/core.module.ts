@@ -1,4 +1,6 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 import { JwtHelper } from 'angular2-jwt';
 
 import { AuthHttpService } from './auth/auth-http.service';
@@ -25,6 +27,7 @@ import { ValueConverterService } from './converter/value/value-converter.service
     ThemesService,
     TranslatorService,
     UserPermissionsService,
+    DatePipe,
   ],
   exports: [
   ]

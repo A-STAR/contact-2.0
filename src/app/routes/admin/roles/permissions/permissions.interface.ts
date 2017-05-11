@@ -1,4 +1,4 @@
-import {IValueEntity} from '../../../../core/converter/value/value-converter.interface';
+import { IValueEntity } from '../../../../core/converter/value/value-converter.interface';
 
 export interface IPermissionRole {
   id: number;
@@ -14,4 +14,8 @@ export interface IPermissionModel extends IValueEntity {
   dsc: string;
   name: string;
   comment?: string;
+}
+
+export interface IPermissionsResponse {
+  permits: IPermissionModel[];
 }

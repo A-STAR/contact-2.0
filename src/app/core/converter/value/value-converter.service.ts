@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { IValueEntity, ValueType } from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
 
-  constructor() {
+  constructor(private datePipe: DatePipe) {
   }
 
   public serialize(valueEntity: IValueEntity) {
@@ -21,6 +22,33 @@ export class ValueConverterService {
     }
     delete valueEntity.value;
     return valueEntity;
+  }
+
+  public deserialize(valueEntity: IValueEntity): IValueEntity {
+    switch (valueEntity.typeCode) {
+      case 1:
+        valueEntity.value = valueEntity.valueN;
+        break;
+      case 2:
+        valueEntity.value = this.datePipe.transform(new Date(valueEntity.valueD), 'dd.MM.yyyy HH:mm:ss');
+        break;
+      case 3:
+        valueEntity.value = valueEntity.valueS || '';
+        break;
+      case 4:
+        valueEntity.value = valueEntity.valueB;
+        break;
+      default:
+        valueEntity.value = '';
+    }
+    return valueEntity;
+  }
+
+  public deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
+    if (!dataSet) {
+      return [];
+    }
+    return dataSet.map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
   }
 
   public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {

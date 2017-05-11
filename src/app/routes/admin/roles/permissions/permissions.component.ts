@@ -2,7 +2,6 @@ import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { DatePipe } from '@angular/common';
 import { TableColumn } from '@swimlane/ngx-datatable';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
@@ -10,9 +9,9 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
+import {IDataSource} from '../../../../shared/components/grid/grid.interface';
 
-import { IPermissionModel, IPermissionRole } from './permissions.interface';
-import { BasePermissionsComponent } from './base.permissions.component';
+import {IPermissionModel, IPermissionRole, IPermissionsResponse} from './permissions.interface';
 import { IDisplayProperties } from '../roles.interface';
 import { PermissionsService } from './permissions.service';
 
@@ -20,7 +19,7 @@ import { PermissionsService } from './permissions.service';
   selector: 'app-permissions',
   templateUrl: './permissions.component.html'
 })
-export class PermissionsComponent extends BasePermissionsComponent implements AfterViewInit, OnChanges {
+export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   displayProperties: IDisplayProperties = {
     removePermit: false,
@@ -66,14 +65,18 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
+  dataSource: IDataSource = {
+    read: '/api/roles/{id}/permits',
+    dataKey: 'permits'
+  };
+
   constructor(private permissionsService: PermissionsService,
               private columnDecoratorService: GridColumnDecoratorService,
-              private valueConverterService: ValueConverterService,
-              datePipe: DatePipe) {
-    super({
-      read: '/api/roles/{id}/permits',
-      dataKey: 'permits',
-    }, datePipe);
+              private valueConverterService: ValueConverterService) {
+  }
+
+  public parseFn(data: IPermissionsResponse) {
+    return this.valueConverterService.deserializeSet(data.permits);
   }
 
   /**
