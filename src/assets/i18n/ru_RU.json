@@ -25,35 +25,35 @@
                 "SORTABLE": "Сортировка",
                 "REORDERABLE": "Перемещение",
                 "GROUPABLE": "Группировка",
-                "ADMIN_PANEL": "Панель Администрирования",
+                "ADMIN_PANEL": "Панель администрирования",
                 "ROLES_AND_PERMISSIONS": "Роли и доступы",
                 "USERS": "Пользовтели",
-                "ACTIONS_LOG": "Аудит",
-                "CONSTANTS": "Константы",
+                "ACTIONS_LOG": "Лог действий",
+                "CONSTANTS": "Значения констант",
                 "DICTIONARIES": "Словари",
-                "BANKS": "Банки",
-                "DEPARTMENTS": "Подразделения",
-                "UTILITIES": "Удтилиты",
-                "UPLOAD_TEMPLATES": "Загрузка шаблонов",
+                "BANKS": "Клиенты и портфели",
+                "DEPARTMENTS": "Структура предприятия",
+                "UTILITIES": "Утилиты",
+                "UPLOAD_TEMPLATES": "Шаблоны загрузки",
                 "DATA_UPLOAD": "Загрузка данных",
-                "ARBITRARY_VALUES": "Произвольные значения",
+                "ARBITRARY_VALUES": "Произвольные атрибуты",
                 "CONTACT_TREES": "Дерево контактов",
                 "MESSAGE_SCENARIOS": "Сценарии сообщений",
                 "GROUPS": "Группы",
-                "CAMPAIGNS": "Кампании",
+                "CAMPAIGNS": "Кампании обзвона",
                 "SCHEDULE": "Расписание",
                 "FORMULAS": "Формулы",
-                "COURTS": "Суды",
+                "COURTS": "Суды и ФССП",
                 "WORKPLACES": "Рабочие места",
                 "DEBT_LIST": "Список долгов",
-                "TASKS": "Задачи",
+                "TASKS": "Постановка задач",
                 "DEBTS": "Обработка долгов",
-                "CONTACT_PROTOCOL": "Contact Protocol",
-                "CALL_CENTER": "Колл центр",
+                "CONTACT_PROTOCOL": "Протокол контактов",
+                "CALL_CENTER": "Центр обзвона",
                 "PAYMENTS": "Платежи",
-                "COURTS_2": "Суды 2",
-                "OUTGOING_INFORMATION": "Исходящая информация",
-                "SEARCH_GROUPS": "Группы поиска",
+                "COURTS_2": "Судебное и исполнительное производство",
+                "OUTGOING_INFORMATION": "Исходящее информирование",
+                "SEARCH_GROUPS": "Группы свободного поиска",
                 "MAIL": "Почта",
                 "REPORTS": "Отчеты",
                 "ARBITRARY_REPORTS": "Произвольные отчеты",
@@ -65,16 +65,41 @@
         "WELCOME": "Добро пожаловать"
     },
     "validation": {
-        "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+        "DEFAULT_ERROR_MESSAGE": "Произошла ошибка",
+        "FIELD_REQUIRED": "Это обязательное поле",
+        "FIELD_MIN_LENGTH": "Это поле должно быть не короче {{length}} символов",
         "login": {
             "INVALID_CREDENTIALS": "Неверный логин или пароль"
         }
     },
+    "network": {
+        "CONNECTION_ERROR": "Ошибка соединения"
+    },
     "grid": {
-      "messages": {
-        "emptyMessage": "Нет данных",
-        "totalMessage": "всего",
-        "selectedMessage": "выбрано"
-      }
+        "messages": {
+            "emptyMessage": "Нет данных",
+            "totalMessage": "всего",
+            "selectedMessage": "выбрано"
+        }
+    },
+    "queryBuilder": {
+        "TITLE": "Построитель запросов",
+        "ADD_CONDITION": "Добавить условие",
+        "ADD_GROUP": "Добавить группу",
+        "REMOVE_GROUP": "Удалить группу",
+        "buttons": {
+            "GET_QUERY": "Получить запрос",
+            "BACK": "Вернуться к построителю запросов"
+        }
+    },
+    "login": {
+        "PLEASE_AUTHENTICATE": "Пожалуйста, авторизуйтесь",
+        "LOGIN_PLACEHOLDER": "Логин",
+        "PASSWORD_PLACEHOLDER": "Пароль",
+        "REMEMBER_ME": "Запомнить меня",
+        "FORGOT_PASSWORD": "Забыли пароль?",
+        "NO_ACCOUNT": "Нет аккаунта?",
+        "LOGIN_BUTTON": "Войти",
+        "REGISTER_BUTTON": "Зарегистрироваться"
     }
 }

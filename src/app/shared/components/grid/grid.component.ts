@@ -61,9 +61,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.parseFn = this.parseFn || function (data) { return data; };
     this.translate.get('grid.messages')
       .subscribe(
-        messages => {
-          this.messages = messages;
-        },
+        messages => this.messages = messages,
         error => console.error(error)
       );
   }
@@ -72,14 +70,14 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (this.autoLoad) {
       this.load(this.initialParameters);
     }
-    this.selectionType = this.selectionType || 'multiClick';
+    this.selectionType = this.selectionType || 'multi';
   }
 
   ngAfterViewInit() {
     // Define a possible height of the datatable
     // 43px - tab height,
     // 2x15px - top & bottom padding around the grid
-    // 8px => ? tbd
+    // 8px => - to be examined ?
     if (this.styles) {
       // Don't set the full height if the `styles` param is not set
       return;

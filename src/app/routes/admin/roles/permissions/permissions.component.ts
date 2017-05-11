@@ -2,20 +2,23 @@ import {
   Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { TableColumn } from '@swimlane/ngx-datatable';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { IDataSource } from '../../../../shared/components/grid/grid.interface';
+import { IDisplayProperties } from '../roles.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { IPermissionModel, IPermissionRole } from './permissions.interface';
-import { BasePermissionsComponent } from './base.permissions.component';
-import { IDisplayProperties } from '../roles.interface';
+import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { PermissionsService } from './permissions.service';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html'
 })
-export class PermissionsComponent extends BasePermissionsComponent implements AfterViewInit, OnChanges {
+export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   displayProperties: IDisplayProperties = {
     removePermit: false,
@@ -28,10 +31,13 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
   @Input() currentRole: IPermissionRole;
   @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>();
 
-  columns: Array<any> = [
+  columns: Array<TableColumn> = [
     { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
     { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100 },
+    this.columnDecoratorService.decorateColumn(
+      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
+      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
+    ),
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
     { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
     { name: 'Комментарий', prop: 'comment' },
@@ -58,12 +64,17 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
     {id: 0, title: 'Доступы', active: true},
   ];
 
-  constructor(private permissionsService: PermissionsService, datePipe: DatePipe) {
-    super({
-      read: '/api/roles/{id}/permits',
-      dataKey: 'permits',
-    }, datePipe);
+  dataSource: IDataSource = {
+    read: '/api/roles/{id}/permits',
+    dataKey: 'permits'
+  };
+
+  constructor(private permissionsService: PermissionsService,
+              private columnDecoratorService: GridColumnDecoratorService,
+              private valueConverterService: ValueConverterService) {
   }
+
+  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   /**
    * @override
@@ -113,11 +124,10 @@ export class PermissionsComponent extends BasePermissionsComponent implements Af
 
   onEditPermission(permission: IPermissionModel) {
     const permissionId: number = this.editedPermission.id;
-
     this.permissionsService.editPermission(this.currentRole, permissionId, permission)
       .then(() => {
         this.displayProperties.editPermit = false;
-        Object.assign(this.permitsGrid.findRowById(permissionId), this.toRawValue(permission));
+        this.refreshGrid();
       });
   }
 

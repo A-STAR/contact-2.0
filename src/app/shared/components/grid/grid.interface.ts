@@ -6,4 +6,4 @@ export interface IDataSource {
   dataKey: string;
 }
 
-export type TSelectionType = 'single' | 'multiClick';
+export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
