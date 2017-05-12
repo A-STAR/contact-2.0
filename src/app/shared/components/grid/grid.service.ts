@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RequestMethod } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
+
 import { AuthService } from '../../../core/auth/auth.service';
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class GridService {
@@ -16,13 +17,12 @@ export class GridService {
     return this;
   }
 
-  read(url: string, routeParams: object = {}): Promise<any> {
+  read(url: string, routeParams: object = {}): Observable<any> {
     if (this._localRequest) {
       // this would not be a default value, so clear the flag for further requests
       this._localRequest = false;
       return this.http.get(url)
-        .toPromise()
-        .then(data => data.json());
+        .map(data => data.json());
     }
 
     return this.request(url, RequestMethod.Get, routeParams);
@@ -34,34 +34,33 @@ export class GridService {
    *  url = '/api/roles/{id}/permits', params = { id: 5 }
    *  route = '/api/roles/5/permits
    */
-  create(url: string, routeParams: object = {}, body: object): Promise<any> {
+  create(url: string, routeParams: object = {}, body: object): Observable<any> {
     return this.request(url, RequestMethod.Post, routeParams, body);
   }
 
-  update(url: string, routeParams: object = {}, body: object): Promise<any> {
+  update(url: string, routeParams: object = {}, body: object): Observable<any> {
     return this.request(url, RequestMethod.Put, routeParams, body);
   }
 
-  delete(url: string, routeParams: object = {}): Promise<any> {
+  delete(url: string, routeParams: object = {}): Observable<any> {
     return this.request(url, RequestMethod.Delete, routeParams);
   }
 
-  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Promise<any> {
+  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
     return this.validateUrl(url)
-      .then(rootUrl => {
+      .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
         return this.http.request(`${rootUrl}${route}`, {
           method: method,
           body: body
         })
-        .toPromise()
-        .then(data => data.json());
+        .map(data => data.json());
       });
   }
 
-  private validateUrl(url: string = ''): Promise<any> {
+  private validateUrl(url: string = ''): Observable<any> {
     if (!url) {
-      return Promise.reject('Error: no url passed to the GridService');
+      return Observable.throw('Error: no url passed to the GridService');
     }
     return this.authService.getRootUrl();
   }

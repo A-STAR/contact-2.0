@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthHttp } from 'angular2-jwt';
-import { AuthService } from '../../../../../core/auth/auth.service';
+import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
@@ -27,7 +27,7 @@ export class RolesEditComponent extends AbstractRolesPopup {
     },
   ];
 
-  constructor(protected authHttp: AuthHttp, protected authService: AuthService, private formBuilder: FormBuilder) {
+  constructor(protected authHttp: AuthHttp, private formBuilder: FormBuilder) {
     super();
   }
 
@@ -48,15 +48,15 @@ export class RolesEditComponent extends AbstractRolesPopup {
       this.httpActionCreate(baseUrl);
   }
 
-  private isUpdating() {
-    return this.role && this.role.name;
+  private isUpdating(): boolean {
+    return !!(this.role && this.role.name);
   }
 
-  private httpActionCreate(baseUrl: string) {
+  private httpActionCreate(baseUrl: string): Observable<any> {
     return this.authHttp.post(`${baseUrl}/api/roles/`, this.form.getRawValue());
   }
 
-  private httpActionUpdate(baseUrl: string) {
+  private httpActionUpdate(baseUrl: string): Observable<any> {
     return this.authHttp.put(`${baseUrl}/api/roles/${this.role.id}`, this.form.getRawValue());
   }
 }

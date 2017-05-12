@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
@@ -15,18 +16,19 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
 
   controls: Array<IDynamicFormControl>;
 
-  constructor(protected authHttp: AuthHttp, protected authService: AuthService, private formBuilder: FormBuilder) {
+  constructor(protected http: AuthHttp, protected authService: AuthService, private formBuilder: FormBuilder) {
     super();
   }
 
   ngOnInit() {
-    this.getBaseUrl().then(baseUrl => {
-      this.authHttp.get(`${baseUrl}/api/roles`)
-        .toPromise()
-        .then(data => data.json())
-        .then(data => this.initControls(data))
-        .catch(error => console.log(error));
-    });
+    this.getBaseUrl()
+      .subscribe(baseUrl => {
+        this.http.get(`${baseUrl}/api/roles`)
+          .toPromise()
+          .then(data => data.json())
+          .then(data => this.initControls(data))
+          .catch(error => console.log(error));
+      });
   }
 
   private initControls(data) {
@@ -59,7 +61,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected createForm(role: IRoleRecord) {
+  protected createForm(role: IRoleRecord): FormGroup {
     return this.formBuilder.group({
       originalRoleId: [ this.originalRole.id, Validators.required ],
       name: [ this.role.name, Validators.required ],
@@ -67,8 +69,8 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     });
   }
 
-  protected httpAction(baseUrl: string) {
+  protected httpAction(baseUrl: string): Observable<any> {
     const data = this.form.getRawValue();
-    return this.authHttp.post(`${baseUrl}/api/roles/${data.originalRoleId}/copy`, data);
+    return this.http.post(`${baseUrl}/api/roles/${data.originalRoleId}/copy`, data);
   }
 }

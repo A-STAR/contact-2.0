@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -14,7 +15,7 @@ export class PermissionsService {
               private valueConverterService: ValueConverterService) {
   }
 
-  public editPermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Promise<any> {
+  public editPermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Observable<any> {
     return this.gridService.update(
       `/api/roles/{id}/permits/{permissionId}`,
       { id: role.id, permissionId: permissionId },
@@ -22,11 +23,11 @@ export class PermissionsService {
     );
   }
 
-  public removePermission(role: IPermissionRole): Promise<any> {
+  public removePermission(role: IPermissionRole): Observable<any> {
     return this.gridService.delete(`/api/roles/{id}/permits`, role);
   }
 
-  public addPermission(role: IPermissionRole, permissionsIds: number []): Promise<any> {
+  public addPermission(role: IPermissionRole, permissionsIds: number []): Observable<any> {
     return this.gridService.create(
       `/api/roles/{id}/permits`,
       role,

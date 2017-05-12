@@ -46,15 +46,15 @@ export class RolesComponent {
   constructor(private formBuilder: FormBuilder) {
   }
 
-  get isRoleBeingCreatedOrEdited() {
+  get isRoleBeingCreatedOrEdited(): boolean {
     return this.currentRole && (this.action === ToolbarActionTypeEnum.ADD || this.action === ToolbarActionTypeEnum.EDIT);
   }
 
-  get isRoleBeingCopied() {
+  get isRoleBeingCopied(): boolean {
     return this.currentRole && this.action === ToolbarActionTypeEnum.CLONE;
   }
 
-  get isRoleBeingRemoved() {
+  get isRoleBeingRemoved(): boolean {
     return this.currentRole && this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
@@ -63,7 +63,7 @@ export class RolesComponent {
     return data[dataKey] || [];
   }
 
-  onSelectedRowChange(roles: Array<IRoleRecord>) {
+  onSelectedRowChange(roles: Array<IRoleRecord>): void {
     const role = roles[0];
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
       this.selectedRole = role;
@@ -72,12 +72,12 @@ export class RolesComponent {
     }
   }
 
-  onEdit(role: IRoleRecord) {
+  onEdit(role: IRoleRecord): void {
     this.action = ToolbarActionTypeEnum.EDIT;
     this.currentRole = this.selectedRole;
   }
 
-  onAction(action: IToolbarAction) {
+  onAction(action: IToolbarAction): void {
     this.action = action.type;
     switch (action.type) {
       case ToolbarActionTypeEnum.EDIT:
@@ -93,12 +93,17 @@ export class RolesComponent {
     }
   }
 
-  onUpdate() {
+  onUpdate(): void {
     this.selectedRole = null;
-    this.grid.load().then(() => this.refreshToolbar());
+    this.grid.load().
+      subscribe(
+        () => this.refreshToolbar(),
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
-  callActionByType(type: ToolbarActionTypeEnum) {
+  callActionByType(type: ToolbarActionTypeEnum): void {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
@@ -110,11 +115,11 @@ export class RolesComponent {
     };
   }
 
-  private refreshToolbar() {
+  private refreshToolbar(): void {
     this.setActionsVisibility(this.bottomActionsGroup, !!this.selectedRole);
   }
 
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
     actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
       this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });

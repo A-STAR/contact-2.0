@@ -18,9 +18,6 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
   {
     name: 'menuItemGrids',
     children: [
-      // {
-      //   name: 'menuItemLargeDataset'
-      // },
       {
         name: 'menuItemSortable'
       },
@@ -43,12 +40,12 @@ export class MenuService {
   loadMenu() {
     return this.authService
       .getRootUrl()
-      .then(root => {
+      .flatMap(root => {
         return this.http
           .get(`${root}/api/guiconfigurations`)
-          .toPromise()
-          .then(response => response.json())
-          .then(response => this.prepareMenu(response));
+          .map(resp => resp.json())
+          .do(resp => this.prepareMenu(resp))
+          .map(resp => true);
       })
       .catch(error => {
         // TODO: move into wrapper
@@ -57,6 +54,7 @@ export class MenuService {
         } else {
           this.router.navigate(['/connection-error']);
         }
+        throw error;
       });
   }
 
@@ -64,7 +62,7 @@ export class MenuService {
     return this.menuItems;
   }
 
-  private prepareMenu(response: IMenuApiResponse) {
+  private prepareMenu(response: IMenuApiResponse): void {
     this.menuItems = ADDITIONAL_MENU_ITEMS
       .concat(response.appGuiObjects)
       .map(item => this.prepareMenuNode(item));

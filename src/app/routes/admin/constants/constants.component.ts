@@ -175,14 +175,15 @@ export class ConstantsComponent implements OnInit {
     }
 
     this.grid.update({ id: id }, body)
-      .then(resp => {
-        this.display = false;
-        this.form.reset();
-        this.grid.load();
-      })
-      .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
-      });
+      .subscribe(
+        resp => {
+          this.display = false;
+          this.form.reset();
+          this.grid.load();
+        },
+        // TODO: display & log a message
+        error => console.log(error.statusText || error.status || 'Request error')
+      );
   }
 
   onCancel(event): void {
