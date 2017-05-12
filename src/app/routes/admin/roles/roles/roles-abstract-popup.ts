@@ -11,10 +11,16 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   form: FormGroup;
 
+  error: string = null;
+
   abstract controls: Array<IDynamicFormControl>;
 
   ngOnChanges(changes: SimpleChanges) {
     this.form = this.createForm(changes.role.currentValue);
+  }
+
+  get canSubmit(): boolean {
+    return this.form.dirty && this.form.valid;
   }
 
   onDisplayChange(event): void {
@@ -24,17 +30,18 @@ export abstract class AbstractRolesPopup implements OnChanges {
   }
 
   onActionClick(): void {
+    this.error = null;
     this.httpAction()
       .subscribe(
         data => {
-          if (data.ok) {
-            // TODO: check success === true in data.json()
+          if (data.success) {
             this.onUpdate.emit();
             this.close();
+          } else {
+            this.error = data.message;
           }
         },
-        // TODO: display & log a message
-        error => console.log(error)
+        error => this.error = 'validation.DEFAULT_ERROR_MESSAGE'
       );
   }
 

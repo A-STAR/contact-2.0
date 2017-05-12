@@ -22,7 +22,6 @@ export class RolesEditComponent extends AbstractRolesPopup {
       label: 'Комментарий',
       controlName: 'comment',
       type: 'textarea',
-      required: true,
       rows: 2
     },
   ];
@@ -38,11 +37,11 @@ export class RolesEditComponent extends AbstractRolesPopup {
   protected createForm(role: IRoleRecord) {
     return this.formBuilder.group({
       name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment, Validators.required ],
+      comment: [ this.role.comment ],
     });
   }
 
-  protected httpAction() {
+  protected httpAction(): Observable<any> {
     return this.isUpdating() ?
       this.httpActionUpdate() :
       this.httpActionCreate();
