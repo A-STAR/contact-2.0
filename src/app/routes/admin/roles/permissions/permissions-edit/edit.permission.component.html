@@ -1,31 +1,21 @@
-<p-dialog
-  appendTo="body"
-  [header]="'Доступ'"
-  [draggable]="true"
-  [modal]="true"
-  [resizable]="false"
-  [responsive]="false"
-  [(visible)]="displayProperties.editPermit"
-  [width]="600"
-  [height]="550">
+<app-dialog [display]="displayProperties.editPermit"
+            (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>Доступ</h3>
+  </div>
 
   <app-dynamic-form [form]="form"
                     [controls]="controls">
   </app-dynamic-form>
 
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button"
-              class="ui-button-secondary"
-              pButton icon="fa-close"
-              label="Отмена"
-              (click)="onCancel()"></button>
-      <button type="button"
-              class="ui-button-success"
-              pButton icon="fa-check"
-              label="Сохранить"
-              [disabled]="!canSaveChanges()"
-              (click)="onSave()"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+  <div dialog-footer>
+    <button class="btn btn-danger"
+            [disabled]="!canSaveChanges()"
+            (click)="onSave()">
+      <i class="fa fa-check"></i> Сохранить
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> Отмена
+    </button>
+  </div>
+</app-dialog>

@@ -1,7 +1,7 @@
 import {
-  Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
+  Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
+
 import { TableColumn } from '@swimlane/ngx-datatable';
 
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
@@ -29,7 +29,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
-  @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>();
 
   columns: Array<TableColumn> = [
     { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -46,7 +45,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   bottomActions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'PERMIT_ADD' },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
   ];
 
@@ -56,7 +54,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.CLONE,
     ToolbarActionTypeEnum.ADD,
   ];
 
@@ -98,9 +95,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
         break;
       case ToolbarActionTypeEnum.REMOVE:
         this.displayProperties.removePermit = true;
-        break;
-      case ToolbarActionTypeEnum.CLONE:
-        this.cloneRole.emit(this.currentRole);
         break;
     }
   }
@@ -145,11 +139,11 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   onRemovePermission(): void {
     const permissionId: number = this.editedPermission.id;
-    this.permissionsService.removePermission(this.currentRole)
+    this.permissionsService.removePermission(this.currentRole, permissionId)
       .subscribe(
         () => {
           this.displayProperties.removePermit = false;
-          this.permitsGrid.removeRowById(permissionId);
+          this.refreshGrid();
         },
         // TODO: display & log a message
         err => console.error(err)

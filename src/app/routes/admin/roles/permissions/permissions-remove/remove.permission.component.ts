@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IDisplayProperties } from '../../roles.interface';
 
 @Component({
   selector: 'app-remove-permission',
@@ -6,10 +7,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class RemovePermissionComponent {
 
-  @Input() displayProperties;
+  @Input() displayProperties: IDisplayProperties;
   @Output() confirm: EventEmitter<void> = new EventEmitter<void>();
 
   onConfirm() {
     this.confirm.emit(null);
+  }
+
+  onDisplayChange(event): void {
+    if (event === false) {
+      this.displayProperties.removePermit = false;
+    }
   }
 }

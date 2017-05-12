@@ -1,7 +1,6 @@
 <app-edit-permission *ngIf="displayProperties.editPermit"
                      [displayProperties]="displayProperties"
                      [record]="editedPermission"
-                     (cancel)="displayProperties.editPermit = false"
                      (save)="onEditPermission($event)">
 </app-edit-permission>
 
@@ -14,7 +13,6 @@
 
 <app-remove-permission *ngIf="displayProperties.removePermit"
                        [displayProperties]="displayProperties"
-                       (cancel)="displayProperties.removePermit = false"
                        (confirm)="onRemovePermission()">
 </app-remove-permission>
 

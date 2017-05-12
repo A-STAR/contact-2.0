@@ -50,6 +50,8 @@
 
 .dialog_content {
   padding: 16px 24px 1px;
+  max-height: 80vh;
+  overflow-y: auto;
   background-color: #ffffff;
 }
 
