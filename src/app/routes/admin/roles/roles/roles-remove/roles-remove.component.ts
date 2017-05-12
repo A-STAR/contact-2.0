@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
-import { AuthService } from '../../../../../core/auth/auth.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
@@ -11,7 +10,7 @@ import { AbstractRolesPopup } from '../roles-abstract-popup';
 export class RolesRemoveComponent extends AbstractRolesPopup {
   controls = null;
 
-  constructor(protected authHttp: AuthHttp, protected authService: AuthService) {
+  constructor(private gridService: GridService) {
     super();
   }
 
@@ -19,7 +18,7 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
     return null;
   }
 
-  protected httpAction(baseUrl: string) {
-    return this.authHttp.delete(`${baseUrl}/api/roles/${this.role.id}`);
+  protected httpAction() {
+    return this.gridService.delete('/api/roles/{id}', this.role);
   };
 }
