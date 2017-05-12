@@ -1,4 +1,8 @@
 <app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>Удалить роль</h3>
+  </div>
+
   <p>Вы действительно хотите удалить роль {{ role.name }}?</p>
 
   <div dialog-footer>
