@@ -32,7 +32,7 @@ export class RolesEditComponent extends AbstractRolesPopup {
   }
 
   get popupTitle() {
-    return this.isUpdating() ? this.role.name : 'Новая роль';
+    return this.isUpdating() ? `Роль: ${this.role.id}` : 'Новая роль';
   }
 
   protected createForm(role: IRoleRecord) {
