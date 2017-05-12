@@ -23,8 +23,8 @@ export class PermissionsService {
     );
   }
 
-  public removePermission(role: IPermissionRole): Observable<any> {
-    return this.gridService.delete(`/api/roles/{id}/permits`, role);
+  public removePermission(role: IPermissionRole, permissionId: number): Observable<any> {
+    return this.gridService.delete(`/api/roles/{id}/permits/${permissionId}`, role);
   }
 
   public addPermission(role: IPermissionRole, permissionsIds: number []): Observable<any> {

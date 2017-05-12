@@ -40,7 +40,7 @@ export class AddPermissionComponent implements AfterViewInit {
    * @template
    */
   public ngAfterViewInit(): void {
-    this.addPermitGrid.load(this.currentRole);
+    this.addPermitGrid.load(this.currentRole).subscribe();
   }
 
   onSelectPermissions(permissions: IPermissionModel[]): void {

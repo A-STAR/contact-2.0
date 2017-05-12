@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDisplayProperties } from '../../roles.interface';
 
 @Component({
   selector: 'app-edit-permission',
@@ -9,9 +10,8 @@ import { IDynamicFormControl } from '../../../../../shared/components/form/dynam
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() displayProperties;
+  @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   controls: Array<IDynamicFormControl>;
@@ -68,13 +68,19 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Комментарий',
         controlName: 'comment',
-        type: 'text'
+        type: 'textarea'
       }
     ];
   }
 
+  onDisplayChange(event): void {
+    if (event === false) {
+      this.onCancel();
+    }
+  }
+
   onCancel() {
-    this.cancel.emit(false);
+    this.displayProperties.editPermit = false;
   }
 
   onSave() {
