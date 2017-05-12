@@ -50,7 +50,8 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Значение',
         controlName: 'value',
-        type: 'boolean'
+        type: 'dynamic',
+        dependsOn: 'typeCode'
       },
       {
         label: 'Описание',
