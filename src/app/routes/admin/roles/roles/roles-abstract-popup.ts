@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthService } from '../../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from './roles.interface';
 
@@ -13,8 +12,6 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   abstract controls: Array<IDynamicFormControl>;
 
-  protected authService: AuthService;
-
   ngOnChanges(changes: SimpleChanges) {
     this.form = this.createForm(changes.role.currentValue);
   }
@@ -26,18 +23,16 @@ export abstract class AbstractRolesPopup implements OnChanges {
   }
 
   onActionClick() {
-    this.getBaseUrl().then(baseUrl => {
-      this.httpAction(baseUrl)
-        .toPromise()
-        .then(data => {
-          if (data.ok) {
-            // TODO: check success === true in data.json()
-            this.onUpdate.emit();
-            this.close();
-          }
-        })
-        .catch(error => console.log(error));
-    });
+    this.httpAction()
+      .then(data => {
+        if (data.success) {
+          this.onUpdate.emit();
+          this.close();
+        } else {
+          throw new Error('Request error.');  // TODO: display error in popup dialog
+        }
+      })
+      .catch(error => console.log(error));
   }
 
   onCancelClick() {
@@ -46,11 +41,7 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   protected abstract createForm(role: IRoleRecord): FormGroup;
 
-  protected abstract httpAction(baseUrl: string);
-
-  protected getBaseUrl(): Promise<string> {
-    return this.authService.getRootUrl();
-  }
+  protected abstract httpAction();
 
   private close() {
     this.role = null;

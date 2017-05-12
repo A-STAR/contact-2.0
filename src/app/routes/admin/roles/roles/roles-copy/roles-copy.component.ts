@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthHttp } from 'angular2-jwt';
-import { AuthService } from '../../../../../core/auth/auth.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
@@ -15,18 +14,15 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
 
   controls: Array<IDynamicFormControl>;
 
-  constructor(protected authHttp: AuthHttp, protected authService: AuthService, private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private gridService: GridService) {
     super();
   }
 
   ngOnInit() {
-    this.getBaseUrl().then(baseUrl => {
-      this.authHttp.get(`${baseUrl}/api/roles`)
-        .toPromise()
-        .then(data => data.json())
-        .then(data => this.initControls(data))
-        .catch(error => console.log(error));
-    });
+    this.gridService
+      .read('/api/roles')
+      .then(data => this.initControls(data))
+      .catch(error => console.log(error));
   }
 
   private initControls(data) {
@@ -67,8 +63,8 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     });
   }
 
-  protected httpAction(baseUrl: string) {
+  protected httpAction() {
     const data = this.form.getRawValue();
-    return this.authHttp.post(`${baseUrl}/api/roles/${data.originalRoleId}/copy`, data);
+    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
 }
