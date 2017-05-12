@@ -9,7 +9,7 @@
       </div>
       <div class="panel-body">
         <p class="text-center pv">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
-        <form [formGroup]="valForm" class="form-validate mb-lg" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
+        <form [formGroup]="valForm" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
           <div class="form-group has-feedback">
             <input class="form-control" type="text" name="login" placeholder="{{ 'login.LOGIN_PLACEHOLDER' | translate }}" autocomplete="off" minlength="2" formControlName="login" required="" />
             <span class="fa fa-envelope form-control-feedback text-muted"></span>
@@ -35,8 +35,11 @@
                 <span class="fa fa-check"></span>{{ 'login.REMEMBER_ME' | translate }}
               </label>
             </div>
-            <div class="pull-right"><a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
+            <!--
+            <div class="pull-right">
+              <a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
             </div>
+            -->
           </div>
           <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
             {{ 'login.LOGIN_BUTTON' | translate }}
@@ -45,11 +48,6 @@
             {{ error | translate }}
           </span>
         </form>
-        <!-- <div class="alert alert-danger text-center" ></div> -->
-        <p class="pt-lg text-center">
-          {{ 'login.NO_ACCOUNT' | translate }}
-        </p>
-        <a class="btn btn-block btn-default" [routerLink]="'/register'">{{ 'login.REGISTER_BUTTON' | translate }}</a>
       </div>
     </div>
     <!-- END panel-->
