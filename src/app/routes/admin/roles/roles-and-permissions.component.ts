@@ -1,7 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
-import {IPermissionRole} from './permissions/permissions.interface';
-import {RolesComponent} from './roles/roles.component';
-import {ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.interface';
+import { Component, ViewChild } from '@angular/core';
+import { RolesComponent } from './roles/roles.component';
+import { IRoleRecord } from './roles/roles.interface';
+import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 
 @Component({
   selector: 'app-roles-and-permissions',
@@ -10,10 +10,10 @@ import {ToolbarActionTypeEnum} from '../../../shared/components/toolbar/toolbar.
 export class RolesAndPermissionsComponent {
 
   @ViewChild(RolesComponent) rolesComponent: RolesComponent;
-  currentRole: IPermissionRole;
+  currentRole: IRoleRecord;
 
-  onSelect(id) {
-    this.currentRole = {id};
+  onSelect(role: IRoleRecord) {
+    this.currentRole = role;
   }
 
   onRoleClone() {

@@ -1,5 +1,5 @@
 export interface IRoleRecord {
-  id?: number;
+  id: number;
   name: string;
   comment: string;
 }
