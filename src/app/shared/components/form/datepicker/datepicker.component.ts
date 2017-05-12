@@ -7,7 +7,7 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
   templateUrl: './datepicker.component.html',
   styles: [
     '.datepicker { display: inline-block; }',
-    '.dropdown { position: fixed; margin-top: 10px; z-index: 5000; }'
+    '.dropdown { position: fixed; margin-top: 10px; z-index: 20000; }'
   ]
 })
 export class DatePickerComponent implements OnInit, OnDestroy {
