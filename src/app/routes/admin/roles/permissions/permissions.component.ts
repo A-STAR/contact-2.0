@@ -1,7 +1,7 @@
 import {
-  Component, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild, AfterViewInit
+  Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
+
 import { TableColumn } from '@swimlane/ngx-datatable';
 
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
@@ -29,7 +29,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
-  @Output() cloneRole: EventEmitter<IPermissionRole> = new EventEmitter<IPermissionRole>();
 
   columns: Array<TableColumn> = [
     { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -55,7 +54,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.CLONE,
     ToolbarActionTypeEnum.ADD,
   ];
 
@@ -97,9 +95,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
         break;
       case ToolbarActionTypeEnum.REMOVE:
         this.displayProperties.removePermit = true;
-        break;
-      case ToolbarActionTypeEnum.CLONE:
-        this.cloneRole.emit(this.currentRole);
         break;
     }
   }

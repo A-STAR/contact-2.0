@@ -68,9 +68,15 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Комментарий',
         controlName: 'comment',
-        type: 'text'
+        type: 'textarea'
       }
     ];
+  }
+
+  onDisplayChange(event): void {
+    if (event === false) {
+      this.onCancel();
+    }
   }
 
   onCancel() {
