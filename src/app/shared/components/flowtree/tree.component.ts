@@ -3,19 +3,19 @@ import {
   Component,
   Input,
   AfterContentInit,
-  OnDestroy,
   Output,
   EventEmitter,
-  OnInit,
   ContentChildren,
   QueryList,
   TemplateRef,
-  Optional,
-  ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+  ViewEncapsulation, HostListener, Renderer2
+} from '@angular/core';
+
+import { DragulaService } from 'ng2-dragula';
+
 import { TreeNode } from './common/api';
-import { TreeDragDropService } from './common/treedragdrop.service';
-import { PrimeTemplate, SharedModule } from './common/shared';
+import { PrimeTemplate } from './common/shared';
+import { ITreeNodeDragAndDropPayload } from './tree.interface';
 
 @Component({
     selector: 'app-tree',
@@ -23,7 +23,7 @@ import { PrimeTemplate, SharedModule } from './common/shared';
     templateUrl: './tree.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
+export class TreeComponent implements AfterContentInit {
 
     @Input() value: TreeNode[];
 
@@ -43,8 +43,6 @@ export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
 
     @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
 
-    @Output() onNodeDrop: EventEmitter<any> = new EventEmitter();
-
     @Input() style: any;
 
     @Input() styleClass: string;
@@ -53,19 +51,13 @@ export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
 
     @Input() layout = 'vertical';
 
-    @Input() draggableScope: any;
-
-    @Input() droppableScope: any;
-
-    @Input() draggableNodes: boolean;
-
-    @Input() droppableNodes: boolean;
-
     @Input() metaKeySelection = true;
 
     @Input() propagateSelectionUp = true;
 
     @Input() propagateSelectionDown = true;
+
+  @Output() changeLocation: EventEmitter<ITreeNodeDragAndDropPayload> = new EventEmitter();
 
     @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
@@ -73,49 +65,111 @@ export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
 
     public nodeTouched: boolean;
 
-    public dragNodeTree: TreeComponent;
-
-    public dragNode: TreeNode;
-
-    public dragNodeSubNodes: TreeNode[];
-
-    public dragNodeIndex: number;
-
-    public dragNodeScope: any;
-
     public dragHover: boolean;
 
-    public dragStartSubscription: Subscription;
+    private _clientX: number;
+  private _clientY: number;
 
-    public dragStopSubscription: Subscription;
+  private _mirrorPosition;
 
-    constructor(@Optional() public dragDropService: TreeDragDropService) {}
+  private _isPutted: boolean;
 
-    ngOnInit() {
-        if (this.droppableNodes) {
-            this.dragStartSubscription = this.dragDropService.dragStart$.subscribe(
-              event => {
-                this.dragNodeTree = event.tree;
-                this.dragNode = event.node;
-                this.dragNodeSubNodes = event.subNodes;
-                this.dragNodeIndex = event.index;
-                this.dragNodeScope = event.scope;
-            });
+  @HostListener('mousemove', ['$event'])
+  onMousemove(event: MouseEvent) {
 
-            this.dragStopSubscription = this.dragDropService.dragStop$.subscribe(
-              event => {
-                this.dragNodeTree = null;
-                this.dragNode = null;
-                this.dragNodeSubNodes = null;
-                this.dragNodeIndex = null;
-                this.dragNodeScope = null;
-                this.dragHover = false;
-            });
+   this._clientX = event.clientX;
+    this._clientY = event.clientY;
+  }
+
+  constructor(private dragulaService: DragulaService,
+              private renderer2: Renderer2) {
+
+    dragulaService.drag.subscribe((value) => {
+      this._isPutted = false;
+    });
+
+      dragulaService.dragend.subscribe((value) => {
+        const attr = value[1].getAttribute('nodeid');
+        this.renderer2.removeChild(value[1].parentNode, value[1]);
+
+        if (this._isPutted) {
+          return;
         }
+
+        const elements: HTMLCollectionOf<Element> = document.getElementsByClassName('ui-treenode-content');
+
+        const a = [];
+
+        Array.prototype.forEach.call(elements, (el) => {
+          // Do stuff here
+         // console.log(el.tagName);
+          const elPos = this.getOffset(el);
+          const x1 = elPos.left;
+          const x2 = elPos.left + elPos.width;
+          const y1 = elPos.top;
+          const y2 = elPos.top + elPos.height;
+
+          if (this._mirrorPosition) {
+            const x1Mirror = this._mirrorPosition.left;
+            const x2Mirror = this._mirrorPosition.left + this._mirrorPosition.width;
+            const y1Mirror = this._mirrorPosition.top;
+            const y2Mirror = this._mirrorPosition.top + this._mirrorPosition.height;
+
+            if ((x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
+              (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
+              (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
+              (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
+             // console.log('OK: ', elPos.nodeId);
+              a.push(elPos.nodeId);
+            }
+          }
+        });
+
+        if (a.length === 2) {
+          console.log('ARRAY: ', a);
+
+          this.changeLocation.emit({
+            swap: true,
+            target: a[0],
+            source: attr
+          });
+        }
+
+
+      });
+      dragulaService.drop.subscribe((value) => {
+        this._mirrorPosition = this.getOffset(document.getElementsByClassName('gu-mirror')[0]);
+
+        if (value[1] && value[2]) {
+          this.changeLocation.emit({
+            swap: false,
+            source: value[1].getAttribute('nodeid'),
+            target: value[2].getAttribute('nodeid')
+          });
+
+          this._isPutted = true;
+        }
+      });
     }
+
+  getOffset(el) {
+    const t = el;
+    let _x = 0;
+    let _y = 0;
+    while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+      _x += el.offsetLeft - el.scrollLeft;
+      _y += el.offsetTop - el.scrollTop;
+      el = el.offsetParent;
+    }
+    return {top: _y, left: _x, width: t.clientWidth, height: t.clientHeight, nodeId: t.getAttribute('nodeid')};
+  }
 
     get horizontal(): boolean {
         return this.layout === 'horizontal';
+    }
+
+    onChangeLocation(a) {
+        this.changeLocation.emit(a);
     }
 
     ngAfterContentInit() {
@@ -220,10 +274,6 @@ export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
         }
 
         this.nodeTouched = false;
-    }
-
-    onNodeTouchEnd() {
-        this.nodeTouched = true;
     }
 
     onNodeRightClick(event: MouseEvent, node: TreeNode) {
@@ -347,108 +397,4 @@ export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
             return null;
         }
     }
-
-    onDragOver(event) {
-        if (this.droppableNodes && (!this.value || this.value.length === 0)) {
-            event.dataTransfer.dropEffect = 'move';
-            event.preventDefault();
-        }
-    }
-
-    onDrop(event) {
-        if (this.droppableNodes && (!this.value || this.value.length === 0)) {
-            event.preventDefault();
-            const dragNode = this.dragNode;
-            if (this.allowDrop(dragNode, null, this.dragNodeScope)) {
-                const { dragNodeIndex } = this;
-                this.dragNodeSubNodes.splice(dragNodeIndex, 1);
-                this.value = this.value||[];
-                this.value.push(dragNode);
-
-                this.dragDropService.stopDrag({
-                    node: dragNode
-                });
-            }
-        }
-    }
-
-    onDragEnter(event) {
-        if (this.droppableNodes && this.allowDrop(this.dragNode, null, this.dragNodeScope)) {
-            this.dragHover = true;
-        }
-    }
-
-    onDragLeave(event) {
-        if (this.droppableNodes) {
-            const rect = event.currentTarget.getBoundingClientRect();
-            if (event.x > rect.left + rect.width || event.x < rect.left || event.y > rect.top + rect.height || event.y < rect.top) {
-               this.dragHover = false;
-            }
-        }
-    }
-
-    allowDrop(dragNode: TreeNode, dropNode: TreeNode, dragNodeScope: any): boolean {
-        if (!this.isValidDragScope(dragNodeScope)) {
-            return false;
-        }
-
-        let allow = true;
-
-        if (dropNode) {
-            if (dragNode === dropNode) {
-                allow = false;
-            } else {
-                let parent = dropNode.parent;
-                while (parent != null) {
-                    if (parent === dragNode) {
-                        allow = false;
-                        break;
-                    }
-                    parent = parent.parent;
-                }
-            }
-        }
-
-        return allow;
-    }
-
-    isValidDragScope(dragScope: any): boolean {
-        const dropScope = this.droppableScope;
-
-        if (!dropScope) {
-            return true;
-        }
-
-        if (typeof dropScope === 'string') {
-            if (typeof dragScope === 'string') {
-                return dropScope === dragScope;
-            } else if (dragScope instanceof Array) {
-                return (<Array<any>>dragScope).indexOf(dropScope) !== -1;
-            }
-        } else if (dropScope instanceof Array) {
-            if (typeof dragScope === 'string') {
-                return (<Array<any>>dropScope).indexOf(dragScope) !== -1;
-            } else if (dragScope instanceof Array) {
-                for (const s of dropScope) {
-                    for (const ds of dragScope) {
-                        if (s === ds) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    ngOnDestroy() {
-        if (this.dragStartSubscription) {
-            this.dragStartSubscription.unsubscribe();
-        }
-
-        if (this.dragStopSubscription) {
-            this.dragStopSubscription.unsubscribe();
-        }
-    }
 }
-

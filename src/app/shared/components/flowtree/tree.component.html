@@ -9,7 +9,8 @@
     (dragleave)="onDragLeave($event)">
     <ul class="ui-tree-container">
         <app-tree-node *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index" [node]="node"
-        [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></app-tree-node>
+        (changeLocation)="onChangeLocation($event)"
+                       [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></app-tree-node>
     </ul>
 </div>
 <div
@@ -19,10 +20,10 @@
     *ngIf="horizontal">
     <div *ngIf="value && value[0]">
         <table *ngIf="value[0].children">
-            <app-tree-node [node]="child" [root]="true" *ngFor="let child of value[0].children"></app-tree-node>
+            <app-tree-node (changeLocation)="onChangeLocation($event)" [node]="child" [root]="true" *ngFor="let child of value[0].children"></app-tree-node>
         </table>
         <table *ngIf="!value[0].children">
-            <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
+            <app-tree-node (changeLocation)="onChangeLocation($event)" [node]="value[0]" [root]="true"></app-tree-node>
         </table>
     </div>
 </div>
