@@ -98,8 +98,6 @@
         "PASSWORD_PLACEHOLDER": "Пароль",
         "REMEMBER_ME": "Запомнить меня",
         "FORGOT_PASSWORD": "Забыли пароль?",
-        "NO_ACCOUNT": "Нет аккаунта?",
-        "LOGIN_BUTTON": "Войти",
-        "REGISTER_BUTTON": "Зарегистрироваться"
+        "LOGIN_BUTTON": "Войти"
     }
 }
