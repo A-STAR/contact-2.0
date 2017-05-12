@@ -38,7 +38,9 @@
             <div class="pull-right"><a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
             </div>
           </div>
-          <button class="btn btn-block btn-primary mt-lg" type="submit">{{ 'login.LOGIN_BUTTON' | translate }}</button>
+          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
+            {{ 'login.LOGIN_BUTTON' | translate }}
+          </button>
           <span class="text-danger" *ngIf="error">
             {{ error | translate }}
           </span>
