@@ -139,11 +139,11 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   onRemovePermission(): void {
     const permissionId: number = this.editedPermission.id;
-    this.permissionsService.removePermission(this.currentRole)
+    this.permissionsService.removePermission(this.currentRole, permissionId)
       .subscribe(
         () => {
           this.displayProperties.removePermit = false;
-          this.permitsGrid.removeRowById(permissionId);
+          this.refreshGrid();
         },
         // TODO: display & log a message
         err => console.error(err)
