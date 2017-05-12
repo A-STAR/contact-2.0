@@ -5,8 +5,12 @@
 
   <p>Вы действительно хотите удалить роль {{ role.name }}?</p>
 
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
   <div dialog-footer>
-    <button class="btn btn-danger" (click)="onActionClick()">
+    <button class="btn btn-danger" (click)="onActionClick()" [disabled]="!canSubmit">
       <i class="fa fa-check"></i> Да
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">

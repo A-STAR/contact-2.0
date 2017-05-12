@@ -53,7 +53,6 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         label: 'Комментарий',
         controlName: 'comment',
         type: 'textarea',
-        required: true,
         rows: 2
       },
     ];
@@ -63,7 +62,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     return this.formBuilder.group({
       originalRoleId: [ this.originalRole.id, Validators.required ],
       name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment, Validators.required ],
+      comment: [ this.role.comment ],
     });
   }
 
