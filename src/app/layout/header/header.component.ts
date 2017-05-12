@@ -77,6 +77,6 @@ export class HeaderComponent implements OnInit {
 
     logout(event) {
       event.preventDefault();
-      this.authService.logout();
+      this.authService.logout().subscribe();
     }
 }
