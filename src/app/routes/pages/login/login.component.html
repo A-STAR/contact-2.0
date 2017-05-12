@@ -31,14 +31,16 @@
           <div class="clearfix">
             <div class="checkbox c-checkbox pull-left mt0">
               <label>
-                <input type="checkbox" value="" name="account_remember"/>
+                <input type="checkbox" value="" name="account_remember" formControlName="account_remember"/>
                 <span class="fa fa-check"></span>{{ 'login.REMEMBER_ME' | translate }}
               </label>
             </div>
             <div class="pull-right"><a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
             </div>
           </div>
-          <button class="btn btn-block btn-primary mt-lg" type="submit">{{ 'login.LOGIN_BUTTON' | translate }}</button>
+          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
+            {{ 'login.LOGIN_BUTTON' | translate }}
+          </button>
           <span class="text-danger" *ngIf="error">
             {{ error | translate }}
           </span>

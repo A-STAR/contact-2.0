@@ -12,6 +12,7 @@ import { TranslatorService } from '../../../core/translator/translator.service';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+    static LOGIN_KEY = 'auth-login';
 
     valForm: FormGroup;
 
@@ -24,18 +25,24 @@ export class LoginComponent {
         private router: Router,
         private translator: TranslatorService,
     ) {
+        const login = this.login;
+        const remember = !!login;
+
         this.valForm = fb.group({
-            'login': [null, Validators.compose([Validators.required, Validators.minLength(2)])],
-            'password': [null, Validators.required]
+            'login': [login, Validators.compose([Validators.required, Validators.minLength(2)])],
+            'password': [null, Validators.required],
+            'account_remember': [remember],
         });
 
         this.valForm.valueChanges.subscribe(() => this.error = null);
     }
 
     submitForm(event, value: any) {
-        this.error = null;
-
         event.preventDefault();
+
+        this.error = null;
+        this.login = value.account_remember ? value.login : null;
+
         [].forEach.call(this.valForm.controls, ctrl => {
             ctrl.markAsTouched();
         });
@@ -49,6 +56,18 @@ export class LoginComponent {
                     this.router.navigate([redirectUrl]);
                 })
                 .catch(error => this.error = error.message);
+        }
+    }
+
+    private get login() {
+        return localStorage.getItem(LoginComponent.LOGIN_KEY);
+    }
+
+    private set login(login) {
+        if (login) {
+            localStorage.setItem(LoginComponent.LOGIN_KEY, login);
+        } else {
+            localStorage.removeItem(LoginComponent.LOGIN_KEY);
         }
     }
 }
