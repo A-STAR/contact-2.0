@@ -4,6 +4,8 @@ import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 
 const TOKEN_NAME = 'auth/token';
 
@@ -43,18 +45,18 @@ export class AuthService implements CanActivate, OnInit {
     this.getRootUrl();
   }
 
-  getRootUrl(): Promise<string> {
+  getRootUrl(): Observable<string> {
     if (this.rootUrl) {
-      return Promise.resolve(this.rootUrl);
+      return Observable.of(this.rootUrl);
     }
 
     return this.http.get('./assets/server/root.json')
-      .toPromise()
-      .then(resp => {
-        this.rootUrl = resp.json().url;
-        return this.rootUrl;
-      })
-      .catch(err => console.error(err));
+      .map(resp => resp.json().url)
+      .do(root => this.rootUrl = root)
+      .catch(err => {
+        console.error(err);
+        throw err;
+      });
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -68,52 +70,49 @@ export class AuthService implements CanActivate, OnInit {
     return false;
   }
 
-  authenticate(login: string, password: string): Promise<boolean> {
+  authenticate(login: string, password: string): Observable<boolean> {
     const body = JSON.stringify({ login, password });
 
     return this.getRootUrl()
-      .then(root => {
+      .flatMap((root: string) => {
         return this.http.post(`${root}/auth/login`, body)
-          .toPromise()
-          .then((resp: Response) => {
-            this.saveToken(resp);
-            return this.authenticated = true;
-          });
-      })
-      .catch(error => {
-        this.authenticated = false;
-        const { message } = error.json();
-        throw new Error(message);
-      })
-      .catch(error => {
-        throw new Error(this.getErrorMessage(error.message));
+          .do((resp: Response) => this.saveToken(resp))
+          .do((resp: Response) => this.authenticated = true)
+          .catch(error => {
+            const { message } = error.json();
+            this.authenticated = false;
+            throw new Error(this.getErrorMessage(error.message));
+          })
+          .map(resp => true);
       });
   }
 
-  logout(): Promise<boolean> {
+  logout(): Observable<boolean> {
     return this.getRootUrl()
-      .then(root => {
+      .flatMap(root => {
         return this.http.get(`${root}/auth/logout`)
-        .toPromise()
-        .then((response: Response) => {
-          removeToken();
-          this.redirectToLogin();
-          return this.authenticated = false;
-        });
-      })
-      .catch(error => {
-        console.error(error.statusText || error.status || 'Request error');
-        return this.authenticated = false;  // FIXME
+          .do((resp: Response) => {
+            removeToken();
+            this.authenticated = false;
+            this.redirectToLogin();
+          })
+          .catch(error => {
+            console.error(error.statusText || error.status || 'Request error');
+            // FIXME
+            this.authenticated = false;
+            throw new Error(error);
+          })
+          .map(resp => true);
       });
   }
 
-  redirectToLogin(url = null) {
+  redirectToLogin(url: string = null) {
     this.clearTokenTimer();
     this.redirectUrl = url || this.router.url || '/home';
     this.router.navigate(['/login']);
   }
 
-  private getErrorMessage(message = null) {
+  private getErrorMessage(message: any = null) {
     switch (message) {
       case 'login.invalidCredentials':
         return 'validation.login.INVALID_CREDENTIALS';
@@ -141,14 +140,11 @@ export class AuthService implements CanActivate, OnInit {
 
   private refreshToken() {
     return this.getRootUrl()
-      .then(root => {
-        return this.http.get(`${root}/api/refresh`)
-          .toPromise()
-          .then((resp: Response) => {
-            this.saveToken(resp);
-          });
-      })
-      .catch(() => this.redirectToLogin());
+      .flatMap(root => this.http.get(`${root}/api/refresh`))
+      .subscribe(
+        resp => this.saveToken(resp),
+        () => this.redirectToLogin()
+      );
   }
 
   private saveToken(response: Response) {

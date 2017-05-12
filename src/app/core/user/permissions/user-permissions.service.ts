@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { from } from 'rxjs/observable/from';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissions.interface';
 
@@ -11,19 +10,17 @@ export class UserPermissionsService {
 
   constructor(private gridService: GridService) {
     // TODO Temp solution
-    this.loadUserPermissions();
+    this.loadUserPermissions().subscribe();
   }
 
   public loadUserPermissions(): Observable<IUserPermissionsResponse> {
-    return from(
-      this.gridService.read('/api/userpermits').then(
-        (response: IUserPermissionsResponse) => {
-          response.userPermits.forEach((userPermission: IUserPermissionModel) => {
-            this.userPermits.set(userPermission.name, this.toUserPermissionValue(userPermission));
-          });
-          return response;
-        })
-    );
+    return this.gridService.read('/api/userpermits')
+      .map((response: IUserPermissionsResponse) => {
+        response.userPermits.forEach((userPermission: IUserPermissionModel) => {
+          this.userPermits.set(userPermission.name, this.toUserPermissionValue(userPermission));
+        });
+        return response;
+      });
   }
 
   public hasPermission(permissionName: string): boolean {

@@ -76,21 +76,15 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
-  /**
-   * @override
-   */
   public ngAfterViewInit() {
     this.refreshGrid();
   }
 
-  /**
-   * @override
-   */
   public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     this.refreshGrid();
   }
 
-  private onAction(action: IToolbarAction) {
+  private onAction(action: IToolbarAction): void {
     this.displayProperties.editPermit = false;
     this.displayProperties.addPermit = false;
     this.displayProperties.removePermit = false;
@@ -111,50 +105,67 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  onBeginEditPermission() {
+  onBeginEditPermission(): void {
     this.displayProperties.editPermit = true;
   }
 
-  onSelectPermissions(records: IPermissionModel[]) {
+  onSelectPermissions(records: IPermissionModel[]): void {
     if (records.length) {
       this.editedPermission = records[0];
     }
     this.refreshToolbar(records);
   }
 
-  onEditPermission(permission: IPermissionModel) {
+  onEditPermission(permission: IPermissionModel): void {
     const permissionId: number = this.editedPermission.id;
     this.permissionsService.editPermission(this.currentRole, permissionId, permission)
-      .then(() => {
-        this.displayProperties.editPermit = false;
-        this.refreshGrid();
-      });
+      .subscribe(
+        () => {
+          this.displayProperties.editPermit = false;
+          this.refreshGrid();
+        },
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
-  onAddPermissions(addedPermissions: IPermissionModel[]) {
+  onAddPermissions(addedPermissions: IPermissionModel[]): void {
     const permissionsIds: number [] = addedPermissions.map((rec: IPermissionModel) => rec.id);
 
     this.permissionsService.addPermission(this.currentRole, permissionsIds)
-      .then(() => {
-        this.displayProperties.addPermit = false;
-        this.refreshGrid();
-      });
+      .subscribe(
+        () => {
+          this.displayProperties.addPermit = false;
+          this.refreshGrid();
+        },
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
-  onRemovePermission() {
+  onRemovePermission(): void {
     const permissionId: number = this.editedPermission.id;
     this.permissionsService.removePermission(this.currentRole)
-      .then(() => {
-        this.displayProperties.removePermit = false;
-        this.permitsGrid.removeRowById(permissionId);
-      });
+      .subscribe(
+        () => {
+          this.displayProperties.removePermit = false;
+          this.permitsGrid.removeRowById(permissionId);
+        },
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
-  private loadGrid(): Promise<any> {
-    return this.permitsGrid.load(this.currentRole).then(() => this.refreshToolbar());
+  private loadGrid(): void {
+    this.permitsGrid.load(this.currentRole)
+      .subscribe(
+        () => this.refreshToolbar(),
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
-  private refreshGrid() {
+  private refreshGrid(): void {
     if (!this.permitsGrid) {
       return;
     }
@@ -166,7 +177,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private refreshToolbar(permissions: IPermissionModel[] = []) {
+  private refreshToolbar(permissions: IPermissionModel[] = []): void {
     const isRoleSelected: boolean = !!this.currentRole;
     const isRolePermissionSelected: boolean = permissions.length > 0;
 
@@ -174,7 +185,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
   }
 
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean) {
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
     actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
       this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });

@@ -35,12 +35,15 @@ export class SortableComponent implements OnInit {
     this.gridService
       .localRequest()
       .read('assets/server/100k.json')
-      .then(data => {
-        setTimeout(() => {
-          this.value = data.slice(0, this.totalRecords);
-          this.loading = false;
-        }, 2000);
-      })
-      .catch(() => this.loading = false );
+      .subscribe(
+        data => {
+          setTimeout(() => {
+            this.value = data.slice(0, this.totalRecords);
+            this.loading = false;
+          }, 2000);
+        },
+        () => {},
+        () => this.loading = false
+      );
   }
 }

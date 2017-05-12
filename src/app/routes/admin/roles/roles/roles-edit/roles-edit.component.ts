@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
@@ -47,8 +48,8 @@ export class RolesEditComponent extends AbstractRolesPopup {
       this.httpActionCreate();
   }
 
-  private isUpdating() {
-    return this.role && this.role.name;
+  private isUpdating(): boolean {
+    return !!(this.role && this.role.name);
   }
 
   private httpActionCreate() {

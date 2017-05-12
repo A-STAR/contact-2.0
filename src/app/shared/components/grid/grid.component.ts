@@ -6,6 +6,7 @@ import { Component,
   EventEmitter,
   Input,
   Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 import { IDataSource, TSelectionType } from './grid.interface';
@@ -68,7 +69,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     if (this.autoLoad) {
-      this.load(this.initialParameters);
+      this.load(this.initialParameters).subscribe();
     }
     this.selectionType = this.selectionType || 'multi';
   }
@@ -87,14 +88,18 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
-  load(parameters?: IParameters): Promise<any> {
+  load(parameters?: IParameters): Observable<any> {
     return this.gridService
       .read(this.dataSource.read, parameters)
-      .then(data => this.rows = this.parseFn(data))
-      .catch(err => console.error(err));
+      .map(data => this.parseFn(data))
+      .do(data => this.rows = data)
+      .catch(err => {
+        console.error(err);
+        throw new Error(err);
+      });
   }
 
-  update(routeParams: object, body: object) {
+  update(routeParams: object, body: object): Observable<any> {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
@@ -102,19 +107,19 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.onRowSelect.emit(selected);
   }
 
-  clear() {
+  clear(): void {
     this.rows = [];
   }
 
-  onActionClick(event) {
+  onActionClick(event): void {
     this.onAction.emit(event);
   }
 
-  findRowById(id: number) {
+  findRowById(id: number): any {
     return this.rows.find((item: { id: number }) => item.id === id);
   }
 
-  removeRowById(id: number) {
+  removeRowById(id: number): void {
     const index: number = this.rows.findIndex((item: { id: number }) => item.id === id);
     this.rows.splice(index, 1);
   }

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
@@ -21,8 +22,11 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   ngOnInit() {
     this.gridService
       .read('/api/roles')
-      .then(data => this.initControls(data))
-      .catch(error => console.log(error));
+      .subscribe(
+        data => this.initControls(data),
+        // TODO: display & log message
+        error => console.log(error)
+      );
   }
 
   private initControls(data) {
@@ -55,7 +59,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected createForm(role: IRoleRecord) {
+  protected createForm(role: IRoleRecord): FormGroup {
     return this.formBuilder.group({
       originalRoleId: [ this.originalRole.id, Validators.required ],
       name: [ this.role.name, Validators.required ],
@@ -63,7 +67,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     });
   }
 
-  protected httpAction() {
+  protected httpAction(): Observable<any> {
     const data = this.form.getRawValue();
     return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
