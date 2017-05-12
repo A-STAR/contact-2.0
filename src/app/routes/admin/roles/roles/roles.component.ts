@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -11,7 +9,7 @@ import { IRoleRecord } from './roles.interface';
   templateUrl: './roles.component.html'
 })
 export class RolesComponent {
-  @Output() onSelect: EventEmitter<number> = new EventEmitter();
+  @Output() onSelect: EventEmitter<IRoleRecord> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
   currentRole: IRoleRecord = null;
@@ -43,9 +41,6 @@ export class RolesComponent {
     dataKey: 'roles',
   };
 
-  constructor(private formBuilder: FormBuilder) {
-  }
-
   get isRoleBeingCreatedOrEdited(): boolean {
     return this.currentRole && (this.action === ToolbarActionTypeEnum.ADD || this.action === ToolbarActionTypeEnum.EDIT);
   }
@@ -66,9 +61,7 @@ export class RolesComponent {
   onSelectedRowChange(roles: Array<IRoleRecord>): void {
     const role = roles[0];
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
-      this.selectedRole = role;
-      this.onSelect.emit(this.selectedRole.id);
-      this.refreshToolbar();
+      this.selectRole(role);
     }
   }
 
@@ -107,7 +100,13 @@ export class RolesComponent {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
-  private createEmptyRole() {
+  private selectRole(role = null) {
+    this.selectedRole = role;
+    this.onSelect.emit(role);
+    this.refreshToolbar();
+  }
+
+  private createEmptyRole(): IRoleRecord {
     return {
       id: null,
       name: '',

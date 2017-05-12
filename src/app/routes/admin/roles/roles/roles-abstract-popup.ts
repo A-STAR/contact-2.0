@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from '../../../../core/auth/auth.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from './roles.interface';
 
@@ -14,8 +13,6 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   abstract controls: Array<IDynamicFormControl>;
 
-  protected authService: AuthService;
-
   ngOnChanges(changes: SimpleChanges) {
     this.form = this.createForm(changes.role.currentValue);
   }
@@ -27,18 +24,14 @@ export abstract class AbstractRolesPopup implements OnChanges {
   }
 
   onActionClick(): void {
-    this.getBaseUrl()
+    this.httpAction()
       .subscribe(
-        baseUrl => {
-        this.httpAction(baseUrl)
-          .toPromise()
-          .then(data => {
-            if (data.ok) {
-              // TODO: check success === true in data.json()
-              this.onUpdate.emit();
-              this.close();
-            }
-          });
+        data => {
+          if (data.ok) {
+            // TODO: check success === true in data.json()
+            this.onUpdate.emit();
+            this.close();
+          }
         },
         // TODO: display & log a message
         error => console.log(error)
@@ -51,11 +44,7 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   protected abstract createForm(role: IRoleRecord): FormGroup;
 
-  protected abstract httpAction(baseUrl: string);
-
-  protected getBaseUrl(): Observable<string> {
-    return this.authService.getRootUrl();
-  }
+  protected abstract httpAction(): Observable<any>;
 
   private close(): void {
     this.role = null;
