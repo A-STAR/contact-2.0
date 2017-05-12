@@ -25,24 +25,32 @@
 }
 
 .dialog_header {
-  padding: 14px 24px;
-  background-color: #add8e6;
+  /* can be extended wherever necessary */
+  outline: none;
 }
 
-.dialog_header /deep/ h3 {
-  margin: 0;
-  font-weight: 400;
+.dialog_header /deep/ {
+  [dialog-header] {
+    padding: 14px 24px;
+    background-color: #add8e6;
+  }
+
+  h3 {
+    margin: 0;
+    font-weight: 400;
+  }
 }
 
 .dialog_footer {
-  padding: 12px 32px 13px;
+  padding: 12px 24px;
   text-align: right;
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
   border-top: 1px solid #eee;
 }
 
 .dialog_content {
   padding: 16px 24px 1px;
+  background-color: #ffffff;
 }
 
 .dialog_close {

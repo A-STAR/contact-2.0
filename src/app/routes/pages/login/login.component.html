@@ -9,7 +9,7 @@
       </div>
       <div class="panel-body">
         <p class="text-center pv">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
-        <form [formGroup]="valForm" class="form-validate mb-lg" role="form" name="loginForm" novalidate="" (submit)="submitForm($event, valForm.value)">
+        <form [formGroup]="valForm" class="form-validate mb-lg" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
           <div class="form-group has-feedback">
             <input class="form-control" type="text" name="login" placeholder="{{ 'login.LOGIN_PLACEHOLDER' | translate }}" autocomplete="off" minlength="2" formControlName="login" required="" />
             <span class="fa fa-envelope form-control-feedback text-muted"></span>
