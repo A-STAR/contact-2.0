@@ -1,0 +1,16 @@
+<app-roles-edit [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingCreatedOrEdited"></app-roles-edit>
+<app-roles-copy [(role)]="currentRole" [originalRole]="selectedRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingCopied"></app-roles-copy>
+<app-roles-remove [(role)]="currentRole" (onUpdate)="onUpdate()" *ngIf="isRoleBeingRemoved"></app-roles-remove>
+
+<app-grid
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [parseFn]="parseFn"
+  [editPermission]="'ROLE_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit($event)"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>

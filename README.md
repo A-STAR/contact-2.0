@@ -27,17 +27,9 @@ Before running the tests make sure you are serving the app via `ng serve`.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-## Gitflow
-
-### Git global setup
-```
-git config --global user.name "Tymchuk Alexander"
-git config --global user.email "a.tymchuk@crif.com"
-```
-
 ### Clone this project
 ```
-git clone http://a.tymchuk@repository2.luxbase.int/Contact-2.0/front-end-prototype.git
+git clone http://repository2.luxbase.int/Contact-2.0/front-end.git
 cd front-end-prototype
 touch README.md
 git add README.md
@@ -48,7 +40,7 @@ git push -u origin master
 ## Production build
 
 ### Prerequisites
-* install node.js engine
+* install node.js engine >= v6.9
 * install git bash
 * clone this repository
 
@@ -60,9 +52,3 @@ git push -u origin master
 ### Running
 * cd to the `/dist` folder
 * serve the folder contents with any http server, i.e. `python -m SimpleHTTPServer 9000 .`
-
-## Questions
-* Implement record blocking for preventing concurrent edits
-* <del>Transaction isolation for large datasets</del> - withheld
-* App logo in svg
-* Menu icons designed in svg

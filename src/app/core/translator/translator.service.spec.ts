@@ -5,14 +5,14 @@ import { TranslatorService } from './translator.service';
 import { SharedModule } from '../../shared/shared.module';
 
 describe('Service: Translator', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [SharedModule],
-            providers: [TranslatorService]
-        });
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [SharedModule],
+      providers: [TranslatorService]
     });
+  });
 
-    it('should ...', inject([TranslatorService], (service: TranslatorService) => {
-        expect(service).toBeTruthy();
-    }));
+  it('should inject the translation service', inject([TranslatorService], (service: TranslatorService) => {
+    expect(service).toBeTruthy();
+  }));
 });

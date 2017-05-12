@@ -6,10 +6,18 @@ import { Component,
   EventEmitter,
   Input,
   Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { TranslateService } from '@ngx-translate/core';
+import { IDataSource, TSelectionType } from './grid.interface';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { SettingsService } from '../../../core/settings/settings.service';
+import { GridService } from './grid.service';
+import { IToolbarAction } from '../toolbar/toolbar.interface';
 
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridService } from '../../../shared/components/grid/grid.service';
+interface IParameters {
+  [index: string]: any;
+}
 
 @Component({
   selector: 'app-grid',
@@ -19,11 +27,18 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  @Input() selectionType: TSelectionType;
   @Input() autoLoad = true;
+  @Input() editPermission;
   @Input() parseFn: Function;
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
+  @Input() styles: { [key: string]: any };
+  @Input() initialParameters: IParameters;
+  @Input() bottomActions: IToolbarAction[];
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
+  @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onAction: EventEmitter<any> = new EventEmitter();
 
   element: HTMLElement;
   rows: Array<any> = [];
@@ -36,48 +51,84 @@ export class GridComponent implements OnInit, AfterViewInit {
     pagerPrevious: 'fa fa-angle-double-left',
     pagerNext: 'fa fa-angle-double-right',
   };
+  messages: object = {};
 
-  constructor(private gridService: GridService, element: ElementRef) {
-    this.element = element.nativeElement;
-    this.parseFn = this.parseFn || function (data) { return data; };
+  constructor(
+    private gridService: GridService,
+    public settings: SettingsService,
+    private translate: TranslateService,
+    private userPermissionsService: UserPermissionsService,
+  ) {
+    this.parseFn = this.parseFn || function (data: any): any { return data; };
+    this.translate.get('grid.messages')
+      .subscribe(
+        messages => this.messages = messages,
+        error => console.error(error)
+      );
   }
 
   ngOnInit() {
     if (this.autoLoad) {
-      this.load();
+      this.load(this.initialParameters).subscribe();
     }
+    this.selectionType = this.selectionType || 'multi';
   }
 
   ngAfterViewInit() {
-    // set up the height of datatable - it does not work with height specified
-    const height = this.element.offsetHeight;
-    // this.dataTableRef.nativeElement.style.height = `${height}px`;
-    // this.dataTable.recalculate();
-    // this.dataTable.bodyHeight = 400;
+    // Define a possible height of the datatable
+    // 43px - tab height,
+    // 2x15px - top & bottom padding around the grid
+    // 8px => - to be examined ?
+    if (this.styles) {
+      // Don't set the full height if the `styles` param is not set
+      return;
+    }
+    const offset = 43 + 15 + 15 + 8;
+    const height = this.settings.getContentHeight() - offset;
+    this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
-  load() {
-    this.gridService
-      .read(this.dataSource.read)
-      .then(data => this.rows = this.parseFn(data))
-      .catch(err => console.error(err));
+  load(parameters?: IParameters): Observable<any> {
+    return this.gridService
+      .read(this.dataSource.read, parameters)
+      .map(data => this.parseFn(data))
+      .do(data => this.rows = data)
+      .catch(err => {
+        console.error(err);
+        throw new Error(err);
+      });
   }
 
-  update(key: string | number, body: object) {
-    return this.gridService.update(this.dataSource.update, key, body);
+  update(routeParams: object, body: object): Observable<any> {
+    return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  onSelect({ selected }): void {
-    // this.selected = [].concat(selected);
-    // console.log(this.selected.length);
+  onSelect(event: any): void {
+    this.onRowSelect.emit(event.selected);
   }
 
-  onSelectCheck(row, col, value): boolean {
-    return true;
+  clear(): void {
+    this.rows = [];
   }
 
-  onActivate(event): void {
+  onActionClick(event: any): void {
+    this.onAction.emit(event);
+  }
+
+  findRowById(id: number): any {
+    return this.rows.find((item: { id: number }) => item.id === id);
+  }
+
+  removeRowById(id: number): void {
+    const index: number = this.rows.findIndex((item: { id: number }) => item.id === id);
+    this.rows.splice(index, 1);
+  }
+
+  onActivate(event: any): void {
     if (event.type === 'dblclick') {
+      if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
+        return;
+      }
       this.onEdit.emit(event.row);
       // workaround for rows getting unselected on dblclick
       if (!this.selected.find(row => row.$$id === event.row.$$id)) {
@@ -90,7 +141,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     // console.log('offset', offset);
   }
 
-  getRowHeight(row): number {
+  getRowHeight(row: any): number {
     return row.height;
   }
 

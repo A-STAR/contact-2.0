@@ -1,9 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthHttp } from 'angular2-jwt';
+import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 
 const TOKEN_NAME = 'auth/token';
 
@@ -15,93 +17,156 @@ const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
 export class AuthService implements CanActivate, OnInit {
-
-  private authenticated = false;
+  static JWT_EXPIRATION_THRESHOLD = 60e3;
+  static JWT_TIMER_INTERVAL = 10e3;
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
+
+  private authenticated = false;
+
   // backend root url
   private rootUrl = '';
 
-  constructor(private http: AuthHttp, private router: Router) { }
+  private tokenTimer = null;
+
+  constructor(private http: AuthHttp, private router: Router, private jwtHelper: JwtHelper) {
+    const token = getToken();
+    if (this.isTokenValid(token)) {
+      this.initTokenTimer(token);
+    }
+  }
 
   get isAuthenticated(): boolean {
     return this.authenticated;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getRootUrl();
   }
 
-  getRootUrl(): Promise<string> {
+  getRootUrl(): Observable<string> {
     if (this.rootUrl) {
-      return Promise.resolve(this.rootUrl);
+      return Observable.of(this.rootUrl);
     }
 
     return this.http.get('./assets/server/root.json')
-      .toPromise()
-      .then(resp => {
-        this.rootUrl = resp.json().url;
-        return this.rootUrl;
-      })
-      .catch(err => console.error(err));
+      .map(resp => resp.json().url)
+      .do(root => this.rootUrl = root)
+      .catch(err => {
+        console.error(err);
+        throw err;
+      });
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
-    return this.checkLogin(url);
-  }
 
-  checkLogin(url: string): boolean {
-    if (this.isAuthenticated) { return true; }
-
-    const token = getToken();
-    if (token) {
-      // TODO: check this token for expiration with angular-jwt
-      return this.authenticated = true;
+    if (this.checkLogin(url)) {
+      return true;
     }
 
-    // Store the attempted URL for redirecting
-    this.redirectUrl = url;
-
-    // Navigate to the login page with extras
-    this.router.navigate(['/login']);
+    this.redirectToLogin(url);
     return false;
   }
 
-  authenticate(login: string, password: string): Promise<boolean> {
+  authenticate(login: string, password: string): Observable<boolean> {
     const body = JSON.stringify({ login, password });
 
     return this.getRootUrl()
-      .then(root => {
+      .flatMap((root: string) => {
         return this.http.post(`${root}/auth/login`, body)
-          .toPromise()
-          .then((resp: Response) => {
-            setToken(resp.headers.get('X-Auth-Token'));
-            return this.authenticated = true;
-          });
-      })
-      .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
-        // TODO: display a message on the login form
-        return this.authenticated = false;
+          .do((resp: Response) => this.saveToken(resp))
+          .do((resp: Response) => this.authenticated = true)
+          .catch(error => {
+            this.authenticated = false;
+            throw new Error(this.getErrorMessage(error.message));
+          })
+          .map(resp => true);
       });
   }
 
-  logout(): Promise<boolean> {
+  logout(): Observable<boolean> {
     return this.getRootUrl()
-      .then(root => {
+      .flatMap(root => {
         return this.http.get(`${root}/auth/logout`)
-        .toPromise()
-        .then((response: Response) => {
-          removeToken();
-          this.router.navigate(['/login']);
-          return this.authenticated = false;
-        });
-      })
-      .catch(error => {
-        console.log(error.statusText || error.status || 'Request error');
-        return this.authenticated = false;  // FIXME
+          .do((resp: Response) => {
+            removeToken();
+            this.authenticated = false;
+            this.redirectToLogin();
+          })
+          .catch(error => {
+            console.error(error.statusText || error.status || 'Request error');
+            // FIXME
+            this.authenticated = false;
+            throw new Error(error);
+          })
+          .map(resp => true);
       });
   }
+
+  redirectToLogin(url: string = null): void {
+    this.clearTokenTimer();
+    this.redirectUrl = url || this.router.url || '/home';
+    this.router.navigate(['/login']);
+  }
+
+  private getErrorMessage(message: any = null): string {
+    switch (message) {
+      case 'login.invalidCredentials':
+        return 'validation.login.INVALID_CREDENTIALS';
+      default:
+        return 'validation.DEFAULT_ERROR_MESSAGE';
+    }
+  }
+
+  private isTokenValid(token: string): boolean {
+    return token && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  private checkLogin(url: string): boolean {
+    if (this.isAuthenticated) {
+      return true;
+    }
+
+    const token = getToken();
+    if (this.isTokenValid(token)) {
+      return this.authenticated = true;
+    }
+
+    return this.authenticated = false;
+  }
+
+  private refreshToken(): void {
+    this.getRootUrl()
+      .flatMap(root => this.http.get(`${root}/api/refresh`))
+      .subscribe(
+        resp => this.saveToken(resp),
+        () => this.redirectToLogin()
+      );
+  }
+
+  private saveToken(response: Response): void {
+    const token = response.headers.get('X-Auth-Token');
+    this.initTokenTimer(token);
+    setToken(token);
+  }
+
+  private initTokenTimer(token: string): void {
+    const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+
+    this.clearTokenTimer();
+    this.tokenTimer = setInterval(() => {
+      const timeUntilExpiration = expirationDate.getTime() - Date.now();
+      if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
+        this.refreshToken();
+      }
+    }, AuthService.JWT_TIMER_INTERVAL);
+  }
+
+  private clearTokenTimer(): void {
+    if (this.tokenTimer) {
+      clearInterval(this.tokenTimer);
+    }
+  };
 }

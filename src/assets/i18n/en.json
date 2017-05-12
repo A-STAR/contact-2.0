@@ -1,7 +1,7 @@
 {
     "header": {
         "search": {
-            "PLACEHOLDER": "Type and hit enter.."
+            "PLACEHOLDER": "Type and hit enter..."
         }
     },
     "offsidebar": {
@@ -63,5 +63,33 @@
     },
     "dashboard": {
         "WELCOME": "Welcome"
+    },
+    "validation": {
+        "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+        "login": {
+            "INVALID_CREDENTIALS": "Incorrect login or password"
+        }
+    },
+    "grid": {
+      "messages": {
+        "emptyMessage": "No data to display",
+        "totalMessage": "total",
+        "selectedMessage": "selected"
+      }
+    },
+    "network": {
+      "CONNECTION_ERROR": "Connection Error"
+    },
+    "constants": {
+      "title": "Constants",
+      "form": {
+        "title": "Constant"
+      }
+    },
+    "default": {
+      "buttons": {
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     }
 }

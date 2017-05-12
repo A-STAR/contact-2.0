@@ -9,14 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { RatingModule } from 'ngx-bootstrap/rating';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 // Angle directives
 import { FlotDirective } from './directives/flot/flot.directive';
@@ -27,7 +21,6 @@ import { CheckallDirective } from './directives/checkall/checkall.directive';
 import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
-import { JqcloudDirective } from './directives/jqcloud/jqcloud.directive';
 
 // App modules
 import { CalendarModule } from 'primeng/primeng';
@@ -46,6 +39,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
+import { ToolbarModule } from './components/toolbar/toolbar.module';
+import { IconsService } from './icons/icons.service';
 
 
 // https://angular.io/styleguide#!#04-10
@@ -59,25 +54,21 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     AlertModule.forRoot(),
     ButtonsModule.forRoot(),
     CalendarModule,
-    CarouselModule.forRoot(),
-    CollapseModule.forRoot(),
     CurrencyMaskModule,
     DropdownModule.forRoot(),
     TranslateModule,
-    PaginationModule.forRoot(),
     ProgressbarModule.forRoot(),
-    RatingModule.forRoot(),
     TextMaskModule,
-    TooltipModule.forRoot(),
-    TypeaheadModule.forRoot(),
     // app modules
     DatePickerModule,
     DynamicFormModule,
     GridModule,
+    ToolbarModule,
     MomentModule,
   ],
   providers: [
     ColorsService,
+    IconsService,
     QBuilderService
   ],
   declarations: [
@@ -88,7 +79,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     VectormapDirective,
     NowDirective,
     ScrollableDirective,
-    JqcloudDirective,
     // app declarations
     TabComponent,
     TabstripComponent,
@@ -107,20 +97,13 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     AccordionModule,
     AlertModule,
     ButtonsModule,
-    CarouselModule,
-    CollapseModule,
     DropdownModule,
     CalendarModule,
     TextMaskModule,
-    PaginationModule,
     ProgressbarModule,
-    RatingModule,
-    TooltipModule,
-    TypeaheadModule,
     CheckallDirective,
     EasypiechartDirective,
     FlotDirective,
-    JqcloudDirective,
     NowDirective,
     ScrollableDirective,
     SparklineDirective,
@@ -130,6 +113,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DialogComponent,
     DynamicFormModule,
     GridModule,
+    ToolbarModule,
     MomentModule,
     NumericInputComponent,
     QBuilderComponent,

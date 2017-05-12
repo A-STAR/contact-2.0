@@ -1,9 +1,6 @@
 <div class="aside-inner">
   <nav class="sidebar" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
     <ul class="nav">
-      <li *ngIf="false" class="has-user-block">
-        <app-userblock></app-userblock>
-      </li>
       <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
         <a
           *ngIf="!item.children"
@@ -17,7 +14,7 @@
         </a>
         <a
           *ngIf="item.children"
-          title="(item.text | translate) || item.name"
+          [title]="(item.text | translate) || item.name"
           (click)="toggleSubmenuClick($event)"
           (mouseenter)="toggleSubmenuHover($event)"
         >

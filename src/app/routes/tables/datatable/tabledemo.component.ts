@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
-import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
-
 @Component({
   selector: 'app-tabledemo',
   templateUrl: './tabledemo.component.html'
@@ -18,9 +15,6 @@ export class TabledemoComponent implements OnInit {
     { id: 1, title: 'Users', active: false },
   ];
   columns: Array<any> = [
-    // { width: 20, maxWidth: 20, sortable: false, draggable: false,
-    //   resizeable: false, canAutoResize: true, headerCheckboxable: false, checkboxable: false
-    // },
     { prop: 'id', name: '#', minWidth: 30, maxWidth: 70 },
     { name: 'Name', width: 150 },
     { name: 'Gender', minWidth: 80, maxWidth: 100 },
@@ -31,7 +25,7 @@ export class TabledemoComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
   createForm(record: any) {
     this.form = this.fb.group({
@@ -56,11 +50,8 @@ export class TabledemoComponent implements OnInit {
     this.display = true;
   }
 
-  get popupTitle() {
+  get popupTitle(): any {
     return this.editedRecord && this.editedRecord.name ? this.editedRecord.name : null;
   }
 
-  onHide(dialog) {
-    dialog.hide();
-  }
 }

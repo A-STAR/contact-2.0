@@ -2,7 +2,7 @@
   <div dialog-header>
     <h3>{{ popupTitle }}</h3>
   </div>
-  <form *ngIf="display" [formGroup]="form" novalidate>
+  <form *ngIf="display" [formGroup]="form">
     <div class="form-group">
       <label>Id
         <input type="number" class="form-control" formControlName="id">

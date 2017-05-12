@@ -10,7 +10,6 @@ export class FlowService {
 
   getFiles() {
     return this.http.get('assets/server/workflow.json')
-            .toPromise()
-            .then(res => <TreeNode[]> res.json().data);
+            .map(res => <TreeNode[]> res.json().data);
   }
 }

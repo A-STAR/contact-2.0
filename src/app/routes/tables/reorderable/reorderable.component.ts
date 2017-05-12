@@ -33,7 +33,7 @@ export class ReorderableComponent implements OnInit {
     this.gridService
       .localRequest()
       .read('assets/server/100k.json')
-      .then(data => {
+      .subscribe(data => {
         this.value = data.slice(0, this.totalRecords);
       });
   }

@@ -104,7 +104,8 @@ app-root, .wrapper {
     // overflow: hidden;
     z-index: $z-index-main-section;
     background-color: $content-bg;
-    margin-bottom: $footer-hg !important; // ensure a space for the footer
+    // ensure a space for the footer
+    // margin-bottom: $footer-hg !important;
   }
 
   // Page Footer
@@ -169,10 +170,12 @@ app-root, .wrapper {
   }
 
   @media only screen and (min-width: $mq-tablet) {
-    padding: $content-padding;
+    // padding: $content-padding;
+    // CRIF: reset to make more room for the tabs
+    padding: 0;
     //overflow: auto; // required for portlets
     .content-heading {
-      margin: -$content-padding;
+      margin: 0;
       margin-bottom: $content-padding;
       padding: $content-padding;
     }

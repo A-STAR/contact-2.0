@@ -1,6 +1,7 @@
+import { AuthService } from '../core/auth/auth.service';
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AuthService } from '../core/auth/auth.service';
+import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
 
 export const routes = [
   {
@@ -21,13 +22,15 @@ export const routes = [
     canActivate: [AuthService],
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
-      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' }
+      { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
+      { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' }
     ]
   },
 
   // Eagerly-loaded routes
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LoginComponent },
+  { path: 'connection-error', component: ConnectionErrorComponent },
 
   // Redirect home, if the path is not found
   { path: '**', redirectTo: '' },

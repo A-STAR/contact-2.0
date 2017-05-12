@@ -7,7 +7,7 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
   templateUrl: './datepicker.component.html',
   styles: [
     '.datepicker { display: inline-block; }',
-    '.dropdown { position: fixed; margin-top: 10px; z-index: 5000; }'
+    '.dropdown { position: fixed; padding: 8px 0; z-index: 20000; }'
   ]
 })
 export class DatePickerComponent implements OnInit, OnDestroy {
@@ -34,9 +34,9 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
   locale = {
     firstDayOfWeek: 1,  // 0 = Sunday, 1 = Monday, etc.
-    dayNames: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-    dayNamesShort: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-    dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+    dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+    dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
     monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
     monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
   };
@@ -81,12 +81,14 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     const y = newValue.getFullYear();
     const date = `${d > 9 ? d : '0' + d}.${m > 9 ? m : '0' + m}.${y}`;
 
-    if (this.controlName) {
-      this.form.patchValue({ [this.controlName]: date });
+    if (this.form) {
+      if (this.controlName) {
+        this.form.patchValue({ [this.controlName]: date });
+      }
+      this.form.markAsDirty();
     }
 
-    this.form.markAsDirty();
-    this.value = date;
+    this.onValueChange(date);
     this.toggleCalendar(false);
   }
 
@@ -97,11 +99,21 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   toggleCalendar(isExpanded?: boolean) {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
-      const position: ClientRect = this.input.nativeElement.getBoundingClientRect();
-      this.dropdownStyle = {
-        top: `${position.bottom}px`,
-        left: `${position.left}px`
-      };
+      setTimeout(() => this.positionDropdown(), 0);  // TODO: is there a better way to do this?
     }
+  }
+
+  private positionDropdown() {
+    const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();
+    const contentRect: ClientRect = this.dropdown.nativeElement.children[0].getBoundingClientRect();
+
+    // If the dropdown won't fit into the window below the input - place it above it.
+    const top = inputRect.bottom + contentRect.height > window.innerHeight ? inputRect.top - contentRect.height : inputRect.bottom;
+    const left = inputRect.left;
+
+    this.dropdownStyle = {
+      top: `${top}px`,
+      left: `${left}px`
+    };
   }
 }

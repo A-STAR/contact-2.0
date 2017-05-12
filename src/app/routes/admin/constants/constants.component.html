@@ -1,35 +1,23 @@
-<p-dialog
-    appendTo="body"
-    [header]="dialogTitle"
-    [draggable]="true"
-    [modal]="true"
-    [resizable]="false"
-    [responsive]="false"
-    [width]="600"
-    [height]="650"
-    [(visible)]="display">
+<app-dialog [display]="display">
+  <div dialog-header>
+    <h3>{{ 'constants.form.title' | translate }}: {{form.controls['id'].value}}</h3>
+  </div>
 
   <app-dynamic-form [form]="form" [controls]="controls"></app-dynamic-form>
 
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" label="Cancel" (click)="onCancel($event)"></button>
-      <button
-        type="button"
-        class="ui-button-success"
-        pButton
-        icon="fa-check"
-        label="Save"
-        [disabled]="!form.dirty"
-        (click)="onSave($event)">
-      </button>
-    </div>
-  </p-footer>
+  <div dialog-footer>
+    <button class="btn btn-primary" [disabled]="!form.dirty || !form.valid" (click)="onSave()">
+      {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
 
-</p-dialog>
+</app-dialog>
 
 <app-tabstrip>
-  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
+  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onTabClose($event)" [active]="tab.active">
     <app-grid
       [columns]="columns"
       [parseFn]="parseFn"
