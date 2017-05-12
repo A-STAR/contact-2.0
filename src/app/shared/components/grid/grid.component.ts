@@ -59,7 +59,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.parseFn = this.parseFn || function (data) { return data; };
+    this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.translate.get('grid.messages')
       .subscribe(
         messages => this.messages = messages,
@@ -103,15 +103,15 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  onSelect({ selected }): void {
-    this.onRowSelect.emit(selected);
+  onSelect(event: any): void {
+    this.onRowSelect.emit(event.selected);
   }
 
   clear(): void {
     this.rows = [];
   }
 
-  onActionClick(event): void {
+  onActionClick(event: any): void {
     this.onAction.emit(event);
   }
 
@@ -124,7 +124,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.rows.splice(index, 1);
   }
 
-  onActivate(event): void {
+  onActivate(event: any): void {
     if (event.type === 'dblclick') {
       if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
         return;
@@ -141,7 +141,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     // console.log('offset', offset);
   }
 
-  getRowHeight(row): number {
+  getRowHeight(row: any): number {
     return row.height;
   }
 

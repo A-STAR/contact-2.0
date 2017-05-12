@@ -101,5 +101,17 @@
         "NO_ACCOUNT": "Нет аккаунта?",
         "LOGIN_BUTTON": "Войти",
         "REGISTER_BUTTON": "Зарегистрироваться"
+    },
+    "constants": {
+      "title": "Константы",
+      "form": {
+        "title": "Константа"
+      }
+    },
+    "default": {
+      "buttons": {
+        "save": "Сохранить",
+        "cancel": "Отменить"
+      }
     }
 }

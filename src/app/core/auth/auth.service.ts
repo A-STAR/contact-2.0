@@ -1,5 +1,5 @@
-import { Inject, Injectable, OnInit } from '@angular/core';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
+import { Injectable, OnInit } from '@angular/core';
+import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
@@ -41,7 +41,7 @@ export class AuthService implements CanActivate, OnInit {
     return this.authenticated;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getRootUrl();
   }
 
@@ -79,7 +79,6 @@ export class AuthService implements CanActivate, OnInit {
           .do((resp: Response) => this.saveToken(resp))
           .do((resp: Response) => this.authenticated = true)
           .catch(error => {
-            const { message } = error.json();
             this.authenticated = false;
             throw new Error(this.getErrorMessage(error.message));
           })
@@ -106,13 +105,13 @@ export class AuthService implements CanActivate, OnInit {
       });
   }
 
-  redirectToLogin(url: string = null) {
+  redirectToLogin(url: string = null): void {
     this.clearTokenTimer();
     this.redirectUrl = url || this.router.url || '/home';
     this.router.navigate(['/login']);
   }
 
-  private getErrorMessage(message: any = null) {
+  private getErrorMessage(message: any = null): string {
     switch (message) {
       case 'login.invalidCredentials':
         return 'validation.login.INVALID_CREDENTIALS';
@@ -121,7 +120,7 @@ export class AuthService implements CanActivate, OnInit {
     }
   }
 
-  private isTokenValid(token: string) {
+  private isTokenValid(token: string): boolean {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
@@ -138,8 +137,8 @@ export class AuthService implements CanActivate, OnInit {
     return this.authenticated = false;
   }
 
-  private refreshToken() {
-    return this.getRootUrl()
+  private refreshToken(): void {
+    this.getRootUrl()
       .flatMap(root => this.http.get(`${root}/api/refresh`))
       .subscribe(
         resp => this.saveToken(resp),
@@ -147,13 +146,13 @@ export class AuthService implements CanActivate, OnInit {
       );
   }
 
-  private saveToken(response: Response) {
+  private saveToken(response: Response): void {
     const token = response.headers.get('X-Auth-Token');
     this.initTokenTimer(token);
     setToken(token);
   }
 
-  private initTokenTimer(token: string) {
+  private initTokenTimer(token: string): void {
     const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
 
     this.clearTokenTimer();
@@ -165,7 +164,7 @@ export class AuthService implements CanActivate, OnInit {
     }, AuthService.JWT_TIMER_INTERVAL);
   }
 
-  private clearTokenTimer() {
+  private clearTokenTimer(): void {
     if (this.tokenTimer) {
       clearInterval(this.tokenTimer);
     }

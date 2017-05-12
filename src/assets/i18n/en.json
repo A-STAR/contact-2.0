@@ -78,6 +78,18 @@
       }
     },
     "network": {
-        "CONNECTION_ERROR": "Connection Error"
+      "CONNECTION_ERROR": "Connection Error"
+    },
+    "constants": {
+      "title": "Constants",
+      "form": {
+        "title": "Constant"
+      }
+    },
+    "default": {
+      "buttons": {
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     }
 }

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CustomValidators } from 'ng2-validation';
-import { Observable } from 'rxjs/Observable';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TranslatorService } from '../../../core/translator/translator.service';

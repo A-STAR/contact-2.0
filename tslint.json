@@ -111,6 +111,9 @@
     "directive-class-suffix": true,
     "no-access-missing-member": true,
     "templates-use-public": true,
-    "invoke-injectable": true
+    "invoke-injectable": true,
+
+    "typedef": [true, "call-signature", "parameter"],
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}]
   }
 }

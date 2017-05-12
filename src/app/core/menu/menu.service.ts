@@ -6,27 +6,15 @@ import { AuthService } from '../auth/auth.service';
 import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
-  {
-    name: 'menuItemHome'
-  },
-  {
-    name: 'menuItemWorkflow'
-  },
-  {
-    name: 'menuItemQueryBuilder',
-  },
+  { name: 'menuItemHome' },
+  { name: 'menuItemWorkflow' },
+  { name: 'menuItemQueryBuilder' },
   {
     name: 'menuItemGrids',
     children: [
-      {
-        name: 'menuItemSortable'
-      },
-      {
-        name: 'menuItemReorderable'
-      },
-      {
-        name: 'menuItemGroupable'
-      }
+      { name: 'menuItemSortable' },
+      { name: 'menuItemReorderable' },
+      { name: 'menuItemGroupable' }
     ]
   }
 ];

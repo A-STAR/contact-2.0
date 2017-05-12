@@ -3,8 +3,6 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthHttp } from 'angular2-jwt';
 import { DatePipe } from '@angular/common';
 
-import { TabComponent } from '../../../shared/components/tabstrip/tab.component';
-import { TabstripComponent } from '../../../shared/components/tabstrip/tabstrip.component';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl, IValue } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
@@ -84,7 +82,7 @@ export class ConstantsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private http: AuthHttp, private datePipe: DatePipe) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createForm();
   }
 
@@ -133,7 +131,7 @@ export class ConstantsComponent implements OnInit {
     this.form.setValue(values);
   }
 
-  onClose(id: number): void {
+  onTabClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
@@ -153,7 +151,7 @@ export class ConstantsComponent implements OnInit {
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
 
-  onSave(event): void {
+  onSave(): void {
     const id = this.getFieldValue('id');
     const typeCode = this.getFieldValue('typeCode');
     const value = this.getFieldValue('value');
@@ -186,13 +184,10 @@ export class ConstantsComponent implements OnInit {
       );
   }
 
-  onCancel(event): void {
+  onCancel(): void {
     this.display = false;
     this.editedRecord = null;
     this.form.reset();
   }
 
-  get dialogTitle() {
-    return !this.editedRecord ? null : this.editedRecord.name || this.editedRecord.id || 'Edit form';
-  }
 }

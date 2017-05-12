@@ -20,7 +20,7 @@ export class SettingsService {
     this.app = {
       name: 'CRIF',
       description: 'Contact v2.0',
-      year: ((new Date()).getFullYear())
+      year: (new Date()).getFullYear()
     };
 
     // Layout Settings
@@ -52,33 +52,33 @@ export class SettingsService {
     return $('.app-content').height() - $('.topnavbar-wrapper').height();
   }
 
-  getAppSetting(name) {
+  getAppSetting(name: string): string | number {
     return name ? this.app[name] : this.app;
   }
-  getUserSetting(name) {
+  getUserSetting(name: string): string {
     return name ? this.user[name] : this.user;
   }
-  getLayoutSetting(name) {
+  getLayoutSetting(name: string): boolean | string {
     return name ? this.layout[name] : this.layout;
   }
 
-  setAppSetting(name, value) {
+  setAppSetting(name: string, value: string): void {
     if (typeof this.app[name] !== 'undefined') {
       this.app[name] = value;
     }
   }
-  setUserSetting(name, value) {
+  setUserSetting(name: string, value: string): void {
     if (typeof this.user[name] !== 'undefined') {
       this.user[name] = value;
     }
   }
-  setLayoutSetting(name, value) {
+  setLayoutSetting(name: string, value: any): any {
     if (typeof this.layout[name] !== 'undefined') {
       return this.layout[name] = value;
     }
   }
 
-  toggleLayoutSetting(name) {
+  toggleLayoutSetting(name: string): any {
     return this.setLayoutSetting(name, !this.getLayoutSetting(name));
   }
 
