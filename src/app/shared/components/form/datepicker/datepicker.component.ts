@@ -88,7 +88,7 @@ export class DatePickerComponent implements OnInit, OnDestroy {
       this.form.markAsDirty();
     }
 
-    this.value = date;
+    this.onValueChange(date);
     this.toggleCalendar(false);
   }
 
