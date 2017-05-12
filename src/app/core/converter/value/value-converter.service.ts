@@ -53,7 +53,9 @@ export class ValueConverterService {
 
   public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
     const booleanValue: number = this.toNumber(valueEntity.value);
-    if (valueEntity.typeCode === 4) {
+    if (valueEntity.typeCode === 1 || valueEntity.typeCode === 3) {
+      return valueEntity.value;
+    } else if (valueEntity.typeCode === 4) {
       return booleanValue === 1 ? 'Истина' : 'Ложь'; // TODO translator
     }
     return booleanValue;
