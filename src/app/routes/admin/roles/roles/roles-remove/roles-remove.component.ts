@@ -17,6 +17,10 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
     super();
   }
 
+  protected getControls() {
+    return [];
+  }
+
   /**
    * @override
    */

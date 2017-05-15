@@ -5,6 +5,7 @@ import { GridService } from '../../../../../shared/components/grid/grid.service'
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
+import 'rxjs/add/operator/toPromise';
 
 @Component({
   selector: 'app-roles-copy',
@@ -19,28 +20,13 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     super();
   }
 
-  ngOnInit() {
-    this.gridService
-      .read('/api/roles')
-      .subscribe(
-        data => this.initControls(data),
-        // TODO: display & log message
-        error => console.log(error)
-      );
-  }
-
-  private initControls(data) {
-    const options = data.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    }));
-
-    this.controls = [
+  protected getControls(): Array<IDynamicFormControl> {
+    return [
       {
         label: 'Название оригинальной роли',
         controlName: 'originalRoleId',
         type: 'select',
-        options,
+        options: [],
         required: true
       },
       {
@@ -56,6 +42,39 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         rows: 2
       },
     ];
+
+    /*
+    return this.gridService
+      .read('/api/roles')
+      .toPromise()
+      .then(data => {
+        const options = data.roles.map(role => ({
+          label: role.name,
+          value: role.id
+        }));
+        return [
+          {
+            label: 'Название оригинальной роли',
+            controlName: 'originalRoleId',
+            type: 'select',
+            options,
+            required: true
+          },
+          {
+            label: 'Название',
+            controlName: 'name',
+            type: 'text',
+            required: true
+          },
+          {
+            label: 'Комментарий',
+            controlName: 'comment',
+            type: 'textarea',
+            rows: 2
+          },
+        ] as Array<IDynamicFormControl>;
+      });
+    */
   }
 
   protected createForm(role: IRoleRecord): FormGroup {

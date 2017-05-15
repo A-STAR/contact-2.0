@@ -9,6 +9,8 @@ export interface IDynamicFormControl {
   options?: Array<ISelectOptions>;
   // number of rows for textarea
   rows?: number;
+  display?: boolean;
+  value?: any;
 }
 
 export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic';
