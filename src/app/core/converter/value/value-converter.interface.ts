@@ -8,3 +8,8 @@ export interface IValueEntity {
   valueD?: Date;
   value?: ValueType;
 }
+
+export interface ILocalizedValue {
+  trueValue?: string;
+  falseValue?: string;
+}
