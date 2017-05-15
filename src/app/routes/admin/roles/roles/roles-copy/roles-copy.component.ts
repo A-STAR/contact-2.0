@@ -49,7 +49,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
 
   protected createForm(role: IRoleRecord): FormGroup {
     return this.formBuilder.group({
-      originalRoleId: [ this.originalRole.id, Validators.required ],
+      originalRoleId: [ [{ value: this.originalRole.id, label: this.originalRole.name }], Validators.required ],
       name: [ this.role.name, Validators.required ],
       comment: [ this.role.comment ],
     });

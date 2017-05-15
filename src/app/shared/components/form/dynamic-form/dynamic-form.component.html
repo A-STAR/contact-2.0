@@ -33,7 +33,8 @@
 
         <div class="form-group">
           <label *ngSwitchCase="'select'">{{control.label}}
-            <app-select [allowClear]="true"
+            <app-select [formControlName]="control.controlName"
+                        [allowClear]="true"
                         [items]="control.options"
                         [lazyItems]="control.lazyOptions"
                         [cachingItems]="control.cachingOptions"

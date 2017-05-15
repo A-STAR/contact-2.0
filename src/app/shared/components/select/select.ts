@@ -189,6 +189,8 @@ let styles = `
       </ul>
     </div>
 
+    <input type="hidden" [formControlName]="formControlName">
+
     <div tabindex="0"
          *ngIf="multiple === true"
          (keyup)="mainClick($event)"
