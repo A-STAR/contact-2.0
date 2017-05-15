@@ -299,7 +299,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this._active = selectedItems.map((item:any) => {
         let data = areItemsStrings
           ? item
-          : {[this.idField]: item[this.idField], [this.textField]: item[this.textField]};
+          : {id: item[this.idField], text: item[this.textField]};
 
         return new SelectItem(data);
       });
@@ -318,7 +318,12 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   public element:ElementRef;
 
   public get active():Array<any> {
-    return this._active;
+    return this._active.map((item) => {
+      return {
+        [this.idField]: item.id,
+        [this.textField]: item.text
+      };
+    });
   }
 
   private set optionsOpened(value:boolean){
