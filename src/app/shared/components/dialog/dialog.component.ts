@@ -11,9 +11,11 @@ import {EnvironmentContainer} from '../../../core/environment/environment.interf
 })
 export class DialogComponent implements OnDestroy, OnInit {
 
+  @Input() autoWidth: boolean;
   @Input() display: boolean;
   @Output() displayChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  styles: CSSStyleDeclaration;
 
   constructor(private element: ElementRef,
               private renderer2: Renderer2,
@@ -34,6 +36,9 @@ export class DialogComponent implements OnDestroy, OnInit {
    * @override
    */
   ngOnInit(): void {
+    if (this.autoWidth) {
+      this.styles.width = 'width: auto;';
+    }
     this.renderer2.appendChild(this.environmentContainer, this.element.nativeElement);
   }
 

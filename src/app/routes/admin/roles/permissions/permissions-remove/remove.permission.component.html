@@ -1,4 +1,6 @@
-<app-dialog [display]="displayProperties.removePermit" (displayChange)="onDisplayChange($event)">
+<app-dialog [display]="displayProperties.removePermit"
+            [autoWidth]="true"
+            (displayChange)="onDisplayChange($event)">
   <div dialog-header>
     <h3>Удаление доступа у роли</h3>
   </div>
