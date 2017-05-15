@@ -1,1 +1,6 @@
-I am users component!
+<app-grid
+  [columns]="columns"
+  [parseFn]="parseFn"
+  [dataSource]="dataSource"
+  (onEdit)="onEdit($event)">
+</app-grid>
