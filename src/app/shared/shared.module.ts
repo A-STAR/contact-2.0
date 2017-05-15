@@ -31,7 +31,6 @@ import { MomentModule } from 'angular2-moment';
 import { TextMaskModule } from 'angular2-text-mask';
 
 // App directives
-import { DialogComponent } from './components/dialog/dialog.component';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
@@ -41,6 +40,7 @@ import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
+import { DialogModule } from './components/dialog/dialog.module';
 
 
 // https://angular.io/styleguide#!#04-10
@@ -82,7 +82,6 @@ import { IconsService } from './icons/icons.service';
     // app declarations
     TabComponent,
     TabstripComponent,
-    DialogComponent,
     NumericInputComponent,
     QBuilderComponent
   ],
@@ -110,8 +109,8 @@ import { IconsService } from './icons/icons.service';
     VectormapDirective,
     // App exports
     DatePickerModule,
-    DialogComponent,
     DynamicFormModule,
+    DialogModule,
     GridModule,
     ToolbarModule,
     MomentModule,
