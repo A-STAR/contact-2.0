@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 export interface IDynamicFormControl {
   label: string;
   controlName: string;
@@ -5,8 +7,11 @@ export interface IDynamicFormControl {
   dependsOn?: string;
   required?: boolean;
   disabled?: boolean;
+  placeholder?: string;
   // options for select controls
   options?: Array<ISelectOptions>;
+  lazyOptions?: Observable<Array<ISelectOptions>>;
+  cachingOptions?: boolean;
   // number of rows for textarea
   rows?: number;
 }

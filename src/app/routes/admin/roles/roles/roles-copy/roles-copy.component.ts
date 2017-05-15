@@ -19,29 +19,18 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     super();
   }
 
-  ngOnInit() {
-    this.gridService
-      .read('/api/roles')
-      .subscribe(
-        data => this.initControls(data),
-        // TODO: display & log message
-        error => console.log(error)
-      );
-  }
-
-  private initControls(data) {
-    const options = data.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    }));
-
+  ngOnInit(): void {
     this.controls = [
       {
         label: 'Название оригинальной роли',
         controlName: 'originalRoleId',
         type: 'select',
-        options,
-        required: true
+        required: true,
+        cachingOptions: true,
+        lazyOptions: this.gridService.read('/api/roles')
+          .map(
+            (data: any) => data.roles.map(role => ({label: role.name, value: role.id}))
+          )
       },
       {
         label: 'Название',
