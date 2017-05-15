@@ -111,7 +111,7 @@ let styles = `
 `;
 
 @Component({
-  selector: 'ng-select',
+  selector: 'app-select',
   styles: [styles],
   providers: [
     {
@@ -268,6 +268,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public multiple:boolean = false;
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public cachingItems: boolean = false;
+  @Input() public formControlName: string; // TODO
 
   private _lazyItemsSubscription: Subscription;
 
