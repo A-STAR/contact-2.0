@@ -3,11 +3,10 @@ import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 
-const TOKEN_NAME = 'auth/token';
+const TOKEN_NAME = 'auth-token';
 
 export const getToken = () => localStorage.getItem(TOKEN_NAME);
 

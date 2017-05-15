@@ -14,17 +14,17 @@ export class DialogComponent implements OnDestroy {
     document.body.appendChild(element.nativeElement);
   }
 
-  onVisibleChange(value: boolean) {
+  onVisibleChange(value: boolean): void {
     this.display = value;
     this.displayChange.emit(value);
   }
 
-  onCloseClick() {
+  onCloseClick(): void {
     this.onVisibleChange(false);
     this.onClose.emit();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     document.body.removeChild(this.element.nativeElement);
   }
 }

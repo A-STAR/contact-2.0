@@ -11,7 +11,7 @@ export interface IDynamicFormControl {
   rows?: number;
 }
 
-export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic';
+export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden';
 
 export interface ISelectOptions {
   label: string;
