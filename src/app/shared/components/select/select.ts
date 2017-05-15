@@ -299,7 +299,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this._active = selectedItems.map((item:any) => {
         let data = areItemsStrings
           ? item
-          : {id: item[this.idField], text: item[this.textField]};
+          : {[this.idField]: item[this.idField], [this.textField]: item[this.textField]};
 
         return new SelectItem(data);
       });
