@@ -27,7 +27,7 @@ export class EditPermissionComponent implements OnInit {
     this.createFormAndControls();
   }
 
-  private createFormAndControls() {
+  private createFormAndControls(): void {
     this.form = this.fb.group({
       id: new FormControl({value: this.record.id, disabled: true}, Validators.required),
       typeCode: [this.record.typeCode, Validators.required],
@@ -66,17 +66,17 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  onDisplayChange(event): void {
+  onDisplayChange(event: boolean): void {
     if (event === false) {
       this.onCancel();
     }
   }
 
-  onCancel() {
+  onCancel(): void {
     this.displayProperties.editPermit = false;
   }
 
-  onSave() {
+  onSave(): void {
     this.save.emit(this.formChanges);
   }
 
