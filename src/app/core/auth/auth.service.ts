@@ -80,7 +80,8 @@ export class AuthService implements CanActivate, OnInit {
           .do((resp: Response) => this.authenticated = true)
           .catch(error => {
             this.authenticated = false;
-            throw new Error(this.getErrorMessage(error.message));
+            const { message } = error.json();
+            throw new Error(this.getErrorMessage(message));
           })
           .map(resp => true);
       });
