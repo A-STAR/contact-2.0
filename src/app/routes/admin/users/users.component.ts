@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IUser, IUsersResponse } from './users.interface';
 
 @Component({
@@ -31,7 +32,78 @@ export class UsersComponent {
     dataKey: 'users',
   };
 
+  actions: Array<IToolbarAction> = [
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
+  ];
+
+  selectedUser: IUser = null;
+
+  currentUser: IUser = null;
+
+  action: ToolbarActionTypeEnum = null;
+
   parseFn(data: IUsersResponse): Array<IUser> {
     return data.users;
+  }
+
+  isUserBeingCreatedOrEdited(): boolean {
+    return !!this.currentUser && !!this.action;
+  }
+
+  onAction(action: IToolbarAction): void {
+    this.action = action.type;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.EDIT:
+        this.currentUser = this.selectedUser;
+        break;
+      case ToolbarActionTypeEnum.ADD:
+        this.currentUser = this.createEmptyUser();
+        break;
+    }
+  }
+
+  onEdit(user: IUser): void {
+    this.action = ToolbarActionTypeEnum.EDIT;
+    this.currentUser = this.selectedUser;
+  }
+
+  onSelect(users: Array<IUser>): void {
+    const user = users[0];
+    if (user && user.id && (this.selectedUser && this.selectedUser.id !== user.id || !this.selectedUser)) {
+      this.selectUser(user);
+    }
+  }
+
+  private selectUser(user: IUser): void {
+    this.selectedUser = user;
+    this.refreshToolbar();
+  }
+
+  private refreshToolbar(): void {
+    this.actions
+      .find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.EDIT)
+      .visible = !!this.selectedUser;
+  }
+
+  private createEmptyUser(): IUser {
+    return {
+      id: null,
+      login: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      comment: '',
+      email: '',
+      workPhone: '',
+      mobPhone: '',
+      intPhone: '',
+      workAddress: '',
+      position: '',
+      startWorkDate: '',
+      endWorkDate: '',
+      langCode: '',
+      isBlocked: false
+    };
   }
 }
