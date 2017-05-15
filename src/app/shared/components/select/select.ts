@@ -318,12 +318,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   public element:ElementRef;
 
   public get active():Array<any> {
-    return this._active.map((item) => {
-      return {
-        [this.idField]: item.id,
-        [this.textField]: item.text
-      };
-    });
+    return this._active;
   }
 
   private set optionsOpened(value:boolean){
