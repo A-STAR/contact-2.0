@@ -29,17 +29,17 @@ export class LoginComponent {
     this.valForm = fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
       'password': [ null, Validators.required ],
-      'account_remember': [remember],
+      'remember_login': [remember],
     });
 
     this.valForm.valueChanges.subscribe(() => this.error = null);
   }
 
-  submitForm(event, value: any): void {
+  submitForm(event: UIEvent, value: any): void {
     event.preventDefault();
 
     this.error = null;
-    this.login = value.account_remember ? value.login : null;
+    this.login = value.remember_login ? value.login : null;
 
     [].forEach.call(this.valForm.controls, ctrl => {
         ctrl.markAsTouched();
@@ -63,7 +63,7 @@ export class LoginComponent {
     return localStorage.getItem(LoginComponent.LOGIN_KEY);
   }
 
-  private set login(login) {
+  private set login(login: string) {
     if (login) {
       localStorage.setItem(LoginComponent.LOGIN_KEY, login);
     } else {

@@ -23,16 +23,15 @@ export class ConstantsComponent implements OnInit {
 
   columns: Array<any> = [
     { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { name: 'Наименование', prop: 'name', maxWidth: 350 },
+    { name: 'Название константы', prop: 'name', maxWidth: 350 },
     { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Описание', prop: 'dsc', width: 200, maxWidth: 400 },
-    { name: 'Альт. описание', prop: 'altDsc', minWidth: 200 },
+    { name: 'Комментарий', prop: 'dsc', width: 200, maxWidth: 400 },
   ];
 
   controls: Array<IDynamicFormControl> = [
-    { label: 'Идентификатор', controlName: 'id', type: 'number', required: true, disabled: true },
-    { label: 'Наименование', controlName: 'name', type: 'text', required: true, disabled: true },
-    { label: 'Тип значения', controlName: 'typeCode', type: 'select', required: true, disabled: true,
+    { label: 'Ид', controlName: 'id', type: 'hidden', required: true, disabled: true },
+    { label: 'Название константы', controlName: 'name', type: 'text', required: true, disabled: true },
+    { label: 'Тип', controlName: 'typeCode', type: 'select', required: true, disabled: true,
       options: [
         { label: 'Число', value: 1 },
         { label: 'Дата', value: 2 },
@@ -43,8 +42,7 @@ export class ConstantsComponent implements OnInit {
       ]
     },
     { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
-    { label: 'Описание', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2 },
-    { label: 'Альт. описание', controlName: 'altDsc', type: 'textarea', required: true, disabled: true, rows: 2 },
+    { label: 'Комментарий', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2 },
   ];
 
   dataSource: IDataSource = {
@@ -105,7 +103,7 @@ export class ConstantsComponent implements OnInit {
     });
   }
 
-  populateForm(record: any) {
+  populateForm(record: any): void {
     let value = record.value;
     switch (record.typeCode) {
       case 2:
@@ -126,7 +124,7 @@ export class ConstantsComponent implements OnInit {
       return arr;
     }, {});
 
-    // NOTE: this is special, to be revised to make more universal
+    // TODO: this is special, to be revised to make more universal
     values.value = value;
     this.form.setValue(values);
   }
@@ -177,7 +175,7 @@ export class ConstantsComponent implements OnInit {
         resp => {
           this.display = false;
           this.form.reset();
-          this.grid.load();
+          this.grid.load().subscribe();
         },
         // TODO: display & log a message
         error => console.log(error.statusText || error.status || 'Request error')
