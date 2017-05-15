@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { IValueEntity, ValueType } from './value-converter.interface';
+import { TranslateService } from '@ngx-translate/core';
+
+import { ILocalizedValue, IValueEntity, ValueType } from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
 
-  constructor(private datePipe: DatePipe) {
+  private _localizedValues: ILocalizedValue = {};
+
+  constructor(private datePipe: DatePipe, private translateService: TranslateService) {
+    this.translateService.get('default.boolean.TRUE')
+      .subscribe((v: string) => this._localizedValues.trueValue = v);
+    this.translateService.get('default.boolean.FALSE')
+      .subscribe((v: string) => this._localizedValues.falseValue = v);
   }
 
-  public serialize(valueEntity: IValueEntity) {
+  public serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
         valueEntity.valueN = this.toNumber(valueEntity.value);
         break;
       case 3:
-        valueEntity.valueS = valueEntity as string;
+        valueEntity.valueS = valueEntity.value as string;
         break;
       case 4:
         valueEntity.valueB = this.toNumber(valueEntity.value);
@@ -56,7 +64,9 @@ export class ValueConverterService {
     if (valueEntity.typeCode === 1 || valueEntity.typeCode === 3) {
       return valueEntity.value;
     } else if (valueEntity.typeCode === 4) {
-      return booleanValue === 1 ? 'Истина' : 'Ложь'; // TODO translator
+      return booleanValue === 1
+        ? this._localizedValues.trueValue
+        : this._localizedValues.falseValue;
     }
     return booleanValue;
   }

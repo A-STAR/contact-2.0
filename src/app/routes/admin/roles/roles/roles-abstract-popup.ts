@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -15,15 +15,18 @@ export abstract class AbstractRolesPopup implements OnChanges {
 
   abstract controls: Array<IDynamicFormControl>;
 
-  ngOnChanges(changes: SimpleChanges) {
+  /**
+   * @override
+   */
+  ngOnChanges(changes: SimpleChanges): void {
     this.form = this.createForm(changes.role.currentValue);
   }
 
   get canSubmit(): boolean {
-    return this.form.dirty && this.form.valid;
+    return this.form && this.form.dirty && this.form.valid;
   }
 
-  onDisplayChange(event): void {
+  onDisplayChange(event: boolean): void {
     if (event === false) {
       this.close();
     }

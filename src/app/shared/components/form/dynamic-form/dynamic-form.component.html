@@ -1,4 +1,5 @@
   <form [formGroup]="form">
+
     <ng-container *ngFor="let control of controls">
 
       <ng-container [ngSwitch]="control.type">
@@ -68,41 +69,44 @@
 
           <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
 
-            <div *ngSwitchCase="1" class="form-group">
-              <label>{{control.label}}
-                <input type="number"
-                       class="form-control"
-                       [attr.disabled]="control.disabled"
-                       [formControlName]="control.controlName">
-              </label>
-            </div>
+          <div *ngSwitchCase="1" class="form-group">
+            <label>{{control.label}}
+              <input type="number"
+                     class="form-control"
+                     [attr.disabled]="control.disabled"
+                     [formControlName]="control.controlName">
+            </label>
+          </div>
 
             <div *ngSwitchCase="2" class="form-group">
               <label>{{control.label}}</label>
                 <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
             </div>
+          </div>
 
-            <div *ngSwitchCase="4" class="form-group">
-              <label>{{control.label}}</label>
-              <div>
-                <label class="radio-inline">
-                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1"> True
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0"> False
-                </label>
-              </div>
+          <div *ngSwitchCase="4" class="form-group">
+            <label>{{control.label}}</label>
+            <div>
+              <label class="radio-inline">
+                <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1">
+                {{'default.boolean.TRUE' | translate}}
+              </label>
+              <label class="radio-inline">
+                <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0">
+                {{'default.boolean.FALSE' | translate}}
+              </label>
             </div>
+          </div>
 
-            <div *ngSwitchDefault class="form-group">
-              <label>{{control.label}}</label>
-              <div>
-                <input type="text"
-                       class="form-control"
-                       [attr.disabled]="control.disabled"
-                       [formControlName]="control.controlName">
-              </div>
+          <div *ngSwitchDefault class="form-group">
+            <label>{{control.label}}</label>
+            <div>
+              <input type="text"
+                     class="form-control"
+                     [attr.disabled]="control.disabled"
+                     [formControlName]="control.controlName">
             </div>
+          </div>
 
           </ng-container> <!-- control.dependsOn -->
 

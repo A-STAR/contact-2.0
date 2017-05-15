@@ -27,15 +27,14 @@ export class EditPermissionComponent implements OnInit {
     this.createFormAndControls();
   }
 
-  private createFormAndControls() {
+  private createFormAndControls(): void {
     this.form = this.fb.group({
       id: new FormControl({value: this.record.id, disabled: true}, Validators.required),
       typeCode: [this.record.typeCode, Validators.required],
       name: [this.record.name, Validators.required],
       value: [String(this.record.value), Validators.required],
       comment: [this.record.comment],
-      dsc: [this.record.dsc],
-      altDsc: [this.record.altDsc]
+      dsc: [this.record.dsc]
     });
 
     this.form.valueChanges.subscribe((formChanges) => this.formChanges = formChanges);
@@ -60,12 +59,6 @@ export class EditPermissionComponent implements OnInit {
         disabled: true
       },
       {
-        label: 'Описание на альтернативном языке',
-        controlName: 'altDsc',
-        type: 'text',
-        disabled: true
-      },
-      {
         label: 'Комментарий',
         controlName: 'comment',
         type: 'textarea'
@@ -73,17 +66,17 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  onDisplayChange(event): void {
-    if (event === false) {
+  onDisplayChange(event: boolean): void {
+    if (!event) {
       this.onCancel();
     }
   }
 
-  onCancel() {
+  onCancel(): void {
     this.displayProperties.editPermit = false;
   }
 
-  onSave() {
+  onSave(): void {
     this.save.emit(this.formChanges);
   }
 
