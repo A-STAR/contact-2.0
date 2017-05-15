@@ -8,13 +8,13 @@ export class ValueConverterService {
   constructor(private datePipe: DatePipe) {
   }
 
-  public serialize(valueEntity: IValueEntity) {
+  public serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
         valueEntity.valueN = this.toNumber(valueEntity.value);
         break;
       case 3:
-        valueEntity.valueS = valueEntity as string;
+        valueEntity.valueS = valueEntity.value as string;
         break;
       case 4:
         valueEntity.valueB = this.toNumber(valueEntity.value);

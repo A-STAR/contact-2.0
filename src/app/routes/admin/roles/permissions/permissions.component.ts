@@ -72,15 +72,15 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
-  public ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     this.refreshGrid();
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
     this.refreshGrid();
   }
 
-  private onAction(action: IToolbarAction): void {
+  onAction(action: IToolbarAction): void {
     this.displayProperties.editPermit = false;
     this.displayProperties.addPermit = false;
     this.displayProperties.removePermit = false;
