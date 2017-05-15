@@ -38,7 +38,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
       (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
     ),
     { name: 'Описание', prop: 'dsc', minWidth: 200 },
-    { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
     { name: 'Комментарий', prop: 'comment' },
   ];
 
