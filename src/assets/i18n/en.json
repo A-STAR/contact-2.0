@@ -87,6 +87,10 @@
       }
     },
     "default": {
+      "boolean": {
+        "TRUE": "True",
+        "FALSE": "False"
+      },
       "buttons": {
         "save": "Save",
         "cancel": "Cancel"

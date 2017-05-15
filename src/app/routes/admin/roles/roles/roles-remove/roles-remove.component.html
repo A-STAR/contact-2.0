@@ -1,4 +1,6 @@
-<app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
+<app-dialog [display]="role"
+            [autoWidth]="true"
+            (displayChange)="onDisplayChange($event)">
   <div dialog-header>
     <h3>Удалить роль</h3>
   </div>

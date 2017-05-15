@@ -107,6 +107,10 @@
     }
   },
   "default": {
+    "boolean": {
+      "TRUE": "Истина",
+      "FALSE": "Ложь"
+    },
     "buttons": {
       "save": "Сохранить",
       "cancel": "Отменить"
