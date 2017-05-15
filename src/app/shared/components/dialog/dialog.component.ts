@@ -15,7 +15,7 @@ export class DialogComponent implements OnDestroy, OnInit {
   @Input() display: boolean;
   @Output() displayChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
-  styles: CSSStyleDeclaration;
+  styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
 
   constructor(private element: ElementRef,
               private renderer2: Renderer2,
