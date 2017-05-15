@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { IUser, IUsersResponse } from './users.interface';
 
 @Component({
   moduleId: module.id,
@@ -30,8 +31,7 @@ export class UsersComponent {
     dataKey: 'users',
   };
 
-  parseFn(data: any): any {
-    console.log(data);
-    return data[this.dataSource.dataKey];
+  parseFn(data: IUsersResponse): Array<IUser> {
+    return data.users;
   }
 }
