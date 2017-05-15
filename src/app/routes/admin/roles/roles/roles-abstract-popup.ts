@@ -1,5 +1,4 @@
 import { EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from './roles.interface';
@@ -8,8 +7,6 @@ export abstract class AbstractRolesPopup implements OnInit {
   @Input() role: IRoleRecord;
   @Output() roleChange: EventEmitter<IRoleRecord> = new EventEmitter();
   @Output() onUpdate: EventEmitter<null> = new EventEmitter();
-
-  form: FormGroup;
 
   error: string = null;
 

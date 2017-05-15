@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDisplayProperties } from '../../roles.interface';
 
@@ -13,14 +11,12 @@ export class EditPermissionComponent implements OnInit {
   @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
-  // form: FormGroup;
+
   controls: Array<IDynamicFormControl>;
-  private formChanges: any;
 
   canSaveChanges = false;
 
-  constructor(private fb: FormBuilder) {
-  }
+  private formChanges: any;
 
   /**
    * @override
@@ -56,23 +52,20 @@ export class EditPermissionComponent implements OnInit {
         label: 'ID',
         controlName: 'id',
         value: this.record.id,
-        type: 'number',
-        required: true,
-        disabled: true,
-        // display: false
+        type: 'hidden',
+        required: true
       },
       {
         label: 'Тип',
         controlName: 'typeCode',
         value: this.record.typeCode,
-        type: 'number',
-        required: true,
-        disabled: true,
-        // display: false
+        type: 'hidden',
+        required: true
       },
       {
         label: 'Название',
         controlName: 'name',
+        value: this.record.name,
         type: 'text',
         disabled: true,
         required: true
@@ -80,6 +73,7 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Значение',
         controlName: 'value',
+        value: this.record.value,
         type: 'dynamic',
         dependsOn: 'typeCode',
         required: true
@@ -87,12 +81,14 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Описание',
         controlName: 'dsc',
+        value: this.record.dsc,
         type: 'text',
         disabled: true
       },
       {
         label: 'Комментарий',
         controlName: 'comment',
+        value: this.record.comment,
         type: 'textarea'
       }
     ];
@@ -111,11 +107,4 @@ export class EditPermissionComponent implements OnInit {
   onSave(): void {
     this.save.emit(this.formChanges);
   }
-
-  /*
-  canSaveChanges(): boolean {
-    return this.form.dirty;
-  }
-  */
-
 }

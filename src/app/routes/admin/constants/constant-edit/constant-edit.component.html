@@ -1,0 +1,20 @@
+<app-dialog [display]="constant" (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>{{ 'constants.form.title' | translate }}: {{ constant.id }}</h3>
+  </div>
+
+  <app-dynamic-form
+    [controls]="controls"
+    (formValue)="onFormValueChange($event)"
+    (canSubmit)="onCanSubmitChange($event)">
+  </app-dynamic-form>
+
+  <div dialog-footer>
+    <button class="btn btn-primary" [disabled]="!canSubmit" (click)="onActionClick()">
+      {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancelClick()">
+      {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

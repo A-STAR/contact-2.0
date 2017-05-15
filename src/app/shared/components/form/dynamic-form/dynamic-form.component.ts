@@ -7,7 +7,6 @@ import { IDynamicFormControl } from './dynamic-form-control.interface';
   selector: 'app-dynamic-form',
   templateUrl: 'dynamic-form.component.html'
 })
-
 export class DynamicFormComponent implements OnInit {
   @Input() controls: Array<IDynamicFormControl>;
 
@@ -20,15 +19,14 @@ export class DynamicFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.createForm();
-    this.form.valueChanges.subscribe(value => {
-      this.formValue.emit(value);
+    this.form.valueChanges.subscribe(() => {
+      this.formValue.emit(this.form.getRawValue());
       this.canSubmit.emit(this.form.valid && this.form.dirty);
     });
   }
 
   private createForm(): FormGroup {
     const controls = this.controls
-      .filter(control => control.display !== false)
       .reduce((acc, control) => {
         const options = {
           disabled: control.disabled,
@@ -36,13 +34,6 @@ export class DynamicFormComponent implements OnInit {
         };
         const validators = control.required ? Validators.required : undefined;
         acc[control.controlName] = new FormControl(options, validators);
-
-        /*
-        if (control.disabled) {
-          formControl.disable();
-        }
-        */
-
         return acc;
       }, {});
 
