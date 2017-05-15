@@ -33,8 +33,8 @@ export class UsersComponent {
   };
 
   actions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
   ];
 
   selectedUser: IUser = null;
