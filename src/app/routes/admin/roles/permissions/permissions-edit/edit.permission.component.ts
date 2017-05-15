@@ -34,8 +34,7 @@ export class EditPermissionComponent implements OnInit {
       name: [this.record.name, Validators.required],
       value: [String(this.record.value), Validators.required],
       comment: [this.record.comment],
-      dsc: [this.record.dsc],
-      altDsc: [this.record.altDsc]
+      dsc: [this.record.dsc]
     });
 
     this.form.valueChanges.subscribe((formChanges) => this.formChanges = formChanges);
@@ -56,12 +55,6 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Описание',
         controlName: 'dsc',
-        type: 'text',
-        disabled: true
-      },
-      {
-        label: 'Описание на альтернативном языке',
-        controlName: 'altDsc',
         type: 'text',
         disabled: true
       },
