@@ -4,13 +4,11 @@
     <h3>Доступ</h3>
   </div>
 
-  <app-dynamic-form [form]="form"
-                    [controls]="controls">
-  </app-dynamic-form>
+  <app-dynamic-form [controls]="controls"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-danger"
-            [disabled]="!canSaveChanges()"
+            [disabled]="!canSaveChanges"
             (click)="onSave()">
       <i class="fa fa-check"></i> Сохранить
     </button>

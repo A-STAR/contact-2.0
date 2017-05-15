@@ -1,44 +1,40 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
 @Component({
   selector: 'app-roles-edit',
   templateUrl: './roles-edit.component.html'
 })
-export class RolesEditComponent extends AbstractRolesPopup {
-  controls: Array<IDynamicFormControl> = [
-    {
-      label: 'Название',
-      controlName: 'name',
-      type: 'text',
-      required: true
-    },
-    {
-      label: 'Комментарий',
-      controlName: 'comment',
-      type: 'textarea',
-      rows: 2
-    },
-  ];
-
+export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
   constructor(private formBuilder: FormBuilder, private gridService: GridService) {
     super();
   }
 
-  get popupTitle() {
+  get popupTitle(): string {
     return this.isUpdating() ? `Роль: ${this.role.id}` : 'Новая роль';
   }
 
-  protected createForm(role: IRoleRecord) {
-    return this.formBuilder.group({
-      name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment ],
-    });
+  protected getControls(): Array<IDynamicFormControl> {
+    return [
+      {
+        label: 'Название',
+        controlName: 'name',
+        type: 'text',
+        required: true,
+        value: this.role.name
+      },
+      {
+        label: 'Комментарий',
+        controlName: 'comment',
+        type: 'textarea',
+        rows: 2,
+        value: this.role.comment
+      }
+    ];
   }
 
   protected httpAction(): Observable<any> {
@@ -51,11 +47,11 @@ export class RolesEditComponent extends AbstractRolesPopup {
     return !!(this.role && this.role.name);
   }
 
-  private httpActionCreate() {
-    return this.gridService.create('/api/roles', {}, this.form.getRawValue());
+  private httpActionCreate(): Observable<any> {
+    return this.gridService.create('/api/roles', {}, this.formValue);
   }
 
-  private httpActionUpdate() {
-    return this.gridService.update('/api/roles/{id}', this.role, this.form.getRawValue());
+  private httpActionUpdate(): Observable<any> {
+    return this.gridService.update('/api/roles/{id}', this.role, this.formValue);
   }
 }
