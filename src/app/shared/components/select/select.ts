@@ -301,7 +301,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
           ? item
           : {id: item[this.idField], text: item[this.textField]};
 
-        return new SelectItem(data);
+        return new SelectItem(data, this.idField, this.textField);
       });
     }
   }
@@ -346,11 +346,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
           return item;
         }
       });
-      this.itemObjects = this._items.map((item: any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({
-        id: item[this.idField],
-        text: item[this.textField],
-        children: item[this.childrenField]
-      })));
+      this.itemObjects = this._items.map((item: any) => (typeof item === 'string'
+        ? new SelectItem(item, this.idField, this.textField)
+        : new SelectItem({
+          id: item[this.idField],
+          text: item[this.textField],
+          children: item[this.childrenField]}, this.idField, this.textField
+        )));
     }
   }
 

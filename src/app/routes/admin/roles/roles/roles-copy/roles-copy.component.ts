@@ -56,9 +56,10 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   }
 
   protected httpAction(): Observable<any> {
+    // TODO Make role-service for direct http calls
+    // The component should not contain this logic here, only proxy calls
     const data = this.form.getRawValue();
-    // TODO ID
-    const originalRoleId: number = data.originalRoleId[0].value || data.originalRoleId[0].id;
+    const originalRoleId: number = data.originalRoleId[0].value;
     data.originalRoleId = originalRoleId;
     return this.gridService.create('/api/roles/{id}/copy', { id: originalRoleId }, data);
   }
