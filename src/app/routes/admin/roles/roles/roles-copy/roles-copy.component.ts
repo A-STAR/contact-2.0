@@ -29,7 +29,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         cachingOptions: true,
         lazyOptions: this.gridService.read('/api/roles')
           .map(
-            (data: any) => data.roles.map(role => ({label: role.name, value: role.id}))
+            (data: {roles: Array<{name: string, id: number}>}) => data.roles.map(role => ({label: role.name, value: role.id}))
           )
       },
       {
