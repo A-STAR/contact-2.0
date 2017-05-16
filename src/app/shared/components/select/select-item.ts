@@ -43,10 +43,10 @@ export class SelectItem {
   }
 
   public getSimilar(): SelectItem {
-    const r: SelectItem = new SelectItem(false, this.idKey, this.textKey);
-    r.id = this.id;
-    r.text = this.text;
-    r.parent = this.parent;
-    return r;
+    return Object.assign(new SelectItem(false, this.idKey, this.textKey), {
+      id: this.text,
+      text: this.text,
+      parent: this.parent
+    });
   }
 }
