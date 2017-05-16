@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -13,8 +13,6 @@ import { AbstractRolesPopup } from '../roles-abstract-popup';
 export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   @Input() originalRole: IRoleRecord = null;
 
-  controls: Array<IDynamicFormControl>;
-
   constructor(private formBuilder: FormBuilder, private gridService: GridService) {
     super();
   }
@@ -25,68 +23,35 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         label: 'Название оригинальной роли',
         controlName: 'originalRoleId',
         type: 'select',
-        options: [],
-        required: true
+        required: true,
+        // TODO: select options lazy loading
+        options: [
+          {
+            label: this.originalRole.name,
+            value: this.originalRole.id
+          }
+        ],
+        value: this.originalRole.id
       },
       {
         label: 'Название',
         controlName: 'name',
         type: 'text',
-        required: true
+        required: true,
+        value: this.role.name
       },
       {
         label: 'Комментарий',
         controlName: 'comment',
         type: 'textarea',
-        rows: 2
+        rows: 2,
+        value: this.role.name
       },
     ];
-
-    /*
-    return this.gridService
-      .read('/api/roles')
-      .toPromise()
-      .then(data => {
-        const options = data.roles.map(role => ({
-          label: role.name,
-          value: role.id
-        }));
-        return [
-          {
-            label: 'Название оригинальной роли',
-            controlName: 'originalRoleId',
-            type: 'select',
-            options,
-            required: true
-          },
-          {
-            label: 'Название',
-            controlName: 'name',
-            type: 'text',
-            required: true
-          },
-          {
-            label: 'Комментарий',
-            controlName: 'comment',
-            type: 'textarea',
-            rows: 2
-          },
-        ] as Array<IDynamicFormControl>;
-      });
-    */
-  }
-
-  protected createForm(role: IRoleRecord): FormGroup {
-    return this.formBuilder.group({
-      originalRoleId: [ this.originalRole.id, Validators.required ],
-      name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment ],
-    });
   }
 
   protected httpAction(): Observable<any> {
-    // const data = this.form.getRawValue();
-    // return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
-    return null;
+    const data = this.formValue;
+    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
 }

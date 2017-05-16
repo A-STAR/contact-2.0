@@ -1,4 +1,4 @@
-<app-constant-edit [(constant)]="currentConstant" (onUpdate)="onUpdate()" *ngIf="!!currentConstant"></app-constant-edit>
+<app-constant-edit [(constant)]="currentConstant" (onUpdate)="onUpdate()" *ngIf="currentConstant"></app-constant-edit>
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onTabClose($event)" [active]="tab.active">
