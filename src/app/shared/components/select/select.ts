@@ -387,6 +387,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   private initLazyItems(): void {
     if (this.cachingItems && this._lazyItemsSubscription) {
+      this.afterInitItems();
       return;
     }
     this._lazyItemsSubscription = this.lazyItems.subscribe((value: Array<any>) => {
