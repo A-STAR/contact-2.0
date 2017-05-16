@@ -54,7 +54,8 @@ export class EditPermissionComponent implements OnInit {
         controlName: 'name',
         value: this.record.name,
         type: 'text',
-        required: true
+        required: true,
+        disabled: true
       },
       {
         label: 'Значение',
@@ -68,7 +69,8 @@ export class EditPermissionComponent implements OnInit {
         label: 'Описание',
         controlName: 'dsc',
         value: this.record.dsc,
-        type: 'text'
+        type: 'text',
+        disabled: true
       },
       {
         label: 'Комментарий',
