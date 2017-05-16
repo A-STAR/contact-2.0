@@ -1,13 +1,8 @@
-<p-dialog
-  appendTo="body"
-  [header]="'Выберите доступ'"
-  [draggable]="true"
-  [modal]="true"
-  [resizable]="false"
-  [responsive]="false"
-  [width]="800"
-  [height]="600"
-  [(visible)]="displayProperties.addPermit">
+<app-dialog [display]="displayProperties.addPermit"
+            (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>Выберите доступ</h3>
+  </div>
 
   <app-grid
     #addPermitGrid
@@ -20,19 +15,14 @@
     (onRowSelect)="onSelectPermissions($event)">
   </app-grid>
 
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button"
-              class="ui-button-secondary"
-              pButton icon="fa-close"
-              label="Отмена"
-              (click)="onCancel()"></button>
-      <button type="button"
-              class="ui-button-success"
-              pButton icon="fa-check"
-              label="Добавить"
-              [disabled]="!canAddPermissions()"
-              (click)="onAddPermissions()"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+  <div dialog-footer>
+    <button class="btn btn-danger"
+            [disabled]="!canAddPermissions()"
+            (click)="onAddPermissions()">
+      <i class="fa fa-check"></i> Добавить
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> Отмена
+    </button>
+  </div>
+</app-dialog>

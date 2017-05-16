@@ -8,6 +8,7 @@ export interface IDynamicFormControl {
   dependsOn?: string;
   required?: boolean;
   disabled?: boolean;
+  readonly?: boolean;
   placeholder?: string;
   // options for select controls
   options?: Array<ISelectOptions>;
