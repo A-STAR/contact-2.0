@@ -25,7 +25,7 @@ export class ConstantsComponent implements OnInit {
     { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { name: 'Название константы', prop: 'name', maxWidth: 350 },
     { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Комментарий', prop: 'dsc', width: 200, maxWidth: 400 },
+    { name: 'Комментарий', prop: 'dsc', width: 200 },
   ];
 
   controls: Array<IDynamicFormControl> = [
