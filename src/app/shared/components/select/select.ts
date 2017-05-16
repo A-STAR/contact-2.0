@@ -288,7 +288,7 @@ const styles = `
 })
 export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor, ISelectComponent {
   @Input() public allowClear = false;
-  @Input() public readonly = true;
+  @Input() public readonly: boolean;
   @Input() public placeholder = '';
   @Input() public idField = 'id';
   @Input() public textField = 'text';
@@ -500,13 +500,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
    * @override
    */
   public ngOnInit(): void {
+    this.readonly = typeof this.readonly !== 'undefined' ? this.readonly : true;
+
     this.behavior = (this.firstItemHasChildren)
       ? new ChildrenBehavior(this)
       : new GenericBehavior(this);
-
-    if (this.readonly) {
-      this.renderer.setAttribute(this.getInputElement(), 'readonly', 'true');
-    }
   }
 
   /**
@@ -516,6 +514,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     const selectNativeElement: Element = this.behavior.getSelectNativeElement();
     if (selectNativeElement) {
       // TODO Define select field behaviour
+    }
+
+    if (this.readonly) {
+      const input: any = this.getInputElement();
+      if (input) {
+        this.renderer.setAttribute(input, 'readonly', 'true');
+      }
     }
   }
 
