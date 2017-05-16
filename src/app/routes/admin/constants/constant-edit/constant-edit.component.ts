@@ -44,7 +44,7 @@ export class ConstantEditComponent implements OnInit {
 
   onActionClick(): void {
     const id = this.getFieldValue('id');
-    const typeCode = this.getFieldValue('typeCode');
+    const typeCode = this.getFieldValue('typeCode')[0].value;
     const value = this.getFieldValue('value');
     const fieldMap: object = {
       1: 'valueN',
@@ -52,7 +52,7 @@ export class ConstantEditComponent implements OnInit {
       3: 'valueS',
       4: 'valueB',
     };
-    const field: string = fieldMap[this.getFieldValue('typeCode')];
+    const field: string = fieldMap[typeCode];
     const body = { [field]: value };
 
     if (typeCode === 4) {
@@ -90,12 +90,48 @@ export class ConstantEditComponent implements OnInit {
     ];
 
     return [
-      { label: 'Ид', controlName: 'id', type: 'hidden', required: true, disabled: true, value: this.constant.id },
-      { label: 'Название константы', controlName: 'name', type: 'text', required: true, disabled: true, value: this.constant.name },
-      { label: 'Тип', controlName: 'typeCode', type: 'select', required: true, disabled: true, options, value: this.constant.typeCode },
-      { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true,
-        value: this.getValueField(this.constant) },
-      { label: 'Комментарий', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2, value: this.constant.dsc },
+      {
+        label: 'Ид',
+        controlName: 'id',
+        type: 'hidden',
+        required: true,
+        disabled: true,
+        value: this.constant.id
+      },
+      {
+        label: 'Название константы',
+        controlName: 'name',
+        type: 'text',
+        required: true,
+        disabled: true,
+        value: this.constant.name
+      },
+      {
+        label: 'Тип',
+        controlName: 'typeCode',
+        type: 'select',
+        required: true,
+        disabled: true,
+        options,
+        value: [{ value: this.constant.typeCode, label: this.constant.typeCode }]
+      },
+      {
+        label: 'Значение',
+        controlName: 'value',
+        type: 'dynamic',
+        dependsOn: 'typeCode',
+        required: true,
+        value: this.getValueField(this.constant)
+      },
+      {
+        label: 'Комментарий',
+        controlName: 'dsc',
+        type: 'textarea',
+        required: true,
+        disabled: true,
+        rows: 2,
+        value: this.constant.dsc
+      },
     ];
   }
 

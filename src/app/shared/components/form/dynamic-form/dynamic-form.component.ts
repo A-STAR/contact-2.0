@@ -22,7 +22,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   get value(): any {
-    return this.form.value;
+    return this.form.getRawValue();
   }
 
   private createForm(): FormGroup {
