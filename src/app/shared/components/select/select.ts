@@ -175,7 +175,6 @@ const styles = `
              (keydown)="inputEvent($event)"
              (keyup)="inputEvent($event, true)"
              [disabled]="disabled"
-             [attr.readonly]="readonly"
              class="form-control ui-select-search"
              *ngIf="inputMode"
              placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -346,7 +345,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   public options: Array<SelectItem> = [];
   public itemObjects: Array<SelectItem> = [];
   public activeOption: SelectItem;
-  public element: ElementRef;
 
   protected onChange: any = Function.prototype;
   protected onTouched: any = Function.prototype;
@@ -401,7 +399,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     return this._optionsOpened;
   }
 
-  public constructor(element: ElementRef,
+  public constructor(public element: ElementRef,
                      private sanitizer: DomSanitizer,
                      private renderer: Renderer2) {
     this.element = element;
@@ -502,8 +500,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
    * @override
    */
   public ngOnInit(): void {
-    this.behavior = (this.firstItemHasChildren) ?
-      new ChildrenBehavior(this) : new GenericBehavior(this);
+    this.behavior = (this.firstItemHasChildren)
+      ? new ChildrenBehavior(this)
+      : new GenericBehavior(this);
+
+    if (this.readonly) {
+      this.renderer.setAttribute(this.getInputElement(), 'readonly', 'true');
+    }
   }
 
   /**
@@ -615,14 +618,18 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.remove(value);
   }
 
-  private focusToInput(value:string = ''):void {
+  private focusToInput(value: string = ''): void {
     setTimeout(() => {
-      let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
+      const el = this.getInputElement();
       if (el) {
         el.focus();
         el.value = value;
       }
     }, 0);
+  }
+
+  private getInputElement(): any {
+    return this.element.nativeElement.querySelector('div.ui-select-container > input');
   }
 
   private open(): void {
