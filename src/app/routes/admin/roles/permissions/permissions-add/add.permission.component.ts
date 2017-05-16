@@ -51,6 +51,12 @@ export class AddPermissionComponent implements AfterViewInit {
     this.cancel.emit(false);
   }
 
+  onDisplayChange(event: boolean): void {
+    if (!event) {
+      this.onCancel();
+    }
+  }
+
   onAddPermissions(): void {
     this.add.emit(this.selectedPermissions);
   }

@@ -2,7 +2,7 @@ import {
   Component, ElementRef, EventEmitter, Input, Output, OnDestroy, Renderer2, OnInit
 } from '@angular/core';
 
-import {EnvironmentContainer} from '../../../core/environment/environment.interface';
+import { EnvironmentContainer } from '../../../core/environment/environment.interface';
 
 @Component({
   selector: 'app-dialog',
@@ -32,9 +32,6 @@ export class DialogComponent implements OnDestroy, OnInit {
     this.onClose.emit(null);
   }
 
-  /**
-   * @override
-   */
   ngOnInit(): void {
     if (this.autoWidth) {
       this.styles.width = 'auto';
@@ -42,9 +39,6 @@ export class DialogComponent implements OnDestroy, OnInit {
     this.renderer2.appendChild(this.environmentContainer, this.element.nativeElement);
   }
 
-  /**
-   * @override
-   */
   ngOnDestroy(): void {
     this.renderer2.removeChild(this.environmentContainer, this.element.nativeElement);
   }
