@@ -53,7 +53,7 @@ let styles = `
   .ui-select-choices {
     width: 100%;
     height: auto;
-    max-height: 200px;
+    max-height: 180px;
     overflow-x: hidden;
     margin-top: 0;
   }
