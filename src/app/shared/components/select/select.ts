@@ -286,7 +286,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public cachingItems = false;
-  @Output() public clickAction: EventEmitter<SelectionActionTypeEnum> = new EventEmitter();
+  @Output() public clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
 
   private _lazyItemsSubscription: Subscription;
 
@@ -411,6 +411,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
         }
         break;
     }
+    this.clickAction.emit(action);
   }
 
   public sanitize(html: string): SafeHtml {
