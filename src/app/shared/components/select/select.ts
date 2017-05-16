@@ -38,25 +38,17 @@ const styles = `
     right: 15px;
   }
   
-  .ui-disabled {
-    background-color: #eceeef;
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    opacity: 0.6;
-    top: 0;
-    left: 0;
-    cursor: not-allowed;
-  }
-  
   .ui-select-choices {
     width: 100%;
     height: auto;
     max-height: 180px;
     overflow-x: hidden;
     margin-top: 0;
+  }
+  
+  .ui-select-container[disabled] * {
+    background-color: #edf1f2;
+    cursor: not-allowed;
   }
   
   .ui-select-multiple .ui-select-choices {
@@ -140,11 +132,11 @@ const styles = `
     </template>
     
     <div tabindex="0"
+         [attr.disabled]="disabled"
          *ngIf="multiple === false"
          (keyup)="mainClick($event)"
          [offClick]="clickedOutside"
          class="ui-select-container dropdown open">
-      <div [ngClass]="{'ui-disabled': disabled}"></div>
       <div class="ui-select-match"
            *ngIf="!inputMode">
       <span tabindex="-1"
@@ -156,7 +148,7 @@ const styles = `
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
+        <i *ngIf="!disabled" class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" 
            style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
@@ -209,12 +201,12 @@ const styles = `
     </div>
 
     <div tabindex="0"
+         [attr.disabled]="disabled"
          *ngIf="multiple === true"
          (keyup)="mainClick($event)"
          (focus)="focusToInput('')"
          [offClick]="clickedOutside"
          class="ui-select-container ui-select-multiple dropdown form-control open">
-      <div [ngClass]="{'ui-disabled': disabled}"></div>
       <span class="ui-select-match">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
