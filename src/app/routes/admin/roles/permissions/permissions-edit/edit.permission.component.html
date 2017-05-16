@@ -4,7 +4,11 @@
     <h3>Доступ</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls"></app-dynamic-form>
+  <app-dynamic-form
+    [controls]="controls"
+    (formValue)="onFormValueChange($event)"
+    (canSubmit)="onCanSubmitChange($event)">
+  </app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-danger"
