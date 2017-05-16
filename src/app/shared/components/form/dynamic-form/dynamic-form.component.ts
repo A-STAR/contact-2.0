@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { IDynamicFormControl } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormControl } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -33,10 +32,13 @@ export class DynamicFormComponent implements OnInit {
           disabled: control.disabled,
           value: control.value
         };
-        const validators = control.required ? Validators.required : undefined;
+        const validators = Validators.compose([
+          ...control.validators || [],
+          control.required ? Validators.required : undefined
+        ]);
         acc[control.controlName] = new FormControl(options, validators);
         return acc;
-      }, {});
+      }, {} as IControls);
 
     return this.formBuilder.group(controls);
   }
