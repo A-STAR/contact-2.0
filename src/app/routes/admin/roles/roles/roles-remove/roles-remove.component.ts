@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-
 import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
 @Component({
@@ -19,13 +16,6 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
 
   protected getControls() {
     return [];
-  }
-
-  /**
-   * @override
-   */
-  protected createForm(role: IRoleRecord): FormGroup {
-    return null;
   }
 
   /**

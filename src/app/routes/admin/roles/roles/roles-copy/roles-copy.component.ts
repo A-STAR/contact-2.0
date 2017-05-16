@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -13,7 +12,7 @@ import { AbstractRolesPopup } from '../roles-abstract-popup';
 export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   @Input() originalRole: IRoleRecord = null;
 
-  constructor(private formBuilder: FormBuilder, private gridService: GridService) {
+  constructor(private gridService: GridService) {
     super();
   }
 
