@@ -321,12 +321,17 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   @Input()
   public set active(selectedItems: Array<any>) {
-    if (!selectedItems || selectedItems.length === 0) {
+    let currentSelectedItems: number|Array<any> = selectedItems;
+    if (typeof currentSelectedItems === 'number') {
+      const optionValue: SelectItem = this.itemObjects.find((item: SelectItem) => String(item.id) === String(currentSelectedItems));
+      currentSelectedItems = [{[this.idField]: optionValue.id, [this.textField]: optionValue.text}];
+    }
+    if (!currentSelectedItems || currentSelectedItems.length === 0 || !Array.isArray(currentSelectedItems)) {
       this._active = [];
     } else {
-      const areItemsStrings = typeof selectedItems[0] === 'string';
+      const areItemsStrings = typeof currentSelectedItems[0] === 'string';
 
-      this._active = selectedItems.map((item: any) => {
+      this._active = currentSelectedItems.map((item: any) => {
         const data = areItemsStrings
           ? item
           : {id: item[this.idField], text: item[this.textField]};
