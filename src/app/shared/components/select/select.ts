@@ -73,6 +73,9 @@ const styles = `
   .ui-select-action {
       padding: 3px 20px;
   }
+  .ui-select-action fa {
+      float: right;
+  }
   .ui-select-choices-row.active>a {
       color: #fff;
       text-decoration: none;
