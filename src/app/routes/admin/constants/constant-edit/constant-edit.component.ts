@@ -79,7 +79,6 @@ export class ConstantEditComponent implements OnInit {
         resp => {
           this.close();
           this.onUpdate.emit();
-          // this.grid.load().subscribe();  TODO - reload grid
         },
         // TODO: display & log a message
         error => console.log(error.statusText || error.status || 'Request error')
@@ -104,13 +103,12 @@ export class ConstantEditComponent implements OnInit {
       { label: 'Ид', controlName: 'id', type: 'hidden', required: true, disabled: true, value: this.constant.id },
       { label: 'Название константы', controlName: 'name', type: 'text', required: true, disabled: true, value: this.constant.name },
       { label: 'Тип', controlName: 'typeCode', type: 'select', required: true, disabled: true, options, value: this.constant.typeCode },
-      { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true, value: String(this.constant) },
-        //value: this.getValueField(this.constant) },
+      { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true,
+        value: this.getValueField(this.constant) },
       { label: 'Комментарий', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2, value: this.constant.dsc },
     ];
   }
 
-/*
   getValueField(constant: IConstant): any {
     const value = constant.value;
     switch (constant.typeCode) {
@@ -125,7 +123,6 @@ export class ConstantEditComponent implements OnInit {
         return value;
     }
   }
-*/
 
   private close(): void {
     this.constant = null;
