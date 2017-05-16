@@ -1,12 +1,16 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import {
+  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Renderer2, AfterViewChecked
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 
-let styles = `
+const styles = `
   .ui-select-toggle {
     position: relative;
   }
@@ -49,7 +53,7 @@ let styles = `
   .ui-select-choices {
     width: 100%;
     height: auto;
-    max-height: 200px;
+    max-height: 180px;
     overflow-x: hidden;
     margin-top: 0;
   }
@@ -107,7 +111,7 @@ let styles = `
 `;
 
 @Component({
-  selector: 'ng-select',
+  selector: 'app-select',
   styles: [styles],
   providers: [
     {
@@ -119,38 +123,40 @@ let styles = `
     }
   ],
   template: `
-  <div tabindex="0"
-     *ngIf="multiple === false"
-     (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
-    <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <div class="ui-select-match"
-         *ngIf="!inputMode">
+    <div tabindex="0"
+         *ngIf="multiple === false"
+         (keyup)="mainClick($event)"
+         [offClick]="clickedOutside"
+         class="ui-select-container dropdown open">
+      <div [ngClass]="{'ui-disabled': disabled}"></div>
+      <div class="ui-select-match"
+           *ngIf="!inputMode">
       <span tabindex="-1"
-          class="btn btn-default btn-secondary form-control ui-select-toggle"
-          (click)="matchClick($event)"
-          style="outline: 0;">
+            class="btn btn-default btn-secondary form-control ui-select-toggle"
+            (click)="matchClick($event)"
+            style="outline: 0;">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
+        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" 
+           style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
         </a>
       </span>
-    </div>
-    <input type="text" autocomplete="false" tabindex="-1"
-           (keydown)="inputEvent($event)"
-           (keyup)="inputEvent($event, true)"
-           [disabled]="disabled"
-           class="form-control ui-select-search"
-           *ngIf="inputMode"
-           placeholder="{{active.length <= 0 ? placeholder : ''}}">
-     <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+      </div>
+      <input type="text" autocomplete="false" tabindex="-1"
+             (keydown)="inputEvent($event)"
+             (keyup)="inputEvent($event, true)"
+             [disabled]="disabled"
+             [attr.readonly]="readonly"
+             class="form-control ui-select-search"
+             *ngIf="inputMode"
+             placeholder="{{active.length <= 0 ? placeholder : ''}}">
+      <!-- options template -->
+      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
@@ -163,13 +169,13 @@ let styles = `
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -182,16 +188,16 @@ let styles = `
           </div>
         </li>
       </ul>
-  </div>
+    </div>
 
-  <div tabindex="0"
-     *ngIf="multiple === true"
-     (keyup)="mainClick($event)"
-     (focus)="focusToInput('')"
-     [offClick]="clickedOutside"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
-    <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <span class="ui-select-match">
+    <div tabindex="0"
+         *ngIf="multiple === true"
+         (keyup)="mainClick($event)"
+         (focus)="focusToInput('')"
+         [offClick]="clickedOutside"
+         class="ui-select-container ui-select-multiple dropdown form-control open">
+      <div [ngClass]="{'ui-disabled': disabled}"></div>
+      <span class="ui-select-match">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
                   tabindex="-1"
@@ -204,20 +210,21 @@ let styles = `
            </span>
         </span>
     </span>
-    <input type="text"
-           (keydown)="inputEvent($event)"
-           (keyup)="inputEvent($event, true)"
-           (click)="matchClick($event)"
-           [disabled]="disabled"
-           autocomplete="false"
-           autocorrect="off"
-           autocapitalize="off"
-           spellcheck="false"
-           class="form-control ui-select-search"
-           placeholder="{{active.length <= 0 ? placeholder : ''}}"
-           role="combobox">
-     <!-- options template -->
-     <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+      <input type="text"
+             (keydown)="inputEvent($event)"
+             (keyup)="inputEvent($event, true)"
+             (click)="matchClick($event)"
+             [disabled]="disabled"
+             [attr.readonly]="readonly"
+             autocomplete="false"
+             autocorrect="off"
+             autocapitalize="off"
+             spellcheck="false"
+             class="form-control ui-select-search"
+             placeholder="{{active.length <= 0 ? placeholder : ''}}"
+             role="combobox">
+      <!-- options template -->
+      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
@@ -230,13 +237,13 @@ let styles = `
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -249,105 +256,132 @@ let styles = `
           </div>
         </li>
       </ul>
-  </div>
+    </div>
   `
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
-  @Input() public allowClear:boolean = false;
-  @Input() public placeholder:string = '';
-  @Input() public idField:string = 'id';
-  @Input() public textField:string = 'text';
-  @Input() public childrenField:string = 'children';
-  @Input() public multiple:boolean = false;
+export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
+  @Input() public allowClear = false;
+  @Input() public readonly = true;
+  @Input() public placeholder = '';
+  @Input() public idField = 'id';
+  @Input() public textField = 'text';
+  @Input() public childrenField = 'children';
+  @Input() public multiple = false;
+  @Input() public lazyItems: Observable<Array<any>>;
+  @Input() public cachingItems = false;
+
+  private _lazyItemsSubscription: Subscription;
 
   @Input()
-  public set items(value:Array<any>) {
-    if (!value) {
-      this._items = this.itemObjects = [];
-    } else {
-      this._items = value.filter((item:any) => {
-        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
-          return item;
-        }
-      });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], children: item[this.childrenField]})));
-    }
+  public set items(value: Array<any>) {
+    this.initItems(value);
   }
 
   @Input()
-  public set disabled(value:boolean) {
+  public set disabled(value: boolean) {
     this._disabled = value;
     if (this._disabled === true) {
       this.hideOptions();
     }
   }
 
-  public get disabled():boolean {
+  public get disabled(): boolean {
     return this._disabled;
   }
 
   @Input()
-  public set active(selectedItems:Array<any>) {
+  public set active(selectedItems: Array<any>) {
     if (!selectedItems || selectedItems.length === 0) {
       this._active = [];
     } else {
-      let areItemsStrings = typeof selectedItems[0] === 'string';
+      const areItemsStrings = typeof selectedItems[0] === 'string';
 
-      this._active = selectedItems.map((item:any) => {
-        let data = areItemsStrings
+      this._active = selectedItems.map((item: any) => {
+        const data = areItemsStrings
           ? item
           : {id: item[this.idField], text: item[this.textField]};
 
-        return new SelectItem(data);
+        return new SelectItem(data, this.idField, this.textField);
       });
     }
   }
 
-  @Output() public data:EventEmitter<any> = new EventEmitter();
-  @Output() public selected:EventEmitter<any> = new EventEmitter();
-  @Output() public removed:EventEmitter<any> = new EventEmitter();
-  @Output() public typed:EventEmitter<any> = new EventEmitter();
-  @Output() public opened:EventEmitter<any> = new EventEmitter();
+  @Output() public data: EventEmitter<any> = new EventEmitter();
+  @Output() public selected: EventEmitter<any> = new EventEmitter();
+  @Output() public removed: EventEmitter<any> = new EventEmitter();
+  @Output() public typed: EventEmitter<any> = new EventEmitter();
+  @Output() public opened: EventEmitter<any> = new EventEmitter();
 
-  public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
-  public activeOption:SelectItem;
-  public element:ElementRef;
+  public options: Array<SelectItem> = [];
+  public itemObjects: Array<SelectItem> = [];
+  public activeOption: SelectItem;
+  public element: ElementRef;
 
-  public get active():Array<any> {
+  protected onChange: any = Function.prototype;
+  protected onTouched: any = Function.prototype;
+
+  private inputMode = false;
+  private _optionsOpened = false;
+  private behavior: OptionsBehavior;
+  private inputValue = '';
+  private _items: Array<any> = [];
+  private _disabled = false;
+  private _active: Array<SelectItem> = [];
+
+  public get active(): Array<any> {
     return this._active;
   }
 
-  private set optionsOpened(value:boolean){
+  private set optionsOpened(value: boolean){
     this._optionsOpened = value;
     this.opened.emit(value);
+  }
+
+  private initItems(value: Array<any>): void {
+    if (!value) {
+      this._items = this.itemObjects = [];
+    } else {
+      this._items = value.filter((item: any) => {
+        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
+          return item;
+        }
+      });
+      this.itemObjects = this._items.map((item: any) => (typeof item === 'string'
+        ? new SelectItem(item, this.idField, this.textField)
+        : new SelectItem({
+          id: item[this.idField],
+          text: item[this.textField],
+          children: item[this.childrenField]}, this.idField, this.textField
+        )));
+    }
+  }
+
+  private initLazyItems(): void {
+    if (this.cachingItems && this._lazyItemsSubscription) {
+      return;
+    }
+    this._lazyItemsSubscription = this.lazyItems.subscribe((value: Array<any>) => {
+      this.initItems(value);
+      this.afterInitItems();
+    });
   }
 
   private get optionsOpened(): boolean{
     return this._optionsOpened;
   }
 
-  protected onChange:any = Function.prototype;
-  protected onTouched:any = Function.prototype;
-
-  private inputMode:boolean = false;
-  private _optionsOpened:boolean = false;
-  private behavior:OptionsBehavior;
-  private inputValue:string = '';
-  private _items:Array<any> = [];
-  private _disabled:boolean = false;
-  private _active:Array<SelectItem> = [];
-
-  public constructor(element:ElementRef, private sanitizer:DomSanitizer) {
+  public constructor(element: ElementRef,
+                     private sanitizer: DomSanitizer,
+                     private renderer: Renderer2) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
   }
 
-  public sanitize(html:string):SafeHtml {
+  public sanitize(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  public inputEvent(e:any, isUpMode:boolean = false):void {
+  public inputEvent(e: any, isUpMode: boolean = false): void {
     // tab
     if (e.keyCode === 9) {
       return;
@@ -359,7 +393,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // backspace
     if (!isUpMode && e.keyCode === 8) {
-      let el:any = this.element.nativeElement
+      const el: any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
@@ -415,7 +449,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       e.preventDefault();
       return;
     }
-    let target = e.target || e.srcElement;
+    const target = e.target || e.srcElement;
     if (target && target.value) {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
@@ -425,17 +459,30 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public ngOnInit():any {
+  /**
+   * @override
+   */
+  public ngOnInit(): any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
 
-  public remove(item:SelectItem):void {
+  /**
+   * @override
+   */
+  public ngAfterViewChecked(): void {
+    const selectNativeElement: Element = this.behavior.getSelectNativeElement();
+    if (selectNativeElement) {
+      // TODO Define select field behaviour
+    }
+  }
+
+  public remove(item: SelectItem): void {
     if (this._disabled === true) {
       return;
     }
     if (this.multiple === true && this.active) {
-      let index = this.active.indexOf(item);
+      const index = this.active.indexOf(item);
       this.active.splice(index, 1);
       this.data.next(this.active);
       this.doEvent('removed', item);
@@ -447,7 +494,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public doEvent(type:string, value:any):void {
+  public doEvent(type: string, value: any): void {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
@@ -458,16 +505,16 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public clickedOutside():void {
+  public clickedOutside(): void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
 
-  public get firstItemHasChildren():boolean {
+  public get firstItemHasChildren(): boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
 
-  public writeValue(val:any):void {
+  public writeValue(val: any): void {
     this.active = val;
     this.data.emit(this.active);
   }
@@ -539,23 +586,31 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }, 0);
   }
 
-  private open():void {
-    this.options = this.itemObjects
-      .filter((option:SelectItem) => (this.multiple === false ||
-      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
-
-    if (this.options.length > 0) {
-      this.behavior.first();
+  private open(): void {
+    if (this.lazyItems) {
+      this.initLazyItems();
+    } else {
+      this.afterInitItems();
     }
     this.optionsOpened = true;
   }
 
-  private hideOptions():void {
+  private afterInitItems(): void {
+    this.options = this.itemObjects
+      .filter((option: SelectItem) => (this.multiple === false ||
+      this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
+
+    if (this.options.length > 0) {
+      this.behavior.first();
+    }
+  }
+
+  private hideOptions(): void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
 
-  private selectActiveMatch():void {
+  private selectActiveMatch(): void {
     this.selectMatch(this.activeOption);
   }
 
@@ -593,6 +648,10 @@ export class Behavior {
 
   public constructor(actor:SelectComponent) {
     this.actor = actor;
+  }
+
+  public getSelectNativeElement(): Element {
+    return this.actor.element.nativeElement.querySelector('.ui-select-choices');
   }
 
   public fillOptionsMap():void {

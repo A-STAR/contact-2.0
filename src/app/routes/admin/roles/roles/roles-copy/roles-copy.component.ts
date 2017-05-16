@@ -23,14 +23,12 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         controlName: 'originalRoleId',
         type: 'select',
         required: true,
-        // TODO: select options lazy loading
-        options: [
-          {
-            label: this.originalRole.name,
-            value: this.originalRole.id
-          }
-        ],
-        value: this.originalRole.id
+        value: [{ value: this.originalRole.id, label: this.originalRole.name }],
+        cachingOptions: true,
+        lazyOptions: this.gridService.read('/api/roles')
+          .map(
+            (data: {roles: Array<IRoleRecord>}) => data.roles.map(role => ({label: role.name, value: role.id}))
+          )
       },
       {
         label: 'Название',
@@ -50,7 +48,10 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   }
 
   protected httpAction(): Observable<any> {
-    const data = this.form.value;
+    const data = {
+      ...this.form.value,
+      originalRoleId: this.form.value.originalRoleId[0].value
+    };
     return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
 }
