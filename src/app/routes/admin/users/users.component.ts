@@ -17,13 +17,16 @@ export class UsersComponent {
     { name: 'Имя', prop: 'firstName', minWidth: 120 },
     { name: 'Отчество', prop: 'middleName', minWidth: 120 },
     { name: 'Должность', prop: 'position', minWidth: 120 },
-    { name: 'Роль', prop: 'roleId', minWidth: 80 },  // TODO: display role name
-    { name: 'Блокирован', prop: 'isBlocked', minWidth: 100 },  // TODO: display checkbox; display column depending on filter
+    // TODO: display role name
+    { name: 'Роль', prop: 'roleId', minWidth: 80 },
+    // TODO: display checkbox; display column depending on filter
+    { name: 'Блокирован', prop: 'isBlocked', minWidth: 100 },
     { name: 'Мобильный телефон', prop: 'mobPhone', minWidth: 140 },
     { name: 'Рабочий телефон', prop: 'workPhone', minWidth: 140 },
     { name: 'Внутренний номер', prop: 'intPhone', minWidth: 140 },
     { name: 'Email', prop: 'email', minWidth: 120 },
-    { name: 'Язык', prop: 'langCode', minWidth: 120 },  // TODO: display language name
+    // TODO: display language name
+    { name: 'Язык', prop: 'langCode', minWidth: 120 },
   ];
 
   dataSource: IDataSource = {
