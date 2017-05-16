@@ -1,6 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { AuthHttp } from 'angular2-jwt';
 import { DatePipe } from '@angular/common';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -13,7 +11,6 @@ import { GridComponent } from '../../../shared/components/grid/grid.component';
 export class ConstantsComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  form: FormGroup;
   currentConstant: any = null;
   tabs: Array<any> = [
     { id: 0, title: 'Константы', active: true },
@@ -61,7 +58,7 @@ export class ConstantsComponent {
     });
   }
 
-  constructor(private fb: FormBuilder, private http: AuthHttp, private datePipe: DatePipe) { }
+  constructor(private datePipe: DatePipe) { }
 
   onTabClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
@@ -73,5 +70,9 @@ export class ConstantsComponent {
 
   onCancel(): void {
     this.currentConstant = null;
+  }
+
+  onUpdate(): void {
+    this.grid.load().subscribe();
   }
 }

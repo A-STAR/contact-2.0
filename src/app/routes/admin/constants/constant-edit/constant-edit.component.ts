@@ -78,6 +78,7 @@ export class ConstantEditComponent implements OnInit {
       .subscribe(
         resp => {
           this.close();
+          this.onUpdate.emit();
           // this.grid.load().subscribe();  TODO - reload grid
         },
         // TODO: display & log a message

@@ -5,7 +5,6 @@ import { GridService } from '../../../../../shared/components/grid/grid.service'
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
-import 'rxjs/add/operator/toPromise';
 
 @Component({
   selector: 'app-roles-copy',
@@ -86,7 +85,8 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   }
 
   protected httpAction(): Observable<any> {
-    const data = this.form.getRawValue();
-    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
+    // const data = this.form.getRawValue();
+    // return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
+    return null;
   }
 }
