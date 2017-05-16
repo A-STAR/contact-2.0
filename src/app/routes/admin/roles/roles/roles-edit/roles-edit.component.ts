@@ -47,10 +47,10 @@ export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
   }
 
   private httpActionCreate(): Observable<any> {
-    return this.gridService.create('/api/roles', {}, this.formValue);
+    return this.gridService.create('/api/roles', {}, this.form.value);
   }
 
   private httpActionUpdate(): Observable<any> {
-    return this.gridService.update('/api/roles/{id}', this.role, this.formValue);
+    return this.gridService.update('/api/roles/{id}', this.role, this.form.value);
   }
 }

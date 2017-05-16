@@ -3,14 +3,10 @@
     <h3>{{ 'constants.form.title' | translate }}: {{ constant.id }}</h3>
   </div>
 
-  <app-dynamic-form
-    [controls]="controls"
-    (formValue)="onFormValueChange($event)"
-    (canSubmit)="onCanSubmitChange($event)">
-  </app-dynamic-form>
+  <app-dynamic-form [controls]="controls"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-primary" [disabled]="!canSubmit" (click)="onActionClick()">
+    <button class="btn btn-primary" [disabled]="!form.canSubmit" (click)="onActionClick()">
       {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">

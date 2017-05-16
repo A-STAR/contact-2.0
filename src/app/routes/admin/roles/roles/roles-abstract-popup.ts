@@ -1,31 +1,21 @@
-import { EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IRoleRecord } from './roles.interface';
 
 export abstract class AbstractRolesPopup implements OnInit {
   @Input() role: IRoleRecord;
   @Output() roleChange: EventEmitter<IRoleRecord> = new EventEmitter();
   @Output() onUpdate: EventEmitter<null> = new EventEmitter();
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   error: string = null;
 
   controls: Array<IDynamicFormControl>;
 
-  canSubmit = false;
-
-  formValue = null;
-
   ngOnInit(): void {
     this.controls = this.getControls();
-  }
-
-  onFormValueChange(formValue: any): void {
-    this.formValue = formValue;
-  }
-
-  onCanSubmitChange(canSubmit: boolean): void {
-    this.canSubmit = canSubmit;
   }
 
   onDisplayChange(event: boolean): void {

@@ -5,8 +5,7 @@
 
   <app-dynamic-form
     [controls]="controls"
-    (formValue)="onFormValueChange($event)"
-    (canSubmit)="onCanSubmitChange($event)">
+    (formValue)="onFormValueChange($event)">
   </app-dynamic-form>
 
   <div *ngIf="error" class="alert alert-danger">
@@ -14,7 +13,7 @@
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!canSubmit">
+    <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!form.canSubmit">
       <i class="fa fa-check"></i> Copy
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">

@@ -50,7 +50,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   }
 
   protected httpAction(): Observable<any> {
-    const data = this.formValue;
+    const data = this.form.value;
     return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
 }

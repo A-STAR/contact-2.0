@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
@@ -14,27 +15,16 @@ export class ConstantEditComponent implements OnInit {
   @Input() constant: IConstant;
   @Output() constantChange: EventEmitter<IConstant> = new EventEmitter();
   @Output() onUpdate: EventEmitter<null> = new EventEmitter();
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   error: string = null;
 
   controls: Array<IDynamicFormControl>;
 
-  canSubmit = false;
-
-  formValue = null;
-
   constructor(private datePipe: DatePipe, private gridService: GridService) { }
 
   ngOnInit(): void {
     this.controls = this.getControls();
-  }
-
-  onFormValueChange(formValue: any): void {
-    this.formValue = formValue;
-  }
-
-  onCanSubmitChange(canSubmit: boolean): void {
-    this.canSubmit = canSubmit;
   }
 
   onDisplayChange(event: boolean): void {
@@ -44,7 +34,7 @@ export class ConstantEditComponent implements OnInit {
   }
 
   getFieldValue(field: string): any {
-    return this.formValue[field];
+    return this.form.value[field];
   }
 
   valueToIsoDate(value: any): string {

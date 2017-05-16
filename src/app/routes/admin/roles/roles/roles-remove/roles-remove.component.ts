@@ -24,11 +24,4 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
   protected httpAction(): Observable<any> {
     return this.gridService.delete('/api/roles/{id}', this.role);
   };
-
-  /**
-   * @override
-   */
-  get canSubmit(): boolean {
-    return true;
-  }
 }

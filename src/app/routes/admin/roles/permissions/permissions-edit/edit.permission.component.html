@@ -4,15 +4,11 @@
     <h3>Доступ</h3>
   </div>
 
-  <app-dynamic-form
-    [controls]="controls"
-    (formValue)="onFormValueChange($event)"
-    (canSubmit)="onCanSubmitChange($event)">
-  </app-dynamic-form>
+  <app-dynamic-form [controls]="controls"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-danger"
-            [disabled]="!canSaveChanges"
+            [disabled]="!form.canSubmit"
             (click)="onSave()">
       <i class="fa fa-check"></i> Сохранить
     </button>

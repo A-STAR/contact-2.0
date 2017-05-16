@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDisplayProperties } from '../../roles.interface';
 
@@ -11,26 +12,15 @@ export class EditPermissionComponent implements OnInit {
   @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl>;
-
-  canSaveChanges = false;
-
-  private formChanges: any;
 
   /**
    * @override
    */
   public ngOnInit(): void {
     this.createFormAndControls();
-  }
-
-  onFormValueChange(formChanges: any): void {
-    this.formChanges = formChanges;
-  }
-
-  onCanSubmitChange(canSaveChanges: boolean): void {
-    this.canSaveChanges = canSaveChanges;
   }
 
   private createFormAndControls(): void {
@@ -92,6 +82,6 @@ export class EditPermissionComponent implements OnInit {
   }
 
   onSave(): void {
-    this.save.emit(this.formChanges);
+    this.save.emit(this.form.value);
   }
 }
