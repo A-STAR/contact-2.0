@@ -260,16 +260,15 @@ const styles = `
   `
 })
 export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
-  @Input() public allowClear: boolean = false;
-  @Input() public readonly: boolean = true;
-  @Input() public placeholder: string = '';
-  @Input() public idField: string = 'id';
-  @Input() public textField: string = 'text';
-  @Input() public childrenField: string = 'children';
-  @Input() public multiple: boolean = false;
+  @Input() public allowClear = false;
+  @Input() public readonly = true;
+  @Input() public placeholder = '';
+  @Input() public idField = 'id';
+  @Input() public textField = 'text';
+  @Input() public childrenField = 'children';
+  @Input() public multiple = false;
   @Input() public lazyItems: Observable<Array<any>>;
-  @Input() public cachingItems: boolean = false;
-  @Input() public formControlName: string;
+  @Input() public cachingItems = false;
 
   private _lazyItemsSubscription: Subscription;
 
@@ -321,12 +320,12 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   protected onChange: any = Function.prototype;
   protected onTouched: any = Function.prototype;
 
-  private inputMode: boolean = false;
-  private _optionsOpened: boolean = false;
+  private inputMode = false;
+  private _optionsOpened = false;
   private behavior: OptionsBehavior;
-  private inputValue: string = '';
+  private inputValue = '';
   private _items: Array<any> = [];
-  private _disabled: boolean = false;
+  private _disabled = false;
   private _active: Array<SelectItem> = [];
 
   public get active(): Array<any> {
@@ -392,7 +391,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
     // backspace
     if (!isUpMode && e.keyCode === 8) {
-      let el:any = this.element.nativeElement
+      const el: any = this.element.nativeElement
         .querySelector('div.ui-select-container > input');
       if (!el.value || el.value.length <= 0) {
         if (this.active.length > 0) {
@@ -470,18 +469,18 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
    * @override
    */
   public ngAfterViewChecked(): void {
-    const selectNativeElement:Element = this.behavior.getSelectNativeElement();
+    const selectNativeElement: Element = this.behavior.getSelectNativeElement();
     if (selectNativeElement) {
       // TODO Define select field behaviour
     }
   }
 
-  public remove(item:SelectItem):void {
+  public remove(item: SelectItem): void {
     if (this._disabled === true) {
       return;
     }
     if (this.multiple === true && this.active) {
-      let index = this.active.indexOf(item);
+      const index = this.active.indexOf(item);
       this.active.splice(index, 1);
       this.data.next(this.active);
       this.doEvent('removed', item);
@@ -493,7 +492,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  public doEvent(type:string, value:any):void {
+  public doEvent(type: string, value: any): void {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
@@ -504,16 +503,16 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  public clickedOutside():void {
+  public clickedOutside(): void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
 
-  public get firstItemHasChildren():boolean {
+  public get firstItemHasChildren(): boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
 
-  public writeValue(val:any):void {
+  public writeValue(val: any): void {
     this.active = val;
     this.data.emit(this.active);
   }
