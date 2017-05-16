@@ -19,29 +19,18 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     super();
   }
 
-  ngOnInit() {
-    this.gridService
-      .read('/api/roles')
-      .subscribe(
-        data => this.initControls(data),
-        // TODO: display & log message
-        error => console.log(error)
-      );
-  }
-
-  private initControls(data) {
-    const options = data.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    }));
-
+  ngOnInit(): void {
     this.controls = [
       {
         label: 'Название оригинальной роли',
         controlName: 'originalRoleId',
         type: 'select',
-        options,
-        required: true
+        required: true,
+        cachingOptions: true,
+        lazyOptions: this.gridService.read('/api/roles')
+          .map(
+            (data: {roles: Array<{name: string, id: number}>}) => data.roles.map(role => ({label: role.name, value: role.id}))
+          )
       },
       {
         label: 'Название',
@@ -60,14 +49,19 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
 
   protected createForm(role: IRoleRecord): FormGroup {
     return this.formBuilder.group({
-      originalRoleId: [ this.originalRole.id, Validators.required ],
+      originalRoleId: [ [{ value: this.originalRole.id, label: this.originalRole.name }], Validators.required ],
       name: [ this.role.name, Validators.required ],
       comment: [ this.role.comment ],
     });
   }
 
   protected httpAction(): Observable<any> {
+    // TODO Make role-service for direct http calls
+    // TODO The component should not contain this logic here, only proxy calls
+
     const data = this.form.getRawValue();
-    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
+    const originalRoleId: number = data.originalRoleId[0].value;
+    data.originalRoleId = originalRoleId;
+    return this.gridService.create('/api/roles/{id}/copy', { id: originalRoleId }, data);
   }
 }
