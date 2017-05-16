@@ -7,8 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
-import { OptionsBehavior } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, ISelectComponent } from './select-interfaces';
 import { escapeRegexp } from './common';
+import { SelectActionHandler } from './select-action';
 
 const styles = `
   .ui-select-toggle {
@@ -37,17 +38,13 @@ const styles = `
     right: 15px;
   }
   
-  .ui-disabled {
-    background-color: #eceeef;
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    opacity: 0.6;
-    top: 0;
-    left: 0;
-    cursor: not-allowed;
+  .ui-select-unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   
   .ui-select-choices {
@@ -56,6 +53,15 @@ const styles = `
     max-height: 180px;
     overflow-x: hidden;
     margin-top: 0;
+  }
+  
+  .ui-select-choices.dropdown-menu {
+    box-shadow: none;
+  }
+  
+  .ui-select-container[disabled] * {
+    background-color: #edf1f2;
+    cursor: not-allowed;
   }
   
   .ui-select-multiple .ui-select-choices {
@@ -69,6 +75,15 @@ const styles = `
       line-height: 1.42857143;
       color: #333;
       white-space: nowrap;
+  }
+  .ui-select-action {
+      padding: 3px 20px;
+  }
+  .ui-select-action .fa {
+      float: right;
+  }
+  .ui-select-action-btn {
+      cursor: pointer;
   }
   .ui-select-choices-row.active>a {
       color: #fff;
@@ -123,12 +138,21 @@ const styles = `
     }
   ],
   template: `
+    <template #actionTemplate>
+      <li *ngFor="let action of actions; let index=index" role="menuitem" class="ui-select-unselectable">
+        <div class="ui-select-action"
+             (click)="actionClick(action, $event)">
+          {{ action.text }}<span *ngIf="action.actionIconCls" class="ui-select-action-btn {{action.actionIconCls}}"></span>
+        </div>
+      </li>
+    </template>
+    
     <div tabindex="0"
+         [attr.disabled]="disabled"
          *ngIf="multiple === false"
          (keyup)="mainClick($event)"
          [offClick]="clickedOutside"
          class="ui-select-container dropdown open">
-      <div [ngClass]="{'ui-disabled': disabled}"></div>
       <div class="ui-select-match"
            *ngIf="!inputMode">
       <span tabindex="-1"
@@ -140,7 +164,7 @@ const styles = `
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
+        <i *ngIf="!disabled" class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" 
            style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
@@ -158,6 +182,7 @@ const styles = `
       <!-- options template -->
       <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -172,6 +197,7 @@ const styles = `
 
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
@@ -191,12 +217,12 @@ const styles = `
     </div>
 
     <div tabindex="0"
+         [attr.disabled]="disabled"
          *ngIf="multiple === true"
          (keyup)="mainClick($event)"
          (focus)="focusToInput('')"
          [offClick]="clickedOutside"
          class="ui-select-container ui-select-multiple dropdown form-control open">
-      <div [ngClass]="{'ui-disabled': disabled}"></div>
       <span class="ui-select-match">
         <span *ngFor="let a of active">
             <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
@@ -226,6 +252,7 @@ const styles = `
       <!-- options template -->
       <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -240,6 +267,7 @@ const styles = `
 
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
@@ -259,7 +287,7 @@ const styles = `
     </div>
   `
 })
-export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
+export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor, ISelectComponent {
   @Input() public allowClear = false;
   @Input() public readonly = true;
   @Input() public placeholder = '';
@@ -267,10 +295,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public textField = 'text';
   @Input() public childrenField = 'children';
   @Input() public multiple = false;
+  @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public cachingItems = false;
+  @Output() public clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
 
   private _lazyItemsSubscription: Subscription;
+  private _selectActionHandler: SelectActionHandler;
 
   @Input()
   public set items(value: Array<any>) {
@@ -375,6 +406,14 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
                      private renderer: Renderer2) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
+    this._selectActionHandler = new SelectActionHandler(this);
+  }
+
+  actionClick(action: ISelectionAction, $event: Event): void {
+    $event.stopPropagation();
+
+    this._selectActionHandler.handle(action);
+    this.clickAction.emit(action);
   }
 
   public sanitize(html: string): SafeHtml {
@@ -462,7 +501,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   /**
    * @override
    */
-  public ngOnInit(): any {
+  public ngOnInit(): void {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
