@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
-import { OptionsBehavior } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, SelectionActionTypeEnum } from './select-interfaces';
 import { escapeRegexp } from './common';
 
 const styles = `
@@ -70,6 +70,9 @@ const styles = `
       color: #333;
       white-space: nowrap;
   }
+  .ui-select-action {
+      padding: 3px 20px;
+  }
   .ui-select-choices-row.active>a {
       color: #fff;
       text-decoration: none;
@@ -123,6 +126,15 @@ const styles = `
     }
   ],
   template: `
+    <template #actionTemplate>
+      <li *ngFor="let action of actions; let index=index" role="menuitem">
+        <div class="ui-select-action "
+             (click)="actionClick(action, $event)">
+          {{ action.text }}<span *ngIf="action.actionIconCls" class="{{action.actionIconCls}}"></span>
+        </div>
+      </li>
+    </template>
+    
     <div tabindex="0"
          *ngIf="multiple === false"
          (keyup)="mainClick($event)"
@@ -158,6 +170,7 @@ const styles = `
       <!-- options template -->
       <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -172,6 +185,7 @@ const styles = `
 
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
@@ -226,6 +240,7 @@ const styles = `
       <!-- options template -->
       <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let o of options" role="menuitem">
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -240,6 +255,7 @@ const styles = `
 
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
+        <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
@@ -267,8 +283,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public textField = 'text';
   @Input() public childrenField = 'children';
   @Input() public multiple = false;
+  @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public cachingItems = false;
+  @Output() public clickAction: EventEmitter<SelectionActionTypeEnum> = new EventEmitter();
 
   private _lazyItemsSubscription: Subscription;
 
@@ -377,6 +395,24 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.clickedOutside = this.clickedOutside.bind(this);
   }
 
+  actionClick(action: ISelectionAction, $event: Event): void {
+    $event.stopPropagation();
+
+    switch (action.type) {
+      case SelectionActionTypeEnum.SORT:
+        if (action.state === 'down') {
+          action.state = 'up';
+          action.actionIconCls = 'fa fa-arrow-down';
+          this.options.sort((item1: SelectItem, item2: SelectItem) => item1.text.localeCompare(item2.text));
+        } else {
+          action.state = 'down';
+          action.actionIconCls = 'fa fa-arrow-up';
+          this.options.sort((item1: SelectItem, item2: SelectItem) => item2.text.localeCompare(item1.text));
+        }
+        break;
+    }
+  }
+
   public sanitize(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
@@ -462,7 +498,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   /**
    * @override
    */
-  public ngOnInit(): any {
+  public ngOnInit(): void {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }

@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/select/select-interfaces';
 import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
@@ -30,7 +31,10 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         lazyOptions: this.gridService.read('/api/roles')
           .map(
             (data: {roles: Array<{name: string, id: number}>}) => data.roles.map(role => ({label: role.name, value: role.id}))
-          )
+          ),
+        optionsActions: [
+          {text: 'Выберите роль', type: SelectionActionTypeEnum.SORT}
+        ]
       },
       {
         label: 'Название',

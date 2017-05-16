@@ -6,3 +6,14 @@ export interface OptionsBehavior {
   filter(query: RegExp): any;
   getSelectNativeElement(): Element;
 }
+
+export enum SelectionActionTypeEnum {
+  SORT
+}
+
+export interface ISelectionAction {
+  text: string;
+  type: SelectionActionTypeEnum;
+  state?: any;
+  actionIconCls?: string;
+}
