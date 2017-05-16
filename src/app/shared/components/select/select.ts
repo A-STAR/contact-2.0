@@ -164,7 +164,7 @@ const styles = `
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
-        <i *ngIf="!disabled" class="caret pull-right"></i>
+        <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" 
            style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
@@ -308,7 +308,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   @Input()
-  public set disabled(value: boolean) {
+  public set controlDisabled(value: boolean) {
     this._disabled = value;
     if (this._disabled === true) {
       this.hideOptions();
