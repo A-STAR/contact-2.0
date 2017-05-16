@@ -13,6 +13,7 @@ import { TranslatorService } from './translator/translator.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
+import { MapConverterFactoryService } from './converter/map/map-converter-factory.service';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { ValueConverterService } from './converter/value/value-converter.service
     AuthHttpService,
     AuthService,
     ValueConverterService,
+    MapConverterFactoryService,
     JwtHelper,
     MenuService,
     SettingsService,
