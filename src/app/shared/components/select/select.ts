@@ -356,13 +356,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  private loadOptions(): void {
+  private initLazyItems(): void {
     if (this.cachingItems && this._lazyItemsSubscription) {
       return;
     }
     this._lazyItemsSubscription = this.lazyItems.subscribe((value: Array<any>) => {
       this.initItems(value);
-      this.onLoadOptions();
+      this.afterInitItems();
     });
   }
 
@@ -586,31 +586,31 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }, 0);
   }
 
-  private open():void {
+  private open(): void {
     if (this.lazyItems) {
-      this.loadOptions();
+      this.initLazyItems();
     } else {
-      this.onLoadOptions();
+      this.afterInitItems();
     }
     this.optionsOpened = true;
   }
 
-  private onLoadOptions() {
+  private afterInitItems(): void {
     this.options = this.itemObjects
-      .filter((option:SelectItem) => (this.multiple === false ||
-      this.multiple === true && !this.active.find((o:SelectItem) => option.text === o.text)));
+      .filter((option: SelectItem) => (this.multiple === false ||
+      this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
 
     if (this.options.length > 0) {
       this.behavior.first();
     }
   }
 
-  private hideOptions():void {
+  private hideOptions(): void {
     this.inputMode = false;
     this.optionsOpened = false;
   }
 
-  private selectActiveMatch():void {
+  private selectActiveMatch(): void {
     this.selectMatch(this.activeOption);
   }
 
