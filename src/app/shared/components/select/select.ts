@@ -38,12 +38,25 @@ const styles = `
     right: 15px;
   }
   
+  .ui-select-unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
   .ui-select-choices {
     width: 100%;
     height: auto;
     max-height: 180px;
     overflow-x: hidden;
     margin-top: 0;
+  }
+  
+  .ui-select-choices.dropdown-menu {
+    box-shadow: none;
   }
   
   .ui-select-container[disabled] * {
@@ -68,6 +81,9 @@ const styles = `
   }
   .ui-select-action .fa {
       float: right;
+  }
+  .ui-select-action-btn {
+      cursor: pointer;
   }
   .ui-select-choices-row.active>a {
       color: #fff;
@@ -123,10 +139,10 @@ const styles = `
   ],
   template: `
     <template #actionTemplate>
-      <li *ngFor="let action of actions; let index=index" role="menuitem">
-        <div class="ui-select-action "
+      <li *ngFor="let action of actions; let index=index" role="menuitem" class="ui-select-unselectable">
+        <div class="ui-select-action"
              (click)="actionClick(action, $event)">
-          {{ action.text }}<span *ngIf="action.actionIconCls" class="{{action.actionIconCls}}"></span>
+          {{ action.text }}<span *ngIf="action.actionIconCls" class="ui-select-action-btn {{action.actionIconCls}}"></span>
         </div>
       </li>
     </template>
