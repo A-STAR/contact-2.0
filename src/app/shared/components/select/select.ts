@@ -4,13 +4,13 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
 import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 
-let styles = `
+const styles = `
   .ui-select-toggle {
     position: relative;
   }
@@ -141,7 +141,8 @@ let styles = `
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
+        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" 
+           style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
         </a>
       </span>
@@ -259,45 +260,45 @@ let styles = `
   `
 })
 export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
-  @Input() public allowClear:boolean = false;
-  @Input() public readonly:boolean = true;
-  @Input() public placeholder:string = '';
-  @Input() public idField:string = 'id';
-  @Input() public textField:string = 'text';
-  @Input() public childrenField:string = 'children';
-  @Input() public multiple:boolean = false;
+  @Input() public allowClear: boolean = false;
+  @Input() public readonly: boolean = true;
+  @Input() public placeholder: string = '';
+  @Input() public idField: string = 'id';
+  @Input() public textField: string = 'text';
+  @Input() public childrenField: string = 'children';
+  @Input() public multiple: boolean = false;
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public cachingItems: boolean = false;
-  @Input() public formControlName: string; // TODO
+  @Input() public formControlName: string;
 
   private _lazyItemsSubscription: Subscription;
 
   @Input()
-  public set items(value:Array<any>) {
+  public set items(value: Array<any>) {
     this.initItems(value);
   }
 
   @Input()
-  public set disabled(value:boolean) {
+  public set disabled(value: boolean) {
     this._disabled = value;
     if (this._disabled === true) {
       this.hideOptions();
     }
   }
 
-  public get disabled():boolean {
+  public get disabled(): boolean {
     return this._disabled;
   }
 
   @Input()
-  public set active(selectedItems:Array<any>) {
+  public set active(selectedItems: Array<any>) {
     if (!selectedItems || selectedItems.length === 0) {
       this._active = [];
     } else {
-      let areItemsStrings = typeof selectedItems[0] === 'string';
+      const areItemsStrings = typeof selectedItems[0] === 'string';
 
-      this._active = selectedItems.map((item:any) => {
-        let data = areItemsStrings
+      this._active = selectedItems.map((item: any) => {
+        const data = areItemsStrings
           ? item
           : {id: item[this.idField], text: item[this.textField]};
 
@@ -306,27 +307,38 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  @Output() public data:EventEmitter<any> = new EventEmitter();
-  @Output() public selected:EventEmitter<any> = new EventEmitter();
-  @Output() public removed:EventEmitter<any> = new EventEmitter();
-  @Output() public typed:EventEmitter<any> = new EventEmitter();
-  @Output() public opened:EventEmitter<any> = new EventEmitter();
+  @Output() public data: EventEmitter<any> = new EventEmitter();
+  @Output() public selected: EventEmitter<any> = new EventEmitter();
+  @Output() public removed: EventEmitter<any> = new EventEmitter();
+  @Output() public typed: EventEmitter<any> = new EventEmitter();
+  @Output() public opened: EventEmitter<any> = new EventEmitter();
 
-  public options:Array<SelectItem> = [];
-  public itemObjects:Array<SelectItem> = [];
-  public activeOption:SelectItem;
-  public element:ElementRef;
+  public options: Array<SelectItem> = [];
+  public itemObjects: Array<SelectItem> = [];
+  public activeOption: SelectItem;
+  public element: ElementRef;
 
-  public get active():Array<any> {
+  protected onChange: any = Function.prototype;
+  protected onTouched: any = Function.prototype;
+
+  private inputMode: boolean = false;
+  private _optionsOpened: boolean = false;
+  private behavior: OptionsBehavior;
+  private inputValue: string = '';
+  private _items: Array<any> = [];
+  private _disabled: boolean = false;
+  private _active: Array<SelectItem> = [];
+
+  public get active(): Array<any> {
     return this._active;
   }
 
-  private set optionsOpened(value:boolean){
+  private set optionsOpened(value: boolean){
     this._optionsOpened = value;
     this.opened.emit(value);
   }
 
-  private initItems(value: Array<any>) {
+  private initItems(value: Array<any>): void {
     if (!value) {
       this._items = this.itemObjects = [];
     } else {
@@ -343,7 +355,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  private loadOptions() {
+  private loadOptions(): void {
     if (this.cachingItems && this._lazyItemsSubscription) {
       return;
     }
@@ -357,29 +369,18 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     return this._optionsOpened;
   }
 
-  protected onChange:any = Function.prototype;
-  protected onTouched:any = Function.prototype;
-
-  private inputMode:boolean = false;
-  private _optionsOpened:boolean = false;
-  private behavior:OptionsBehavior;
-  private inputValue:string = '';
-  private _items:Array<any> = [];
-  private _disabled:boolean = false;
-  private _active:Array<SelectItem> = [];
-
-  public constructor(element:ElementRef,
-                     private sanitizer:DomSanitizer,
-                     private renderer:Renderer2) {
+  public constructor(element: ElementRef,
+                     private sanitizer: DomSanitizer,
+                     private renderer: Renderer2) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
   }
 
-  public sanitize(html:string):SafeHtml {
+  public sanitize(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  public inputEvent(e:any, isUpMode:boolean = false):void {
+  public inputEvent(e: any, isUpMode: boolean = false): void {
     // tab
     if (e.keyCode === 9) {
       return;
@@ -447,7 +448,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       e.preventDefault();
       return;
     }
-    let target = e.target || e.srcElement;
+    const target = e.target || e.srcElement;
     if (target && target.value) {
       this.inputValue = target.value;
       this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
@@ -460,7 +461,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   /**
    * @override
    */
-  public ngOnInit():any {
+  public ngOnInit(): any {
     this.behavior = (this.firstItemHasChildren) ?
       new ChildrenBehavior(this) : new GenericBehavior(this);
   }
