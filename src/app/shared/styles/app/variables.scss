@@ -311,6 +311,7 @@ $zindex-tooltip:           1070;
 $zindex-navbar-fixed:      1030;
 $zindex-modal-background:  1040;
 $zindex-modal:             1050;
+$zindex-app-dialog:        10000;
 
 
 //== Media queries breakpoints
@@ -640,13 +641,15 @@ $modal-content-border-color:                   rgba(0,0,0,.2);
 $modal-content-fallback-border-color:          #999;
 
 //** Modal backdrop background color
-$modal-backdrop-bg:           #000;
+$modal-backdrop-bg:           rgba(0, 0, 0, 0.5);
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      .5;
 //** Modal header border color
 $modal-header-border-color:   #e5e5e5;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color;
+$modal-footer-bg:             #f9f9f9;
+$modal-footer-border-color:   #eee;
 
 $modal-lg:                    900px;
 $modal-md:                    600px;

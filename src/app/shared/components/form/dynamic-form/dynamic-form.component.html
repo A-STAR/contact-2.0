@@ -54,9 +54,7 @@
 
         <div *ngSwitchCase="'datepicker'" class="form-group">
           <label>{{control.label}}</label>
-          <div>
             <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
-          </div>
         </div>
 
         <input *ngSwitchCase="'hidden'"
@@ -78,10 +76,9 @@
             </label>
           </div>
 
-            <div *ngSwitchCase="2" class="form-group">
-              <label>{{control.label}}</label>
-                <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
-            </div>
+          <div *ngSwitchCase="2" class="form-group">
+            <label>{{control.label}}</label>
+            <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
           </div>
 
           <div *ngSwitchCase="4" class="form-group">
