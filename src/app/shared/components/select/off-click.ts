@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import {Directive, HostListener, Input} from '@angular/core';
 
 @Directive({
   selector: '[offClick]'
@@ -17,6 +17,6 @@ export class OffClickDirective {
 
   @HostListener('document:click', ['$event'])
   public onDocumentClick($event: MouseEvent): void {
-      this.offClick();
+    this.offClick();
   }
 }
