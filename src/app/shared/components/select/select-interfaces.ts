@@ -1,3 +1,5 @@
+import { SelectItem } from './select-item';
+
 export interface OptionsBehavior {
   first(): any;
   last(): any;
@@ -5,6 +7,10 @@ export interface OptionsBehavior {
   next(): any;
   filter(query: RegExp): any;
   getSelectNativeElement(): Element;
+}
+
+export interface ISelectComponent {
+  options: Array<SelectItem>;
 }
 
 export enum SelectionActionTypeEnum {

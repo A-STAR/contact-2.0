@@ -7,8 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
-import { ISelectionAction, OptionsBehavior, SelectionActionTypeEnum } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, ISelectComponent } from './select-interfaces';
 import { escapeRegexp } from './common';
+import { SelectActionHandler } from './select-action';
 
 const styles = `
   .ui-select-toggle {
@@ -278,7 +279,7 @@ const styles = `
     </div>
   `
 })
-export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
+export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor, ISelectComponent {
   @Input() public allowClear = false;
   @Input() public readonly = true;
   @Input() public placeholder = '';
@@ -292,6 +293,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Output() public clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
 
   private _lazyItemsSubscription: Subscription;
+  private _selectActionHandler: SelectActionHandler;
 
   @Input()
   public set items(value: Array<any>) {
@@ -396,24 +398,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
                      private renderer: Renderer2) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
+    this._selectActionHandler = new SelectActionHandler(this);
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
     $event.stopPropagation();
 
-    switch (action.type) {
-      case SelectionActionTypeEnum.SORT:
-        if (action.state === 'down') {
-          action.state = 'up';
-          action.actionIconCls = 'fa fa-arrow-down';
-          this.options.sort((item1: SelectItem, item2: SelectItem) => item1.text.localeCompare(item2.text));
-        } else {
-          action.state = 'down';
-          action.actionIconCls = 'fa fa-arrow-up';
-          this.options.sort((item1: SelectItem, item2: SelectItem) => item2.text.localeCompare(item1.text));
-        }
-        break;
-    }
+    this._selectActionHandler.handle(action);
     this.clickAction.emit(action);
   }
 
