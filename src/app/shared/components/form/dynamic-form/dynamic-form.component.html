@@ -8,6 +8,7 @@
           <label>{{control.label}}
             <input type="number"
                   class="form-control"
+                  [attr.placeholder]="control.placeholder || ''"
                   [attr.disabled]="control.disabled"
                   [formControlName]="control.controlName">
           </label>
@@ -16,9 +17,10 @@
         <div *ngSwitchCase="'text'" class="form-group">
           <label>{{control.label}}
             <input type="text"
-                  class="form-control"
-                  [attr.disabled]="control.disabled"
-                  [formControlName]="control.controlName">
+                   class="form-control"
+                   [attr.placeholder]="control.placeholder || ''"
+                   [attr.disabled]="control.disabled"
+                   [formControlName]="control.controlName">
           </label>
         </div>
 
@@ -41,7 +43,7 @@
                         [idField]="'value'"
                         [textField]="'label'"
                         [disabled]="control.disabled"
-                        placeholder="{{ control.placeholder || '' }}">
+                        [attr.placeholder]="control.placeholder || ''">
               </app-select>
           </label>
         </div>
@@ -49,6 +51,7 @@
         <div class="form-group">
           <label *ngSwitchCase="'textarea'">{{control.label}}
             <textarea
+              [attr.placeholder]="control.placeholder || ''"
               [attr.disabled]="control.disabled"
               [formControlName]="control.controlName"
               class="form-control"
@@ -76,6 +79,7 @@
             <label>{{control.label}}
               <input type="number"
                      class="form-control"
+                     [attr.placeholder]="control.placeholder || ''"
                      [attr.disabled]="control.disabled"
                      [formControlName]="control.controlName">
             </label>
@@ -105,6 +109,7 @@
             <div>
               <input type="text"
                      class="form-control"
+                     [attr.placeholder]="control.placeholder || ''"
                      [attr.disabled]="control.disabled"
                      [formControlName]="control.controlName">
             </div>
