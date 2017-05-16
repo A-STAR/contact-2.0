@@ -10,6 +10,8 @@ export class UserEditComponent {
   @Input() user: IUser;
   @Output() userChange: EventEmitter<IUser> = new EventEmitter();
 
+  error: string = null;
+
   onDisplayChange(event: boolean): void {
     if (event === false) {
       this.close();

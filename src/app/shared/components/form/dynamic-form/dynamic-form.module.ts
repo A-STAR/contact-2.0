@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { SelectModule } from '../../select/select.module';
+
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DatePickerModule } from '../datepicker/datepicker.module';
 
@@ -13,6 +15,7 @@ import { DatePickerModule } from '../datepicker/datepicker.module';
     DatePickerModule,
     ReactiveFormsModule,
     TranslateModule,
+    SelectModule,
   ],
   exports: [
     DynamicFormComponent

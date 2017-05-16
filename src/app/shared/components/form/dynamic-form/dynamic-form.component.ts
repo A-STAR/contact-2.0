@@ -12,4 +12,3 @@ export class DynamicFormComponent {
   @Input() form: FormGroup;
   @Input() controls: Array<IDynamicFormControl>;
 }
-
