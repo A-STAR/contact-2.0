@@ -9,6 +9,9 @@ import { DragAndDropComponentPluginFactory } from './drag-and-drop.component.plu
   imports: [
     DragulaModule,
   ],
+  exports: [
+    DragulaModule,
+  ],
   providers: [
     DragAndDropComponentPluginFactory,
     DragAndDropDomHelper,

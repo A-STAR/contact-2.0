@@ -38,11 +38,10 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
-import { TreeModule } from './components/flowtree/tree.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
-
+import { DragAndDropModule } from "./components/dnd/drag-and-drop.module";
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -64,9 +63,9 @@ import { DialogModule } from './components/dialog/dialog.module';
     DatePickerModule,
     DynamicFormModule,
     GridModule,
-    MomentModule,
     ToolbarModule,
-    TreeModule,
+    MomentModule,
+    DragAndDropModule,
   ],
   providers: [
     ColorsService,
@@ -120,7 +119,7 @@ import { DialogModule } from './components/dialog/dialog.module';
     QBuilderComponent,
     TabComponent,
     TabstripComponent,
-    TreeModule,
+    DragAndDropModule,
   ]
 })
 
