@@ -13,7 +13,8 @@ export class DynamicFormComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
     this.form = this.createForm();
@@ -21,7 +22,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.form.dirty && this.form.valid;
+    return this.form && this.form.dirty && this.form.valid;
   }
 
   public get value(): any {

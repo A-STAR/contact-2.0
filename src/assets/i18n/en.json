@@ -86,6 +86,9 @@
         "title": "Constant"
       }
     },
+    "departments": {
+      "TITLE": "Company structure"
+    },
     "default": {
       "boolean": {
         "TRUE": "True",
