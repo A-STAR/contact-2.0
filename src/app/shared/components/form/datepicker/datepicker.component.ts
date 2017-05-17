@@ -7,7 +7,7 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
   templateUrl: './datepicker.component.html',
   styles: [
     '.datepicker { display: inline-block; }',
-    '.dropdown { position: fixed; padding: 8px 0; z-index: 20000; }'
+    '.dropdown { position: fixed; padding: 1px 0; z-index: 20000; }'
   ]
 })
 export class DatePickerComponent implements OnInit, OnDestroy {
@@ -48,34 +48,35 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent): void {
     if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target)) {
       this.toggleCalendar(false);
     }
   };
 
-  @HostListener('document:scroll')
-  onDocumentScroll() {
+  // TODO: is it possible to listen to input container scroll?
+  @HostListener('document:wheel')
+  onDocumentWheel(): void {
     this.toggleCalendar(false);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.controlName && this.form.get(this.controlName).value) {
       this.value = this.form.get(this.controlName).value;
     }
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     document.body.removeChild(this.dropdown.nativeElement);
   }
 
-  onValueChange(newValue: string) {
+  onValueChange(newValue: string): void {
     this.value = newValue;
     this.valueChange.emit(newValue);
   }
 
-  onDateChange(newValue: Date) {
+  onDateChange(newValue: Date): void {
     const d = newValue.getDate();
     const m = newValue.getMonth() + 1;
     const y = newValue.getFullYear();
@@ -92,18 +93,18 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     this.toggleCalendar(false);
   }
 
-  get date() {
+  get date(): string {
     return this.value || null;
   }
 
-  toggleCalendar(isExpanded?: boolean) {
+  toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
       setTimeout(() => this.positionDropdown(), 0);  // TODO: is there a better way to do this?
     }
   }
 
-  private positionDropdown() {
+  private positionDropdown(): void {
     const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();
     const contentRect: ClientRect = this.dropdown.nativeElement.children[0].getBoundingClientRect();
 
