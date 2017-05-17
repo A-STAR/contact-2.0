@@ -42,6 +42,7 @@ export class TreeComponent implements AfterContentInit {
   @Input() metaKeySelection = true;
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
+  @Input() dragulaOptions: any;
   @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
   public templateMap: any;

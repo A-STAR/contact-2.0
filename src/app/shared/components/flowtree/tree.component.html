@@ -8,7 +8,9 @@
                    [node]="node"
                    [firstChild]="firstChild"
                    [lastChild]="lastChild"
-                   [index]="index"></app-tree-node>
+                   [index]="index"
+                   [dragulaOptions]="dragulaOptions">
+    </app-tree-node>
   </ul>
 </div>
 <div
@@ -20,7 +22,9 @@
     <table *ngIf="value[0].children">
       <app-tree-node *ngFor="let child of value[0].children"
                      [node]="child"
-                     [root]="true"></app-tree-node>
+                     [root]="true"
+                     [dragulaOptions]="dragulaOptions">
+      </app-tree-node>
     </table>
     <table *ngIf="!value[0].children">
       <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
