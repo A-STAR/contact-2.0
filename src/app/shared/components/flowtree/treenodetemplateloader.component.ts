@@ -3,14 +3,11 @@ import {
   Component,
   Input,
   OnDestroy,
-  EventEmitter,
   OnInit,
   EmbeddedViewRef,
   ViewContainerRef,
-  TemplateRef } from '@angular/core';
-import { TreeNode } from './common/api';
-import { TreeDragDropService } from './common/treedragdrop.service';
-import { PrimeTemplate, SharedModule } from './common/shared';
+  TemplateRef
+} from '@angular/core';
 
 @Component({
   selector: 'app-tree-node-template-loader',
@@ -26,13 +23,13 @@ export class TreeNodeTemplateLoaderComponent implements OnInit, OnDestroy {
 
   constructor(public viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.view = this.viewContainer.createEmbeddedView(this.template, {
       '\$implicit': this.node
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.view.destroy();
   }
 }
