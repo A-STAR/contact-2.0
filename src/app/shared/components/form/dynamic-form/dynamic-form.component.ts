@@ -22,7 +22,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.dirty && this.form.valid;
+    return this.form.dirty && this.form.valid;
   }
 
   public get value(): any {
