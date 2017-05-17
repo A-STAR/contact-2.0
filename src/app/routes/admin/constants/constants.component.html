@@ -1,20 +1,4 @@
-<app-dialog *ngIf="display">
-  <div dialog-header>
-    <h3>{{ 'constants.form.title' | translate }}: {{form.controls['id'].value}}</h3>
-  </div>
-
-  <app-dynamic-form [form]="form" [controls]="controls"></app-dynamic-form>
-
-  <div dialog-footer>
-    <button class="btn btn-primary" [disabled]="!form.dirty || !form.valid" (click)="onSave()">
-      {{ 'default.buttons.save' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      {{ 'default.buttons.cancel' | translate }}
-    </button>
-  </div>
-
-</app-dialog>
+<app-constant-edit [(constant)]="currentConstant" (onUpdate)="onUpdate()" *ngIf="currentConstant"></app-constant-edit>
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" [closable]="false" (onClose)="onTabClose($event)" [active]="tab.active">

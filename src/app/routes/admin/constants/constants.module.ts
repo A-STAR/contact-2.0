@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { ConstantsComponent } from './constants.component';
+import { ConstantEditComponent } from './constant-edit/constant-edit.component';
 
 const routes: Routes = [
   { path: '', component: ConstantsComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   ],
   declarations: [
     ConstantsComponent,
+    ConstantEditComponent,
   ],
   providers: [
     DatePipe,

@@ -1,5 +1,6 @@
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { ISelectionAction } from '../../select/select-interfaces';
+import { ISelectionAction } from '../select/select-interfaces';
 
 export interface IDynamicFormControl {
   label: string;
@@ -17,6 +18,7 @@ export interface IDynamicFormControl {
   optionsActions?: Array<ISelectionAction>;
   // number of rows for textarea
   rows?: number;
+  validators?: Array<ValidatorFn>;
 }
 
 export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden';
@@ -29,4 +31,8 @@ export interface ISelectOptions {
 
 export interface IValue {
   [key: string]: any;
+}
+
+export interface IControls {
+  [key: string]: FormControl;
 }
