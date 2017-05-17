@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, forwardRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, Inject, forwardRef } from '@angular/core';
 
 import { TreeNode } from './common/api';
 import { TreeComponent } from './tree.component';
@@ -24,14 +24,9 @@ export class UITreeNodeComponent implements OnInit {
 
   @Input() lastChild: boolean;
 
-  @Output() changeLocation: EventEmitter<any> = new EventEmitter();
-
   options2 = {
     copy: true,
-    /*accepts: function (el, target, source, sibling) {
-     return !target.classList.contains('ui-treenode-ending');
-     },*/
-    moves: function (el, source, handle, sibling) {
+    moves: function (el: Element, source: Element): boolean {
       return !source.classList.contains('ui-treenode-root');
     },
   };

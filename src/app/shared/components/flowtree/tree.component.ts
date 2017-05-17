@@ -84,7 +84,7 @@ export class TreeComponent implements AfterContentInit {
   constructor(private dragulaService: DragulaService,
               private renderer2: Renderer2) {
 
-    dragulaService.drag.subscribe((value) => {
+    dragulaService.drag.subscribe(() => {
       this._isPutted = false;
     });
 
@@ -167,10 +167,6 @@ export class TreeComponent implements AfterContentInit {
   get horizontal(): boolean {
     return this.layout === 'horizontal';
   }
-
-    onChangeLocation(a): void {
-        this.changeLocation.emit(a);
-    }
 
     ngAfterContentInit(): void {
         if (this.templates.length) {
