@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import {ENVIRONMENT_CONTAINER} from './environment.interface';
+import { ENVIRONMENT_CONTAINER } from './environment.interface';
 
 export function environmentFactory(): any {
   return document.body;
@@ -12,7 +12,7 @@ export function environmentFactory(): any {
     CommonModule
   ],
   providers: [
-    {provide: ENVIRONMENT_CONTAINER, useFactory: environmentFactory}
+    { provide: ENVIRONMENT_CONTAINER, useFactory: environmentFactory }
   ]
 })
 export class EnvironmentModule {
