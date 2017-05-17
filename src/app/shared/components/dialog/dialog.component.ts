@@ -1,8 +1,7 @@
 import {
-  Component, ElementRef, EventEmitter, Input, Output, OnDestroy, Renderer2, OnInit
+  Component, ElementRef, EventEmitter, Input, Output, OnDestroy, Renderer2, OnInit, Inject
 } from '@angular/core';
-
-import { EnvironmentContainer } from '../../../core/environment/environment.interface';
+import { ENVIRONMENT_CONTAINER } from '../../../core/environment/environment.interface';
 
 @Component({
   selector: 'app-dialog',
@@ -19,7 +18,7 @@ export class DialogComponent implements OnDestroy, OnInit {
 
   constructor(private element: ElementRef,
               private renderer2: Renderer2,
-              private environmentContainer: EnvironmentContainer) {
+              @Inject(ENVIRONMENT_CONTAINER) private environmentContainer: any) {
   }
 
   onVisibleChange(value: boolean): void {
