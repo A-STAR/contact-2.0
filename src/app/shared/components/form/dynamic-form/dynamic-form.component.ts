@@ -14,15 +14,15 @@ export class DynamicFormComponent implements OnInit {
   form: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
-    this.form = this.createForm();
   }
 
   ngOnInit(): void {
+    this.form = this.createForm();
     this.populateForm();
   }
 
   get canSubmit(): boolean {
-    return this.form.dirty && this.form.valid;
+    return this.form && this.form.dirty && this.form.valid;
   }
 
   public get value(): any {
