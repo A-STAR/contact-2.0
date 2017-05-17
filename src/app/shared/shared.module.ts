@@ -42,7 +42,6 @@ import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
 
-
 // https://angular.io/styleguide#!#04-10
 @NgModule({
   imports: [
@@ -113,12 +112,12 @@ import { DialogModule } from './components/dialog/dialog.module';
     DynamicFormModule,
     DialogModule,
     GridModule,
-    ToolbarModule,
     MomentModule,
     NumericInputComponent,
     QBuilderComponent,
     TabComponent,
     TabstripComponent,
+    ToolbarModule,
     TreeModule,
   ]
 })

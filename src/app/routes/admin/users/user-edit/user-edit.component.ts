@@ -108,10 +108,8 @@ export class UserEditComponent implements OnInit {
   private getData(): any {
     return {
       ...this.user,
-      // isBlocked: this.user.isBlocked ? 1 : 0,
       // FIXME: add label
       roleId: [{ value: this.user.roleId }],
-      // TODO: format properly
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
       // FIXME: change to language code once the API is ready
@@ -126,13 +124,14 @@ export class UserEditComponent implements OnInit {
       password: value.password || undefined,
       roleId: value.roleId[0].value,
       // FIXME
-      startWorkDate: null,  // value.startWorkDate,
-      endWorkDate: null,  // value.endWorkDate,
+      startWorkDate: null,
+      endWorkDate: null,
       langCode: value.langCode[0].value
     };
   }
 
   private formatDate(date: string): string {
+    // TODO: format properly
     return date ? (new Date(date)).toLocaleDateString() : '';
   }
 

@@ -3,7 +3,7 @@ import { MapConverterService } from '../../../core/converter/map/map-converter.s
 import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
@@ -44,9 +44,12 @@ export class UsersComponent {
     dataKey: 'users',
   };
 
+  displayBlockedUsers = true;
+
   actions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
+    { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX, value: this.displayBlockedUsers }
   ];
 
   selectedUser: IUser = null;
@@ -66,6 +69,11 @@ export class UsersComponent {
 
     // FIXME: change to Languages API once it is ready
     this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
+    this.filter = this.filter.bind(this);
+  }
+
+  filter(user: IUser): boolean {
+    return !user.isBlocked || this.displayBlockedUsers;
   }
 
   transformIsBlocked(isBlocked: number): string {
@@ -89,6 +97,9 @@ export class UsersComponent {
         break;
       case ToolbarActionTypeEnum.ADD:
         this.currentUser = this.createEmptyUser();
+        break;
+      case 10:
+        this.displayBlockedUsers = action.value;
         break;
     }
   }

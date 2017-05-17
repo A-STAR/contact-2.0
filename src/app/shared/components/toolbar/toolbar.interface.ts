@@ -1,3 +1,8 @@
+export enum ToolbarControlEnum {
+  BUTTON,
+  CHECKBOX
+}
+
 export enum ToolbarActionTypeEnum {
   ADD,
   EDIT,
@@ -10,4 +15,6 @@ export interface IToolbarAction {
   type: ToolbarActionTypeEnum;
   visible?: boolean;
   permission?: string;
+  control?: ToolbarControlEnum;
+  value?: any;
 }

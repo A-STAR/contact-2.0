@@ -88,6 +88,15 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
+  @Input()
+  filter(data: Array<any>): Array<any> {
+    return data;
+  }
+
+  get filteredRows(): Array<any> {
+    return this.rows.filter(this.filter);
+  }
+
   load(parameters?: IParameters): Observable<any> {
     return this.gridService
       .read(this.dataSource.read, parameters)
