@@ -24,7 +24,8 @@ export class ConstantEditComponent implements OnInit {
   // TODO: add type
   data: any;
 
-  constructor(private datePipe: DatePipe, private gridService: GridService) { }
+  constructor(private datePipe: DatePipe, private gridService: GridService) {
+  }
 
   ngOnInit(): void {
     this.controls = this.getControls();
