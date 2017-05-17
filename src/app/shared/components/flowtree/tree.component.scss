@@ -3,6 +3,7 @@
 
     .ui-treenode-selectable.ui-treenode-content {
         cursor: pointer;
+        user-select: none;
     }
 
     .ui-tree-container {

@@ -1,200 +1,284 @@
 {
   "data":
-  [{
-    "id": 1,
-    "label": "Lien lac thanh cong / Successful conversation",
-    "bgColor": "#fea",
-    "selectedBgColor": "#fc8",
-    "children": [{
-      "id": 2,
-      "label": "Lien lac voi nguoi tham chieu / Conversation with third person",
-      "children": [{
-        "id": 4,
-        "label": "Xác nhận lại lời hứa / Confirmation of payment",
-        "data": 422
-      }, {
-        "id": 6,
-        "label": "Da thong bao voi nguoi than / Information is transmitted",
-        "data": 2
-      }, {
-        "id": 7,
-        "label": "Không liên lạc được / No contact",
-        "children": [{
-          "id": 1202,
-          "label": "Biết khách hàng nhưng không có quan hệ với khách hàng / Client is known, communications has been lost",
-          "data": 448
-        }, {
-          "id": 1203,
-          "label": "Không biết khách hàng / Not familiar with the client",
-          "data": 449
-        }]
-      }, {
-        "id": 8,
-        "label": "Trường hợp phức tạp / Complicated situation",
-        "children": [{
-          "id": 1198,
-          "label": "Mất/mất tích / Information about death/loss of the client",
-          "data": 444
-        }, {
-          "id": 1199,
-          "label": "Đi tù/bộ đội / Currently in prison/army",
-          "data": 445
-        }, {
-          "id": 1200,
-          "label": "Ốm nặng/tàn tật / Seriously ill/disabled person",
-          "data": 446
-        }, {
-          "id": 1201,
-          "label": "Nghiện rượu/ nghiện ma túy / Alcoholic/ drug addict",
-          "data": 447
-        }]
-      }, {
-        "id": 166,
-        "label": "Goi lai sau / Call back later",
-        "data": 408
-      }, {
-        "id": 167,
-        "label": "Khách hàng không vay / Client didn't take a loan",
-        "data": 409
-      }, {
-        "id": 189,
-        "label": "Hứa thanh toán / Promise to pay",
-        "data": 2
-      }, {
-        "id": 1196,
-        "label": "Thanh toán vượt quá ngày quy định / Payment after an established period",
-        "data": 2
-      }, {
-        "id": 1197,
-        "label": "Từ chối thanh toán / Refuse to pay",
-        "data": 2
-      }, {
-        "id": 1204,
-        "label": "Hứa thanh toán trong ngày / Promise to pay today",
-        "data": 450
-      }, {
-        "id": 1205,
-        "label": "Thanh lý hợp đồng / Full repayment",
-        "children": [{
-          "id": 1206,
-          "label": "Kênh khác / Other Channel",
-          "data": 451
-        }, {
-          "id": 1207,
-          "label": "Tiền mặt / Cash",
-          "data": 452
-        }]
-      }, {
-        "id": 1208,
-        "label": "Gia hạn hợp đồng / Prolongation",
-        "data": 453
-      }, {
-        "id": 1209,
-        "label": "Thanh toán một phần / Partial payment",
-        "children": [{
-          "id": 1210,
-          "label": "Kênh khác / Other Channel",
-          "data": 454
-        }, {
-          "id": 1211,
-          "label": "Tiền mặt / Cash",
-          "data": 455
-        }]
-      }, {
-        "id": 1212,
-        "label": "Tư vấn / Consultation",
-        "data": 456
-      }]
-    }]
-    }, {
-      "id": 182,
-      "label": "Lien lac voi khach hang / Conversation with client",
+  [
+    {
+      "id": 1,
+      "label": "Executive",
       "bgColor": "#fea",
       "selectedBgColor": "#fc8",
-      "children": [{
-        "id": 183,
-        "label": "Goi lai sau / Call back later",
-        "data": 424
-      }, {
-        "id": 184,
-        "label": "Khách hàng không vay / Client didn't take a loan",
-        "data": 425
-      }, {
-        "id": 185,
-        "label": "Từ chối thanh toán / Refuse to pay",
-        "data": 426
-      }, {
-        "id": 187,
-        "label": "Xác nhận lại lời hứa / Confirmation of payment",
-        "data": 428
-      }, {
-        "id": 188,
-        "label": "Hứa thanh toán / Promise to pay",
-        "data": 429
-      }, {
-        "id": 1184,
-        "label": "Hứa thanh toán trong ngày / Promise to pay today",
-        "data": 433
-      }, {
-        "id": 1185,
-        "label": "Thanh toán vượt quá ngày quy định / Payment after an established period",
-        "data": 434
-      }, {
-        "id": 1186,
-        "label": "Thanh lý hợp đồng / Full repayment",
-        "children": [{
-          "id": 1187,
-          "label": "Tiền mặt / Cash",
-          "data": 435
-        }, {
-          "id": 1188,
-          "label": "Kênh khác / Other channel",
-          "data": 436
-        }]
-      }, {
-        "id": 1189,
-        "label": "Thanh toán một phần / Partial payment",
-        "data": "",
-        "children": [{
-          "id": 1190,
-          "label": "Kênh khác / Other channel",
-          "data": 437
-        }, {
-          "id": 1191,
-          "label": "Tiền mặt / Cash",
-          "data": 438
-        }]
-      }, {
-        "id": 1192,
-        "label": "Gia hạn hợp đồng / Prolongation",
-        "data": 439
-      }, {
-        "id": 1193,
-        "label": "Tư vấn / Consultation",
-        "data": 440
-      }, {
-        "id": 1194,
-        "label": "Trường hợp phức tạp / Complicated situation"
-      }]
-  }, {
-    "id": 15,
-    "label": "Khong lien lac thanh cong / Unsuccessful conversation",
-    "bgColor": "#fea",
-    "selectedBgColor": "#fc8",
-    "children": [{
-      "id": 19,
-      "label": "VoiceMail, fax, v.v / VoiceMail, fax, etc.",
-      "data": 9
-    }, {
-      "id": 20,
-      "label": "Sai so / Wrong number",
-      "data": 10
-    }]
-  }, {
-    "id": 206,
-    "label": "Lich su qua trinh / Work history",
-    "data": 0,
-    "bgColor": "#fea",
-    "selectedBgColor": "#fc8"
-  }]
+      "children": [
+        {
+          "id": 2,
+          "label": "Executive director",
+          "children": [
+            {
+              "id": 4,
+              "label": "Xác nhận lại lời hứa / Confirmation of payment",
+              "data": 422
+            },
+            {
+              "id": 6,
+              "label": "Da thong bao voi nguoi than / Information is transmitted",
+              "data": 2
+            },
+            {
+              "id": 7,
+              "label": "Không liên lạc được / No contact",
+              "children": [
+                {
+                  "id": 1202,
+                  "label": "Biết khách hàng nhưng không có quan hệ với khách hàng / Client is known, communications has been lost",
+                  "data": 448
+                },
+                {
+                  "id": 1203,
+                  "label": "Không biết khách hàng / Not familiar with the client",
+                  "data": 449
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "label": "Trường hợp phức tạp / Complicated situation",
+              "children": [
+                {
+                  "id": 1198,
+                  "label": "Mất/mất tích / Information about death/loss of the client",
+                  "data": 444
+                },
+                {
+                  "id": 1199,
+                  "label": "Đi tù/bộ đội / Currently in prison/army",
+                  "data": 445
+                },
+                {
+                  "id": 1200,
+                  "label": "Ốm nặng/tàn tật / Seriously ill/disabled person",
+                  "data": 446
+                },
+                {
+                  "id": 1201,
+                  "label": "Nghiện rượu/ nghiện ma túy / Alcoholic/ drug addict",
+                  "data": 447
+                }
+              ]
+            },
+            {
+              "id": 166,
+              "label": "Goi lai sau / Call back later",
+              "data": 408
+            },
+            {
+              "id": 167,
+              "label": "Khách hàng không vay / Client didn't take a loan",
+              "data": 409
+            },
+            {
+              "id": 189,
+              "label": "Hứa thanh toán / Promise to pay",
+              "data": 2
+            },
+            {
+              "id": 1196,
+              "label": "Thanh toán vượt quá ngày quy định / Payment after an established period",
+              "data": 2
+            },
+            {
+              "id": 1197,
+              "label": "Từ chối thanh toán / Refuse to pay",
+              "data": 2
+            },
+            {
+              "id": 1204,
+              "label": "Hứa thanh toán trong ngày / Promise to pay today",
+              "data": 450
+            },
+            {
+              "id": 1205,
+              "label": "Thanh lý hợp đồng / Full repayment",
+              "children": [
+                {
+                  "id": 1206,
+                  "label": "Kênh khác / Other Channel",
+                  "data": 451
+                },
+                {
+                  "id": 1207,
+                  "label": "Tiền mặt / Cash",
+                  "data": 452
+                }
+              ]
+            },
+            {
+              "id": 1208,
+              "label": "Gia hạn hợp đồng / Prolongation",
+              "data": 453
+            },
+            {
+              "id": 1209,
+              "label": "Thanh toán một phần / Partial payment",
+              "children": [
+                {
+                  "id": 1210,
+                  "label": "Kênh khác / Other Channel",
+                  "data": 454
+                },
+                {
+                  "id": 1211,
+                  "label": "Tiền mặt / Cash",
+                  "data": 455
+                }
+              ]
+            },
+            {
+              "id": 1212,
+              "label": "Tư vấn / Consultation",
+              "data": 456
+            }
+          ]
+        },
+        {
+          "id": 308,
+          "label": "Secretary"
+        }
+      ]
+    },
+    {
+      "id": 182,
+      "label": "Finance Department",
+      "bgColor": "#fea",
+      "selectedBgColor": "#fc8",
+      "children": [
+        {
+          "id": 183,
+          "label": "Goi lai sau / Call back later",
+          "data": 424
+        },
+        {
+          "id": 184,
+          "label": "Khách hàng không vay / Client didn't take a loan",
+          "data": 425
+        },
+        {
+          "id": 185,
+          "label": "Từ chối thanh toán / Refuse to pay",
+          "data": 426
+        },
+        {
+          "id": 187,
+          "label": "Xác nhận lại lời hứa / Confirmation of payment",
+          "data": 428
+        },
+        {
+          "id": 188,
+          "label": "Hứa thanh toán / Promise to pay",
+          "data": 429
+        },
+        {
+          "id": 1184,
+          "label": "Hứa thanh toán trong ngày / Promise to pay today",
+          "data": 433
+        },
+        {
+          "id": 1185,
+          "label": "Thanh toán vượt quá ngày quy định / Payment after an established period",
+          "data": 434
+        },
+        {
+          "id": 1186,
+          "label": "Thanh lý hợp đồng / Full repayment",
+          "children": [
+            {
+              "id": 1187,
+              "label": "Tiền mặt / Cash",
+              "data": 435
+            }, {
+              "id": 1188,
+              "label": "Kênh khác / Other channel",
+              "data": 436
+            }
+          ]
+        },
+        {
+          "id": 1189,
+          "label": "Thanh toán một phần / Partial payment",
+          "data": "",
+          "children": [
+            {
+              "id": 1190,
+              "label": "Kênh khác / Other channel",
+              "data": 437
+            },
+            {
+              "id": 1191,
+              "label": "Tiền mặt / Cash",
+              "data": 438
+            }
+          ]
+        },
+        {
+          "id": 1192,
+          "label": "Gia hạn hợp đồng / Prolongation",
+          "data": 439
+        },
+        {
+          "id": 1193,
+          "label": "Tư vấn / Consultation",
+          "data": 440
+        },
+        {
+          "id": 1194,
+          "label": "Trường hợp phức tạp / Complicated situation"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "label": "Production Department",
+      "bgColor": "#fea",
+      "selectedBgColor": "#fc8",
+      "children": [
+        {
+          "id": 19,
+          "label": "VoiceMail, fax, v.v / VoiceMail, fax, etc.",
+          "data": 9
+        },
+        {
+          "id": 20,
+          "label": "Sai so / Wrong number",
+          "data": 10
+        }
+      ]
+    },
+    {
+      "id": 206,
+      "label": "Transportation Department",
+      "data": 0,
+      "bgColor": "#fea",
+      "selectedBgColor": "#fc8"
+    },
+    {
+      "id": 209,
+      "label": "Legal Department",
+      "data": 0,
+      "bgColor": "#fea",
+      "selectedBgColor": "#fc8",
+      "children": [
+        {
+          "id": 210,
+          "label": "Legal council",
+          "bgColor": "#fea",
+          "selectedBgColor": "#fc8"
+        },
+        {
+          "id": 211,
+          "label": "Paralegal"
+        },
+        {
+          "id": 212,
+          "label": "Secretary"
+        }
+      ]
+    }
+  ]
 }

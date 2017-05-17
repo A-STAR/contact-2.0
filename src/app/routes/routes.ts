@@ -11,9 +11,7 @@ export const routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-      { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
-      { path: 'workflow', loadChildren: './tree/flow.module#FlowModule' },
-      { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
+      // { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
     ]
   },
   {
@@ -24,7 +22,9 @@ export const routes = [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
       { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' },
-      { path: 'users', loadChildren: './admin/users/users.module#UsersModule' }
+      { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
+      { path: 'departments', loadChildren: './admin/departments/departments.module#DepartmentsModule' },
+      // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },
 

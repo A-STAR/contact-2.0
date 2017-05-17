@@ -11,7 +11,7 @@ export class DynamicFormComponent implements OnInit {
   // TODO: add interface
   @Input() data: any;
 
-  private form: FormGroup;
+  form: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {}
 

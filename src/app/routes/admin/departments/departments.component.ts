@@ -1,24 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { TreeNode } from '../../shared/components/flowtree/common/api';
-import { TreeComponent } from '../../shared/components/flowtree/tree.component';
+
+import { TreeNode } from '../../../shared/components/flowtree/common/api';
+import { TreeComponent } from '../../../shared/components/flowtree/tree.component';
+import { DepartmentsService } from './departments.service';
 
 @Component({
-  selector: 'app-workflow',
-  templateUrl: './flow.component.html',
-  styleUrls: ['./flow.component.scss']
+  selector: 'app-departments',
+  templateUrl: './departments.component.html',
+  styleUrls: ['./departments.component.scss']
 })
-export class FlowDemoComponent implements OnInit {
+export class DepartmentsComponent implements OnInit {
   @ViewChild('tree') tree: TreeComponent;
   selection: TreeNode;
   value: TreeNode[];
 
-  constructor(private http: Http) { }
+  constructor(private departmentsService: DepartmentsService) { }
 
-  ngOnInit() {
-    this.http.get('assets/server/workflow.json')
-      .map(data => data.json().data)
+  ngOnInit(): void {
+    this.departmentsService.getNodes()
       .subscribe(
         data => {
           const files = {
@@ -33,7 +33,7 @@ export class FlowDemoComponent implements OnInit {
       );
   }
 
-  onNodeSelect({ node }) {
+  onNodeSelect({ node }): void {
     // use for node selection, could operate on selection collection as well
     const parent = this.findParentRecursive(node);
     const isExpanded = node.expanded;
@@ -43,7 +43,7 @@ export class FlowDemoComponent implements OnInit {
     }
   }
 
-  onNodeExpand({ node }) {
+  onNodeExpand({ node }): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;

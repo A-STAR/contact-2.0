@@ -7,7 +7,7 @@ import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
 describe('Component: Sidebar', () => {
-    let mockRouter = {
+    const mockRouter = {
         navigate: jasmine.createSpy('navigate')
     };
     beforeEach(() => {
@@ -21,7 +21,7 @@ describe('Component: Sidebar', () => {
     });
 
     it('should create an instance', async(inject([MenuService, SettingsService, Router], (menuService, settingsService, router) => {
-        let component = new SidebarComponent(menuService, settingsService, router);
+        const component = new SidebarComponent(menuService, settingsService, router);
         expect(component).toBeTruthy();
     })));
 });
