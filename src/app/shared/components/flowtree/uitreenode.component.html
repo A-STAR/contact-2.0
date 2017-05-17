@@ -46,7 +46,7 @@
                 <td class="ui-treenode" [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
                     [dragula]='"first-bag"'
                     [attr.nodeid]="node.id"
-                    [dragulaOptions]="options2">
+                    [dragulaOptions]="dragulaOptions">
                     <div class="ui-treenode-content ui-state-default ui-corner-all"
                          [ngStyle]="{'background-color':getBgColor()}"
                          [attr.nodeid]="node.id"

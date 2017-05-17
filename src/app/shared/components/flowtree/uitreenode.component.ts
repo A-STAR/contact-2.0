@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Inject, forwardRef } from '@angular/core';
+import {Component, OnInit, Input, Inject, forwardRef} from '@angular/core';
 
-import { TreeNode } from './common/api';
-import { TreeComponent } from './tree.component';
+import {TreeNode} from './common/api';
+import {TreeComponent} from './tree.component';
 
 @Component({
   selector: 'app-tree-node',
@@ -13,29 +13,25 @@ export class UITreeNodeComponent implements OnInit {
   static DEFAULT_SELECTED_BG_COLOR = '#def';
 
   @Input() node: TreeNode;
-
   @Input() parentNode: TreeNode;
-
   @Input() root: boolean;
-
   @Input() index: number;
-
   @Input() firstChild: boolean;
-
   @Input() lastChild: boolean;
-
-  options2 = {
-    copy: true,
-    moves: function (el: Element, source: Element): boolean {
-      return !source.classList.contains('ui-treenode-root');
-    },
-  };
+  @Input() dragulaOptions: any;
 
   constructor(@Inject(forwardRef(() => TreeComponent)) public tree: TreeComponent) {
   }
 
   ngOnInit(): void {
-    // this.node.parent = this.parentNode;
+    if (typeof this.parentNode !== 'undefined') {
+      this.node.parent = this.parentNode;
+    }
+    if (!this.dragulaOptions) {
+      this.dragulaOptions = {
+        invalid: () => true // prevent any drags from initiating by default
+      };
+    }
   }
 
   getBgColor(): string {
