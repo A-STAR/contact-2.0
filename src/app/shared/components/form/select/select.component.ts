@@ -72,10 +72,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       const areItemsStrings = typeof currentSelectedItems[0] === 'string';
 
       this._active = currentSelectedItems.map((item: any) => {
-        const data = areItemsStrings
-          ? item
-          : {id: item[this.idField], text: item[this.textField]};
-
+        const data = areItemsStrings ? item : {id: item[this.idField], text: item[this.textField] || ''};
         return new SelectItem(data, this.idField, this.textField);
       });
     }
@@ -123,9 +120,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this.itemObjects = this._items.map((item: any) => (typeof item === 'string'
         ? new SelectItem(item, this.idField, this.textField)
         : new SelectItem({
-          id: item[this.idField],
-          text: item[this.textField],
-          children: item[this.childrenField]}, this.idField, this.textField
+            id: item[this.idField],
+            text: item[this.textField],
+            children: item[this.childrenField]
+          }, this.idField, this.textField
         )));
     }
   }
