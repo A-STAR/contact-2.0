@@ -25,10 +25,10 @@ export class ConstantEditComponent implements OnInit {
   data: any;
 
   constructor(private datePipe: DatePipe, private gridService: GridService) {
-    this.controls = this.getControls();
   }
 
   ngOnInit(): void {
+    this.controls = this.getControls();
     this.data = this.getData();
   }
 
