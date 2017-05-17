@@ -310,7 +310,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input()
   public set controlDisabled(value: boolean) {
     this._disabled = value;
-    if (this._disabled === true) {
+    if (this._disabled) {
       this.hideOptions();
     }
   }
