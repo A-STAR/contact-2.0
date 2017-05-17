@@ -5,10 +5,9 @@ import { RouterModule } from '@angular/router';
 
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
-// import { ToasterModule } from 'angular2-toaster/angular2-toaster';
+import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
@@ -53,7 +52,6 @@ import { DialogModule } from './components/dialog/dialog.module';
     // Angle modules
     AccordionModule.forRoot(),
     AlertModule.forRoot(),
-    ButtonsModule.forRoot(),
     CalendarModule,
     CurrencyMaskModule,
     DropdownModule.forRoot(),
@@ -65,6 +63,7 @@ import { DialogModule } from './components/dialog/dialog.module';
     DynamicFormModule,
     GridModule,
     MomentModule,
+    ToasterModule,
     ToolbarModule,
     TreeModule,
   ],
@@ -97,7 +96,6 @@ import { DialogModule } from './components/dialog/dialog.module';
     CurrencyMaskModule,
     AccordionModule,
     AlertModule,
-    ButtonsModule,
     DropdownModule,
     CalendarModule,
     TextMaskModule,
@@ -108,6 +106,7 @@ import { DialogModule } from './components/dialog/dialog.module';
     NowDirective,
     ScrollableDirective,
     SparklineDirective,
+    ToasterModule,
     VectormapDirective,
     // App exports
     DatePickerModule,

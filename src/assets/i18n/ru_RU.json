@@ -10,7 +10,6 @@
     }
   },
   "sidebar": {
-    "WELCOME": "Добро пожаловать",
     "heading": {
         "HEADER": "Menu Heading"
     },
@@ -62,7 +61,7 @@
     }
   },
   "dashboard": {
-    "WELCOME": "Добро пожаловать"
+    "TITLE": "Панель управления"
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "Произошла ошибка",

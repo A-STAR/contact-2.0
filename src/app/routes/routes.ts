@@ -11,7 +11,6 @@ export const routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-      // { path: 'grid', loadChildren: './tables/tables.module#TablesModule' },
     ]
   },
   {

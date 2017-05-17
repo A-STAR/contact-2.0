@@ -10,7 +10,6 @@
         }
     },
     "sidebar": {
-        "WELCOME": "Welcome",
         "heading": {
             "HEADER": "Menu Heading"
         },
@@ -62,7 +61,7 @@
         }
     },
     "dashboard": {
-        "WELCOME": "Welcome"
+        "TITLE": "Dashboard"
     },
     "validation": {
         "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
