@@ -1,7 +1,7 @@
 import {
   Component, ElementRef, EventEmitter, Input, Output, OnDestroy, Renderer2, OnInit, Inject
 } from '@angular/core';
-import {ENVIRONMENT_CONTAINER} from '../../../core/environment/environment.interface';
+import { ENVIRONMENT_CONTAINER } from '../../../core/environment/environment.interface';
 
 @Component({
   selector: 'app-dialog',
