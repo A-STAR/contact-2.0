@@ -164,15 +164,15 @@ export class TreeComponent implements AfterContentInit {
     return {top: _y, left: _x, width: t.clientWidth, height: t.clientHeight, nodeId: t.getAttribute('nodeid')};
   }
 
-    get horizontal(): boolean {
-        return this.layout === 'horizontal';
-    }
+  get horizontal(): boolean {
+    return this.layout === 'horizontal';
+  }
 
-    onChangeLocation(a) {
+    onChangeLocation(a): void {
         this.changeLocation.emit(a);
     }
 
-    ngAfterContentInit() {
+    ngAfterContentInit(): void {
         if (this.templates.length) {
             this.templateMap = {};
         }
@@ -182,7 +182,7 @@ export class TreeComponent implements AfterContentInit {
         });
     }
 
-    onNodeClick(event: MouseEvent, node: TreeNode) {
+    onNodeClick(event: MouseEvent, node: TreeNode): void {
         const eventTarget = (<Element> event.target);
 
         if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
@@ -276,7 +276,7 @@ export class TreeComponent implements AfterContentInit {
         this.nodeTouched = false;
     }
 
-    onNodeRightClick(event: MouseEvent, node: TreeNode) {
+    onNodeRightClick(event: MouseEvent, node: TreeNode): void {
         if (this.contextMenu) {
             const eventTarget = (<Element> event.target);
 
@@ -300,15 +300,15 @@ export class TreeComponent implements AfterContentInit {
         }
     }
 
-    findIndexInSelection(node: TreeNode) {
+    findIndexInSelection(node: TreeNode): number {
         let index: number = -1;
 
         if (this.selectionMode && this.selection) {
             if (this.isSingleSelectionMode()) {
-                index = (this.selection == node) ? 0 : - 1;
+                index = (this.selection === node) ? 0 : - 1;
             } else {
                 for (let i = 0; i  < this.selection.length; i++) {
-                    if (this.selection[i] == node) {
+                    if (this.selection[i] === node) {
                         index = i;
                         break;
                     }
@@ -326,7 +326,7 @@ export class TreeComponent implements AfterContentInit {
             for (const child of node.children) {
                 if (this.isSelected(child)) {
                     selectedCount++;
-                } else if(child.partialSelected) {
+                } else if (child.partialSelected) {
                     childPartialSelected = true;
                 }
             }
@@ -338,11 +338,11 @@ export class TreeComponent implements AfterContentInit {
                 if (!select) {
                     const index = this.findIndexInSelection(node);
                     if (index >= 0) {
-                        this.selection = this.selection.filter((val, i) => i != index);
+                        this.selection = this.selection.filter((val, i) => i !== index);
                     }
                 }
 
-                if (childPartialSelected || selectedCount > 0 && selectedCount != node.children.length) {
+                if (childPartialSelected || selectedCount > 0 && selectedCount !== node.children.length) {
                     node.partialSelected = true;
                 } else {
                     node.partialSelected = false;
@@ -356,7 +356,7 @@ export class TreeComponent implements AfterContentInit {
         }
     }
 
-    propagateDown(node: TreeNode, select: boolean) {
+    propagateDown(node: TreeNode, select: boolean): void {
         const index = this.findIndexInSelection(node);
 
         if (select && index === -1) {
@@ -374,19 +374,19 @@ export class TreeComponent implements AfterContentInit {
         }
     }
 
-    isSelected(node: TreeNode) {
+    isSelected(node: TreeNode): boolean {
         return this.findIndexInSelection(node) !== -1;
     }
 
-    isSingleSelectionMode() {
+    isSingleSelectionMode(): boolean {
         return this.selectionMode && this.selectionMode === 'single';
     }
 
-    isMultipleSelectionMode() {
+    isMultipleSelectionMode(): boolean {
         return this.selectionMode && this.selectionMode === 'multiple';
     }
 
-    isCheckboxSelectionMode() {
+    isCheckboxSelectionMode(): boolean {
         return this.selectionMode && this.selectionMode === 'checkbox';
     }
 
