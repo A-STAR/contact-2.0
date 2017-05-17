@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { ISelectionAction } from '../../select/select-interfaces';
+import { ISelectionAction } from '../select/select-interfaces';
 
 export interface IDynamicFormControl {
   label: string;
