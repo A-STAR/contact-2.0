@@ -24,13 +24,13 @@ export class DynamicFormComponent implements OnInit {
     return this.form.dirty && this.form.valid;
   }
 
-  get value(): any {
+  public get value(): any {
     return this.form.getRawValue();
   }
 
   private createForm(): FormGroup {
     const controls = this.controls
-      .reduce((acc, control) => {
+      .reduce((acc, control: IDynamicFormControl) => {
         const options = {
           disabled: control.disabled,
           value: ''
