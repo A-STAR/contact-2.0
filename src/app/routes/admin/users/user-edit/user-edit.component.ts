@@ -15,6 +15,7 @@ import { UsersService } from '../users.service';
 export class UserEditComponent implements OnInit {
   @Input() user: IUser;
   @Output() userChange: EventEmitter<IUser> = new EventEmitter();
+  @Output() onUpdate: EventEmitter<null> = new EventEmitter();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl>;
@@ -45,14 +46,19 @@ export class UserEditComponent implements OnInit {
   }
 
   onActionClick(): void {
-    const action = this.isUpdating ? this.usersService.save : this.usersService.create;
-
-    console.log(this.form.value);
-
-    /*
-    action(this.form.value)
-      .subscribe(r => console.log(r));
-    */
+    const action = this.isUpdating ? this.usersService.save(this.user.id, this.payload) : this.usersService.create(this.payload);
+    action
+      .subscribe(
+        data => {
+          if (data.success) {
+            this.onUpdate.emit();
+            this.close();
+          } else {
+            this.error = data.message;
+          }
+        },
+        error => this.error = 'validation.DEFAULT_ERROR_MESSAGE'
+      );
   }
 
   onCancelClick(): void {
@@ -110,6 +116,19 @@ export class UserEditComponent implements OnInit {
       endWorkDate: this.formatDate(this.user.endWorkDate),
       // FIXME: change to language code once the API is ready
       langCode: [{ value: this.user.roleId }]
+    };
+  }
+
+  private get payload(): IUser {
+    const value = this.form.value;
+    return {
+      ...value,
+      password: value.password || undefined,
+      roleId: value.roleId[0].value,
+      // FIXME
+      startWorkDate: null,  // value.startWorkDate,
+      endWorkDate: null,  // value.endWorkDate,
+      langCode: value.langCode[0].value
     };
   }
 

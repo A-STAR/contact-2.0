@@ -11,7 +11,7 @@ export class UsersService {
     return this.gridService.create('/api/users', {}, data);
   }
 
-  save(data: any): Observable<any> {
-    return this.gridService.update('/api/users/{id}', { id: data.id }, data);
+  save(id: number, data: any): Observable<any> {
+    return this.gridService.update('/api/users/{id}', { id }, data);
   }
 }

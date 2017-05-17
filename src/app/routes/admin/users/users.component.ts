@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
+import { Component, ViewChild } from '@angular/core';
 import { MapConverterService } from '../../../core/converter/map/map-converter.service';
 import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
+import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
 @Component({
@@ -12,6 +13,8 @@ import { IUser, IUsersResponse } from './users.interface';
   templateUrl: 'users.component.html'
 })
 export class UsersComponent {
+  @ViewChild(GridComponent) grid: GridComponent;
+
   columns: Array<any> = [
     { name: 'ID', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { name: 'Логин', prop: 'login', minWidth: 120 },
@@ -93,6 +96,16 @@ export class UsersComponent {
   onEdit(user: IUser): void {
     this.action = ToolbarActionTypeEnum.EDIT;
     this.currentUser = this.selectedUser;
+  }
+
+  onUpdate(): void {
+    this.selectedUser = null;
+    this.grid.load().
+      subscribe(
+        () => this.refreshToolbar(),
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
   onSelect(users: Array<IUser>): void {
