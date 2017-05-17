@@ -58,16 +58,16 @@ export class TreeComponent implements OnInit, OnDestroy, AfterContentInit {
     return this.layout === 'horizontal';
   }
 
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.dragAndDropPlugin.onMouseMove(event);
-  }
-
   constructor(public dragulaService: DragulaService,
               public domHandler: DomHandler,
               public elementRef: ElementRef,
               public renderer: Renderer2) {
     this.dragAndDropPlugin = new TreeDragAndDropPlugin(this);
+  }
+
+  @HostListener('mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    this.dragAndDropPlugin.onMouseMove(event);
   }
 
   ngOnInit(): void {
