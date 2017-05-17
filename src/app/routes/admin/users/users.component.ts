@@ -20,7 +20,7 @@ export class UsersComponent {
     { name: 'Отчество', prop: 'middleName', minWidth: 120 },
     { name: 'Должность', prop: 'position', minWidth: 120 },
     this.columnDecoratorService.decorateColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 80 }, ({ roleId }) => this.roleConverter.map(roleId)
+      { name: 'Роль', prop: 'roleId', minWidth: 100 }, ({ roleId }) => this.roleConverter.map(roleId)
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
@@ -75,7 +75,7 @@ export class UsersComponent {
   }
 
   get isUserBeingCreatedOrEdited(): boolean {
-    return !!this.currentUser && !!this.action;
+    return this.currentUser && this.action !== null;
   }
 
   onAction(action: IToolbarAction): void {
