@@ -7,7 +7,10 @@ import {
   ContentChildren,
   QueryList,
   TemplateRef,
-  ViewEncapsulation, HostListener, Renderer2
+  ViewEncapsulation,
+  HostListener,
+  Renderer2,
+  ElementRef
 } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula';
@@ -58,6 +61,7 @@ export class TreeComponent implements AfterContentInit {
 
   constructor(private dragulaService: DragulaService,
               private domHandler: DomHandler,
+              private elementRef: ElementRef,
               private renderer2: Renderer2) {
 
     dragulaService.drag.subscribe(() => {
@@ -72,8 +76,7 @@ export class TreeComponent implements AfterContentInit {
           return;
         }
 
-        const elements: HTMLCollectionOf<Element> = document.getElementsByClassName('ui-treenode-content');
-
+        const elements: HTMLCollectionOf<Element> = this.elementRef.nativeElement.querySelectorAll('.ui-treenode-content');
         const a = [];
 
         Array.prototype.forEach.call(elements, (el) => {
@@ -95,7 +98,6 @@ export class TreeComponent implements AfterContentInit {
               (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
               (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
               (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
-             // console.log('OK: ', elPos.nodeId);
               a.push(el.getAttribute('nodeid'));
             }
           }
@@ -110,9 +112,8 @@ export class TreeComponent implements AfterContentInit {
             source: attr
           });
         }
-
-
       });
+
       dragulaService.drop.subscribe((value) => {
         this._mirrorPosition = this.domHandler.getOffset(document.getElementsByClassName('gu-mirror')[0]);
 
