@@ -3,7 +3,7 @@ import { MapConverterService } from '../../../core/converter/map/map-converter.s
 import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
@@ -47,6 +47,7 @@ export class UsersComponent {
   actions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
+    { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX }
   ];
 
   selectedUser: IUser = null;
@@ -89,6 +90,9 @@ export class UsersComponent {
         break;
       case ToolbarActionTypeEnum.ADD:
         this.currentUser = this.createEmptyUser();
+        break;
+      case 10:
+        console.log('boom!', action);
         break;
     }
   }

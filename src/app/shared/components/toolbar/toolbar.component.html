@@ -1,8 +1,16 @@
-<div class="app-toolbar">
-  <button *ngFor="let action of actions"
-          [disabled]="!action.visible || !isActionAccessible(action)"
-          (click)="onActionClick(action)"
-          class="app-button fa fa-{{ toIconCls(action) }}"
-          aria-hidden="true">
-  </button>
-</div>
+<ul class="app-toolbar">
+    <li *ngFor="let action of actions" class="app-control">
+        <ng-container [ngSwitch]="action.control">
+            <span *ngSwitchCase="ToolbarControlEnum.CHECKBOX">
+                <input type="checkbox" (change)="onActionClick(action, $event)"> {{ action.text }}
+            </span>
+            <button
+                *ngSwitchDefault
+                [disabled]="!action.visible || !isActionAccessible(action)"
+                (click)="onActionClick(action, $event)"
+                class="app-button fa fa-{{ toIconCls(action) }}"
+                aria-hidden="true">
+            </button>
+        </ng-container>
+    </li>
+</ul>
