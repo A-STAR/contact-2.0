@@ -9,19 +9,15 @@ import {
   TemplateRef,
   ViewEncapsulation,
   HostListener,
-  Renderer2,
   ElementRef,
   OnInit,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
-
-import { DragulaService } from 'ng2-dragula';
 
 import { TreeNode } from './common/api';
 import { PrimeTemplate } from './common/shared';
-import { ITreeNodeDragAndDropPayload } from './tree.interface';
-import { DomHandler } from './dom/domhandler';
-import { TreeDragAndDropPlugin } from './tree.drag-and-drop';
+import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
+import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.interface';
 
 @Component({
   selector: 'app-tree',
@@ -29,7 +25,7 @@ import { TreeDragAndDropPlugin } from './tree.drag-and-drop';
   templateUrl: './tree.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class TreeComponent implements OnInit, OnDestroy, AfterContentInit {
+export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, AfterContentInit {
 
   @Input() value: TreeNode[];
   @Input() selectionMode: string;
@@ -40,7 +36,7 @@ export class TreeComponent implements OnInit, OnDestroy, AfterContentInit {
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
   @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
-  @Output() changeLocation: EventEmitter<ITreeNodeDragAndDropPayload> = new EventEmitter();
+  @Output() changeLocation: EventEmitter<IDragAndDropPayload> = new EventEmitter();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() contextMenu: any;
@@ -52,17 +48,19 @@ export class TreeComponent implements OnInit, OnDestroy, AfterContentInit {
   @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
   public templateMap: any;
-  private dragAndDropPlugin: TreeDragAndDropPlugin;
+  private dragAndDropPlugin: DragAndDropComponentPlugin;
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
   }
 
-  constructor(public dragulaService: DragulaService,
-              public domHandler: DomHandler,
-              public elementRef: ElementRef,
-              public renderer: Renderer2) {
-    this.dragAndDropPlugin = new TreeDragAndDropPlugin(this);
+  get elementSelector(): string {
+    return '.ui-treenode-content';
+  }
+
+  constructor(public elementRef: ElementRef,
+              dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
+    this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
   }
 
   @HostListener('mousemove', ['$event'])

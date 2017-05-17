@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
 import { TreeNode } from '../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../shared/components/flowtree/tree.component';
-import { ITreeNodeDragAndDropPayload } from '../../shared/components/flowtree/tree.interface';
+import { IDragAndDropPayload } from '../../shared/components/dnd/drag-and-drop.interface';
 
 @Component({
   selector: 'app-workflow',
@@ -52,7 +52,7 @@ export class FlowDemoComponent implements OnInit {
     }
   }
 
-  onNodeChangeLocation(payload: ITreeNodeDragAndDropPayload): void {
+  onNodeChangeLocation(payload: IDragAndDropPayload): void {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
