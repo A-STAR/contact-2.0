@@ -48,7 +48,7 @@ export class ConstantEditComponent implements OnInit {
 
   onActionClick(): void {
     const id = this.getFieldValue('id');
-    const typeCode = this.getFieldValue('typeCode')[0].value;
+    const typeCode = this.getFieldValue('typeCode');
     const value = this.getFieldValue('value');
     const fieldMap: object = {
       1: 'valueN',
