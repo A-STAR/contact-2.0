@@ -2,7 +2,8 @@
     <li *ngFor="let action of actions" class="app-control">
         <ng-container [ngSwitch]="action.control">
             <span *ngSwitchCase="ToolbarControlEnum.CHECKBOX">
-                <input type="checkbox" (change)="onActionClick(action, $event)"> {{ action.text }}
+                <!-- TODO: fix styles -->
+                <input type="checkbox" style="position: relative; top: 2px;" [checked]="action.value" (change)="onActionClick(action, $event)"> {{ action.text }}
             </span>
             <button
                 *ngSwitchDefault

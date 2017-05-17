@@ -44,10 +44,12 @@ export class UsersComponent {
     dataKey: 'users',
   };
 
+  displayBlockedUsers = true;
+
   actions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX }
+    { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX, value: this.displayBlockedUsers }
   ];
 
   selectedUser: IUser = null;
@@ -67,6 +69,11 @@ export class UsersComponent {
 
     // FIXME: change to Languages API once it is ready
     this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
+    this.filter = this.filter.bind(this);
+  }
+
+  filter(user: IUser): boolean {
+    return !user.isBlocked || this.displayBlockedUsers;
   }
 
   transformIsBlocked(isBlocked: number): string {
@@ -92,7 +99,7 @@ export class UsersComponent {
         this.currentUser = this.createEmptyUser();
         break;
       case 10:
-        console.log('boom!', action);
+        this.displayBlockedUsers = action.value;
         break;
     }
   }

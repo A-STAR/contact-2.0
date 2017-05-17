@@ -16,5 +16,5 @@ export interface IToolbarAction {
   visible?: boolean;
   permission?: string;
   control?: ToolbarControlEnum;
-  payload?: any;
+  value?: any;
 }

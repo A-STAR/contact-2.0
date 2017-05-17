@@ -20,10 +20,9 @@ export class ToolbarComponent {
   }
 
   onActionClick(action: IToolbarAction, event: any): void {
-    const payload = action.control === ToolbarControlEnum.CHECKBOX ? event.target.checked : undefined;
     this.actionClick.emit({
       ...action,
-      payload
+      value: action.control === ToolbarControlEnum.CHECKBOX ? event.target.checked : undefined
     });
   }
 
