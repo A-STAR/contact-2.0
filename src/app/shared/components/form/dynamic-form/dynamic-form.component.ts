@@ -13,10 +13,11 @@ export class DynamicFormComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder) {
+    this.form = this.createForm();
+  }
 
   ngOnInit(): void {
-    this.form = this.createForm();
     this.populateForm();
   }
 
