@@ -74,7 +74,7 @@ export class UsersComponent {
     return data.users;
   }
 
-  isUserBeingCreatedOrEdited(): boolean {
+  get isUserBeingCreatedOrEdited(): boolean {
     return !!this.currentUser && !!this.action;
   }
 

@@ -1,9 +1,9 @@
 <app-dialog [display]="user" (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>Create user / Edit user</h3>
+    <h3>{{ title }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="user"></app-dynamic-form>
 
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}
