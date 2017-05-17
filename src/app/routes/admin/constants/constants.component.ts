@@ -25,7 +25,7 @@ export class ConstantsComponent implements OnInit {
     { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { name: 'Название константы', prop: 'name', maxWidth: 350 },
     { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Комментарий', prop: 'dsc', width: 200 },
+    { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
   ];
 
   controls: Array<IDynamicFormControl> = [
@@ -120,7 +120,11 @@ export class ConstantsComponent implements OnInit {
     }
 
     const values: IValue = this.controls.reduce((arr, ctrl) => {
-      arr[ctrl.controlName] = record[ctrl.controlName];
+      if (ctrl.type === 'select') {
+        arr[ctrl.controlName] = [ [{ value: record[ctrl.controlName], label: ctrl.label }] ];
+      } else {
+        arr[ctrl.controlName] = record[ctrl.controlName];
+      }
       return arr;
     }, {});
 

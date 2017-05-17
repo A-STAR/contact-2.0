@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="block-center mt-xl wd-xl">
+  <div class="block-center vertical-align wd-xl">
     <!-- START panel-->
     <div class="panel panel-dark panel-flat">
       <div class="panel-heading text-center">
@@ -8,11 +8,11 @@
         </a>
       </div>
       <div class="panel-body">
-        <p class="text-center pv">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
+        <p class="text-center pv-lg">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
         <form [formGroup]="valForm" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
           <div class="form-group has-feedback">
             <input class="form-control" type="text" name="login" placeholder="{{ 'login.LOGIN_PLACEHOLDER' | translate }}" autocomplete="off" minlength="2" formControlName="login" required="" />
-            <span class="fa fa-envelope form-control-feedback text-muted"></span>
+            <span class="fa fa-user form-control-feedback text-muted"></span>
             <span class="text-danger" *ngIf="valForm.controls['login'].hasError('required') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">
               {{ 'validation.FIELD_REQUIRED' | translate }}
             </span>
@@ -35,11 +35,6 @@
                 <span class="fa fa-check"></span>{{ 'login.REMEMBER_ME' | translate }}
               </label>
             </div>
-            <!--
-            <div class="pull-right">
-              <a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
-            </div>
-            -->
           </div>
           <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
             {{ 'login.LOGIN_BUTTON' | translate }}

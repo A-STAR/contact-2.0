@@ -11,7 +11,7 @@ import { TranslatorService } from '../../../core/translator/translator.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  static LOGIN_KEY = 'auth-login';
+  static LOGIN_KEY = 'auth/login';
 
   valForm: FormGroup;
   error: string = null;

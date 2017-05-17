@@ -1,4 +1,4 @@
-<app-dialog [display]="display">
+<app-dialog *ngIf="display">
   <div dialog-header>
     <h3>{{ 'constants.form.title' | translate }}: {{form.controls['id'].value}}</h3>
   </div>
@@ -17,7 +17,7 @@
 </app-dialog>
 
 <app-tabstrip>
-  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onTabClose($event)" [active]="tab.active">
+  <app-tab *ngFor="let tab of tabs" [title]="tab.title" [closable]="false" (onClose)="onTabClose($event)" [active]="tab.active">
     <app-grid
       [columns]="columns"
       [parseFn]="parseFn"
