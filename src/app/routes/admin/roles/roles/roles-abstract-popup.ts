@@ -1,29 +1,25 @@
-import { EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IRoleRecord } from './roles.interface';
 
-export abstract class AbstractRolesPopup implements OnChanges {
+export abstract class AbstractRolesPopup implements OnInit {
   @Input() role: IRoleRecord;
   @Output() roleChange: EventEmitter<IRoleRecord> = new EventEmitter();
   @Output() onUpdate: EventEmitter<null> = new EventEmitter();
-
-  form: FormGroup;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   error: string = null;
 
-  abstract controls: Array<IDynamicFormControl>;
+  controls: Array<IDynamicFormControl>;
 
-  /**
-   * @override
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    this.form = this.createForm(changes.role.currentValue);
-  }
+  // TODO: add type
+  data: any;
 
-  get canSubmit(): boolean {
-    return this.form && this.form.dirty && this.form.valid;
+  ngOnInit(): void {
+    this.controls = this.getControls();
+    this.data = this.getData();
   }
 
   onDisplayChange(event: boolean): void {
@@ -52,7 +48,9 @@ export abstract class AbstractRolesPopup implements OnChanges {
     this.close();
   }
 
-  protected abstract createForm(role: IRoleRecord): FormGroup;
+  protected abstract getControls(): Array<IDynamicFormControl>;
+
+  protected abstract getData(): any;
 
   protected abstract httpAction(): Observable<any>;
 

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -14,14 +13,12 @@ import { AbstractRolesPopup } from '../roles-abstract-popup';
 export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   @Input() originalRole: IRoleRecord = null;
 
-  controls: Array<IDynamicFormControl>;
-
-  constructor(private formBuilder: FormBuilder, private gridService: GridService) {
+  constructor(private gridService: GridService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.controls = [
+  protected getControls(): Array<IDynamicFormControl> {
+    return [
       {
         label: 'Название оригинальной роли',
         controlName: 'originalRoleId',
@@ -30,7 +27,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         cachingOptions: true,
         lazyOptions: this.gridService.read('/api/roles')
           .map(
-            (data: {roles: Array<{name: string, id: number}>}) => data.roles.map(role => ({label: role.name, value: role.id}))
+            (data: {roles: Array<IRoleRecord>}) => data.roles.map(role => ({label: role.name, value: role.id}))
           ),
         optionsActions: [
           {text: 'Выберите роль', type: SelectionActionTypeEnum.SORT}
@@ -51,21 +48,18 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected createForm(role: IRoleRecord): FormGroup {
-    return this.formBuilder.group({
-      originalRoleId: [ [{ value: this.originalRole.id, label: this.originalRole.name }], Validators.required ],
-      name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment ],
-    });
+  protected getData(): any {
+    return {
+      ...this.role,
+      originalRoleId: [{ value: this.originalRole.id, label: this.originalRole.name }]
+    }
   }
 
   protected httpAction(): Observable<any> {
-    // TODO Make role-service for direct http calls
-    // TODO The component should not contain this logic here, only proxy calls
-
-    const data = this.form.getRawValue();
-    const originalRoleId: number = data.originalRoleId[0].value;
-    data.originalRoleId = originalRoleId;
-    return this.gridService.create('/api/roles/{id}/copy', { id: originalRoleId }, data);
+    const data = {
+      ...this.form.value,
+      originalRoleId: this.form.value.originalRoleId[0].value
+    };
+    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
   }
 }

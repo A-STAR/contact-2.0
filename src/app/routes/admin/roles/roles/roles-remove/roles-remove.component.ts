@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-
 import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { IRoleRecord } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
 
 @Component({
@@ -17,10 +14,11 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
     super();
   }
 
-  /**
-   * @override
-   */
-  protected createForm(role: IRoleRecord): FormGroup {
+  protected getControls(): any {
+    return [];
+  }
+
+  protected getData(): any {
     return null;
   }
 
@@ -30,11 +28,4 @@ export class RolesRemoveComponent extends AbstractRolesPopup {
   protected httpAction(): Observable<any> {
     return this.gridService.delete('/api/roles/{id}', this.role);
   };
-
-  /**
-   * @override
-   */
-  get canSubmit(): boolean {
-    return true;
-  }
 }

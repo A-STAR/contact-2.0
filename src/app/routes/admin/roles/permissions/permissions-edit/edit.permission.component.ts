@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDisplayProperties } from '../../roles.interface';
 
@@ -13,44 +12,48 @@ export class EditPermissionComponent implements OnInit {
   @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
-  form: FormGroup;
-  controls: Array<IDynamicFormControl>;
-  private formChanges: any;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  constructor(private fb: FormBuilder) {
-  }
+  controls: Array<IDynamicFormControl>;
+
+  // TODO: add type
+  data: any;
 
   /**
    * @override
    */
   public ngOnInit(): void {
-    this.createFormAndControls();
+    this.controls = this.getControls();
+    this.data = this.getData();
   }
 
-  private createFormAndControls(): void {
-    this.form = this.fb.group({
-      id: new FormControl({value: this.record.id, disabled: true}, Validators.required),
-      typeCode: [this.record.typeCode, Validators.required],
-      name: [this.record.name, Validators.required],
-      value: [String(this.record.value), Validators.required],
-      comment: [this.record.comment],
-      dsc: [this.record.dsc]
-    });
-
-    this.form.valueChanges.subscribe((formChanges) => this.formChanges = formChanges);
-
-    this.controls = [
+  private getControls(): Array<IDynamicFormControl> {
+    return [
+      {
+        label: 'ID',
+        controlName: 'id',
+        type: 'hidden',
+        required: true
+      },
+      {
+        label: 'Тип',
+        controlName: 'typeCode',
+        type: 'hidden',
+        required: true
+      },
       {
         label: 'Название',
         controlName: 'name',
         type: 'text',
+        required: true,
         disabled: true
       },
       {
         label: 'Значение',
         controlName: 'value',
         type: 'dynamic',
-        dependsOn: 'typeCode'
+        dependsOn: 'typeCode',
+        required: true
       },
       {
         label: 'Описание',
@@ -66,6 +69,13 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
+  getData(): any {
+    return {
+      ...this.record,
+      value: String(this.record.value)
+    }
+  }
+
   onDisplayChange(event: boolean): void {
     if (!event) {
       this.onCancel();
@@ -77,10 +87,6 @@ export class EditPermissionComponent implements OnInit {
   }
 
   onSave(): void {
-    this.save.emit(this.formChanges);
-  }
-
-  canSaveChanges(): boolean {
-    return this.form.dirty;
+    this.save.emit(this.form.value);
   }
 }
