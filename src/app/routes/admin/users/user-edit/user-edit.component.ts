@@ -6,6 +6,7 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 import { SelectionActionTypeEnum } from '../../../../shared/components/form/select/select-interfaces';
 import { IUser } from '../users.interface';
 import { IRolesResponse } from '../../roles/roles/roles.interface';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -22,14 +23,14 @@ export class UserEditComponent implements OnInit {
 
   error: string = null;
 
-  constructor(private gridService: GridService) {}
+  constructor(private gridService: GridService, private usersService: UsersService) {}
 
   get canSubmit(): boolean {
     return this.form.canSubmit;
   }
 
   get title(): string {
-    return this.user && this.user.id ? `Пользователь: ${this.user.id}` : 'Новый пользователь';
+    return this.isUpdating ? `Пользователь: ${this.user.id}` : 'Новый пользователь';
   }
 
   ngOnInit(): void {
@@ -44,14 +45,26 @@ export class UserEditComponent implements OnInit {
   }
 
   onActionClick(): void {
+    const action = this.isUpdating ? this.usersService.save : this.usersService.create;
 
+    console.log(this.form.value);
+
+    /*
+    action(this.form.value)
+      .subscribe(r => console.log(r));
+    */
   }
 
   onCancelClick(): void {
     this.close();
   }
 
+  private get isUpdating(): boolean {
+    return !!(this.user && this.user.id);
+  }
+
   private getControls(): Array<IDynamicFormControl> {
+    // TODO: persist value when options are fetched
     const roleSelectOptions = {
       cachingOptions: true,
       lazyOptions: this.gridService
@@ -70,17 +83,18 @@ export class UserEditComponent implements OnInit {
       // TODO: do we need separate type 'checkbox' in addition to 'boolean'?
       { label: 'Блокирован', controlName: 'isBlocked', type: 'boolean', required: true },
       { label: 'Логин', controlName: 'login', type: 'text', required: true },
-      { label: 'Пароль', controlName: 'password', type: 'text', required: true },
+      { label: 'Пароль', controlName: 'password', type: 'text' },
       { label: 'Роль', controlName: 'roleId', type: 'select', required: true, ...roleSelectOptions },
       { label: 'Должность', controlName: 'position', type: 'text' },
-      { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'text' },  // calendar
-      { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'text' },  // calendar
+      { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker' },
+      { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'datepicker' },
       { label: 'Мобильный телефон', controlName: 'mobPhone', type: 'text' },
       { label: 'Рабочий телефон', controlName: 'workPhone', type: 'text' },
       { label: 'Внутренний номер', controlName: 'intPhone', type: 'text' },
       { label: 'Email', controlName: 'email', type: 'text' },
-      { label: 'Рабочий адрес', controlName: 'address', type: 'text', required: true },
-      { label: 'Язык', controlName: 'langCode', type: 'select', required: true },  // select
+      { label: 'Рабочий адрес', controlName: 'address', type: 'text' },
+      // FIXME: change to language options once the API is ready
+      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, ...roleSelectOptions },
       { label: 'Комментарий', controlName: 'comment', type: 'textarea' },
     ];
   }
@@ -88,8 +102,19 @@ export class UserEditComponent implements OnInit {
   private getData(): any {
     return {
       ...this.user,
-      roleId: [{ value: this.user.roleId }]  // FIXME: add label
+      // isBlocked: this.user.isBlocked ? 1 : 0,
+      // FIXME: add label
+      roleId: [{ value: this.user.roleId }],
+      // TODO: format properly
+      startWorkDate: this.formatDate(this.user.startWorkDate),
+      endWorkDate: this.formatDate(this.user.endWorkDate),
+      // FIXME: change to language code once the API is ready
+      langCode: [{ value: this.user.roleId }]
     };
+  }
+
+  private formatDate(date: string): string {
+    return date ? (new Date(date)).toLocaleDateString() : '';
   }
 
   private close(): void {

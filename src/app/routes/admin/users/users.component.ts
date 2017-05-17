@@ -117,6 +117,7 @@ export class UsersComponent {
     return {
       id: null,
       login: '',
+      roleId: null,
       firstName: '',
       middleName: '',
       lastName: '',
