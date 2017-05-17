@@ -10,15 +10,18 @@ import {
   ViewEncapsulation,
   HostListener,
   Renderer2,
-  ElementRef
+  ElementRef,
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula';
 
 import { TreeNode } from './common/api';
 import { PrimeTemplate } from './common/shared';
-import { ITreeNodeDragAndDropPayload, INodeOffset } from './tree.interface';
+import { ITreeNodeDragAndDropPayload } from './tree.interface';
 import { DomHandler } from './dom/domhandler';
+import { TreeDragAndDropPlugin } from './tree.drag-and-drop';
 
 @Component({
   selector: 'app-tree',
@@ -26,7 +29,7 @@ import { DomHandler } from './dom/domhandler';
   templateUrl: './tree.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class TreeComponent implements AfterContentInit {
+export class TreeComponent implements OnInit, OnDestroy, AfterContentInit {
 
   @Input() value: TreeNode[];
   @Input() selectionMode: string;
@@ -49,88 +52,30 @@ export class TreeComponent implements AfterContentInit {
   @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
   public templateMap: any;
-
-  private _clientX: number;
-  private _clientY: number;
-  private _mirrorPosition: INodeOffset;
-  private _isPutted: boolean;
+  private dragAndDropPlugin: TreeDragAndDropPlugin;
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
   }
 
-  constructor(private dragulaService: DragulaService,
-              private domHandler: DomHandler,
-              private elementRef: ElementRef,
-              private renderer2: Renderer2) {
-
-    dragulaService.drag.subscribe(() => {
-      this._isPutted = false;
-    });
-
-      dragulaService.dragend.subscribe((value) => {
-        const attr = value[1].getAttribute('nodeid');
-        this.renderer2.removeChild(value[1].parentNode, value[1]);
-
-        if (this._isPutted) {
-          return;
-        }
-
-        const elements: HTMLCollectionOf<Element> = this.elementRef.nativeElement.querySelectorAll('.ui-treenode-content');
-        const a = [];
-
-        Array.prototype.forEach.call(elements, (el) => {
-          const elPos = this.domHandler.getOffset(el);
-          const x1 = elPos.left;
-          const x2 = elPos.left + elPos.width;
-          const y1 = elPos.top;
-          const y2 = elPos.top + elPos.height;
-
-          if (this._mirrorPosition) {
-            const x1Mirror = this._mirrorPosition.left;
-            const x2Mirror = this._mirrorPosition.left + this._mirrorPosition.width;
-            const y1Mirror = this._mirrorPosition.top;
-            const y2Mirror = this._mirrorPosition.top + this._mirrorPosition.height;
-
-            if ((x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
-              (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
-              (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
-              (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
-              a.push(el.getAttribute('nodeid'));
-            }
-          }
-        });
-
-        if (a.length === 2) {
-          console.log('ARRAY: ', a);
-
-          this.changeLocation.emit({
-            swap: true,
-            target: a[0],
-            source: attr
-          });
-        }
-      });
-
-      dragulaService.drop.subscribe((value) => {
-        this._mirrorPosition = this.domHandler.getOffset(document.getElementsByClassName('gu-mirror')[0]);
-
-        if (value[1] && value[2]) {
-          this.changeLocation.emit({
-            swap: false,
-            source: value[1].getAttribute('nodeid'),
-            target: value[2].getAttribute('nodeid')
-          });
-
-          this._isPutted = true;
-        }
-      });
-    }
-
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
-    this._clientX = event.clientX;
-    this._clientY = event.clientY;
+    this.dragAndDropPlugin.onMouseMove(event);
+  }
+
+  constructor(public dragulaService: DragulaService,
+              public domHandler: DomHandler,
+              public elementRef: ElementRef,
+              public renderer: Renderer2) {
+    this.dragAndDropPlugin = new TreeDragAndDropPlugin(this);
+  }
+
+  ngOnInit(): void {
+    this.dragAndDropPlugin.ngOnInit();
+  }
+
+  ngOnDestroy(): void {
+    this.dragAndDropPlugin.ngOnDestroy();
   }
 
   ngAfterContentInit(): void {
