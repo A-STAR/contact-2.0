@@ -6,11 +6,11 @@
     <div class="panel-body">
       <app-tree
         #tree
-        [value]="value"
         layout="horizontal"
         selectionMode="single"
+        [value]="value"
         [dragulaOptions]="dragulaOptions"
-        (changeLocation)="onChangeLocation($event)"
+        (changeLocation)="onNodeChangeLocation($event)"
         (onNodeSelect)="onNodeSelect($event)"
         (onNodeExpand)="onNodeExpand($event)"
         [(selection)]="selection">

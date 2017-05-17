@@ -19,6 +19,10 @@ export class FlowDemoComponent implements OnInit {
     moves: (el: Element, source: Element) => !source.classList.contains('ui-treenode-root')
   };
 
+  private get rootNode(): TreeNode {
+    return this.value[0];
+  }
+
   constructor(private http: Http) { }
 
   ngOnInit(): void {
@@ -32,7 +36,7 @@ export class FlowDemoComponent implements OnInit {
             children: [].concat(data),
           };
           this.value = [files];
-          this.prepareTree(this.value[0]);
+          this.prepareTree(this.rootNode);
         },
         error => console.error(error)
       );
@@ -48,13 +52,20 @@ export class FlowDemoComponent implements OnInit {
     }
   }
 
-  onChangeLocation(payload: ITreeNodeDragAndDropPayload): void {
-    const targetElement: TreeNode = this.findNodeRecursively(this.value[0], payload.target);
-    const sourceElement = this.findNodeRecursively(this.value[0], payload.source);
+  onNodeChangeLocation(payload: ITreeNodeDragAndDropPayload): void {
+    const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
+    const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
-    const sourceElementPosition: number = sourceElement.parent.children.findIndex((d) => d === sourceElement);
+    const sourceParentElement: TreeNode = sourceElement.parent;
+    const sourceParentChildren: TreeNode[] = sourceParentElement.children;
+
+    const sourceElementPosition: number = sourceParentChildren.findIndex((d) => d === sourceElement);
     if (sourceElementPosition > -1) {
-      sourceElement.parent.children.splice(sourceElementPosition, 1);
+      sourceParentChildren.splice(sourceElementPosition, 1);
+    }
+    if (!sourceParentChildren.length) {
+      delete sourceParentElement.children;
+      sourceParentElement.expanded = false;
     }
 
     if (payload.swap) {
@@ -66,10 +77,6 @@ export class FlowDemoComponent implements OnInit {
       sourceElement.parent = targetElement.parent;
     } else {
       console.log('PUT');
-      if (!sourceElement.parent.children.length) {
-        delete sourceElement.parent.children;
-        sourceElement.parent.expanded = false;
-      }
       if (!targetElement.children) {
         targetElement.children = [];
       }
