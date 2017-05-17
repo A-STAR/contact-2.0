@@ -58,14 +58,12 @@ export class DepartmentsComponent implements OnInit {
     }
 
     if (payload.swap) {
-      console.log('SWAP');
       const indexOf = targetElement.parent.children.findIndex((d) => d === targetElement);
       if (indexOf > -1) {
         targetElement.parent.children.splice(indexOf + 1, 0, sourceElement);
       }
       sourceElement.parent = targetElement.parent;
     } else {
-      console.log('PUT');
       if (!targetElement.children) {
         targetElement.children = [];
       }
