@@ -137,7 +137,7 @@ export class ConstantEditComponent implements OnInit {
   getData(): any {
     return {
       ...this.constant,
-      typeCode: [{ value: this.constant.typeCode, label: this.constant.typeCode }],
+      typeCode: this.constant.typeCode,
       // TODO: can we just write `value: String(this.constant)` like we do in permits form?
       // FIXME: value form control always renders as text input regerdless of typeCode
       value: this.getValueField(this.constant)
