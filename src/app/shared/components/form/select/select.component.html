@@ -24,7 +24,7 @@
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text)"></span>
         <i class="dropdown-toggle pull-right"></i>
-        <i *ngIf="!disabled" class="caret pull-right"></i>
+        <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
            style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
@@ -34,7 +34,6 @@
   <input type="text" autocomplete="false" tabindex="-1"
          (keydown)="inputEvent($event)"
          (keyup)="inputEvent($event, true)"
-         [disabled]="disabled"
          class="form-control ui-select-search"
          *ngIf="inputMode"
          placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -99,7 +98,6 @@
          (keydown)="inputEvent($event)"
          (keyup)="inputEvent($event, true)"
          (click)="matchClick($event)"
-         [disabled]="disabled"
          [attr.readonly]="readonly"
          autocomplete="false"
          autocorrect="off"
