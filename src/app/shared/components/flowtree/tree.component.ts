@@ -80,8 +80,6 @@ export class TreeComponent implements AfterContentInit {
         const a = [];
 
         Array.prototype.forEach.call(elements, (el) => {
-          // Do stuff here
-         // console.log(el.tagName);
           const elPos = this.domHandler.getOffset(el);
           const x1 = elPos.left;
           const x2 = elPos.left + elPos.width;
