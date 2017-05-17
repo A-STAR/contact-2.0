@@ -106,6 +106,9 @@
       "title": "Константа"
     }
   },
+  "departments": {
+    "TITLE": "Структура предприятия"
+  },
   "default": {
     "boolean": {
       "TRUE": "Истина",

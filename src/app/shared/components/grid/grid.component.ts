@@ -67,14 +67,14 @@ export class GridComponent implements OnInit, AfterViewInit {
       );
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.autoLoad) {
       this.load(this.initialParameters).subscribe();
     }
     this.selectionType = this.selectionType || 'multi';
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     // Define a possible height of the datatable
     // 43px - tab height,
     // 2x15px - top & bottom padding around the grid

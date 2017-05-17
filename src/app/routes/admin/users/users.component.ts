@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
+import { Component, ViewChild } from '@angular/core';
 import { MapConverterService } from '../../../core/converter/map/map-converter.service';
 import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
+import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
 @Component({
@@ -12,6 +13,8 @@ import { IUser, IUsersResponse } from './users.interface';
   templateUrl: 'users.component.html'
 })
 export class UsersComponent {
+  @ViewChild(GridComponent) grid: GridComponent;
+
   columns: Array<any> = [
     { name: 'ID', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { name: 'Логин', prop: 'login', minWidth: 120 },
@@ -20,7 +23,7 @@ export class UsersComponent {
     { name: 'Отчество', prop: 'middleName', minWidth: 120 },
     { name: 'Должность', prop: 'position', minWidth: 120 },
     this.columnDecoratorService.decorateColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 80 }, ({ roleId }) => this.roleConverter.map(roleId)
+      { name: 'Роль', prop: 'roleId', minWidth: 100 }, ({ roleId }) => this.roleConverter.map(roleId)
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
@@ -74,8 +77,8 @@ export class UsersComponent {
     return data.users;
   }
 
-  isUserBeingCreatedOrEdited(): boolean {
-    return !!this.currentUser && !!this.action;
+  get isUserBeingCreatedOrEdited(): boolean {
+    return this.currentUser && this.action !== null;
   }
 
   onAction(action: IToolbarAction): void {
@@ -93,6 +96,16 @@ export class UsersComponent {
   onEdit(user: IUser): void {
     this.action = ToolbarActionTypeEnum.EDIT;
     this.currentUser = this.selectedUser;
+  }
+
+  onUpdate(): void {
+    this.selectedUser = null;
+    this.grid.load().
+      subscribe(
+        () => this.refreshToolbar(),
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
   onSelect(users: Array<IUser>): void {
@@ -117,6 +130,7 @@ export class UsersComponent {
     return {
       id: null,
       login: '',
+      roleId: null,
       firstName: '',
       middleName: '',
       lastName: '',

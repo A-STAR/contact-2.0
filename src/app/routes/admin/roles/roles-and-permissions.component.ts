@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { RolesComponent } from './roles/roles.component';
-import { IRoleRecord } from './roles/roles.interface';
+import { IRole } from './roles/roles.interface';
 import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 
 @Component({
@@ -10,9 +10,9 @@ import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolba
 export class RolesAndPermissionsComponent {
 
   @ViewChild(RolesComponent) rolesComponent: RolesComponent;
-  currentRole: IRoleRecord;
+  currentRole: IRole;
 
-  onSelect(role: IRoleRecord) {
+  onSelect(role: IRole) {
     this.currentRole = role;
   }
 
