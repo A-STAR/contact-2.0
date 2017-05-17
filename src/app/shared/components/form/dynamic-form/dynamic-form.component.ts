@@ -8,6 +8,8 @@ import { IControls, IDynamicFormControl } from './dynamic-form-control.interface
 })
 export class DynamicFormComponent implements OnInit {
   @Input() controls: Array<IDynamicFormControl>;
+  // TODO: add interface
+  @Input() data: any;
 
   private form: FormGroup;
 
@@ -15,6 +17,7 @@ export class DynamicFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.createForm();
+    this.populateForm();
   }
 
   get canSubmit(): boolean {
@@ -30,7 +33,7 @@ export class DynamicFormComponent implements OnInit {
       .reduce((acc, control) => {
         const options = {
           disabled: control.disabled,
-          value: control.value
+          value: ''
         };
         const validators = Validators.compose([
           ...control.validators || [],
@@ -41,5 +44,11 @@ export class DynamicFormComponent implements OnInit {
       }, {} as IControls);
 
     return this.formBuilder.group(controls);
+  }
+
+  private populateForm(): void {
+    if (this.data) {
+      this.form.patchValue(this.data);
+    }
   }
 }

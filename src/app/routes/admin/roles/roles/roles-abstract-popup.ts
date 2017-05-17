@@ -14,8 +14,12 @@ export abstract class AbstractRolesPopup implements OnInit {
 
   controls: Array<IDynamicFormControl>;
 
+  // TODO: add type
+  data: any;
+
   ngOnInit(): void {
     this.controls = this.getControls();
+    this.data = this.getData();
   }
 
   onDisplayChange(event: boolean): void {
@@ -45,6 +49,8 @@ export abstract class AbstractRolesPopup implements OnInit {
   }
 
   protected abstract getControls(): Array<IDynamicFormControl>;
+
+  protected abstract getData(): any;
 
   protected abstract httpAction(): Observable<any>;
 

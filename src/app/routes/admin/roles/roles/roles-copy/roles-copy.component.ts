@@ -24,7 +24,6 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         controlName: 'originalRoleId',
         type: 'select',
         required: true,
-        value: [{ value: this.originalRole.id, label: this.originalRole.name }],
         cachingOptions: true,
         lazyOptions: this.gridService.read('/api/roles')
           .map(
@@ -38,17 +37,22 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         label: 'Название',
         controlName: 'name',
         type: 'text',
-        required: true,
-        value: this.role.name
+        required: true
       },
       {
         label: 'Комментарий',
         controlName: 'comment',
         type: 'textarea',
-        rows: 2,
-        value: this.role.name
+        rows: 2
       },
     ];
+  }
+
+  protected getData(): any {
+    return {
+      ...this.role,
+      originalRoleId: [{ value: this.originalRole.id, label: this.originalRole.name }]
+    }
   }
 
   protected httpAction(): Observable<any> {

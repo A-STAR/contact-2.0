@@ -23,17 +23,19 @@ export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
         label: 'Название',
         controlName: 'name',
         type: 'text',
-        required: true,
-        value: this.role.name
+        required: true
       },
       {
         label: 'Комментарий',
         controlName: 'comment',
         type: 'textarea',
-        rows: 2,
-        value: this.role.comment
+        rows: 2
       }
     ];
+  }
+
+  protected getData(): any {
+    return this.role;
   }
 
   protected httpAction(): Observable<any> {

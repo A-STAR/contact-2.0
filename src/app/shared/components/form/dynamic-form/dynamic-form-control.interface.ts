@@ -18,7 +18,6 @@ export interface IDynamicFormControl {
   optionsActions?: Array<ISelectionAction>;
   // number of rows for textarea
   rows?: number;
-  value?: any;
   validators?: Array<ValidatorFn>;
 }
 

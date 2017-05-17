@@ -3,7 +3,7 @@
     <h3>{{ popupTitle }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}

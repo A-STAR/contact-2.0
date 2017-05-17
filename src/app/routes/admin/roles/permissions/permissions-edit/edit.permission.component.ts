@@ -16,33 +16,34 @@ export class EditPermissionComponent implements OnInit {
 
   controls: Array<IDynamicFormControl>;
 
+  // TODO: add type
+  data: any;
+
   /**
    * @override
    */
   public ngOnInit(): void {
-    this.createFormAndControls();
+    this.controls = this.getControls();
+    this.data = this.getData();
   }
 
-  private createFormAndControls(): void {
-    this.controls = [
+  private getControls(): Array<IDynamicFormControl> {
+    return [
       {
         label: 'ID',
         controlName: 'id',
-        value: this.record.id,
         type: 'hidden',
         required: true
       },
       {
         label: 'Тип',
         controlName: 'typeCode',
-        value: this.record.typeCode,
         type: 'hidden',
         required: true
       },
       {
         label: 'Название',
         controlName: 'name',
-        value: this.record.name,
         type: 'text',
         required: true,
         disabled: true
@@ -50,7 +51,6 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Значение',
         controlName: 'value',
-        value: String(this.record.value),
         type: 'dynamic',
         dependsOn: 'typeCode',
         required: true
@@ -58,17 +58,22 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'Описание',
         controlName: 'dsc',
-        value: this.record.dsc,
         type: 'text',
         disabled: true
       },
       {
         label: 'Комментарий',
         controlName: 'comment',
-        value: this.record.comment,
         type: 'textarea'
       }
     ];
+  }
+
+  getData(): any {
+    return {
+      ...this.record,
+      value: String(this.record.value)
+    }
   }
 
   onDisplayChange(event: boolean): void {
