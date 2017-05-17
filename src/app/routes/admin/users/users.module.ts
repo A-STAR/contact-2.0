@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { UserEditModule } from './user-edit/user-edit.module';
+import { UsersService } from './users.service';
 import { UsersComponent } from './users.component';
 
 const routes: Routes = [
@@ -20,6 +21,9 @@ const routes: Routes = [
   ],
   declarations: [
     UsersComponent,
+  ],
+  providers: [
+    UsersService,
   ]
 })
 export class UsersModule { }

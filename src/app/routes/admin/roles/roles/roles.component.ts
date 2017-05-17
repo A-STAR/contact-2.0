@@ -2,18 +2,18 @@ import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { IRoleRecord } from './roles.interface';
+import { IRole } from './roles.interface';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
 export class RolesComponent {
-  @Output() onSelect: EventEmitter<IRoleRecord> = new EventEmitter();
+  @Output() onSelect: EventEmitter<IRole> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
-  currentRole: IRoleRecord = null;
-  selectedRole: IRoleRecord = null;
+  currentRole: IRole = null;
+  selectedRole: IRole = null;
   action: ToolbarActionTypeEnum = null;
 
   bottomActions: Array<IToolbarAction> = [
@@ -53,19 +53,19 @@ export class RolesComponent {
     return this.currentRole && this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  parseFn(data): Array<IRoleRecord> {
+  parseFn(data): Array<IRole> {
     const { dataKey } = this.dataSource;
     return data[dataKey] || [];
   }
 
-  onSelectedRowChange(roles: Array<IRoleRecord>): void {
+  onSelectedRowChange(roles: Array<IRole>): void {
     const role = roles[0];
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
       this.selectRole(role);
     }
   }
 
-  onEdit(role: IRoleRecord): void {
+  onEdit(role: IRole): void {
     this.action = ToolbarActionTypeEnum.EDIT;
     this.currentRole = this.selectedRole;
   }
@@ -106,7 +106,7 @@ export class RolesComponent {
     this.refreshToolbar();
   }
 
-  private createEmptyRole(): IRoleRecord {
+  private createEmptyRole(): IRole {
     return {
       id: null,
       name: '',
