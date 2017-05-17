@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, Renderer2, Injectable } from '@angular/core';
+import { OnInit, OnDestroy, Injectable } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { DragulaService } from 'ng2-dragula';
@@ -10,16 +10,14 @@ import { IDraggedComponent, INodeOffset } from './drag-and-drop.interface';
 export class DragAndDropComponentPluginFactory {
 
   constructor(private dragulaService: DragulaService,
-              private domHelper: DragAndDropDomHelper,
-              private renderer: Renderer2) {
+              private domHelper: DragAndDropDomHelper) {
   }
 
   public createAndAttachTo(component: IDraggedComponent): DragAndDropComponentPlugin {
     return new DragAndDropComponentPlugin(
       component,
       this.dragulaService,
-      this.domHelper,
-      this.renderer
+      this.domHelper
     );
   }
 }
@@ -37,8 +35,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   constructor(private component: IDraggedComponent,
               private dragulaService: DragulaService,
-              private domHandler: DragAndDropDomHelper,
-              private renderer: Renderer2) {
+              private domHandler: DragAndDropDomHelper) {
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -64,7 +61,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Array<Element>) => {
       const attr: string = this.toNodeId(value[1]);
-      this.renderer.removeChild(value[1].parentNode, value[1]);
+      this.component.renderer.removeChild(value[1].parentNode, value[1]);
 
       if (this._isNodeAlreadySwapped) {
         return;

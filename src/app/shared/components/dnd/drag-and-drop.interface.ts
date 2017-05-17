@@ -1,4 +1,4 @@
-import { ElementRef, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { ElementRef, EventEmitter, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 export interface IDragAndDropPayload {
   swap: boolean;
@@ -17,4 +17,5 @@ export interface IDraggedComponent extends OnInit, OnDestroy {
   changeLocation: EventEmitter<IDragAndDropPayload>;
   elementRef: ElementRef;
   elementSelector: string;
+  renderer: Renderer2;
 }

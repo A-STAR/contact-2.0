@@ -12,6 +12,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
+  Renderer2,
 } from '@angular/core';
 
 import { TreeNode } from './common/api';
@@ -59,6 +60,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   }
 
   constructor(public elementRef: ElementRef,
+              public renderer: Renderer2,
               dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
     this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
   }
