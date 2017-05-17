@@ -15,7 +15,7 @@ export class TreeDragAndDropPlugin implements OnInit, OnDestroy {
   private renderer: Renderer2;
 
   private _draggedElementPosition: INodeOffset;
-  private _isPutted: boolean;
+  private _isNodeSwapped: boolean;
   private _clientX: number;
   private _clientY: number;
 
@@ -36,15 +36,27 @@ export class TreeDragAndDropPlugin implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._dragSubscription = this.dragulaService.drag.subscribe(() => {
-      this._isPutted = false;
+    this._dragSubscription = this.dragulaService.drag.subscribe(() => this._isNodeSwapped = false);
+
+    this._dropSubscription = this.dragulaService.drop.subscribe((value: Array<Element>) => {
+      this._draggedElementPosition = this.domHandler.getOffset(document.body.getElementsByClassName('gu-mirror')[0]);
+
+      if (value[1] && value[2]) {
+        this.treeComponent.changeLocation.emit({
+          swap: false,
+          source: this.toNodeId(value[1]),
+          target: this.toNodeId(value[2])
+        });
+
+        this._isNodeSwapped = true;
+      }
     });
 
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value) => {
-      const attr = value[1].getAttribute('nodeid');
+      const attr = this.toNodeId(value[1]);
       this.renderer.removeChild(value[1].parentNode, value[1]);
 
-      if (this._isPutted) {
+      if (this._isNodeSwapped) {
         return;
       }
 
@@ -56,27 +68,20 @@ export class TreeDragAndDropPlugin implements OnInit, OnDestroy {
       if (intersectedByTargetElements.length === 2) {
         this.treeComponent.changeLocation.emit({
           swap: true,
-          target: intersectedByTargetElements[0].getAttribute('nodeid'),
+          target: this.toNodeId(intersectedByTargetElements[0]),
           source: attr
         });
-      }
-    });
-
-    this._dropSubscription = this.dragulaService.drop.subscribe((value) => {
-      this._draggedElementPosition = this.domHandler.getOffset(document.getElementsByClassName('gu-mirror')[0]);
-
-      if (value[1] && value[2]) {
-        this.treeComponent.changeLocation.emit({
-          swap: false,
-          source: value[1].getAttribute('nodeid'),
-          target: value[2].getAttribute('nodeid')
-        });
-
-        this._isPutted = true;
       }
     });
   }
 
   ngOnDestroy(): void {
+    this._dragEndSubscription.unsubscribe();
+    this._dropSubscription.unsubscribe();
+    this._dragSubscription.unsubscribe();
+  }
+
+  private toNodeId(element: Element): string {
+    return element.getAttribute('nodeid');
   }
 }

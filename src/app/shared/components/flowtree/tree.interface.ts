@@ -1,5 +1,5 @@
 export interface ITreeNodeDragAndDropPayload {
   swap: boolean;
-  source;
-  target;
+  source: string;
+  target: string;
 }
