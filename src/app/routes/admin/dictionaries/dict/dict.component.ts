@@ -12,9 +12,9 @@ import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
 export class DictComponent extends GridEntityComponent<IDict> {
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_TERM_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_EDIT' },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_DELETE' },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [

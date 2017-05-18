@@ -1,0 +1,12 @@
+<app-grid
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [parseFn]="parseFn"
+  [editPermission]="'DICT_TERM_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit($event)"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>

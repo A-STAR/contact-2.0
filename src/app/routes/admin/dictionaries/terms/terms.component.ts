@@ -16,9 +16,9 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   @Input() currentMaster: IDict;
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false },
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_TERM_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -41,13 +41,5 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
 
   constructor() {
     super();
-  }
-
-  public createEmptyEntity(): ITerm {
-    return {
-      id: null,
-      name: '',
-      system: 0
-    };
   }
 }
