@@ -36,7 +36,15 @@ export class UsersComponent {
     { name: 'Внутренний номер', prop: 'intPhone', minWidth: 140 },
     { name: 'Email', prop: 'email', minWidth: 120 },
     this.columnDecoratorService.decorateColumn(
-      { name: 'Язык', prop: 'langCode', minWidth: 120 }, ({ langCode }) => this.languageConverter.map(langCode)
+      { name: 'Язык', prop: 'langCode', minWidth: 120 },
+      // TODO: use language converter when the API is ready
+      // ({ langCode }) => this.languageConverter.map(langCode)
+      ({ langCode }) => {
+        switch (langCode) {
+          case 1: return 'Русский';
+          case 2: return 'English';
+        }
+      }
     ),
   ];
 
