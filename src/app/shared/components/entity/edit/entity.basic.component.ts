@@ -6,7 +6,7 @@ export class EntityBasicComponent<T> {
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
   onDisplayChange(event: boolean): void {
-    if (event === false) {
+    if (!event) {
       this.close();
     }
   }
