@@ -60,14 +60,14 @@ export class GridService {
         );
         observer.complete();
       });
-    } else if (url === '/api/terms') {
+    } else if (url === '/api/1/terms') {
       return new Observable(observer => {
         observer.next(
           {
             'success': true,
             'terms': [
-              {'id': 1, 'name': 'test_term1'},
-              {'id': 2, 'name': 'test_term2'},
+              {'id': 100, 'name': 'test_term1', system: 1, language: 'es'},
+              {'id': 200, 'name': 'test_term2', system: 0, language: 'ru'},
             ]
           }
         );

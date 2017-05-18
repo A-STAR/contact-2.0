@@ -18,7 +18,6 @@ export abstract class GridEntityComponent<T extends IGridEntity> implements OnCh
   dataSource: IDataSource;
 
   public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
-    console.log('changes: ', changes);
     this.refreshGrid();
   }
 
@@ -49,13 +48,7 @@ export abstract class GridEntityComponent<T extends IGridEntity> implements OnCh
 
   afterUpdate(): void {
     this.selectedEntity = null;
-
-    this.grid.load()
-      .subscribe(
-        () => this.refreshToolbar(),
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+    this.loadGrid();
   }
 
   onSelectedRowChange(entities: T[]): void {
@@ -78,7 +71,7 @@ export abstract class GridEntityComponent<T extends IGridEntity> implements OnCh
       return;
     }
 
-    if (this.selectedEntity) {
+    if (this.masterEntity) {
       this.loadGrid();
     } else {
       this.grid.clear();
