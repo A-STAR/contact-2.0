@@ -47,34 +47,6 @@ export class GridService {
   }
 
   private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
-    if (url === '/api/dict') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'dict': [
-              {'id': 1, 'name': 'test_dict1'},
-              {'id': 2, 'name': 'test_dict2'},
-            ]
-          }
-        );
-        observer.complete();
-      });
-    } else if (url === '/api/1/terms') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'terms': [
-              {'id': 100, 'name': 'test_term1', system: 1, language: 'es'},
-              {'id': 200, 'name': 'test_term2', system: 0, language: 'ru'},
-            ]
-          }
-        );
-        observer.complete();
-      });
-    }
-
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
