@@ -1,6 +1,6 @@
 <form [formGroup]="form">
 
-    <div *ngFor="let control of controls" class="form-group">
+    <div *ngFor="let control of controls" [ngClass]="{'form-group': true, 'has-error': displayControlErrors(control)}">
 
       <ng-container [ngSwitch]="control.type">
 
