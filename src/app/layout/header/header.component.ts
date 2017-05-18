@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-// const screenfull = require('screenfull');
 const browser = require('jquery.browser');
 
 import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { TranslatorService } from '../../core/translator/translator.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +17,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public settings: SettingsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translatorService: TranslatorService,
     ) { }
 
   ngOnInit(): void {
@@ -63,7 +64,10 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleLanguage(): void {
-    // TODO: test the language switching options
+    // STUB: to test the language switching options
+    const lang = this.translatorService.getCurrentLang();
+    const nextLang = lang === 'ru' ? 'en' : 'ru';
+    this.translatorService.useLanguage(nextLang);
   }
 
   logout(event: UIEvent): void {
