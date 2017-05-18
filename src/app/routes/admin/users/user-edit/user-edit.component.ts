@@ -140,16 +140,24 @@ export class UserEditComponent implements OnInit {
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       roleId: value.roleId[0].value,
-      // FIXME
-      startWorkDate: null,
-      endWorkDate: null,
+      startWorkDate: this.toIsoDate(value.startWorkDate),
+      endWorkDate: this.toIsoDate(value.endWorkDate),
       langCode: value.langCode[0].value
     };
   }
 
   private formatDate(date: string): string {
-    // TODO: format properly
+    // TODO: move to a service, format properly
     return date ? (new Date(date)).toLocaleDateString() : '';
+  }
+
+  private toIsoDate(date: string): string {
+    // TODO: move to a service, use moment.js
+    if (!date) {
+      return null;
+    }
+    const ymd = date.split('.');
+    return (new Date(parseInt(ymd[2], 10), parseInt(ymd[1], 10) - 1, parseInt(ymd[0], 10))).toISOString();
   }
 
   private close(): void {
