@@ -51,7 +51,13 @@ export class DictComponent extends GridEntityComponent<IDict> {
     }
   }
 
-  onEditCancel(): void {
+  onRemoveSubmit(): void {
+    this.dictService.removeDict(this.selectedEntity).subscribe(() => {
+      this.action = null;
+    });
+  }
+
+  onCancel(): void {
     this.action = null;
   }
 }

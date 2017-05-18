@@ -1,22 +1,14 @@
-<app-dialog [display]="role"
-            [autoWidth]="true"
+<app-dialog [autoWidth]="true"
             (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>Удалить словарь</h3>
+    <h3>Удаление словаря</h3>
   </div>
 
-  <p>Вы действительно хотите удалить словарь {{ role.name }}?</p>
-
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
+  <p>Вы действительно хотите удалить словарь?</p>
 
   <div dialog-footer>
-    <button class="btn btn-danger" (click)="onActionClick()">
-      <i class="fa fa-check"></i> Да
-    </button>
-    <button class="btn btn-default" (click)="onCancelClick()">
-      <i class="fa fa-remove"></i> Нет
+    <button class="btn btn-danger" (click)="onSubmit()">
+      <i class="fa fa-check"></i> Удалить
     </button>
   </div>
 </app-dialog>

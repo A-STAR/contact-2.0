@@ -31,6 +31,15 @@ export class DictEditComponent extends EntityEditComponent<IDict> {
         required: true
       },
       {
+        label: 'Тип словаря',
+        controlName: 'type',
+        type: 'select',
+        options: [
+          { label: 'Системный', value: 1 },
+          { label: 'Общий', value: 2 },
+        ]
+      },
+      {
         label: 'Родительский словарь',
         controlName: 'parent',
         type: 'text',
@@ -40,15 +49,6 @@ export class DictEditComponent extends EntityEditComponent<IDict> {
           ),
         optionsActions: [
           { text: 'Перечень словарей', type: SelectionActionTypeEnum.SORT }
-        ]
-      },
-      {
-        label: 'Тип словаря',
-        controlName: 'type',
-        type: 'select',
-        options: [
-          { label: 'Системный', value: 0 },
-          { label: 'Общий', value: 1 },
         ]
       }
     ];
