@@ -272,11 +272,6 @@ input[type="search"] {
   margin-left: 10px; // space out consecutive inline controls
 }
 
-// a special fix for Chrome/Webkit
-.radio-inline {
-  vertical-align: top;
-}
-
 // Apply same disabled cursor tweak as for inputs
 // Some special care is needed because <label>s don't inherit their parent's `cursor`.
 //

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Injectable, EventEmitter } from '@angular/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 import { ILanguage } from './translator.interface';
@@ -35,4 +35,7 @@ export class TranslatorService {
     return this.translate.currentLang;
   }
 
+  onLangChange(): EventEmitter<LangChangeEvent> {
+    return this.translate.onLangChange;
+  }
 }

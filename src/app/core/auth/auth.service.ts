@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 
+import { TranslatorService } from '../translator/translator.service';
+
 const TOKEN_NAME = 'auth/token';
 
 export const getToken = () => localStorage.getItem(TOKEN_NAME);
@@ -27,7 +29,12 @@ export class AuthService implements CanActivate, OnInit {
   private rootUrl = '';
   private tokenTimer = null;
 
-  constructor(private http: AuthHttp, private router: Router, private jwtHelper: JwtHelper) {
+  constructor(
+      private http: AuthHttp,
+      private router: Router,
+      private jwtHelper: JwtHelper,
+      private translatorService: TranslatorService,
+  ) {
     const token = getToken();
     if (this.isTokenValid(token)) {
       this.initTokenTimer(token);
@@ -73,8 +80,12 @@ export class AuthService implements CanActivate, OnInit {
     return this.getRootUrl()
       .flatMap((root: string) => {
         return this.http.post(`${root}/auth/login`, body)
-          .do((resp: Response) => this.saveToken(resp))
-          .do((resp: Response) => this.authenticated = true)
+          .map((resp: Response) => resp.headers.get('X-Auth-Token'))
+          .do((token: string) => {
+              this.saveToken(token);
+              this.useLanguage(token);
+              this.authenticated = true;
+          })
           .catch(error => {
             this.authenticated = false;
             const { message } = error.json();
@@ -139,20 +150,22 @@ export class AuthService implements CanActivate, OnInit {
     this.getRootUrl()
       .flatMap(root => this.http.get(`${root}/api/refresh`))
       .subscribe(
-        resp => this.saveToken(resp),
+        resp => {
+          const token = resp.headers.get('X-Auth-Token');
+          this.saveToken(token);
+          this.useLanguage(token);
+        },
         () => this.redirectToLogin()
       );
   }
 
-  private saveToken(response: Response): void {
-    const token = response.headers.get('X-Auth-Token');
+  private saveToken(token: string): void {
     this.initTokenTimer(token);
     setToken(token);
   }
 
   private initTokenTimer(token: string): void {
     const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
-    this.jwtHelper.decodeToken(token);
 
     this.clearTokenTimer();
     this.tokenTimer = setInterval(() => {
@@ -167,5 +180,10 @@ export class AuthService implements CanActivate, OnInit {
     if (this.tokenTimer) {
       clearInterval(this.tokenTimer);
     }
-  };
+  }
+
+  private useLanguage(token: string): void {
+    const { language } = this.jwtHelper.decodeToken(token);
+    this.translatorService.useLanguage(language);
+  }
 }
