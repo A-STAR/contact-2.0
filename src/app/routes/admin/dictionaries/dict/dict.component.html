@@ -1,0 +1,25 @@
+<app-dict-edit *ngIf="isEntityBeingCreated"
+               (submit)="onEditSubmit($event, true)"
+               (cancel)="onCancel()"></app-dict-edit>
+
+<app-dict-edit *ngIf="isEntityBeingEdited"
+               [editedEntity]="selectedEntity"
+               (submit)="onEditSubmit($event, false)"
+               (cancel)="onCancel()"></app-dict-edit>
+
+<app-dict-remove *ngIf="isEntityBeingRemoved"
+               (submit)="onRemoveSubmit()"
+               (cancel)="onCancel()"></app-dict-remove>
+
+<app-grid
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [parseFn]="parseFn"
+  [editPermission]="'DICT_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>

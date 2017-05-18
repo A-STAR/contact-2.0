@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angu
 
 import { password } from '../../../../core/validators/password';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ConstantsService } from '../../../../core/constants/constants.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -32,7 +33,8 @@ export class UserEditComponent implements OnInit {
   constructor(
     private gridService: GridService,
     private usersService: UsersService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private constantsService: ConstantsService
   ) {}
 
   get canEdit(): boolean {
@@ -95,8 +97,21 @@ export class UserEditComponent implements OnInit {
       ]
     };
 
+    // TODO: use lazy loading w/ language API when it's ready
+    const languageSelectOptions = {
+      options: [
+        { value: 1, label: 'Русский' },
+        { value: 2, label: 'English' },
+      ]
+    };
+
     const passwordValidation = {
-      validators: [ password(6, true) ]
+      validators: [
+        password(
+          this.constantsService.get('UserPassword.MinLength') as number,
+          this.constantsService.get('UserPassword.Complexity.Use') as boolean
+        ),
+      ]
     };
 
     return [
@@ -116,20 +131,26 @@ export class UserEditComponent implements OnInit {
       { label: 'Внутренний номер', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
       { label: 'Email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
       { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
-      // FIXME: change to language options once the API is ready
-      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, disabled: !this.canEditUser, ...roleSelectOptions },
+      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, disabled: !this.canEditUser, ...languageSelectOptions },
       { label: 'Комментарий', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
     ];
   }
 
   private getData(): any {
+    // TODO: remove this when language API is ready
+    const label = (langCode => {
+      switch (String(langCode)) {
+        case '1': return 'Русский';
+        case '2': return 'English';
+      }
+    })(this.user.langCode);
+
     return {
       ...this.user,
       roleId: [{ value: this.user.roleId }],
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
-      // FIXME: change to language code once the API is ready
-      langCode: [{ value: this.user.roleId }]
+      langCode: [{ value: this.user.langCode, label }]
     };
   }
 

@@ -7,6 +7,8 @@ import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../..
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
+import { ConstantsService } from '../../../core/constants/constants.service';
+
 @Component({
   moduleId: module.id,
   selector: 'app-users',
@@ -34,7 +36,15 @@ export class UsersComponent {
     { name: 'Внутренний номер', prop: 'intPhone', minWidth: 140 },
     { name: 'Email', prop: 'email', minWidth: 120 },
     this.columnDecoratorService.decorateColumn(
-      { name: 'Язык', prop: 'langCode', minWidth: 120 }, ({ langCode }) => this.languageConverter.map(langCode)
+      { name: 'Язык', prop: 'langCode', minWidth: 120 },
+      // TODO: use language converter when the API is ready
+      // ({ langCode }) => this.languageConverter.map(langCode)
+      ({ langCode }) => {
+        switch (langCode) {
+          case 1: return 'Русский';
+          case 2: return 'English';
+        }
+      }
     ),
   ];
 
@@ -62,6 +72,7 @@ export class UsersComponent {
   private languageConverter: MapConverterService;
 
   constructor(
+    private constantsService: ConstantsService,
     private columnDecoratorService: GridColumnDecoratorService,
     private mapConverterFactoryService: MapConverterFactoryService) {
 
@@ -98,6 +109,7 @@ export class UsersComponent {
       case ToolbarActionTypeEnum.ADD:
         this.currentUser = this.createEmptyUser();
         break;
+      // FIXME omg!
       case 10:
         this.displayBlockedUsers = action.value;
         break;

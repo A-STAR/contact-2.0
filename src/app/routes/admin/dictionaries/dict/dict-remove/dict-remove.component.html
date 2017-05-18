@@ -1,0 +1,14 @@
+<app-dialog [autoWidth]="true"
+            (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>Удаление словаря</h3>
+  </div>
+
+  <p>Вы действительно хотите удалить словарь?</p>
+
+  <div dialog-footer>
+    <button class="btn btn-danger" (click)="onSubmit()">
+      <i class="fa fa-check"></i> Удалить
+    </button>
+  </div>
+</app-dialog>

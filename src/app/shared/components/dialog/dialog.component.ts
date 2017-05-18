@@ -11,7 +11,7 @@ import { ENVIRONMENT_CONTAINER } from '../../../core/environment/environment.int
 export class DialogComponent implements OnDestroy, OnInit {
 
   @Input() autoWidth: boolean;
-  @Input() display: boolean;
+  @Input() display = true;
   @Output() displayChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;

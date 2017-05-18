@@ -396,7 +396,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   private afterInitItems(): void {
     this.active.forEach(activeItem => {
-      activeItem.text = activeItem.text || this.itemObjects.find(item => item.id === activeItem.id).text;
+      const selectedItem = this.itemObjects.find(item => item.id === activeItem.id);
+      activeItem.text = activeItem.text || (selectedItem && selectedItem.text) || '';
     });
 
     this.options = this.itemObjects

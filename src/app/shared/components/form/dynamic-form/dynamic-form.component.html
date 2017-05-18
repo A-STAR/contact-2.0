@@ -126,13 +126,13 @@
 
       </ng-container> <!-- ngSwitch:control.type -->
 
-      <ng-container *ngIf="displayControlErrors(control)">
-        <ul>
+      <div *ngIf="displayControlErrors(control)" class="error-messages">
+        <ul class="alert alert-danger">
           <li *ngFor="let error of getControlErrors(control)">
             {{ error.message | translate:error.data }}
           </li>
         </ul>
-      </ng-container>
+      </div>
 
     </div> <!-- ngFor:controls -->
 
