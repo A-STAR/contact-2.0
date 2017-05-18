@@ -1,8 +1,8 @@
-export class EntityMasterDetailComponent<T> {
+export class MasterDetailComponent<T> {
 
-  currentMaster: T;
+  masterEntity: T;
 
-  onSelectMaster(currentMaster: T): void {
-    this.currentMaster = currentMaster;
+  onSelectMaster(masterEntity: T): void {
+    this.masterEntity = masterEntity;
   }
 }

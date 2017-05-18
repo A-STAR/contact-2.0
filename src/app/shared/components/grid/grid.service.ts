@@ -60,6 +60,19 @@ export class GridService {
         );
         observer.complete();
       });
+    } else if (url === '/api/terms') {
+      return new Observable(observer => {
+        observer.next(
+          {
+            'success': true,
+            'terms': [
+              {'id': 1, 'name': 'test_term1'},
+              {'id': 2, 'name': 'test_term2'},
+            ]
+          }
+        );
+        observer.complete();
+      });
     }
 
     return this.validateUrl(url)

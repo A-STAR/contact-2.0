@@ -1,19 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 import { ITerm } from './terms.interface';
-import { IDict } from '../dict/dict.interface';
 
 @Component({
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
 export class TermsComponent extends GridEntityComponent<ITerm> {
-
-  @Input() currentMaster: IDict;
 
   bottomActions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_TERM_ADD' },
@@ -34,7 +31,7 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   dataSource: IDataSource = {
-    read: '/api/terms',
+    read: '/api/{id}/terms',
     update: '/api/terms',
     dataKey: 'terms',
   };

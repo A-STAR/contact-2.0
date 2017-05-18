@@ -1,12 +1,13 @@
-import { EventEmitter, Output, ViewChild } from '@angular/core';
+import { EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from '@angular/core';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { GridComponent } from '../grid/grid.component';
 import { IGridEntity } from './grid.entity.interface';
 import { IDataSource } from '../grid/grid.interface';
 
-export abstract class GridEntityComponent<T extends IGridEntity> {
+export abstract class GridEntityComponent<T extends IGridEntity> implements OnChanges {
 
+  @Input() masterEntity: any;   // TODO master type
   @Output() onSelect: EventEmitter<T> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
@@ -15,6 +16,11 @@ export abstract class GridEntityComponent<T extends IGridEntity> {
   bottomActionsGroup: Array<ToolbarActionTypeEnum>;
   bottomActions: Array<IToolbarAction>;
   dataSource: IDataSource;
+
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
+    console.log('changes: ', changes);
+    this.refreshGrid();
+  }
 
   get isEntityBeingCreated(): boolean {
     return this.action === ToolbarActionTypeEnum.ADD;
@@ -65,6 +71,27 @@ export abstract class GridEntityComponent<T extends IGridEntity> {
 
   callActionByType(type: ToolbarActionTypeEnum): void {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
+  }
+
+  private refreshGrid(): void {
+    if (!this.grid) {
+      return;
+    }
+
+    if (this.selectedEntity) {
+      this.loadGrid();
+    } else {
+      this.grid.clear();
+    }
+  }
+
+  private loadGrid(): void {
+    this.grid.load(this.masterEntity)
+      .subscribe(
+        () => this.refreshToolbar(),
+        // TODO: display & log a message
+        err => console.error(err)
+      );
   }
 
   private refreshToolbar(): void {
