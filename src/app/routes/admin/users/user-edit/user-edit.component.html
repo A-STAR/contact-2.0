@@ -9,7 +9,7 @@
     {{ error }}
   </div>
 
-  <div dialog-footer>
+  <div dialog-footer *ngIf="canEdit">
     <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!canSubmit">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
