@@ -21,6 +21,7 @@ export const routes = [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
       { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' },
+      { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionary.module#DictionaryModule' },
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
       // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },

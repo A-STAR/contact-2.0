@@ -1,0 +1,7 @@
+<div class="content-heading">
+  {{ 'sidebar.nav.menu.DICT_AND_TERMS' | translate }}
+</div>
+
+<app-dict (onSelect)="onSelectMaster($event)"></app-dict>
+<br>
+<app-terms [currentMaster]="currentMaster"></app-terms>
