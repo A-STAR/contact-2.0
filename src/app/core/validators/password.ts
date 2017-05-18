@@ -2,9 +2,10 @@ import { Validators } from '@angular/forms';
 
 import { hasLowerCaseChars } from './hasLowerCaseChars';
 import { hasUpperCaseChars } from './hasUpperCaseChars';
+import { hasDigits } from './hasDigits';
 
 const complexityValidators = complex => complex ? [
-  Validators.pattern(/\d/),
+  hasDigits,
   hasLowerCaseChars,
   hasUpperCaseChars,
 ] : [];

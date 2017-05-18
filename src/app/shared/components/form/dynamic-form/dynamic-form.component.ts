@@ -9,6 +9,7 @@ import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.i
 export class DynamicFormComponent implements OnInit {
   static DEFAULT_MESSAGES = {
     minlength: 'validation.FIELD_MIN_LENGTH',
+    hasdigits: 'validation.FIELD_DIGITS',
     haslowercasechars: 'validation.FIELD_LOWER_CASE',
     hasuppercasechars: 'validation.FIELD_UPPER_CASE',
   };
