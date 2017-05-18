@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angu
 
 import { password } from '../../../../core/validators/password';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ConstantsService } from '../../../../core/constants/constants.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -32,7 +33,8 @@ export class UserEditComponent implements OnInit {
   constructor(
     private gridService: GridService,
     private usersService: UsersService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private constantsService: ConstantsService
   ) {}
 
   get canEdit(): boolean {
@@ -96,7 +98,12 @@ export class UserEditComponent implements OnInit {
     };
 
     const passwordValidation = {
-      validators: [ password(6, true) ]
+      validators: [
+        password(
+          this.constantsService.get('UserPassword.MinLength') as number,
+          this.constantsService.get('UserPassword.Complexity.Use') as boolean
+        ),
+      ]
     };
 
     return [

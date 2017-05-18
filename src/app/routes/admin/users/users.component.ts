@@ -7,6 +7,8 @@ import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../..
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
 
+import { ConstantsService } from '../../../core/constants/constants.service';
+
 @Component({
   moduleId: module.id,
   selector: 'app-users',
@@ -62,6 +64,7 @@ export class UsersComponent {
   private languageConverter: MapConverterService;
 
   constructor(
+    private constantsService: ConstantsService,
     private columnDecoratorService: GridColumnDecoratorService,
     private mapConverterFactoryService: MapConverterFactoryService) {
 
@@ -98,6 +101,7 @@ export class UsersComponent {
       case ToolbarActionTypeEnum.ADD:
         this.currentUser = this.createEmptyUser();
         break;
+      // FIXME omg!
       case 10:
         this.displayBlockedUsers = action.value;
         break;
