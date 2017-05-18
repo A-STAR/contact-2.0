@@ -39,22 +39,23 @@ export class DictComponent extends GridEntityComponent<IDict> {
     super();
   }
 
-  onEditSubmit(data: any): void {
-    if (this.selectedEntity) {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => {
+  onEditSubmit(data: any, createMode: boolean): void {
+    if (createMode) {
+      this.dictService.createDict(data).subscribe(() => {
         this.action = null;
       });
     } else {
-      this.dictService.createDict(data).subscribe(() => {
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => {
         this.action = null;
       });
     }
   }
 
   onRemoveSubmit(): void {
-    this.dictService.removeDict(this.selectedEntity).subscribe(() => {
-      this.action = null;
-    });
+    this.dictService.removeDict(this.selectedEntity)
+      .subscribe(() => {
+        this.action = null;
+      });
   }
 
   onCancel(): void {

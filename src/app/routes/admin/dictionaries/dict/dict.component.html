@@ -1,10 +1,10 @@
 <app-dict-edit *ngIf="isEntityBeingCreated"
-               (submit)="onEditSubmit($event)"
+               (submit)="onEditSubmit($event, true)"
                (cancel)="onCancel()"></app-dict-edit>
 
 <app-dict-edit *ngIf="isEntityBeingEdited"
                [editedEntity]="selectedEntity"
-               (submit)="onEditSubmit($event)"
+               (submit)="onEditSubmit($event, false)"
                (cancel)="onCancel()"></app-dict-edit>
 
 <app-dict-remove *ngIf="isEntityBeingRemoved"
