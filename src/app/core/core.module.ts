@@ -22,16 +22,16 @@ import { MapConverterFactoryService } from './converter/map/map-converter-factor
   providers: [
     AuthHttpService,
     AuthService,
-    ValueConverterService,
-    MapConverterFactoryService,
+    DatePipe,
+    ConstantsService,
     JwtHelper,
+    MapConverterFactoryService,
     MenuService,
     SettingsService,
     ThemesService,
     TranslatorService,
     UserPermissionsService,
-    ConstantsService,
-    DatePipe,
+    ValueConverterService,
   ],
   exports: [
   ]
