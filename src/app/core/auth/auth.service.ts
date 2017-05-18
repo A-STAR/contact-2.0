@@ -23,10 +23,8 @@ export class AuthService implements CanActivate, OnInit {
   public redirectUrl: string;
 
   private authenticated = false;
-
   // backend root url
   private rootUrl = '';
-
   private tokenTimer = null;
 
   constructor(private http: AuthHttp, private router: Router, private jwtHelper: JwtHelper) {
@@ -154,6 +152,7 @@ export class AuthService implements CanActivate, OnInit {
 
   private initTokenTimer(token: string): void {
     const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+    this.jwtHelper.decodeToken(token);
 
     this.clearTokenTimer();
     this.tokenTimer = setInterval(() => {

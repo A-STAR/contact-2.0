@@ -22,7 +22,7 @@ export const routes = [
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
       { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' },
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
-      { path: 'departments', loadChildren: './admin/departments/departments.module#DepartmentsModule' },
+      { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
       // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },

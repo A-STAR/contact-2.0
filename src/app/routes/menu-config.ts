@@ -52,7 +52,7 @@ export const menuConfig: IMenuConfig = {
   },
   structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
-    link: '/admin/departments',
+    link: '/admin/organizations',
     icon: 'icon-link'
   },
 
