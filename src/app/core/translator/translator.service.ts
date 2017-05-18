@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
+import { ILanguage } from './translator.interface';
+
 @Injectable()
 export class TranslatorService {
 
-  private defaultLanguage = 'ru_RU';
-  private availableLangs: any;
+  private defaultLanguage = 'ru';
+  private availableLangs: ILanguage[];
 
   constructor(private translate: TranslateService) {
     // this language will be used as a fallback when a translation isn't found in the current language
@@ -14,18 +16,23 @@ export class TranslatorService {
 
     this.availableLangs = [
       { code: 'en', text: 'English' },
-      { code: 'ru_RU', text: 'Russian' }
+      { code: 'ru', text: 'Russian' }
     ];
 
     this.useLanguage();
   }
 
-  useLanguage(lang = this.defaultLanguage): Observable<boolean> {
+  useLanguage(lang: string = this.defaultLanguage): Observable<boolean> {
     return this.translate.use(lang);
   }
 
-  getAvailableLanguages() {
+  getAvailableLanguages(): ILanguage[] {
     return this.availableLangs;
+  }
+
+  // return the code of the currently selected language
+  getCurrentLang(): string {
+    return this.translate.currentLang;
   }
 
 }
