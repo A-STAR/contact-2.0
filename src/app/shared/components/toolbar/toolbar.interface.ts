@@ -14,7 +14,7 @@ export interface IToolbarAction {
   text: string;
   type: ToolbarActionTypeEnum;
   visible?: boolean;
-  permission?: string;
+  permission?: string | Array<string>;
   control?: ToolbarControlEnum;
   value?: any;
 }

@@ -5,10 +5,7 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
 @Component({
   selector: 'app-input-datepicker',
   templateUrl: './datepicker.component.html',
-  styles: [
-    '.datepicker { display: inline-block; }',
-    '.dropdown { position: fixed; padding: 1px 0; z-index: 20000; }'
-  ]
+  styleUrls: ['./datepicker.component.scss']
 })
 export class DatePickerComponent implements OnInit, OnDestroy {
   @Input() controlName: string;
