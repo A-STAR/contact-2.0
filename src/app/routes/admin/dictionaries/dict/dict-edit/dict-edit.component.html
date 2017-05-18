@@ -1,0 +1,18 @@
+<app-dialog>
+  <div dialog-header>
+    <h3>Словарь</h3>
+  </div>
+
+  <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
+
+  <div dialog-footer>
+    <button class="btn btn-danger"
+            [disabled]="!form.canSubmit"
+            (click)="onSubmit()">
+      <i class="fa fa-check"></i> Сохранить
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> Отмена
+    </button>
+  </div>
+</app-dialog>

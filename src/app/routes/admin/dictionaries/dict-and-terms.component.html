@@ -1,0 +1,7 @@
+<div class="content-heading">
+  {{ 'dictionaries.TITLE' | translate }}
+</div>
+
+<app-dict (onSelect)="onSelectMaster($event)"></app-dict>
+<br>
+<app-terms [masterEntity]="masterEntity"></app-terms>
