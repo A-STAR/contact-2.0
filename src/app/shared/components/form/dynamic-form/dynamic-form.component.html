@@ -33,6 +33,15 @@
           </label>
         </div>
 
+        <div *ngSwitchCase="'checkbox'" class="clearfix">
+          <div class="checkbox pull-left mt0">
+            <label>
+              <input type="checkbox" [formControlName]="control.controlName"/>
+              <span class="fa fa-check"></span>{{ control.label }}
+            </label>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'select'" class="form-group">
           <label>{{control.label}}
             <app-select [formControlName]="control.controlName"

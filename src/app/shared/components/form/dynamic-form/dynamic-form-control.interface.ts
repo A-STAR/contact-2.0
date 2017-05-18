@@ -21,7 +21,7 @@ export interface IDynamicFormControl {
   validators?: Array<ValidatorFn>;
 }
 
-export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden';
+export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden' | 'ckeckbox';
 
 export interface ISelectOptions {
   label: string;
