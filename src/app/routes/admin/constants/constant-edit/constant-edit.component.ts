@@ -95,43 +95,11 @@ export class ConstantEditComponent implements OnInit {
     ];
 
     return [
-      {
-        label: 'Ид',
-        controlName: 'id',
-        type: 'hidden',
-        required: true,
-        disabled: true
-      },
-      {
-        label: 'Название константы',
-        controlName: 'name',
-        type: 'text',
-        required: true,
-        disabled: true
-      },
-      {
-        label: 'Тип',
-        controlName: 'typeCode',
-        type: 'select',
-        required: true,
-        disabled: true,
-        options
-      },
-      {
-        label: 'Значение',
-        controlName: 'value',
-        type: 'dynamic',
-        dependsOn: 'typeCode',
-        required: true
-      },
-      {
-        label: 'Комментарий',
-        controlName: 'dsc',
-        type: 'textarea',
-        required: true,
-        disabled: true,
-        rows: 2
-      },
+      { label: 'Ид', controlName: 'id', type: 'hidden', required: true, disabled: true },
+      { label: 'Название константы', controlName: 'name', type: 'text', required: true, disabled: true },
+      { label: 'Тип', controlName: 'typeCode', type: 'select', required: true, disabled: true, options },
+      { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
+      { label: 'Комментарий', controlName: 'dsc', type: 'textarea', required: true, disabled: true },
     ];
   }
 
@@ -140,7 +108,7 @@ export class ConstantEditComponent implements OnInit {
       ...this.constant,
       typeCode: this.constant.typeCode,
       // TODO: can we just write `value: String(this.constant)` like we do in permits form?
-      // FIXME: value form control always renders as text input regerdless of typeCode
+      // TODO: value form control always renders as text input regerdless of typeCode
       value: this.getValueField(this.constant)
     };
   }
