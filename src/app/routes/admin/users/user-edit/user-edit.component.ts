@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 
+import { password } from '../../../../core/validators/password';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -94,16 +95,18 @@ export class UserEditComponent implements OnInit {
       ]
     };
 
+    const passwordValidation = {
+      validators: [ password(6, true) ]
+    };
+
     return [
       { label: 'Фамилия', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
       { label: 'Имя', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
       { label: 'Отчество', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
       // TODO: insert photo upload control here
-      // TODO: do we need separate type 'checkbox' in addition to 'boolean'?
-      { label: 'Блокирован', controlName: 'isBlocked', type: 'boolean', required: true, disabled: !this.canEditUser },
+      { label: 'Блокирован', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
       { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser },
-      // FIXME: disabled & readonly attributes in select control
+      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
       { label: 'Роль', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole, ...roleSelectOptions },
       { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
       { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
@@ -134,18 +137,27 @@ export class UserEditComponent implements OnInit {
     const value = this.form.value;
     return {
       ...value,
+      isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       roleId: value.roleId[0].value,
-      // FIXME
-      startWorkDate: null,
-      endWorkDate: null,
+      startWorkDate: this.toIsoDate(value.startWorkDate),
+      endWorkDate: this.toIsoDate(value.endWorkDate),
       langCode: value.langCode[0].value
     };
   }
 
   private formatDate(date: string): string {
-    // TODO: format properly
+    // TODO: move to a service, format properly
     return date ? (new Date(date)).toLocaleDateString() : '';
+  }
+
+  private toIsoDate(date: string): string {
+    // TODO: move to a service, use moment.js
+    if (!date) {
+      return null;
+    }
+    const ymd = date.split('.');
+    return (new Date(parseInt(ymd[2], 10), parseInt(ymd[1], 10) - 1, parseInt(ymd[0], 10))).toISOString();
   }
 
   private close(): void {

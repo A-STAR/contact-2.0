@@ -1,32 +1,56 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormControl } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: 'dynamic-form.component.html'
 })
 export class DynamicFormComponent implements OnInit {
+  static DEFAULT_MESSAGES = {
+    minlength: 'validation.FIELD_MIN_LENGTH',
+    hasdigits: 'validation.FIELD_DIGITS',
+    haslowercasechars: 'validation.FIELD_LOWER_CASE',
+    hasuppercasechars: 'validation.FIELD_UPPER_CASE',
+  };
+
   @Input() controls: Array<IDynamicFormControl>;
-  // TODO: add interface
-  @Input() data: any;
+  @Input() data: IValue;
 
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.createForm();
     this.populateForm();
   }
 
+  debug(a: any): string {
+    return JSON.stringify(a);
+  }
+
   get canSubmit(): boolean {
     return this.form.dirty && this.form.valid;
   }
 
-  public get value(): any {
+  get value(): any {
     return this.form.getRawValue();
+  }
+
+  displayControlErrors(control: IDynamicFormControl): boolean {
+    const formControl = this.form.controls[control.controlName];
+
+    // TODO: double check this
+    return formControl.errors && (formControl.dirty || formControl.touched);
+  }
+
+  getControlErrors(control: IDynamicFormControl): Array<any> {
+    const errors = this.form.controls[control.controlName].errors;
+    return Object.keys(errors).map(key => ({
+      message: control.validationMessages && control.validationMessages[key] || DynamicFormComponent.DEFAULT_MESSAGES[key] || key,
+      data: errors[key]
+    }));
   }
 
   private createForm(): FormGroup {
