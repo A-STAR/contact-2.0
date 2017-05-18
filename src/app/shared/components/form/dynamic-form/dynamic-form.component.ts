@@ -4,7 +4,8 @@ import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.i
 
 @Component({
   selector: 'app-dynamic-form',
-  templateUrl: 'dynamic-form.component.html'
+  templateUrl: 'dynamic-form.component.html',
+  styleUrls: ['./dynamic-form.component.scss']
 })
 export class DynamicFormComponent implements OnInit {
   static DEFAULT_MESSAGES = {
