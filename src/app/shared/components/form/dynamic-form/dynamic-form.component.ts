@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormControl } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -8,25 +8,39 @@ import { IControls, IDynamicFormControl } from './dynamic-form-control.interface
 })
 export class DynamicFormComponent implements OnInit {
   @Input() controls: Array<IDynamicFormControl>;
-  // TODO: add interface
-  @Input() data: any;
+  @Input() data: IValue;
 
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.createForm();
     this.populateForm();
   }
 
+  debug(a: any): string {
+    return JSON.stringify(a);
+  }
+
   get canSubmit(): boolean {
     return this.form.dirty && this.form.valid;
   }
 
-  public get value(): any {
+  get value(): any {
     return this.form.getRawValue();
+  }
+
+  getControlErrors(control: IDynamicFormControl): Array<string> {
+    const errors = this.form.controls[control.controlName].errors;
+    return Object.keys(errors)
+      .reduce((acc, key) => {
+        if (errors[key] !== null) {
+          const message = control.validationMessages && control.validationMessages[key] || key;
+          acc.push(message);
+        }
+        return acc;
+      }, [] as Array<string>);
   }
 
   private createForm(): FormGroup {

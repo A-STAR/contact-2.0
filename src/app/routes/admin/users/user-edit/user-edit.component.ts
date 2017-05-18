@@ -95,6 +95,13 @@ export class UserEditComponent implements OnInit {
       ]
     };
 
+    const passwordValidation = {
+      validators: [ password(6, true) ],
+      validationMessages: {
+        minlength: 'Пароль слишком короткий!'
+      }
+    };
+
     return [
       { label: 'Фамилия', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
       { label: 'Имя', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
@@ -102,7 +109,7 @@ export class UserEditComponent implements OnInit {
       // TODO: insert photo upload control here
       { label: 'Блокирован', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
       { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, validators: [ password(6, true) ] },
+      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
       { label: 'Роль', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole, ...roleSelectOptions },
       { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
       { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },

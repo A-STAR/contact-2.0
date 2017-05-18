@@ -1,28 +1,29 @@
 <form [formGroup]="form">
 
-    <ng-container *ngFor="let control of controls">
+    <div *ngFor="let control of controls" class="form-group">
 
       <ng-container [ngSwitch]="control.type">
 
-        <div *ngSwitchCase="'number'" class="form-group">
+        <ng-container *ngSwitchCase="'number'">
           <label>{{control.label}}
             <input type="number"
                   class="form-control"
                   [attr.placeholder]="control.placeholder || ''"
                   [formControlName]="control.controlName">
           </label>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'text'" class="form-group">
+        <ng-container *ngSwitchCase="'text'">
           <label>{{control.label}}
             <input type="text"
                    class="form-control"
                    [attr.placeholder]="control.placeholder || ''"
                    [formControlName]="control.controlName">
           </label>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'boolean'" class="form-group">{{control.label}}<br>
+        <ng-container *ngSwitchCase="'boolean'">
+          {{control.label}}<br>
           <label class="radio-inline">
             <input type="radio" [formControlName]="control.controlName" value="1">
              {{'default.boolean.TRUE' | translate}}
@@ -31,18 +32,18 @@
             <input type="radio" [formControlName]="control.controlName" value="0">
              {{'default.boolean.FALSE' | translate}}
           </label>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'checkbox'" class="clearfix">
-          <div class="checkbox pull-left mt0">
+        <ng-container *ngSwitchCase="'checkbox'">
+          <div class="checkbox mt0 mb0">
             <label>
               <input type="checkbox" [formControlName]="control.controlName"/>
               {{ control.label }}
             </label>
           </div>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'select'" class="form-group">
+        <ng-container *ngSwitchCase="'select'">
           <label>{{control.label}}
             <app-select [formControlName]="control.controlName"
                         [allowClear]="true"
@@ -57,9 +58,9 @@
                         [attr.placeholder]="control.placeholder || ''">
               </app-select>
           </label>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'textarea'" class="form-group">
+        <ng-container *ngSwitchCase="'textarea'">
           <label>{{control.label}}
             <textarea
               [attr.placeholder]="control.placeholder || ''"
@@ -68,12 +69,12 @@
               rows="control.rows || 2"
             ></textarea>
           </label>
-        </div>
+        </ng-container>
 
-        <div *ngSwitchCase="'datepicker'" class="form-group">
+        <ng-container *ngSwitchCase="'datepicker'">
           <label>{{control.label}}</label>
-            <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
-        </div>
+          <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+        </ng-container>
 
         <input *ngSwitchCase="'hidden'"
                 type="hidden"
@@ -84,21 +85,21 @@
 
           <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
 
-              <div *ngSwitchCase="1" class="form-group">
+              <ng-container *ngSwitchCase="1">
                 <label>{{control.label}}
                   <input type="number"
                          class="form-control"
                          [attr.placeholder]="control.placeholder || ''"
                          [formControlName]="control.controlName">
                 </label>
-              </div>
+              </ng-container>
 
-              <div *ngSwitchCase="2" class="form-group">
+              <ng-container *ngSwitchCase="2">
                 <label>{{control.label}}</label>
                 <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
-              </div>
+              </ng-container>
 
-              <div *ngSwitchCase="4" class="form-group">
+              <ng-container *ngSwitchCase="4">
                 <label>{{control.label}}</label>
                 <label class="radio-inline">
                     <input type="radio" [formControlName]="control.controlName" value="1">
@@ -108,16 +109,16 @@
                     <input type="radio" [formControlName]="control.controlName" value="0">
                     {{'default.boolean.FALSE' | translate}}
                 </label>
-              </div>
+              </ng-container>
 
-              <div *ngSwitchDefault class="form-group">
+              <ng-container *ngSwitchDefault>
                 <label>{{control.label}}
                   <input type="text"
                          class="form-control"
                          [attr.placeholder]="control.placeholder || ''"
                          [formControlName]="control.controlName">
                 </label>
-              </div>
+              </ng-container>
 
           </ng-container> <!-- control.dependsOn -->
 
@@ -125,6 +126,14 @@
 
       </ng-container> <!-- ngSwitch:control.type -->
 
-    </ng-container> <!-- ngFor:controls -->
+      <ng-container *ngIf="form.controls[control.controlName].errors && (form.controls[control.controlName].dirty || form.controls[control.controlName].touched)">
+        <ul>
+          <li *ngFor="let error of getControlErrors(control)">
+            {{ error | translate }}
+          </li>
+        </ul>
+      </ng-container>
+
+    </div> <!-- ngFor:controls -->
 
 </form>

@@ -2,5 +2,5 @@ import { ValidatorFn } from '@angular/forms';
 
 export const hasUpperCaseChars: ValidatorFn = control => {
   const value = String(control.value);
-  return value.toLowerCase() === value ? { hasUpperCaseChars: false } : null;
+  return value.toLowerCase() === value && value.length ? { hasUpperCaseChars: false } : null;
 };
