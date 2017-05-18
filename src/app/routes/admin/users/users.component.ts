@@ -44,11 +44,11 @@ export class UsersComponent {
     dataKey: 'users',
   };
 
-  displayBlockedUsers = true;
+  displayBlockedUsers = false;
 
   actions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
     { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX, value: this.displayBlockedUsers }
   ];
 

@@ -11,7 +11,9 @@
       [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button #trigger class="btn btn-sm btn-default" type="button" (click)="toggleCalendar()"><i class="fa fa-calendar"></i></button>
+      <button #trigger class="btn btn-sm btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
+        <i class="fa fa-calendar"></i>
+      </button>
     </span>
   </span>
   <span *ngIf="!form" class="input-group">
@@ -26,7 +28,9 @@
       [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button #trigger class="btn btn-sm btn-default" type="button" (click)="toggleCalendar()"><i class="fa fa-calendar"></i></button>
+      <button #trigger class="btn btn-sm btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
+        <i class="fa fa-calendar"></i>
+      </button>
     </span>
   </span>
   <div #dropdown>

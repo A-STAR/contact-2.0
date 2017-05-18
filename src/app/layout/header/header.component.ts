@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit {
     return this.settings.layout.isCollapsedText;
   }
 
-  toggleLanguage(event: UIEvent): void {
+  toggleLanguage(): void {
     // TODO: test the language switching options
   }
 

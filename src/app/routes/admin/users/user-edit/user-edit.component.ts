@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -24,7 +25,18 @@ export class UserEditComponent implements OnInit {
 
   error: string = null;
 
-  constructor(private gridService: GridService, private usersService: UsersService) {}
+  canEditUser = false;
+  canEditUserRole = false;
+
+  constructor(
+    private gridService: GridService,
+    private usersService: UsersService,
+    private userPermissionsService: UserPermissionsService
+  ) {}
+
+  get canEdit(): boolean {
+    return this.canEditUser || this.canEditUserRole;
+  }
 
   get canSubmit(): boolean {
     return this.form.canSubmit;
@@ -35,6 +47,8 @@ export class UserEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.canEditUser = this.userPermissionsService.hasPermission('USER_EDIT');
+    this.canEditUserRole = this.userPermissionsService.hasPermission('USER_ROLE_EDIT');
     this.controls = this.getControls();
     this.data = this.getData();
   }
@@ -70,7 +84,6 @@ export class UserEditComponent implements OnInit {
   }
 
   private getControls(): Array<IDynamicFormControl> {
-    // TODO: persist value when options are fetched
     const roleSelectOptions = {
       cachingOptions: true,
       lazyOptions: this.gridService
@@ -82,33 +95,33 @@ export class UserEditComponent implements OnInit {
     };
 
     return [
-      { label: 'Фамилия', controlName: 'lastName', type: 'text', required: true },
-      { label: 'Имя', controlName: 'firstName', type: 'text' },
-      { label: 'Отчество', controlName: 'middleName', type: 'text' },
+      { label: 'Фамилия', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
+      { label: 'Имя', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
+      { label: 'Отчество', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
       // TODO: insert photo upload control here
       // TODO: do we need separate type 'checkbox' in addition to 'boolean'?
-      { label: 'Блокирован', controlName: 'isBlocked', type: 'boolean', required: true },
-      { label: 'Логин', controlName: 'login', type: 'text', required: true },
-      { label: 'Пароль', controlName: 'password', type: 'text' },
-      { label: 'Роль', controlName: 'roleId', type: 'select', required: true, ...roleSelectOptions },
-      { label: 'Должность', controlName: 'position', type: 'text' },
-      { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker' },
-      { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'datepicker' },
-      { label: 'Мобильный телефон', controlName: 'mobPhone', type: 'text' },
-      { label: 'Рабочий телефон', controlName: 'workPhone', type: 'text' },
-      { label: 'Внутренний номер', controlName: 'intPhone', type: 'text' },
-      { label: 'Email', controlName: 'email', type: 'text' },
-      { label: 'Рабочий адрес', controlName: 'address', type: 'text' },
+      { label: 'Блокирован', controlName: 'isBlocked', type: 'boolean', required: true, disabled: !this.canEditUser },
+      { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
+      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser },
+      // FIXME: disabled & readonly attributes in select control
+      { label: 'Роль', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole, ...roleSelectOptions },
+      { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
+      { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
+      { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'datepicker', disabled: !this.canEditUser },
+      { label: 'Мобильный телефон', controlName: 'mobPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'Рабочий телефон', controlName: 'workPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'Внутренний номер', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'Email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
+      { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
       // FIXME: change to language options once the API is ready
-      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, ...roleSelectOptions },
-      { label: 'Комментарий', controlName: 'comment', type: 'textarea' },
+      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, disabled: !this.canEditUser, ...roleSelectOptions },
+      { label: 'Комментарий', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
     ];
   }
 
   private getData(): any {
     return {
       ...this.user,
-      // FIXME: add label
       roleId: [{ value: this.user.roleId }],
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
