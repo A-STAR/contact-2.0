@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../../../shared/components/flowtree/common/shared';
+import { SharedModule } from '../../../../shared/shared.module';
 import { TermsComponent } from './terms.component';
 
 @NgModule({
