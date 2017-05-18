@@ -98,7 +98,7 @@
     "PLEASE_AUTHENTICATE": "Пожалуйста, авторизуйтесь",
     "LOGIN_PLACEHOLDER": "Логин",
     "PASSWORD_PLACEHOLDER": "Пароль",
-    "REMEMBER_ME": "Запомнить меня",
+    "REMEMBER_ME": "Запомнить логин",
     "FORGOT_PASSWORD": "Забыли пароль?",
     "LOGIN_BUTTON": "Войти"
   },
