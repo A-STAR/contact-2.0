@@ -37,6 +37,13 @@ export class DynamicFormComponent implements OnInit {
     return this.form.getRawValue();
   }
 
+  displayControlErrors(control: IDynamicFormControl): boolean {
+    const formControl = this.form.controls[control.controlName];
+
+    // TODO: double check this
+    return formControl.errors && (formControl.dirty || formControl.touched);
+  }
+
   getControlErrors(control: IDynamicFormControl): Array<any> {
     const errors = this.form.controls[control.controlName].errors;
     return Object.keys(errors).map(key => ({

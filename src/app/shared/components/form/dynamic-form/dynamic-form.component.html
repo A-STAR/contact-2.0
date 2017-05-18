@@ -126,7 +126,7 @@
 
       </ng-container> <!-- ngSwitch:control.type -->
 
-      <ng-container *ngIf="form.controls[control.controlName].errors && (form.controls[control.controlName].dirty || form.controls[control.controlName].touched)">
+      <ng-container *ngIf="displayControlErrors(control)">
         <ul>
           <li *ngFor="let error of getControlErrors(control)">
             {{ error.message | translate:error.data }}
