@@ -100,11 +100,9 @@ export class UserEditComponent implements OnInit {
       { label: 'Имя', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
       { label: 'Отчество', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
       // TODO: insert photo upload control here
-      // TODO: do we need separate type 'checkbox' in addition to 'boolean'?
-      { label: 'Блокирован', controlName: 'isBlocked', type: 'boolean', required: true, disabled: !this.canEditUser },
+      { label: 'Блокирован', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
       { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
       { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, validators: [ password(6, true) ] },
-      // FIXME: disabled & readonly attributes in select control
       { label: 'Роль', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole, ...roleSelectOptions },
       { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
       { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
@@ -135,6 +133,7 @@ export class UserEditComponent implements OnInit {
     const value = this.form.value;
     return {
       ...value,
+      isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       roleId: value.roleId[0].value,
       // FIXME
