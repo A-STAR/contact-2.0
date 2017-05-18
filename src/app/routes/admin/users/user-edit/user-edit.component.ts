@@ -96,10 +96,7 @@ export class UserEditComponent implements OnInit {
     };
 
     const passwordValidation = {
-      validators: [ password(6, true) ],
-      validationMessages: {
-        minlength: 'Пароль слишком короткий!'
-      }
+      validators: [ password(6, true) ]
     };
 
     return [

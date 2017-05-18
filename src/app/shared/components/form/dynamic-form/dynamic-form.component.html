@@ -129,7 +129,7 @@
       <ng-container *ngIf="form.controls[control.controlName].errors && (form.controls[control.controlName].dirty || form.controls[control.controlName].touched)">
         <ul>
           <li *ngFor="let error of getControlErrors(control)">
-            {{ error | translate }}
+            {{ error.message | translate:error.data }}
           </li>
         </ul>
       </ng-container>

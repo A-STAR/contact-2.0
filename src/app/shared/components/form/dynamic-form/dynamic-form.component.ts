@@ -7,6 +7,12 @@ import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.i
   templateUrl: 'dynamic-form.component.html'
 })
 export class DynamicFormComponent implements OnInit {
+  static DEFAULT_MESSAGES = {
+    minlength: 'validation.FIELD_MIN_LENGTH',
+    haslowercasechars: 'validation.FIELD_LOWER_CASE',
+    hasuppercasechars: 'validation.FIELD_UPPER_CASE',
+  };
+
   @Input() controls: Array<IDynamicFormControl>;
   @Input() data: IValue;
 
@@ -31,16 +37,12 @@ export class DynamicFormComponent implements OnInit {
     return this.form.getRawValue();
   }
 
-  getControlErrors(control: IDynamicFormControl): Array<string> {
+  getControlErrors(control: IDynamicFormControl): Array<any> {
     const errors = this.form.controls[control.controlName].errors;
-    return Object.keys(errors)
-      .reduce((acc, key) => {
-        if (errors[key] !== null) {
-          const message = control.validationMessages && control.validationMessages[key] || key;
-          acc.push(message);
-        }
-        return acc;
-      }, [] as Array<string>);
+    return Object.keys(errors).map(key => ({
+      message: control.validationMessages && control.validationMessages[key] || DynamicFormComponent.DEFAULT_MESSAGES[key] || key,
+      data: errors[key]
+    }));
   }
 
   private createForm(): FormGroup {
