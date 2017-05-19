@@ -189,6 +189,10 @@
       }
     },
     "default": {
+      "yesNo": {
+        "Yes": "Yes",
+        "No": "No"
+      },
       "boolean": {
         "TRUE": "True",
         "FALSE": "False"

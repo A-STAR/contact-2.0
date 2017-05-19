@@ -207,6 +207,10 @@
     }
   },
   "default": {
+    "yesNo": {
+      "Yes": "Да",
+      "No": "Нет"
+    },
     "boolean": {
       "TRUE": "Истина",
       "FALSE": "Ложь"

@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
@@ -18,25 +19,25 @@ export class UsersComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
-    { name: 'Логин', prop: 'login', minWidth: 120 },
-    { name: 'Фамилия', prop: 'lastName', minWidth: 120 },
-    { name: 'Имя', prop: 'firstName', minWidth: 120 },
-    { name: 'Отчество', prop: 'middleName', minWidth: 120 },
-    { name: 'Должность', prop: 'position', minWidth: 120 },
+    { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
+    { prop: 'login', minWidth: 120 },
+    { prop: 'lastName', minWidth: 120 },
+    { prop: 'firstName', minWidth: 120 },
+    { prop: 'middleName', minWidth: 120 },
+    { prop: 'position', minWidth: 120 },
     this.columnDecoratorService.decorateRelatedEntityColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
+      { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
-      { name: 'Блокирован', prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
+      { prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
     ),
-    { name: 'Мобильный телефон', prop: 'mobPhone', minWidth: 140 },
-    { name: 'Рабочий телефон', prop: 'workPhone', minWidth: 140 },
-    { name: 'Внутренний номер', prop: 'intPhone', minWidth: 140 },
-    { name: 'Email', prop: 'email', minWidth: 120 },
+    { prop: 'mobPhone', minWidth: 140 },
+    { prop: 'workPhone', minWidth: 140 },
+    { prop: 'intPhone', minWidth: 140 },
+    { prop: 'email', minWidth: 120 },
     this.columnDecoratorService.decorateColumn(
-      { name: 'Язык', prop: 'langCode', minWidth: 120 },
+      { prop: 'langCode', minWidth: 120 },
       // TODO: use language converter when the API is ready
       // ({ langCode }) => this.languageConverter.map(langCode)
       ({ langCode }) => {
@@ -78,6 +79,7 @@ export class UsersComponent {
 
   constructor(
     private constantsService: ConstantsService,
+    private translateService: TranslateService,
     private columnDecoratorService: GridColumnDecoratorService,
     private mapConverterFactoryService: MapConverterFactoryService,
     private usersService: UsersService) {
@@ -93,7 +95,7 @@ export class UsersComponent {
 
   transformIsBlocked(isBlocked: number): string {
     // TODO: render checkbox
-    return isBlocked ? 'Да' : 'Нет';
+    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
   parseFn(data: IUsersResponse): Array<IUser> {
