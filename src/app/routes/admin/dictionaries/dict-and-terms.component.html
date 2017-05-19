@@ -2,6 +2,12 @@
   {{ 'dictionaries.TITLE' | translate }}
 </div>
 
-<app-dict (onSelect)="onSelectMaster($event)"></app-dict>
-<br>
-<app-terms [masterEntity]="masterEntity"></app-terms>
+<ng-container *ngIf="canDictionariesShow()">
+  <app-dict (onSelect)="onSelectMaster($event)"></app-dict>
+  <br>
+  <app-terms [masterEntity]="masterEntity"></app-terms>
+</ng-container>
+
+<div class="access-denied-offset" *ngIf="!canDictionariesShow()">
+  {{ 'dictionaries.access_denied' | translate }}
+</div>
