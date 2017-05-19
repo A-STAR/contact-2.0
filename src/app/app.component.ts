@@ -8,8 +8,8 @@ import { SettingsService } from './core/settings/settings.service';
 })
 export class AppComponent {
   @HostBinding('class.aside-collapsed')
-  get isCollapsed() {
-    return this.settings.layout.isCollapsed;
+  get isCollapsed(): boolean {
+    return this.settings.layout.isCollapsed as boolean;
   };
 
   constructor(public settings: SettingsService) {}

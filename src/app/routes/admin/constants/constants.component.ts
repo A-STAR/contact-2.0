@@ -1,20 +1,26 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { TranslatorService } from '../../../core/translator/translator.service';
 
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
-export class ConstantsComponent implements OnInit {
+export class ConstantsComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
+  controls: Array<IDynamicFormControl> = [];
+
   currentConstant: any = null;
-  subscription: any = null;
+
+  dataSource: IDataSource = {
+    read: '/api/constants',
+    update: '/api/constants/{id}',
+    dataKey: 'constants',
+  };
 
   tabs: Array<any> = [
     { id: 0, title: 'Константы', active: true },
@@ -26,14 +32,6 @@ export class ConstantsComponent implements OnInit {
     { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
     { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
   ];
-
-  controls: Array<IDynamicFormControl> = [];
-
-  dataSource: IDataSource = {
-    read: '/api/constants',
-    update: '/api/constants/{id}',
-    dataKey: 'constants',
-  };
 
   parseFn = (data) => {
     const { dataKey } = this.dataSource;
@@ -62,11 +60,7 @@ export class ConstantsComponent implements OnInit {
       });
   }
 
-  constructor(private datePipe: DatePipe, private translatorService: TranslatorService) { }
-
-  ngOnInit(): void {
-    this.translateComponent();
-  }
+  constructor(private datePipe: DatePipe) { }
 
   onTabClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
@@ -82,20 +76,6 @@ export class ConstantsComponent implements OnInit {
 
   onUpdate(): void {
     this.grid.load().subscribe();
-  }
-
-  translateComponent(): void {
-    this.subscription = this.translatorService
-      .onLangChange()
-      .subscribe(event => {
-        const { constants } = event.translations;
-        const { grid, form } = constants;
-        this.columns = this.columns.map(col => {
-          col.name = grid[col.prop];
-          return col;
-        });
-        this.tabs[0].title = form.title;
-      });
   }
 
 }
