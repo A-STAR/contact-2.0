@@ -14,7 +14,7 @@ export interface IOrganizationsResponse {
 }
 
 export interface IEmployee {
-  id: number;
-  name: string;
-  // TODO
+  userId: number;
+  roleCode: number;
+  comment: string;
 }

@@ -170,8 +170,23 @@
       "CONFIRM_MESSAGE": "Вы действительно хотите удалить термин?"
     }
   },
-  "departments": {
-    "TITLE": "Структура предприятия"
+  "organizations": {
+    "title": "Структура предприятия",
+    "employees": {
+      "edit": {
+        "title": "Сотрудник"
+      },
+      "remove": {
+        "title": "Удаление сотрудника",
+        "confirmMessage": "Вы действительно хотите удалить сотрудника?"
+      }
+    },
+    "grid": {
+      "id": "ID",
+      "userId": "ID пользователя",
+      "roleCode": "Код роли",
+      "comment": "Комментарий"
+    }
   },
   "default": {
     "boolean": {
