@@ -24,14 +24,14 @@ export class DictComponent extends GridEntityComponent<IDict> {
 
   columns: Array<any> = [
     { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
-    { name: 'Название', prop: 'name', maxWidth: 400 },
-    { name: 'Комментарий', prop: 'comment', width: 200 },
-    { name: 'Системный', prop: 'system'},
+    { name: 'Код словаря', prop: 'code', minWidth: 30, maxWidth: 70 },
+    { name: 'Название', prop: 'name', maxWidth: 300 },
+    { name: 'Родительский словарь', prop: 'parentCode', width: 200 },
+    { name: 'Тип словаря', prop: 'typeCode'},
   ];
 
   dataSource: IDataSource = {
-    read: '/api/dict',
-    update: '/api/dict',
+    read: '/api/dictionaries',
     dataKey: 'dict',
   };
 

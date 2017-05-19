@@ -128,9 +128,15 @@
     }
   },
     "dictionaries": {
+      "access_denied": "Доступ к словарям ограничен. Обратитесь к администратору",
       "TITLE": "Dictionaries",
-      "EDIT": {
-        "TITLE": "Dictionary"
+      "edit": {
+        "title": "Dictionary",
+        "dict_code": "Code",
+        "dict_name": "Name",
+        "dict_type": "Type",
+        "dict_parent": "Parent dictionary",
+        "dict_list": "Dictionary list"
       },
       "REMOVE": {
         "TITLE": "Remove dictionary",

@@ -35,11 +35,22 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public loadLazyItemsOnInit = false;
   @Input() public cachingItems = false;
   @Output() public clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
+  @Output() public data: EventEmitter<any> = new EventEmitter();
+  @Output() public selected: EventEmitter<any> = new EventEmitter();
+  @Output() public removed: EventEmitter<any> = new EventEmitter();
+  @Output() public typed: EventEmitter<any> = new EventEmitter();
+  @Output() public opened: EventEmitter<any> = new EventEmitter();
 
+  private _disabled;
+  private _readonly = true;
+  private _optionsOpened = false;
+  private _items: Array<any> = [];
+  private _active: Array<SelectItem> = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
-  private _disabled = false;
-  private _readonly = true;
+
+  private onChange: Function = () => {};
+  private onTouched: Function = () => {};
 
   @Input()
   public set items(value: Array<any>) {
@@ -48,16 +59,20 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   @Input()
   public set readonly(value: boolean) {
-    this._readonly = value === false ? undefined : value;
+    this._readonly = this.toAttributeValue(value, this._readonly);
   }
 
   @Input()
   public set controlDisabled(value: boolean) {
-    this._disabled = value === false ? undefined : value;
+    this._disabled = this.toAttributeValue(value, this._disabled);
 
     if (this._disabled) {
       this.hideOptions();
     }
+  }
+
+  private toAttributeValue(value: boolean, defaultValue: boolean): boolean {
+    return typeof value === 'undefined' ? defaultValue : (value || undefined);
   }
 
   public get readonly(): boolean {
@@ -66,6 +81,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   public get disabled(): boolean {
     return this._disabled;
+  }
+
+  public get active(): Array<any> {
+    return this._active;
   }
 
   @Input()
@@ -93,29 +112,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  @Output() public data: EventEmitter<any> = new EventEmitter();
-  @Output() public selected: EventEmitter<any> = new EventEmitter();
-  @Output() public removed: EventEmitter<any> = new EventEmitter();
-  @Output() public typed: EventEmitter<any> = new EventEmitter();
-  @Output() public opened: EventEmitter<any> = new EventEmitter();
-
   public options: Array<SelectItem> = [];
   public itemObjects: Array<SelectItem> = [];
   public activeOption: SelectItem;
 
-  protected onChange: any = Function.prototype;
-  protected onTouched: any = Function.prototype;
-
   private inputMode = false;
-  private _optionsOpened = false;
   private behavior: OptionsBehavior;
   private inputValue = '';
-  private _items: Array<any> = [];
-  private _active: Array<SelectItem> = [];
-
-  public get active(): Array<any> {
-    return this._active;
-  }
 
   private set optionsOpened(value: boolean){
     this._optionsOpened = value;
@@ -259,6 +262,19 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
+  public writeValue(value: any): void {
+    this.active = value;
+    this.data.emit(this.active);
+  }
+
+  public registerOnChange(fn: Function): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: Function): void {
+    this.onTouched = fn;
+  }
+
   /**
    * @override
    */
@@ -316,14 +332,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   public get firstItemHasChildren(): boolean {
     return this.itemObjects[0] && this.itemObjects[0].hasChildren();
   }
-
-  public writeValue(val: any): void {
-    this.active = val;
-    this.data.emit(this.active);
-  }
-
-  public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
-  public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
   protected matchClick(e:any):void {
     if (this._disabled === true) {
@@ -421,7 +429,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.selectMatch(this.activeOption);
   }
 
-  private selectMatch(value:SelectItem, e:Event = void 0):void {
+  private selectMatch(value: SelectItem, e: Event = void 0): void {
     if (e) {
       e.stopPropagation();
       e.preventDefault();
@@ -545,85 +553,6 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     if (this.actor.options.length > 0) {
       this.actor.activeOption = this.actor.options[0];
       super.ensureHighlightVisible();
-    }
-  }
-}
-
-export class ChildrenBehavior extends Behavior implements OptionsBehavior {
-  public constructor(actor:SelectComponent) {
-    super(actor);
-  }
-
-  public first():void {
-    this.actor.activeOption = this.actor.options[0].children[0];
-    this.fillOptionsMap();
-    this.ensureHighlightVisible(this.optionsMap);
-  }
-
-  public last():void {
-    this.actor.activeOption =
-      this.actor
-        .options[this.actor.options.length - 1]
-        .children[this.actor.options[this.actor.options.length - 1].children.length - 1];
-    this.fillOptionsMap();
-    this.ensureHighlightVisible(this.optionsMap);
-  }
-
-  public prev():void {
-    let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
-    if (!this.actor.activeOption) {
-      if (this.actor.options[indexParent - 1]) {
-        this.actor.activeOption = this.actor
-          .options[indexParent - 1]
-          .children[this.actor.options[indexParent - 1].children.length - 1];
-      }
-    }
-    if (!this.actor.activeOption) {
-      this.last();
-    }
-    this.fillOptionsMap();
-    this.ensureHighlightVisible(this.optionsMap);
-  }
-
-  public next():void {
-    let indexParent = this.actor.options
-      .findIndex((option:SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
-    let index = this.actor.options[indexParent].children
-      .findIndex((option:SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
-    this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
-    if (!this.actor.activeOption) {
-      if (this.actor.options[indexParent + 1]) {
-        this.actor.activeOption = this.actor.options[indexParent + 1].children[0];
-      }
-    }
-    if (!this.actor.activeOption) {
-      this.first();
-    }
-    this.fillOptionsMap();
-    this.ensureHighlightVisible(this.optionsMap);
-  }
-
-  public filter(query:RegExp):void {
-    let options:Array<SelectItem> = [];
-    let optionsMap:Map<string, number> = new Map<string, number>();
-    let startPos = 0;
-    for (let si of this.actor.itemObjects) {
-      let children:Array<SelectItem> = si.children.filter((option:SelectItem) => query.test(option.text));
-      startPos = si.fillChildrenHash(optionsMap, startPos);
-      if (children.length > 0) {
-        let newSi = si.getSimilar();
-        newSi.children = children;
-        options.push(newSi);
-      }
-    }
-    this.actor.options = options;
-    if (this.actor.options.length > 0) {
-      this.actor.activeOption = this.actor.options[0].children[0];
-      super.ensureHighlightVisible(optionsMap);
     }
   }
 }
