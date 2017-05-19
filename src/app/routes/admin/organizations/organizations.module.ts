@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
-import { OrganizationsComponent } from './organizations.component';
 import { OrganizationsService } from './organizations.service';
+import { OrganizationsComponent } from './organizations.component';
+import { OrganizationsTreeModule } from './organizations-tree/organizations-tree.module';
 
 const routes: Routes = [
     { path: '', component: OrganizationsComponent },
@@ -12,12 +13,13 @@ const routes: Routes = [
     imports: [
       SharedModule,
       RouterModule.forChild(routes),
+      OrganizationsTreeModule,
     ],
     exports: [
       RouterModule,
     ],
     providers: [
-      OrganizationsService
+      OrganizationsService,
     ],
     declarations: [
       OrganizationsComponent,
