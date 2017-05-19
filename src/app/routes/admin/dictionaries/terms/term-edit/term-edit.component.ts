@@ -25,18 +25,13 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         required: true
       },
       {
-        label: 'Русский',
-        controlName: 'ru',
-        type: 'text',
-      },
-      {
-        label: 'Английский',
-        controlName: 'ru',
+        label: 'Текст термина',
+        controlName: 'name',
         type: 'text',
       },
       {
         label: 'Тип термина',
-        controlName: 'type',
+        controlName: 'typeCode',
         type: 'select',
         required: true,
         options: [
@@ -46,7 +41,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
       },
       {
         label: 'Термин родительского словаря',
-        controlName: 'parent',
+        controlName: 'parentCode',
         type: 'text',
         lazyOptions: this.gridService.read('/api/term')
           .map(
@@ -58,7 +53,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
       },
       {
         label: ' Термин не используется',
-        controlName: 'notUsed',
+        controlName: 'isClosed',
         type: 'checkbox'
       },
     ];

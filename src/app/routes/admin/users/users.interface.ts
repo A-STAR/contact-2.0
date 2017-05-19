@@ -14,7 +14,7 @@ export interface IUser {
   position: string;
   startWorkDate: string;
   endWorkDate: string;
-  langCode: number;
+  languageID: number;
   isBlocked: boolean;
 }
 

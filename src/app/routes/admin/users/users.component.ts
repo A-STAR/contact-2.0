@@ -8,6 +8,7 @@ import { MapConverterFactoryService } from '../../../core/converter/map/map-conv
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { UsersService } from './users.service';
 
 @Component({
   selector: 'app-users',
@@ -23,8 +24,8 @@ export class UsersComponent {
     { name: 'Имя', prop: 'firstName', minWidth: 120 },
     { name: 'Отчество', prop: 'middleName', minWidth: 120 },
     { name: 'Должность', prop: 'position', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 100 }, ({ roleId }) => this.roleConverter.map(roleId)
+    this.columnDecoratorService.decorateRelatedEntityColumn(
+      { name: 'Роль', prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
@@ -73,15 +74,13 @@ export class UsersComponent {
 
   action: ToolbarActionTypeEnum = null;
 
-  private roleConverter: MapConverterService;
   private languageConverter: MapConverterService;
 
   constructor(
     private constantsService: ConstantsService,
     private columnDecoratorService: GridColumnDecoratorService,
-    private mapConverterFactoryService: MapConverterFactoryService) {
-
-    this.roleConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
+    private mapConverterFactoryService: MapConverterFactoryService,
+    private usersService: UsersService) {
 
     // FIXME: change to Languages API once it is ready
     this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
@@ -171,7 +170,7 @@ export class UsersComponent {
       position: '',
       startWorkDate: '',
       endWorkDate: '',
-      langCode: null,
+      languageID: null,
       isBlocked: false
     };
   }
