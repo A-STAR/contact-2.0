@@ -11,7 +11,7 @@ export class DictService {
   }
 
   public getDictList(): Observable<any> {
-    return this.gridService.read('/api/dict/list')
+    return this.gridService.read('/api/dictionaries')
       .map(data => data.dictList.map(dict => ({label: dict.name, value: dict.id})));
   }
 
@@ -25,7 +25,7 @@ export class DictService {
 
   public createDict(params: any): Observable<any> {
     return this.gridService.create(
-      `/api/dict`,
+      '/api/dictionaries',
       params,
       {}
     );

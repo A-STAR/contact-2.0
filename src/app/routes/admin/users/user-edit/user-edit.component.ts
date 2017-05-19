@@ -97,14 +97,6 @@ export class UserEditComponent implements OnInit {
       ]
     };
 
-    // TODO: use lazy loading w/ language API when it's ready
-    const languageSelectOptions = {
-      options: [
-        { value: 1, label: 'Русский' },
-        { value: 2, label: 'English' },
-      ]
-    };
-
     const passwordValidation = {
       validators: [
         password(
@@ -139,7 +131,15 @@ export class UserEditComponent implements OnInit {
       { label: 'Внутренний номер', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
       { label: 'Email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
       { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
-      { label: 'Язык', controlName: 'langCode', type: 'select', required: true, disabled: !this.canEditUser, ...languageSelectOptions },
+      {
+        label: 'Язык',
+        controlName: 'langCode',
+        type: 'select',
+        required: true,
+        disabled: !this.canEditUser,
+        cachingOptions: true,
+        lazyOptions: this.usersService.getLanguages()
+      },
       { label: 'Комментарий', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
     ];
   }
