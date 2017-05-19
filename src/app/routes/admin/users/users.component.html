@@ -1,3 +1,7 @@
+<div class="content-heading">
+  {{ 'users.title' | translate }}
+</div>
+
 <app-user-edit
   *ngIf="isUserBeingCreatedOrEdited"
   [(user)]="currentUser"
@@ -7,6 +11,7 @@
 <app-grid
   selectionType="single"
   [columns]="columns"
+  [columnTranslationKey]="'users'"
   [dataSource]="dataSource"
   [filter]="filter"
   [parseFn]="parseFn"

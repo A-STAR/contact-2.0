@@ -104,30 +104,46 @@
         "dsc": "Comments"
       }
     },
-    "USERS": {
-      "TOOLBAR": {
-        "ACTION": {
-          "PREVIEW_BLOCK_USERS": "Отображать блокированных"
-        }
+  "users": {
+    "title": "Users",
+    "toolbar": {
+      "action": {
+        "show_blocked_users": "show blocked"
       }
     },
+    "grid": {
+      "id": "Id",
+      "login": "Login",
+      "lastName": "Family name",
+      "firstName": "Name",
+      "middleName": "Patronim",
+      "position": "Position",
+      "roleId": "Role",
+      "isBlocked": "Blocked",
+      "mobPhone": "Mobile",
+      "workPhone": "Work phone",
+      "intPhone": "Extension",
+      "email": "Email",
+      "langCode": "Language"
+    }
+  },
     "dictionaries": {
       "TITLE": "Dictionaries",
       "EDIT": {
-        "TITLE": "Словарь"
+        "TITLE": "Dictionary"
       },
       "REMOVE": {
-        "TITLE": "Удаление словаря",
-        "CONFIRM_MESSAGE": "Вы действительно хотите удалить словарь?"
+        "TITLE": "Remove dictionary",
+        "CONFIRM_MESSAGE": "Do you really want to remove the dictionary?"
       }
     },
     "TERMS": {
       "EDIT": {
-        "TITLE": "Словарный термин"
+        "TITLE": "Dictionary term"
       },
       "REMOVE": {
-        "TITLE": "Удаление термина",
-        "CONFIRM_MESSAGE": "Вы действительно хотите удалить термин?"
+        "TITLE": "Remove term",
+        "CONFIRM_MESSAGE": "Do you really want to remove the term?"
       }
     },
     "departments": {

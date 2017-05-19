@@ -122,11 +122,27 @@
       "dsc": "Комментарий"
     }
   },
-  "USERS": {
-    "TOOLBAR": {
-      "ACTION": {
-        "PREVIEW_BLOCK_USERS": "Отображать блокированных"
+  "users": {
+    "title": "Пользователи",
+    "toolbar": {
+      "action": {
+        "show_blocked_users": "Отображать блокированных"
       }
+    },
+    "grid": {
+      "id": "Ид",
+      "login": "Логин",
+      "lastName": "Фамилия",
+      "firstName": "Имя",
+      "middleName": "Отчество",
+      "position": "Должность",
+      "roleId": "Роль",
+      "isBlocked": "Блокирован",
+      "mobPhone": "Мобильный телефон",
+      "workPhone": "Рабочий телефон",
+      "intPhone": "Внутренний номер",
+      "email": "Эл. почта",
+      "langCode": "Язык"
     }
   },
   "dictionaries": {

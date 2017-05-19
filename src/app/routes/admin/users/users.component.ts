@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
+
+import { ConstantsService } from '../../../core/constants/constants.service';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { MapConverterService } from '../../../core/converter/map/map-converter.service';
 import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IUser, IUsersResponse } from './users.interface';
-
-import { ConstantsService } from '../../../core/constants/constants.service';
+import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 
 @Component({
   selector: 'app-users',
@@ -17,7 +17,7 @@ export class UsersComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<any> = [
-    { name: 'ID', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
+    { name: 'Ид', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { name: 'Логин', prop: 'login', minWidth: 120 },
     { name: 'Фамилия', prop: 'lastName', minWidth: 120 },
     { name: 'Имя', prop: 'firstName', minWidth: 120 },
@@ -59,7 +59,7 @@ export class UsersComponent {
     { text: 'TOOLBAR.ACTION.ADD', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
     {
-      text: 'USERS.TOOLBAR.ACTION.PREVIEW_BLOCK_USERS',
+      text: 'users.toolbar.action.show_blocked_users',
       type: 10,
       visible: true,
       control: ToolbarControlEnum.CHECKBOX,
