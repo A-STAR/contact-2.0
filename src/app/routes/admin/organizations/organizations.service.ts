@@ -16,15 +16,18 @@ export class OrganizationsService {
   }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
-    return organizations.map(organization => this.convertToTreeNode(organization));
+    return organizations
+      .sort((a: IOrganization, b: IOrganization) => a.sortOrder > b.sortOrder ? 1 : -1)
+      .map(organization => this.convertToTreeNode(organization));
   }
 
   private convertToTreeNode(organization: IOrganization): TreeNode {
+    const hasChildren = organization.children && organization.children.length;
     return {
       id: organization.id,
       bgColor: organization.boxColor,
       label: organization.name,
-      children: organization.children && organization.children.length ? this.convertToTreeNodes(organization.children) : undefined,
+      children: hasChildren ? this.convertToTreeNodes(organization.children) : undefined,
       data: organization
     };
   }

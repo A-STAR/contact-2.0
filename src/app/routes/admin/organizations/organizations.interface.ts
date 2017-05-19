@@ -1,14 +1,11 @@
 export interface IOrganization {
   id: number;
   name: string;
-  parent: IOrganization;
-  children: Array<IOrganization>;
-  boxColor: string;
-  boxShape: string;
-  branchCode: number;
   comment: string;
-  curIndex: number;
-  expanded: boolean;
+  branchCode: number;
+  boxColor: string;
+  sortOrder: number;
+  children: Array<IOrganization>;
 }
 
 export interface IOrganizationsResponse {
