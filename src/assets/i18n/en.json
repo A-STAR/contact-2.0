@@ -154,11 +154,11 @@
         "title": "Dictionary term"
       },
       "grid": {
-        "term_code": "Код словаря",
-        "term_text": "Текст термина",
-        "term_type": "Тип термина",
-        "term_parent": "Родительский термин",
-        "term_is_closed": "Не используется"
+        "code": "Код словаря",
+        "name": "Текст термина",
+        "typeCode": "Тип термина",
+        "parentCodeName": "Родительский термин",
+        "isClosed": "Не используется"
       },
       "remove": {
         "title": "Remove term",

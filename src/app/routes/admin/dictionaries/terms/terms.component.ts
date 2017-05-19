@@ -24,11 +24,11 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   columns: Array<any> = [
-    { name: 'term_code', prop: 'code', minWidth: 30, maxWidth: 70 },
-    { name: 'term_text', prop: 'name', maxWidth: 400 },
-    { name: 'term_type', prop: 'typeCode' },
-    { name: 'term_parent', prop: 'parentCodeName' },
-    { name: 'term_is_closed', prop: 'isClosed' },
+    { prop: 'code', minWidth: 30, maxWidth: 70 },
+    { prop: 'name', maxWidth: 400 },
+    { prop: 'typeCode' },
+    { prop: 'parentCodeName' },
+    { prop: 'isClosed' },
   ];
 
   dataSource: IDataSource = {
