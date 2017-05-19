@@ -84,6 +84,14 @@
       "selectedMessage": "выбрано"
     }
   },
+  "TOOLBAR": {
+    "ACTION": {
+      "ADD": "Добавить",
+      "EDIT": "Изменить",
+      "REMOVE": "Удалить",
+      "COPY": "Копировать"
+    }
+  },
   "queryBuilder": {
     "TITLE": "Построитель запросов",
     "ADD_CONDITION": "Добавить условие",
@@ -114,8 +122,31 @@
       "dsc": "Комментарий"
     }
   },
+  "USERS": {
+    "TOOLBAR": {
+      "ACTION": {
+        "PREVIEW_BLOCK_USERS": "Отображать блокированных"
+      }
+    }
+  },
   "dictionaries": {
-    "TITLE": "Словари"
+    "TITLE": "Словари",
+    "EDIT": {
+      "TITLE": "Словарь"
+    },
+    "REMOVE": {
+      "TITLE": "Удаление словаря",
+      "CONFIRM_MESSAGE": "Вы действительно хотите удалить словарь?"
+    }
+  },
+  "TERMS": {
+    "EDIT": {
+      "TITLE": "Словарный термин"
+    },
+    "REMOVE": {
+      "TITLE": "Удаление термина",
+      "CONFIRM_MESSAGE": "Вы действительно хотите удалить термин?"
+    }
   },
   "departments": {
     "TITLE": "Структура предприятия"
