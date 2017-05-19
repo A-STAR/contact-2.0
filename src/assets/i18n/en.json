@@ -144,18 +144,25 @@
         "dict_parent": "Родительский словарь",
         "dict_type": "Тип словаря"
       },
-      "REMOVE": {
-        "TITLE": "Remove dictionary",
-        "CONFIRM_MESSAGE": "Do you really want to remove the dictionary?"
+      "remove": {
+        "title": "Remove dictionary",
+        "confirm_message": "Do you really want to remove the dictionary?"
       }
     },
-    "TERMS": {
-      "EDIT": {
-        "TITLE": "Dictionary term"
+    "terms": {
+      "edit": {
+        "title": "Dictionary term"
       },
-      "REMOVE": {
-        "TITLE": "Remove term",
-        "CONFIRM_MESSAGE": "Do you really want to remove the term?"
+      "grid": {
+        "term_code": "Код словаря",
+        "term_text": "Текст термина",
+        "term_type": "Тип термина",
+        "term_parent": "Родительский термин",
+        "term_is_closed": "Не используется"
+      },
+      "remove": {
+        "title": "Remove term",
+        "confirm_message": "Do you really want to remove the term?"
       }
     },
     "organizations": {

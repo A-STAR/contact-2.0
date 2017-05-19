@@ -24,15 +24,15 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   columns: Array<any> = [
-    { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
-    { name: 'Название', prop: 'name', maxWidth: 400 },
-    { name: 'Системный', prop: 'system' },
-    { name: 'Язык', prop: 'language' },
+    { name: 'term_code', prop: 'code', minWidth: 30, maxWidth: 70 },
+    { name: 'term_text', prop: 'name', maxWidth: 400 },
+    { name: 'term_type', prop: 'typeCode' },
+    { name: 'term_parent', prop: 'parentCodeName' },
+    { name: 'term_is_closed', prop: 'isClosed' },
   ];
 
   dataSource: IDataSource = {
     read: '/api/{id}/terms',
-    update: '/api/terms',
     dataKey: 'terms',
   };
 
