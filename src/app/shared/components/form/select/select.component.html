@@ -31,7 +31,10 @@
         </a>
       </span>
   </div>
-  <input type="text" autocomplete="false" tabindex="-1"
+  <input type="text"
+         autocomplete="false"
+         tabindex="-1"
+         [attr.readonly]="readonly"
          (keydown)="inputEvent($event)"
          (keyup)="inputEvent($event, true)"
          class="form-control ui-select-search"

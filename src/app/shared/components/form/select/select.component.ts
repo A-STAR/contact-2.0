@@ -1,5 +1,5 @@
 import {
-  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, Renderer2, AfterViewChecked
+  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterViewChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -25,7 +25,6 @@ import { SelectActionHandler } from './select-action';
 })
 export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor, ISelectComponent {
   @Input() public allowClear = false;
-  @Input() public readonly: boolean;
   @Input() public placeholder = '';
   @Input() public idField = 'id';
   @Input() public textField = 'text';
@@ -33,12 +32,14 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public multiple = false;
   @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
-  @Input() public loadItemsOnInit = true;
+  @Input() public loadLazyItemsOnInit = false;
   @Input() public cachingItems = false;
   @Output() public clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
 
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
+  private _disabled = false;
+  private _readonly = true;
 
   @Input()
   public set items(value: Array<any>) {
@@ -46,11 +47,21 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   @Input()
+  public set readonly(value: boolean) {
+    this._readonly = value === false ? undefined : value;
+  }
+
+  @Input()
   public set controlDisabled(value: boolean) {
-    this._disabled = value || undefined;
+    this._disabled = value === false ? undefined : value;
+
     if (this._disabled) {
       this.hideOptions();
     }
+  }
+
+  public get readonly(): boolean {
+    return this._readonly;
   }
 
   public get disabled(): boolean {
@@ -71,10 +82,14 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     } else {
       const areItemsStrings = typeof currentSelectedItems[0] === 'string';
 
-      this._active = currentSelectedItems.map((item: any) => {
-        const data = areItemsStrings ? item : {id: item[this.idField], text: item[this.textField] || ''};
-        return new SelectItem(data, this.idField, this.textField);
-      });
+      this._active = currentSelectedItems
+        .map((item: any) => {
+          const data = areItemsStrings
+            ? item
+            : {id: item[this.idField], text: item[this.textField]};
+          return new SelectItem(data, this.idField, this.textField);
+        })
+        .filter((selectItem: SelectItem) => typeof selectItem.id !== 'undefined' && selectItem.id !== null);
     }
   }
 
@@ -96,7 +111,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   private behavior: OptionsBehavior;
   private inputValue = '';
   private _items: Array<any> = [];
-  private _disabled = false;
   private _active: Array<SelectItem> = [];
 
   public get active(): Array<any> {
@@ -120,10 +134,9 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this.itemObjects = this._items.map((item: any) => (typeof item === 'string'
         ? new SelectItem(item, this.idField, this.textField)
         : new SelectItem({
-            id: item[this.idField],
-            text: item[this.textField],
-            children: item[this.childrenField]
-          }, this.idField, this.textField
+          id: item[this.idField],
+          text: item[this.textField],
+          children: item[this.childrenField]}, this.idField, this.textField
         )));
     }
   }
@@ -133,9 +146,16 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this.afterInitItems();
       return;
     }
-    this._lazyItemsSubscription = this.lazyItems.subscribe((value: Array<any>) => {
-      this.initItems(value);
+    this._lazyItemsSubscription = this.lazyItems.subscribe((loadedItems: Array<any>) => {
+      this.initItems(loadedItems);
       this.afterInitItems();
+
+      if (this.active.length) {
+        this.active = this.active.map((item: SelectItem) => {
+          const valueItem = loadedItems.find((loadedItem) => loadedItem[this.idField] === item.id);
+          return {[this.idField]: item.id, [this.textField]: valueItem ? valueItem.label : item.id};
+        });
+      }
     });
   }
 
@@ -144,8 +164,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   public constructor(public element: ElementRef,
-                     private sanitizer: DomSanitizer,
-                     private renderer: Renderer2) {
+                     private sanitizer: DomSanitizer) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
     this._selectActionHandler = new SelectActionHandler(this);
@@ -244,15 +263,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
    * @override
    */
   public ngOnInit(): void {
-    this.readonly = typeof this.readonly !== 'undefined' ? this.readonly : true;
+    this.behavior = new GenericBehavior(this);
 
-    if (this.lazyItems && this.loadItemsOnInit) {
+    if (this.loadLazyItemsOnInit) {
       this.initLazyItems();
     }
-
-    this.behavior = (this.firstItemHasChildren)
-      ? new ChildrenBehavior(this)
-      : new GenericBehavior(this);
   }
 
   /**
@@ -262,13 +277,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     const selectNativeElement: Element = this.behavior.getSelectNativeElement();
     if (selectNativeElement) {
       // TODO Define select field behaviour
-    }
-
-    if (this.readonly) {
-      const input: any = this.getInputElement();
-      if (input) {
-        this.renderer.setAttribute(input, 'readonly', 'true');
-      }
     }
   }
 
@@ -314,8 +322,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.data.emit(this.active);
   }
 
-  public registerOnChange(fn: (_: any) => {}): void {this.onChange = fn;}
-  public registerOnTouched(fn: () => {}): void {this.onTouched = fn;}
+  public registerOnChange(fn:(_:any) => {}):void {this.onChange = fn;}
+  public registerOnTouched(fn:() => {}):void {this.onTouched = fn;}
 
   protected matchClick(e:any):void {
     if (this._disabled === true) {
@@ -328,7 +336,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  protected  mainClick(event: any): void {
+  protected  mainClick(event:any):void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -358,11 +366,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.inputEvent(event);
   }
 
-  protected  selectActive(value: SelectItem): void {
+  protected  selectActive(value:SelectItem):void {
     this.activeOption = value;
   }
 
-  protected  isActive(value: SelectItem): boolean {
+  protected  isActive(value:SelectItem):boolean {
     return this.activeOption.id === value.id;
   }
 
@@ -395,11 +403,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   private afterInitItems(): void {
-    this.active.forEach(activeItem => {
-      const selectedItem = this.itemObjects.find(item => item.id === activeItem.id);
-      activeItem.text = activeItem.text || (selectedItem && selectedItem.text) || '';
-    });
-
     this.options = this.itemObjects
       .filter((option: SelectItem) => (this.multiple === false ||
       this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
