@@ -20,7 +20,7 @@ export class GridColumnDecoratorService {
     return this.decorateColumn(column,
       (entity) => {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
-        return labeledValue.label || labeledValue.value;
+        return labeledValue ? labeledValue.label : entity[column.prop];
       });
   }
 }
