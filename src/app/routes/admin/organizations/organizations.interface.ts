@@ -5,10 +5,16 @@ export interface IOrganization {
   branchCode: number;
   boxColor: string;
   sortOrder: number;
-  children: Array<IOrganization>;
+  children?: Array<IOrganization>;
 }
 
 export interface IOrganizationsResponse {
   success: boolean;
-  organizations: Array<any>;
+  organizations: Array<IOrganization>;
+}
+
+export interface IEmployee {
+  id: number;
+  name: string;
+  // TODO
 }

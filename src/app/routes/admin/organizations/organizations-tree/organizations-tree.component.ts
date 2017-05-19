@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { OrganizationsService } from '../organizations.service';
+import { IOrganization } from '../organizations.interface';
 
 @Component({
   selector: 'app-organizations-tree',
@@ -12,7 +13,10 @@ import { OrganizationsService } from '../organizations.service';
   styleUrls: ['./organizations-tree.component.scss']
 })
 export class OrganizationsTreeComponent implements OnInit {
+  @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter;
   @ViewChild('tree') tree: TreeComponent;
+
+  // TODO: TreeNode<IOrganization> { ..., data: IOrganization }
 
   selection: TreeNode;
   value: TreeNode[];
@@ -112,6 +116,7 @@ export class OrganizationsTreeComponent implements OnInit {
       node.expanded = !isExpanded;
     }
     this.refreshToolbar();
+    this.onSelect.emit(node.data);
   }
 
   onNodeExpand({ node }): void {
