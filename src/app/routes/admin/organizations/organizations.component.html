@@ -6,10 +6,10 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-7">
-        <app-organizations-tree></app-organizations-tree>
+        <app-organizations-tree (onSelect)="onSelectMaster($event)"></app-organizations-tree>
       </div>
       <div class="col-sm-5">
-        Users grid goes here
+        <app-organizations-employees [masterEntity]="masterEntity"></app-organizations-employees>
       </div>
     </div>
   </div>

@@ -12,3 +12,9 @@ export interface IOrganizationsResponse {
   success: boolean;
   organizations: Array<any>;
 }
+
+export interface IEmployee {
+  id: number;
+  name: string;
+  // TODO
+}
