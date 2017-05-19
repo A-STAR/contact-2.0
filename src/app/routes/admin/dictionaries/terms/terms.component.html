@@ -1,3 +1,16 @@
+<app-term-edit *ngIf="isEntityBeingCreated"
+               (submit)="onEditSubmit($event, true)"
+               (cancel)="cancelAction()"></app-term-edit>
+
+<app-term-edit *ngIf="isEntityBeingEdited"
+               [editedEntity]="selectedEntity"
+               (submit)="onEditSubmit($event, false)"
+               (cancel)="cancelAction()"></app-term-edit>
+
+<app-term-remove *ngIf="isEntityBeingRemoved"
+                 (submit)="onRemoveSubmit()"
+                 (cancel)="cancelAction()"></app-term-remove>
+
 <app-grid
   selectionType="single"
   [styles]="{height: '200px'}"

@@ -42,9 +42,9 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
+    { text: 'TOOLBAR.ACTION.ADD', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
+    { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
+    { text: 'TOOLBAR.ACTION.REMOVE', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
   ];
 
   bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [

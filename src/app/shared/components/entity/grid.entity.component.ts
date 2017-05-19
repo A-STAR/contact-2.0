@@ -42,6 +42,10 @@ export abstract class GridEntityComponent<T extends IGridEntity> implements OnCh
     this.action = action.type;
   }
 
+  cancelAction(): void {
+    this.action = null;
+  }
+
   onEdit(): void {
     this.action = ToolbarActionTypeEnum.EDIT;
   }

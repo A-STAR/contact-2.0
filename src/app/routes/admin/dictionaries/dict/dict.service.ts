@@ -10,6 +10,11 @@ export class DictService {
   constructor(private gridService: GridService) {
   }
 
+  public getDictList(): Observable<any> {
+    return this.gridService.read('/api/dict/list')
+      .map(data => data.dictList.map(dict => ({label: dict.name, value: dict.id})));
+  }
+
   public editDict(dict: IDict, params: any): Observable<any> {
     return this.gridService.update(
       `/api/dict/{id}`,

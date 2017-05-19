@@ -1,8 +1,8 @@
 import { EventEmitter, Output } from '@angular/core';
 
-export class EntityBasicComponent<T> {
+export class SubmittedPopup {
 
-  @Output() submit: EventEmitter<T> = new EventEmitter<T>();
+  @Output() submit: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
   onDisplayChange(event: boolean): void {
@@ -12,7 +12,7 @@ export class EntityBasicComponent<T> {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.getSubmitValue());
+    this.submit.emit();
   }
 
   onCancel(): void {
@@ -21,9 +21,5 @@ export class EntityBasicComponent<T> {
 
   private close(): void {
     this.cancel.emit();
-  }
-
-  protected getSubmitValue(): any {
-    return null;
   }
 }

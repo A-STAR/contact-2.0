@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDict } from '../dict.interface';
-import { EntityEditComponent } from '../../../../../shared/components/entity/edit/entity.edit.component';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { DictService } from '../dict.service';
 
 @Component({
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html'
 })
-export class DictEditComponent extends EntityEditComponent<IDict> {
+export class DictEditComponent extends EntityBaseComponent<IDict> {
 
-  constructor(private gridService: GridService) {
+  constructor(private dictService: DictService) {
     super();
   }
 
@@ -42,11 +42,8 @@ export class DictEditComponent extends EntityEditComponent<IDict> {
       {
         label: 'Родительский словарь',
         controlName: 'parent',
-        type: 'text',
-        lazyOptions: this.gridService.read('/api/dict')
-          .map(
-            (data: {dicts: Array<IDict>}) => data.dicts.map(dict => ({label: dict.name, value: dict.id}))
-          ),
+        type: 'select',
+        lazyOptions: this.dictService.getDictList(),
         optionsActions: [
           { text: 'Перечень словарей', type: SelectionActionTypeEnum.SORT }
         ]
