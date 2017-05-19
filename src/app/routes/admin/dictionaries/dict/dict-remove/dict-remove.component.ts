@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { SubmittedPopup } from '../../../../../shared/components/popup/SubmittedPopup';
+import { SubmittedPopup } from '../../../../../shared/components/popup/submitted-popup';
 
 @Component({
   selector: 'app-dict-remove',
