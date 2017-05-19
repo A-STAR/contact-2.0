@@ -19,19 +19,19 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
-        label: 'dictionaries.edit.dict_code',
+        label: 'dictionaries.edit.code',
         controlName: 'code',
         type: 'number',
         required: true
       },
       {
-        label: 'dictionaries.edit.dict_name',
+        label: 'dictionaries.edit.name',
         controlName: 'name',
         type: 'text',
         required: true
       },
       {
-        label: 'dictionaries.edit.dict_type',
+        label: 'dictionaries.edit.type',
         controlName: 'type',
         type: 'select',
         options: [
@@ -41,7 +41,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         required: true
       },
       {
-        label: 'dictionaries.edit.dict_parent',
+        label: 'dictionaries.edit.parent',
         controlName: 'parent',
         type: 'select',
         lazyOptions: this.dictService.getDictList(),

@@ -19,18 +19,18 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
-        label: 'Код термина',
+        label: 'terms.edit.code',
         controlName: 'code',
         type: 'number',
         required: true
       },
       {
-        label: 'Текст термина',
+        label: 'terms.edit.text',
         controlName: 'name',
         type: 'text',
       },
       {
-        label: 'Тип термина',
+        label: 'terms.edit.type',
         controlName: 'typeCode',
         type: 'select',
         required: true,
@@ -40,7 +40,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         ]
       },
       {
-        label: 'Термин родительского словаря',
+        label: 'terms.edit.parent',
         controlName: 'parentCode',
         type: 'text',
         lazyOptions: this.gridService.read('/api/term')
@@ -52,7 +52,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         ]
       },
       {
-        label: ' Термин не используется',
+        label: 'terms.edit.closed',
         controlName: 'isClosed',
         type: 'checkbox'
       },
