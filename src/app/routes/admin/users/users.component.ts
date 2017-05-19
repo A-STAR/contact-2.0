@@ -9,7 +9,6 @@ import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { UsersService } from './users.service';
-import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-users',
@@ -17,8 +16,6 @@ import { ILabeledValue } from '../../../core/converter/value/value-converter.int
 })
 export class UsersComponent {
   @ViewChild(GridComponent) grid: GridComponent;
-
-  private roles: ILabeledValue[] = [];
 
   columns: Array<any> = [
     { name: 'Ид', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -88,8 +85,6 @@ export class UsersComponent {
     // FIXME: change to Languages API once it is ready
     this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
     this.filter = this.filter.bind(this);
-
-    this.usersService.getRoles().subscribe(roles => this.roles = roles);
   }
 
   filter(user: IUser): boolean {
