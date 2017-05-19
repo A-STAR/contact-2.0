@@ -11,6 +11,10 @@ export class EntityBasicComponent<T> {
     }
   }
 
+  canSubmit(): boolean {
+    return true;
+  }
+
   onSubmit(): void {
     this.submit.emit(this.getSubmitValue());
   }

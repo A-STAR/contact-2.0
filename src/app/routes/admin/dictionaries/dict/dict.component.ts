@@ -12,9 +12,9 @@ import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
 export class DictComponent extends GridEntityComponent<IDict> {
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_DELETE' },
+    { text: 'TOOLBAR.ACTION.ADD', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
+    { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_EDIT' },
+    { text: 'TOOLBAR.ACTION.REMOVE', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_DELETE' },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -41,24 +41,13 @@ export class DictComponent extends GridEntityComponent<IDict> {
 
   onEditSubmit(data: any, createMode: boolean): void {
     if (createMode) {
-      this.dictService.createDict(data).subscribe(() => {
-        this.action = null;
-      });
+      this.dictService.createDict(data).subscribe(() => this.cancelAction());
     } else {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => {
-        this.action = null;
-      });
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.cancelAction());
     }
   }
 
   onRemoveSubmit(): void {
-    this.dictService.removeDict(this.selectedEntity)
-      .subscribe(() => {
-        this.action = null;
-      });
-  }
-
-  onCancel(): void {
-    this.action = null;
+    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.cancelAction());
   }
 }

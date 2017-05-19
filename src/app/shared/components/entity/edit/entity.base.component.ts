@@ -4,7 +4,7 @@ import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.compo
 import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form-control.interface';
 import { EntityBasicComponent } from './entity.basic.component';
 
-export abstract class EntityEditComponent<T> extends EntityBasicComponent<T> implements OnInit {
+export abstract class EntityBaseComponent<T> extends EntityBasicComponent<T> implements OnInit {
 
   @Input() editedEntity: T;
   @Input() editedMessage: string;
@@ -14,6 +14,10 @@ export abstract class EntityEditComponent<T> extends EntityBasicComponent<T> imp
 
   ngOnInit(): void {
     this.controls = this.getControls();
+  }
+
+  canSubmit(): boolean {
+    return this.form.canSubmit;
   }
 
   protected getSubmitValue(): any {
