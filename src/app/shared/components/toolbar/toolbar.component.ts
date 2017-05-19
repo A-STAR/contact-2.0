@@ -30,7 +30,7 @@ export class ToolbarComponent {
     return !action.permission || this.userPermissionsService.hasPermission(action.permission);
   }
 
-  toIconCls(action: IToolbarAction) {
+  toIconCls(action: IToolbarAction): string {
     return this.iconsService.fromActionType(action.type);
   }
 }

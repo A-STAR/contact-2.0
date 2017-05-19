@@ -4,11 +4,12 @@
             <span *ngSwitchCase="ToolbarControlEnum.CHECKBOX" class="checkbox mt0 mb0">
                 <label>
                     <!-- TODO: fix styles -->
-                    <input type="checkbox" style="position: relative; top: 2px;" [checked]="action.value" (change)="onActionClick(action, $event)"> {{ action.text }}
+                    <input type="checkbox" style="position: relative; top: 2px;" [checked]="action.value" (change)="onActionClick(action, $event)"> {{ action.text | translate }}
                 </label>
             </span>
             <button
                 *ngSwitchDefault
+                [attr.title]="action.text | translate"
                 [disabled]="!action.visible || !isActionAccessible(action)"
                 (click)="onActionClick(action, $event)"
                 class="app-button fa fa-{{ toIconCls(action) }}"
