@@ -1,11 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
-import { MapConverterService } from '../../../core/converter/map/map-converter.service';
-import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
@@ -36,16 +33,8 @@ export class UsersComponent {
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'langCode', minWidth: 120 },
-      // TODO: use language converter when the API is ready
-      // ({ langCode }) => this.languageConverter.map(langCode)
-      ({ langCode }) => {
-        switch (langCode) {
-          case 1: return 'Русский';
-          case 2: return 'English';
-        }
-      }
+    this.columnDecoratorService.decorateRelatedEntityColumn(
+      { prop: 'languageID', minWidth: 120 }, this.usersService.getLanguages()
     ),
   ];
 
@@ -75,17 +64,10 @@ export class UsersComponent {
 
   action: ToolbarActionTypeEnum = null;
 
-  private languageConverter: MapConverterService;
-
   constructor(
-    private constantsService: ConstantsService,
     private translateService: TranslateService,
     private columnDecoratorService: GridColumnDecoratorService,
-    private mapConverterFactoryService: MapConverterFactoryService,
     private usersService: UsersService) {
-
-    // FIXME: change to Languages API once it is ready
-    this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
     this.filter = this.filter.bind(this);
   }
 

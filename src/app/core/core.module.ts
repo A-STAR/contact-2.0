@@ -14,7 +14,6 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ConstantsService } from './constants/constants.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
-import { MapConverterFactoryService } from './converter/map/map-converter-factory.service';
 
 @NgModule({
   imports: [
@@ -25,7 +24,6 @@ import { MapConverterFactoryService } from './converter/map/map-converter-factor
     DatePipe,
     ConstantsService,
     JwtHelper,
-    MapConverterFactoryService,
     MenuService,
     SettingsService,
     ThemesService,
