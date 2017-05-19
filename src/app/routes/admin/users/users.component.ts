@@ -8,6 +8,8 @@ import { MapConverterFactoryService } from '../../../core/converter/map/map-conv
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { UsersService } from './users.service';
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-users',
@@ -16,6 +18,8 @@ import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../..
 export class UsersComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
+  private roles: ILabeledValue[] = [];
+
   columns: Array<any> = [
     { name: 'Ид', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { name: 'Логин', prop: 'login', minWidth: 120 },
@@ -23,8 +27,8 @@ export class UsersComponent {
     { name: 'Имя', prop: 'firstName', minWidth: 120 },
     { name: 'Отчество', prop: 'middleName', minWidth: 120 },
     { name: 'Должность', prop: 'position', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 100 }, ({ roleId }) => this.roleConverter.map(roleId)
+    this.columnDecoratorService.decorateRelatedEntityColumn(
+      { name: 'Роль', prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
@@ -73,19 +77,19 @@ export class UsersComponent {
 
   action: ToolbarActionTypeEnum = null;
 
-  private roleConverter: MapConverterService;
   private languageConverter: MapConverterService;
 
   constructor(
     private constantsService: ConstantsService,
     private columnDecoratorService: GridColumnDecoratorService,
-    private mapConverterFactoryService: MapConverterFactoryService) {
-
-    this.roleConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
+    private mapConverterFactoryService: MapConverterFactoryService,
+    private usersService: UsersService) {
 
     // FIXME: change to Languages API once it is ready
     this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
     this.filter = this.filter.bind(this);
+
+    this.usersService.getRoles().subscribe(roles => this.roles = roles);
   }
 
   filter(user: IUser): boolean {
@@ -171,7 +175,7 @@ export class UsersComponent {
       position: '',
       startWorkDate: '',
       endWorkDate: '',
-      langCode: null,
+      languageID: null,
       isBlocked: false
     };
   }

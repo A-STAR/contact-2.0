@@ -176,7 +176,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private translateColumns(columnTranslations: object): void {
     this.columns = this.columns.map(col => {
-      col.name = columnTranslations[col.name] || col.name;
+      col.name = columnTranslations[col.prop];
       return col;
     });
   }

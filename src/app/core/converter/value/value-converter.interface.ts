@@ -13,3 +13,8 @@ export interface ILocalizedValue {
   trueValue?: string;
   falseValue?: string;
 }
+
+export interface ILabeledValue {
+  value: any;
+  label: string;
+}
