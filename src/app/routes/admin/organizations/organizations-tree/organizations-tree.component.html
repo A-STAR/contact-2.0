@@ -1,0 +1,17 @@
+<!-- TODO: fix border styles -->
+<app-toolbar
+  [actions]="toolbarActions"
+  (actionClick)="onToolbarAction($event)">
+</app-toolbar>
+
+<app-tree
+  #tree
+  layout="horizontal"
+  selectionMode="single"
+  [value]="value"
+  [dragulaOptions]="dragulaOptions"
+  (changeLocation)="onNodeChangeLocation($event)"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeExpand)="onNodeExpand($event)"
+  [(selection)]="selection">
+</app-tree>
