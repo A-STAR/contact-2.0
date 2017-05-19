@@ -133,11 +133,12 @@ export class UserEditComponent implements OnInit {
       { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
       {
         label: 'Язык',
-        controlName: 'langCode',
+        controlName: 'languageID',
         type: 'select',
         required: true,
         disabled: !this.canEditUser,
         cachingOptions: true,
+        loadLazyItemsOnInit: true,
         lazyOptions: this.usersService.getLanguages()
       },
       { label: 'Комментарий', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
@@ -145,21 +146,12 @@ export class UserEditComponent implements OnInit {
   }
 
   private getData(): any {
-    // TODO: remove this when language API is ready
-    const label = ((langCode: number) => {
-      switch (langCode) {
-        case 1: return 'Русский';
-        case 2: return 'English';
-        case 30: return 'Spain';
-      }
-    })(this.user.langCode);
-
     return {
       ...this.user,
       roleId: [{ value: this.user.roleId }],
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
-      langCode: [{ value: this.user.langCode, label }]
+      languageID: [{ value: this.user.languageID }]
     };
   }
 
@@ -172,7 +164,7 @@ export class UserEditComponent implements OnInit {
       roleId: value.roleId[0].value,
       startWorkDate: this.toIsoDate(value.startWorkDate),
       endWorkDate: this.toIsoDate(value.endWorkDate),
-      langCode: value.langCode[0].value
+      languageID: value.languageID[0].value
     };
   }
 

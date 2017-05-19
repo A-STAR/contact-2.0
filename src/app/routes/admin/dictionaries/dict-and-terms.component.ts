@@ -16,6 +16,6 @@ export class DictAndTermsComponent extends MasterDetailComponent<IDict> {
   }
 
   canDictionariesShow(): boolean {
-    return false; // this.userPermissionsService.hasPermission('DICT_VIEW');
+    return this.userPermissionsService.hasPermission('DICT_VIEW');
   }
 }

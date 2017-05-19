@@ -138,6 +138,12 @@
         "dict_parent": "Parent dictionary",
         "dict_list": "Dictionary list"
       },
+      "grid": {
+        "dict_code": "Код словаря",
+        "dict_name": "Название",
+        "dict_parent": "Родительский словарь",
+        "dict_type": "Тип словаря"
+      },
       "REMOVE": {
         "TITLE": "Remove dictionary",
         "CONFIRM_MESSAGE": "Do you really want to remove the dictionary?"
