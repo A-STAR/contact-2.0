@@ -1,10 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
-import { MapConverterService } from '../../../core/converter/map/map-converter.service';
-import { MapConverterFactoryService } from '../../../core/converter/map/map-converter-factory.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
@@ -18,33 +16,25 @@ export class UsersComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
-    { name: 'Логин', prop: 'login', minWidth: 120 },
-    { name: 'Фамилия', prop: 'lastName', minWidth: 120 },
-    { name: 'Имя', prop: 'firstName', minWidth: 120 },
-    { name: 'Отчество', prop: 'middleName', minWidth: 120 },
-    { name: 'Должность', prop: 'position', minWidth: 120 },
+    { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
+    { prop: 'login', minWidth: 120 },
+    { prop: 'lastName', minWidth: 120 },
+    { prop: 'firstName', minWidth: 120 },
+    { prop: 'middleName', minWidth: 120 },
+    { prop: 'position', minWidth: 120 },
     this.columnDecoratorService.decorateRelatedEntityColumn(
-      { name: 'Роль', prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
+      { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
-      { name: 'Блокирован', prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
+      { prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
     ),
-    { name: 'Мобильный телефон', prop: 'mobPhone', minWidth: 140 },
-    { name: 'Рабочий телефон', prop: 'workPhone', minWidth: 140 },
-    { name: 'Внутренний номер', prop: 'intPhone', minWidth: 140 },
-    { name: 'Email', prop: 'email', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { name: 'Язык', prop: 'langCode', minWidth: 120 },
-      // TODO: use language converter when the API is ready
-      // ({ langCode }) => this.languageConverter.map(langCode)
-      ({ langCode }) => {
-        switch (langCode) {
-          case 1: return 'Русский';
-          case 2: return 'English';
-        }
-      }
+    { prop: 'mobPhone', minWidth: 140 },
+    { prop: 'workPhone', minWidth: 140 },
+    { prop: 'intPhone', minWidth: 140 },
+    { prop: 'email', minWidth: 120 },
+    this.columnDecoratorService.decorateRelatedEntityColumn(
+      { prop: 'languageID', minWidth: 120 }, this.usersService.getLanguages()
     ),
   ];
 
@@ -74,16 +64,10 @@ export class UsersComponent {
 
   action: ToolbarActionTypeEnum = null;
 
-  private languageConverter: MapConverterService;
-
   constructor(
-    private constantsService: ConstantsService,
+    private translateService: TranslateService,
     private columnDecoratorService: GridColumnDecoratorService,
-    private mapConverterFactoryService: MapConverterFactoryService,
     private usersService: UsersService) {
-
-    // FIXME: change to Languages API once it is ready
-    this.languageConverter = this.mapConverterFactoryService.create('/api/roles', {}, 'roles');
     this.filter = this.filter.bind(this);
   }
 
@@ -93,7 +77,7 @@ export class UsersComponent {
 
   transformIsBlocked(isBlocked: number): string {
     // TODO: render checkbox
-    return isBlocked ? 'Да' : 'Нет';
+    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
   parseFn(data: IUsersResponse): Array<IUser> {

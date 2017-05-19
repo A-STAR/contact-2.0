@@ -12,7 +12,7 @@ export class DictService {
 
   public getDictList(): Observable<any> {
     return this.gridService.read('/api/dictionaries')
-      .map(data => data.dictList.map(dict => ({label: dict.name, value: dict.id})));
+      .map(data => data.dict.map(dict => ({label: dict.name, value: dict.id})));
   }
 
   public editDict(dict: IDict, params: any): Observable<any> {
