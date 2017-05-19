@@ -1,16 +1,15 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
-export class ConstantsComponent implements OnInit {
+export class ConstantsComponent {
   @ViewChild(GridComponent) grid: GridComponent;
 
   controls: Array<IDynamicFormControl> = [];
@@ -61,11 +60,7 @@ export class ConstantsComponent implements OnInit {
       });
   }
 
-  constructor(private datePipe: DatePipe, private translateService: TranslateService) { }
-
-  ngOnInit(): void {
-    this.translateComponent();
-  }
+  constructor(private datePipe: DatePipe) { }
 
   onTabClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
@@ -81,16 +76,6 @@ export class ConstantsComponent implements OnInit {
 
   onUpdate(): void {
     this.grid.load().subscribe();
-  }
-
-  translateComponent(): void {
-    // this.translateService
-    //   .onLangChange
-    //   .subscribe(event => {
-    //     const { constants } = event.translations;
-    //     const { form } = constants;
-    //     this.tabs[0].title = form.title;
-    //   });
   }
 
 }
