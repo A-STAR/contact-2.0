@@ -1,0 +1,32 @@
+<app-employee-edit
+  *ngIf="isEntityBeingCreated"
+  (submit)="onEditSubmit($event, true)"
+  (cancel)="cancelAction()">
+</app-employee-edit>
+
+<app-employee-edit
+  *ngIf="isEntityBeingEdited"
+  [editedEntity]="selectedEntity"
+  (submit)="onEditSubmit($event, false)"
+  (cancel)="cancelAction()">
+</app-employee-edit>
+
+<app-employee-remove
+  *ngIf="isEntityBeingRemoved"
+  (submit)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-employee-remove>
+
+<app-grid
+  selectionType="single"
+  [columns]="columns"
+  [columnTranslationKey]="'organizations'"
+  [dataSource]="dataSource"
+  [autoLoad]="false"
+  [parseFn]="parseFn"
+  [editPermission]="'ORGANIZATION_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>
