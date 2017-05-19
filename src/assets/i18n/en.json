@@ -139,10 +139,10 @@
         "dict_list": "Dictionary list"
       },
       "grid": {
-        "dict_code": "Код словаря",
-        "dict_name": "Название",
-        "dict_parent": "Родительский словарь",
-        "dict_type": "Тип словаря"
+        "code": "Код словаря",
+        "name": "Название",
+        "parentCode": "Родительский словарь",
+        "typeCode": "Тип словаря"
       },
       "remove": {
         "title": "Remove dictionary",
