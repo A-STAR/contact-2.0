@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
-import { OrganizationsService } from '../organizations.service';
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { OrganizationsService } from '../organizations.service';
 
 @Component({
   selector: 'app-organizations-tree',
@@ -12,18 +13,31 @@ import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-
 })
 export class OrganizationsTreeComponent implements OnInit {
   @ViewChild('tree') tree: TreeComponent;
+
   selection: TreeNode;
   value: TreeNode[];
+
   dragulaOptions = {
     copy: true,
     moves: (el: Element, source: Element) => !source.classList.contains('ui-treenode-root')
   };
 
-  private get rootNode(): TreeNode {
-    return this.value[0];
-  }
+  toolbarActions: Array<IToolbarAction> = [
+    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_ADD' },
+    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
+    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_DELETE' },
+  ];
+
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.EDIT,
+    ToolbarActionTypeEnum.REMOVE,
+  ];
 
   constructor(private organizationsService: OrganizationsService) { }
+
+  onToolbarAction(action: IToolbarAction): void {
+    console.log(action);
+  }
 
   ngOnInit(): void {
     this.organizationsService.load()
@@ -97,12 +111,17 @@ export class OrganizationsTreeComponent implements OnInit {
     if (node.children) {
       node.expanded = !isExpanded;
     }
+    this.refreshToolbar();
   }
 
   onNodeExpand({ node }): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
+  }
+
+  private get rootNode(): TreeNode {
+    return this.value[0];
   }
 
   private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {
@@ -152,5 +171,15 @@ export class OrganizationsTreeComponent implements OnInit {
       expanded: false,
       children: item.children && item.children.length ? this.prepareTree(item.children, item) : undefined
     }));
+  }
+
+  private refreshToolbar(): void {
+    this.setActionsVisibility(this.toolbarActionsGroup, !!this.selection);
+  }
+
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
+      this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
+    });
   }
 }
