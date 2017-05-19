@@ -1,16 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AuthHttp } from 'angular2-jwt';
 
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { TreeNode } from '../../../shared/components/flowtree/common/api';
+import { IOrganization, IOrganizationsResponse } from './organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
+  constructor(private gridService: GridService) {}
 
-  constructor(public http: AuthHttp) { }
+  load(): Observable<Array<TreeNode>> {
+    return this.gridService
+      .read('/api/organizations')
+      .map((response: IOrganizationsResponse) => this.convertToTreeNodes(response.organizations));
+  }
 
-  getNodes(): Observable<TreeNode[]> {
-    return this.http.get('assets/server/workflow.json')
-            .map(res => res.json().data as TreeNode[]);
+  private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
+    return organizations.map(organization => this.convertToTreeNode(organization));
+  }
+
+  private convertToTreeNode(organization: IOrganization): TreeNode {
+    return {
+      id: organization.id,
+      bgColor: organization.boxColor,
+      label: organization.name,
+      children: organization.children && organization.children.length ? this.convertToTreeNodes(organization.children) : undefined,
+      data: organization
+    };
   }
 }

@@ -26,16 +26,16 @@ export class OrganizationsComponent implements OnInit {
   constructor(private organizationsService: OrganizationsService) { }
 
   ngOnInit(): void {
-    this.organizationsService.getNodes()
+    this.organizationsService.load()
       .subscribe(
         data => {
-          const files = {
+          const root = {
             id: 0,
             label: 'Home',
-            children: [].concat(data),
+            children: null
           };
-          this.value = [files];
-          this.prepareTree(this.rootNode);
+          root.children = this.prepareTree(data, root);
+          this.value = [ root ];
         },
         error => console.error(error)
       );
@@ -145,13 +145,12 @@ export class OrganizationsComponent implements OnInit {
     });
   }
 
-  private prepareTree(node: TreeNode, parent: TreeNode = null): void {
-    node.expanded = false;
-    node.parent = parent;
-    if (node.children) {
-        node.children.forEach(childNode => {
-            this.prepareTree(childNode, node);
-        });
-    }
+  private prepareTree(data: Array<TreeNode>, parent: TreeNode = null): Array<TreeNode> {
+    return data.map(item => ({
+      ...item,
+      parent,
+      expanded: false,
+      children: item.children && item.children.length ? this.prepareTree(item.children, item) : undefined
+    }));
   }
 }
