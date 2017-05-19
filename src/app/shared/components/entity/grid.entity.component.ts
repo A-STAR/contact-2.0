@@ -2,10 +2,9 @@ import { EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from 
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { GridComponent } from '../grid/grid.component';
-import { IGridEntity } from './grid.entity.interface';
 import { IDataSource } from '../grid/grid.interface';
 
-export abstract class GridEntityComponent<T extends IGridEntity> implements OnChanges {
+export abstract class GridEntityComponent<T> implements OnChanges {
 
   @Input() masterEntity: any;   // TODO master type
   @Output() onSelect: EventEmitter<T> = new EventEmitter();

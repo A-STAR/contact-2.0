@@ -1,0 +1,16 @@
+<app-dialog
+  [autoWidth]="true"
+  (displayChange)="onDisplayChange($event)"
+>
+  <div dialog-header>
+    <h3>{{ 'departments.employees.remove.TITLE' | translate }}</h3>
+  </div>
+
+  <p>{{ 'departments.employees.remove.CONFIRM_MESSAGE' | translate }}</p>
+
+  <div dialog-footer>
+    <button class="btn btn-danger" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.remove' | translate }}
+    </button>
+  </div>
+</app-dialog>
