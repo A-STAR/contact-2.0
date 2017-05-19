@@ -19,6 +19,7 @@ export interface IDynamicFormControl {
   options?: Array<ISelectOptions>;
   lazyOptions?: Observable<Array<ISelectOptions>>;
   cachingOptions?: boolean;
+  loadLazyItemsOnInit?: boolean;
   optionsActions?: Array<ISelectionAction>;
   // number of rows for textarea
   rows?: number;

@@ -57,9 +57,15 @@ export class UsersComponent {
   displayBlockedUsers = false;
 
   actions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
-    { text: 'Отображать блокированных', type: 10, visible: true, control: ToolbarControlEnum.CHECKBOX, value: this.displayBlockedUsers }
+    { text: 'TOOLBAR.ACTION.ADD', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
+    { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
+    {
+      text: 'USERS.TOOLBAR.ACTION.PREVIEW_BLOCK_USERS',
+      type: 10,
+      visible: true,
+      control: ToolbarControlEnum.CHECKBOX,
+      value: this.displayBlockedUsers
+    }
   ];
 
   selectedUser: IUser = null;
@@ -166,7 +172,7 @@ export class UsersComponent {
       position: '',
       startWorkDate: '',
       endWorkDate: '',
-      langCode: '',
+      langCode: null,
       isBlocked: false
     };
   }

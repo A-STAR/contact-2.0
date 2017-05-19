@@ -122,7 +122,15 @@ export class UserEditComponent implements OnInit {
       { label: 'Блокирован', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
       { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
       { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
-      { label: 'Роль', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole, ...roleSelectOptions },
+      {
+        label: 'Роль',
+        controlName: 'roleId',
+        type: 'select',
+        required: true,
+        loadLazyItemsOnInit: true,
+        disabled: !this.canEditUserRole,
+        ...roleSelectOptions
+      },
       { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
       { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
       { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'datepicker', disabled: !this.canEditUser },
@@ -138,10 +146,11 @@ export class UserEditComponent implements OnInit {
 
   private getData(): any {
     // TODO: remove this when language API is ready
-    const label = (langCode => {
-      switch (String(langCode)) {
-        case '1': return 'Русский';
-        case '2': return 'English';
+    const label = ((langCode: number) => {
+      switch (langCode) {
+        case 1: return 'Русский';
+        case 2: return 'English';
+        case 30: return 'Spain';
       }
     })(this.user.langCode);
 
