@@ -19,33 +19,34 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
-        label: 'Код словаря',
+        label: 'dictionaries.edit.dict_code',
         controlName: 'code',
         type: 'number',
         required: true
       },
       {
-        label: 'Название словаря',
+        label: 'dictionaries.edit.dict_name',
         controlName: 'name',
         type: 'text',
         required: true
       },
       {
-        label: 'Тип словаря',
+        label: 'dictionaries.edit.dict_type',
         controlName: 'type',
         type: 'select',
         options: [
           { label: 'Системный', value: 1 },
           { label: 'Общий', value: 2 },
-        ]
+        ],
+        required: true
       },
       {
-        label: 'Родительский словарь',
+        label: 'dictionaries.edit.dict_parent',
         controlName: 'parent',
         type: 'select',
         lazyOptions: this.dictService.getDictList(),
         optionsActions: [
-          { text: 'Перечень словарей', type: SelectionActionTypeEnum.SORT }
+          { text: '', type: SelectionActionTypeEnum.SORT }
         ]
       }
     ];

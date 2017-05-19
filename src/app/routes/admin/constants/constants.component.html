@@ -1,7 +1,13 @@
 <app-constant-edit [(constant)]="currentConstant" (onUpdate)="onUpdate()" *ngIf="currentConstant"></app-constant-edit>
 
 <app-tabstrip>
-  <app-tab *ngFor="let tab of tabs" [title]="'constants.title' | translate" [closable]="false" (onClose)="onTabClose($event)" [active]="tab.active">
+  <app-tab
+    *ngFor="let tab of tabs"
+    [title]="'constants.title' | translate"
+    [closable]="false"
+    (onClose)="onTabClose($event)"
+    [active]="tab.active"
+  >
     <app-grid
       [columns]="columns"
       [columnTranslationKey]="'constants'"

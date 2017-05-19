@@ -14,4 +14,9 @@ export class UsersService {
   save(id: number, data: any): Observable<any> {
     return this.gridService.update('/api/users/{id}', { id }, data);
   }
+
+  getLanguages(): Observable<any> {
+    return this.gridService.read('/api/userlanguages')
+      .map(data => data.languages.map(lang => ({ label: lang.name, value: lang.id })));
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
+
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -33,7 +34,7 @@ export class ConstantEditComponent implements OnInit {
   }
 
   onDisplayChange(event: boolean): void {
-    if (event === false) {
+    if (!event) {
       this.close();
     }
   }

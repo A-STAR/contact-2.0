@@ -24,7 +24,7 @@
                 "SORTABLE": "Sortable",
                 "REORDERABLE": "Reorderable",
                 "GROUPABLE": "Groupable",
-                "ADMIN_PANEL": "Admin Panel",
+                "ADMIN_PANEL": "Administration",
                 "ROLES_AND_PERMISSIONS": "Roles and Permissions",
                 "USERS": "Users",
                 "ACTIONS_LOG": "Actions Log",
@@ -128,9 +128,15 @@
     }
   },
     "dictionaries": {
+      "access_denied": "Доступ к словарям ограничен. Обратитесь к администратору",
       "TITLE": "Dictionaries",
-      "EDIT": {
-        "TITLE": "Dictionary"
+      "edit": {
+        "title": "Dictionary",
+        "dict_code": "Code",
+        "dict_name": "Name",
+        "dict_type": "Type",
+        "dict_parent": "Parent dictionary",
+        "dict_list": "Dictionary list"
       },
       "REMOVE": {
         "TITLE": "Remove dictionary",
