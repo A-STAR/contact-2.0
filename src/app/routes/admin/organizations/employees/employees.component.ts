@@ -27,9 +27,9 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
 
   columns: Array<any> = [
     { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
-    { name: 'User ID', prop: 'userId', maxWidth: 400 },
-    { name: 'Role Code', prop: 'roleCode' },
-    { name: 'Comment', prop: 'comment' },
+    { name: 'ID пользователя', prop: 'userId', maxWidth: 400 },
+    { name: 'Код роли', prop: 'roleCode' },
+    { name: 'Комментарий', prop: 'comment' },
   ];
 
   dataSource: IDataSource = {

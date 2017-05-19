@@ -152,8 +152,23 @@
         "CONFIRM_MESSAGE": "Do you really want to remove the term?"
       }
     },
-    "departments": {
-      "TITLE": "Company structure"
+    "organizations": {
+      "title": "Company structure",
+      "employees": {
+        "edit": {
+          "title": "Employee"
+        },
+        "remove": {
+          "title": "Delete employee",
+          "confirmMessage": "Are you sure you want to delete employee?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "userId": "User ID",
+        "roleCode": "Role code",
+        "comment": "Comment"
+      }
     },
     "default": {
       "boolean": {

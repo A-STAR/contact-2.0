@@ -10,6 +10,7 @@ import { IEmployee } from '../../organizations.interface';
 })
 export class EmployeeEditComponent extends EntityBaseComponent<IEmployee> {
   protected getControls(): Array<IDynamicFormControl> {
+    // TODO: localize when the API is ready
     return [
       { label: 'userId', controlName: 'userId', type: 'number', required: true },
       { label: 'roleCode', controlName: 'roleCode', type: 'number', required: true },
