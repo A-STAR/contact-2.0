@@ -10,7 +10,6 @@ import { IUser, IUsersResponse } from './users.interface';
 import { ConstantsService } from '../../../core/constants/constants.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-users',
   templateUrl: 'users.component.html'
 })
