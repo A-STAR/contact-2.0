@@ -44,7 +44,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueS || '';
         break;
       case 4:
-        valueEntity.value = valueEntity.valueB;
+        valueEntity.value = String(valueEntity.valueB);
         break;
       default:
         valueEntity.value = '';
