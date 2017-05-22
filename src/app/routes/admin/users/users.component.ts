@@ -34,7 +34,7 @@ export class UsersComponent {
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
     this.columnDecoratorService.decorateRelatedEntityColumn(
-      { prop: 'languageID', minWidth: 120 }, this.usersService.getLanguages()
+      { prop: 'languageId', minWidth: 120 }, this.usersService.getLanguages()
     ),
   ];
 
@@ -154,7 +154,7 @@ export class UsersComponent {
       position: '',
       startWorkDate: '',
       endWorkDate: '',
-      languageID: null,
+      languageId: null,
       isBlocked: false
     };
   }
