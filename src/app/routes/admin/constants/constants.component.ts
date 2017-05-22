@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { IConstant } from './constants.interface';
-
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-constants',
@@ -30,7 +29,6 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
       {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 150},
       (constant) => this.valueConverterService.deserializeBooleanViewValue(constant)
     ),
-    // { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
     { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
   ];
 
@@ -60,6 +58,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
 
   onEditSubmit(data: any): void {
+    // TODO: move logic to constants service
     const id = data.id;
     const typeCode = data.typeCode;
     const value = data.value;
@@ -82,10 +81,18 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
 
     this.gridService
       .update('/api/constants/{id}', { id }, body)
-      .subscribe(() => this.cancelAction());
+      .subscribe(
+        () => {
+          this.afterUpdate();
+          this.cancelAction();
+        },
+        // TODO: display error
+        error => console.error(error)
+      );
   }
 
   valueToIsoDate(value: any): string {
+    // TODO: move to date service
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }

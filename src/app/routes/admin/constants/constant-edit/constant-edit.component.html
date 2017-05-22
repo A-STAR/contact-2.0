@@ -1,6 +1,6 @@
 <app-dialog>
   <div dialog-header>
-    <h3>{{ 'constants.form.title' | translate }}</h3>
+    <h3>{{ 'constants.form.title' | translate }}: {{ editedEntity.id }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
