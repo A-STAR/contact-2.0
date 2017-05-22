@@ -14,7 +14,7 @@
 <app-submitted-popup *ngIf="displayProperties.removePermit"
                      [titleTranslationKey]="'roles.permissions.remove.title'"
                      [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
-                     [submitMessage]="'default.buttons.remove'"
+                     [actionMessage]="'default.buttons.remove'"
                      [messageParams]="currentRole"
                      (action)="onRemovePermission()"
                      (cancel)="displayProperties.removePermit = false"></app-submitted-popup>

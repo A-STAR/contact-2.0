@@ -10,7 +10,7 @@
 <app-submitted-popup *ngIf="isEntityBeingRemoved"
                      [titleTranslationKey]="'terms.remove.title'"
                      [actionTranslationKey]="'terms.remove.confirmMessage'"
-                     [submitMessage]="'default.buttons.remove'"
+                     [actionMessage]="'default.buttons.remove'"
                      [messageParams]="selectedEntity"
                      (action)="onRemoveSubmit()"
                      (cancel)="cancelAction()"></app-submitted-popup>
