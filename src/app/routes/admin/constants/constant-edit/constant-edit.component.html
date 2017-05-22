@@ -1,16 +1,16 @@
-<app-dialog [display]="constant" (displayChange)="onDisplayChange($event)">
+<app-dialog>
   <div dialog-header>
-    <h3>{{ 'constants.form.title' | translate }}: {{ constant.id }}</h3>
+    <h3>{{ 'constants.form.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-primary" [disabled]="!form.canSubmit" (click)="onActionClick()">
-      {{ 'default.buttons.save' | translate }}
+    <button class="btn btn-primary" [disabled]="!canSubmit()" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
-    <button class="btn btn-default" (click)="onCancelClick()">
-      {{ 'default.buttons.cancel' | translate }}
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>
 </app-dialog>

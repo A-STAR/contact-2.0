@@ -1,20 +1,31 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { IConstant } from './constants.interface';
 
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
-export class ConstantsComponent {
-  @ViewChild(GridComponent) grid: GridComponent;
+export class ConstantsComponent extends GridEntityComponent<IConstant> {
+  bottomActions: Array<IToolbarAction> = [
+    { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
+  ];
 
-  controls: Array<IDynamicFormControl> = [];
+  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.EDIT,
+  ];
 
-  currentConstant: any = null;
+  columns: Array<any> = [
+    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+    { name: 'Название константы', prop: 'name', maxWidth: 350 },
+    { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
+    { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
+  ];
 
   dataSource: IDataSource = {
     read: '/api/constants',
@@ -26,14 +37,15 @@ export class ConstantsComponent {
     { id: 0, title: 'Константы', active: true },
   ];
 
-  columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { name: 'Название константы', prop: 'name', maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
-  ];
+  constructor(private datePipe: DatePipe, private gridService: GridService) {
+    super();
+  }
 
-  parseFn = (data) => {
+  onTabClose(id: number): void {
+    this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
+  }
+
+  parseFn(data: any) {
     const { dataKey } = this.dataSource;
     const dataSet = data[dataKey];
 
@@ -60,22 +72,34 @@ export class ConstantsComponent {
       });
   }
 
-  constructor(private datePipe: DatePipe) { }
+  onEditSubmit(data: any): void {
+    const id = data.id;
+    const typeCode = data.typeCode;
+    const value = data.value;
+    const fieldMap: object = {
+      1: 'valueN',
+      2: 'valueD',
+      3: 'valueS',
+      4: 'valueB',
+    };
+    const field: string = fieldMap[typeCode];
+    const body = { [field]: value };
 
-  onTabClose(id: number): void {
-    this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
+    if (typeCode === 4) {
+      // convert the boolean to a number
+      body[field] = Number(value);
+    } else if (typeCode === 2) {
+      // convert the date back to ISO8601
+      body[field] = this.valueToIsoDate(value);
+    }
+
+    this.gridService
+      .update('/api/constants/{id}', { id }, body)
+      .subscribe(() => this.cancelAction());
   }
 
-  onEdit(record: any): void {
-    this.currentConstant = record;
+  valueToIsoDate(value: any): string {
+    const converted = value.split('.').reverse().map(Number);
+    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
-
-  onCancel(): void {
-    this.currentConstant = null;
-  }
-
-  onUpdate(): void {
-    this.grid.load().subscribe();
-  }
-
 }
