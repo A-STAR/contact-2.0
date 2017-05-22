@@ -10,7 +10,7 @@
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!canSubmit" *ngIf="canEdit">
+    <button class="btn btn-success" (click)="onActionClick()" [disabled]="!canSubmit" *ngIf="canEdit">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">

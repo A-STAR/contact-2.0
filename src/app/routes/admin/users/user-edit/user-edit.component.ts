@@ -115,7 +115,7 @@ export class UserEditComponent implements OnInit {
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
       { label: 'users.edit.password', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
       {
-        label: 'users.edit.',
+        label: 'users.edit.role',
         controlName: 'roleId',
         type: 'select',
         required: true,
