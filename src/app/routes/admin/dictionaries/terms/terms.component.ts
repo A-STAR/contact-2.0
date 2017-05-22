@@ -32,7 +32,7 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   dataSource: IDataSource = {
-    read: '/api/{id}/terms',
+    read: '/api/dictionaries/{id}/terms',
     dataKey: 'terms',
   };
 
