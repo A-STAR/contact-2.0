@@ -46,7 +46,7 @@ export class UserEditComponent implements OnInit {
   }
 
   get title(): string {
-    return this.isUpdating ? `Пользователь: ${this.user.id}` : 'Новый пользователь';
+    return this.isUpdating ? 'users.edit.title' : 'users.create.title';
   }
 
   ngOnInit(): void {
@@ -93,7 +93,7 @@ export class UserEditComponent implements OnInit {
         .read('/api/roles')
         .map((data: IRolesResponse) => data.roles.map(role => ({ label: role.name, value: role.id }))),
       optionsActions: [
-        { text: 'Выберите роль', type: SelectionActionTypeEnum.SORT}
+        { text: 'users.select.role.title', type: SelectionActionTypeEnum.SORT}
       ]
     };
 
@@ -107,15 +107,15 @@ export class UserEditComponent implements OnInit {
     };
 
     return [
-      { label: 'Фамилия', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'Имя', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
-      { label: 'Отчество', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
+      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
       // TODO: insert photo upload control here
-      { label: 'Блокирован', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
-      { label: 'Логин', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'Пароль', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
+      { label: 'users.edit.login', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
+      { label: 'users.edit.password', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
       {
-        label: 'Роль',
+        label: 'users.edit.role',
         controlName: 'roleId',
         type: 'select',
         required: true,
@@ -123,16 +123,16 @@ export class UserEditComponent implements OnInit {
         disabled: !this.canEditUserRole,
         ...roleSelectOptions
       },
-      { label: 'Должность', controlName: 'position', type: 'text', disabled: !this.canEditUser },
-      { label: 'Дата начала работы', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
-      { label: 'Дата окончания работы', controlName: 'endWorkDate', type: 'datepicker', disabled: !this.canEditUser },
-      { label: 'Мобильный телефон', controlName: 'mobPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'Рабочий телефон', controlName: 'workPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'Внутренний номер', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'Email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
-      { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.position', controlName: 'position', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
+      { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker', disabled: !this.canEditUser },
+      { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.address', controlName: 'address', type: 'text', disabled: !this.canEditUser },
       {
-        label: 'Язык',
+        label: 'users.edit.language',
         controlName: 'languageId',
         type: 'select',
         required: true,
@@ -141,7 +141,7 @@ export class UserEditComponent implements OnInit {
         loadLazyItemsOnInit: true,
         lazyOptions: this.usersService.getLanguages()
       },
-      { label: 'Комментарий', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
+      { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
     ];
   }
 
