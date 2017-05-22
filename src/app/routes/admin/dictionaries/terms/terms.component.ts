@@ -47,16 +47,21 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
     }
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
-        .subscribe(() => {
-          this.cancelAction();
-          this.afterUpdate();
-        });
+        .subscribe(() => this.onSuccess());
     } else {
       this.gridService.update('/api/dictionaries/{code}/terms/{termsId}', this.masterEntity, data)
-        .subscribe(() => {
-          this.cancelAction();
-          this.afterUpdate();
-        });
+        .subscribe(() => this.onSuccess());
     }
+  }
+
+  onRemoveSubmit(): void {
+    const termsId: number = this.selectedEntity.id;
+    this.gridService.delete(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity)
+      .subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.cancelAction();
+    this.afterUpdate();
   }
 }
