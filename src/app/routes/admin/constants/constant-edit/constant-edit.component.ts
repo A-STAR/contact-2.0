@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -9,14 +10,22 @@ import { IConstant } from '../constants.interface';
   templateUrl: './constant-edit.component.html'
 })
 export class ConstantEditComponent extends EntityBaseComponent<IConstant> {
+  private localizedOptions;
+
+  constructor(private translateService: TranslateService) {
+    super();
+    this.translateService.get('default.typeCode').subscribe(options => this.localizedOptions = options);
+    this.translateService.onLangChange.subscribe(event => this.localizedOptions = event.translations.default.typeCode);
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
     const options = [
-      { label: 'Число', value: 1 },
-      { label: 'Дата', value: 2 },
-      { label: 'Строка', value: 3 },
-      { label: 'Булево', value: 4 },
-      { label: 'Деньги', value: 5 },
-      { label: 'Словарь', value: 6 },
+      { label: this.localizedOptions.number, value: 1 },
+      { label: this.localizedOptions.date, value: 2 },
+      { label: this.localizedOptions.string, value: 3 },
+      { label: this.localizedOptions.boolean, value: 4 },
+      { label: this.localizedOptions.currency, value: 5 },
+      { label: this.localizedOptions.dictionary, value: 6 },
     ];
 
     return [
