@@ -6,7 +6,7 @@
   <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-danger" [disabled]="!canSubmit()" (click)="onSubmit()">
+    <button class="btn btn-success" [disabled]="!canSubmit()" (click)="onSubmit()">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">
