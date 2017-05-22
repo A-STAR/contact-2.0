@@ -8,8 +8,8 @@ export class SubmittedPopupComponent {
 
   @Input() titleParams;
   @Input() messageParams;
-  @Input() title: string;
-  @Input() message: string;
+  @Input() titleTranslationKey: string;
+  @Input() actionTranslationKey: string;
   @Input() cancelMessage = 'default.buttons.cancel';
   @Input() submitMessage = 'default.buttons.save';
 

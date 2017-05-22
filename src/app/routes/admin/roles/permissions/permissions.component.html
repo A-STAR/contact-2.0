@@ -12,8 +12,8 @@
 </app-add-permission>
 
 <app-submitted-popup *ngIf="displayProperties.removePermit"
-                     [title]="'roles.permissions.remove.title'"
-                     [message]="'roles.permissions.remove.confirmMessage'"
+                     [titleTranslationKey]="'roles.permissions.remove.title'"
+                     [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
                      [submitMessage]="'default.buttons.remove'"
                      [messageParams]="currentRole"
                      (action)="onRemovePermission()"

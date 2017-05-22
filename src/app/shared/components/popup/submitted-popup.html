@@ -1,10 +1,10 @@
 <app-dialog [autoWidth]="true"
             (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ title | translate:titleParams }}</h3>
+    <h3>{{ titleTranslationKey | translate:titleParams }}</h3>
   </div>
 
-  <p>{{ message | translate:messageParams }}</p>
+  <p>{{ actionTranslationKey | translate:messageParams }}</p>
 
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}

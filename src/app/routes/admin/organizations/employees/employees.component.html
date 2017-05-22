@@ -12,8 +12,8 @@
 </app-employee-edit>
 
 <app-submitted-popup *ngIf="isEntityBeingRemoved"
-                     [title]="'organizations.employees.remove.title'"
-                     [message]="'organizations.employees.remove.confirmMessage'"
+                     [titleTranslationKey]="'organizations.employees.remove.title'"
+                     [actionTranslationKey]="'organizations.employees.remove.confirmMessage'"
                      [submitMessage]="'default.buttons.remove'"
                      (action)="onRemoveSubmit()"
                      (cancel)="cancelAction()"></app-submitted-popup>

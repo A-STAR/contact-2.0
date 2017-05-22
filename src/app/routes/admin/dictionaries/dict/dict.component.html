@@ -8,8 +8,8 @@
                (cancel)="cancelAction()"></app-dict-edit>
 
 <app-submitted-popup *ngIf="isEntityBeingRemoved"
-                     [title]="'dictionaries.remove.title'"
-                     [message]="'dictionaries.remove.confirmMessage'"
+                     [titleTranslationKey]="'dictionaries.remove.title'"
+                     [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
                      [actionMessage]="'default.buttons.remove'"
                      [messageParams]="selectedEntity"
                      (action)="onRemoveSubmit()"
