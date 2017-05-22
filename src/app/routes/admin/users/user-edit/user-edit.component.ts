@@ -107,13 +107,13 @@ export class UserEditComponent implements OnInit {
     };
 
     return [
-      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
       // TODO: insert photo upload control here
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true, disabled: !this.canEditUser },
-      { label: 'users.edit.login', controlName: 'login', type: 'text', required: true, disabled: !this.canEditUser },
-      { label: 'users.edit.password', controlName: 'password', type: 'text', disabled: !this.canEditUser, ...passwordValidation },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+      { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
+      { label: 'users.edit.password', controlName: 'password', type: 'text', ...passwordValidation },
       {
         label: 'users.edit.role',
         controlName: 'roleId',
@@ -123,26 +123,28 @@ export class UserEditComponent implements OnInit {
         disabled: !this.canEditUserRole,
         ...roleSelectOptions
       },
-      { label: 'users.edit.position', controlName: 'position', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker', disabled: !this.canEditUser },
-      { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker', disabled: !this.canEditUser },
-      { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.email', controlName: 'email', type: 'text', disabled: !this.canEditUser },
-      { label: 'users.edit.address', controlName: 'address', type: 'text', disabled: !this.canEditUser },
+      { label: 'users.edit.position', controlName: 'position', type: 'text' },
+      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
+      { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
+      { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
+      { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
+      { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
+      { label: 'users.edit.email', controlName: 'email', type: 'text' },
+      { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
       {
         label: 'users.edit.language',
         controlName: 'languageId',
         type: 'select',
         required: true,
-        disabled: !this.canEditUser,
         cachingOptions: true,
         loadLazyItemsOnInit: true,
         lazyOptions: this.usersService.getLanguages()
       },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
-    ];
+    ].map((control: IDynamicFormControl) => ({
+      ...control,
+      disabled: control.hasOwnProperty('disabled') ? control.disabled : !this.canEditUser
+    }));
   }
 
   private getData(): any {
