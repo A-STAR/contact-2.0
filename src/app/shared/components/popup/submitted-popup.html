@@ -1,0 +1,17 @@
+<app-dialog [autoWidth]="true"
+            (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>{{ title | translate }}</h3>
+  </div>
+
+  <p>{{ message | translate }}</p>
+
+  <div dialog-footer>
+    <button class="btn btn-danger" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ submitMessage | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ cancelMessage | translate }}
+    </button>
+  </div>
+</app-dialog>

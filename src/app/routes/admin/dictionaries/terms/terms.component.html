@@ -7,9 +7,12 @@
                (submit)="onEditSubmit($event, false)"
                (cancel)="cancelAction()"></app-term-edit>
 
-<app-term-remove *ngIf="isEntityBeingRemoved"
-                 (submit)="onRemoveSubmit()"
-                 (cancel)="cancelAction()"></app-term-remove>
+<app-submitted-popup *ngIf="isEntityBeingRemoved"
+                     [title]="'terms.remove.title'"
+                     [message]="'terms.remove.confirm_message'"
+                     [submitMessage]="'default.buttons.remove'"
+                     (submit)="onRemoveSubmit()"
+                     (cancel)="cancelAction()"></app-submitted-popup>
 
 <app-grid
   selectionType="single"

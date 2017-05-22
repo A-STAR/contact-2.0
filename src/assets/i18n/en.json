@@ -170,6 +170,18 @@
         "confirm_message": "Do you really want to remove the term?"
       }
     },
+    "roles": {
+      "roles": {
+        "copy": {
+          "title": "Копировать роль"
+        }
+      },
+      "permissions": {
+        "add": {
+          "title": "Выберите доступ"
+        }
+      }
+    },
     "organizations": {
       "title": "Company structure",
       "employees": {

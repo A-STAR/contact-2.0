@@ -11,11 +11,12 @@
   (cancel)="cancelAction()">
 </app-employee-edit>
 
-<app-employee-remove
-  *ngIf="isEntityBeingRemoved"
-  (submit)="onRemoveSubmit()"
-  (cancel)="cancelAction()">
-</app-employee-remove>
+<app-submitted-popup *ngIf="isEntityBeingRemoved"
+                     [title]="'organizations.employees.remove.title'"
+                     [message]="'organizations.employees.remove.confirmMessage'"
+                     [submitMessage]="'default.buttons.remove'"
+                     (submit)="onRemoveSubmit()"
+                     (cancel)="cancelAction()"></app-submitted-popup>
 
 <app-grid
   selectionType="single"

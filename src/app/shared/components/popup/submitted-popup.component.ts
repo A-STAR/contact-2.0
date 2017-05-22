@@ -1,6 +1,15 @@
-import { EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-export class SubmittedPopup {
+@Component({
+  selector: 'app-submitted-popup',
+  templateUrl: './submitted-popup.html'
+})
+export class SubmittedPopupComponent {
+
+  @Input() title: string;
+  @Input() message: string;
+  @Input() cancelMessage = 'default.buttons.cancel';
+  @Input() submitMessage = 'default.buttons.save';
 
   @Output() submit: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
