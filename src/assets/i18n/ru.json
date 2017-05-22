@@ -292,10 +292,12 @@
       }
     },
     "grid": {
-      "id": "Ид",
-      "userId": "Ид пользователя",
+      "name": "Имя",
+      "lastName": "Фамилия",
+      "middleName": "Отчество",
+      "firstName": "Имя",
       "roleCode": "Код роли",
-      "comment": "Комментарий"
+      "isBlocked": "Заблокирован"
     }
   },
   "default": {

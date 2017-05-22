@@ -274,10 +274,12 @@
         }
       },
       "grid": {
-        "id": "Id",
-        "userId": "User id",
+        "name": "Name",
+        "lastName": "Last name",
+        "middleName": "Middle name",
+        "firstName": "First name",
         "roleCode": "Role code",
-        "comment": "Comment"
+        "isBlocked": "Blocked"
       }
     },
     "default": {
