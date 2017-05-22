@@ -133,7 +133,7 @@ export class UserEditComponent implements OnInit {
       { label: 'Рабочий адрес', controlName: 'address', type: 'text', disabled: !this.canEditUser },
       {
         label: 'Язык',
-        controlName: 'languageID',
+        controlName: 'languageId',
         type: 'select',
         required: true,
         disabled: !this.canEditUser,
@@ -151,7 +151,7 @@ export class UserEditComponent implements OnInit {
       roleId: [{ value: this.user.roleId }],
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
-      languageID: [{ value: this.user.languageID }]
+      languageId: [{ value: this.user.languageId }]
     };
   }
 
@@ -164,7 +164,7 @@ export class UserEditComponent implements OnInit {
       roleId: value.roleId[0].value,
       startWorkDate: this.toIsoDate(value.startWorkDate),
       endWorkDate: this.toIsoDate(value.endWorkDate),
-      languageID: value.languageID[0].value
+      languageId: value.languageId[0].value
     };
   }
 
