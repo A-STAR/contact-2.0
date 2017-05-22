@@ -115,6 +115,32 @@
           "show_blocked_users": "show blocked"
         }
       },
+      "edit": {
+        "title": "Пользователь {name}",
+        "lastName": "Фамилия",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "blocked": "Блокирован",
+        "login": "Логин",
+        "password": "Пароль",
+        "роль": "Роль",
+        "position": "Должность",
+        "startWorkDate": "Дата начала работы",
+        "endWorkDate": "Дата окончания работы",
+        "mobPhone": "Мобильный телефон",
+        "workPhone": "Рабочий телефон",
+        "intPhone": "Внутренний номер",
+        "email": "Email",
+        "address": "Рабочий адрес",
+        "language": "Язык",
+        "comment": "Комментарий"
+      },
+      "select": {
+         "title": "Выберите роль"
+       },
+       "create": {
+         "title": "Новый пользователь"
+       },
       "grid": {
         "id": "Id",
         "login": "Login",

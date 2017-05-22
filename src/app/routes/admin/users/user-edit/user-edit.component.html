@@ -1,6 +1,6 @@
 <app-dialog [display]="user" (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ title }}</h3>
+    <h3>{{ title | translate:user }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
