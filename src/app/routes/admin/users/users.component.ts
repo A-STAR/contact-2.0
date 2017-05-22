@@ -34,7 +34,7 @@ export class UsersComponent {
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
     this.columnDecoratorService.decorateRelatedEntityColumn(
-      { prop: 'languageID', minWidth: 120 }, this.usersService.getLanguages()
+      { prop: 'languageId', minWidth: 120 }, this.usersService.getLanguages()
     ),
   ];
 
@@ -47,8 +47,8 @@ export class UsersComponent {
   displayBlockedUsers = false;
 
   actions: Array<IToolbarAction> = [
-    { text: 'TOOLBAR.ACTION.ADD', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
-    { text: 'TOOLBAR.ACTION.EDIT', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
+    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
     {
       text: 'users.toolbar.action.show_blocked_users',
       type: 10,
@@ -154,7 +154,7 @@ export class UsersComponent {
       position: '',
       startWorkDate: '',
       endWorkDate: '',
-      languageID: null,
+      languageId: null,
       isBlocked: false
     };
   }
