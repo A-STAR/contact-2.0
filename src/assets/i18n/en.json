@@ -181,6 +181,12 @@
             "title": "Выберите роль"
           }
         },
+        "edit": {
+          "title": "Редактирование роли {{ name }} "
+        },
+        "create": {
+          "title": "Новая роль"
+        },
         "remove": {
           "title": "Удалить роль",
           "confirmMessage": "Do you really want to remove the role {{ name }}?"
