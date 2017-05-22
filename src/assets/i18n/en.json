@@ -81,12 +81,12 @@
         "selectedMessage": "selected"
       }
     },
-    "TOOLBAR": {
-      "ACTION": {
-        "ADD": "Добавить",
-        "EDIT": "Изменить",
-        "REMOVE": "Удалить",
-        "COPY": "Копировать"
+    "toolbar": {
+      "action": {
+        "add": "Add",
+        "edit": "Edit",
+        "remove": "Remove",
+        "copy": "Copy"
       }
     },
     "network": {

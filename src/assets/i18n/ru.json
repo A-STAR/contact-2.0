@@ -84,12 +84,12 @@
       "selectedMessage": "выбрано"
     }
   },
-  "TOOLBAR": {
-    "ACTION": {
-      "ADD": "Добавить",
-      "EDIT": "Изменить",
-      "REMOVE": "Удалить",
-      "COPY": "Копировать"
+  "toolbar": {
+    "action": {
+      "add": "Добавить",
+      "edit": "Изменить",
+      "remove": "Удалить",
+      "copy": "Копировать"
     }
   },
   "queryBuilder": {
