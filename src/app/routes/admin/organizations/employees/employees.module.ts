@@ -4,12 +4,16 @@ import { EmployeesComponent } from './employees.component';
 import { EmployeeEditComponent } from './employee-edit/employee-edit.component';
 
 @NgModule({
-    imports: [
-      SharedModule,
-    ],
-    declarations: [
-      EmployeesComponent,
-      EmployeeEditComponent,
-    ]
+  imports: [
+    SharedModule,
+  ],
+  exports: [
+    EmployeesComponent
+  ],
+  declarations: [
+    EmployeesComponent,
+    EmployeeEditComponent,
+  ]
 })
-export class OrganizationsEmployeesModule { }
+export class OrganizationsEmployeesModule {
+}
