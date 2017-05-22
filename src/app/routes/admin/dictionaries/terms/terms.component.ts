@@ -33,7 +33,7 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   dataSource: IDataSource = {
-    read: '/api/dictionaries/{id}/terms',
+    read: '/api/dictionaries/{code}/terms',
     dataKey: 'terms',
   };
 
@@ -47,10 +47,16 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
     }
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
-        .subscribe(() => this.cancelAction());
+        .subscribe(() => {
+          this.cancelAction();
+          this.afterUpdate();
+        });
     } else {
       this.gridService.update('/api/dictionaries/{code}/terms/{termsId}', this.masterEntity, data)
-        .subscribe(() => this.cancelAction());
+        .subscribe(() => {
+          this.cancelAction();
+          this.afterUpdate();
+        });
     }
   }
 }
