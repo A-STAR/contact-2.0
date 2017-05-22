@@ -5,6 +5,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 import { ITerm } from './terms.interface';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-terms',
@@ -36,7 +37,20 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
     dataKey: 'terms',
   };
 
-  constructor() {
+  constructor(private gridService: GridService) {
     super();
+  }
+
+  onEditSubmit(data: ITerm, createMode: boolean): void {
+    if (Array.isArray(data.typeCode)) {
+      data.typeCode = data.typeCode[0].value;
+    }
+    if (createMode) {
+      this.gridService.create('/dictionaries/{id}/terms', this.masterEntity, data)
+        .subscribe(() => this.cancelAction());
+    } else {
+      this.gridService.update('/dictionaries/{id}/terms/{termsId}', this.masterEntity, data)
+        .subscribe(() => this.cancelAction());
+    }
   }
 }
