@@ -177,6 +177,11 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     }
   }
 
+  onDoubleNodeClick(event: MouseEvent, node: TreeNode): void {
+    // TODO: edit event
+    console.log('Double click', event, node);
+  }
+
   onNodeRightClick(event: MouseEvent, node: TreeNode): void {
     if (this.contextMenu) {
       const eventTarget = (<Element> event.target);
