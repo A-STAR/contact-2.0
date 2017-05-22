@@ -22,8 +22,8 @@ export class AddPermissionComponent implements AfterViewInit {
   private selectedPermissions: IPermissionModel[];
 
   columns: Array<any> = [
-    {name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350},
-    {name: 'Описание', prop: 'dsc', minWidth: 70},
+    { prop: 'name', minWidth: 200, maxWidth: 350 },
+    { prop: 'dsc', minWidth: 70 },
   ];
 
   public dataSource: IDataSource = {
