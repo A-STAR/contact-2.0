@@ -31,14 +31,14 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   @Input() currentRole: IPermissionRole;
 
   columns: Array<TableColumn> = [
-    { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
-    { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
+    { prop: 'id', minWidth: 70, maxWidth: 100 },
+    { prop: 'name', minWidth: 200, maxWidth: 350 },
     this.columnDecoratorService.decorateColumn(
-      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
+      { prop: 'value', minWidth: 70, maxWidth: 100 },
       (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
     ),
-    { name: 'Описание', prop: 'dsc', minWidth: 200 },
-    { name: 'Комментарий', prop: 'comment' },
+    { prop: 'dsc', minWidth: 200 },
+    { prop: 'comment' },
   ];
 
   bottomActions: Array<IToolbarAction> = [
@@ -57,7 +57,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   tabs: Array<any> = [
-    {id: 0, title: 'Доступы', active: true},
+    {id: 0, title: 'roles.permissions.tab.title', active: true},
   ];
 
   dataSource: IDataSource = {

@@ -20,13 +20,13 @@ export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
-        label: 'Название',
+        label: 'roles.roles.edit.name',
         controlName: 'name',
         type: 'text',
         required: true
       },
       {
-        label: 'Комментарий',
+        label: 'roles.roles.edit.comment',
         controlName: 'comment',
         type: 'textarea',
         rows: 2

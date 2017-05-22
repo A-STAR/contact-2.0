@@ -36,33 +36,33 @@ export class EditPermissionComponent implements OnInit {
         required: true
       },
       {
-        label: 'Тип',
+        label: 'roles.permissions.edit.type',
         controlName: 'typeCode',
         type: 'hidden',
         required: true
       },
       {
-        label: 'Название',
+        label: 'roles.permissions.edit.name',
         controlName: 'name',
         type: 'text',
         required: true,
         disabled: true
       },
       {
-        label: 'Значение',
+        label: 'roles.permissions.edit.value',
         controlName: 'value',
         type: 'dynamic',
         dependsOn: 'typeCode',
         required: true
       },
       {
-        label: 'Описание',
+        label: 'roles.permissions.edit.description',
         controlName: 'dsc',
         type: 'text',
         disabled: true
       },
       {
-        label: 'Комментарий',
+        label: 'roles.permissions.edit.comment',
         controlName: 'comment',
         type: 'textarea'
       }
@@ -73,7 +73,7 @@ export class EditPermissionComponent implements OnInit {
     return {
       ...this.record,
       value: String(this.record.value)
-    }
+    };
   }
 
   onDisplayChange(event: boolean): void {
