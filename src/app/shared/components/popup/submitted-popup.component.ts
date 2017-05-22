@@ -13,7 +13,7 @@ export class SubmittedPopupComponent {
   @Input() cancelMessage = 'default.buttons.cancel';
   @Input() submitMessage = 'default.buttons.save';
 
-  @Output() submit: EventEmitter<void> = new EventEmitter<void>();
+  @Output() action: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
   @Input() errorMessage: string;
@@ -24,8 +24,8 @@ export class SubmittedPopupComponent {
     }
   }
 
-  onSubmit(): void {
-    this.submit.emit();
+  onAction(): void {
+    this.action.emit();
   }
 
   onCancel(): void {
