@@ -205,6 +205,13 @@
         "add": {
           "title": "Выберите доступ"
         },
+        "edit": {
+          "type": "Тип",
+          "name": "Название",
+          "value": "Значение",
+          "description": "Значение",
+          "comment": "Комментарий"
+        },
         "remove": {
           "title": "Удаление доступа у роли",
           "confirmMessage": "Do you really want to remove the permission {{ name }}?"
