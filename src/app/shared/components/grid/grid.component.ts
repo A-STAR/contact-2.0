@@ -99,7 +99,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
         // translate column names
         if (this.columnTranslationKey) {
           // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-          const columnTranslations = translations[this.columnTranslationKey].grid;
+          const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
           this.translateColumns(columnTranslations);
         }
       });

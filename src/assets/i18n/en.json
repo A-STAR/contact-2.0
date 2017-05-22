@@ -194,6 +194,11 @@
         "remove": {
           "title": "Удалить роль",
           "confirmMessage": "Do you really want to remove the role {{ name }}?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "comment": "Comments"
         }
       },
       "permissions": {
@@ -203,6 +208,13 @@
         "remove": {
           "title": "Удаление доступа у роли",
           "confirmMessage": "Do you really want to remove the permission {{ name }}?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "value": "Value",
+          "dsc": "Description",
+          "comment": "Comments"
         }
       }
     },
