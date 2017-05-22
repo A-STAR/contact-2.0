@@ -30,9 +30,9 @@ export class RolesComponent {
   ];
 
   columns: Array<any> = [
-    { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
-    { name: 'Название', prop: 'name', maxWidth: 400 },
-    { name: 'Комментарий', prop: 'comment', width: 200 },
+    { prop: 'id', minWidth: 30, maxWidth: 70 },
+    { prop: 'name', maxWidth: 400 },
+    { prop: 'comment', width: 200 },
   ];
 
   dataSource: IDataSource = {

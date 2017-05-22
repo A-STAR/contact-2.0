@@ -1,6 +1,6 @@
 <app-dialog [display]="user" (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ title }}</h3>
+    <h3>{{ title | translate:user }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
@@ -10,7 +10,7 @@
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!canSubmit" *ngIf="canEdit">
+    <button class="btn btn-success" (click)="onActionClick()" [disabled]="!canSubmit" *ngIf="canEdit">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">
