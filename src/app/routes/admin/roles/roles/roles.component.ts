@@ -17,10 +17,10 @@ export class RolesComponent {
   action: ToolbarActionTypeEnum = null;
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
+    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
+    { text: 'toolbar.action.copy', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
+    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -100,7 +100,7 @@ export class RolesComponent {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
-  private selectRole(role = null) {
+  private selectRole(role = null): void {
     this.selectedRole = role;
     this.onSelect.emit(role);
     this.refreshToolbar();
