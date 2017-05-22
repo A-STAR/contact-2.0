@@ -7,6 +7,9 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { IConstant } from './constants.interface';
 
+import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
@@ -23,7 +26,11 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
   columns: Array<any> = [
     { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { name: 'Название константы', prop: 'name', maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
+    this.columnDecoratorService.decorateColumn(
+      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 150},
+      (constant) => this.valueConverterService.deserializeBooleanViewValue(constant)
+    ),
+    // { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
     { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
   ];
 
@@ -37,7 +44,12 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     { id: 0, title: 'Константы', active: true },
   ];
 
-  constructor(private datePipe: DatePipe, private gridService: GridService) {
+  constructor(
+    private datePipe: DatePipe,
+    private gridService: GridService,
+    private columnDecoratorService: GridColumnDecoratorService,
+    private valueConverterService: ValueConverterService) {
+
     super();
   }
 
@@ -45,32 +57,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  parseFn(data: any) {
-    const { dataKey } = this.dataSource;
-    const dataSet = data[dataKey];
-
-    return !dataSet
-      ? []
-      : dataSet.map(val => {
-        switch (val.typeCode) {
-          case 1:
-            val.value = String(val.valueN);
-            break;
-          case 2:
-            val.value = this.datePipe.transform(new Date(val.valueD), 'dd.MM.yyyy HH:mm:ss');
-            break;
-          case 3:
-            val.value = val.valueS || '';
-            break;
-          case 4:
-            val.value = Boolean(val.valueB) ? 'Истина' : 'Ложь';
-            break;
-          default:
-            val.value = '';
-        }
-        return val;
-      });
-  }
+  parseFn = (data) => this.valueConverterService.deserializeSet(data.constants);
 
   onEditSubmit(data: any): void {
     const id = data.id;
