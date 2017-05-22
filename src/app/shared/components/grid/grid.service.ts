@@ -47,20 +47,7 @@ export class GridService {
   }
 
   private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
-    if (url === '/api/dictionaries') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'dict': [
-              {'id': 1, 'name': 'test_dict1', typeCode: 24, parentCode: 3, code: '34' },
-              {'id': 2, 'name': 'test_dict2', typeCode: 234, parentCode: 2, code: '67' },
-            ]
-          }
-        );
-        observer.complete();
-      });
-    } else if (url === '/api/{id}/terms') {
+    if (url === '/api/{id}/terms') {
       return new Observable(observer => {
         observer.next(
           {
