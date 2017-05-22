@@ -173,7 +173,13 @@
     "roles": {
       "roles": {
         "copy": {
-          "title": "Копировать роль"
+          "title": "Копировать роль",
+          "originalRoleName": "Название оригинальной роли",
+          "roleName": "Название",
+          "roleComment": "Комментарий",
+          "select": {
+            "title": "Выберите роль"
+          }
         },
         "remove": {
           "title": "Удалить роль",

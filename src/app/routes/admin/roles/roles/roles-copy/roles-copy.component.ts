@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 import { IRole } from '../roles.interface';
 import { AbstractRolesPopup } from '../roles-abstract-popup';
+import { RolesService } from '../roles.service';
 
 @Component({
   selector: 'app-roles-copy',
@@ -13,34 +13,31 @@ import { AbstractRolesPopup } from '../roles-abstract-popup';
 export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
   @Input() originalRole: IRole = null;
 
-  constructor(private gridService: GridService) {
+  constructor(private rolesService: RolesService) {
     super();
   }
 
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
-        label: 'Название оригинальной роли',
+        label: 'roles.roles.copy.originalRoleName',
         controlName: 'originalRoleId',
         type: 'select',
         required: true,
         cachingOptions: true,
-        lazyOptions: this.gridService.read('/api/roles')
-          .map(
-            (data: {roles: Array<IRole>}) => data.roles.map(role => ({label: role.name, value: role.id}))
-          ),
+        lazyOptions: this.rolesService.getRolesList(),
         optionsActions: [
-          {text: 'Выберите роль', type: SelectionActionTypeEnum.SORT}
+          {text: 'roles.roles.copy.originalRoleName', type: SelectionActionTypeEnum.SORT}
         ]
       },
       {
-        label: 'Название',
+        label: 'roles.roles.copy.roleName',
         controlName: 'name',
         type: 'text',
         required: true
       },
       {
-        label: 'Комментарий',
+        label: 'roles.roles.copy.roleComment',
         controlName: 'comment',
         type: 'textarea',
         rows: 2
@@ -52,14 +49,14 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     return {
       ...this.role,
       originalRoleId: [{ value: this.originalRole.id, label: this.originalRole.name }]
-    }
+    };
   }
 
   protected httpAction(): Observable<any> {
-    const data = {
+    // TODO replace with the event based approach
+    return this.rolesService.copyRole({
       ...this.form.value,
       originalRoleId: this.form.value.originalRoleId[0].value
-    };
-    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
+    });
   }
 }
