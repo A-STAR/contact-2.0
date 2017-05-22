@@ -1,67 +1,67 @@
 {
-    "header": {
-        "search": {
-            "PLACEHOLDER": "Type and hit enter..."
-        }
+  "header": {
+    "search": {
+      "PLACEHOLDER": "Type and hit enter..."
+    }
+  },
+  "offsidebar": {
+    "setting": {
+      "SETTINGS": "Settings"
+    }
+  },
+  "sidebar": {
+    "heading": {
+      "HEADER": "Menu Heading"
     },
-    "offsidebar": {
-        "setting": {
-            "SETTINGS": "Settings"
+      "nav": {
+        "SINGLEVIEW": "Single View",
+        "menu": {
+          "HOME": "Home",
+          "WORKFLOW": "Workflow",
+          "QUERY_BUILDER": "Query Builder",
+          "GRIDS": "Grids",
+          "LARGE_DATASET": "Large Dataset",
+          "SORTABLE": "Sortable",
+          "REORDERABLE": "Reorderable",
+          "GROUPABLE": "Groupable",
+          "ADMIN_PANEL": "Administration",
+          "ROLES_AND_PERMISSIONS": "Roles and Permissions",
+          "USERS": "Users",
+          "ACTIONS_LOG": "Actions Log",
+          "CONSTANTS": "Constants",
+          "DICTIONARIES": "Dictionaries",
+          "BANKS": "Banks",
+          "DEPARTMENTS": "Departments",
+          "UTILITIES": "Utilities",
+          "UPLOAD_TEMPLATES": "Upload Templates",
+          "DATA_UPLOAD": "Data Upload",
+          "ARBITRARY_VALUES": "Arbitrary Values",
+          "CONTACT_TREES": "Contact Trees",
+          "MESSAGE_SCENARIOS": "Message Scenarios",
+          "GROUPS": "Groups",
+          "CAMPAIGNS": "Campaigns",
+          "SCHEDULE": "Schedule",
+          "FORMULAS": "Formulas",
+          "COURTS": "Coutrs",
+          "WORKPLACES": "Workplaces",
+          "DEBT_LIST": "Debt List",
+          "TASKS": "Tasks",
+          "DEBTS": "Debts Processing",
+          "CONTACT_PROTOCOL": "Contact Protocol",
+          "CALL_CENTER": "Call Center",
+          "PAYMENTS": "Payments",
+          "COURTS_2": "Courts",
+          "OUTGOING_INFORMATION": "Outgoing Information",
+          "SEARCH_GROUPS": "Search Groups",
+          "MAIL": "Mail",
+          "REPORTS": "Reports",
+          "ARBITRARY_REPORTS": "Arbitrary Reports",
+          "HELP": "Help"
         }
-    },
-    "sidebar": {
-        "heading": {
-            "HEADER": "Menu Heading"
-        },
-        "nav": {
-            "SINGLEVIEW": "Single View",
-            "menu": {
-                "HOME": "Home",
-                "WORKFLOW": "Workflow",
-                "QUERY_BUILDER": "Query Builder",
-                "GRIDS": "Grids",
-                "LARGE_DATASET": "Large Dataset",
-                "SORTABLE": "Sortable",
-                "REORDERABLE": "Reorderable",
-                "GROUPABLE": "Groupable",
-                "ADMIN_PANEL": "Administration",
-                "ROLES_AND_PERMISSIONS": "Roles and Permissions",
-                "USERS": "Users",
-                "ACTIONS_LOG": "Actions Log",
-                "CONSTANTS": "Constants",
-                "DICTIONARIES": "Dictionaries",
-                "BANKS": "Banks",
-                "DEPARTMENTS": "Departments",
-                "UTILITIES": "Utilities",
-                "UPLOAD_TEMPLATES": "Upload Templates",
-                "DATA_UPLOAD": "Data Upload",
-                "ARBITRARY_VALUES": "Arbitrary Values",
-                "CONTACT_TREES": "Contact Trees",
-                "MESSAGE_SCENARIOS": "Message Scenarios",
-                "GROUPS": "Groups",
-                "CAMPAIGNS": "Campaigns",
-                "SCHEDULE": "Schedule",
-                "FORMULAS": "Formulas",
-                "COURTS": "Coutrs",
-                "WORKPLACES": "Workplaces",
-                "DEBT_LIST": "Debt List",
-                "TASKS": "Tasks",
-                "DEBTS": "Debts Processing",
-                "CONTACT_PROTOCOL": "Contact Protocol",
-                "CALL_CENTER": "Call Center",
-                "PAYMENTS": "Payments",
-                "COURTS_2": "Courts",
-                "OUTGOING_INFORMATION": "Outgoing Information",
-                "SEARCH_GROUPS": "Search Groups",
-                "MAIL": "Mail",
-                "REPORTS": "Reports",
-                "ARBITRARY_REPORTS": "Arbitrary Reports",
-                "HELP": "Help"
-            }
-        }
+      }
     },
     "dashboard": {
-        "TITLE": "Dashboard"
+      "TITLE": "Dashboard"
     },
     "validation": {
       "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
@@ -93,40 +93,44 @@
       "CONNECTION_ERROR": "Connection Error"
     },
     "constants": {
-      "title": "Constants",
-      "form": {
-        "title": "Constant"
+      "title": "Константы",
+      "edit": {
+        "title": "Constant",
+        "name": "Name",
+        "type": "Type",
+        "value": "Value",
+        "comment": "Comments"
       },
       "grid": {
         "id": "Id",
-        "name": "Constant name",
+        "name": "Name",
         "value": "Value",
         "dsc": "Comments"
       }
     },
-  "users": {
-    "title": "Users",
-    "toolbar": {
-      "action": {
-        "show_blocked_users": "show blocked"
+    "users": {
+      "title": "Users",
+      "toolbar": {
+        "action": {
+          "show_blocked_users": "show blocked"
+        }
+      },
+      "grid": {
+        "id": "Id",
+        "login": "Login",
+        "lastName": "Family name",
+        "firstName": "Name",
+        "middleName": "Patronim",
+        "position": "Position",
+        "roleId": "Role",
+        "isBlocked": "Blocked",
+        "mobPhone": "Mobile",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "email": "Email",
+        "langCode": "Language"
       }
     },
-    "grid": {
-      "id": "Id",
-      "login": "Login",
-      "lastName": "Family name",
-      "firstName": "Name",
-      "middleName": "Patronim",
-      "position": "Position",
-      "roleId": "Role",
-      "isBlocked": "Blocked",
-      "mobPhone": "Mobile",
-      "workPhone": "Work phone",
-      "intPhone": "Extension",
-      "email": "Email",
-      "langCode": "Language"
-    }
-  },
     "dictionaries": {
       "access_denied": "Доступ к словарям ограничен. Обратитесь к администратору",
       "TITLE": "Dictionaries",
