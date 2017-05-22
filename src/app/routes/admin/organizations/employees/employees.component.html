@@ -11,15 +11,18 @@
   (cancel)="cancelAction()">
 </app-employee-edit>
 
-<app-submitted-popup *ngIf="isEntityBeingRemoved"
-                     [titleTranslationKey]="'organizations.employees.remove.title'"
-                     [actionTranslationKey]="'organizations.employees.remove.confirmMessage'"
-                     [actionMessage]="'default.buttons.remove'"
-                     [actionMode]="'danger'"
-                     (action)="onRemoveSubmit()"
-                     (cancel)="cancelAction()"></app-submitted-popup>
+<app-submitted-popup
+  *ngIf="isEntityBeingRemoved"
+  [titleTranslationKey]="'organizations.employees.remove.title'"
+  [actionTranslationKey]="'organizations.employees.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-submitted-popup>
 
 <app-grid
+  class="flat"
   selectionType="single"
   [columns]="columns"
   [columnTranslationKey]="'organizations'"

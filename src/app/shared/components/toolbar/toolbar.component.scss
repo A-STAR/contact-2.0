@@ -25,3 +25,11 @@
     }
   }
 }
+
+:host.toolbar-border /deep/ {
+  & ul.app-toolbar {
+    outline: none;
+    border: 1px solid #d6d6d6;
+    border-bottom: 0;
+  }
+}

@@ -218,8 +218,8 @@
         }
       },
       "grid": {
-        "id": "ID",
-        "userId": "User ID",
+        "id": "Id",
+        "userId": "User id",
         "roleCode": "Role code",
         "comment": "Comment"
       }

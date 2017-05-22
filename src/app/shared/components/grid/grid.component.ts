@@ -70,6 +70,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.rows.filter(this.filter);
   }
 
+  get hasToolbar(): boolean {
+    return !!this.bottomActions;
+  }
+
   ngOnInit(): void {
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
@@ -110,12 +114,13 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     // Define a possible height of the datatable
     // 43px - tab height,
     // 2x15px - top & bottom padding around the grid
+    // 50px - toolbar height
     // 8px => - ?, to be identified
     if (this.styles) {
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    const offset = 43 + 15 + 15 + 8;
+    const offset = 43 + 15 + 15 + 50 + 8;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
