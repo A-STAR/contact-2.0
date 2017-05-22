@@ -6,6 +6,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class SubmittedPopupComponent {
 
+  @Input() titleParams;
+  @Input() messageParams;
   @Input() title: string;
   @Input() message: string;
   @Input() cancelMessage = 'default.buttons.cancel';
@@ -13,6 +15,8 @@ export class SubmittedPopupComponent {
 
   @Output() submit: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+
+  @Input() errorMessage: string;
 
   onDisplayChange(event: boolean): void {
     if (!event) {

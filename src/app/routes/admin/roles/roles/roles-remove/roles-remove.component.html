@@ -2,10 +2,10 @@
             [autoWidth]="true"
             (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>Удалить роль</h3>
+    <h3>{{ 'roles.roles.remove.title' | translate }}</h3>
   </div>
 
-  <p>Вы действительно хотите удалить роль {{ role.name }}?</p>
+  <p>{{ 'roles.roles.remove.confirmMessage' | translate:role }}</p>
 
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}

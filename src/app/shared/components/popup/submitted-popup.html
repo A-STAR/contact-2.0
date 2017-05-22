@@ -1,10 +1,14 @@
 <app-dialog [autoWidth]="true"
             (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ title | translate }}</h3>
+    <h3>{{ title | translate:titleParams }}</h3>
   </div>
 
-  <p>{{ message | translate }}</p>
+  <p>{{ message | translate:messageParams }}</p>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
 
   <div dialog-footer>
     <button class="btn btn-danger" (click)="onSubmit()">
