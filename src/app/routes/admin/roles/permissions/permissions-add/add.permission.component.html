@@ -1,7 +1,7 @@
 <app-dialog [display]="displayProperties.addPermit"
             (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>Выберите доступ</h3>
+    <h3>{{ 'roles.permissions.add.title' | translate }}</h3>
   </div>
 
   <app-grid
@@ -16,13 +16,13 @@
   </app-grid>
 
   <div dialog-footer>
-    <button class="btn btn-danger"
+    <button class="btn btn-success"
             [disabled]="!canAddPermissions()"
             (click)="onAddPermissions()">
-      <i class="fa fa-check"></i> Добавить
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> Отмена
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>
 </app-dialog>

@@ -71,7 +71,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const translationKeys = ['grid.messages'];
+    const gridMessagesKey = 'grid.messages';
+    const translationKeys = [gridMessagesKey];
     if (this.autoLoad) {
       this.load(this.initialParameters).subscribe();
     }
@@ -81,7 +82,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     this.translate.get(translationKeys)
       .subscribe(
         (translation) => {
-          this.messages = translation['grid.messages'];
+          this.messages = translation[gridMessagesKey];
           if (this.columnTranslationKey) {
             this.translateColumns(translation[this.columnTranslationKey].grid);
           }
@@ -161,10 +162,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
         return;
       }
-      this.onEdit.emit(event.row);
+      const { row } = event;
+      this.onEdit.emit(row);
       // workaround for rows getting unselected on dblclick
-      if (!this.selected.find(row => row.$$id === event.row.$$id)) {
-        this.selected = this.selected.concat(event.row);
+      if (!this.selected.find(selected => selected.$$id === row.$$id)) {
+        this.selected = this.selected.concat(row);
       }
     }
   }

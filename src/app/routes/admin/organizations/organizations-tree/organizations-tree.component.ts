@@ -47,13 +47,13 @@ export class OrganizationsTreeComponent implements OnInit {
     this.organizationsService.load()
       .subscribe(
         data => {
-          const root = {
+          const files = {
             id: 0,
             label: 'Home',
-            children: null
+            children: [].concat(data),
           };
-          root.children = this.prepareTree(data, root);
-          this.value = [ root ];
+          this.value = [files];
+          this.prepareTree(this.rootNode);
         },
         error => console.error(error)
       );
@@ -169,13 +169,14 @@ export class OrganizationsTreeComponent implements OnInit {
     });
   }
 
-  private prepareTree(data: Array<TreeNode>, parent: TreeNode = null): Array<TreeNode> {
-    return data.map(item => ({
-      ...item,
-      parent,
-      expanded: false,
-      children: item.children && item.children.length ? this.prepareTree(item.children, item) : undefined
-    }));
+  private prepareTree(node: TreeNode, parent: TreeNode = null): void {
+    node.expanded = false;
+    node.parent = parent;
+    if (node.children) {
+      node.children.forEach(childNode => {
+        this.prepareTree(childNode, node);
+      });
+    }
   }
 
   private refreshToolbar(): void {

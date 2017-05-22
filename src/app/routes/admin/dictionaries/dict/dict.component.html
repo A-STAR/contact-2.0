@@ -7,9 +7,14 @@
                (submit)="onEditSubmit($event, false)"
                (cancel)="cancelAction()"></app-dict-edit>
 
-<app-dict-remove *ngIf="isEntityBeingRemoved"
-               (submit)="onRemoveSubmit()"
-               (cancel)="cancelAction()"></app-dict-remove>
+<app-submitted-popup *ngIf="isEntityBeingRemoved"
+                     [titleTranslationKey]="'dictionaries.remove.title'"
+                     [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
+                     [actionMessage]="'default.buttons.remove'"
+                     [messageParams]="selectedEntity"
+                     [actionMode]="'danger'"
+                     (action)="onRemoveSubmit()"
+                     (cancel)="cancelAction()"></app-submitted-popup>
 
 <app-grid
   selectionType="single"

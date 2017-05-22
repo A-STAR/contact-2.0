@@ -2,7 +2,7 @@
   <li *ngFor="let action of actions; let index=index" role="menuitem" class="ui-select-unselectable">
     <div class="ui-select-action"
          (click)="actionClick(action, $event)">
-      {{ action.text }}<span *ngIf="action.actionIconCls" class="ui-select-action-btn {{action.actionIconCls}}"></span>
+      {{ action.text | translate }}<span *ngIf="action.actionIconCls" class="ui-select-action-btn {{action.actionIconCls}}"></span>
     </div>
   </li>
 </template>
