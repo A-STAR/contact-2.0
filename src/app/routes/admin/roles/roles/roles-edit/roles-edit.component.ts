@@ -14,7 +14,7 @@ export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
   }
 
   get popupTitle(): string {
-    return this.isUpdating() ? `Роль: ${this.role.id}` : 'Новая роль';
+    return this.isUpdating() ? 'roles.roles.edit.title' : 'roles.roles.create.title';
   }
 
   protected getControls(): Array<IDynamicFormControl> {

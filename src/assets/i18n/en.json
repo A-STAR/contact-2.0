@@ -146,7 +146,7 @@
       },
       "remove": {
         "title": "Remove dictionary",
-        "confirm_message": "Do you really want to remove the dictionary?"
+        "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
       }
     },
     "terms": {
@@ -167,7 +167,39 @@
       },
       "remove": {
         "title": "Remove term",
-        "confirm_message": "Do you really want to remove the term?"
+        "confirmMessage": "Do you really want to remove the term {{ name }}?"
+      }
+    },
+    "roles": {
+      "roles": {
+        "copy": {
+          "title": "Копировать роль",
+          "originalRoleName": "Название оригинальной роли",
+          "roleName": "Название",
+          "roleComment": "Комментарий",
+          "select": {
+            "title": "Выберите роль"
+          }
+        },
+        "edit": {
+          "title": "Редактирование роли {{ name }} "
+        },
+        "create": {
+          "title": "Новая роль"
+        },
+        "remove": {
+          "title": "Удалить роль",
+          "confirmMessage": "Do you really want to remove the role {{ name }}?"
+        }
+      },
+      "permissions": {
+        "add": {
+          "title": "Выберите доступ"
+        },
+        "remove": {
+          "title": "Удаление доступа у роли",
+          "confirmMessage": "Do you really want to remove the permission {{ name }}?"
+        }
       }
     },
     "organizations": {
