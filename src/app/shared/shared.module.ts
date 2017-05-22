@@ -41,6 +41,7 @@ import { TreeModule } from './components/flowtree/tree.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
+import { SubmittedPopupModule } from './components/popup/submitted-popup.module';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -65,6 +66,7 @@ import { DialogModule } from './components/dialog/dialog.module';
     ToasterModule,
     ToolbarModule,
     TreeModule,
+    SubmittedPopupModule,
   ],
   providers: [
     ColorsService,
@@ -119,6 +121,7 @@ import { DialogModule } from './components/dialog/dialog.module';
     TabstripComponent,
     ToolbarModule,
     TreeModule,
+    SubmittedPopupModule,
   ]
 })
 

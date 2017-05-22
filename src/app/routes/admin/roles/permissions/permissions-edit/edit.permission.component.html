@@ -7,13 +7,13 @@
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-danger"
+    <button class="btn btn-success"
             [disabled]="!form.canSubmit"
             (click)="onSave()">
-      <i class="fa fa-check"></i> Сохранить
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> Отмена
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>
 </app-dialog>
