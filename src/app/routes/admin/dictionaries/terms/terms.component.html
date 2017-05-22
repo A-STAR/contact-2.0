@@ -11,6 +11,7 @@
                      [title]="'terms.remove.title'"
                      [message]="'terms.remove.confirm_message'"
                      [submitMessage]="'default.buttons.remove'"
+                     [messageParams]="selectedEntity"
                      (submit)="onRemoveSubmit()"
                      (cancel)="cancelAction()"></app-submitted-popup>
 
