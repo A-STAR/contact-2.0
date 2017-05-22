@@ -20,11 +20,11 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> {
     ];
 
     return [
-      { label: 'Ид', controlName: 'id', type: 'hidden', required: true, disabled: true },
-      { label: 'Название константы', controlName: 'name', type: 'text', required: true, disabled: true },
-      { label: 'Тип', controlName: 'typeCode', type: 'select', required: true, disabled: true, options },
-      { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
-      { label: 'Комментарий', controlName: 'dsc', type: 'textarea', required: true, disabled: true },
+      { label: 'id', controlName: 'id', type: 'hidden', required: true, disabled: true },
+      { label: 'constants.edit.name', controlName: 'name', type: 'text', required: true, disabled: true },
+      { label: 'constants.edit.type', controlName: 'typeCode', type: 'select', required: true, disabled: true, options },
+      { label: 'constants.edit.value', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
+      { label: 'constants.edit.comment', controlName: 'dsc', type: 'textarea', required: true, disabled: true },
     ];
   }
 }
