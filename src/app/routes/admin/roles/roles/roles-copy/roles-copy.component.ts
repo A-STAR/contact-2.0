@@ -27,7 +27,7 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
         cachingOptions: true,
         lazyOptions: this.rolesService.getRolesList(),
         optionsActions: [
-          {text: 'roles.roles.copy.originalRoleName', type: SelectionActionTypeEnum.SORT}
+          {text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT}
         ]
       },
       {
