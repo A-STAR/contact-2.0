@@ -11,10 +11,13 @@
                     (add)="onAddPermissions($event)">
 </app-add-permission>
 
-<app-remove-permission *ngIf="displayProperties.removePermit"
-                       [displayProperties]="displayProperties"
-                       (confirm)="onRemovePermission()">
-</app-remove-permission>
+<app-submitted-popup *ngIf="displayProperties.removePermit"
+                     [title]="'terms.remove.title'"
+                     [message]="'terms.remove.confirm_message'"
+                     [submitMessage]="'default.buttons.remove'"
+                     [messageParams]="currentRole"
+                     (confirm)="onRemovePermission()"
+                     (cancel)="displayProperties.removePermit = false"></app-submitted-popup>
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">

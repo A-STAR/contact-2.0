@@ -183,6 +183,10 @@
       "permissions": {
         "add": {
           "title": "Выберите доступ"
+        },
+        "remove": {
+          "title": "Удаление доступа у роли",
+          "confirmMessage": "Do you really want to remove the permission {{ name }}?"
         }
       }
     },
