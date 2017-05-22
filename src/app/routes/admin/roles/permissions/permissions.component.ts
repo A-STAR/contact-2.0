@@ -57,7 +57,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   tabs: Array<any> = [
-    {id: 0, title: 'Доступы', active: true},
+    {id: 0, title: 'roles.permissions.tab.title', active: true},
   ];
 
   dataSource: IDataSource = {
