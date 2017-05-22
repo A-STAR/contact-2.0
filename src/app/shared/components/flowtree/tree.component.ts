@@ -37,6 +37,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
   @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeEdit: EventEmitter<any> = new EventEmitter();
   @Output() changeLocation: EventEmitter<IDragAndDropPayload> = new EventEmitter();
   @Input() style: any;
   @Input() styleClass: string;
@@ -178,8 +179,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   }
 
   onDoubleNodeClick(event: MouseEvent, node: TreeNode): void {
-    // TODO: edit event
-    console.log('Double click', event, node);
+    this.onNodeEdit.emit(node);
   }
 
   onNodeRightClick(event: MouseEvent, node: TreeNode): void {
