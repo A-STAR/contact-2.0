@@ -32,14 +32,7 @@ export abstract class GridEntityComponent<T> implements OnChanges {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  parseFn = data => data[this.dataSource.dataKey] || [];
-
-  /*
-  parseFn(data: any): Array<T> {
-    const {dataKey} = this.dataSource;
-    return data[dataKey] || [];
-  }
-  */
+  parseFn = data => (data[this.dataSource.dataKey] || []) as Array<T>;
 
   onAction(action: IToolbarAction): void {
     this.action = action.type;

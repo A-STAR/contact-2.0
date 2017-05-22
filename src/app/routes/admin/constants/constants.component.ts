@@ -57,7 +57,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  parseFn = (data) => this.valueConverterService.deserializeSet(data.constants);
+  parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
 
   onEditSubmit(data: any): void {
     const id = data.id;
