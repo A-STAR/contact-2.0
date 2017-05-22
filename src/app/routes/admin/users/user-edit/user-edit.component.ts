@@ -93,7 +93,7 @@ export class UserEditComponent implements OnInit {
         .read('/api/roles')
         .map((data: IRolesResponse) => data.roles.map(role => ({ label: role.name, value: role.id }))),
       optionsActions: [
-        { text: 'users.select.title', type: SelectionActionTypeEnum.SORT}
+        { text: 'users.select.role.title', type: SelectionActionTypeEnum.SORT}
       ]
     };
 
