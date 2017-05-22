@@ -71,13 +71,21 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const translationKeys = ['grid.messages'];
     if (this.autoLoad) {
       this.load(this.initialParameters).subscribe();
     }
-
-    this.translate.get('grid.messages')
+    if (this.columnTranslationKey) {
+      translationKeys.push(this.columnTranslationKey);
+    }
+    this.translate.get(translationKeys)
       .subscribe(
-        messages => this.messages = messages,
+        (translation) => {
+          this.messages = translation['grid.messages'];
+          if (this.columnTranslationKey) {
+            this.translateColumns(translation[this.columnTranslationKey].grid);
+          }
+        },
         // TODO: log out the error
         error => console.error(error)
       );
@@ -91,8 +99,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
         // translate column names
         if (this.columnTranslationKey) {
           // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-          const { grid } = translations[this.columnTranslationKey];
-          this.translateColumns(grid);
+          const columnTranslations = translations[this.columnTranslationKey].grid;
+          this.translateColumns(columnTranslations);
         }
       });
   }
