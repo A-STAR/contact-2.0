@@ -12,6 +12,7 @@ export class SubmittedPopupComponent {
   @Input() actionTranslationKey: string;
   @Input() cancelMessage = 'default.buttons.cancel';
   @Input() actionMessage = 'default.buttons.save';
+  @Input() actionMode = 'success';
 
   @Output() action: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();

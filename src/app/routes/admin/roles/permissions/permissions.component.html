@@ -16,6 +16,7 @@
                      [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
                      [actionMessage]="'default.buttons.remove'"
                      [messageParams]="currentRole"
+                     [actionMode]="'danger'"
                      (action)="onRemovePermission()"
                      (cancel)="displayProperties.removePermit = false"></app-submitted-popup>
 

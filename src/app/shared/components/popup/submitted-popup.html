@@ -11,7 +11,7 @@
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-succes" (click)="onAction()">
+    <button class="btn btn-{{ actionMode }}" (click)="onAction()">
       <i class="fa fa-check"></i> {{ actionMessage | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">
