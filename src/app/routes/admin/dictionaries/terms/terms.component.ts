@@ -46,10 +46,10 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
       data.typeCode = data.typeCode[0].value;
     }
     if (createMode) {
-      this.gridService.create('/dictionaries/{id}/terms', this.masterEntity, data)
+      this.gridService.create('/api/dictionaries/{id}/terms', this.masterEntity, data)
         .subscribe(() => this.cancelAction());
     } else {
-      this.gridService.update('/dictionaries/{id}/terms/{termsId}', this.masterEntity, data)
+      this.gridService.update('/api/dictionaries/{id}/terms/{termsId}', this.masterEntity, data)
         .subscribe(() => this.cancelAction());
     }
   }
