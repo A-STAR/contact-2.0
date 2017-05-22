@@ -146,7 +146,7 @@
       },
       "remove": {
         "title": "Remove dictionary",
-        "confirm_message": "Do you really want to remove the dictionary {{ name }}?"
+        "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
       }
     },
     "terms": {
@@ -167,7 +167,7 @@
       },
       "remove": {
         "title": "Remove term",
-        "confirm_message": "Do you really want to remove the term {{ name }}?"
+        "confirmMessage": "Do you really want to remove the term {{ name }}?"
       }
     },
     "roles": {

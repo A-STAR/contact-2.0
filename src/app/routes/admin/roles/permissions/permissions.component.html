@@ -12,11 +12,11 @@
 </app-add-permission>
 
 <app-submitted-popup *ngIf="displayProperties.removePermit"
-                     [title]="'terms.remove.title'"
-                     [message]="'terms.remove.confirm_message'"
+                     [title]="'roles.permissions.remove.title'"
+                     [message]="'roles.permissions.remove.confirmMessage'"
                      [submitMessage]="'default.buttons.remove'"
                      [messageParams]="currentRole"
-                     (confirm)="onRemovePermission()"
+                     (submit)="onRemovePermission()"
                      (cancel)="displayProperties.removePermit = false"></app-submitted-popup>
 
 <app-tabstrip>
