@@ -27,7 +27,7 @@ export class UsersComponent {
     this.columnDecoratorService.decorateLocalizedColumn(
       // TODO: display column depending on filter
       { prop: 'isBlocked', minWidth: 100 },
-      ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'
+      ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE'
     ),
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
