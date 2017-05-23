@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ILocalizedValue, IValueEntity, ValueType } from './value-converter.interface';
+import { ILabeledValue, ILocalizedValue, IValueEntity, ValueType } from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
@@ -69,6 +69,18 @@ export class ValueConverterService {
         : this._localizedValues.falseValue;
     }
     return booleanValue;
+  }
+
+  public toLabeledValues(data: ILabeledValue[]): any[] {
+    if (Array.isArray(data)) {
+      return data.map((labeledValue: ILabeledValue) => labeledValue.value);
+    }
+    return null;
+  }
+
+  public firstLabeledValue(data: ILabeledValue[]): any[] {
+    const array: any[] = this.toLabeledValues(data);
+    return array && array.length ? array[0] : null;
   }
 
   private toNumber(value: ValueType): number {
