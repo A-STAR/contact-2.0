@@ -69,27 +69,35 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.employeesService
-      .create(this.masterEntity.id, data)
-      .subscribe(
-        // TODO: reload grid
-        // TODO: handle errors
-      );
+    this.submit(
+      this.employeesService.create(this.masterEntity.id, data)
+    );
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.employeesService
-      .save(this.masterEntity.id, this.selectedEntity.userId, {
-        roleCode: data.roleCode, //data.roleCode[0].id,
+    this.submit(
+      this.employeesService.save(this.masterEntity.id, this.selectedEntity.userId, {
+        roleCode: data.roleCode[0].id,
         comment: data.comment
       })
-      .subscribe(
-        // TODO: reload grid
-        // TODO: handle errors
-      );
+    );
   }
 
   onRemoveSubmit(data: any): void {
-    //
+    this.submit(
+      this.employeesService.remove(this.masterEntity.id, this.selectedEntity.userId)
+    );
+  }
+
+  private submit(observable: any): void {
+    observable
+      .subscribe(
+        () => {
+          this.afterUpdate();
+          this.cancelAction();
+        },
+        // TODO: handle errors
+        error => console.error(error)
+      );
   }
 }

@@ -17,6 +17,6 @@ export class EmployeesService {
   }
 
   remove(organizationId: number, userId: number): Observable<any> {
-    return this.gridService.delete('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId });
+    return this.gridService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
   }
 }

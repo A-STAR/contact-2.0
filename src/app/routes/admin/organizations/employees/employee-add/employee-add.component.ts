@@ -21,6 +21,14 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
 
   private selectedEmployees: Array<IEmployeeUser>;
 
+  // TODO: dictionary service
+  private options = [
+    { value: 1, label: 'Сотрудник' },
+    { value: 2, label: 'Руководитель' },
+    { value: 3, label: 'Заместитель' },
+    { value: 4, label: 'Куратор' },
+  ];
+
   columns: Array<any> = [
     this.columnDecoratorService.decorateColumn(
       { prop: 'fullName', minWidth: 200 },
@@ -40,7 +48,9 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
   };
 
   formData = {
-    roleCode: 1
+    roleCode: [
+      this.options[0]
+    ]
   };
 
   constructor(
@@ -69,7 +79,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
   }
 
   canSubmit(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form.canSubmit;
+    return this.selectedEmployees && this.selectedEmployees.length > 0;
   }
 
   protected getControls(): Array<IDynamicFormControl> {
@@ -79,13 +89,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
         controlName: 'roleCode',
         type: 'select',
         required: true,
-        // TODO: dictionary service
-        options: [
-          { value: 1, label: 'Сотрудник' },
-          { value: 2, label: 'Руководитель' },
-          { value: 3, label: 'Заместитель' },
-          { value: 4, label: 'Куратор' },
-        ]
+        options: this.options
       },
     ];
   }
