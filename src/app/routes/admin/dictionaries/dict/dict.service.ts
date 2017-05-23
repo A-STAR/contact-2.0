@@ -23,14 +23,6 @@ export class DictService {
     );
   }
 
-  public createDict(params: any): Observable<any> {
-    return this.gridService.create(
-      '/api/dictionaries',
-      params,
-      {}
-    );
-  }
-
   public removeDict(params: any): Observable<any> {
     return this.gridService.delete(
       `/api/dict`,
