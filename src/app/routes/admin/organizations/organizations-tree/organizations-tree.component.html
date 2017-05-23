@@ -1,3 +1,9 @@
+<app-organization-edit
+  *ngIf="isEntityBeingEdited"
+  (submit)="onEditSubmit($event, true)"
+  (cancel)="cancelAction()">
+</app-organization-edit>
+
 <!-- TODO: fix border styles -->
 <app-toolbar
   class="toolbar-border"
@@ -13,6 +19,7 @@
   [dragulaOptions]="dragulaOptions"
   (changeLocation)="onNodeChangeLocation($event)"
   (onNodeSelect)="onNodeSelect($event)"
+  (onNodeEdit)="onNodeEdit($event)"
   (onNodeExpand)="onNodeExpand($event)"
   [(selection)]="selection">
 </app-tree>

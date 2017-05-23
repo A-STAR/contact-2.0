@@ -7,6 +7,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { OrganizationsService } from '../organizations.service';
 import { IOrganization } from '../organizations.interface';
 
+// TODO: extend from GridEntityComponent
 @Component({
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
@@ -37,10 +38,12 @@ export class OrganizationsTreeComponent implements OnInit {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
+  action: ToolbarActionTypeEnum;
+
   constructor(private organizationsService: OrganizationsService) { }
 
-  onToolbarAction(action: IToolbarAction): void {
-    console.log(action);
+  get isEntityBeingEdited(): boolean {
+    return this.action === ToolbarActionTypeEnum.EDIT;
   }
 
   ngOnInit(): void {
@@ -115,6 +118,7 @@ export class OrganizationsTreeComponent implements OnInit {
     if (node.children) {
       node.expanded = !isExpanded;
     }
+    this.action = null;
     this.refreshToolbar();
     this.onSelect.emit(node.data);
   }
@@ -123,6 +127,18 @@ export class OrganizationsTreeComponent implements OnInit {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
+  }
+
+  onToolbarAction(action: IToolbarAction): void {
+    this.action = action.type;
+  }
+
+  cancelAction(): void {
+    this.action = null;
+  }
+
+  onNodeEdit(): void {
+    this.action = ToolbarActionTypeEnum.EDIT;
   }
 
   private get rootNode(): TreeNode {

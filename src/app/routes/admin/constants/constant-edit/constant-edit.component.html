@@ -1,4 +1,4 @@
-<app-dialog>
+<app-dialog (displayChange)="onDisplayChange()">
   <div dialog-header>
     <h3>{{ 'constants.edit.title' | translate }}: {{ editedEntity.id }}</h3>
   </div>

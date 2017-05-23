@@ -1,7 +1,8 @@
-import {Component, OnInit, Input, Inject, forwardRef} from '@angular/core';
+import { Component, OnInit, Input, Inject, forwardRef, EventEmitter } from '@angular/core';
+import 'rxjs/add/operator/debounceTime';
 
-import {TreeNode} from './common/api';
-import {TreeComponent} from './tree.component';
+import { TreeNode } from './common/api';
+import { TreeComponent } from './tree.component';
 
 @Component({
   selector: 'app-tree-node',
@@ -20,7 +21,22 @@ export class UITreeNodeComponent implements OnInit {
   @Input() lastChild: boolean;
   @Input() dragulaOptions: any;
 
+  click: EventEmitter<MouseEvent> = new EventEmitter();
+
   constructor(@Inject(forwardRef(() => TreeComponent)) public tree: TreeComponent) {
+    /*
+     * TODO:
+     * 1. Break onNodeClick into two events: onNodeSelect (fires immediately) and onNodeExpand (debounced).
+     * 2. Fire onDoubleNodeClick immediately after two clicks.
+     */
+    this.click
+      .debounceTime(250)
+      .subscribe(event => {
+        this.tree.onNodeClick(event, this.node);
+        if (event.detail > 1) {
+          this.tree.onDoubleNodeClick(event, this.node);
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -55,7 +71,7 @@ export class UITreeNodeComponent implements OnInit {
   }
 
   onNodeClick(event: MouseEvent): void {
-    this.tree.onNodeClick(event, this.node);
+    this.click.emit(event);
   }
 
   onNodeRightClick(event: MouseEvent): void {

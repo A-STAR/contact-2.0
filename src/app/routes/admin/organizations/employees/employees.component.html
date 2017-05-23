@@ -1,13 +1,14 @@
-<app-employee-edit
+<app-employee-add
   *ngIf="isEntityBeingCreated"
-  (submit)="onEditSubmit($event, true)"
+  [masterEntity]="masterEntity"
+  (submit)="onAddSubmit($event)"
   (cancel)="cancelAction()">
-</app-employee-edit>
+</app-employee-add>
 
 <app-employee-edit
   *ngIf="isEntityBeingEdited"
   [editedEntity]="selectedEntity"
-  (submit)="onEditSubmit($event, false)"
+  (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
 </app-employee-edit>
 
@@ -25,7 +26,7 @@
   class="flat"
   selectionType="single"
   [columns]="columns"
-  [columnTranslationKey]="'organizations'"
+  [columnTranslationKey]="'organizations.employees'"
   [dataSource]="dataSource"
   [autoLoad]="false"
   [parseFn]="parseFn"

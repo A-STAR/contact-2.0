@@ -283,19 +283,29 @@
   "organizations": {
     "title": "Структура предприятия",
     "employees": {
+      "add": {
+        "title": "Выберите сотрудника",
+        "grid": {
+          "fullName": "ФИО",
+          "position": "Должность",
+          "isBlocked": "Блокирован"
+        }
+      },
       "edit": {
-        "title": "Сотрудник"
+        "title": "Сотрудник",
+        "fullName": "ФИО"
       },
       "remove": {
         "title": "Удаление сотрудника",
         "confirmMessage": "Вы действительно хотите удалить сотрудника?"
+      },
+      "grid": {
+        "name": "Имя",
+        "position": "Должность",
+        "fullName": "ФИО",
+        "roleCode": "Код роли",
+        "isBlocked": "Блокирован"
       }
-    },
-    "grid": {
-      "id": "Ид",
-      "userId": "Ид пользователя",
-      "roleCode": "Код роли",
-      "comment": "Комментарий"
     }
   },
   "default": {

@@ -265,19 +265,29 @@
     "organizations": {
       "title": "Company structure",
       "employees": {
+        "add": {
+          "title": "Choose employees",
+          "grid": {
+            "fullName": "Full name",
+            "position": "Position",
+            "isBlocked": "Blocked"
+          }
+        },
         "edit": {
-          "title": "Employee"
+          "title": "Employee",
+          "fullName": "ФИО"
         },
         "remove": {
           "title": "Delete employee",
           "confirmMessage": "Are you sure you want to delete employee?"
+        },
+        "grid": {
+          "name": "Name",
+          "position": "Position",
+          "fullName": "Full name",
+          "roleCode": "Role code",
+          "isBlocked": "Blocked"
         }
-      },
-      "grid": {
-        "id": "Id",
-        "userId": "User id",
-        "roleCode": "Role code",
-        "comment": "Comment"
       }
     },
     "default": {
