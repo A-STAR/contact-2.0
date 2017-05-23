@@ -53,7 +53,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
             (data: { terms: Array<ITerm> }) => data.terms.map(dict => ({ label: dict.name, value: dict.id }))
           ),
         optionsActions: [
-          { text: 'term.edit.select.type', type: SelectionActionTypeEnum.SORT }
+          { text: 'terms.edit.select.type', type: SelectionActionTypeEnum.SORT }
         ]
       },
       {
