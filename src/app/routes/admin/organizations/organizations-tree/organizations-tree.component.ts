@@ -22,8 +22,6 @@ export class OrganizationsTreeComponent implements OnInit {
   selection: TreeNode;
   value: TreeNode[];
 
-  selectedEntity: IOrganization;
-
   dragulaOptions = {
     copy: true,
     moves: (el: Element, source: Element) => !source.classList.contains('ui-treenode-root')

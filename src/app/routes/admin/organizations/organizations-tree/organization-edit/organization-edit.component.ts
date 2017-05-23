@@ -12,7 +12,7 @@ export class OrganizationEditComponent extends EntityBaseComponent<IOrganization
   protected getControls(): Array<IDynamicFormControl> {
     return [
       { label: 'organizations.organizations.edit.name', controlName: 'name', type: 'text', required: true },
-      { label: 'organizations.organizations.edit.branchCode', controlName: 'branchCode', type: 'select' },
+      // { label: 'organizations.organizations.edit.branchCode', controlName: 'branchCode', type: 'select' },
       { label: 'organizations.organizations.edit.comment', controlName: 'comment', type: 'text' },
       // TODO: color picker
       { label: 'organizations.organizations.edit.boxColor', controlName: 'boxColor', type: 'text' },

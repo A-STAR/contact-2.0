@@ -6,7 +6,7 @@
 
 <app-organization-edit
   *ngIf="isEntityBeingEdited"
-  [editedEntity]="selectedEntity"
+  [editedEntity]="selection && selection.data"
   (submit)="onEditSubmit($event, false)"
   (cancel)="cancelAction()">
 </app-organization-edit>
