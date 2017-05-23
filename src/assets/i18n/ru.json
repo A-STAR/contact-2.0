@@ -307,6 +307,14 @@
       "TRUE": "Истина",
       "FALSE": "Ложь"
     },
+    "typeCode": {
+      "number": "Число",
+      "date": "Дата",
+      "string": "Строка",
+      "boolean": "Булево",
+      "currency": "Деньги",
+      "dictionary": "Словарь"
+    },
     "buttons": {
       "save": "Сохранить",
       "cancel": "Отменить",

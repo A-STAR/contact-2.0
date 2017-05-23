@@ -289,6 +289,14 @@
         "TRUE": "True",
         "FALSE": "False"
       },
+      "typeCode": {
+        "number": "Number",
+        "date": "Date",
+        "string": "String",
+        "boolean": "Boolean",
+        "currency": "Currency",
+        "dictionary": "Dictionary"
+      },
       "buttons": {
         "save": "Save",
         "cancel": "Cancel",
