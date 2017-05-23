@@ -4,7 +4,7 @@ import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { OrganizationsService } from '../organizations.service';
+import { OrganizationsService } from './organizations.service';
 import { IOrganization } from '../organizations.interface';
 
 // TODO: extend from GridEntityComponent
@@ -147,6 +147,20 @@ export class OrganizationsTreeComponent implements OnInit {
 
   onNodeEdit(): void {
     this.action = ToolbarActionTypeEnum.EDIT;
+  }
+
+  onEditSubmit(data: any, create: boolean): void {
+    // TODO: error handling
+    if (create) {
+      this.organizationsService.create(data).subscribe();
+    } else {
+      this.organizationsService.save(this.selection.data.id, data).subscribe();
+    }
+  }
+
+  onRemoveSubmit(): void {
+    // TODO: error handling
+    this.organizationsService.remove(this.selection.data.id);
   }
 
   private get rootNode(): TreeNode {

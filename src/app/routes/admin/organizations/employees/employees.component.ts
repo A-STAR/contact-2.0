@@ -5,7 +5,6 @@ import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { OrganizationsService } from '../organizations.service';
 import { EmployeesService } from './employees.service';
 import { IEmployeeUser } from '../organizations.interface';
 
@@ -57,7 +56,6 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   constructor(
     private employeesService: EmployeesService,
     private columnDecoratorService: GridColumnDecoratorService,
-    private organizationsService: OrganizationsService,
     private translateService: TranslateService) {
 
     super();
