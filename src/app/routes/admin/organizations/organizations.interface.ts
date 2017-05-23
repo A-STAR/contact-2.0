@@ -27,3 +27,8 @@ export interface IEmployee {
   intPhone: string;
   comment: string;
 }
+
+export interface IEmployeesResponse {
+  success: boolean;
+  users: Array<IEmployee>;
+}

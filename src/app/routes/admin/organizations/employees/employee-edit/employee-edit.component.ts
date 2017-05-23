@@ -26,6 +26,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployee> {
   }
 
   protected getControls(): Array<IDynamicFormControl> {
+    // TODO: dictionary service
     const roleSelectOptions = {
       options: [
         { value: 1, label: 'Сотрудник' },

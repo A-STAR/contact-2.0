@@ -26,11 +26,12 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
 
   columns: Array<any> = [
     this.columnDecoratorService.decorateColumn(
-      { prop: 'fullName', minWidth: 200 },
+      { prop: 'fullName', minWidth: 150 },
       (employee: IEmployee) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
     ),
-    { prop: 'position' },
+    { prop: 'position', minWidth: 100 },
     this.columnDecoratorService.decorateColumn(
+      // TODO: dictionary service
       { prop: 'roleCode', minWidth: 100 }, (column, roleCode: number) => {
         switch (roleCode) {
           case 1: return 'Сотрудник';

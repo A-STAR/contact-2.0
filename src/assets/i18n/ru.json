@@ -283,6 +283,14 @@
   "organizations": {
     "title": "Структура предприятия",
     "employees": {
+      "add": {
+        "title": "Выберите сотрудника",
+        "grid": {
+          "fullName": "ФИО",
+          "position": "Должность",
+          "isBlocked": "Блокирован"
+        }
+      },
       "edit": {
         "title": "Сотрудник",
         "fullName": "ФИО"
@@ -293,9 +301,10 @@
       },
       "grid": {
         "name": "Имя",
+        "position": "Должность",
         "fullName": "ФИО",
         "roleCode": "Код роли",
-        "isBlocked": "Заблокирован"
+        "isBlocked": "Блокирован"
       }
     }
   },

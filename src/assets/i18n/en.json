@@ -265,6 +265,14 @@
     "organizations": {
       "title": "Company structure",
       "employees": {
+        "add": {
+          "title": "Choose employees",
+          "grid": {
+            "fullName": "Full name",
+            "position": "Position",
+            "isBlocked": "Blocked"
+          }
+        },
         "edit": {
           "title": "Employee",
           "fullName": "ФИО"
@@ -275,6 +283,7 @@
         },
         "grid": {
           "name": "Name",
+          "position": "Position",
           "fullName": "Full name",
           "roleCode": "Role code",
           "isBlocked": "Blocked"
