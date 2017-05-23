@@ -180,6 +180,10 @@
         "title": "Remove dictionary",
         "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
       }
+     "types": {
+        "system": "System",
+        "client": "Client"
+      }
     },
     "terms": {
       "edit": {
@@ -188,7 +192,10 @@
         "text": "Term text",
         "type": "Term type",
         "parent": "Parent dictionary term",
-        "closed": "Unused term"
+        "closed": "Unused term",
+        "select": {
+          "title": "Term type"
+        }
       },
       "grid": {
         "code": "Dictionary code",

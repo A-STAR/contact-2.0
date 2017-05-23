@@ -35,7 +35,11 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         controlName: 'type',
         type: 'select',
         cachingOptions: true,
-        lazyOptions: this.dictService.getDictTypes(),
+        // TODO Duplication
+        options: [
+          { label: 'dictionaries.types.system', value: 1 },
+          { label: 'dictionaries.types.client', value: 2 },
+        ],
         required: true
       },
       {

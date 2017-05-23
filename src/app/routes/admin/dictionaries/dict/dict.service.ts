@@ -10,13 +10,6 @@ export class DictService {
   constructor(private gridService: GridService) {
   }
 
-  public getDictTypes(): Observable<any> {
-    return Observable.of([
-      { label: 'Системный', value: 1 },
-      { label: 'Общий', value: 2 }
-    ]);
-  }
-
   public getDictList(): Observable<any> {
     return this.gridService.read('/api/dictionaries')
       .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id})));

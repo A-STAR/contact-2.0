@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 import { ITerm } from '../terms.interface';
+import { IDict } from '../../dict/dict.interface';
 
 @Component({
   selector: 'app-term-edit',
@@ -12,11 +13,14 @@ import { ITerm } from '../terms.interface';
 })
 export class TermEditComponent extends EntityBaseComponent<ITerm> {
 
+  @Input() masterEntity: IDict;
+
   constructor(private gridService: GridService) {
     super();
   }
 
   protected getControls(): Array<IDynamicFormControl> {
+    const dictCode: number = this.masterEntity.code;
     return [
       {
         label: 'terms.edit.code',
@@ -34,21 +38,22 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         controlName: 'typeCode',
         type: 'select',
         required: true,
+        // TODO Duplication
         options: [
-          { label: 'Системный', value: 1 },
-          { label: 'Общий', value: 2 },
+          { label: 'dictionaries.types.system', value: 1 },
+          { label: 'dictionaries.types.client', value: 2 },
         ]
       },
       {
         label: 'terms.edit.parent',
         controlName: 'parentCode',
-        type: 'text',
-        lazyOptions: this.gridService.read('/api/term')
+        type: 'select',
+        lazyOptions: this.gridService.read(`/api/dictionaries/${dictCode}/terms`)
           .map(
-            (data: {dicts: Array<ITerm>}) => data.dicts.map(dict => ({label: dict.name, value: dict.id}))
+            (data: { terms: Array<ITerm> }) => data.terms.map(dict => ({ label: dict.name, value: dict.id }))
           ),
         optionsActions: [
-          { text: 'Тип термина', type: SelectionActionTypeEnum.SORT }
+          { text: 'terms.edit.select.type', type: SelectionActionTypeEnum.SORT }
         ]
       },
       {

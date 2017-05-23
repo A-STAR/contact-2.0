@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
@@ -24,11 +25,17 @@ export class DictComponent extends GridEntityComponent<IDict> {
   ];
 
   columns: Array<any> = [
-    { prop: 'id', minWidth: 30, maxWidth: 70 },
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' }, this.dictService.getDictTypes())
+    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' },
+      // TODO Duplication
+      Observable.of([
+        { label: 'dictionaries.types.system', value: 1 },
+        { label: 'dictionaries.types.client', value: 2 }
+      ]),
+      true
+    )
   ];
 
   dataSource: IDataSource = {
