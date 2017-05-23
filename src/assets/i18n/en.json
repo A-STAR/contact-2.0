@@ -65,11 +65,11 @@
     },
     "validation": {
       "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
-      "FIELD_REQUIRED": "This field is required",
-      "FIELD_MIN_LENGTH": "This field must be at least {{ requiredLength }} characters long",
-      "FIELD_DIGITS": "This field should contain at least one digit",
-      "FIELD_LOWER_CASE": "This field should contain at least one lower case character",
-      "FIELD_UPPER_CASE": "This field should contain at least one upper case character",
+      "fieldRequired": "This field is required",
+      "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
+      "fieldDigits": "This field should contain at least one digit",
+      "fieldLowerCase": "This field should contain at least one lower case character",
+      "fieldUpperCase": "This field should contain at least one upper case character",
       "login": {
         "INVALID_CREDENTIALS": "Incorrect login or password"
       }

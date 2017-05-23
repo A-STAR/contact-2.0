@@ -10,7 +10,12 @@ const complexityValidators = complex => complex ? [
   hasUpperCaseChars,
 ] : [];
 
-export const password = (minLength: number, complexity: boolean) => Validators.compose([
+const requiredValidators = required => required ? [
+  Validators.required
+] : [];
+
+export const password = (required: boolean, minLength: number, complexity: boolean) => Validators.compose([
   Validators.minLength(minLength),
-  ...complexityValidators(complexity)
+  ...complexityValidators(complexity),
+  ...requiredValidators(required)
 ]);
