@@ -33,7 +33,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   columns: Array<TableColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    this.columnDecoratorService.decorateColumn(
+    this.columnDecoratorService.decorateLocalizedColumn(
       { prop: 'value', minWidth: 70, maxWidth: 100 },
       (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
     ),
