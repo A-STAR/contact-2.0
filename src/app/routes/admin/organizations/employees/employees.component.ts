@@ -6,6 +6,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 import { OrganizationsService } from '../organizations.service';
+import { EmployeesService } from './employees.service';
 import { IEmployee } from '../organizations.interface';
 
 @Component({
@@ -55,6 +56,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
   };
 
   constructor(
+    private employeesService: EmployeesService,
     private columnDecoratorService: GridColumnDecoratorService,
     private organizationsService: OrganizationsService,
     private translateService: TranslateService) {
@@ -68,7 +70,9 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
   }
 
   onAddSubmit(data: any): void {
-    console.log(data);
+    this.employeesService
+      .save(this.masterEntity.id, data)
+      .subscribe(data => console.log(data));
   }
 
   onEditSubmit(): void {

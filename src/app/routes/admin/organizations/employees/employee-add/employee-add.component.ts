@@ -56,7 +56,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
   onSubmit(): void {
     this.submit.emit({
       roleCode: this.form.value.roleCode[0].id,
-      userIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
+      usersIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
     });
   }
 
