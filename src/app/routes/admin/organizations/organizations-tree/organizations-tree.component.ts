@@ -44,8 +44,16 @@ export class OrganizationsTreeComponent implements OnInit {
 
   constructor(private organizationsService: OrganizationsService) { }
 
+  get isEntityBeingCreated(): boolean {
+    return this.action === ToolbarActionTypeEnum.ADD;
+  }
+
   get isEntityBeingEdited(): boolean {
     return this.action === ToolbarActionTypeEnum.EDIT;
+  }
+
+  get isEntityBeingRemoved(): boolean {
+    return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
   ngOnInit(): void {

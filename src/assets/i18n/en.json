@@ -265,9 +265,19 @@
     "organizations": {
       "title": "Company structure",
       "organizations": {
+        "create": {
+          "title": "New company"
+        },
+        "edit": {
+          "title": "Edit company",
+          "name": "Name",
+          "branchCode": "Branch",
+          "comment": "Comment",
+          "boxColor": "Color"
+        },
         "remove": {
-          "title": "Delete organization",
-          "confirmMessage": "Are you sure you want to delete organization?"
+          "title": "Delete company",
+          "confirmMessage": "Are you sure you want to delete company?"
         }
       },
       "employees": {
