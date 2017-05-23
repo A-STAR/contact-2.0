@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDict } from '../dict.interface';
@@ -11,6 +11,8 @@ import { GridService } from '../../../../../shared/components/grid/grid.service'
   templateUrl: './dict-edit.component.html'
 })
 export class DictEditComponent extends EntityBaseComponent<IDict> {
+
+  @Input() title: string;
 
   constructor(private gridService: GridService) {
     super();

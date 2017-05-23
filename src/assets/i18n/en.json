@@ -164,12 +164,15 @@
       "access_denied": "You have no acces to the dictionaries. Please contact the administrator.",
       "TITLE": "Dictionaries",
       "edit": {
-        "title": "Dictionary",
+        "title": "Dictionary: {{ code }}",
         "code": "Code",
         "name": "Name",
         "type": "Type",
         "parent": "Parent dictionary",
         "list": "Dictionary list"
+      },
+      "create": {
+        "title": "New dictionary"
       },
       "grid": {
         "code": "Dictionary code",
