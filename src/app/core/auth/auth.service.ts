@@ -184,6 +184,6 @@ export class AuthService implements CanActivate, OnInit {
 
   private useLanguage(token: string): void {
     const { language } = this.jwtHelper.decodeToken(token);
-    this.translatorService.useLanguage(language);
+    this.translatorService.useLanguage(language).subscribe();
   }
 }

@@ -4,7 +4,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IEmployee, IEmployeeUser } from '../../organizations.interface';
+import { IEmployeeUser } from '../../organizations.interface';
 
 @Component({
   selector: 'app-employee-edit',
