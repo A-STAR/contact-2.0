@@ -45,6 +45,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
   bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -73,6 +74,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   public ngAfterViewInit(): void {
+    this.permitsGrid.onRowsChange.subscribe(() => this.refreshToolbar());
     this.refreshGrid();
   }
 
@@ -86,6 +88,10 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     this.displayProperties.removePermit = false;
 
     switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.editedPermission = null;
+        this.loadGrid();
+        break;
       case ToolbarActionTypeEnum.EDIT:
         this.displayProperties.editPermit = true;
         break;
@@ -106,7 +112,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     if (records.length) {
       this.editedPermission = records[0];
     }
-    this.refreshToolbar(records);
+    this.refreshToolbar();
   }
 
   onEditPermission(permission: IPermissionModel): void {
@@ -152,7 +158,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   private loadGrid(): void {
     this.permitsGrid.load(this.currentRole)
       .subscribe(
-        () => this.refreshToolbar(),
+        () => {},
         // TODO: display & log a message
         err => console.error(err)
       );
@@ -170,12 +176,12 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private refreshToolbar(permissions: IPermissionModel[] = []): void {
-    const isRoleSelected: boolean = !!this.currentRole;
-    const isRolePermissionSelected: boolean = permissions.length > 0;
+  private refreshToolbar(): void {
+    this.setActionsVisibility(this.bottomRoleActionsGroup, !!this.currentRole);
+    this.setActionsVisibility(this.bottomPermitActionsGroup, !!this.editedPermission);
 
-    this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
-    this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
+    this.bottomActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+      .visible = this.permitsGrid.rows.length > 0;
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
