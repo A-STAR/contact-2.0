@@ -2,6 +2,7 @@ stages:
   - test
   - build
   - deploy
+
 job_test:
   stage: test
   script:
@@ -9,7 +10,9 @@ job_test:
     - echo $CI_PROJECT_DIR    
     - npm install
     - npm run build -- --prod --aot --progress=false
-
+  except: 
+    - dev
+  
 job_build:
   stage: build
   script:
