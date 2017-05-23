@@ -12,6 +12,7 @@ import { TranslatorService } from '../../../core/translator/translator.service';
 })
 export class LoginComponent {
   static LOGIN_KEY = 'auth/login';
+  static USER_LANGUAGE = 'user/language';
 
   valForm: FormGroup;
   error: string = null;
@@ -20,11 +21,16 @@ export class LoginComponent {
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
+    private translateService: TranslatorService,
     private router: Router,
-    private translator: TranslatorService,
   ) {
     const login = this.login;
     const remember = !!login;
+    const language = localStorage.getItem(LoginComponent.USER_LANGUAGE);
+
+    if (language) {
+      translateService.useLanguage(language).subscribe();
+    }
 
     this.valForm = fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],

@@ -2,13 +2,13 @@ import { Injectable, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 
-import { TranslatorService } from '../translator/translator.service';
-
 const TOKEN_NAME = 'auth/token';
+const LANGUAGE_TOKEN = 'user/language';
 
 export const getToken = () => localStorage.getItem(TOKEN_NAME);
 
@@ -33,7 +33,7 @@ export class AuthService implements CanActivate, OnInit {
       private http: AuthHttp,
       private router: Router,
       private jwtHelper: JwtHelper,
-      private translatorService: TranslatorService,
+      private translateService: TranslateService,
   ) {
     const token = getToken();
     if (this.isTokenValid(token)) {
@@ -184,6 +184,7 @@ export class AuthService implements CanActivate, OnInit {
 
   private useLanguage(token: string): void {
     const { language } = this.jwtHelper.decodeToken(token);
-    this.translatorService.useLanguage(language).subscribe();
+    this.translateService.use(language).subscribe();
+    localStorage.setItem(LANGUAGE_TOKEN, language);
   }
 }
