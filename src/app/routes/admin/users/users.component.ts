@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
+import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { UsersService } from './users.service';
@@ -14,7 +14,7 @@ import { UsersService } from './users.service';
 export class UsersComponent implements AfterViewInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  columns: Array<any> = [
+  columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { prop: 'login', minWidth: 120 },
     { prop: 'lastName', minWidth: 120 },
@@ -24,7 +24,7 @@ export class UsersComponent implements AfterViewInit {
     this.columnDecoratorService.decorateRelatedEntityColumn(
       { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
-    this.columnDecoratorService.decorateLocalizedColumn(
+    this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
       { prop: 'isBlocked', minWidth: 100 },
       ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE'

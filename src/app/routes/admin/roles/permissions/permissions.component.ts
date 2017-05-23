@@ -2,9 +2,7 @@ import {
   Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { TableColumn } from '@swimlane/ngx-datatable';
-
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
+import { IDataSource, IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IDisplayProperties } from '../roles.interface';
 import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -30,11 +28,11 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
 
-  columns: Array<TableColumn> = [
+  columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    this.columnDecoratorService.decorateLocalizedColumn(
-      { prop: 'value', minWidth: 70, maxWidth: 100 },
+    this.columnDecoratorService.decorateColumn(
+      { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
       (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
     ),
     { prop: 'dsc', minWidth: 200 },

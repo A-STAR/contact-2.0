@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TableColumn } from '@swimlane/ngx-datatable';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+import { IGridColumn } from './grid.interface';
 
 @Injectable()
 export class GridColumnDecoratorService {
@@ -10,16 +10,17 @@ export class GridColumnDecoratorService {
   constructor(private translateService: TranslateService) {
   }
 
-  public decorateColumn(column: TableColumn, decoratorFn: Function): TableColumn {
-    column.$$valueGetter = (entity: any, fieldName: string) => decoratorFn(entity, Reflect.get(entity, fieldName));
+  public decorateColumn(column: IGridColumn, decoratorFn: Function): IGridColumn {
+    column.$$valueGetter = (entity: any, fieldName: string) => {
+      const value: any = Reflect.get(entity, fieldName);
+      column.localized
+        ? this.translateService.instant(decoratorFn(entity, value))
+        : decoratorFn(entity, value);
+    };
     return column;
   }
 
-  public decorateLocalizedColumn(column: TableColumn, decoratorFn: Function): TableColumn {
-    return this.decorateColumn(column, (entity, value) => this.translateService.instant(decoratorFn(entity, value)));
-  }
-
-  public decorateRelatedEntityColumn(column: TableColumn, entitiesLoader: Observable<ILabeledValue[]>, localize?: boolean): TableColumn {
+  public decorateRelatedEntityColumn(column: IGridColumn, entitiesLoader: Observable<ILabeledValue[]>, localize?: boolean): IGridColumn {
     let entities: ILabeledValue[] = [];
     entitiesLoader.subscribe((data) => entities = data);
 
