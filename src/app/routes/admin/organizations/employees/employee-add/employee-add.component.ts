@@ -29,7 +29,8 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
     { prop: 'position' },
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
+      { prop: 'isBlocked', minWidth: 100 },
+      ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No')
     ),
   ];
 
@@ -48,17 +49,8 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
 
   parseFn = (data: IEmployeesResponse) => data.users;
 
-  transformIsBlocked(isBlocked: number): string {
-    // TODO: render checkbox
-    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
-  }
-
   ngAfterViewInit(): void {
     this.addEmplpoyeeGrid.load({ id: this.masterEntity.id }).subscribe();
-  }
-
-  onAddEmployees(): void {
-    //
   }
 
   onSelectEmployees(employees: Array<IEmployee>): void {
