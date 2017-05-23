@@ -42,10 +42,10 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
       {
         label: 'terms.edit.parent',
         controlName: 'parentCode',
-        type: 'text',
-        lazyOptions: this.gridService.read('/api/term')
+        type: 'select',
+        lazyOptions: this.gridService.read('/api/dictionaries/{code}/terms')
           .map(
-            (data: {dicts: Array<ITerm>}) => data.dicts.map(dict => ({label: dict.name, value: dict.id}))
+            (data: {terms: Array<ITerm>}) => data.terms.map(dict => ({label: dict.name, value: dict.id}))
           ),
         optionsActions: [
           { text: 'Тип термина', type: SelectionActionTypeEnum.SORT }
