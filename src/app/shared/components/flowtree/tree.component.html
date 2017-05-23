@@ -4,12 +4,13 @@
   [ngStyle]="style"
   [class]="styleClass">
   <ul class="ui-tree-container">
-    <app-tree-node *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index"
-                   [node]="node"
-                   [firstChild]="firstChild"
-                   [lastChild]="lastChild"
-                   [index]="index"
-                   [dragulaOptions]="dragulaOptions">
+    <app-tree-node
+      *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index"
+      [node]="node"
+      [firstChild]="firstChild"
+      [lastChild]="lastChild"
+      [index]="index"
+      [dragulaOptions]="dragulaOptions">
     </app-tree-node>
   </ul>
 </div>
@@ -20,10 +21,11 @@
   [class]="styleClass">
   <div *ngIf="value && value[0]">
     <table *ngIf="value[0].children">
-      <app-tree-node *ngFor="let child of value[0].children"
-                     [node]="child"
-                     [root]="true"
-                     [dragulaOptions]="dragulaOptions">
+      <app-tree-node
+        *ngFor="let child of value[0].children"
+        [node]="child"
+        [root]="true"
+        [dragulaOptions]="dragulaOptions">
       </app-tree-node>
     </table>
     <table *ngIf="!value[0].children">

@@ -93,7 +93,7 @@
       "CONNECTION_ERROR": "Connection Error"
     },
     "constants": {
-      "title": "Константы",
+      "title": "Constants",
       "edit": {
         "title": "Constant",
         "name": "Name",
@@ -116,32 +116,32 @@
         }
       },
       "edit": {
-        "title": "Пользователь {{ login }}",
-        "lastName": "Фамилия",
-        "firstName": "Имя",
-        "middleName": "Отчество",
-        "blocked": "Блокирован",
-        "login": "Логин",
-        "password": "Пароль",
-        "role": "Роль",
-        "position": "Должность",
-        "startWorkDate": "Дата начала работы",
-        "endWorkDate": "Дата окончания работы",
-        "mobPhone": "Мобильный телефон",
-        "workPhone": "Рабочий телефон",
-        "intPhone": "Внутренний номер",
+        "title": "User {{ login }}",
+        "lastName": "Family name",
+        "firstName": "Name",
+        "middleName": "Patronim",
+        "blocked": "Blocked",
+        "login": "Login",
+        "password": "Password",
+        "role": "Role",
+        "position": "Position",
+        "startWorkDate": "Start date",
+        "endWorkDate": "Resign date",
+        "mobPhone": "Mobile",
+        "workPhone": "Office phone",
+        "intPhone": "Extension",
         "email": "Email",
-        "address": "Рабочий адрес",
-        "language": "Язык",
-        "comment": "Комментарий"
+        "address": "Office address",
+        "language": "Language",
+        "comment": "Comments"
       },
       "select": {
          "role": {
-           "title": "Выберите роль"
+           "title": "Choose a role"
          }
        },
        "create": {
-         "title": "Новый пользователь"
+         "title": "New user"
        },
       "grid": {
         "id": "Id",
@@ -160,7 +160,7 @@
       }
     },
     "dictionaries": {
-      "access_denied": "Доступ к словарям ограничен. Обратитесь к администратору",
+      "access_denied": "You have no acces to the dictionaries. Please contact the administrator.",
       "TITLE": "Dictionaries",
       "edit": {
         "title": "Dictionary",
@@ -171,10 +171,10 @@
         "list": "Dictionary list"
       },
       "grid": {
-        "code": "Код словаря",
-        "name": "Название",
-        "parentCode": "Родительский словарь",
-        "typeCode": "Тип словаря"
+        "code": "Dictionary code",
+        "name": "Name",
+        "parentCode": "Parent dictionary",
+        "typeCode": "Dictionary type"
       },
       "remove": {
         "title": "Remove dictionary",
@@ -184,18 +184,18 @@
     "terms": {
       "edit": {
         "title": "Dictionary term",
-        "code": "Код термина",
-        "text": "Текст термина",
-        "type": "Тип термина",
-        "parent": "Термин родительского словаря",
-        "closed": "Термин не используется"
+        "code": "Term code",
+        "text": "Term text",
+        "type": "Term type",
+        "parent": "Parent dictionary term",
+        "closed": "Unused term"
       },
       "grid": {
-        "code": "Код словаря",
-        "name": "Текст термина",
-        "typeCode": "Тип термина",
-        "parentCodeName": "Родительский термин",
-        "isClosed": "Не используется"
+        "code": "Dictionary code",
+        "name": "Term text",
+        "typeCode": "Term type",
+        "parentCodeName": "Parent term",
+        "isClosed": "Unused term"
       },
       "remove": {
         "title": "Remove term",
@@ -205,52 +205,52 @@
     "roles": {
       "roles": {
         "copy": {
-          "title": "Копировать роль",
-          "originalRoleName": "Название оригинальной роли",
-          "roleName": "Название",
-          "roleComment": "Комментарий",
+          "title": "Copy role",
+          "originalRoleName": "Original role name",
+          "roleName": "Name",
+          "roleComment": "Comments",
           "select": {
-            "title": "Выберите роль"
+            "title": "Select a role"
           }
         },
         "edit": {
-          "title": "Редактирование роли: {{ id }} ",
-          "name": "Название",
-          "comment": "Комментарий"
+          "title": "Edit role: {{ id }} ",
+          "name": "Name",
+          "comment": "Comments"
         },
         "create": {
-          "title": "Новая роль"
+          "title": "New role"
         },
         "remove": {
-          "title": "Удалить роль",
+          "title": "Remove the role",
           "confirmMessage": "Do you really want to remove the role {{ name }}?"
         },
         "grid": {
-          "id": "ID",
+          "id": "Id",
           "name": "Name",
           "comment": "Comments"
         }
       },
       "permissions": {
         "tab": {
-          "title": "Доступы"
+          "title": "Permits"
         },
         "add": {
-          "title": "Выберите доступ",
+          "title": "Choose a permission",
           "grid": {
-            "name": "Название",
-            "dsc": "Описание"
+            "name": "Name",
+            "dsc": "Description"
           }
         },
         "edit": {
-          "type": "Тип",
-          "name": "Название",
-          "value": "Значение",
-          "description": "Значение",
-          "comment": "Комментарий"
+          "type": "Type",
+          "name": "Name",
+          "value": "Value",
+          "description": "Description",
+          "comment": "Comments"
         },
         "remove": {
-          "title": "Удаление доступа у роли",
+          "title": "Remove role permission",
           "confirmMessage": "Do you really want to remove the permission {{ name }}?"
         },
         "grid": {
