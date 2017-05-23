@@ -13,7 +13,7 @@ export class GridColumnDecoratorService {
   public decorateColumn(column: IGridColumn, decoratorFn: Function): IGridColumn {
     column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
-      column.localized
+      return column.localized
         ? this.translateService.instant(decoratorFn(entity, value))
         : decoratorFn(entity, value);
     };
