@@ -137,7 +137,7 @@ export class OrganizationsTreeComponent implements OnInit {
     this.action = null;
   }
 
-  onNodeEdit(): void {
+  onNodeEdit(data: any): void {
     this.action = ToolbarActionTypeEnum.EDIT;
   }
 
