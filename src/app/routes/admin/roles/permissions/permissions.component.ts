@@ -74,7 +74,10 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
   public ngAfterViewInit(): void {
-    this.permitsGrid.onRowsChange.subscribe(() => this.refreshToolbar());
+    this.permitsGrid.onRowsChange.subscribe(() => {
+      this.editedPermission = null;
+      this.refreshToolbar();
+    });
     this.refreshGrid();
   }
 
@@ -89,7 +92,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
 
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
-        this.editedPermission = null;
         this.loadGrid();
         break;
       case ToolbarActionTypeEnum.EDIT:
