@@ -150,17 +150,17 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    // TODO: error handling
+    // TODO: error handling & dialog closing
     if (create) {
-      this.organizationsService.create(data).subscribe();
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data).subscribe();
     } else {
       this.organizationsService.save(this.selection.data.id, data).subscribe();
     }
   }
 
   onRemoveSubmit(): void {
-    // TODO: error handling
-    this.organizationsService.remove(this.selection.data.id);
+    // TODO: error handling & dialog closing
+    this.organizationsService.remove(this.selection.data.id).subscribe();
   }
 
   private get rootNode(): TreeNode {

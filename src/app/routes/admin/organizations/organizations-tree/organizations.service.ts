@@ -15,8 +15,8 @@ export class OrganizationsService {
       .map((response: IOrganizationsResponse) => this.convertToTreeNodes(response.organizations));
   }
 
-  create(organization: any): Observable<any> {
-    return this.gridService.create('/api/organizations', {}, organization);
+  create(parentId: number, organization: any): Observable<any> {
+    return this.gridService.create('/api/organizations', {}, { ...organization, parentId });
   }
 
   save(organizationId: number, organization: any): Observable<any> {
