@@ -65,7 +65,8 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
         .subscribe(() => this.onSuccess());
     } else {
-      this.gridService.update('/api/dictionaries/{code}/terms/{termsId}', this.masterEntity, data)
+      const termsId: number = this.selectedEntity.id;
+      this.gridService.update(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity, data)
         .subscribe(() => this.onSuccess());
     }
   }
