@@ -1,8 +1,25 @@
 <app-organization-edit
-  *ngIf="isEntityBeingEdited"
+  *ngIf="isEntityBeingCreated"
   (submit)="onEditSubmit($event, true)"
   (cancel)="cancelAction()">
 </app-organization-edit>
+
+<app-organization-edit
+  *ngIf="isEntityBeingEdited"
+  [editedEntity]="selectedEntity"
+  (submit)="onEditSubmit($event, false)"
+  (cancel)="cancelAction()">
+</app-organization-edit>
+
+<app-submitted-popup
+  *ngIf="isEntityBeingRemoved"
+  [titleTranslationKey]="'organizations.organizations.remove.title'"
+  [actionTranslationKey]="'organizations.organizations.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-submitted-popup>
 
 <!-- TODO: fix border styles -->
 <app-toolbar

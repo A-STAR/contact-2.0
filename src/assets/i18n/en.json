@@ -264,6 +264,12 @@
     },
     "organizations": {
       "title": "Company structure",
+      "organizations": {
+        "remove": {
+          "title": "Delete organization",
+          "confirmMessage": "Are you sure you want to delete organization?"
+        }
+      },
       "employees": {
         "add": {
           "title": "Choose employees",

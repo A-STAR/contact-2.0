@@ -282,6 +282,12 @@
   },
   "organizations": {
     "title": "Структура предприятия",
+    "organizations": {
+      "remove": {
+        "title": "Удаление оргиназации",
+        "confirmMessage": "Вы действительно хотите удалить оргиназацию?"
+      }
+    },
     "employees": {
       "add": {
         "title": "Выберите сотрудника",
