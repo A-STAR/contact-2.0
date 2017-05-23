@@ -10,26 +10,26 @@ export class GridColumnDecoratorService {
   constructor(private translateService: TranslateService) {
   }
 
-  public decorateColumn(column: IGridColumn, decoratorFn: Function): IGridColumn {
+  public decorateColumn(column: IGridColumn, decoratorFn: Function | Observable<ILabeledValue[]>): IGridColumn {
+    let entities: ILabeledValue[] = [];
+    const isObservableDecorator: boolean = decoratorFn instanceof Observable;
+    if (isObservableDecorator) {
+      (decoratorFn as Observable<ILabeledValue[]>).subscribe((data) => entities = data);
+    }
     column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
-      return column.localized
-        ? this.translateService.instant(decoratorFn(entity, value))
-        : decoratorFn(entity, value);
-    };
-    return column;
-  }
 
-  public decorateRelatedEntityColumn(column: IGridColumn, entitiesLoader: Observable<ILabeledValue[]>, localize?: boolean): IGridColumn {
-    let entities: ILabeledValue[] = [];
-    entitiesLoader.subscribe((data) => entities = data);
-
-    return this.decorateColumn(column,
-      (entity) => {
+      if (isObservableDecorator) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
         return labeledValue
-          ? (localize ? this.translateService.instant(labeledValue.label) : labeledValue.label)
+          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
           : entity[column.prop];
-      });
+      } else {
+        return column.localized
+          ? this.translateService.instant((decoratorFn as Function)(entity, value))
+          : (decoratorFn as Function)(entity, value);
+      }
+    };
+    return column;
   }
 }
