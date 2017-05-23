@@ -50,13 +50,18 @@ export class DictComponent extends GridEntityComponent<IDict> {
 
   onEditSubmit(data: any, createMode: boolean): void {
     if (createMode) {
-      this.dictService.createDict(data).subscribe(() => this.cancelAction());
+      this.dictService.createDict(data).subscribe(() => this.onSuccess());
     } else {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.cancelAction());
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
     }
   }
 
   onRemoveSubmit(): void {
-    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.cancelAction());
+    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.cancelAction();
+    this.afterUpdate();
   }
 }
