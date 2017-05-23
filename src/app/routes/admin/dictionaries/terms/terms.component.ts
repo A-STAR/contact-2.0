@@ -8,6 +8,8 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
 import { ITerm } from './terms.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-terms',
@@ -22,6 +24,7 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.ADD,
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];
@@ -49,17 +52,15 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   };
 
   constructor(private gridService: GridService,
+              private valueConverterService: ValueConverterService,
               private columnDecoratorService: GridColumnDecoratorService) {
     super();
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {
-    if (Array.isArray(data.typeCode)) {
-      data.typeCode = data.typeCode[0].value;
-    }
-    if (Array.isArray(data.parentCode)) {
-      data.parentCode = data.parentCode[0].value;
-    }
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
         .subscribe(() => this.onSuccess());
