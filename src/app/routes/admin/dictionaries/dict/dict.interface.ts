@@ -1,7 +1,9 @@
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+
 export interface IDict {
   id: number;
   code: number;
   name: string;
-  parentCode: number;
-  typeCode: number;
+  parentCode: number|Array<ILabeledValue>;
+  typeCode: number|Array<ILabeledValue>;
 }

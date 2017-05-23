@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { TreeNode } from '../../../shared/components/flowtree/common/api';
-import { IOrganization, IOrganizationsResponse } from './organizations.interface';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { TreeNode } from '../../../../shared/components/flowtree/common/api';
+import { IOrganization, IOrganizationsResponse } from '../organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
@@ -13,6 +13,18 @@ export class OrganizationsService {
     return this.gridService
       .read('/api/organizations')
       .map((response: IOrganizationsResponse) => this.convertToTreeNodes(response.organizations));
+  }
+
+  create(parentId: number, organization: any): Observable<any> {
+    return this.gridService.create('/api/organizations', {}, { ...organization, parentId });
+  }
+
+  save(organizationId: number, organization: any): Observable<any> {
+    return this.gridService.update('/api/organizations/{organizationId}', { organizationId }, organization);
+  }
+
+  remove(organizationId: number): Observable<any> {
+    return this.gridService.delete('/api/organizations/{organizationId}', { organizationId });
   }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {

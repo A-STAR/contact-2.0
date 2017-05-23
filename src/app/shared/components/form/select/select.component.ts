@@ -92,9 +92,21 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     let currentSelectedItems: number|Array<any> = selectedItems;
     if (typeof currentSelectedItems === 'number') {
       const optionValue: SelectItem = this.itemObjects.find((item: SelectItem) => String(item.id) === String(currentSelectedItems));
-      currentSelectedItems = [
-        {[this.idField]: optionValue.id, [this.textField]: optionValue.text}
-      ];
+      if (optionValue) {
+        currentSelectedItems = [
+          {[this.idField]: optionValue.id, [this.textField]: optionValue.text}
+        ];
+      } else {
+        /**
+         * loadLazyItemsOnInit: true +
+         * lazyOptions: Observable +
+         * edit mode + set initial form values +
+         * number input item
+         */
+        currentSelectedItems = [
+          { [this.idField]: currentSelectedItems }
+        ];
+      }
     }
     if (!currentSelectedItems || currentSelectedItems.length === 0 || !Array.isArray(currentSelectedItems)) {
       this._active = [];

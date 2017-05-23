@@ -4,7 +4,7 @@ import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { OrganizationsService } from '../organizations.service';
+import { OrganizationsService } from './organizations.service';
 import { IOrganization } from '../organizations.interface';
 
 // TODO: extend from GridEntityComponent
@@ -42,8 +42,16 @@ export class OrganizationsTreeComponent implements OnInit {
 
   constructor(private organizationsService: OrganizationsService) { }
 
+  get isEntityBeingCreated(): boolean {
+    return this.action === ToolbarActionTypeEnum.ADD;
+  }
+
   get isEntityBeingEdited(): boolean {
     return this.action === ToolbarActionTypeEnum.EDIT;
+  }
+
+  get isEntityBeingRemoved(): boolean {
+    return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
   ngOnInit(): void {
@@ -137,8 +145,22 @@ export class OrganizationsTreeComponent implements OnInit {
     this.action = null;
   }
 
-  onNodeEdit(): void {
+  onNodeEdit(data: any): void {
     this.action = ToolbarActionTypeEnum.EDIT;
+  }
+
+  onEditSubmit(data: any, create: boolean): void {
+    // TODO: error handling & dialog closing
+    if (create) {
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data).subscribe();
+    } else {
+      this.organizationsService.save(this.selection.data.id, data).subscribe();
+    }
+  }
+
+  onRemoveSubmit(): void {
+    // TODO: error handling & dialog closing
+    this.organizationsService.remove(this.selection.data.id).subscribe();
   }
 
   private get rootNode(): TreeNode {

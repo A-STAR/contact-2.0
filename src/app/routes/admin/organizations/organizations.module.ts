@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
-import { OrganizationsService } from './organizations.service';
 import { OrganizationsComponent } from './organizations.component';
 import { OrganizationsTreeModule } from './organizations-tree/organizations-tree.module';
 import { OrganizationsEmployeesModule } from './employees/employees.module';
@@ -19,9 +18,6 @@ const routes: Routes = [
     ],
     exports: [
       RouterModule,
-    ],
-    providers: [
-      OrganizationsService,
     ],
     declarations: [
       OrganizationsComponent,

@@ -9,10 +9,11 @@ import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.i
 })
 export class DynamicFormComponent implements OnInit {
   static DEFAULT_MESSAGES = {
-    minlength: 'validation.FIELD_MIN_LENGTH',
-    hasdigits: 'validation.FIELD_DIGITS',
-    haslowercasechars: 'validation.FIELD_LOWER_CASE',
-    hasuppercasechars: 'validation.FIELD_UPPER_CASE',
+    required: 'validation.fieldRequired',
+    minlength: 'validation.fieldMinLength',
+    hasdigits: 'validation.fieldDigits',
+    haslowercasechars: 'validation.fieldLowerCase',
+    hasuppercasechars: 'validation.fieldUpperCase',
   };
 
   @Input() controls: Array<IDynamicFormControl>;
@@ -25,10 +26,6 @@ export class DynamicFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.createForm();
     this.populateForm();
-  }
-
-  debug(a: any): string {
-    return JSON.stringify(a);
   }
 
   get canSubmit(): boolean {

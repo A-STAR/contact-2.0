@@ -13,6 +13,7 @@ export abstract class GridEntityComponent<T> implements OnChanges {
   action: ToolbarActionTypeEnum;
   selectedEntity: T;
   bottomActionsGroup: Array<ToolbarActionTypeEnum>;
+  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum>;
   bottomActions: Array<IToolbarAction>;
   dataSource: IDataSource;
 
@@ -89,6 +90,9 @@ export abstract class GridEntityComponent<T> implements OnChanges {
 
   private refreshToolbar(): void {
     this.setActionsVisibility(this.bottomActionsGroup, !!this.selectedEntity);
+    if (Array.isArray(this.bottomActionsMasterGroup)) {
+      this.setActionsVisibility(this.bottomActionsMasterGroup, !!this.masterEntity);
+    }
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {

@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
@@ -25,9 +24,10 @@ export class UsersComponent {
     this.columnDecoratorService.decorateRelatedEntityColumn(
       { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
-    this.columnDecoratorService.decorateColumn(
+    this.columnDecoratorService.decorateLocalizedColumn(
       // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
+      { prop: 'isBlocked', minWidth: 100 },
+      ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'
     ),
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
@@ -65,7 +65,6 @@ export class UsersComponent {
   action: ToolbarActionTypeEnum = null;
 
   constructor(
-    private translateService: TranslateService,
     private columnDecoratorService: GridColumnDecoratorService,
     private usersService: UsersService) {
     this.filter = this.filter.bind(this);
@@ -73,11 +72,6 @@ export class UsersComponent {
 
   filter(user: IUser): boolean {
     return !user.isBlocked || this.displayBlockedUsers;
-  }
-
-  transformIsBlocked(isBlocked: number): string {
-    // TODO: render checkbox
-    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
   parseFn(data: IUsersResponse): Array<IUser> {

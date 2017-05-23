@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 import { IDict } from './dict.interface';
 import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-dict',
@@ -24,11 +28,17 @@ export class DictComponent extends GridEntityComponent<IDict> {
   ];
 
   columns: Array<any> = [
-    { prop: 'id', minWidth: 30, maxWidth: 70 },
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' }, this.dictService.getDictTypes())
+    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' },
+      // TODO Duplication
+      Observable.of([
+        { label: 'dictionaries.types.system', value: 1 },
+        { label: 'dictionaries.types.client', value: 2 }
+      ]),
+      true
+    )
   ];
 
   dataSource: IDataSource = {
@@ -37,19 +47,30 @@ export class DictComponent extends GridEntityComponent<IDict> {
   };
 
   constructor(private dictService: DictService,
+              private gridService: GridService,
+              private valueConverterService: ValueConverterService,
               private columnDecoratorService: GridColumnDecoratorService) {
     super();
   }
 
-  onEditSubmit(data: any, createMode: boolean): void {
+  onEditSubmit(data: IDict, createMode: boolean): void {
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+
     if (createMode) {
-      this.dictService.createDict(data).subscribe(() => this.cancelAction());
+      this.gridService.create('/api/dictionaries', {}, data)
+        .subscribe(() => this.onSuccess());
     } else {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.cancelAction());
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
     }
   }
 
   onRemoveSubmit(): void {
-    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.cancelAction());
+    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.cancelAction();
+    this.afterUpdate();
   }
 }

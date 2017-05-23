@@ -100,6 +100,7 @@ export class UserEditComponent implements OnInit {
     const passwordValidation = {
       validators: [
         password(
+          !this.isUpdating,
           this.constantsService.get('UserPassword.MinLength') as number,
           this.constantsService.get('UserPassword.Complexity.Use') as boolean
         ),
