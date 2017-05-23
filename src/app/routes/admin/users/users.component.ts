@@ -91,7 +91,7 @@ export class UsersComponent implements AfterViewInit {
     this.action = action.type;
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
-        this.refreshToolbar();
+        this.onUpdate();
         break;
       case ToolbarActionTypeEnum.EDIT:
         this.currentUser = this.selectedUser;
