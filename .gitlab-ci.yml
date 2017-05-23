@@ -1,6 +1,18 @@
 stages:
+  - test
   - build
   - deploy
+
+job_test:
+  stage: test
+  script:
+    - cd $CI_PROJECT_DIR
+    - echo $CI_PROJECT_DIR    
+    - npm install
+    - npm run build -- --prod --aot --progress=false
+  except: 
+    - dev
+  
 job_build:
   stage: build
   script:
@@ -25,3 +37,15 @@ deploy_dev:
     name: dev    
   only:
     - dev
+    
+deploy_demo:
+  stage: deploy
+  script:
+    - rm -rf /var/www/html/angular-java-demo/dist
+    - cp -R dist/ /var/www/html/angular-java-demo/
+    - cp -R /var/www/configs/angular-java-demo/* /var/www/html/angular-java-demo/
+  environment:
+    name: demo
+  when: manual
+  only:
+    - dev 
