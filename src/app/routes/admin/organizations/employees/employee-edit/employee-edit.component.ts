@@ -4,13 +4,13 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IEmployee } from '../../organizations.interface';
+import { IEmployee, IEmployeeUser } from '../../organizations.interface';
 
 @Component({
   selector: 'app-employee-edit',
   templateUrl: './employee-edit.component.html'
 })
-export class EmployeeEditComponent extends EntityBaseComponent<IEmployee> {
+export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
   private canEdit = false;
 
   constructor(private gridService: GridService, private userPermissionsService: UserPermissionsService) {
