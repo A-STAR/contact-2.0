@@ -1,3 +1,5 @@
+import { IUser } from '../users/users.interface';
+
 export interface IOrganization {
   id: number;
   name: string;
@@ -14,21 +16,19 @@ export interface IOrganizationsResponse {
 }
 
 export interface IEmployee {
-  userId: number;
+  userId?: number;
   roleCode: number;
-  isBlocked: number;
-  email: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  position: string;
-  mobPhone: string;
-  workPhone: string;
-  intPhone: string;
   comment: string;
+}
+
+export interface IEmployeeCreateData {
+  roleCode: number;
+  usersIds: Array<number>;
 }
 
 export interface IEmployeesResponse {
   success: boolean;
   users: Array<IEmployee>;
 }
+
+export type IEmployeeUser = IUser & IEmployee;

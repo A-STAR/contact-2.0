@@ -7,24 +7,24 @@ import { GridColumnDecoratorService } from '../../../../../shared/components/gri
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { IEmployee, IEmployeesResponse, IOrganization } from '../../organizations.interface';
+import { IEmployeeUser, IEmployee, IEmployeesResponse, IOrganization } from '../../organizations.interface';
 
 @Component({
   selector: 'app-employee-add',
   templateUrl: './employee-add.component.html'
 })
-export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> implements AfterViewInit {
+export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> implements AfterViewInit {
   @Input() masterEntity: IOrganization;
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @ViewChild('addEmplpoyeeGrid') addEmplpoyeeGrid: GridComponent;
 
-  private selectedEmployees: Array<IEmployee>;
+  private selectedEmployees: Array<IEmployeeUser>;
 
   columns: Array<any> = [
     this.columnDecoratorService.decorateColumn(
       { prop: 'fullName', minWidth: 200 },
-      (employee: IEmployee) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
+      (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
     ),
     { prop: 'position' },
     this.columnDecoratorService.decorateColumn(
@@ -64,7 +64,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
     this.addEmplpoyeeGrid.load({ id: this.masterEntity.id }).subscribe();
   }
 
-  onSelectEmployees(employees: Array<IEmployee>): void {
+  onSelectEmployees(employees: Array<IEmployeeUser>): void {
     this.selectedEmployees = employees;
   }
 

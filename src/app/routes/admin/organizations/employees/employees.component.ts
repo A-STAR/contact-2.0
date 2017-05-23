@@ -7,13 +7,13 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 import { OrganizationsService } from '../organizations.service';
 import { EmployeesService } from './employees.service';
-import { IEmployee } from '../organizations.interface';
+import { IEmployeeUser } from '../organizations.interface';
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html'
 })
-export class EmployeesComponent extends GridEntityComponent<IEmployee> {
+export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
@@ -28,7 +28,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
   columns: Array<any> = [
     this.columnDecoratorService.decorateColumn(
       { prop: 'fullName', minWidth: 150 },
-      (employee: IEmployee) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
+      (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
     ),
     { prop: 'position', minWidth: 100 },
     this.columnDecoratorService.decorateColumn(
@@ -51,7 +51,6 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
 
   dataSource: IDataSource = {
     read: '/api/organizations/{id}/users',
-    // update: '/api/terms',
     dataKey: 'users',
   };
 
@@ -71,11 +70,26 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
 
   onAddSubmit(data: any): void {
     this.employeesService
-      .save(this.masterEntity.id, data)
-      .subscribe(data => console.log(data));
+      .create(this.masterEntity.id, data)
+      .subscribe(
+        // TODO: reload grid
+        // TODO: handle errors
+      );
   }
 
-  onEditSubmit(): void {
+  onEditSubmit(data: IEmployeeUser): void {
+    this.employeesService
+      .save(this.masterEntity.id, this.selectedEntity.userId, {
+        roleCode: data.roleCode, //data.roleCode[0].id,
+        comment: data.comment
+      })
+      .subscribe(
+        // TODO: reload grid
+        // TODO: handle errors
+      );
+  }
+
+  onRemoveSubmit(data: any): void {
     //
   }
 }
