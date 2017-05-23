@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
 @Component({
@@ -9,9 +10,10 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
 })
 export class DatePickerComponent implements OnInit, OnDestroy {
   @Input() controlName: string;
+  @Input() form: FormGroup;
+  @Input() language = 'en';
   @Input() name: string;
   @Input() value: string;
-  @Input() form: FormGroup;
   @Output() valueChange = new EventEmitter<string>();
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -23,22 +25,37 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
   dateFormat = 'dd.mm.yy';
 
+  locale = {};
+
   mask = {
     mask: [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/],
     pipe: createAutoCorrectedDatePipe('dd.mm.yyyy'),
     keepCharPositions: true
   };
 
-  locale = {
-    firstDayOfWeek: 1,  // 0 = Sunday, 1 = Monday, etc.
-    dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-    dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+  private locales = {
+    ru: {
+      // 0 = Sunday, 1 = Monday, etc.
+      firstDayOfWeek: 1,
+      dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+      dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    },
+    en: {
+      firstDayOfWeek: 1,
+      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      monthNames: [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+      ],
+      monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    }
   };
 
-  constructor() {
+  constructor(private translateService: TranslateService) {
     if (this.controlName && this.name) {
       throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
     }
@@ -61,6 +78,10 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     if (this.controlName && this.form.get(this.controlName).value) {
       this.value = this.form.get(this.controlName).value;
     }
+
+    this.language = this.translateService.currentLang;
+    this.locale = this.locales[this.language];
+
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
@@ -97,7 +118,8 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
-      setTimeout(() => this.positionDropdown(), 0);  // TODO: is there a better way to do this?
+      // TODO: is there a better way to do this?
+      setTimeout(() => this.positionDropdown(), 0);
     }
   }
 

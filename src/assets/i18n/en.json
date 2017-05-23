@@ -275,11 +275,11 @@
         },
         "edit": {
           "title": "Employee",
-          "fullName": "ФИО"
+          "fullName": "Full name"
         },
         "remove": {
           "title": "Delete employee",
-          "confirmMessage": "Are you sure you want to delete employee?"
+          "confirmMessage": "Are you sure you want to delete the employee?"
         },
         "grid": {
           "name": "Name",
