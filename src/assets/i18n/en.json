@@ -266,20 +266,19 @@
       "title": "Company structure",
       "employees": {
         "edit": {
-          "title": "Employee"
+          "title": "Employee",
+          "fullName": "ФИО"
         },
         "remove": {
           "title": "Delete employee",
           "confirmMessage": "Are you sure you want to delete employee?"
+        },
+        "grid": {
+          "name": "Name",
+          "fullName": "Full name",
+          "roleCode": "Role code",
+          "isBlocked": "Blocked"
         }
-      },
-      "grid": {
-        "name": "Name",
-        "lastName": "Last name",
-        "middleName": "Middle name",
-        "firstName": "First name",
-        "roleCode": "Role code",
-        "isBlocked": "Blocked"
       }
     },
     "default": {

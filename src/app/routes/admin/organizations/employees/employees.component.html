@@ -1,8 +1,10 @@
+<!--
 <app-employee-edit
   *ngIf="isEntityBeingCreated"
   (submit)="onEditSubmit($event, true)"
   (cancel)="cancelAction()">
 </app-employee-edit>
+-->
 
 <app-employee-edit
   *ngIf="isEntityBeingEdited"
@@ -25,7 +27,7 @@
   class="flat"
   selectionType="single"
   [columns]="columns"
-  [columnTranslationKey]="'organizations'"
+  [columnTranslationKey]="'organizations.employees'"
   [dataSource]="dataSource"
   [autoLoad]="false"
   [parseFn]="parseFn"

@@ -284,20 +284,19 @@
     "title": "Структура предприятия",
     "employees": {
       "edit": {
-        "title": "Сотрудник"
+        "title": "Сотрудник",
+        "fullName": "ФИО"
       },
       "remove": {
         "title": "Удаление сотрудника",
         "confirmMessage": "Вы действительно хотите удалить сотрудника?"
+      },
+      "grid": {
+        "name": "Имя",
+        "fullName": "ФИО",
+        "roleCode": "Код роли",
+        "isBlocked": "Заблокирован"
       }
-    },
-    "grid": {
-      "name": "Имя",
-      "lastName": "Фамилия",
-      "middleName": "Отчество",
-      "firstName": "Имя",
-      "roleCode": "Код роли",
-      "isBlocked": "Заблокирован"
     }
   },
   "default": {

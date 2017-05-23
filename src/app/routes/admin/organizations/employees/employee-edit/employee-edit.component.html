@@ -3,7 +3,7 @@
     <h3>{{ 'organizations.employees.edit.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit()" (click)="onSubmit()">
