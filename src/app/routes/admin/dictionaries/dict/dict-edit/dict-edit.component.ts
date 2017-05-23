@@ -4,7 +4,7 @@ import { IDynamicFormControl } from '../../../../../shared/components/form/dynam
 import { IDict } from '../dict.interface';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { DictService } from '../dict.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-dict-edit',
@@ -12,7 +12,7 @@ import { DictService } from '../dict.service';
 })
 export class DictEditComponent extends EntityBaseComponent<IDict> {
 
-  constructor(private dictService: DictService) {
+  constructor(private gridService: GridService) {
     super();
   }
 
@@ -32,23 +32,24 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
       },
       {
         label: 'dictionaries.edit.type',
-        controlName: 'type',
+        controlName: 'typeCode',
         type: 'select',
-        cachingOptions: true,
+        required: true,
         // TODO Duplication
         options: [
           { label: 'dictionaries.types.system', value: 1 },
           { label: 'dictionaries.types.client', value: 2 },
-        ],
-        required: true
+        ]
       },
       {
         label: 'dictionaries.edit.parent',
-        controlName: 'parent',
+        controlName: 'parentCode',
         type: 'select',
-        lazyOptions: this.dictService.getDictList(),
+        loadLazyItemsOnInit: true,
+        lazyOptions: this.gridService.read('/api/dictionaries')
+          .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
         optionsActions: [
-          { text: '', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.type', type: SelectionActionTypeEnum.SORT }
         ]
       }
     ];

@@ -179,7 +179,7 @@
       "remove": {
         "title": "Remove dictionary",
         "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
-      }
+      },
      "types": {
         "system": "System",
         "client": "Client"

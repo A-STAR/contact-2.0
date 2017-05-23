@@ -6,6 +6,9 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
 import { IDict } from './dict.interface';
 import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-dict',
@@ -44,13 +47,19 @@ export class DictComponent extends GridEntityComponent<IDict> {
   };
 
   constructor(private dictService: DictService,
+              private gridService: GridService,
+              private valueConverterService: ValueConverterService,
               private columnDecoratorService: GridColumnDecoratorService) {
     super();
   }
 
-  onEditSubmit(data: any, createMode: boolean): void {
+  onEditSubmit(data: IDict, createMode: boolean): void {
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+
     if (createMode) {
-      this.dictService.createDict(data).subscribe(() => this.onSuccess());
+      this.gridService.create('/api/dictionaries', {}, data)
+        .subscribe(() => this.onSuccess());
     } else {
       this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
     }
