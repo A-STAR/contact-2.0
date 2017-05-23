@@ -7,7 +7,8 @@ export enum ToolbarActionTypeEnum {
   ADD,
   EDIT,
   CLONE,
-  REMOVE
+  REMOVE,
+  REFRESH
 }
 
 export interface IToolbarAction {

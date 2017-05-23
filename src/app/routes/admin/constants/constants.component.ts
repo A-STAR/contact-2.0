@@ -16,6 +16,7 @@ import { IConstant } from './constants.interface';
 export class ConstantsComponent extends GridEntityComponent<IConstant> {
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
