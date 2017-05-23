@@ -11,3 +11,13 @@ export interface IParameters {
 }
 
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
+
+export interface IGridColumn {
+  localized?: boolean;
+  prop: string;
+  name?: string;
+  minWidth?: number;
+  maxWidth?: number;
+  disabled?: boolean;
+  $$valueGetter?: Function;
+}
