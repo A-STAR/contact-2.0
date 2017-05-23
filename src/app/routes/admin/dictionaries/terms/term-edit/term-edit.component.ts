@@ -32,6 +32,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         label: 'terms.edit.text',
         controlName: 'name',
         type: 'text',
+        required: true
       },
       {
         label: 'terms.edit.type',
