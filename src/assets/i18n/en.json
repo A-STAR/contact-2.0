@@ -271,6 +271,22 @@
     },
     "organizations": {
       "title": "Company structure",
+      "organizations": {
+        "create": {
+          "title": "New company"
+        },
+        "edit": {
+          "title": "Edit company",
+          "name": "Name",
+          "branchCode": "Branch",
+          "comment": "Comment",
+          "boxColor": "Color"
+        },
+        "remove": {
+          "title": "Delete company",
+          "confirmMessage": "Are you sure you want to delete company?"
+        }
+      },
       "employees": {
         "add": {
           "title": "Choose employees",
