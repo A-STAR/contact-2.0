@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -28,7 +29,14 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   columns: Array<any> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 400 },
-    { prop: 'typeCode' },
+    this.columnDecoratorService.decorateRelatedEntityColumn({prop: 'typeCode'},
+      // TODO Duplication
+      Observable.of([
+        { label: 'dictionaries.types.system', value: 1 },
+        { label: 'dictionaries.types.client', value: 2 }
+      ]),
+      true
+    ),
     this.columnDecoratorService.decorateColumn({ prop: 'parentCodeName' },
       (term: ITerm) => term.parentCodeName || term.parentCode),
     this.columnDecoratorService.decorateColumn({ prop: 'isClosed' },

@@ -13,7 +13,7 @@ export class DictService {
   public getDictTypes(): Observable<any> {
     return Observable.of([
       { label: 'Системный', value: 1 },
-      { label: 'Общий', value: 2 }
+      { label: 'Клиентский', value: 2 }
     ]);
   }
 

@@ -38,9 +38,10 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         controlName: 'typeCode',
         type: 'select',
         required: true,
+        // TODO Duplication
         options: [
-          { label: 'Системный', value: 1 },
-          { label: 'Общий', value: 2 },
+          { label: 'dictionaries.types.system', value: 1 },
+          { label: 'dictionaries.types.client', value: 2 },
         ]
       },
       {
@@ -52,7 +53,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
             (data: { terms: Array<ITerm> }) => data.terms.map(dict => ({ label: dict.name, value: dict.id }))
           ),
         optionsActions: [
-          { text: 'Тип термина', type: SelectionActionTypeEnum.SORT }
+          { text: 'term.edit.select.type', type: SelectionActionTypeEnum.SORT }
         ]
       },
       {
