@@ -9,16 +9,10 @@ import {
 } from 'primeng/primeng';
 
 import { TabledemoComponent } from './datatable/tabledemo.component';
-import { GroupableComponent } from './groupable/groupable.component';
-import { ReorderableComponent } from './reorderable/reorderable.component';
-import { SortableComponent } from './sortable/sortable.component';
 import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
   { path: 'large', component: TabledemoComponent },
-  { path: 'sortable', component: SortableComponent },
-  { path: 'reorderable', component: ReorderableComponent },
-  { path: 'groupable', component: GroupableComponent },
 ];
 
 @NgModule({
@@ -32,15 +26,10 @@ const routes: Routes = [
     SharedModule,
   ],
   declarations: [
-    GroupableComponent,
-    ReorderableComponent,
-    SortableComponent,
     TabledemoComponent,
   ],
   exports: [
     RouterModule,
   ],
-  providers: [
-  ]
 })
 export class TablesModule { }
