@@ -38,6 +38,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
 
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
@@ -129,7 +130,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.gridService
       .read(this.dataSource.read, parameters)
       .map(data => this.parseFn(data))
-      .do(data => this.rows = data)
+      .do(data => this.updateRows(data))
       .catch(err => {
         // TODO: gisplay message & log
         console.error(err);
@@ -146,20 +147,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   clear(): void {
-    this.rows = [];
+    this.updateRows([]);
   }
 
   onActionClick(event: any): void {
     this.onAction.emit(event);
   }
 
-  findRowById(id: number): any {
-    return this.rows.find((item: { id: number }) => item.id === id);
-  }
-
-  removeRowById(id: number): void {
-    const index: number = this.rows.findIndex((item: { id: number }) => item.id === id);
-    this.rows.splice(index, 1);
+  updateRows(data: any[]): void {
+    this.rows = data;
+    this.onRowsChange.emit(data);
   }
 
   onActivate(event: any): void {

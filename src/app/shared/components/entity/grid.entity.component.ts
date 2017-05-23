@@ -1,10 +1,10 @@
-import { EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from '@angular/core';
+import { EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { GridComponent } from '../grid/grid.component';
 import { IDataSource } from '../grid/grid.interface';
 
-export abstract class GridEntityComponent<T> implements OnChanges {
+export abstract class GridEntityComponent<T> implements OnChanges, OnInit {
 
   @Input() masterEntity: any;   // TODO master type
   @Output() onSelect: EventEmitter<T> = new EventEmitter();
@@ -16,6 +16,10 @@ export abstract class GridEntityComponent<T> implements OnChanges {
   bottomActionsMasterGroup: Array<ToolbarActionTypeEnum>;
   bottomActions: Array<IToolbarAction>;
   dataSource: IDataSource;
+
+  ngOnInit(): void {
+    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+  }
 
   public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
     this.refreshGrid();
@@ -36,7 +40,13 @@ export abstract class GridEntityComponent<T> implements OnChanges {
   parseFn = data => (data[this.dataSource.dataKey] || []) as Array<T>;
 
   onAction(action: IToolbarAction): void {
-    this.action = action.type;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.afterUpdate();
+        break;
+      default:
+        this.action = action.type;
+    }
   }
 
   cancelAction(): void {
@@ -63,10 +73,6 @@ export abstract class GridEntityComponent<T> implements OnChanges {
     }
   }
 
-  callActionByType(type: ToolbarActionTypeEnum): void {
-    this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
-  }
-
   private refreshGrid(): void {
     if (!this.grid) {
       return;
@@ -82,7 +88,7 @@ export abstract class GridEntityComponent<T> implements OnChanges {
   private loadGrid(): void {
     this.grid.load(this.masterEntity)
       .subscribe(
-        () => this.refreshToolbar(),
+        () => {},
         // TODO: display & log a message
         err => console.error(err)
       );
@@ -93,11 +99,19 @@ export abstract class GridEntityComponent<T> implements OnChanges {
     if (Array.isArray(this.bottomActionsMasterGroup)) {
       this.setActionsVisibility(this.bottomActionsMasterGroup, !!this.masterEntity);
     }
+
+    const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
+    if (refreshAction) {
+      refreshAction.visible = this.grid.rows.length > 0;
+    }
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-    });
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) =>
+      this.findToolbarActionByType(actionType).visible = visible);
+  }
+
+  private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
+    return this.bottomActions.find((action: IToolbarAction) => actionType === action.type);
   }
 }

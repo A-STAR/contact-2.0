@@ -8,10 +8,11 @@ export class IconsService {
     [ToolbarActionTypeEnum.CLONE, 'clone'],
     [ToolbarActionTypeEnum.EDIT, 'pencil'],
     [ToolbarActionTypeEnum.REMOVE, 'trash'],
-    [ToolbarActionTypeEnum.ADD, 'plus']
+    [ToolbarActionTypeEnum.ADD, 'plus'],
+    [ToolbarActionTypeEnum.REFRESH, 'refresh']
   ]);
 
-  public fromActionType(actionType: ToolbarActionTypeEnum) {
+  public fromActionType(actionType: ToolbarActionTypeEnum): string {
     return this.ACTION_ICONS_MAP.get(actionType) || `default-${actionType}`;
   }
 }
