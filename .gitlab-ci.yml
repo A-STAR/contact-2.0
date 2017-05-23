@@ -9,9 +9,6 @@ job_test:
     - echo $CI_PROJECT_DIR    
     - npm install
     - npm run build -- --prod --aot --progress=false
-  only:
-    - ci-test
-
 
 job_build:
   stage: build
@@ -25,7 +22,7 @@ job_build:
     paths:
       - dist/
   only:
-    - ci-test
+    - dev
 
 deploy_dev:
   stage: deploy
@@ -48,4 +45,4 @@ deploy_demo:
     name: demo
   when: manual
   only:
-    - ci-test   
+    - dev 
