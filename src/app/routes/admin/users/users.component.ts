@@ -26,7 +26,7 @@ export class UsersComponent implements AfterViewInit {
     ),
     this.columnDecoratorService.decorateColumn(
       // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100 },
+      { prop: 'isBlocked', minWidth: 100, localized: true },
       ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE'
     ),
     { prop: 'mobPhone', minWidth: 140 },
