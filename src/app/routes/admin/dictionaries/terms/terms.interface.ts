@@ -3,5 +3,7 @@ export interface ITerm {
   code: number;
   name: string;
   typeCode: number;
+  parentCode: number;
+  parentCodeName: string;
   isClosed: boolean;
 }

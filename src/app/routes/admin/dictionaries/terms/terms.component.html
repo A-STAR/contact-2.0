@@ -1,4 +1,5 @@
 <app-term-edit *ngIf="isEntityBeingCreated"
+               [masterEntity]="masterEntity"
                (submit)="onEditSubmit($event, true)"
                (cancel)="cancelAction()"></app-term-edit>
 

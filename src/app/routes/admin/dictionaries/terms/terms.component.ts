@@ -6,6 +6,7 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
 
 import { ITerm } from './terms.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 
 @Component({
   selector: 'app-terms',
@@ -25,11 +26,13 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   columns: Array<any> = [
-    { prop: 'code', minWidth: 30, maxWidth: 70 },
+    { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 400 },
     { prop: 'typeCode' },
-    { prop: 'parentCodeName' },
-    { prop: 'isClosed' },
+    this.columnDecoratorService.decorateColumn({ prop: 'parentCodeName' },
+      (term: ITerm) => term.parentCodeName || term.parentCode),
+    this.columnDecoratorService.decorateColumn({ prop: 'isClosed' },
+      (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : '')
   ];
 
   dataSource: IDataSource = {
@@ -37,13 +40,17 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
     dataKey: 'terms',
   };
 
-  constructor(private gridService: GridService) {
+  constructor(private gridService: GridService,
+              private columnDecoratorService: GridColumnDecoratorService) {
     super();
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {
     if (Array.isArray(data.typeCode)) {
       data.typeCode = data.typeCode[0].value;
+    }
+    if (Array.isArray(data.parentCode)) {
+      data.parentCode = data.parentCode[0].value;
     }
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)

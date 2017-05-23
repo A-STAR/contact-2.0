@@ -24,7 +24,6 @@ export class DictComponent extends GridEntityComponent<IDict> {
   ];
 
   columns: Array<any> = [
-    { prop: 'id', minWidth: 30, maxWidth: 70 },
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
