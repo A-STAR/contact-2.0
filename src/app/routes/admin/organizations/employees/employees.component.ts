@@ -67,4 +67,11 @@ export class EmployeesComponent extends GridEntityComponent<IEmployee> {
     return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
+  onAddSubmit(data: any): void {
+    console.log(data);
+  }
+
+  onEditSubmit(): void {
+    //
+  }
 }

@@ -18,13 +18,13 @@
     </app-grid>
   </div>
 
-  <app-dynamic-form [controls]="controls"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 
   <div dialog-footer>
     <button
       class="btn btn-success"
-      [disabled]="!canAddEmployees()"
-      (click)="onAddEmployees()"
+      [disabled]="!canSubmit()"
+      (click)="onSubmit()"
     >
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>

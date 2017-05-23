@@ -39,6 +39,10 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
     dataKey: 'users'
   };
 
+  formData = {
+    roleCode: 1
+  };
+
   constructor(
     private columnDecoratorService: GridColumnDecoratorService,
     private valueConverterService: ValueConverterService,
@@ -49,6 +53,13 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
 
   parseFn = (data: IEmployeesResponse) => data.users;
 
+  onSubmit(): void {
+    this.submit.emit({
+      roleCode: this.form.value.roleCode[0].id,
+      userIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
+    });
+  }
+
   ngAfterViewInit(): void {
     this.addEmplpoyeeGrid.load({ id: this.masterEntity.id }).subscribe();
   }
@@ -57,8 +68,8 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployee> impleme
     this.selectedEmployees = employees;
   }
 
-  canAddEmployees(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0;
+  canSubmit(): boolean {
+    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form.canSubmit;
   }
 
   protected getControls(): Array<IDynamicFormControl> {
