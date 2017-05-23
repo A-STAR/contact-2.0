@@ -4,6 +4,7 @@
                (cancel)="cancelAction()"></app-term-edit>
 
 <app-term-edit *ngIf="isEntityBeingEdited"
+               [masterEntity]="masterEntity"
                [editedEntity]="selectedEntity"
                (submit)="onEditSubmit($event, false)"
                (cancel)="cancelAction()"></app-term-edit>
