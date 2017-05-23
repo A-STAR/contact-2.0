@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
 
-import { ILabeledValue, ILocalizedValue, IValueEntity, ValueType } from './value-converter.interface';
+import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
 
-  private _localizedValues: ILocalizedValue = {};
-
-  constructor(private datePipe: DatePipe, private translateService: TranslateService) {
-    this.translateService.get('default.boolean.TRUE')
-      .subscribe((v: string) => this._localizedValues.trueValue = v);
-    this.translateService.get('default.boolean.FALSE')
-      .subscribe((v: string) => this._localizedValues.falseValue = v);
+  constructor(private datePipe: DatePipe) {
   }
 
   public serialize(valueEntity: IValueEntity): IValueEntity {
@@ -65,8 +58,8 @@ export class ValueConverterService {
       return valueEntity.value;
     } else if (valueEntity.typeCode === 4) {
       return booleanValue === 1
-        ? this._localizedValues.trueValue
-        : this._localizedValues.falseValue;
+        ? 'default.boolean.TRUE'
+        : 'default.boolean.FALSE';
     }
     return booleanValue;
   }
