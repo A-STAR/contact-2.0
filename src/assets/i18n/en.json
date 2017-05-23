@@ -191,7 +191,7 @@
     },
     "terms": {
       "edit": {
-        "title": "Dictionary term",
+        "title": "Term: {{ code }}",
         "code": "Term code",
         "text": "Term text",
         "type": "Term type",
@@ -200,6 +200,9 @@
         "select": {
           "title": "Term type"
         }
+      },
+      "create": {
+        "title": "New term"
       },
       "grid": {
         "code": "Dictionary code",
