@@ -1,5 +1,7 @@
 export interface ITerm {
   id: number;
+  code: number;
   name: string;
-  system: number;
+  typeCode: number;
+  isClosed: boolean;
 }

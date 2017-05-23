@@ -34,10 +34,8 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         label: 'dictionaries.edit.type',
         controlName: 'type',
         type: 'select',
-        options: [
-          { label: 'Системный', value: 1 },
-          { label: 'Общий', value: 2 },
-        ],
+        cachingOptions: true,
+        lazyOptions: this.dictService.getDictTypes(),
         required: true
       },
       {

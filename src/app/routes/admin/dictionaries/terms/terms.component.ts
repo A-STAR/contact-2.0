@@ -5,6 +5,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 import { ITerm } from './terms.interface';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-terms',
@@ -32,11 +33,35 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   dataSource: IDataSource = {
-    read: '/api/{id}/terms',
+    read: '/api/dictionaries/{code}/terms',
     dataKey: 'terms',
   };
 
-  constructor() {
+  constructor(private gridService: GridService) {
     super();
+  }
+
+  onEditSubmit(data: ITerm, createMode: boolean): void {
+    if (Array.isArray(data.typeCode)) {
+      data.typeCode = data.typeCode[0].value;
+    }
+    if (createMode) {
+      this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
+        .subscribe(() => this.onSuccess());
+    } else {
+      this.gridService.update('/api/dictionaries/{code}/terms/{termsId}', this.masterEntity, data)
+        .subscribe(() => this.onSuccess());
+    }
+  }
+
+  onRemoveSubmit(): void {
+    const termsId: number = this.selectedEntity.id;
+    this.gridService.delete(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity)
+      .subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.cancelAction();
+    this.afterUpdate();
   }
 }

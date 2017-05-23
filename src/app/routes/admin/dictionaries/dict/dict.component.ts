@@ -4,6 +4,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 import { IDict } from './dict.interface';
 import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
+import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 
 @Component({
   selector: 'app-dict',
@@ -24,18 +25,19 @@ export class DictComponent extends GridEntityComponent<IDict> {
 
   columns: Array<any> = [
     { prop: 'id', minWidth: 30, maxWidth: 70 },
-    { prop: 'code', minWidth: 30, maxWidth: 70 },
+    { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    { prop: 'typeCode'},
+    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' }, this.dictService.getDictTypes())
   ];
 
   dataSource: IDataSource = {
     read: '/api/dictionaries',
-    dataKey: 'dict',
+    dataKey: 'dictNames',
   };
 
-  constructor(private dictService: DictService) {
+  constructor(private dictService: DictService,
+              private columnDecoratorService: GridColumnDecoratorService) {
     super();
   }
 

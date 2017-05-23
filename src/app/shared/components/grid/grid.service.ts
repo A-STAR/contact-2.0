@@ -47,47 +47,6 @@ export class GridService {
   }
 
   private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
-    if (url === '/api/dictionaries') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'dict': [
-              {'id': 1, 'name': 'test_dict1', typeCode: 24, parentCode: 3, code: '34' },
-              {'id': 2, 'name': 'test_dict2', typeCode: 234, parentCode: 2, code: '67' },
-            ]
-          }
-        );
-        observer.complete();
-      });
-    } else if (url === '/api/{id}/terms') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'terms': [
-              {'id': 100, 'name': 'test_term1', 'code': 23, isClosed: 1, typeCode: '5', language: 'es'},
-              {'id': 200, 'name': 'test_term2', 'code': 46, isClosed: 0, typeCode: '6', language: 'ru'},
-            ]
-          }
-        );
-        observer.complete();
-      });
-    } else if (url === '/api/dict/list') {
-      return new Observable(observer => {
-        observer.next(
-          {
-            'success': true,
-            'dictList': [
-              {'id': 1, 'name': 'test_dict1'},
-              {'id': 2, 'name': 'test_dict2'},
-            ]
-          }
-        );
-        observer.complete();
-      });
-    }
-
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);

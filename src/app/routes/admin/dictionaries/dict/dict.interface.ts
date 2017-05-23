@@ -1,5 +1,7 @@
 export interface IDict {
   id: number;
+  code: number;
   name: string;
-  system: number;
+  parentCode: number;
+  typeCode: number;
 }
