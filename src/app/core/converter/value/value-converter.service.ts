@@ -71,19 +71,23 @@ export class ValueConverterService {
     return booleanValue;
   }
 
-  public toLabeledValues(data: ILabeledValue[]): any[] {
+  public toLabeledValues(data: number|ILabeledValue[]): number|any[] {
     if (Array.isArray(data)) {
       return data.map((labeledValue: ILabeledValue) => labeledValue.value);
     }
-    return null;
+    return data;
   }
 
-  public firstLabeledValue(data: ILabeledValue[]): any[] {
-    const array: any[] = this.toLabeledValues(data);
-    return array && array.length ? array[0] : null;
+  public firstLabeledValue(data: number|ILabeledValue[]): number|any[] {
+    const array: number|any[] = this.toLabeledValues(data);
+    if (Array.isArray(array)) {
+      return array && array.length ? array[0] : data;
+    } else {
+      return data;
+    }
   }
 
-  private toNumber(value: ValueType): number {
+  public toNumber(value: ValueType): number {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'boolean') {

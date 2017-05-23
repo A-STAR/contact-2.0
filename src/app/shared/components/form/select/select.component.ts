@@ -96,6 +96,16 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
         currentSelectedItems = [
           {[this.idField]: optionValue.id, [this.textField]: optionValue.text}
         ];
+      } else {
+        /**
+         * loadLazyItemsOnInit: true +
+         * lazyOptions: Observable +
+         * edit mode + set initial form values +
+         * number input item
+         */
+        currentSelectedItems = [
+          { [this.idField]: currentSelectedItems }
+        ];
       }
     }
     if (!currentSelectedItems || currentSelectedItems.length === 0 || !Array.isArray(currentSelectedItems)) {

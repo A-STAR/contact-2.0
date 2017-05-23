@@ -32,6 +32,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         label: 'terms.edit.text',
         controlName: 'name',
         type: 'text',
+        required: true
       },
       {
         label: 'terms.edit.type',
@@ -48,6 +49,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         label: 'terms.edit.parent',
         controlName: 'parentCode',
         type: 'select',
+        loadLazyItemsOnInit: true,
         lazyOptions: this.gridService.read(`/api/dictionaries/${dictCode}/terms`)
           .map(
             (data: { terms: Array<ITerm> }) => data.terms.map(dict => ({ label: dict.name, value: dict.id }))

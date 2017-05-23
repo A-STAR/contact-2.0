@@ -22,7 +22,7 @@
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text)"></span>
+              [innerHTML]="sanitize(active[0].text | translate)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
@@ -50,7 +50,7 @@
            (mouseenter)="selectActive(o)"
            (click)="selectMatch(o, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
         </a>
       </div>
     </li>
@@ -70,7 +70,7 @@
            (click)="selectMatch(o, $event)"
            [ngClass]="{'active': isActive(o)}">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
         </a>
       </div>
     </li>
@@ -93,7 +93,7 @@
                <a class="close"
                   style="margin-left: 5px; padding: 0;"
                   (click)="removeClick(a, $event)">&times;</a>
-               <span [innerHtml]="sanitize(a.text)"></span>
+               <span [innerHtml]="sanitize(a.text | translate)"></span>
            </span>
         </span>
     </span>
@@ -119,7 +119,7 @@
            (mouseenter)="selectActive(o)"
            (click)="selectMatch(o, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
         </a>
       </div>
     </li>
@@ -139,7 +139,7 @@
            (click)="selectMatch(o, $event)"
            [ngClass]="{'active': isActive(o)}">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
         </a>
       </div>
     </li>

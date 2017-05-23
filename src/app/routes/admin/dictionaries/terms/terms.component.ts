@@ -18,13 +18,16 @@ import { ILabeledValue } from '../../../../core/converter/value/value-converter.
 export class TermsComponent extends GridEntityComponent<ITerm> {
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_TERM_ADD' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
   ];
 
+  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.ADD
+  ];
+
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD,
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];
@@ -60,12 +63,14 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   onEditSubmit(data: ITerm, createMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+    data.isClosed = this.valueConverterService.toNumber(data.isClosed);
 
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
         .subscribe(() => this.onSuccess());
     } else {
-      this.gridService.update('/api/dictionaries/{code}/terms/{termsId}', this.masterEntity, data)
+      const termsId: number = this.selectedEntity.id;
+      this.gridService.update(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity, data)
         .subscribe(() => this.onSuccess());
     }
   }
