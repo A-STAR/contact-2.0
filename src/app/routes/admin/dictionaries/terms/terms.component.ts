@@ -18,13 +18,16 @@ import { ILabeledValue } from '../../../../core/converter/value/value-converter.
 export class TermsComponent extends GridEntityComponent<ITerm> {
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_TERM_ADD' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
   ];
 
+  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.ADD
+  ];
+
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD,
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];
