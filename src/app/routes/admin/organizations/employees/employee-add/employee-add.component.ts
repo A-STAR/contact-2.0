@@ -79,7 +79,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
   }
 
   canSubmit(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form.canSubmit;
+    return this.selectedEmployees && this.selectedEmployees.length > 0;
   }
 
   protected getControls(): Array<IDynamicFormControl> {
