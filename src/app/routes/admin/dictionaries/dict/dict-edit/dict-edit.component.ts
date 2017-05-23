@@ -49,7 +49,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         lazyOptions: this.gridService.read('/api/dictionaries')
           .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
         optionsActions: [
-          { text: 'dictionaries.edit.select.type', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
       }
     ];
