@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
   selector: 'app-users',
   templateUrl: 'users.component.html'
 })
-export class UsersComponent {
+export class UsersComponent implements AfterViewInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<any> = [
@@ -49,6 +49,7 @@ export class UsersComponent {
   actions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
     {
       text: 'users.toolbar.action.show_blocked_users',
       type: 10,
@@ -70,6 +71,10 @@ export class UsersComponent {
     this.filter = this.filter.bind(this);
   }
 
+  ngAfterViewInit(): void {
+    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+  }
+
   filter(user: IUser): boolean {
     return !user.isBlocked || this.displayBlockedUsers;
   }
@@ -85,6 +90,9 @@ export class UsersComponent {
   onAction(action: IToolbarAction): void {
     this.action = action.type;
     switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.refreshToolbar();
+        break;
       case ToolbarActionTypeEnum.EDIT:
         this.currentUser = this.selectedUser;
         break;
@@ -107,7 +115,7 @@ export class UsersComponent {
     this.selectedUser = null;
     this.grid.load().
       subscribe(
-        () => this.refreshToolbar(),
+        () => {},
         // TODO: display & log a message
         err => console.error(err)
       );
@@ -129,6 +137,9 @@ export class UsersComponent {
     this.actions
       .find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.EDIT)
       .visible = !!this.selectedUser;
+
+    this.actions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+      .visible = this.grid.rows.length > 0;
   }
 
   private createEmptyUser(): IUser {
