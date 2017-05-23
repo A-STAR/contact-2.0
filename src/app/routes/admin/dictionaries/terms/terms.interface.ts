@@ -7,5 +7,5 @@ export interface ITerm {
   typeCode: number|Array<ILabeledValue>;
   parentCode: number|Array<ILabeledValue>;
   parentCodeName: string;
-  isClosed: boolean;
+  isClosed: number;
 }

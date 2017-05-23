@@ -60,6 +60,7 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   onEditSubmit(data: ITerm, createMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+    data.isClosed = this.valueConverterService.toNumber(data.isClosed);
 
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)

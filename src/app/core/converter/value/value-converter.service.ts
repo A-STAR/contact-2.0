@@ -87,7 +87,7 @@ export class ValueConverterService {
     }
   }
 
-  private toNumber(value: ValueType): number {
+  public toNumber(value: ValueType): number {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'boolean') {
