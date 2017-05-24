@@ -53,15 +53,12 @@ export class ValueConverterService {
   }
 
   public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
-    const booleanValue: number = this.toNumber(valueEntity.value);
-    if (valueEntity.typeCode === 1 || valueEntity.typeCode === 3) {
-      return valueEntity.value;
-    } else if (valueEntity.typeCode === 4) {
-      return booleanValue === 1
+    if (valueEntity.typeCode === 4) {
+      return this.toNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
     }
-    return booleanValue;
+    return valueEntity.value;
   }
 
   public toLabeledValues(data: number|ILabeledValue[]): number|any[] {

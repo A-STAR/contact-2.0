@@ -30,6 +30,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
       { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
       (constant) => this.valueConverterService.deserializeBooleanViewValue(constant)
     ),
+    // { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
     { prop: 'dsc', width: 200, minWidth: 400 },
   ];
 
