@@ -32,7 +32,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
     { prop: 'name', maxWidth: 300 },
     this.columnDecoratorService.decorateColumn({ prop: 'parentCode', width: 200 },
       this.gridService.read('/api/dictionaries')
-        .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.id })))
+        .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code })))
     ),
     this.columnDecoratorService.decorateColumn({ prop: 'typeCode', localized: true },
       // TODO Duplication
