@@ -33,6 +33,7 @@ export class OrganizationsTreeComponent implements OnInit {
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_DELETE' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH, visible: true },
   ];
 
   toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -166,7 +167,14 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onToolbarAction(action: IToolbarAction): void {
-    this.action = action.type;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.selection = [];
+        this.load();
+        break;
+      default:
+        this.action = action.type;
+    }
   }
 
   cancelAction(): void {
