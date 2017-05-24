@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
@@ -8,6 +9,7 @@ import { OrganizationsService } from './organizations.service';
 import { IOrganization } from '../organizations.interface';
 
 // TODO: extend from GridEntityComponent
+// TODO: separate tree rendering from organizations logic
 @Component({
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
@@ -54,7 +56,7 @@ export class OrganizationsTreeComponent implements OnInit {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  ngOnInit(): void {
+  load(): void {
     this.organizationsService.load()
       .subscribe(
         data => {
@@ -68,6 +70,10 @@ export class OrganizationsTreeComponent implements OnInit {
         },
         error => console.error(error)
       );
+  }
+
+  ngOnInit(): void {
+    this.load();
   }
 
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
@@ -150,17 +156,27 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    // TODO: error handling & dialog closing
-    if (create) {
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data).subscribe();
-    } else {
-      this.organizationsService.save(this.selection.data.id, data).subscribe();
-    }
+    const action = create ?
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
+      this.organizationsService.save(this.selection.data.id, data);
+    this.submit(action);
   }
 
   onRemoveSubmit(): void {
-    // TODO: error handling & dialog closing
-    this.organizationsService.remove(this.selection.data.id).subscribe();
+    const action = this.organizationsService.remove(this.selection.data.id);
+    this.submit(action);
+  }
+
+  private submit(action: Observable<any>): void {
+    action.subscribe(
+      () => {
+        this.cancelAction();
+        this.selection = [];
+        this.load();
+      },
+      // TODO: error handling
+      error => console.error(error)
+    );
   }
 
   private get rootNode(): TreeNode {
