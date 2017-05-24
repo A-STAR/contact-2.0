@@ -36,13 +36,12 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   columns: Array<any> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 400 },
-    this.columnDecoratorService.decorateRelatedEntityColumn({prop: 'typeCode'},
+    this.columnDecoratorService.decorateColumn({ prop: 'typeCode', localized: true },
       // TODO Duplication
       Observable.of([
         { label: 'dictionaries.types.system', value: 1 },
         { label: 'dictionaries.types.client', value: 2 }
-      ]),
-      true
+      ])
     ),
     this.columnDecoratorService.decorateColumn({ prop: 'parentCodeName' },
       (term: ITerm) => term.parentCodeName || term.parentCode),

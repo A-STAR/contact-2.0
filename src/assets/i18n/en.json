@@ -187,7 +187,9 @@
         "name": "Name",
         "type": "Type",
         "parent": "Parent dictionary",
-        "list": "Dictionary list"
+        "select": {
+          "title": "Dictionary list"
+        }
       },
       "create": {
         "title": "New dictionary"

@@ -21,7 +21,7 @@ export class UsersComponent implements AfterViewInit {
     { prop: 'firstName', minWidth: 120 },
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
-    this.columnDecoratorService.decorateRelatedEntityColumn(
+    this.columnDecoratorService.decorateColumn(
       { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
     ),
     this.columnDecoratorService.decorateColumn(
@@ -33,7 +33,7 @@ export class UsersComponent implements AfterViewInit {
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    this.columnDecoratorService.decorateRelatedEntityColumn(
+    this.columnDecoratorService.decorateColumn(
       { prop: 'languageId', minWidth: 120 }, this.usersService.getLanguages()
     ),
   ];
