@@ -207,6 +207,11 @@
     "types": {
       "system": "Системный",
       "client": "Клиентский"
+    },
+    "placeholder": {
+      "select": {
+        "translation": "Выберите язык"
+      }
     }
   },
   "terms": {

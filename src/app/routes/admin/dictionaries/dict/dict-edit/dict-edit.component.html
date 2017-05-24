@@ -3,7 +3,10 @@
     <h3>{{ title | translate:editedEntity }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls"
+                    [data]="editedEntity"
+                    (selectedControlItemsChange)="onSelectedControlItemsChange($event)">
+  </app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-success"
