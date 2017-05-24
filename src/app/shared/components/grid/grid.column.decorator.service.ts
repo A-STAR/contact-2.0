@@ -25,9 +25,10 @@ export class GridColumnDecoratorService {
           ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
           : entity[column.prop];
       } else {
+        const displayedValue = String((decoratorFn as Function)(entity, value));
         return column.localized
-          ? this.translateService.instant((decoratorFn as Function)(entity, value))
-          : (decoratorFn as Function)(entity, value);
+          ? this.translateService.instant(displayedValue)
+          : displayedValue;
       }
     };
     return column;
