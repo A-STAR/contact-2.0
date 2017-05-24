@@ -14,10 +14,14 @@ import { IEmployeeUser } from '../organizations.interface';
 })
 export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   bottomActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_EDIT' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
+  ];
+
+  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.ADD,
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
