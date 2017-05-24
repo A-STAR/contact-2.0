@@ -83,7 +83,7 @@ export class AuthService implements CanActivate, OnInit {
           .map((resp: Response) => resp.headers.get('X-Auth-Token'))
           .do((token: string) => {
               this.saveToken(token);
-              this.useLanguage(token);
+              this.setLanguage(token);
               this.authenticated = true;
           })
           .catch(error => {
@@ -153,7 +153,7 @@ export class AuthService implements CanActivate, OnInit {
         resp => {
           const token = resp.headers.get('X-Auth-Token');
           this.saveToken(token);
-          this.useLanguage(token);
+          this.setLanguage(token);
         },
         () => this.redirectToLogin()
       );
@@ -182,8 +182,9 @@ export class AuthService implements CanActivate, OnInit {
     }
   }
 
-  private useLanguage(token: string): void {
+  private setLanguage(token: string): void {
     const { language } = this.jwtHelper.decodeToken(token);
+    this.translateService.setDefaultLang(language || 'en');
     this.translateService.use(language).subscribe();
     localStorage.setItem(LANGUAGE_TOKEN, language);
   }

@@ -3,7 +3,7 @@ const browser = require('jquery.browser');
 
 import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { TranslatorService } from '../../core/translator/translator.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -18,8 +18,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     public settings: SettingsService,
     private authService: AuthService,
-    private translatorService: TranslatorService,
-    ) { }
+    private translateService: TranslateService) {
+  }
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
@@ -65,9 +65,9 @@ export class HeaderComponent implements OnInit {
 
   toggleLanguage(): void {
     // STUB: to test the language switching options
-    const lang = this.translatorService.getCurrentLang();
+    const lang = this.translateService.currentLang;
     const nextLang = lang === 'ru' ? 'en' : 'ru';
-    this.translatorService.useLanguage(nextLang);
+    this.translateService.use(nextLang).subscribe();
   }
 
   logout(event: UIEvent): void {

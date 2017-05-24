@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { TranslatorService } from '../../../core/translator/translator.service';
 
 @Component({
   selector: 'app-login',
@@ -12,33 +13,27 @@ import { TranslatorService } from '../../../core/translator/translator.service';
 })
 export class LoginComponent {
   static LOGIN_KEY = 'auth/login';
-  static USER_LANGUAGE = 'user/language';
 
-  valForm: FormGroup;
+  form: FormGroup;
   error: string = null;
 
   constructor(
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private translateService: TranslatorService,
+    private translateService: TranslateService,
     private router: Router,
   ) {
     const login = this.login;
     const remember = !!login;
-    const language = localStorage.getItem(LoginComponent.USER_LANGUAGE);
 
-    if (language) {
-      translateService.useLanguage(language).subscribe();
-    }
-
-    this.valForm = fb.group({
+    this.form = fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
       'password': [ null, Validators.required ],
       'remember_login': [remember],
     });
 
-    this.valForm.valueChanges.subscribe(() => this.error = null);
+    this.form.valueChanges.subscribe(() => this.error = null);
   }
 
   submitForm(event: UIEvent, value: any): void {
@@ -47,11 +42,11 @@ export class LoginComponent {
     this.error = null;
     this.login = value.remember_login ? value.login : null;
 
-    [].forEach.call(this.valForm.controls, ctrl => {
+    [].forEach.call(this.form.controls, ctrl => {
         ctrl.markAsTouched();
     });
 
-    if (this.valForm.valid) {
+    if (this.form.valid) {
       const { login, password } = value;
       this.authService
         .authenticate(login, password)

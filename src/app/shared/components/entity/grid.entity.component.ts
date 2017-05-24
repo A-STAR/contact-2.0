@@ -1,4 +1,4 @@
-import {AfterViewInit, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, ViewChild} from '@angular/core';
+import {AfterViewInit, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { GridComponent } from '../grid/grid.component';

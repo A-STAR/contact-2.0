@@ -9,14 +9,14 @@
       </div>
       <div class="panel-body">
         <p class="text-center pv-lg">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
-        <form [formGroup]="valForm" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
+        <form [formGroup]="form" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, form.value)">
           <div class="form-group has-feedback">
             <input class="form-control" type="text" name="login" placeholder="{{ 'login.LOGIN_PLACEHOLDER' | translate }}" autocomplete="off" minlength="2" formControlName="login" required="" />
             <span class="fa fa-user form-control-feedback text-muted"></span>
-            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('required') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">
+            <span class="text-danger" *ngIf="form.controls['login'].hasError('required') && (form.controls['login'].dirty || form.controls['login'].touched)">
               {{ 'validation.fieldRequired' | translate }}
             </span>
-            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('minlength') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">
+            <span class="text-danger" *ngIf="form.controls['login'].hasError('minlength') && (form.controls['login'].dirty || form.controls['login'].touched)">
               <!-- TODO: cases and singular/plural, i.e. 1 символа, 2 символов -->
               {{ 'validation.fieldMinLength' | translate:{requiredLength: 2} }}
             </span>
@@ -24,7 +24,7 @@
           <div class="form-group has-feedback">
             <input class="form-control" type="password" name="password" placeholder="{{ 'login.PASSWORD_PLACEHOLDER' | translate }}" formControlName="password" required="" />
             <span class="fa fa-lock form-control-feedback text-muted"></span>
-            <span class="text-danger" *ngIf="valForm.controls['password'].hasError('required') && (valForm.controls['password'].dirty || valForm.controls['password'].touched)">
+            <span class="text-danger" *ngIf="form.controls['password'].hasError('required') && (form.controls['password'].dirty || form.controls['password'].touched)">
               {{ 'validation.fieldRequired' | translate }}
             </span>
           </div>
@@ -36,7 +36,7 @@
               </label>
             </div>
           </div>
-          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
+          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!form.valid">
             {{ 'login.LOGIN_BUTTON' | translate }}
           </button>
           <span class="text-danger" *ngIf="error">
