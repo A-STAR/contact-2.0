@@ -199,7 +199,7 @@
         "title": "New dictionary"
       },
       "grid": {
-        "code": "Dictionary code",
+        "code": "Code",
         "name": "Name",
         "parentCode": "Parent dictionary",
         "typeCode": "Dictionary type"
@@ -234,7 +234,7 @@
         "title": "New term"
       },
       "grid": {
-        "code": "Dictionary code",
+        "code": "Code",
         "name": "Term text",
         "typeCode": "Term type",
         "parentCodeName": "Parent term",
