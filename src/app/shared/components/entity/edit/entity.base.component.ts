@@ -1,10 +1,11 @@
 import { EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
-import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl, ISelectedItemsPayload } from '../../form/dynamic-form/dynamic-form-control.interface';
 
 export abstract class EntityBaseComponent<T> implements OnInit {
 
+  @Input() mode: string;
   @Input() title: string;
   @Input() editedEntity: T;
   @Input() editedMessage: string;
@@ -39,6 +40,14 @@ export abstract class EntityBaseComponent<T> implements OnInit {
 
   canSubmit(): boolean {
     return this.form.canSubmit;
+  }
+
+  onSelectedControlItemsChange(payload: ISelectedItemsPayload): void {
+    // TODO
+  }
+
+  protected isEditMode(): boolean {
+    return !!this.editedEntity;
   }
 
   protected abstract getControls(): Array<IDynamicFormControl>;

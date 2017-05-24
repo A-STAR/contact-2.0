@@ -1,12 +1,12 @@
 <app-dict-edit *ngIf="isEntityBeingCreated"
                [title]="'dictionaries.create.title'"
-               (submit)="onEditSubmit($event, true)"
+               (submit)="onEditSubmit($event)"
                (cancel)="cancelAction()"></app-dict-edit>
 
 <app-dict-edit *ngIf="isEntityBeingEdited"
                [title]="'dictionaries.edit.title'"
                [editedEntity]="selectedEntity"
-               (submit)="onEditSubmit($event, false)"
+               (submit)="onEditSubmit($event)"
                (cancel)="cancelAction()"></app-dict-edit>
 
 <app-submitted-popup *ngIf="isEntityBeingRemoved"

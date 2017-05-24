@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormControl, IValue } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormControl, ISelectedItemsPayload, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -16,6 +16,7 @@ export class DynamicFormComponent implements OnInit {
     hasuppercasechars: 'validation.fieldUpperCase',
   };
 
+  @Output() selectedControlItemsChange: EventEmitter<ISelectedItemsPayload> = new EventEmitter<ISelectedItemsPayload>();
   @Input() controls: Array<IDynamicFormControl>;
   @Input() data: IValue;
 
@@ -73,5 +74,12 @@ export class DynamicFormComponent implements OnInit {
     if (this.data) {
       this.form.patchValue(this.data);
     }
+  }
+
+  onSelectedControlItemsChange(control: IDynamicFormControl, selectedItems: any[]): void {
+    this.selectedControlItemsChange.emit({
+      control: control,
+      selectedItems: selectedItems
+    });
   }
 }

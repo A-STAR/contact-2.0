@@ -207,6 +207,11 @@
      "types": {
         "system": "System",
         "client": "Client"
+      },
+      "placeholder": {
+        "select": {
+          "translation": "Select language"
+        }
       }
     },
     "terms": {

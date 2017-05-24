@@ -53,15 +53,15 @@ export class DictComponent extends GridEntityComponent<IDict> {
     super();
   }
 
-  onEditSubmit(data: IDict, createMode: boolean): void {
+  onEditSubmit(data: IDict): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
 
-    if (createMode) {
+    if (this.selectedEntity) {
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
+    } else {
       this.gridService.create('/api/dictionaries', {}, data)
         .subscribe(() => this.onSuccess());
-    } else {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
     }
   }
 

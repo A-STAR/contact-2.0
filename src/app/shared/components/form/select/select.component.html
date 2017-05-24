@@ -19,7 +19,7 @@
             class="btn btn-default btn-secondary form-control ui-select-toggle"
             (click)="matchClick($event)"
             style="outline: 0;">
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
               [innerHTML]="sanitize(active[0].text | translate)"></span>
@@ -35,6 +35,7 @@
          autocomplete="false"
          tabindex="-1"
          [attr.readonly]="readonly"
+         [ngClass]="{ hidden: !isInputVisible()}"
          (keydown)="inputEvent($event)"
          (keyup)="inputEvent($event, true)"
          class="form-control ui-select-search"
@@ -85,29 +86,32 @@
      [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
       <span class="ui-select-match">
-        <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
-                  tabindex="-1"
-                  type="button"
-                  [ngClass]="{'btn-default': true}">
-               <a class="close"
-                  style="margin-left: 5px; padding: 0;"
-                  (click)="removeClick(a, $event)">&times;</a>
-               <span [innerHtml]="sanitize(a.text | translate)"></span>
-           </span>
-        </span>
+          <span *ngFor="let activeItem of active"
+                class="ui-select-match-item btn btn-default btn-secondary btn-xs"
+                tabindex="-1"
+                type="button"
+                (click)="activeItemClick(activeItem, $event)"
+                [ngClass]="{'btn-default': true, 'selected': isItemSelected(activeItem)}">
+             <a class="close"
+                style="margin-left: 5px; padding: 0;"
+                (click)="removeClick(activeItem, $event)">&times;</a>
+             <span [innerHtml]="sanitize(activeItem.text | translate)"></span>
+          </span>
+          <i class="dropdown-toggle pull-right"></i>
+          <i class="caret pull-right"></i>
     </span>
   <input type="text"
          (keydown)="inputEvent($event)"
          (keyup)="inputEvent($event, true)"
          (click)="matchClick($event)"
          [attr.readonly]="readonly"
+         [ngClass]="{ hidden: !isInputVisible()}"
          autocomplete="false"
          autocorrect="off"
          autocapitalize="off"
          spellcheck="false"
          class="form-control ui-select-search"
-         placeholder="{{active.length <= 0 ? placeholder : ''}}"
+         placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
          role="combobox">
   <!-- options template -->
   <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
