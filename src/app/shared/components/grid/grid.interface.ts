@@ -16,6 +16,7 @@ export interface IGridColumn {
   localized?: boolean;
   prop: string;
   name?: string;
+  width?: number;
   minWidth?: number;
   maxWidth?: number;
   disabled?: boolean;
