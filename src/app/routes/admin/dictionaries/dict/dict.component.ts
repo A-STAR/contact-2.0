@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+// import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
@@ -38,10 +38,12 @@ export class DictComponent extends GridEntityComponent<IDict> {
   ];
 
   renderers: IRenderer = {
+    parentCode: this.gridService.read('/api/dictionaries')
+        .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code }))),
     typeCode: Observable.of([
-        { label: 'dictionaries.types.system', value: 1 },
-        { label: 'dictionaries.types.client', value: 2 }
-      ])
+      { label: 'dictionaries.types.system', value: 1 },
+      { label: 'dictionaries.types.client', value: 2 }
+    ])
   };
 
   dataSource: IDataSource = {
@@ -59,8 +61,9 @@ export class DictComponent extends GridEntityComponent<IDict> {
   }
 
   onEditSubmit(data: IDict, editMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
+    data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
 
     if (editMode) {
       this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
