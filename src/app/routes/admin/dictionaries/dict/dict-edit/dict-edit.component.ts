@@ -66,6 +66,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         label: 'dictionaries.edit.termTypeCode',
         controlName: 'termTypeCode',
         type: 'select',
+        required: true,
         loadLazyItemsOnInit: true,
         lazyOptions: this.gridService.read('/api/dictionaries')
           .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.code})))
