@@ -182,12 +182,17 @@
       "access_denied": "You have no acces to the dictionaries. Please contact the administrator.",
       "TITLE": "Dictionaries",
       "edit": {
-        "title": "Dictionary",
+        "title": "Dictionary: {{ code }}",
         "code": "Code",
         "name": "Name",
         "type": "Type",
         "parent": "Parent dictionary",
-        "list": "Dictionary list"
+        "select": {
+          "title": "Dictionary list"
+        }
+      },
+      "create": {
+        "title": "New dictionary"
       },
       "grid": {
         "code": "Dictionary code",
@@ -202,11 +207,16 @@
      "types": {
         "system": "System",
         "client": "Client"
+      },
+      "placeholder": {
+        "select": {
+          "translation": "Select language"
+        }
       }
     },
     "terms": {
       "edit": {
-        "title": "Dictionary term",
+        "title": "Term: {{ code }}",
         "code": "Term code",
         "text": "Term text",
         "type": "Term type",
@@ -215,6 +225,9 @@
         "select": {
           "title": "Term type"
         }
+      },
+      "create": {
+        "title": "New term"
       },
       "grid": {
         "code": "Dictionary code",

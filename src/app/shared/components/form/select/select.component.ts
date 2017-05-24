@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
-import { ISelectionAction, OptionsBehavior, ISelectComponent } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, ISelectComponent, IdType } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { SelectActionHandler } from './select-action';
 
@@ -29,7 +29,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input() public idField = 'id';
   @Input() public textField = 'text';
   @Input() public childrenField = 'children';
-  @Input() public multiple = false;
   @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
   @Input() public loadLazyItemsOnInit = false;
@@ -40,11 +39,14 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Output() public removed: EventEmitter<any> = new EventEmitter();
   @Output() public typed: EventEmitter<any> = new EventEmitter();
   @Output() public opened: EventEmitter<any> = new EventEmitter();
+  @Output() selectedControlItemsChange: EventEmitter<IdType[]> = new EventEmitter<IdType[]>();
 
   private _disabled;
   private _readonly = true;
+  private _multiple = false;
   private _optionsOpened = false;
   private _items: Array<any> = [];
+  private _selectedItems: Array<any> = [];
   private _active: Array<SelectItem> = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
@@ -59,20 +61,29 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   @Input()
   public set readonly(value: boolean) {
-    this._readonly = this.toAttributeValue(value, this._readonly);
+    this._readonly = this.toPropertyValue(value, this._readonly);
+  }
+
+  @Input()
+  public set multiple(value: boolean) {
+    this._multiple = this.toPropertyValue(value, this._multiple);
   }
 
   @Input()
   public set controlDisabled(value: boolean) {
-    this._disabled = this.toAttributeValue(value, this._disabled);
+    this._disabled = this.toPropertyValue(value, this._disabled);
 
     if (this._disabled) {
       this.hideOptions();
     }
   }
 
-  private toAttributeValue(value: boolean, defaultValue: boolean): boolean {
+  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
     return typeof value === 'undefined' ? defaultValue : (value || undefined);
+  }
+
+  public get multiple(): boolean {
+    return this._multiple;
   }
 
   public get readonly(): boolean {
@@ -394,9 +405,33 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     return this.activeOption.id === value.id;
   }
 
-  protected removeClick(value: SelectItem, event: any): void {
-    event.stopPropagation();
-    this.remove(value);
+  activeItemClick(selectItem: SelectItem, $event: MouseEvent): void {
+    this.stopEvent($event);
+
+    if (this._selectedItems.indexOf(selectItem.id) > -1) {
+      this.removeSelectedItem(selectItem);
+    } else {
+      this._selectedItems.push(selectItem.id);
+    }
+    this.selectedControlItemsChange.emit(this._selectedItems);
+  }
+
+  isItemSelected(selectItem: SelectItem): boolean {
+    return !!this._selectedItems.find((itemId: IdType) => itemId === selectItem.id);
+  }
+
+  isInputVisible(): boolean {
+    return !this.multiple || !this.active.length;
+  }
+
+  removeClick(selectItem: SelectItem, $event: Event): void {
+    this.stopEvent($event);
+    this.remove(selectItem);
+    this.removeSelectedItem(selectItem);
+  }
+
+  removeSelectedItem(selectItem: SelectItem): void {
+    this._selectedItems = this._selectedItems.filter((itemId: IdType) => itemId !== selectItem.id);
   }
 
   private focusToInput(value: string = ''): void {
@@ -466,6 +501,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
+
+  private stopEvent($event: Event): void {
+    $event.stopPropagation();
+    $event.preventDefault();
+  }
 }
 
 export class Behavior {
@@ -516,7 +556,7 @@ export class Behavior {
     }
   }
 
-  private getActiveIndex(optionsMap:Map<string, number> = void 0):number {
+  private getActiveIndex(optionsMap: Map<IdType, number> = void 0): number {
     let ai = this.actor.options.indexOf(this.actor.activeOption);
     if (ai < 0 && optionsMap !== void 0) {
       ai = optionsMap.get(this.actor.activeOption.id);

@@ -92,6 +92,9 @@
   padding: 0;
   margin-bottom: 3px;
 
+  &.hidden {
+   display: none;
+  }
 }
 .ui-select-match .close {
   font-size: 1.6em;
@@ -101,6 +104,11 @@
 .ui-select-multiple .ui-select-match-item {
   outline: 0;
   margin: 0 3px 3px 0;
+
+  &.selected {
+    background-color: #d8ffe1;
+    border-color: #b6b6b6;
+  }
 }
 .ui-select-toggle > .caret {
   position: absolute;

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
@@ -8,6 +9,7 @@ import { OrganizationsService } from './organizations.service';
 import { IOrganization } from '../organizations.interface';
 
 // TODO: extend from GridEntityComponent
+// TODO: separate tree rendering from organizations logic
 @Component({
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
@@ -31,6 +33,7 @@ export class OrganizationsTreeComponent implements OnInit {
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_DELETE' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH, visible: true },
   ];
 
   toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -54,7 +57,7 @@ export class OrganizationsTreeComponent implements OnInit {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  ngOnInit(): void {
+  load(): void {
     this.organizationsService.load()
       .subscribe(
         data => {
@@ -70,9 +73,16 @@ export class OrganizationsTreeComponent implements OnInit {
       );
   }
 
+  ngOnInit(): void {
+    this.load();
+  }
+
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
+
+    // Caution: this assumes source element has parent
+    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
 
     const sourceParentElement: TreeNode = sourceElement.parent;
     const sourceParentChildren: TreeNode[] = sourceParentElement.children;
@@ -99,6 +109,25 @@ export class OrganizationsTreeComponent implements OnInit {
       targetElement.children.push(sourceElement);
       sourceElement.parent = targetElement;
     }
+
+    // TODO: do we have to reindex children on previous element parent?
+    targetElement.children.forEach((element: TreeNode, i: number) => {
+      const sortOrder = i + 1;
+      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
+        element.data.parentId = targetElement.data.id;
+        element.data.sortOrder = sortOrder;
+        this.organizationsService
+          .save(element.data.id, {
+            parentId: element.data.parentId,
+            sortOrder: element.data.sortOrder
+          })
+          .subscribe(
+            () => {},
+            // TODO: error handling
+            error => console.error(error)
+          );
+      }
+    });
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {
@@ -138,7 +167,14 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onToolbarAction(action: IToolbarAction): void {
-    this.action = action.type;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.selection = [];
+        this.load();
+        break;
+      default:
+        this.action = action.type;
+    }
   }
 
   cancelAction(): void {
@@ -150,17 +186,27 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    // TODO: error handling & dialog closing
-    if (create) {
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data).subscribe();
-    } else {
-      this.organizationsService.save(this.selection.data.id, data).subscribe();
-    }
+    const action = create ?
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
+      this.organizationsService.save(this.selection.data.id, data);
+    this.submit(action);
   }
 
   onRemoveSubmit(): void {
-    // TODO: error handling & dialog closing
-    this.organizationsService.remove(this.selection.data.id).subscribe();
+    const action = this.organizationsService.remove(this.selection.data.id);
+    this.submit(action);
+  }
+
+  private submit(action: Observable<any>): void {
+    action.subscribe(
+      () => {
+        this.cancelAction();
+        this.selection = [];
+        this.load();
+      },
+      // TODO: error handling
+      error => console.error(error)
+    );
   }
 
   private get rootNode(): TreeNode {

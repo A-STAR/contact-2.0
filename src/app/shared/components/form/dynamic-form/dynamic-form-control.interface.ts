@@ -16,6 +16,7 @@ export interface IDynamicFormControl {
   readonly?: boolean;
   placeholder?: string;
   // options for select controls
+  multiple?: boolean;
   options?: Array<ISelectOptions>;
   lazyOptions?: Observable<Array<ISelectOptions>>;
   cachingOptions?: boolean;
@@ -41,4 +42,9 @@ export interface IValue {
 
 export interface IControls {
   [key: string]: FormControl;
+}
+
+export interface ISelectedItemsPayload {
+  control: IDynamicFormControl;
+  selectedItems: any[];
 }

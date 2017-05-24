@@ -32,13 +32,12 @@ export class DictComponent extends GridEntityComponent<IDict> {
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    this.columnDecoratorService.decorateRelatedEntityColumn({ prop: 'typeCode' },
+    this.columnDecoratorService.decorateColumn({ prop: 'typeCode', localized: true },
       // TODO Duplication
       Observable.of([
         { label: 'dictionaries.types.system', value: 1 },
         { label: 'dictionaries.types.client', value: 2 }
-      ]),
-      true
+      ])
     )
   ];
 
@@ -54,16 +53,24 @@ export class DictComponent extends GridEntityComponent<IDict> {
     super();
   }
 
-  onEditSubmit(data: IDict, createMode: boolean): void {
+  onEditSubmit(data: IDict, editMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
 
-    if (createMode) {
+    if (editMode) {
+      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
+    } else {
       this.gridService.create('/api/dictionaries', {}, data)
         .subscribe(() => this.onSuccess());
-    } else {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
     }
+  }
+
+  onUpdateEntity(data: IDict): void {
+    this.onEditSubmit(data, true);
+  }
+
+  onCreateEntity(data: IDict): void {
+    this.onEditSubmit(data, false);
   }
 
   onRemoveSubmit(): void {

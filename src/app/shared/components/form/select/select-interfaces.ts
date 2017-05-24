@@ -1,5 +1,7 @@
 import { SelectItem } from './select-item';
 
+export type IdType = number|string;
+
 export interface OptionsBehavior {
   first(): any;
   last(): any;

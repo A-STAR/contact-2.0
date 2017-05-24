@@ -17,12 +17,22 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    return [
+    const filteredControls = [
       {
         label: 'dictionaries.edit.code',
         controlName: 'code',
         type: 'number',
         required: true
+      },
+      {
+        label: 'dictionaries.edit.translation',
+        controlName: 'translations',
+        type: 'select',
+        multiple: true,
+        placeholder: 'dictionaries.placeholder.select.translation',
+        loadLazyItemsOnInit: true,
+        lazyOptions: this.gridService.read('/api/userlanguages')
+          .map(data => data.languages.map(lang => ({label: lang.name, value: lang.id})))
       },
       {
         label: 'dictionaries.edit.name',
@@ -49,9 +59,14 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         lazyOptions: this.gridService.read('/api/dictionaries')
           .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
         optionsActions: [
-          { text: 'dictionaries.edit.select.type', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
       }
-    ];
+    ].filter(
+      (control) => {
+        return this.isEditMode() || ['translations'].indexOf(control.controlName) === -1;
+      });
+
+    return filteredControls as Array<IDynamicFormControl>;
   }
 }

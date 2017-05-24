@@ -54,9 +54,11 @@
                         [loadLazyItemsOnInit]="control.loadLazyItemsOnInit"
                         [idField]="'value'"
                         [textField]="'label'"
+                        [multiple]="control.multiple"
                         [controlDisabled]="control.disabled"
                         [readonly]="control.readonly"
-                        [attr.placeholder]="control.placeholder || ''">
+                        [placeholder]="control.placeholder || ''"
+                        (selectedControlItemsChange)="onSelectedControlItemsChange(control, $event)">
               </app-select>
           </label>
         </ng-container>

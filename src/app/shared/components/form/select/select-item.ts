@@ -1,5 +1,7 @@
+import { IdType } from './select-interfaces';
+
 export class SelectItem {
-  public id: string;
+  public id: IdType;
   public text: string;
   public children: Array<SelectItem>;
   public parent: SelectItem;
@@ -30,7 +32,7 @@ export class SelectItem {
     });
   }
 
-  public fillChildrenHash(optionsMap: Map<string, number>, startIndex: number): number {
+  public fillChildrenHash(optionsMap: Map<IdType, number>, startIndex: number): number {
     let i = startIndex;
     this.children.map((child: SelectItem) => {
       optionsMap.set(child.id, i++);
