@@ -80,6 +80,9 @@ export class OrganizationsTreeComponent implements OnInit {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
+    // Caution: this assumes source element has parent
+    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
+
     const sourceParentElement: TreeNode = sourceElement.parent;
     const sourceParentChildren: TreeNode[] = sourceParentElement.children;
 
@@ -105,6 +108,25 @@ export class OrganizationsTreeComponent implements OnInit {
       targetElement.children.push(sourceElement);
       sourceElement.parent = targetElement;
     }
+
+    // TODO: do we have to reindex children on previous element parent?
+    targetElement.children.forEach((element: TreeNode, i: number) => {
+      const sortOrder = i + 1;
+      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
+        element.data.parentId = targetElement.data.id;
+        element.data.sortOrder = sortOrder;
+        this.organizationsService
+          .save(element.data.id, {
+            parentId: element.data.parentId,
+            sortOrder: element.data.sortOrder
+          })
+          .subscribe(
+            () => {},
+            // TODO: error handling
+            error => console.error(error)
+          );
+      }
+    });
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {
