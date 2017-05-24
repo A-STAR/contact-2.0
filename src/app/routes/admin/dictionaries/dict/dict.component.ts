@@ -7,7 +7,6 @@ import { IDict } from './dict.interface';
 import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -54,9 +53,9 @@ export class DictComponent extends GridEntityComponent<IDict> {
   }
 
   onEditSubmit(data: IDict, editMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
-    data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode as Array<ILabeledValue>);
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
+    data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
 
     if (editMode) {
       this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
