@@ -24,13 +24,13 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
   ];
 
   columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { name: 'Название константы', prop: 'name', maxWidth: 350 },
+    { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+    { prop: 'name', maxWidth: 350 },
     this.columnDecoratorService.decorateColumn(
-      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 150},
+      { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
       (constant) => this.valueConverterService.deserializeBooleanViewValue(constant)
     ),
-    { name: 'Комментарий', prop: 'dsc', width: 200, minWidth: 400 },
+    { prop: 'dsc', width: 200, minWidth: 400 },
   ];
 
   dataSource: IDataSource = {
