@@ -47,8 +47,8 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         required: true,
         // TODO Duplication
         options: [
-          {label: 'dictionaries.types.system', value: 1},
-          {label: 'dictionaries.types.client', value: 2},
+          { label: 'dictionaries.types.system', value: 1 },
+          { label: 'dictionaries.types.client', value: 2 },
         ]
       },
       {
@@ -59,7 +59,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         lazyOptions: this.gridService.read('/api/dictionaries')
           .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
         optionsActions: [
-          {text: 'dictionaries.edit.select.title', type: SelectionActionTypeEnum.SORT}
+          { text: 'dictionaries.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
       }
     ].filter(
