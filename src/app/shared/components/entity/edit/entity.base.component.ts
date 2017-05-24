@@ -43,11 +43,10 @@ export abstract class EntityBaseComponent<T> implements OnInit {
   }
 
   onSelectedControlItemsChange(payload: ISelectedItemsPayload): void {
-    // TODO
   }
 
   protected isEditMode(): boolean {
-    return !!this.editedEntity;
+    return 'update' === this.mode;
   }
 
   protected abstract getControls(): Array<IDynamicFormControl>;
