@@ -12,14 +12,14 @@ export class EntityTranslationsConstantsService {
   constructor(private gridService: GridService) {
   }
 
-  saveDictNameTranslation(translation: IEntityTranslation): Observable<any> {
+  saveDictNameTranslation(entityId: string|number, translation: IEntityTranslation): Observable<any> {
     return this.gridService.update(this.API, {
       entityAttributesId: EntityTranslationsConstants.SPEC_DICT_NAME,
-      entitiesId: EntityTranslationsConstants.SPEC_DICT_NAME
+      entitiesId: entityId
     }, translation);
   }
 
-  saveDictNameTranslations(translations: IEntityTranslation[]): Observable<any> {
-    return Observable.forkJoin(translations.map((translation: IEntityTranslation) => this.saveDictNameTranslation(translation)));
+  saveDictNameTranslations(entityId: string|number, translations: IEntityTranslation[]): Observable<any> {
+    return Observable.forkJoin(translations.map((translation: IEntityTranslation) => this.saveDictNameTranslation(entityId, translation)));
   }
 }
