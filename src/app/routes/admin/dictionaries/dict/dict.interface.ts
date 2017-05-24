@@ -6,4 +6,5 @@ export interface IDict {
   name: string;
   parentCode: number|Array<ILabeledValue>;
   typeCode: number|Array<ILabeledValue>;
+  termTypeCode: number|Array<ILabeledValue>;
 }

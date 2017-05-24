@@ -12,13 +12,13 @@ export class ValueConverterService {
   public serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
-        valueEntity.valueN = this.toNumber(valueEntity.value);
+        valueEntity.valueN = this.toBooleanNumber(valueEntity.value);
         break;
       case 3:
         valueEntity.valueS = valueEntity.value as string;
         break;
       case 4:
-        valueEntity.valueB = this.toNumber(valueEntity.value);
+        valueEntity.valueB = this.toBooleanNumber(valueEntity.value);
         break;
     }
     delete valueEntity.value;
@@ -54,30 +54,32 @@ export class ValueConverterService {
 
   public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      return this.toNumber(valueEntity.value) === 1
+      return this.toBooleanNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
     }
     return valueEntity.value;
   }
 
-  public toLabeledValues(data: number|ILabeledValue[]): number|any[] {
+  public toLabeledValues(data: string|number|ILabeledValue[]): number|any[] {
+    if (data === '') {
+      return null;
+    }
     if (Array.isArray(data)) {
       return data.map((labeledValue: ILabeledValue) => labeledValue.value);
     }
-    return data;
+    return data as number;
   }
 
-  public firstLabeledValue(data: number|ILabeledValue[]): number|any[] {
-    const array: number|any[] = this.toLabeledValues(data);
-    if (Array.isArray(array)) {
-      return array && array.length ? array[0] : data;
-    } else {
-      return data;
+  public firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
+    const v: number|any[] = this.toLabeledValues(data);
+    if (Array.isArray(v)) {
+      return v && v.length ? v[0] : data;
     }
+    return v;
   }
 
-  public toNumber(value: ValueType): number {
+  public toBooleanNumber(value: ValueType): number {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'boolean') {

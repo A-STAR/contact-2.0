@@ -9,7 +9,6 @@ import { ITerm } from './terms.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-terms',
@@ -61,9 +60,9 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode as Array<ILabeledValue>);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode as Array<ILabeledValue>);
-    data.isClosed = this.valueConverterService.toNumber(data.isClosed);
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
+    data.isClosed = this.valueConverterService.toBooleanNumber(data.isClosed);
 
     if (createMode) {
       this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)

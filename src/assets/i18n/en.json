@@ -188,14 +188,18 @@
         "type": "Type",
         "parent": "Parent dictionary",
         "select": {
-          "title": "Dictionary list"
-        }
+          "title": {
+            "dictList": "Dictionary list",
+            "termTypesList": "Term types list"
+          }
+        },
+        "termTypeCode": "Type of terms"
       },
       "create": {
         "title": "New dictionary"
       },
       "grid": {
-        "code": "Dictionary code",
+        "code": "Code",
         "name": "Name",
         "parentCode": "Parent dictionary",
         "typeCode": "Dictionary type"
@@ -230,7 +234,7 @@
         "title": "New term"
       },
       "grid": {
-        "code": "Dictionary code",
+        "code": "Code",
         "name": "Term text",
         "typeCode": "Term type",
         "parentCodeName": "Parent term",
