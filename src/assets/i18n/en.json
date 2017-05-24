@@ -135,7 +135,7 @@
         }
       },
       "edit": {
-        "title": "User {{ login }}",
+        "title": "User: {{ id }}",
         "lastName": "Family name",
         "firstName": "Name",
         "middleName": "Middle name",

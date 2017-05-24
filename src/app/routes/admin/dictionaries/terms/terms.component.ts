@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ITerm } from './terms.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
-import { ITerm } from './terms.interface';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-terms',
@@ -33,31 +33,34 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
-  columns: Array<any> = [
+  columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 400 },
-    this.columnDecoratorService.decorateColumn({ prop: 'typeCode', localized: true },
-      // TODO Duplication
-      Observable.of([
-        { label: 'dictionaries.types.system', value: 1 },
-        { label: 'dictionaries.types.client', value: 2 }
-      ])
-    ),
-    this.columnDecoratorService.decorateColumn({ prop: 'parentCodeName' },
-      (term: ITerm) => term.parentCodeName || term.parentCode),
-    this.columnDecoratorService.decorateColumn({ prop: 'isClosed' },
-      (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : '')
+    { prop: 'typeCode', localized: true },
+    { prop: 'parentCodeName' },
+    { prop: 'isClosed' },
   ];
+
+  renderers: IRenderer = {
+    typeCode: Observable.of([
+      { label: 'dictionaries.types.system', value: 1 },
+      { label: 'dictionaries.types.client', value: 2 }
+    ]),
+    parentCodeName: (term: ITerm) => term.parentCodeName || term.parentCode,
+    isClosed: (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : ''
+  };
 
   dataSource: IDataSource = {
     read: '/api/dictionaries/{code}/terms',
     dataKey: 'terms',
   };
 
-  constructor(private gridService: GridService,
-              private valueConverterService: ValueConverterService,
-              private columnDecoratorService: GridColumnDecoratorService) {
+  constructor(
+    private gridService: GridService,
+    private valueConverterService: ValueConverterService,
+  ) {
     super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {

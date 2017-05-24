@@ -16,14 +16,12 @@ export class SidebarComponent implements OnInit {
 
   constructor(private menuSrevice: MenuService, public settings: SettingsService, private injector: Injector) {
     this.menuItems = menuSrevice.getMenu();
-    if (!this.menuItems.length) {
-      menuSrevice.loadMenu()
-        .subscribe(
-          () => { this.menuItems = menuSrevice.getMenu(); },
-          // TODO: show a message on failure
-          err => console.error(err)
-        );
-    }
+    menuSrevice.loadMenu()
+      .subscribe(
+        () => { this.menuItems = menuSrevice.getMenu(); },
+        // TODO: show a message on failure
+        err => console.error(err)
+      );
   }
 
   ngOnInit(): void {

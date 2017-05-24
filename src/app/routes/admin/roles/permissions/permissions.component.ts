@@ -2,15 +2,16 @@ import {
   Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { IDataSource, IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDisplayProperties } from '../roles.interface';
 import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from './permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-permissions',
@@ -31,13 +32,14 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
-      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
-    ),
+    { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
     { prop: 'dsc', minWidth: 200 },
-    { prop: 'comment' },
+    { prop: 'comment', minWidth: 300 },
   ];
+
+  renderers: IRenderer = {
+    value: (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
+  };
 
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
@@ -64,14 +66,17 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     dataKey: 'permits'
   };
 
-  constructor(private permissionsService: PermissionsService,
-              private columnDecoratorService: GridColumnDecoratorService,
-              private valueConverterService: ValueConverterService) {
+  constructor(
+    private permissionsService: PermissionsService,
+    private gridService: GridService,
+    private valueConverterService: ValueConverterService
+  ) {
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
-  public ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.permitsGrid.onRowsChange.subscribe(() => {
       this.editedPermission = null;
       this.refreshToolbar();
@@ -79,7 +84,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     this.refreshGrid();
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
     this.refreshGrid();
   }
 

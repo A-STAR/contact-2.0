@@ -1,27 +1,31 @@
 import {AfterViewInit, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../grid/grid.interface';
+
 import { GridComponent } from '../grid/grid.component';
-import { IDataSource } from '../grid/grid.interface';
 
 export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit {
 
-  @Input() masterEntity: any;   // TODO master type
+  // TODO(a.poterenko): implement a master type
+  @Input() masterEntity: any;
   @Output() onSelect: EventEmitter<T> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
   action: ToolbarActionTypeEnum;
-  selectedEntity: T;
+  dataSource: IDataSource;
+  columns: Array<IGridColumn> = [];
   bottomActionsGroup: Array<ToolbarActionTypeEnum>;
   bottomActionsMasterGroup: Array<ToolbarActionTypeEnum>;
   bottomActions: Array<IToolbarAction>;
-  dataSource: IDataSource;
+  renderers: IRenderer = {};
+  selectedEntity: T;
 
   ngAfterViewInit(): void {
     this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
     this.refreshGrid();
   }
 

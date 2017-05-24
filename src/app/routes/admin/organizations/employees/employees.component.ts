@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { EmployeesService } from './employees.service';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IEmployeeUser } from '../organizations.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+
+import { EmployeesService } from './employees.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+
+import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-employees',
@@ -29,29 +31,29 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
-  columns: Array<any> = [
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'fullName', minWidth: 150 },
-      (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
-    ),
+  columns: Array<IGridColumn> = [
+    { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
-    this.columnDecoratorService.decorateColumn(
-      // TODO: dictionary service
-      { prop: 'roleCode', minWidth: 100 }, (column, roleCode: number) => {
-        switch (roleCode) {
-          case 1: return 'Сотрудник';
-          case 2: return 'Руководитель';
-          case 3: return 'Заместитель';
-          case 4: return 'Куратор';
-        }
-        return roleCode;
-      }
-    ),
-    this.columnDecoratorService.decorateColumn(
-      // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100 }, ({ isBlocked }) => this.transformIsBlocked(isBlocked)
-    ),
+    { prop: 'roleCode', minWidth: 100 },
+    // TODO: display column depending on filter
+    // TODO: render checkbox
+    { prop: 'isBlocked', minWidth: 100 },
   ];
+
+  renderers: IRenderer = {
+    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
+    roleCode: (column, roleCode: number) => {
+      // TODO: dictionary service
+      switch (roleCode) {
+        case 1: return 'Сотрудник';
+        case 2: return 'Руководитель';
+        case 3: return 'Заместитель';
+        case 4: return 'Куратор';
+      }
+      return roleCode;
+    },
+    isBlocked: ({ isBlocked }) => this.transformIsBlocked(isBlocked),
+  };
 
   dataSource: IDataSource = {
     read: '/api/organizations/{id}/users',
@@ -60,14 +62,14 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
 
   constructor(
     private employeesService: EmployeesService,
-    private columnDecoratorService: GridColumnDecoratorService,
-    private translateService: TranslateService) {
-
+    private gridService: GridService,
+    private translateService: TranslateService
+  ) {
     super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   transformIsBlocked(isBlocked: number): string {
-    // TODO: render checkbox
     return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 

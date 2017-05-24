@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
+import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -23,16 +22,16 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     ToolbarActionTypeEnum.EDIT,
   ];
 
-  columns: Array<any> = [
+  columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { prop: 'name', maxWidth: 350 },
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
-      (constant) => this.valueConverterService.deserializeBooleanViewValue(constant)
-    ),
-    // { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
+    { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
     { prop: 'dsc', width: 200, minWidth: 400 },
   ];
+
+  renderers = {
+    value: (constant: any) => this.valueConverterService.deserializeBooleanViewValue(constant),
+  };
 
   dataSource: IDataSource = {
     read: '/api/constants',
@@ -47,10 +46,11 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
   constructor(
     private datePipe: DatePipe,
     private gridService: GridService,
-    private columnDecoratorService: GridColumnDecoratorService,
+    private translateService: TranslateService,
     private valueConverterService: ValueConverterService) {
 
     super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   onTabClose(id: number): void {

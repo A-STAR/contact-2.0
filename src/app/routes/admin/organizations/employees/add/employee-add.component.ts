@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { GridColumnDecoratorService } from '../../../../../shared/components/grid/grid.column.decorator.service';
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
-import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { IEmployeeUser, IEmployee, IEmployeesResponse, IOrganization } from '../../organizations.interface';
+
+import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-employee-add',
@@ -29,18 +31,17 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
     { value: 4, label: 'Куратор' },
   ];
 
-  columns: Array<any> = [
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'fullName', minWidth: 200 },
-      (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`
-    ),
+  columns: Array<IGridColumn> = [
+    { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
-    this.columnDecoratorService.decorateColumn(
-      // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100 },
-      ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No')
-    ),
+    // TODO: display column depending on filter
+    { prop: 'isBlocked', minWidth: 100 },
   ];
+
+  renderers: IRenderer = {
+    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
+    isBlocked: ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'),
+  };
 
   dataSource: IDataSource = {
     read: '/api/organizations/{id}/users/notadded',
@@ -54,11 +55,12 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
   };
 
   constructor(
-    private columnDecoratorService: GridColumnDecoratorService,
+    private gridService: GridService,
     private valueConverterService: ValueConverterService,
     private translateService: TranslateService
   ) {
     super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   parseFn = (data: IEmployeesResponse) => data.users;

@@ -135,7 +135,7 @@
       }
     },
     "edit": {
-      "title": "Пользователь {{ login }}",
+      "title": "Пользователь: {{ id }}",
       "lastName": "Фамилия",
       "firstName": "Имя",
       "middleName": "Отчество",

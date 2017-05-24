@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { GridColumnDecoratorService } from '../../../shared/components/grid/grid.column.decorator.service';
-import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { UsersService } from './users.service';
 
 @Component({
@@ -21,22 +21,21 @@ export class UsersComponent implements AfterViewInit {
     { prop: 'firstName', minWidth: 120 },
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'roleId', minWidth: 100 }, this.usersService.getRoles()
-    ),
-    this.columnDecoratorService.decorateColumn(
-      // TODO: display column depending on filter
-      { prop: 'isBlocked', minWidth: 100, localized: true },
-      ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE'
-    ),
+    { prop: 'roleId', minWidth: 100 },
+    // TODO: display column depending on filter
+    { prop: 'isBlocked', minWidth: 100, localized: true },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    this.columnDecoratorService.decorateColumn(
-      { prop: 'languageId', minWidth: 120 }, this.usersService.getLanguages()
-    ),
+    { prop: 'languageId', minWidth: 120 },
   ];
+
+  renderers: IRenderer = {
+    roleId: this.usersService.getRoles(),
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE',
+    languageId: this.usersService.getLanguages(),
+  };
 
   dataSource: IDataSource = {
     read: '/api/users',
@@ -66,8 +65,9 @@ export class UsersComponent implements AfterViewInit {
   action: ToolbarActionTypeEnum = null;
 
   constructor(
-    private columnDecoratorService: GridColumnDecoratorService,
-    private usersService: UsersService) {
+    private usersService: UsersService,
+    private gridService: GridService) {
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.filter = this.filter.bind(this);
   }
 

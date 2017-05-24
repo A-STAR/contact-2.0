@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
+
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
-import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+
+import { DictService } from 'app/routes/admin/dictionaries/dict/dict.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+
+import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-dict',
@@ -28,29 +30,32 @@ export class DictComponent extends GridEntityComponent<IDict> {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
-  columns: Array<any> = [
+  columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    this.columnDecoratorService.decorateColumn({ prop: 'typeCode', localized: true },
-      // TODO Duplication
-      Observable.of([
+    { prop: 'typeCode', localized: true },
+  ];
+
+  renderers: IRenderer = {
+    typeCode: Observable.of([
         { label: 'dictionaries.types.system', value: 1 },
         { label: 'dictionaries.types.client', value: 2 }
       ])
-    )
-  ];
+  };
 
   dataSource: IDataSource = {
     read: '/api/dictionaries',
     dataKey: 'dictNames',
   };
 
-  constructor(private dictService: DictService,
-              private gridService: GridService,
-              private valueConverterService: ValueConverterService,
-              private columnDecoratorService: GridColumnDecoratorService) {
+  constructor(
+    private dictService: DictService,
+    private gridService: GridService,
+    private valueConverterService: ValueConverterService
+  ) {
     super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   onEditSubmit(data: IDict, editMode: boolean): void {

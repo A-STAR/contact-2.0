@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs/Observable';
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+
 export interface IDataSource {
   create?: string;
   read?: string;
@@ -16,8 +19,13 @@ export interface IGridColumn {
   localized?: boolean;
   prop: string;
   name?: string;
+  width?: number;
   minWidth?: number;
   maxWidth?: number;
   disabled?: boolean;
   $$valueGetter?: Function;
+}
+
+export interface IRenderer {
+  [key: string]: Function | Observable<ILabeledValue[]>;
 }
