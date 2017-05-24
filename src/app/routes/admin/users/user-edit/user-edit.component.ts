@@ -151,10 +151,10 @@ export class UserEditComponent implements OnInit {
   private getData(): any {
     return {
       ...this.user,
-      roleId: [{ value: this.user.roleId }],
+      roleId: [{ value: this.user.roleId || 1 }],
       startWorkDate: this.formatDate(this.user.startWorkDate),
       endWorkDate: this.formatDate(this.user.endWorkDate),
-      languageId: [{ value: this.user.languageId }]
+      languageId: [{ value: this.user.languageId || 1 }]
     };
   }
 
