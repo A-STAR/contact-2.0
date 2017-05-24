@@ -5,6 +5,7 @@ import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form-contro
 
 export abstract class EntityBaseComponent<T> implements OnInit {
 
+  @Input() title: string;
   @Input() editedEntity: T;
   @Input() editedMessage: string;
   @Output() submit: EventEmitter<T> = new EventEmitter<T>();

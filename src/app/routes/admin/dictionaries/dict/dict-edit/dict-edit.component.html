@@ -1,6 +1,6 @@
 <app-dialog (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ 'dictionaries.edit.title' | translate }}</h3>
+    <h3>{{ title | translate:editedEntity }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="editedEntity"></app-dynamic-form>
