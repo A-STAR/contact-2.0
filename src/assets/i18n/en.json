@@ -188,8 +188,12 @@
         "type": "Type",
         "parent": "Parent dictionary",
         "select": {
-          "title": "Dictionary list"
-        }
+          "title": {
+            "dictList": "Dictionary list",
+            "termTypesList": "Term types list"
+          }
+        },
+        "termTypeCode": "Type of terms"
       },
       "create": {
         "title": "New dictionary"

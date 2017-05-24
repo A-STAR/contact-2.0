@@ -59,7 +59,19 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         lazyOptions: this.gridService.read('/api/dictionaries')
           .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
         optionsActions: [
-          { text: 'dictionaries.edit.select.title', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
+        ]
+      },
+      {
+        label: 'dictionaries.edit.termTypeCode',
+        controlName: 'termTypeCode',
+        type: 'select',
+        loadLazyItemsOnInit: true,
+        lazyOptions: this.gridService.read('/api/dictionaries')
+          .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.code})))
+          .map((data) => data.filter((v) => v.value === 5)),
+        optionsActions: [
+          { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ]
       }
     ].filter(
