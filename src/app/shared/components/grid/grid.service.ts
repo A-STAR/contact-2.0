@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
-import { IGridColumn } from './grid.interface';
+import { IGridColumn, IRenderer } from './grid.interface';
 
 @Injectable()
 export class GridService {
@@ -64,7 +64,9 @@ export class GridService {
       rendererFn: Function | Observable<ILabeledValue[]>
   ): IGridColumn {
 
-    let entities: ILabeledValue[] = [];
+    const isArray = Array.isArray(rendererFn);
+    let entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
+
     const isObservableDecorator: boolean = rendererFn instanceof Observable;
     if (isObservableDecorator) {
       (rendererFn as Observable<ILabeledValue[]>).subscribe((data) => entities = data);
@@ -73,7 +75,7 @@ export class GridService {
     column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
 
-      if (isObservableDecorator) {
+      if (isArray || isObservableDecorator) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
         return labeledValue
           ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)

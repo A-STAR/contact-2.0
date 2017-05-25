@@ -42,11 +42,11 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ];
 
   renderers: IRenderer = {
-    typeCode: Observable.of([
+    typeCode: [
       { label: 'dictionaries.types.system', value: 1 },
       { label: 'dictionaries.types.client', value: 2 }
-    ]),
-    parentCodeName: (term: ITerm) => term.parentCodeName || term.parentCode,
+    ],
+    parentCodeName: (term: ITerm) => term.parentCodeName || term.parentCode || '',
     isClosed: (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : ''
   };
 
