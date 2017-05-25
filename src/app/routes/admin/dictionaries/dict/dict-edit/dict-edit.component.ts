@@ -24,7 +24,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         type: 'number',
         required: true
       },
-      {
+      /*{
         label: 'dictionaries.edit.translation',
         controlName: 'translations',
         type: 'select',
@@ -33,7 +33,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         loadLazyItemsOnInit: true,
         lazyOptions: this.gridService.read('/api/userlanguages')
           .map(data => data.languages.map(lang => ({label: lang.name, value: lang.id})))
-      },
+      },*/
       {
         label: 'dictionaries.edit.name',
         controlName: 'name',
