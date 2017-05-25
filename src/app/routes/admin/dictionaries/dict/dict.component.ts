@@ -10,7 +10,6 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
-import { DictService } from './dict.service';
 
 @Component({
   selector: 'app-dict',
