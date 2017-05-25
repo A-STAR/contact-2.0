@@ -6,8 +6,8 @@
 //== Application
 @import './app/shared/styles/app.scss';
 @import '~primeng/resources/primeng.min.css';
-@import './assets/primeng/theme/omega/theme.scss';
-@import './assets/swimlane/theme/material/theme.scss';
+@import './app/shared/styles/primeng/theme/omega.scss';
+@import './app/shared/styles/swimlane/theme/material/theme.scss';
 
 //== Vendor
 @import '../node_modules/font-awesome/css/font-awesome.css';

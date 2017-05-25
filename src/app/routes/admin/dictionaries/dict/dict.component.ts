@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
-// import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { DictService } from './dict.service';
@@ -53,7 +52,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
   constructor(
     private dictService: DictService,
     private gridService: GridService,
-    private valueConverterService: ValueConverterService
+    private valueConverterService: ValueConverterService,
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -77,7 +76,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
   }
 
   onCreateEntity(data: IDict): void {
-    this.onEditSubmit(data, false);
+          this.onEditSubmit(data, false);
   }
 
   onRemoveSubmit(): void {
