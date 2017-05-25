@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
-import { DictAndTermsComponent } from './dict-and-terms.component';
 import { DictModule } from './dict/dict.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { TermsModule } from './terms/terms.module';
 
+import { DictionaryResolver } from './dictionary-resolver.service';
+
+import { DictAndTermsComponent } from './dict-and-terms.component';
+import { DictComponent } from './dict/dict.component';
+
 const routes: Routes = [
-  {path: '', component: DictAndTermsComponent},
+  { path: '', component: DictAndTermsComponent },
+  { path: '', component: DictComponent, resolve: { dictionaries: DictionaryResolver } }
 ];
 
 @NgModule({
@@ -22,6 +27,9 @@ const routes: Routes = [
   ],
   declarations: [
     DictAndTermsComponent,
+  ],
+  providers: [
+    DictionaryResolver
   ]
 })
 export class DictionaryModule {
