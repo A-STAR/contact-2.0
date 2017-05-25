@@ -22,7 +22,7 @@
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text | translate)"></span>
+              [innerHTML]="sanitize((active[0].text || '') | translate)"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
