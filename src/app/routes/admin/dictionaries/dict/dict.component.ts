@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
@@ -14,7 +15,7 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
   selector: 'app-dict',
   templateUrl: './dict.component.html'
 })
-export class DictComponent extends GridEntityComponent<IDict> {
+export class DictComponent extends GridEntityComponent<IDict> implements OnInit {
 
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
@@ -36,8 +37,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
   ];
 
   renderers: IRenderer = {
-    parentCode: this.gridService.read('/api/dictionaries')
-        .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code }))),
+    parentCode: [],
     typeCode: [
       { label: 'dictionaries.types.system', value: 1 },
       { label: 'dictionaries.types.client', value: 2 }
@@ -53,9 +53,17 @@ export class DictComponent extends GridEntityComponent<IDict> {
     private dictService: DictService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
+    private route: ActivatedRoute,
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngOnInit(): void {
+    this.route.data
+      .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code })))
+      .take(1)
+      .subscribe(dictionaries => this.renderers.parentCode = dictionaries);
   }
 
   onEditSubmit(data: IDict, editMode: boolean): void {
@@ -76,7 +84,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
   }
 
   onCreateEntity(data: IDict): void {
-          this.onEditSubmit(data, false);
+    this.onEditSubmit(data, false);
   }
 
   onRemoveSubmit(): void {
