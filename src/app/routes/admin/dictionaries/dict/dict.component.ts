@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
@@ -40,10 +39,10 @@ export class DictComponent extends GridEntityComponent<IDict> {
   renderers: IRenderer = {
     parentCode: this.gridService.read('/api/dictionaries')
         .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code }))),
-    typeCode: Observable.of([
+    typeCode: [
       { label: 'dictionaries.types.system', value: 1 },
       { label: 'dictionaries.types.client', value: 2 }
-    ])
+    ]
   };
 
   dataSource: IDataSource = {

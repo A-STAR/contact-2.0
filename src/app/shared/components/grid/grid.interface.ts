@@ -27,5 +27,5 @@ export interface IGridColumn {
 }
 
 export interface IRenderer {
-  [key: string]: Function | Observable<ILabeledValue[]>;
+  [key: string]: Function | Observable<ILabeledValue[]> | ILabeledValue[];
 }
