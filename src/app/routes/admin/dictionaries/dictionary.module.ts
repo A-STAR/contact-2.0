@@ -8,11 +8,9 @@ import { TermsModule } from './terms/terms.module';
 import { DictionaryResolver } from './dictionary-resolver.service';
 
 import { DictAndTermsComponent } from './dict-and-terms.component';
-import { DictComponent } from './dict/dict.component';
 
 const routes: Routes = [
-  { path: '', component: DictAndTermsComponent },
-  { path: '', component: DictComponent, resolve: { dictionaries: DictionaryResolver } }
+  { path: '', component: DictAndTermsComponent, resolve: { dictionaries: DictionaryResolver } }
 ];
 
 @NgModule({
