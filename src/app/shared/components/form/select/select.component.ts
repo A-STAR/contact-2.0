@@ -1,15 +1,17 @@
-import {
-  Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterViewChecked
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterViewChecked } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { SelectItem } from './select-item';
-import { stripTags } from './select-pipes';
+
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ISelectionAction, OptionsBehavior, ISelectComponent, IdType } from './select-interfaces';
+
 import { escapeRegexp } from './common';
+import { stripTags } from './select-pipes';
 import { SelectActionHandler } from './select-action';
+
+import { SelectItem } from './select-item';
 
 @Component({
   selector: 'app-select',
@@ -26,8 +28,6 @@ import { SelectActionHandler } from './select-action';
 export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor, ISelectComponent {
   @Input() public allowClear = false;
   @Input() public placeholder = '';
-  @Input() public idField = 'id';
-  @Input() public textField = 'text';
   @Input() public childrenField = 'children';
   @Input() public actions: Array<ISelectionAction> = [];
   @Input() public lazyItems: Observable<Array<any>>;
@@ -46,7 +46,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   private _readonly = true;
   private _multiple = false;
   private _optionsOpened = false;
-  private _items: Array<any> = [];
   private _active: Array<SelectItem> = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
@@ -116,7 +115,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       const optionValue: SelectItem = this.itemObjects.find((item: SelectItem) => String(item.id) === String(currentSelectedItems));
       if (optionValue) {
         currentSelectedItems = [
-          {[this.idField]: optionValue.id, [this.textField]: optionValue.text}
+          { value: optionValue.id, label: optionValue.text}
         ];
       } else {
         /**
@@ -126,7 +125,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
          * number input item
          */
         currentSelectedItems = [
-          { [this.idField]: currentSelectedItems }
+          { value: currentSelectedItems }
         ];
       }
     }
@@ -155,14 +154,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.opened.emit(value);
   }
 
-  private initItems(value: Array<any>): void {
-    if (!value) {
-      this._items = this.itemObjects = [];
-    } else {
-      this._items = value;
-      this.itemObjects = this._items.map((item: any) =>
+  private initItems(value: Array<ILabeledValue>): void {
+    if (value) {
+      this.itemObjects = value.map((item: ILabeledValue) =>
         new SelectItem({ id: item.value, text: item.label, selected: item.selected, context: item.context })
       );
+    } else {
+      this.itemObjects = [];
     }
   }
 
@@ -177,10 +175,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
       if (this.active.length) {
         this.active = this.active.map((item: SelectItem) => {
-          const valueItem = loadedItems.find((loadedItem) => loadedItem[this.idField] === item.id);
+          const valueItem = loadedItems.find((loadedItem) => loadedItem.value === item.id);
           return {
             value: item.id,
-            label: valueItem ? valueItem.label : item.id,
+            label: valueItem && valueItem.label,
             selected: item.selected,
             context: item.context
           };
@@ -247,13 +245,13 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       e.preventDefault();
     }
     // left
-    if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
+    if (!isUpMode && e.keyCode === 37 && this.itemObjects.length > 0) {
       this.behavior.first();
       e.preventDefault();
       return;
     }
     // right
-    if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
+    if (!isUpMode && e.keyCode === 39 && this.itemObjects.length > 0) {
       this.behavior.last();
       e.preventDefault();
       return;
@@ -360,7 +358,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     return false;
   }
 
-  protected matchClick(e:any):void {
+  protected matchClick(e: any): void {
     if (this._disabled === true) {
       return;
     }

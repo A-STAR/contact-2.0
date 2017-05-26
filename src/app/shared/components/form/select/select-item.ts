@@ -2,10 +2,18 @@ import { IdType } from './select-interfaces';
 
 export class SelectItem {
   id: IdType;
-  text: string;
+  _text: string;
   parent: SelectItem;
   selected: boolean;
   context?: any;
+
+  set text(text: string) {
+    this._text = text;
+  }
+
+  get text(): string {
+    return this._text || String(this.id);
+  }
 
   get value(): IdType {
     return this.id;
