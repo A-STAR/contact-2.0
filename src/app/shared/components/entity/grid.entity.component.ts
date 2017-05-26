@@ -1,4 +1,4 @@
-import {AfterViewInit, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
+import { AfterViewInit, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from '@angular/core';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../grid/grid.interface';
@@ -47,6 +47,9 @@ export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
         this.afterUpdate();
+        break;
+      case ToolbarActionTypeEnum.EDIT:
+        this.onEdit();
         break;
       default:
         this.action = action.type;

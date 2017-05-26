@@ -9,12 +9,9 @@ export interface IValueEntity {
   value?: ValueType;
 }
 
-export interface ILocalizedValue {
-  trueValue?: string;
-  falseValue?: string;
-}
-
 export interface ILabeledValue {
   value: any;
-  label: string;
+  label?: string;
+  selected?: boolean;
+  context?: any;
 }
