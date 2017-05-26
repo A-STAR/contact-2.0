@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -15,7 +15,7 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
   selector: 'app-dict',
   templateUrl: './dict.component.html'
 })
-export class DictComponent extends GridEntityComponent<IDict> implements OnInit {
+export class DictComponent extends GridEntityComponent<IDict> {
 
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
@@ -56,14 +56,10 @@ export class DictComponent extends GridEntityComponent<IDict> implements OnInit 
     private route: ActivatedRoute,
   ) {
     super();
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-  }
 
-  ngOnInit(): void {
-    this.route.data
-      .map(data => data.dictNames.map(dict => ({ label: dict.name, value: dict.code })))
-      .take(1)
-      .subscribe(dictionaries => this.renderers.parentCode = dictionaries);
+    this.renderers.parentCode = this.route.snapshot.data.dictionaries.dictNames
+      .map(dict => ({ label: dict.name, value: dict.code }));
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   onEditSubmit(data: IDict, editMode: boolean): void {
