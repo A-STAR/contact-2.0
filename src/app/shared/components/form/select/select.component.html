@@ -91,8 +91,9 @@
                 tabindex="-1"
                 type="button"
                 (click)="activeItemClick(activeItem, $event)"
-                [ngClass]="{'btn-default': true, 'selected': isItemSelected(activeItem)}">
-             <a class="close"
+                [ngClass]="{'btn-default': true, 'selected': activeItem.selected }">
+             <a *ngIf="canCloseSelected"
+                class="close"
                 style="margin-left: 5px; padding: 0;"
                 (click)="removeClick(activeItem, $event)">&times;</a>
              <span [innerHtml]="sanitize(activeItem.text | translate)"></span>
