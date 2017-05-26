@@ -42,11 +42,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Output() selectedControlItemsChange: EventEmitter<IdType[]> = new EventEmitter<IdType[]>();
 
   private _disabled;
+  private _canCloseSelectedItem = true;
   private _readonly = true;
   private _multiple = false;
   private _optionsOpened = false;
   private _items: Array<any> = [];
-  private _selectedItems: Array<any> = [];
   private _active: Array<SelectItem> = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
@@ -57,6 +57,11 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   @Input()
   public set items(value: Array<any>) {
     this.initItems(value);
+  }
+
+  @Input()
+  public set canCloseSelectedItem(value: boolean) {
+    this._canCloseSelectedItem = this.toPropertyValue(value, this._canCloseSelectedItem);
   }
 
   @Input()
@@ -82,6 +87,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     return typeof value === 'undefined' ? defaultValue : (value || undefined);
   }
 
+  public get canCloseSelected(): boolean {
+    return this._canCloseSelectedItem;
+  }
+
   public get multiple(): boolean {
     return this._multiple;
   }
@@ -100,6 +109,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   @Input()
   public set active(selectedItems: Array<any>) {
+    this._active = [];
+
     let currentSelectedItems: number|Array<any> = selectedItems;
     if (typeof currentSelectedItems === 'number') {
       const optionValue: SelectItem = this.itemObjects.find((item: SelectItem) => String(item.id) === String(currentSelectedItems));
@@ -119,19 +130,15 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
         ];
       }
     }
-    if (!currentSelectedItems || currentSelectedItems.length === 0 || !Array.isArray(currentSelectedItems)) {
-      this._active = [];
-    } else {
+    if (Array.isArray(currentSelectedItems) && currentSelectedItems.length) {
       const areItemsStrings = typeof currentSelectedItems[0] === 'string';
 
-      this._active = currentSelectedItems
-        .map((item: any) => {
-          const data = areItemsStrings
-            ? item
-            : {id: item[this.idField], text: item[this.textField]};
-          return new SelectItem(data, this.idField, this.textField);
-        })
-        .filter((selectItem: SelectItem) => typeof selectItem.id !== 'undefined' && selectItem.id !== null);
+      this._active = currentSelectedItems.map((item: any) => {
+        const data = areItemsStrings
+          ? item
+          : { id: item.value, text: item.label, selected: item.selected } ;
+        return new SelectItem(data);
+      });
     }
   }
 
@@ -152,18 +159,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     if (!value) {
       this._items = this.itemObjects = [];
     } else {
-      this._items = value.filter((item: any) => {
-        if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] && item[this.idField])) {
-          return item;
-        }
-      });
-      this.itemObjects = this._items.map((item: any) => (typeof item === 'string'
-        ? new SelectItem(item, this.idField, this.textField)
-        : new SelectItem({
-          id: item[this.idField],
-          text: item[this.textField],
-          children: item[this.childrenField]}, this.idField, this.textField
-        )));
+      this._items = value;
+      this.itemObjects = this._items.map((item: any) =>
+        new SelectItem({ id: item.value, text: item.label, selected: item.selected, context: item.context })
+      );
     }
   }
 
@@ -179,7 +178,12 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       if (this.active.length) {
         this.active = this.active.map((item: SelectItem) => {
           const valueItem = loadedItems.find((loadedItem) => loadedItem[this.idField] === item.id);
-          return {[this.idField]: item.id, [this.textField]: valueItem ? valueItem.label : item.id};
+          return {
+            value: item.id,
+            label: valueItem ? valueItem.label : item.id,
+            selected: item.selected,
+            context: item.context
+          };
         });
       }
     });
@@ -353,7 +357,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   public get firstItemHasChildren(): boolean {
-    return this.itemObjects[0] && this.itemObjects[0].hasChildren();
+    return false;
   }
 
   protected matchClick(e:any):void {
@@ -367,7 +371,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  protected  mainClick(event:any):void {
+  protected  mainClick(event: any): void {
     if (this.inputMode === true || this._disabled === true) {
       return;
     }
@@ -397,27 +401,29 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     this.inputEvent(event);
   }
 
-  protected  selectActive(value:SelectItem):void {
+  protected selectActive(value: SelectItem): void {
     this.activeOption = value;
   }
 
-  protected  isActive(value:SelectItem):boolean {
+  protected isActive(value: SelectItem): boolean {
     return this.activeOption.id === value.id;
   }
 
   activeItemClick(selectItem: SelectItem, $event: MouseEvent): void {
     this.stopEvent($event);
 
-    if (this._selectedItems.indexOf(selectItem.id) > -1) {
-      this.removeSelectedItem(selectItem);
-    } else {
-      this._selectedItems.push(selectItem.id);
-    }
-    this.selectedControlItemsChange.emit(this._selectedItems);
-  }
+    this.active.forEach((item: SelectItem) => {
+      if (item !== selectItem) {
+        item.selected = false;
+      }
+    });
+    selectItem.selected = !selectItem.selected;
 
-  isItemSelected(selectItem: SelectItem): boolean {
-    return !!this._selectedItems.find((itemId: IdType) => itemId === selectItem.id);
+    this.selectedControlItemsChange.emit(
+      this.active
+        .filter((item: SelectItem) => item.selected)
+        .map((item: SelectItem) => item.id)
+    );
   }
 
   isInputVisible(): boolean {
@@ -427,11 +433,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   removeClick(selectItem: SelectItem, $event: Event): void {
     this.stopEvent($event);
     this.remove(selectItem);
-    this.removeSelectedItem(selectItem);
-  }
-
-  removeSelectedItem(selectItem: SelectItem): void {
-    this._selectedItems = this._selectedItems.filter((itemId: IdType) => itemId !== selectItem.id);
+    selectItem.selected = false;
   }
 
   private focusToInput(value: string = ''): void {
@@ -519,15 +521,6 @@ export class Behavior {
 
   public getSelectNativeElement(): Element {
     return this.actor.element.nativeElement.querySelector('.ui-select-choices');
-  }
-
-  public fillOptionsMap():void {
-    this.optionsMap.clear();
-    let startPos = 0;
-    this.actor.itemObjects
-      .map((item:SelectItem) => {
-        startPos = item.fillChildrenHash(this.optionsMap, startPos);
-      });
   }
 
   public ensureHighlightVisible(optionsMap:Map<string, number> = void 0):void {
