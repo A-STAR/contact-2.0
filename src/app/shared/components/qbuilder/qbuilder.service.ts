@@ -1,4 +1,4 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { IGroup, IField, ILogicalOperator, ICondition, IMetadata, IComparisonOperator } from './qbuilder.interface';
 

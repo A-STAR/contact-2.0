@@ -30,10 +30,10 @@ export class AuthService implements CanActivate, OnInit {
   private tokenTimer = null;
 
   constructor(
-      private http: AuthHttp,
-      private router: Router,
-      private jwtHelper: JwtHelper,
-      private translateService: TranslateService,
+    private http: AuthHttp,
+    private router: Router,
+    private jwtHelper: JwtHelper,
+    private translateService: TranslateService,
   ) {
     const token = getToken();
     if (this.isTokenValid(token)) {
