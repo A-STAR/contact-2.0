@@ -105,8 +105,16 @@
   margin: 0 3px 3px 0;
 
   &.selected {
-    background-color: #d8ffe1;
+    background-color: #99e5a9;
     border-color: #b6b6b6;
+
+    &.is-context-present {
+      background-color: #99e5a9;
+    }
+  }
+
+  &.is-context-present {
+    background-color: #d8ffe1;
   }
 }
 .ui-select-toggle > .caret {

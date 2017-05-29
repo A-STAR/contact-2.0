@@ -1,6 +1,7 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { ISelectionAction } from '../select/select-interfaces';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 
 export interface IValidationMessages {
   [key: string]: string;
@@ -17,6 +18,7 @@ export interface IDynamicFormControl {
   placeholder?: string;
   // options for select controls
   multiple?: boolean;
+  canCloseSelectedItem?: boolean;
   options?: Array<ISelectOptions>;
   lazyOptions?: Observable<Array<ISelectOptions>>;
   cachingOptions?: boolean;
@@ -44,7 +46,7 @@ export interface IControls {
   [key: string]: FormControl;
 }
 
-export interface ISelectedItemsPayload {
+export interface ISelectedControlItemsPayload {
   control: IDynamicFormControl;
-  selectedItems: any[];
+  items: ILabeledValue[];
 }

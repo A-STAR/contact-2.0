@@ -1,5 +1,3 @@
-import { SelectItem } from './select-item';
-
 export type IdType = number|string;
 
 export interface OptionsBehavior {
@@ -7,12 +5,7 @@ export interface OptionsBehavior {
   last(): any;
   prev(): any;
   next(): any;
-  filter(query: RegExp): any;
   getSelectNativeElement(): Element;
-}
-
-export interface ISelectComponent {
-  options: Array<SelectItem>;
 }
 
 export enum SelectionActionTypeEnum {

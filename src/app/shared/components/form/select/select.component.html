@@ -22,7 +22,7 @@
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text | translate)"></span>
+              [innerHTML]="toCleanedAndTranslatedLabel(active[0])"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
@@ -41,37 +41,17 @@
          class="form-control ui-select-search"
          *ngIf="inputMode"
          placeholder="{{active.length <= 0 ? placeholder : ''}}">
-  <!-- options template -->
-  <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+  <!-- rawData template -->
+  <ul *ngIf="optionsOpened && rawData && rawData.length"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let o of options" role="menuitem">
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
       <div class="ui-select-choices-row"
-           [class.active]="isActive(o)"
-           (mouseenter)="selectActive(o)"
-           (click)="selectMatch(o, $event)">
+           [class.active]="isActive(rawItem)"
+           (mouseenter)="selectActive(rawItem)"
+           (click)="selectMatch(rawItem, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
-        </a>
-      </div>
-    </li>
-  </ul>
-
-  <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-      class="ui-select-choices dropdown-menu" role="menu">
-    <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let c of options; let index=index" role="menuitem">
-      <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-      <div class="dropdown-header">{{c.text}}</div>
-
-      <div *ngFor="let o of c.children"
-           class="ui-select-choices-row"
-           [class.active]="isActive(o)"
-           (mouseenter)="selectActive(o)"
-           (click)="selectMatch(o, $event)"
-           [ngClass]="{'active': isActive(o)}">
-        <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
+          <div [innerHtml]="toCleanedAndTranslatedLabel(rawItem) | highlight:inputValue"></div>
         </a>
       </div>
     </li>
@@ -91,12 +71,12 @@
                 tabindex="-1"
                 type="button"
                 (click)="activeItemClick(activeItem, $event)"
-                [ngClass]="{'btn-default': true, 'selected': activeItem.selected }">
+                [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'is-context-present': isItemContextPresent(activeItem)}">
              <a *ngIf="canCloseSelected"
                 class="close"
                 style="margin-left: 5px; padding: 0;"
                 (click)="removeClick(activeItem, $event)">&times;</a>
-             <span [innerHtml]="sanitize(activeItem.text | translate)"></span>
+             <span [innerHtml]="toCleanedAndTranslatedLabel(activeItem)"></span>
           </span>
           <i class="dropdown-toggle pull-right"></i>
           <i class="caret pull-right"></i>
@@ -114,37 +94,17 @@
          class="form-control ui-select-search"
          placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
          role="combobox">
-  <!-- options template -->
-  <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+  <!-- rawData template -->
+  <ul *ngIf="optionsOpened && rawData && rawData.length"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let o of options" role="menuitem">
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
       <div class="ui-select-choices-row"
-           [class.active]="isActive(o)"
-           (mouseenter)="selectActive(o)"
-           (click)="selectMatch(o, $event)">
+           [class.active]="isActive(rawItem)"
+           (mouseenter)="selectActive(rawItem)"
+           (click)="selectMatch(rawItem, $event)">
         <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
-        </a>
-      </div>
-    </li>
-  </ul>
-
-  <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-      class="ui-select-choices dropdown-menu" role="menu">
-    <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let c of options; let index=index" role="menuitem">
-      <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-      <div class="dropdown-header">{{c.text}}</div>
-
-      <div *ngFor="let o of c.children"
-           class="ui-select-choices-row"
-           [class.active]="isActive(o)"
-           (mouseenter)="selectActive(o)"
-           (click)="selectMatch(o, $event)"
-           [ngClass]="{'active': isActive(o)}">
-        <a href="javascript:void(0)" class="dropdown-item">
-          <div [innerHtml]="sanitize(o.text | translate | highlight:inputValue)"></div>
+          <div [innerHtml]="toCleanedAndTranslatedLabel(rawItem) | highlight:inputValue"></div>
         </a>
       </div>
     </li>

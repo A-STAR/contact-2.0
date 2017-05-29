@@ -214,6 +214,7 @@
         "client": "Client"
       },
       "placeholder": {
+        "translatedName": "Enter the name of the dictionary in the selected language",
         "select": {
           "translation": "Select language"
         }
