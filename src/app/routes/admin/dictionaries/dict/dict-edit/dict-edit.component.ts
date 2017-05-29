@@ -61,7 +61,8 @@ export class DictEditComponent extends EntityBaseComponent<IDict> implements OnI
       {
         controlName: TRANSLATED_NAME_CONTROL_NAME,
         type: 'text',
-        placeholder: 'dictionaries.placeholder.translatedName'
+        placeholder: 'dictionaries.placeholder.translatedName',
+        required: true
       },
       {
         label: 'dictionaries.edit.type',
