@@ -22,6 +22,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   filters: INotificationFilters;
 
+  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR' ];
+
   private notificationSubscription: Subscription;
 
   constructor(
