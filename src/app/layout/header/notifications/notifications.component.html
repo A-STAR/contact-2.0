@@ -1,18 +1,18 @@
-<div>
-  <input type="checkbox"> Info
-  <input type="checkbox"> Warning
-  <input type="checkbox"> Error
-</div>
+<div class="panel mb0">
+  <div class="panel-heading">
+    <input type="checkbox"> Info
+    <input type="checkbox"> Warning
+    <input type="checkbox"> Error
+  </div>
 
-<scrollable height="320">
-  <ul class="list-unstyled">
-    <li *ngFor="let notification of notifications">
-      <a class="list-group-item">
-        <div class="media-box">
-          <div class="pull-left">
+  <scrollable height="320">
+    <ul class="list-group">
+      <li *ngFor="let notification of notifications" class="list-group-item">
+        <div class="media">
+          <div class="media-left">
             <i [class]="getIconClass(notification)"></i>
           </div>
-          <div class="media-box-body clearfix">
+          <div class="media-body">
             <p class="m0">{{ notification.message }}</p>
             <p class="m0 text-muted">
               <!-- TODO: translate -->
@@ -20,12 +20,12 @@
             </p>
           </div>
         </div>
-      </a>
-    </li>
-  </ul>
-</scrollable>
+      </li>
+    </ul>
+  </scrollable>
 
-<div>
-  <button class="btn btn-default">Clear</button>
-  <button class="btn btn-default">Close</button>
+  <div class="panel-footer">
+    <button class="btn btn-default">Clear</button>
+    <button class="btn btn-default">Close</button>
+  </div>
 </div>
