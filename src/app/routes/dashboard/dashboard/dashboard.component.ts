@@ -91,6 +91,8 @@ export class DashboardComponent implements OnInit {
     shadowSize: 0
   };
 
+  INotificationTypeEnum = INotificationTypeEnum;
+
   constructor(
     private colors: ColorsService,
     private http: AuthHttp,
@@ -107,8 +109,18 @@ export class DashboardComponent implements OnInit {
     return this.colors.byName(name);
   }
 
-  addNotification(): void {
-    this.notificationsActions.push('Message', INotificationTypeEnum.ERROR);
+  addNotification(type: INotificationTypeEnum): void {
+    const message = ((t: INotificationTypeEnum) => {
+      switch (t) {
+        case INotificationTypeEnum.ERROR:
+          return 'I am error message.';
+        case INotificationTypeEnum.WARNING:
+          return 'I am warning message.';
+        case INotificationTypeEnum.INFO:
+          return 'I am info message.';
+      }
+    })(type);
+    this.notificationsActions.push(message, type);
   }
 
   clearNotifications(): void {

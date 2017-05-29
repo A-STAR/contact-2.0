@@ -77,7 +77,9 @@
         <div class="panel-title">Notifications</div>
       </div>
       <div class="panel-footer">
-        <button class="btn btn-primary" (click)="addNotification()">Add Notification</button>
+        <button class="btn btn-info" (click)="addNotification(INotificationTypeEnum.INFO)">Add Info Notification</button>
+        <button class="btn btn-warning" (click)="addNotification(INotificationTypeEnum.WARNING)">Add Warning Notification</button>
+        <button class="btn btn-danger" (click)="addNotification(INotificationTypeEnum.ERROR)">Add Error Notification</button>
         <button class="btn btn-default" (click)="clearNotifications()">Clear Notifications</button>
       </div>
     </div>
