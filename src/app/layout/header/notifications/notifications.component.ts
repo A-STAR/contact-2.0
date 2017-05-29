@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { INotification } from '../../../core/notifications/notifications.interface';
+import { INotification, INotificationType } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -45,5 +45,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       case 'INFO':
         return 'fa fa-2x fa-check-circle text-info';
     }
+  }
+
+  onFilterChange(type: INotificationType, event: MouseEvent) {
+    this.notificationsActions.filter(type, true);
   }
 }

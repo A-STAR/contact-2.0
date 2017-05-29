@@ -6,10 +6,12 @@ export interface INotification {
   created: Date;
 }
 
+export type INotificationFilters = {
+  [key in INotificationType]: boolean;
+};
+
 export interface INotificationServiceState {
-  filters: {
-    [key in INotificationType]: boolean;
-  };
+  filters: INotificationFilters;
   notifications: Array<INotification>;
 }
 
@@ -17,7 +19,7 @@ export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET'
 
 export interface INotificationActionPayload {
   notification?: INotification;
-  type?: INotificationType;
+  filter?: INotificationFilters;
 }
 
 export interface INotificationAction {

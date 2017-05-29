@@ -3,9 +3,9 @@ import { INotificationAction, INotificationServiceState } from './notifications.
 const defaultState: INotificationServiceState = {
   notifications: [],
   filters: {
-    ERROR: false,
-    WARNING: false,
-    INFO: false
+    ERROR: true,
+    WARNING: true,
+    INFO: true
   }
 };
 
@@ -35,7 +35,7 @@ export function notificationReducer(
         ...state,
         filters: {
           ...state.filters,
-          [action.payload.type]: !state.filters[action.payload.type]
+          ...action.payload.filter
         }
       };
     default:
