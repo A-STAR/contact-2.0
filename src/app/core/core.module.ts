@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
 
+import { UserPermissionsResolver } from './user/permissions/user-permissions-resolver.service';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { MenuService } from './menu/menu.service';
@@ -32,6 +33,7 @@ import { EntityTranslationsService } from './entity/translations/entity-translat
     UserPermissionsService,
     ValueConverterService,
     EntityTranslationsService,
+    UserPermissionsResolver,
   ],
   exports: [
   ]
