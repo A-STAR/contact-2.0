@@ -17,7 +17,8 @@ export class NotificationActions {
   push(message: string, type: INotificationTypeEnum): void {
     this.store.dispatch(createNotificationAction('NOTIFICATION_PUSH', {
       message,
-      type
+      type,
+      created: new Date()
     }));
   }
 

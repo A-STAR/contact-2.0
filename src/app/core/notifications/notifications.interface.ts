@@ -8,6 +8,7 @@ export enum INotificationTypeEnum {
 export interface INotification {
   message: string;
   type: INotificationTypeEnum;
+  created: Date;
 }
 
 export interface INotificationServiceState {

@@ -46,77 +46,30 @@
             <li class="dropdown dropdown-list" dropdown>
                 <a title="Messages" dropdownToggle>
                     <em class="icon-bell"></em>
-                    <div class="label label-danger">
-                      {{ (notificationsService.notifications | async).length }}
+                    <div *ngIf="notifications.length" class="label label-danger">
+                      {{ notifications.length }}
                     </div>
                 </a>
-                <!-- START Dropdown menu-->
                 <ul *dropdownMenu class="dropdown-menu animated fadeIn">
-                    <li>
-                        <!-- START list group-->
+                    <li *ngFor="let notification of notifications">
                         <div class="list-group">
-                            <!-- list item-->
                             <a class="list-group-item">
                                 <div class="media-box">
                                     <div class="pull-left">
                                         <em class="fa fa-twitter fa-2x text-info"></em>
                                     </div>
                                     <div class="media-box-body clearfix">
-                                        <p class="m0">New followers</p>
+                                        <p class="m0">{{ notification.message }}</p>
                                         <p class="m0 text-muted">
-                                            <small>1 new follower</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-envelope fa-2x text-warning"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">New e-mails</p>
-                                        <p class="m0 text-muted">
-                                            <small>You have 10 new emails</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-tasks fa-2x text-success"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">Pending Tasks</p>
-                                        <p class="m0 text-muted">
-                                            <small>11 pending tasks</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- last list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-comment-o fa-2x text-success"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">New messages</p>
-                                        <p class="m0 text-muted">
-                                            <small>System messages</small>
-                                            <span class="label label-danger pull-right">14</span>
+                                          <!-- TODO: translate -->
+                                          <small>{{ notification.created | date:'medium' }}</small>
                                         </p>
                                     </div>
                                 </div>
                             </a>
                         </div>
-                        <!-- END list group-->
                     </li>
                 </ul>
-                <!-- END Dropdown menu-->
             </li>
             <!-- END Alert menu-->
             <!-- START Offsidebar button-->

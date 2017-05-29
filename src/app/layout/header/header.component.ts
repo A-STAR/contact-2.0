@@ -5,6 +5,8 @@ import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 
+import { INotification } from '../../core/notifications/notifications.interface';
+
 import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
@@ -17,11 +19,16 @@ export class HeaderComponent implements OnInit {
   @ViewChild('fsbutton') fsbutton;
   isNavSearchVisible: boolean;
 
+  notifications: Array<INotification>;
+
   constructor(
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService) {
+
+    // TODO: unsubscribe
+    this.notificationsService.notifications.subscribe((notifications: Array<INotification>) => this.notifications = notifications);
   }
 
   ngOnInit(): void {

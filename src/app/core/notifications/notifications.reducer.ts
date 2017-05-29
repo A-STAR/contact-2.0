@@ -1,4 +1,4 @@
-import { INotificationAction, INotificationServiceState, INotificationTypeEnum } from './notifications.interface';
+import { INotificationAction, INotificationServiceState } from './notifications.interface';
 
 const defaultState: INotificationServiceState = {
   notifications: []
@@ -10,8 +10,8 @@ export const notificationReducer = (state: INotificationServiceState = defaultSt
       return {
         ...state,
         notifications: [
-          ...state.notifications,
-          action.payload
+          action.payload,
+          ...state.notifications
         ]
       };
     case 'NOTIFICATION_RESET':
