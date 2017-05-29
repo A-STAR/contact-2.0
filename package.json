@@ -24,6 +24,8 @@
     "@angular/platform-browser": "4.1.3",
     "@angular/platform-browser-dynamic": "4.1.3",
     "@angular/router": "4.1.3",
+    "@ngrx/core": "^1.2.0",
+    "@ngrx/store": "^2.2.2",
     "@ngx-translate/core": "^6.0.1",
     "@ngx-translate/http-loader": "0.0.3",
     "@swimlane/ngx-datatable": "^8.2.1",

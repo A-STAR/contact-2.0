@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 
+import { INotificationTypeEnum } from '../../../core/notifications/notifications.interface';
+
 import { ColorsService } from '../../../shared/colors/colors.service';
+import { NotificationActions } from '../../../core/notifications/notifications.actions';
 
 @Component({
     selector: 'app-dashboard',
@@ -88,7 +91,11 @@ export class DashboardComponent implements OnInit {
     shadowSize: 0
   };
 
-  constructor(private colors: ColorsService, private http: AuthHttp) { }
+  constructor(
+    private colors: ColorsService,
+    private http: AuthHttp,
+    private notificationActions: NotificationActions,
+  ) { }
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
@@ -100,4 +107,11 @@ export class DashboardComponent implements OnInit {
     return this.colors.byName(name);
   }
 
+  addNotification(): void {
+    this.notificationActions.push('Message', INotificationTypeEnum.ERROR);
+  }
+
+  clearNotifications(): void {
+    this.notificationActions.reset();
+  }
 }
