@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-const browser = require('jquery.browser');
-
-import { SettingsService } from '../../core/settings/settings.service';
-import { AuthService } from '../../core/auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+const browser = require('jquery.browser');
 
 import { INotification } from '../../core/notifications/notifications.interface';
 
+import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
   selector: 'app-header',
@@ -25,8 +24,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
-    private translateService: TranslateService) {
-
+    private translateService: TranslateService
+  ) {
     // TODO: unsubscribe
     this.notificationsService.notifications.subscribe((notifications: Array<INotification>) => this.notifications = notifications);
   }
