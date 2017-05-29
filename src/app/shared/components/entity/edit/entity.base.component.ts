@@ -103,7 +103,7 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
   }
 
   onAfterInit(): void {
-    this.patchDisplayControlValue(true);
+    this.patchDisplayControlValue();
   }
 
   onChanges(changes: T): void {
@@ -126,18 +126,17 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     } else {
       this.displayControl.disable({ onlySelf: true });
     }
-    this.patchDisplayControlValue(false);
+    this.patchDisplayControlValue();
     this.translatedControl.markAsDirty();
   }
 
-  private patchDisplayControlValue(onAfterInit: boolean): void {
+  private patchDisplayControlValue(): void {
     const currentSelectedItem: ILabeledValue = this.currentSelectedItem;
     if (currentSelectedItem) {
-      if (!onAfterInit) {
-        currentSelectedItem.context = currentSelectedItem.context || {};
-      }
-      if (currentSelectedItem.context) {
+      if (currentSelectedItem.context && currentSelectedItem.context.hasOwnProperty('translation')) {
         this.displayControl.patchValue(currentSelectedItem.context.translation);
+      } else {
+        this.displayControl.patchValue('');
       }
     } else {
       this.displayControl.patchValue('');
