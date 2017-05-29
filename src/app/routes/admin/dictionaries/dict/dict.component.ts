@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDict } from './dict.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 
 import { DictService } from './dict.service';
+import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -16,6 +21,8 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
   templateUrl: './dict.component.html'
 })
 export class DictComponent extends GridEntityComponent<IDict> {
+
+  private dictReady = false;
 
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
@@ -53,6 +60,7 @@ export class DictComponent extends GridEntityComponent<IDict> {
     private dictService: DictService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
+    private entityTranslationsService: EntityTranslationsService,
     private route: ActivatedRoute,
   ) {
     super();
@@ -62,25 +70,72 @@ export class DictComponent extends GridEntityComponent<IDict> {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
-  onEditSubmit(data: IDict, editMode: boolean): void {
+  onEdit(): void {
+    super.onEdit();
+    this.dictReady = false;
+
+    this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
+      .subscribe((translations: IEntityTranslation[]) => this.onLoadNameTranslations(translations));
+  }
+
+  onLoadNameTranslations(currentTranslations: IEntityTranslation[]): void {
+    this.dictReady = true;
+
+    this.selectedEntity.nameTranslations = currentTranslations
+      .map((entityTranslation: IEntityTranslation) => {
+        return {
+          value: entityTranslation.languageId,
+          context: { translation: entityTranslation.value }
+        };
+      });
+  }
+
+  modifyEntity(data: IDict, editMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
     data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
 
     if (editMode) {
-      this.dictService.editDict(this.selectedEntity, data).subscribe(() => this.onSuccess());
+      const editTasks = [
+        this.gridService.update(`/api/dictionaries/{code}`, this.selectedEntity, data)
+      ];
+      const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
+      if (nameTranslations.length) {
+        nameTranslations
+          .filter((item: ILabeledValue) => item.removed)
+          .forEach((item: ILabeledValue) => {
+            editTasks.push(
+              this.entityTranslationsService.deleteDictNameTranslation(this.selectedEntity.id, item.value)
+            );
+          });
+
+        nameTranslations
+          .filter((item: ILabeledValue) => !item.removed)
+          .map<IEntityTranslation>((item: ILabeledValue) => {
+            return { languageId: item.value, value: item.context ? item.context.translation : null };
+          })
+          .filter((item: IEntityTranslation) => item.value !== null)
+          .forEach((item: IEntityTranslation) => {
+            editTasks.push(
+              this.entityTranslationsService.saveDictNameTranslation(this.selectedEntity.id, item)
+            );
+          });
+      }
+      delete data.translatedName;
+      delete data.nameTranslations;
+
+      Observable.forkJoin(editTasks).subscribe(() => this.onSuccess());
     } else {
-      this.gridService.create('/api/dictionaries', {}, data)
-        .subscribe(() => this.onSuccess());
+      this.gridService.create('/api/dictionaries', {}, data).subscribe(() => this.onSuccess());
     }
   }
 
   onUpdateEntity(data: IDict): void {
-    this.onEditSubmit(data, true);
+    this.modifyEntity(data, true);
   }
 
   onCreateEntity(data: IDict): void {
-    this.onEditSubmit(data, false);
+    this.modifyEntity(data, false);
   }
 
   onRemoveSubmit(): void {
@@ -90,5 +145,10 @@ export class DictComponent extends GridEntityComponent<IDict> {
   onSuccess(): void {
     this.cancelAction();
     this.afterUpdate();
+  }
+
+  get isReadyForEditing(): boolean {
+    // TODO replace dictReady with router resolve
+    return this.selectedEntity && this.dictReady;
   }
 }

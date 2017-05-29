@@ -1,19 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IDict } from '../dict.interface';
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+
 import { GridService } from '../../../../../shared/components/grid/grid.service';
+
+import {
+  EntityBaseComponent,
+  TranslationFieldsExtension
+} from '../../../../../shared/components/entity/edit/entity.base.component';
+
+const NAME_TRANSLATIONS_CONTROL_NAME = 'nameTranslations';
+const TRANSLATED_NAME_CONTROL_NAME = 'translatedName';
+const NAME_CONTROL_NAME = 'name';
 
 @Component({
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html'
 })
-export class DictEditComponent extends EntityBaseComponent<IDict> {
+export class DictEditComponent extends EntityBaseComponent<IDict> implements OnInit {
 
   constructor(private gridService: GridService) {
     super();
+  }
+
+  ngOnInit(): void {
+    if (this.isEditMode()) {
+      this.extensions.push(
+        new TranslationFieldsExtension<IDict>(this, TRANSLATED_NAME_CONTROL_NAME, NAME_TRANSLATIONS_CONTROL_NAME)
+      );
+    }
+    super.ngOnInit();
   }
 
   protected getControls(): Array<IDynamicFormControl> {
@@ -24,21 +42,26 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
         type: 'number',
         required: true
       },
-      /*{
-        label: 'dictionaries.edit.translation',
-        controlName: 'translations',
+      {
+        label: 'dictionaries.edit.name',
+        controlName: NAME_TRANSLATIONS_CONTROL_NAME,
         type: 'select',
         multiple: true,
         placeholder: 'dictionaries.placeholder.select.translation',
         loadLazyItemsOnInit: true,
         lazyOptions: this.gridService.read('/api/userlanguages')
           .map(data => data.languages.map(lang => ({label: lang.name, value: lang.id})))
-      },*/
+      },
       {
         label: 'dictionaries.edit.name',
-        controlName: 'name',
+        controlName: NAME_CONTROL_NAME,
         type: 'text',
         required: true
+      },
+      {
+        controlName: TRANSLATED_NAME_CONTROL_NAME,
+        type: 'text',
+        placeholder: 'dictionaries.placeholder.translatedName',
       },
       {
         label: 'dictionaries.edit.type',
@@ -78,7 +101,9 @@ export class DictEditComponent extends EntityBaseComponent<IDict> {
       }
     ].filter(
       (control) => {
-        return this.isEditMode() || ['translations'].indexOf(control.controlName) === -1;
+        return this.isEditMode()
+          ? [NAME_CONTROL_NAME].indexOf(control.controlName) === -1
+          : [NAME_TRANSLATIONS_CONTROL_NAME, TRANSLATED_NAME_CONTROL_NAME].indexOf(control.controlName) === -1;
       });
 
     return filteredControls as Array<IDynamicFormControl>;
