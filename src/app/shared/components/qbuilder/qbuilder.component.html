@@ -1,4 +1,4 @@
-<div class="group">
+<div class="group" *ngIf="group">
   <div class="form-inline">
     <select [(ngModel)]="group.operator" class="form-control input-sm">
       <option *ngFor="let operator of logicalOperators" [ngValue]="operator">{{ operator.name }}</option>
