@@ -136,13 +136,17 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     const currentSelectedItem: ILabeledValue = this.currentSelectedItem;
     if (currentSelectedItem) {
       if (currentSelectedItem.context && currentSelectedItem.context.hasOwnProperty('translation')) {
-        this.displayControl.patchValue(currentSelectedItem.context.translation);
+        this.patchDisplayControl(currentSelectedItem.context.translation);
       } else {
-        this.displayControl.patchValue('');
+        this.patchDisplayControl();
       }
     } else {
-      this.displayControl.patchValue('');
+      this.patchDisplayControl();
     }
+  }
+
+  private patchDisplayControl(value: string = ''): void {
+    this.displayControl.patchValue(value, { onlySelf: true });
   }
 
   private get currentSelectedItem(): ILabeledValue {

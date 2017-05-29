@@ -72,7 +72,7 @@
                 type="button"
                 (click)="activeItemClick(activeItem, $event)"
                 [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'is-context-present': isItemContextPresent(activeItem)}">
-             <a *ngIf="canCloseSelected"
+             <a *ngIf="canCloseSelected && active.length > 1"
                 class="close"
                 style="margin-left: 5px; padding: 0;"
                 (click)="removeClick(activeItem, $event)">&times;</a>

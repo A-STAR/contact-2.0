@@ -416,6 +416,9 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   private open(): void {
+    if (this.active.length === this.rawData.length) {
+      return;
+    }
     if (this.lazyItems) {
       this.initLazyItems();
     } else {
