@@ -43,7 +43,7 @@
                 </a>
             </li>
             <!-- START Alert menu-->
-            <li class="dropdown dropdown-list" dropdown>
+            <li class="dropdown dropdown-list" dropdown [isDisabled]="(notificationsService.notifications | async).length === 0">
                 <a title="Messages" dropdownToggle>
                     <em class="icon-bell"></em>
                     <div *ngIf="(notificationsService.notifications | async).length" class="label label-danger">
