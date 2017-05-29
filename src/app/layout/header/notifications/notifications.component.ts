@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -17,6 +17,8 @@ import { NotificationsService } from '../../../core/notifications/notifications.
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   notifications: Array<INotification>;
 
@@ -68,6 +70,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   onCloseClick(): void {
-    //
+    this.onClose.emit();
   }
 }

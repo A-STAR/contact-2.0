@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 const browser = require('jquery.browser');
+import { BsDropdownDirective } from 'ngx-bootstrap';
 
 import { INotification } from '../../core/notifications/notifications.interface';
 
@@ -17,10 +18,13 @@ import { SettingsService } from '../../core/settings/settings.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   // the fullscreen button
   @ViewChild('fsbutton') fsbutton;
+
+  // TODO: what if there are several dropdowns?
+  @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
+
   isNavSearchVisible: boolean;
 
   private notificationsCount = 0;
-
   private notificationSubscription: Subscription;
 
   constructor(
@@ -89,5 +93,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout(event: UIEvent): void {
     event.preventDefault();
     this.authService.logout().subscribe();
+  }
+
+  onNotificationsClose(): void {
+    this.notificationsDropdown.hide();
   }
 }

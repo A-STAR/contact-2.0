@@ -43,6 +43,8 @@
                 </a>
             </li>
             <!-- START Alert menu-->
+
+            <!-- TODO: refactor -->
             <li class="dropdown dropdown-list" dropdown [isDisabled]="(notificationsService.notifications | async).length === 0">
                 <a title="Messages" dropdownToggle>
                     <em class="icon-bell"></em>
@@ -51,7 +53,7 @@
                     </div>
                 </a>
                 <div *dropdownMenu class="dropdown-menu animated fadeIn">
-                    <app-notifications>
+                    <app-notifications (onClose)="onNotificationsClose()">
                     </app-notifications>
                 </div>
             </li>
