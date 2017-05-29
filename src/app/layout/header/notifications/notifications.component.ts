@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { INotification, INotificationTypeEnum } from '../../../core/notifications/notifications.interface';
+import { INotification } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -38,11 +38,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   getIconClass(notification: INotification): string {
     switch (notification.type) {
-      case INotificationTypeEnum.ERROR:
+      case 'ERROR':
         return 'fa fa-2x fa-times-circle text-danger';
-      case INotificationTypeEnum.WARNING:
+      case 'WARNING':
         return 'fa fa-2x fa-warning text-warning';
-      case INotificationTypeEnum.INFO:
+      case 'INFO':
         return 'fa fa-2x fa-check-circle text-info';
     }
   }

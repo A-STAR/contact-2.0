@@ -1,6 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
 const browser = require('jquery.browser');
+
+import { INotification } from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
@@ -11,10 +14,14 @@ import { SettingsService } from '../../core/settings/settings.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   // the fullscreen button
   @ViewChild('fsbutton') fsbutton;
   isNavSearchVisible: boolean;
+
+  private notificationsCount = 0;
+
+  private notificationSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -29,6 +36,13 @@ export class HeaderComponent implements OnInit {
         // Not supported under IE
       this.fsbutton.nativeElement.style.display = 'none';
     }
+
+    this.notificationSubscription = this.notificationsService.notifications
+      .subscribe((notifications: Array<INotification>) => this.notificationsCount = notifications.length);
+  }
+
+  ngOnDestroy(): void {
+    this.notificationSubscription.unsubscribe();
   }
 
   get isAuthenticated(): boolean {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 
-import { INotificationTypeEnum } from '../../../core/notifications/notifications.interface';
+import { INotificationType } from '../../../core/notifications/notifications.interface';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
@@ -91,8 +91,6 @@ export class DashboardComponent implements OnInit {
     shadowSize: 0
   };
 
-  INotificationTypeEnum = INotificationTypeEnum;
-
   constructor(
     private colors: ColorsService,
     private http: AuthHttp,
@@ -109,14 +107,14 @@ export class DashboardComponent implements OnInit {
     return this.colors.byName(name);
   }
 
-  addNotification(type: INotificationTypeEnum): void {
-    const message = ((t: INotificationTypeEnum) => {
+  addNotification(type: INotificationType): void {
+    const message = ((t: INotificationType) => {
       switch (t) {
-        case INotificationTypeEnum.ERROR:
+        case 'ERROR':
           return 'I am error message.';
-        case INotificationTypeEnum.WARNING:
+        case 'WARNING':
           return 'I am warning message.';
-        case INotificationTypeEnum.INFO:
+        case 'INFO':
           return 'I am info message.';
       }
     })(type);
