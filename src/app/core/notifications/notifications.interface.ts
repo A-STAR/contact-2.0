@@ -1,8 +1,7 @@
 export enum INotificationTypeEnum {
   ERROR,
-  DANGER,
   WARNING,
-  NOTICE,
+  INFO,
 }
 
 export interface INotification {

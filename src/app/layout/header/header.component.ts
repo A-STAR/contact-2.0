@@ -2,8 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 const browser = require('jquery.browser');
 
-import { INotification } from '../../core/notifications/notifications.interface';
-
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
@@ -18,17 +16,12 @@ export class HeaderComponent implements OnInit {
   @ViewChild('fsbutton') fsbutton;
   isNavSearchVisible: boolean;
 
-  notifications: Array<INotification>;
-
   constructor(
     private authService: AuthService,
-    private notificationsService: NotificationsService,
+    public notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService
-  ) {
-    // TODO: unsubscribe
-    this.notificationsService.notifications.subscribe((notifications: Array<INotification>) => this.notifications = notifications);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;

@@ -4,7 +4,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { INotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
-import { NotificationActions } from '../../../core/notifications/notifications.actions';
+import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 
 @Component({
     selector: 'app-dashboard',
@@ -94,7 +94,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private colors: ColorsService,
     private http: AuthHttp,
-    private notificationActions: NotificationActions,
+    private notificationsActions: NotificationsActions,
   ) { }
 
   ngOnInit(): void {
@@ -108,10 +108,10 @@ export class DashboardComponent implements OnInit {
   }
 
   addNotification(): void {
-    this.notificationActions.push('Message', INotificationTypeEnum.ERROR);
+    this.notificationsActions.push('Message', INotificationTypeEnum.ERROR);
   }
 
   clearNotifications(): void {
-    this.notificationActions.reset();
+    this.notificationsActions.reset();
   }
 }

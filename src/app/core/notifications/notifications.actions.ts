@@ -10,7 +10,7 @@ export const createNotificationAction = (type: INotificationActionType, payload?
 });
 
 @Injectable()
-export class NotificationActions {
+export class NotificationsActions {
 
   constructor(private store: Store<IAppState>) {}
 
