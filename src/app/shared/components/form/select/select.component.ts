@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef, AfterViewChecked } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
@@ -22,7 +22,7 @@ import { SelectActionHandler } from './select-action';
     }
   ],
 })
-export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAccessor {
+export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() allowClear = false;
   @Input() placeholder = '';
   @Input() actions: Array<ISelectionAction> = [];
@@ -276,16 +276,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
   }
 
-  /**
-   * @override
-   */
-  public ngAfterViewChecked(): void {
-    const selectNativeElement: Element = this.behavior.getSelectNativeElement();
-    if (selectNativeElement) {
-      // TODO Define select field behaviour
-    }
-  }
-
   remove(item: ILabeledValue): void {
     if (this.canSelectMultipleItem) {
       item.selected = false;
@@ -431,11 +421,9 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     if ($event) {
       this.stopEvent($event);
     }
-
     if (!this.rawData.length) {
       return;
     }
-
     if (this.multiple === true) {
       this.active.push(value);
       if (!this.active.find((item: ILabeledValue) => item.selected)) {
@@ -445,8 +433,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     } else if (this.multiple === false) {
       this.active = [value];
     }
-    this.selectedControlItemsChanges.emit(this.rawData);
-
     this.doEvent('selected', value);
     this.hideOptions();
     if (this.multiple === true) {
@@ -455,6 +441,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       this.focusToInput(value.label);
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
+    this.selectedControlItemsChanges.emit(this.rawData);
   }
 
   private stopEvent($event: Event): void {
@@ -470,10 +457,6 @@ export class Behavior {
 
   public constructor(actor: SelectComponent) {
     this.actor = actor;
-  }
-
-  public getSelectNativeElement(): Element {
-    return this.actor.element.nativeElement.querySelector('.ui-select-choices');
   }
 
   public ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {

@@ -5,7 +5,6 @@ export interface OptionsBehavior {
   last(): any;
   prev(): any;
   next(): any;
-  getSelectNativeElement(): Element;
 }
 
 export enum SelectionActionTypeEnum {
