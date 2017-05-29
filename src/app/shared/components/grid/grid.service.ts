@@ -61,21 +61,16 @@ export class GridService {
 
   private setRenderer(
       column: IGridColumn,
-      rendererFn: Function | Observable<ILabeledValue[]>
+      rendererFn: Function | IRenderer
   ): IGridColumn {
 
     const isArray = Array.isArray(rendererFn);
-    let entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
-
-    const isObservableDecorator: boolean = rendererFn instanceof Observable;
-    if (isObservableDecorator) {
-      (rendererFn as Observable<ILabeledValue[]>).subscribe((data) => entities = data);
-    }
+    const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
 
     column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
 
-      if (isArray || isObservableDecorator) {
+      if (isArray) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
         return labeledValue
           ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)

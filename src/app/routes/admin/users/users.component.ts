@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { UsersService } from './users.service';
 
 @Component({
   selector: 'app-users',
@@ -32,9 +32,9 @@ export class UsersComponent implements AfterViewInit {
   ];
 
   renderers: IRenderer = {
-    roleId: this.usersService.getRoles(),
+    roleId: [],
     isBlocked: ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE',
-    languageId: this.usersService.getLanguages(),
+    languageId: [],
   };
 
   dataSource: IDataSource = {
@@ -65,8 +65,11 @@ export class UsersComponent implements AfterViewInit {
   action: ToolbarActionTypeEnum = null;
 
   constructor(
-    private usersService: UsersService,
+    private route: ActivatedRoute,
     private gridService: GridService) {
+    const [ languages, roles ] = this.route.snapshot.data.users;
+    this.renderers.languageId = [].concat(languages);
+    this.renderers.roleId = [].concat(roles);
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.filter = this.filter.bind(this);
   }

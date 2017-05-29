@@ -8,7 +8,7 @@
           <label>{{control.label | translate}}
             <input type="number"
                   class="form-control"
-                  [attr.placeholder]="control.placeholder || ''"
+                  [attr.placeholder]="(control.placeholder || '') | translate"
                   [formControlName]="control.controlName">
           </label>
         </ng-container>
@@ -17,7 +17,7 @@
           <label>{{control.label | translate}}
             <input type="text"
                    class="form-control"
-                   [attr.placeholder]="control.placeholder || ''"
+                   [attr.placeholder]="(control.placeholder || '') | translate"
                    [formControlName]="control.controlName">
           </label>
         </ng-container>
@@ -53,10 +53,11 @@
                         [actions]="control.optionsActions"
                         [loadLazyItemsOnInit]="control.loadLazyItemsOnInit"
                         [multiple]="control.multiple"
+                        [canCloseSelectedItem]="control.canCloseSelectedItem"
                         [controlDisabled]="control.disabled"
                         [readonly]="control.readonly"
-                        [placeholder]="control.placeholder || ''"
-                        (selectedControlItemsChange)="onSelectedControlItemsChange(control, $event)">
+                        [placeholder]="control.placeholder"
+                        (selectedControlItemsChanges)="onSelectedControlItemsChanges(control, $event)">
               </app-select>
           </label>
         </ng-container>
@@ -64,7 +65,7 @@
         <ng-container *ngSwitchCase="'textarea'">
           <label>{{control.label | translate}}
             <textarea
-              [attr.placeholder]="control.placeholder || ''"
+              [attr.placeholder]="(control.placeholder || '') | translate"
               [formControlName]="control.controlName"
               class="form-control"
               rows="control.rows || 2"
@@ -90,7 +91,7 @@
                 <label>{{control.label | translate}}
                   <input type="number"
                          class="form-control"
-                         [attr.placeholder]="control.placeholder || ''"
+                         [attr.placeholder]="(control.placeholder || '') | translate"
                          [formControlName]="control.controlName">
                 </label>
               </ng-container>
@@ -116,7 +117,7 @@
                 <label>{{control.label | translate}}
                   <input type="text"
                          class="form-control"
-                         [attr.placeholder]="control.placeholder || ''"
+                         [attr.placeholder]="(control.placeholder || '') | translate"
                          [formControlName]="control.controlName">
                 </label>
               </ng-container>

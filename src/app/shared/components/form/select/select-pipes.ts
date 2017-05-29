@@ -1,5 +1,30 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {escapeRegexp} from './common';
+import { Pipe, PipeTransform } from '@angular/core';
+
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { escapeRegexp } from './common';
+
+@Pipe({name: 'rawDataFilter'})
+export class RawDataFilterPipe implements PipeTransform {
+
+  public transform(value: ILabeledValue[], params: any): ILabeledValue[] { // TODO any
+    const filteredValue: ILabeledValue[] = value.filter((item: ILabeledValue) =>
+      !params.active.find((activeItem: ILabeledValue) => activeItem.value === item.value));
+
+    if (params.sortType) {
+      switch (params.sortType) {
+        case 'up':
+          filteredValue.sort((item1: ILabeledValue, item2: ILabeledValue) =>
+            (item1.label || String(item1.value)).localeCompare((item2.label || String(item2.value))));
+          break;
+        case 'down':
+          filteredValue.sort((item1: ILabeledValue, item2: ILabeledValue) =>
+            (item2.label || String(item2.value)).localeCompare(item1.label || String(item1.value)));
+          break;
+      }
+    }
+    return filteredValue;
+  }
+}
 
 @Pipe({name: 'highlight'})
 export class HighlightPipe implements PipeTransform {
@@ -23,11 +48,4 @@ export class HighlightPipe implements PipeTransform {
     }
     return value;
   }
-
-}
-
-export function stripTags(input: string): string {
-  const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-  const commentsAndPhpTags = /<!--[\s\S]*?-->/gi;
-  return input.replace(commentsAndPhpTags, '').replace(tags, '');
 }

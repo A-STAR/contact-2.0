@@ -9,16 +9,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
-import { EntityTranslationsConstantsService } from './entity/translations/entity-translations.service';
+import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
 import { NotificationsActions } from './notifications/notifications.actions';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
+import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
-
-import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { rootReducer } from '../core/state/root.reducer';
 
@@ -44,7 +43,7 @@ import { rootReducer } from '../core/state/root.reducer';
     TranslateService,
     UserPermissionsService,
     ValueConverterService,
-    EntityTranslationsConstantsService,
+    EntityTranslationsService,
   ],
   exports: [
   ]

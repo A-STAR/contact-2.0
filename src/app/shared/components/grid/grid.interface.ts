@@ -1,6 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
-
 export interface IDataSource {
   create?: string;
   read?: string;
@@ -27,5 +24,5 @@ export interface IGridColumn {
 }
 
 export interface IRenderer {
-  [key: string]: Function | Observable<ILabeledValue[]> | ILabeledValue[];
+  [key: string]: Function | Array<any>;
 }
