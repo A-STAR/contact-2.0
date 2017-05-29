@@ -8,9 +8,9 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Component({
   selector: 'app-notifications',
-  templateUrl: './notifications.component.html'
+  templateUrl: './notifications.component.html',
+  styleUrls: ['./notifications.component.scss']
 })
-
 export class NotificationsComponent implements OnInit, OnDestroy {
 
   notifications: Array<INotification>;
