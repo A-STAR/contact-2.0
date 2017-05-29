@@ -65,11 +65,11 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
 
   parseFn = (data: IEmployeesResponse) => data.users;
 
-  onSubmit(): void {
-    this.submit.emit({
-      roleCode: this.form.value.roleCode[0].id,
+  toSubmittedValues(values: IEmployeeUser): any {
+    return {
+      roleCode: this.dynamicForm.value.roleCode[0].id,
       usersIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
-    });
+    };
   }
 
   ngAfterViewInit(): void {

@@ -209,6 +209,7 @@
       "client": "Клиентский"
     },
     "placeholder": {
+      "translatedName": "Введите название словаря на выбраном языке",
       "select": {
         "translation": "Выберите язык"
       }

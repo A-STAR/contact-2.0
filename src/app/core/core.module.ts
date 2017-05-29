@@ -14,7 +14,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ConstantsService } from './constants/constants.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
-import { EntityTranslationsConstantsService } from './entity/translations/entity-translations.service';
+import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 
 @NgModule({
   imports: [
@@ -31,7 +31,7 @@ import { EntityTranslationsConstantsService } from './entity/translations/entity
     TranslateService,
     UserPermissionsService,
     ValueConverterService,
-    EntityTranslationsConstantsService,
+    EntityTranslationsService,
   ],
   exports: [
   ]

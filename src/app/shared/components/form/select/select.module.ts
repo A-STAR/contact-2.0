@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SelectComponent } from './select.component';
-import { HighlightPipe } from './select-pipes';
+import { HighlightPipe, RawDataFilterPipe } from './select-pipes';
 import { OffClickDirective } from './off-click';
 
 @NgModule({
@@ -14,6 +14,7 @@ import { OffClickDirective } from './off-click';
   declarations: [
     SelectComponent,
     HighlightPipe,
+    RawDataFilterPipe,
     OffClickDirective
   ],
   exports: [
