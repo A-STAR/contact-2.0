@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { INotification, INotificationTypeEnum } from '../../../core/notifications/notifications.interface';
@@ -21,6 +21,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private notificationsActions: NotificationsActions,
     private notificationsService: NotificationsService
   ) {}
+
+  @HostListener('click', ['$event'])
+  onClick(e: MouseEvent): void {
+    e.stopPropagation();
+  }
 
   ngOnInit(): void {
     this.notificationSubscription = this.notificationsService.notifications
