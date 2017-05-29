@@ -57,7 +57,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFilterChange(type: INotificationType, event: MouseEvent) {
-    this.notificationsActions.filter(type, true);
+  onFilterChange(type: INotificationType, event: MouseEvent): void {
+    // FIXME
+    this.notificationsActions.filter(type, (event.target as HTMLInputElement).checked);
   }
 }

@@ -1,13 +1,13 @@
 <div class="panel notifications">
   <div class="panel-heading">
     <label class="checkbox-inline">
-      <input type="checkbox" (change)="onFilterChange('INFO', $event)"> Info
+      <input type="checkbox" [checked]="filters.INFO" (change)="onFilterChange('INFO', $event)"> Info
     </label>
     <label class="checkbox-inline">
-      <input type="checkbox" (change)="onFilterChange('WARNING', $event)"> Warning
+      <input type="checkbox" [checked]="filters.WARNING" (change)="onFilterChange('WARNING', $event)"> Warning
     </label>
     <label class="checkbox-inline">
-      <input type="checkbox" (change)="onFilterChange('ERROR', $event)"> Error
+      <input type="checkbox" [checked]="filters.ERROR" (change)="onFilterChange('ERROR', $event)"> Error
     </label>
   </div>
 

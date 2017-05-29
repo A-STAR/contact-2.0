@@ -17,9 +17,14 @@ export interface INotificationServiceState {
 
 export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET' | 'NOTIFICATION_FILTER';
 
+export interface IFilterActionPayload {
+  type: INotificationType;
+  value: boolean;
+}
+
 export interface INotificationActionPayload {
   notification?: INotification;
-  filter?: INotificationFilters;
+  filter?: IFilterActionPayload;
 }
 
 export interface INotificationAction {

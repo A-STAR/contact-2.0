@@ -35,7 +35,7 @@ export function notificationReducer(
         ...state,
         filters: {
           ...state.filters,
-          ...action.payload.filter
+          [action.payload.filter.type]: action.payload.filter.value
         }
       };
     default:

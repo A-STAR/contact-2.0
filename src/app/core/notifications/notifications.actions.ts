@@ -28,9 +28,12 @@ export class NotificationsActions {
     this.store.dispatch(createNotificationAction('NOTIFICATION_RESET'));
   }
 
-  filter(type: INotificationType, state: boolean): void {
+  filter(type: INotificationType, value: boolean): void {
     this.store.dispatch(createNotificationAction('NOTIFICATION_FILTER', {
-      [type]: state
+      filter: {
+        type,
+        value
+      }
     }));
   }
 }
