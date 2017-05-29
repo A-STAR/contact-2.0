@@ -1,7 +1,3 @@
-<div class="content-heading">
-  {{ 'dictionaries.TITLE' | translate }}
-</div>
-
 <ng-container *ngIf="canDictionariesShow()">
   <app-dict (onSelect)="onSelectMaster($event)"></app-dict>
   <br>

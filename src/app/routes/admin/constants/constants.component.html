@@ -5,26 +5,16 @@
   (cancel)="cancelAction()">
 </app-constant-edit>
 
-<app-tabstrip>
-  <app-tab
-    *ngFor="let tab of tabs"
-    [title]="'constants.title' | translate"
-    [closable]="false"
-    (onClose)="onTabClose($event)"
-    [active]="tab.active"
-  >
-    <app-grid
-      selectionType="single"
-      [columns]="columns"
-      [columnTranslationKey]="'constants'"
-      [dataSource]="dataSource"
-      [autoLoad]="true"
-      [parseFn]="parseFn"
-      [editPermission]="'CONST_VALUE_EDIT'"
-      (onRowSelect)="onSelectedRowChange($event)"
-      (onEdit)="onEdit()"
-      [bottomActions]="bottomActions"
-      (onAction)="onAction($event)">
-    </app-grid>
-  </app-tab>
-</app-tabstrip>
+<app-grid
+  selectionType="single"
+  [columns]="columns"
+  [columnTranslationKey]="'constants'"
+  [dataSource]="dataSource"
+  [autoLoad]="true"
+  [parseFn]="parseFn"
+  [editPermission]="'CONST_VALUE_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>

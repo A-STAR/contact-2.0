@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/Observable/zip';
+import 'rxjs/add/observable/zip';
 
 import { IUser } from './users.interface';
 
@@ -15,7 +15,7 @@ export class UsersResolver implements Resolve<Array<IUser>> {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<any>> {
-    return zip(
+    return Observable.zip(
       this.usersService.getRoles(),
       this.usersService.getLanguages(),
       (roles, languages) => [ roles, languages ]

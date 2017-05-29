@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { AlertModule } from 'ngx-bootstrap/alert';
+// import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
@@ -20,9 +20,11 @@ import { CheckallDirective } from './directives/checkall/checkall.directive';
 import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
+import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
 import { CalendarModule } from 'primeng/primeng';
+import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 // TODO: consider to dump in favour of angular2-text-mask
 import { CurrencyMaskModule } from 'ng2-currency-mask';
@@ -51,7 +53,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     ReactiveFormsModule,
     // Angle modules
     AccordionModule.forRoot(),
-    AlertModule.forRoot(),
+    // AlertModule.forRoot(),
     CalendarModule,
     CurrencyMaskModule,
     DropdownModule.forRoot(),
@@ -59,6 +61,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     ProgressbarModule.forRoot(),
     TextMaskModule,
     // app modules
+    ContentTabstripModule,
     DatePickerModule,
     DynamicFormModule,
     GridModule,
@@ -82,6 +85,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     NowDirective,
     ScrollableDirective,
     // app declarations
+    RouterOutlet2Directive,
     TabComponent,
     TabstripComponent,
     NumericInputComponent,
@@ -96,7 +100,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     // Angle exports
     CurrencyMaskModule,
     AccordionModule,
-    AlertModule,
+    // AlertModule,
     DropdownModule,
     CalendarModule,
     TextMaskModule,
@@ -110,6 +114,8 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     ToasterModule,
     VectormapDirective,
     // App exports
+    RouterOutlet2Directive,
+    ContentTabstripModule,
     DatePickerModule,
     DynamicFormModule,
     DialogModule,

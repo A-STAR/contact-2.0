@@ -1,0 +1,12 @@
+:host /deep/ .nav-tabs > li {
+  &:not(:first-child) > a {
+    border-left: 0;
+  }
+  & > a.active {
+    background-color: white;
+  }
+}
+
+:host /deep/ ul.nav {
+  cursor: default;
+}
