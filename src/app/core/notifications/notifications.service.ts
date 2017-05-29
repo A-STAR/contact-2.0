@@ -6,7 +6,7 @@ import { IAppState } from '../state/state.interface';
 import { INotification } from './notifications.interface';
 
 @Injectable()
-export class NotificationService {
+export class NotificationsService {
 
   constructor(private store: Store<IAppState>) {}
 

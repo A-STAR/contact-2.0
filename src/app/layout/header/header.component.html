@@ -46,7 +46,9 @@
             <li class="dropdown dropdown-list" dropdown>
                 <a title="Messages" dropdownToggle>
                     <em class="icon-bell"></em>
-                    <div class="label label-danger">11</div>
+                    <div class="label label-danger">
+                      {{ (notificationsService.notifications | async).length }}
+                    </div>
                 </a>
                 <!-- START Dropdown menu-->
                 <ul *dropdownMenu class="dropdown-menu animated fadeIn">

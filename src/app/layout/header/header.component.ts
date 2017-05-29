@@ -5,6 +5,8 @@ import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 
+import { NotificationsService } from '../../core/notifications/notifications.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -16,8 +18,9 @@ export class HeaderComponent implements OnInit {
   isNavSearchVisible: boolean;
 
   constructor(
-    public settings: SettingsService,
     private authService: AuthService,
+    private notificationsService: NotificationsService,
+    public settings: SettingsService,
     private translateService: TranslateService) {
   }
 

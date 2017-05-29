@@ -1,4 +1,4 @@
-import { INotificationAction, INotificationServiceState } from './notifications.interface';
+import { INotificationAction, INotificationServiceState, INotificationTypeEnum } from './notifications.interface';
 
 const defaultState: INotificationServiceState = {
   notifications: []
