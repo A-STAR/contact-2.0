@@ -48,11 +48,4 @@ export class HighlightPipe implements PipeTransform {
     }
     return value;
   }
-
-}
-
-export function stripTags(input: number|string): string {
-  const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-  const commentsAndPhpTags = /<!--[\s\S]*?-->/gi;
-  return String(input).replace(commentsAndPhpTags, '').replace(tags, '');
 }

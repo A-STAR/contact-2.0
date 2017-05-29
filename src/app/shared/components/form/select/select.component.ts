@@ -8,7 +8,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ISelectionAction, OptionsBehavior, IdType } from './select-interfaces';
 
-import { stripTags } from './select-pipes';
 import { SelectActionHandler } from './select-action';
 
 @Component({
@@ -40,16 +39,16 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   activeOption: ILabeledValue;
   sortType: string;
 
+  private _inputMode = false;
   private _disabled;
   private _canSelectMultipleItem = true;
   private _canCloseSelectedItem = true;
   private _readonly = true;
   private _multiple = false;
   private _optionsOpened = false;
-  private _active: Array<ILabeledValue> = [];
+  private _active: ILabeledValue[] = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
-  private inputMode = false;
   private behavior: OptionsBehavior;
   private inputValue = '';
 
@@ -132,7 +131,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     }
     this._active = currentSelectedItems || [];
 
-    if (this.multiple === true && this.canSelectMultipleItem && this._active.length) {
+    if (this.canSelectMultipleItem && this.multiple === true && this._active.length) {
       this._active[0].selected = true;
     }
   }
@@ -272,9 +271,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     const target = e.target || e.srcElement;
     if (target && target.value) {
       this.inputValue = target.value;
-      // TODO reimplement later
-      // this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
-      this.doEvent('typed', this.inputValue);
     }else {
       this.open();
     }
@@ -297,10 +293,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     item.removed = true;
 
     if (this.multiple === true && this.active) {
-      const index = this.active.indexOf(item);
-      this.active.splice(index, 1);
-    }
-    if (this.multiple === false) {
+      this.active = this.active.filter((i: ILabeledValue) => i !== item);
+    } else if (this.multiple === false) {
       this.active = [];
     }
   }
@@ -317,7 +311,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   public clickedOutside(): void {
-    this.inputMode = false;
+    this._inputMode = false;
     this.optionsOpened = false;
   }
 
@@ -325,15 +319,15 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     if (this._disabled === true) {
       return;
     }
-    this.inputMode = !this.inputMode;
-    if (this.inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
+    this._inputMode = !this._inputMode;
+    if (this._inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
       this.focusToInput();
       this.open();
     }
   }
 
   protected  mainClick(event: any): void {
-    if (this.inputMode === true || this._disabled === true) {
+    if (this._inputMode === true || this._disabled === true) {
       return;
     }
     if (event.keyCode === 46) {
@@ -351,7 +345,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
       event.preventDefault();
       return;
     }
-    this.inputMode = true;
+    this._inputMode = true;
     const value = String
       .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
       .toLowerCase();
@@ -388,16 +382,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
 
   removeClick(item: ILabeledValue, $event: Event): void {
     this.stopEvent($event);
-
-    const isCurrentItemSelected: boolean = item.selected;
     this.remove(item);
-
-    if (this.canSelectMultipleItem && isCurrentItemSelected) {
-      const firstItem: ILabeledValue = this.active[0];
-      if (firstItem) {
-        firstItem.selected = true;
-      }
-    }
     this.selectedControlItemsChanges.emit(this.rawData);
   }
 
@@ -434,7 +419,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
   }
 
   private hideOptions(): void {
-    this.inputMode = false;
+    this._inputMode = false;
     this.optionsOpened = false;
   }
 
@@ -467,7 +452,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, ControlValueAc
     if (this.multiple === true) {
       this.focusToInput('');
     } else {
-      this.focusToInput(stripTags(value.label));
+      this.focusToInput(value.label);
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
   }
