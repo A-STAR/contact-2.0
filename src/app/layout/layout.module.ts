@@ -6,7 +6,7 @@ import { LayoutComponent } from './layout.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
 import { NavsearchComponent } from './header/navsearch/navsearch.component';
-
+import { NotificationsComponent } from './header/notifications/notifications.component';
 
 @NgModule({
     imports: [
@@ -17,12 +17,14 @@ import { NavsearchComponent } from './header/navsearch/navsearch.component';
         SidebarComponent,
         HeaderComponent,
         NavsearchComponent,
+        NotificationsComponent,
     ],
     exports: [
         LayoutComponent,
         SidebarComponent,
         HeaderComponent,
         NavsearchComponent,
+        NotificationsComponent,
     ]
 })
 export class LayoutModule { }

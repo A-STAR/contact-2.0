@@ -1,0 +1,25 @@
+<scrollable height="320">
+  <ul class="list-unstyled">
+    <li *ngFor="let notification of notifications">
+      <a class="list-group-item">
+        <div class="media-box">
+          <div class="pull-left">
+            <em class="fa fa-twitter fa-2x text-info"></em>
+          </div>
+          <div class="media-box-body clearfix">
+            <p class="m0">{{ notification.message }}</p>
+            <p class="m0 text-muted">
+              <!-- TODO: translate -->
+              <small>{{ notification.created | date:'medium' }}</small>
+            </p>
+          </div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</scrollable>
+
+<div>
+  <button class="btn btn-primary">Mark all as read</button>
+  <button class="btn btn-danger">Clear</button>
+</div>
