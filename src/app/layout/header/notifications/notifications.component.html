@@ -13,20 +13,22 @@
 
   <scrollable height="320">
     <ul class="list-group">
-      <li *ngFor="let notification of notifications" class="list-group-item">
-        <div class="media">
-          <div class="media-left">
-            <i [class]="getIconClass(notification)"></i>
+      <ng-container *ngFor="let notification of notifications">
+        <li *ngIf="filters[notification.type]" class="list-group-item">
+          <div class="media">
+            <div class="media-left">
+              <i [class]="getIconClass(notification)"></i>
+            </div>
+            <div class="media-body">
+              <p class="m0">{{ notification.message }}</p>
+              <p class="m0 text-muted">
+                <!-- TODO: translate -->
+                <small>{{ notification.created | date:'medium' }}</small>
+              </p>
+            </div>
           </div>
-          <div class="media-body">
-            <p class="m0">{{ notification.message }}</p>
-            <p class="m0 text-muted">
-              <!-- TODO: translate -->
-              <small>{{ notification.created | date:'medium' }}</small>
-            </p>
-          </div>
-        </div>
-      </li>
+        </li>
+      </ng-container>
     </ul>
   </scrollable>
 

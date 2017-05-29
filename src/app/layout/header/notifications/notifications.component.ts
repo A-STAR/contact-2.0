@@ -1,7 +1,12 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { INotification, INotificationType } from '../../../core/notifications/notifications.interface';
+import {
+  INotification,
+  INotificationFilters,
+  INotificationServiceState,
+  INotificationType,
+} from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -14,6 +19,8 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class NotificationsComponent implements OnInit, OnDestroy {
 
   notifications: Array<INotification>;
+
+  filters: INotificationFilters;
 
   private notificationSubscription: Subscription;
 
@@ -28,8 +35,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.notificationSubscription = this.notificationsService.notifications
-      .subscribe((notifications: Array<INotification>) => this.notifications = notifications);
+    this.notificationSubscription = this.notificationsService.state
+      .subscribe((state: INotificationServiceState) => {
+        this.filters = state.filters;
+        this.notifications = state.notifications;
+      });
   }
 
   ngOnDestroy(): void {
