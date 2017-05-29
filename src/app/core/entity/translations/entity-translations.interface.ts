@@ -4,6 +4,6 @@ export class EntityTranslationsConstants {
 }
 
 export interface IEntityTranslation {
-  languagesId: number;
+  languageId: number;
   value: string;
 }
