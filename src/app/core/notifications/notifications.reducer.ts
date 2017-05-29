@@ -31,11 +31,12 @@ export function notificationReducer(
         notifications: []
       };
     case 'NOTIFICATION_FILTER':
+    const filter = action.payload.filter;
       return {
         ...state,
         filters: {
           ...state.filters,
-          [action.payload.filter.type]: action.payload.filter.value
+          [filter.type]: filter.value
         }
       };
     default:
