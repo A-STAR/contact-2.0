@@ -5,7 +5,6 @@ import { ILabeledValue } from '../../../../core/converter/value/value-converter.
 import { IDynamicFormControl, ISelectedControlItemsPayload } from '../../form/dynamic-form/dynamic-form-control.interface';
 
 import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
-import { IDynamicFormControl, ISelectedControlItemsPayload } from '../../form/dynamic-form/dynamic-form-control.interface';
 
 export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
 
@@ -61,9 +60,6 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
 
   canSubmit(): boolean {
     return this.dynamicForm.canSubmit;
-  }
-
-  onSelectedControlItemsChange(payload: ISelectedControlItemsPayload): void {
   }
 
   protected isEditMode(): boolean {
