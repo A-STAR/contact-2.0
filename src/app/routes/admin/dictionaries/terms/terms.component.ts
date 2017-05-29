@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ITerm } from './terms.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
