@@ -14,6 +14,6 @@ export interface ILabeledValue {
   label?: string;
   selected?: boolean;
   removed?: boolean;
+  canRemove?: boolean;
   context?: any;
-  isContextPresent?: boolean;
 }

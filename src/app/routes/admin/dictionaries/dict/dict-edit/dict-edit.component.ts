@@ -50,7 +50,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> implements OnI
         placeholder: 'dictionaries.placeholder.select.translation',
         loadLazyItemsOnInit: true,
         lazyOptions: this.gridService.read('/api/userlanguages')
-          .map(data => data.languages.map(lang => ({label: lang.name, value: lang.id})))
+          .map(data => data.languages.map(lang => ({ label: lang.name, value: lang.id, canRemove: !lang.isMain })))
       },
       {
         label: 'dictionaries.edit.name',

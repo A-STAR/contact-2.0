@@ -18,7 +18,7 @@ export interface IDynamicFormControl {
   placeholder?: string;
   // options for select controls
   multiple?: boolean;
-  canCloseSelectedItem?: boolean;
+  closableSelectedItem?: boolean;
   options?: Array<ISelectOptions>;
   lazyOptions?: Observable<Array<ISelectOptions>>;
   cachingOptions?: boolean;
