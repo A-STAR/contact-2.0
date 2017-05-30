@@ -52,4 +52,8 @@ export class NotificationsActions {
       }
     }));
   }
+
+  remove(index: number): void {
+    this.store.dispatch(createNotificationAction('NOTIFICATION_DELETE', { index }));
+  }
 }

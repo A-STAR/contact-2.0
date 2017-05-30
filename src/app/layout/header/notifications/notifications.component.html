@@ -10,8 +10,9 @@
 
   <scrollable height="320">
     <ul class="list-group">
-      <ng-container *ngFor="let notification of notifications">
+      <ng-container *ngFor="let notification of notifications; let i = index;">
         <li *ngIf="filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
+          <span class="notifications_dismiss" [title]="'notifications.dismiss' | translate" (click)="onDismissClick(i)">&#10005;</span>
           <p class="m0 notifications_message">
             <i [class]="getIconClass(notification)"></i>
             {{ notification.message | translate }}

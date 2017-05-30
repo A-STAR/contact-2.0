@@ -349,6 +349,7 @@
       }
     },
     "notifications": {
+      "dismiss": "Dismiss",
       "types": {
         "debug": "Debug",
         "error": "Error",

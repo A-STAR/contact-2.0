@@ -48,6 +48,10 @@ export class NotificationsComponent {
     this.notificationsActions.reset();
   }
 
+  onDismissClick(index: number): void {
+    this.notificationsActions.remove(index);
+  }
+
   onCloseClick(): void {
     this.onClose.emit();
   }

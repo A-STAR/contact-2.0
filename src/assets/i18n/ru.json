@@ -350,6 +350,7 @@
     }
   },
   "notifications": {
+    "dismiss": "Удалить",
     "types": {
       "debug": "Отладка",
       "error": "Ошибка",
