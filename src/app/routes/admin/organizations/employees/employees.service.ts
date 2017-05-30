@@ -9,14 +9,14 @@ export class EmployeesService {
   constructor(private gridService: GridService) {}
 
   create(organizationId: number, employee: IEmployeeCreateData): Observable<any> {
-    return this.gridService.create('/api/organizations/{organizationId}/users', { organizationId }, employee);
+    return this.gridService.create('/api1/organizations/{organizationId}/users', { organizationId }, employee);
   }
 
   save(organizationId: number, userId: number, employee: IEmployee): Observable<any> {
-    return this.gridService.update('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
+    return this.gridService.update('/api1/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
   }
 
   remove(organizationId: number, userId: number): Observable<any> {
-    return this.gridService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
+    return this.gridService.delete('/api1/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
   }
 }
