@@ -1,4 +1,6 @@
 import { AuthService } from '../core/auth/auth.service';
+import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
+
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
@@ -17,6 +19,7 @@ export const routes = [
     path: 'admin',
     component: LayoutComponent,
     canActivate: [AuthService],
+    resolve: { app: UserPermissionsResolver },
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },

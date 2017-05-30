@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
+import { UserPermissionsResolver } from './user/permissions/user-permissions-resolver.service';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
@@ -44,6 +45,7 @@ import { rootReducer } from '../core/state/root.reducer';
     UserPermissionsService,
     ValueConverterService,
     EntityTranslationsService,
+    UserPermissionsResolver,
   ],
   exports: [
   ]
