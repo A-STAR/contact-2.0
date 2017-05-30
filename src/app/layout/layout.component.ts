@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { MenuService } from '../core/menu/menu.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 
 import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.interface';
@@ -21,6 +22,7 @@ export class LayoutComponent {
   };
 
   constructor(
+    private menuService: MenuService,
     private router: Router,
     private tabService: ContentTabService,
   ) {}
@@ -41,5 +43,7 @@ export class LayoutComponent {
 
     const tab = { title, active: true, component, path, factory, injector };
     this.tabService.addTab(tab);
+
+    this.menuService.onMenuLoadFinish();
   }
 }

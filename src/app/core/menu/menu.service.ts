@@ -8,12 +8,15 @@ import { AuthService } from '../auth/auth.service';
 import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
-  { name: 'menuItemHome' },
+  { id: 0, name: 'menuItemHome' },
 ];
 
 @Injectable()
 export class MenuService {
   private menuItems: Array<IMenuItem> = [];
+
+  private loadingTime: Date = null;
+  private loadingItem: IMenuItem = null;
 
   constructor(private http: AuthHttp, private authService: AuthService, private router: Router) { }
 
@@ -42,6 +45,21 @@ export class MenuService {
     return this.menuItems;
   }
 
+  onMenuLoadStart(item: IMenuItem): void {
+    this.loadingItem = item;
+    this.loadingTime = new Date();
+  }
+
+  onMenuLoadFinish(): void {
+    const t1 = this.loadingTime && this.loadingTime.getTime();
+    const t2 = (new Date()).getTime();
+
+    console.log('Finished loading', this.loadingItem, t2 - t1);
+
+    this.loadingItem = null;
+    this.loadingTime = null;
+  }
+
   private prepareMenu(response: IMenuApiResponse): void {
     this.menuItems = ADDITIONAL_MENU_ITEMS
       .concat(response.appGuiObjects)
@@ -50,6 +68,7 @@ export class MenuService {
 
   private prepareMenuNode(node: IMenuApiResponseItem): IMenuItem {
     return {
+      id: node.id,
       ...menuConfig[node.name],
       children: node.children && node.children.length ? node.children.map(child => this.prepareMenuNode(child)) : undefined
     };

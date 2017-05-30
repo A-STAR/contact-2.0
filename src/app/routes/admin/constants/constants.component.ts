@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { IConstant } from './constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
+
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { IConstant } from './constants.interface';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-constants',

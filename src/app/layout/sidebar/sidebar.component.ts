@@ -1,6 +1,8 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { IMenuItem } from '../../core/menu/menu.interface';
+
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
@@ -11,7 +13,7 @@ import { SettingsService } from '../../core/settings/settings.service';
 })
 export class SidebarComponent implements OnInit {
 
-  menuItems: Array<any>;
+  menuItems: Array<IMenuItem>;
   router: Router;
 
   constructor(private menuSrevice: MenuService, public settings: SettingsService, private injector: Injector) {
@@ -33,6 +35,10 @@ export class SidebarComponent implements OnInit {
       // scroll view to top
       window.scrollTo(0, 0);
     });
+  }
+
+  onMenuItemClick(item: IMenuItem): void {
+    this.menuSrevice.onMenuLoadStart(item);
   }
 
   toggleSubmenuClick(event): void {
