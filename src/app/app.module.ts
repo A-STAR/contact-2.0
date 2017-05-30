@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ToasterModule } from 'angular2-toaster';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
@@ -30,6 +31,7 @@ export function createTranslateLoader(http: Http): TranslateHttpLoader {
     LayoutModule,
     SharedModule.forRoot(),
     RoutesModule,
+    ToasterModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

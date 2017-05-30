@@ -16,7 +16,7 @@ export class NotificationsComponent {
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  filterTypes: Array<INotificationType> = [ 'DEBUG', 'INFO', 'WARNING', 'ERROR' ];
+  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR', 'DEBUG' ];
 
   private notificationIconsClasses = {
     DEBUG: 'fa fa-bug text-danger',
