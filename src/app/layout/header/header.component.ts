@@ -1,9 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-const browser = require('jquery.browser');
+import { Subscription } from 'rxjs/Subscription';
 import { BsDropdownDirective } from 'ngx-bootstrap';
+const browser = require('jquery.browser');
+
+import {
+  INotification,
+  INotificationFilters,
+  INotificationServiceState,
+  INotificationType,
+} from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationsActions } from '../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
@@ -11,7 +21,7 @@ import { SettingsService } from '../../core/settings/settings.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   // the fullscreen button
   @ViewChild('fsbutton') fsbutton;
 
@@ -20,20 +30,38 @@ export class HeaderComponent implements OnInit {
 
   isNavSearchVisible: boolean;
 
-  public notificationCount = 0;
+  notifications: Array<INotification>;
+
+  filters: INotificationFilters;
+
+  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR' ];
+
+  private notificationSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
+    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
     public settings: SettingsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
     if (browser.msie) {
-        // Not supported under IE
+      // Not supported under IE
       this.fsbutton.nativeElement.style.display = 'none';
     }
+
+    this.notificationSubscription = this.notificationsService.state
+      .subscribe((state: INotificationServiceState) => {
+        this.filters = state.filters;
+        this.notifications = state.notifications;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.notificationSubscription.unsubscribe();
   }
 
   get isAuthenticated(): boolean {
@@ -84,9 +112,5 @@ export class HeaderComponent implements OnInit {
 
   onNotificationsClose(): void {
     this.notificationsDropdown.hide();
-  }
-
-  onNotificationCountChange(n: number): void {
-    this.notificationCount = n;
   }
 }

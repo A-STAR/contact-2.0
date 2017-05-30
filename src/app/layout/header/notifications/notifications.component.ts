@@ -1,55 +1,28 @@
-import { Component, EventEmitter, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import {
-  INotification,
-  INotificationFilters,
-  INotificationServiceState,
-  INotificationType,
-} from '../../../core/notifications/notifications.interface';
+import { INotification, INotificationFilters, INotificationType } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class NotificationsComponent {
+
+  @Input() notifications: Array<INotification>;
+  @Input() filters: INotificationFilters;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
-  @Output() onCountChange: EventEmitter<number> = new EventEmitter<number>();
-
-  notifications: Array<INotification>;
-
-  filters: INotificationFilters;
 
   filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR' ];
 
-  private notificationSubscription: Subscription;
-
-  constructor(
-    private notificationsActions: NotificationsActions,
-    private notificationsService: NotificationsService
-  ) {}
+  constructor(private notificationsActions: NotificationsActions) {}
 
   @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.stopPropagation();
-  }
-
-  ngOnInit(): void {
-    this.notificationSubscription = this.notificationsService.state
-      .subscribe((state: INotificationServiceState) => {
-        this.filters = state.filters;
-        this.notifications = state.notifications;
-        this.onCountChange.emit(state.notifications.length);
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.notificationSubscription.unsubscribe();
   }
 
   getIconClass(notification: INotification): string {

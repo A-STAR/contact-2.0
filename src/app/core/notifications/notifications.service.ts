@@ -3,44 +3,19 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
-import { INotification, INotificationFilters, INotificationServiceState } from './notifications.interface';
+import { INotificationServiceState } from './notifications.interface';
 
 @Injectable()
 export class NotificationsService {
+  static STORAGE_KEY = 'state/notifications';
 
   constructor(private store: Store<IAppState>) {}
-
-  /**
-   * @deprecated
-   *
-   * @readonly
-   * @type {Observable<INotificationFilters>}
-   * @memberof NotificationsService
-   */
-  get filters(): Observable<INotificationFilters> {
-    return this.store
-      .select(state => state.notificationService.filters)
-      // TODO: double check this:
-      .filter(Boolean);
-  }
-
-  /**
-   * @deprecated
-   *
-   * @readonly
-   * @type {Observable<Array<INotification>>}
-   * @memberof NotificationsService
-   */
-  get notifications(): Observable<Array<INotification>> {
-    return this.store
-      .select(state => state.notificationService.notifications)
-      // TODO: double check this:
-      .filter(Boolean);
-  }
 
   get state(): Observable<INotificationServiceState> {
     return this.store
       .select(state => state.notificationService)
+      // TODO: separate service for persisting global state?
+      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)))
       // TODO: double check this:
       .filter(Boolean);
   }
