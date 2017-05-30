@@ -11,8 +11,8 @@
   <scrollable height="320">
     <ul class="list-group">
       <ng-container *ngFor="let notification of notifications">
-        <li *ngIf="filters[notification.type]" class="list-group-item">
-          <p class="m0 notifications_message" [title]="notification.message | translate">
+        <li *ngIf="filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
+          <p class="m0 notifications_message">
             <i [class]="getIconClass(notification)"></i>
             {{ notification.message | translate }}
           </p>

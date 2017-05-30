@@ -8,8 +8,13 @@
   border-bottom: 1px solid #eee;
   background-color: #fafafa;
 }
-.notifications_message {
+.notifications_item {
   cursor: pointer;
+  &:hover {
+    background-color: #f5faff;
+  }
+}
+.notifications_message {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
