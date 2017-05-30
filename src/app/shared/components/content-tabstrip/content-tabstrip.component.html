@@ -7,7 +7,7 @@
   </li>
 </ul>
 
-<div class="tab-content">
+<div class="tabstrip-content">
   <div *ngFor="let tab of tabs" [hidden]="!tab.active">
     <app-content-tab [tab]="tab"></app-content-tab>
   </div>
