@@ -21,19 +21,17 @@ export class EntityTranslationsService {
       .map(data => data.translations);
   }
 
-  saveDictNameTranslation(entityId: string|number, translation: IEntityTranslation): Observable<any> {
+  saveDictNameTranslations(entityId: string | number, translations: IEntityTranslation[]): Observable<any> {
     return this.gridService.update(this.API, {
       entityAttributesId: EntityTranslationsConstants.SPEC_DICT_NAME,
       entitiesId: entityId
-    }, translation);
-  }
-
-  saveDictNameTranslations(entityId: string|number, translations: IEntityTranslation[]): Observable<any> {
-    return Observable.forkJoin(translations.map((translation: IEntityTranslation) => this.saveDictNameTranslation(entityId, translation)));
+    }, {
+      translations: translations
+    });
   }
 
   deleteDictNameTranslation(entityId: string|number, languageId: number): Observable<any> {
-    return this.gridService.delete('/entityAttributes/{entityAttributesId}/entities/{entitiesId}/languages/?={languagesId}', {
+    return this.gridService.delete('/entityAttributes/{entityAttributesId}/entities/{entitiesId}/languages/?id={languagesId}', {
       entityAttributesId: EntityTranslationsConstants.SPEC_DICT_NAME,
       entitiesId: entityId,
       languagesId: languageId
