@@ -19,6 +19,7 @@ export const routes = [
     path: 'admin',
     component: LayoutComponent,
     canActivate: [AuthService],
+    resolve: { app: UserPermissionsResolver },
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
