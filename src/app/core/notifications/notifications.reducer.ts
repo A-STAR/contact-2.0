@@ -46,14 +46,9 @@ export function notificationReducer(
         }
       };
     case 'NOTIFICATION_DELETE':
-      const notifications = state.notifications;
-      const index = action.payload.index;
       return {
         ...state,
-        notifications: [
-          ...notifications.slice(0, index),
-          ...notifications.slice(index + 1),
-        ]
+        notifications: state.notifications.filter((_, i) => i !== action.payload.index)
       };
     default:
       return state;
