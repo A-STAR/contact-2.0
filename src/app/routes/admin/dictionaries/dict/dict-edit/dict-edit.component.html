@@ -1,0 +1,21 @@
+<app-dialog (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>{{ title | translate:editedEntity }}</h3>
+  </div>
+
+  <app-dynamic-form [controls]="controls"
+                    [data]="editedEntity"
+                    (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
+  </app-dynamic-form>
+
+  <div dialog-footer>
+    <button class="btn btn-success"
+            [disabled]="!canSubmit()"
+            (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

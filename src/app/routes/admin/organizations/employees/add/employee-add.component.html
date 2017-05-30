@@ -1,0 +1,35 @@
+<app-dialog (displayChange)="onDisplayChange($event)">
+  <div dialog-header>
+    <h3>{{ 'organizations.employees.add.title' | translate }}</h3>
+  </div>
+
+  <!-- TODO: styles -->
+  <div style="margin: 12px 0;">
+    <app-grid
+      #addEmplpoyeeGrid
+      class="flat"
+      [styles]="{ height: '200px' }"
+      [columns]="columns"
+      [parseFn]="parseFn"
+      [autoLoad]="false"
+      [columnTranslationKey]="'organizations.employees.add'"
+      [dataSource]="dataSource"
+      (onRowSelect)="onSelectEmployees($event)">
+    </app-grid>
+  </div>
+
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
+
+  <div dialog-footer>
+    <button
+      class="btn btn-success"
+      [disabled]="!canSubmit()"
+      (click)="onSubmit()"
+    >
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

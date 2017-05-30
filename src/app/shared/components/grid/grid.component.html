@@ -1,7 +1,7 @@
-<div class="panel panel-default">
-  <div class="panel-body">
+<div class="grid grid-default">
+  <div class="grid-body">
     <app-toolbar
-      *ngIf="bottomActions"
+      *ngIf="hasToolbar"
       class="app-toolbar"
       [actions]="bottomActions"
       (actionClick)="onActionClick($event)"
@@ -15,7 +15,7 @@
       [columnMode]="'force'"
       [footerHeight]="50"
       [rowHeight]="25"
-      [rows]="rows"
+      [rows]="filteredRows"
       [limit]="25"
       [messages]="messages"
       [selected]="selected"

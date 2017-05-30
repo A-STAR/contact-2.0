@@ -1,82 +1,109 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-const screenfull = require('screenfull');
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
+import { BsDropdownDirective } from 'ngx-bootstrap';
 const browser = require('jquery.browser');
 
-import { SettingsService } from '../../core/settings/settings.service';
+import { INotification, INotificationFilters, INotificationServiceState } from '../../core/notifications/notifications.interface';
+
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationsActions } from '../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../core/notifications/notifications.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-    @ViewChild('fsbutton') fsbutton;  // the fullscreen button
-    isNavSearchVisible: boolean;
+export class HeaderComponent implements OnInit, OnDestroy {
+  // the fullscreen button
+  @ViewChild('fsbutton') fsbutton;
 
-    constructor(
-        public settings: SettingsService,
-        private authService: AuthService
-        ) { }
+  // TODO: what if there are several dropdowns?
+  @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
-    ngOnInit() {
-        this.isNavSearchVisible = false;
-        if (browser.msie) { // Not supported under IE
-            this.fsbutton.nativeElement.style.display = 'none';
-        }
+  isNavSearchVisible: boolean;
+
+  notifications: Array<INotification>;
+
+  filters: INotificationFilters;
+
+  private notificationSubscription: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
+    public settings: SettingsService,
+    private translateService: TranslateService,
+  ) {}
+
+  ngOnInit(): void {
+    this.isNavSearchVisible = false;
+    if (browser.msie) {
+      // Not supported under IE
+      this.fsbutton.nativeElement.style.display = 'none';
     }
 
-    get isAuthenticated() {
-        return this.authService.isAuthenticated;
-    }
+    this.notificationSubscription = this.notificationsService.state
+      .subscribe((state: INotificationServiceState) => {
+        this.filters = state.filters;
+        this.notifications = state.notifications;
+      });
+  }
 
-    toggleUserSettings(event) {
-        event.preventDefault();
-    }
+  ngOnDestroy(): void {
+    this.notificationSubscription.unsubscribe();
+  }
 
-    openNavSearch(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.setNavSearchVisible(true);
-    }
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated;
+  }
 
-    setNavSearchVisible(stat: boolean) {
-        // console.log(stat);
-        this.isNavSearchVisible = stat;
-    }
+  toggleUserSettings(event: UIEvent): void {
+    event.preventDefault();
+  }
 
-    getNavSearchVisible() {
-        return this.isNavSearchVisible;
-    }
+  openNavSearch(event: UIEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setNavSearchVisible(true);
+  }
 
-    toggleOffsidebar() {
-        this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
-    }
+  setNavSearchVisible(stat: boolean): void {
+    this.isNavSearchVisible = stat;
+  }
 
-    toggleCollapsedSidebar() {
-        this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
-    }
+  getNavSearchVisible(): boolean {
+    return this.isNavSearchVisible;
+  }
 
-    isCollapsedText() {
-        return this.settings.layout.isCollapsedText;
-    }
+  toggleOffsidebar(): void {
+    this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
+  }
 
-    toggleFullScreen(event) {
+  toggleCollapsedSidebar(): void {
+    this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
+  }
 
-        if (screenfull.enabled) {
-            screenfull.toggle();
-        }
-        // Switch icon indicator
-        const el = $(this.fsbutton.nativeElement);
-        if (screenfull.isFullscreen) {
-            el.children('em').removeClass('fa-expand').addClass('fa-compress');
-        } else {
-            el.children('em').removeClass('fa-compress').addClass('fa-expand');
-        }
-    }
+  isCollapsedText(): void {
+    return this.settings.layout.isCollapsedText;
+  }
 
-    logout(event) {
-      event.preventDefault();
-      this.authService.logout().subscribe();
-    }
+  toggleLanguage(): void {
+    // STUB: to test the language switching options
+    const lang = this.translateService.currentLang;
+    const nextLang = lang === 'ru' ? 'en' : 'ru';
+    this.translateService.use(nextLang).subscribe();
+  }
+
+  logout(event: UIEvent): void {
+    event.preventDefault();
+    this.authService.logout().subscribe();
+  }
+
+  onNotificationsClose(): void {
+    this.notificationsDropdown.hide();
+  }
 }

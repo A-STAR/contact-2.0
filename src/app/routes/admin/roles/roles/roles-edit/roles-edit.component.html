@@ -1,20 +1,20 @@
 <app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ popupTitle }}</h3>
+    <h3>{{ popupTitle | translate:role }}</h3>
   </div>
 
-  <app-dynamic-form *ngIf="form" [form]="form" [controls]="controls"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
+    {{ error | translate }}
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-primary" (click)="onActionClick()" [disabled]="!canSubmit">
-      <i class="fa fa-check"></i> Save
+    <button class="btn btn-success" (click)="onActionClick()" [disabled]="!form.canSubmit">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancelClick()">
-      <i class="fa fa-remove"></i> Cancel
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>
 </app-dialog>

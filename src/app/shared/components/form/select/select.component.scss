@@ -1,0 +1,127 @@
+.ui-select-toggle {
+  position: relative;
+}
+
+/* Fix caret going into new line in Firefox */
+.ui-select-placeholder {
+  float: left;
+}
+
+/* Fix Bootstrap dropdown position when inside a input-group */
+.input-group > .dropdown {
+  /* Instead of relative */
+  position: static;
+}
+
+.ui-select-match > .btn {
+  /* Instead of center because of .btn */
+  text-align: left !important;
+  font-size: 14px;
+}
+
+.ui-select-match > .caret {
+  position: absolute;
+  top: 45%;
+  right: 15px;
+}
+
+.ui-select-unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ui-select-choices {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  overflow-x: hidden;
+  margin-top: 0;
+}
+
+.ui-select-choices.dropdown-menu {
+  box-shadow: none;
+}
+
+.ui-select-container[disabled] * {
+  background-color: #edf1f2;
+  cursor: not-allowed;
+}
+
+.ui-select-multiple .ui-select-choices {
+  margin-top: 1px;
+}
+.ui-select-choices-row .dropdown-item {
+  padding: 3px 20px;
+  line-height: 1.42857143;
+  color: #333;
+  font-weight: normal;
+  cursor: pointer;
+}
+.ui-select-action {
+  padding: 3px 20px;
+}
+.ui-select-action .fa {
+  float: right;
+}
+.ui-select-action-btn {
+  cursor: pointer;
+}
+
+.ui-select-choices-row.active {
+  .dropdown-item {
+    color: #fff;
+    background-color: #428bca;
+  }
+}
+
+.ui-select-multiple {
+  height: auto;
+  padding: 3px 3px 0 3px;
+  min-height: 35px;
+}
+
+.ui-select-multiple input.ui-select-search {
+  background-color: transparent !important; /* To prevent double background when disabled */
+  border: none;
+  outline: none;
+  box-shadow: none;
+  height: 1.6666em;
+  margin-bottom: 3px;
+
+  &.hidden {
+   display: none;
+  }
+}
+.ui-select-match .close {
+  font-size: 1.6em;
+  line-height: 0.75;
+}
+
+.ui-select-multiple .ui-select-match-item {
+  font-size: 14px;
+  margin: 1px 3px 3px 3px;
+
+  &.selected {
+    background-color: #99e5a9;
+    border-color: #b6b6b6;
+
+    &.context-exist {
+      background-color: #99e5a9;
+    }
+  }
+
+  &.context-exist {
+    background-color: #d8ffe1;
+  }
+}
+.ui-select-toggle > .caret {
+  position: absolute;
+  height: 10px;
+  top: 50%;
+  right: 10px;
+  margin-top: -2px;
+}

@@ -1,0 +1,18 @@
+<app-user-edit
+  *ngIf="isUserBeingCreatedOrEdited"
+  [(user)]="currentUser"
+  (onUpdate)="onUpdate()">
+</app-user-edit>
+
+<app-grid
+  selectionType="single"
+  [columns]="columns"
+  [columnTranslationKey]="'users'"
+  [dataSource]="dataSource"
+  [filter]="filter"
+  [parseFn]="parseFn"
+  [bottomActions]="actions"
+  (onRowSelect)="onSelect($event)"
+  (onAction)="onAction($event)"
+  (onEdit)="onEdit($event)">
+</app-grid>

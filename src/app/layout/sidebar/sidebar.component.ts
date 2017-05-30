@@ -14,21 +14,17 @@ export class SidebarComponent implements OnInit {
   menuItems: Array<any>;
   router: Router;
 
-  constructor(private menu: MenuService, public settings: SettingsService, private injector: Injector) {
-    this.menuItems = menu.getMenu();
-    if (!this.menuItems.length) {
-      menu.loadMenu()
-        .subscribe(
-          () => {
-            this.menuItems = menu.getMenu();
-          },
-          // TODO: show a message on failure
-          err => console.error(err)
-        );
-    }
+  constructor(private menuSrevice: MenuService, public settings: SettingsService, private injector: Injector) {
+    this.menuItems = menuSrevice.getMenu();
+    menuSrevice.loadMenu()
+      .subscribe(
+        () => { this.menuItems = menuSrevice.getMenu(); },
+        // TODO: show a message on failure
+        err => console.error(err)
+      );
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.router = this.injector.get(Router);
 
     this.router.events.subscribe((val) => {
@@ -39,7 +35,7 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  toggleSubmenuClick(event) {
+  toggleSubmenuClick(event): void {
     if (!this.isSidebarCollapsed() && !this.isSidebarCollapsedText() && !this.isEnabledHover()) {
       event.preventDefault();
 
@@ -88,13 +84,13 @@ export class SidebarComponent implements OnInit {
   }
 
   // Close menu collapsing height
-  closeMenu(elem) {
+  closeMenu(elem): void {
       elem.height(elem[0].scrollHeight); // set height
       elem.height(0); // and move to zero to collapse
       elem.removeClass('opening');
   }
 
-  toggleSubmenuHover(event) {
+  toggleSubmenuHover(event: UIEvent): void {
     const self = this;
     if (this.isSidebarCollapsed() || this.isSidebarCollapsedText() || this.isEnabledHover()) {
       event.preventDefault();
@@ -148,7 +144,7 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  listenForExternalClicks() {
+  listenForExternalClicks(): void {
     const $doc = $(document).on('click.sidebar', (e) => {
       if (!$(e.target).parents('.aside').length) {
         this.removeFloatingNav();
@@ -157,17 +153,17 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  removeFloatingNav() {
+  removeFloatingNav(): void {
     $('.nav-floating').remove();
   }
 
-  isSidebarCollapsed() {
+  isSidebarCollapsed(): boolean {
     return this.settings.layout.isCollapsed;
   }
-  isSidebarCollapsedText() {
+  isSidebarCollapsedText(): boolean {
     return this.settings.layout.isCollapsedText;
   }
-  isEnabledHover() {
+  isEnabledHover(): boolean {
     return this.settings.layout.asideHover;
   }
 }

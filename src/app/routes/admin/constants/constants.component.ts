@@ -1,51 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthHttp } from 'angular2-jwt';
+import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
-
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl, IValue } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { TranslateService } from '@ngx-translate/core';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { IConstant } from './constants.interface';
 
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
+export class ConstantsComponent extends GridEntityComponent<IConstant> {
+  static COMPONENT_NAME = 'ConstantsComponent';
 
-export class ConstantsComponent implements OnInit {
-  @ViewChild(GridComponent) grid: GridComponent;
-  form: FormGroup;
-  display = false;
-  editedRecord: any = null;
-  tabs: Array<any> = [
-    { id: 0, title: 'Константы', active: true },
+  bottomActions: Array<IToolbarAction> = [
+    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { name: 'Наименование', prop: 'name', maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Описание', prop: 'dsc', width: 200, maxWidth: 400 },
-    { name: 'Альт. описание', prop: 'altDsc', minWidth: 200 },
+  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.EDIT,
   ];
 
-  controls: Array<IDynamicFormControl> = [
-    { label: 'Идентификатор', controlName: 'id', type: 'number', required: true, disabled: true },
-    { label: 'Наименование', controlName: 'name', type: 'text', required: true, disabled: true },
-    { label: 'Тип значения', controlName: 'typeCode', type: 'select', required: true, disabled: true,
-      options: [
-        { label: 'Число', value: 1 },
-        { label: 'Дата', value: 2 },
-        { label: 'Строка', value: 3 },
-        { label: 'Булево', value: 4 },
-        { label: 'Деньги', value: 5 },
-        { label: 'Словарь', value: 6 },
-      ]
-    },
-    { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
-    { label: 'Описание', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2 },
-    { label: 'Альт. описание', controlName: 'altDsc', type: 'textarea', required: true, disabled: true, rows: 2 },
+  columns: Array<IGridColumn> = [
+    { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+    { prop: 'name', maxWidth: 350 },
+    { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
+    { prop: 'dsc', width: 200, minWidth: 400 },
   ];
+
+  renderers = {
+    value: (constant: any) => this.valueConverterService.deserializeBooleanViewValue(constant),
+  };
 
   dataSource: IDataSource = {
     read: '/api/constants',
@@ -53,115 +41,38 @@ export class ConstantsComponent implements OnInit {
     dataKey: 'constants',
   };
 
-  parseFn = (data) => {
-    const { dataKey } = this.dataSource;
-    const dataSet = data[dataKey];
-    if (!dataSet) {
-      return [];
-    }
-    return dataSet.map(val => {
-      switch (val.typeCode) {
-        case 1:
-          val.value = String(val.valueN);
-          break;
-        case 2:
-          val.value = this.datePipe.transform(new Date(val.valueD), 'dd.MM.yyyy HH:mm:ss');
-          break;
-        case 3:
-          val.value = val.valueS || '';
-          break;
-        case 4:
-          val.value = Boolean(val.valueB) ? 'Истина' : 'Ложь';
-          break;
-        default:
-          val.value = '';
-      }
-      return val;
-    });
-  }
+  tabs: Array<any> = [
+    { id: 0, title: 'Константы', active: true },
+  ];
 
-  constructor(private fb: FormBuilder, private http: AuthHttp, private datePipe: DatePipe) { }
+  constructor(
+    private datePipe: DatePipe,
+    private gridService: GridService,
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService) {
 
-  ngOnInit(): void {
-    this.createForm();
-  }
-
-  createForm(): void {
-    const ctrls = this.controls.reduce((arr, ctrl) => {
-      const config = { disabled: !!ctrl.disabled };
-      arr[ctrl.controlName] = ctrl.required
-        ? new FormControl(config, Validators.required)
-        : new FormControl(config);
-      return arr;
-    }, {});
-
-    this.form = this.fb.group(ctrls);
-
-    // disable controls where necessary
-    this.controls.forEach(ctrl => {
-      if (ctrl.disabled) {
-        this.form.get(ctrl.controlName).disable();
-      }
-    });
-  }
-
-  populateForm(record: any) {
-    let value = record.value;
-    switch (record.typeCode) {
-      case 2:
-        value = this.datePipe.transform(new Date(record.valueD), 'dd.MM.yyyy');
-        break;
-      case 3:
-        value = value || null;
-        break;
-      case 4:
-        value = value === 'Истина' ? '1' : '0';
-        break;
-      case 1:
-      default:
-    }
-
-    const values: IValue = this.controls.reduce((arr, ctrl) => {
-      arr[ctrl.controlName] = record[ctrl.controlName];
-      return arr;
-    }, {});
-
-    // NOTE: this is special, to be revised to make more universal
-    values.value = value;
-    this.form.setValue(values);
+    super();
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   onTabClose(id: number): void {
     this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
-  onEdit(record: any): void {
-    this.editedRecord = record;
-    this.createForm();
-    this.populateForm(record);
-    this.display = true;
-  }
+  parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
 
-  getFieldValue(field: string): any {
-    return this.form.get(field).value;
-  }
-
-  valueToIsoDate(value: any): string {
-    const converted = value.split('.').reverse().map(Number);
-    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
-  }
-
-  onSave(): void {
-    const id = this.getFieldValue('id');
-    const typeCode = this.getFieldValue('typeCode');
-    const value = this.getFieldValue('value');
+  onEditSubmit(data: any): void {
+    // TODO: move logic to constants service
+    const id = data.id;
+    const typeCode = data.typeCode;
+    const value = data.value;
     const fieldMap: object = {
       1: 'valueN',
       2: 'valueD',
       3: 'valueS',
       4: 'valueB',
     };
-    const field: string = fieldMap[this.getFieldValue('typeCode')];
+    const field: string = fieldMap[typeCode];
     const body = { [field]: value };
 
     if (typeCode === 4) {
@@ -172,22 +83,21 @@ export class ConstantsComponent implements OnInit {
       body[field] = this.valueToIsoDate(value);
     }
 
-    this.grid.update({ id: id }, body)
+    this.gridService
+      .update('/api/constants/{id}', { id }, body)
       .subscribe(
-        resp => {
-          this.display = false;
-          this.form.reset();
-          this.grid.load();
+        () => {
+          this.afterUpdate();
+          this.cancelAction();
         },
-        // TODO: display & log a message
-        error => console.log(error.statusText || error.status || 'Request error')
+        // TODO: display error
+        error => console.error(error)
       );
   }
 
-  onCancel(): void {
-    this.display = false;
-    this.editedRecord = null;
-    this.form.reset();
+  valueToIsoDate(value: any): string {
+    // TODO: move to date service
+    const converted = value.split('.').reverse().map(Number);
+    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
-
 }

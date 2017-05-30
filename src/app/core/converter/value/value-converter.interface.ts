@@ -8,3 +8,12 @@ export interface IValueEntity {
   valueD?: Date;
   value?: ValueType;
 }
+
+export interface ILabeledValue {
+  value: any;
+  label?: string;
+  selected?: boolean;
+  removed?: boolean;
+  canRemove?: boolean;
+  context?: any;
+}

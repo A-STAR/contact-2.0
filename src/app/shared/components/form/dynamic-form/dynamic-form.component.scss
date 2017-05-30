@@ -1,0 +1,22 @@
+@import "../../../styles/app/variables.scss";
+
+.form-group {
+  position: relative;
+  margin-bottom: 10px;
+
+  .error-messages {
+    position: absolute;
+    display: none;
+    z-index: $zindex-app-validation;
+
+    .alert-danger {
+      margin: 0;
+      padding: 8px 16px;
+      list-style-type: none;
+    }
+  }
+
+  &:hover > .error-messages {
+    display: block;
+  }
+}

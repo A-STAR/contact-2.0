@@ -23,7 +23,7 @@ export class NumericInputComponent implements OnInit {
 
   mask = {};
 
-  ngOnInit() {
+  ngOnInit(): void {
     const prefix = this.prefix ? this.prefix.replace(NumericInputComponent.DECIMAL_SYMBOL, '') + ' ' : '';
     const suffix = this.suffix ? ' ' + this.suffix.replace(NumericInputComponent.DECIMAL_SYMBOL, '') : '';
     this.mask = {
@@ -40,14 +40,15 @@ export class NumericInputComponent implements OnInit {
     };
   }
 
-  onValueChange(event: string) {
-    const newValue = parseInt(event.replace(/[^\d\.\-]/g, ''), 10);  // See: https://github.com/text-mask/text-mask/issues/109
+  onValueChange(event: string): void {
+    // See: https://github.com/text-mask/text-mask/issues/109
+    const newValue = parseInt(event.replace(/[^\d\.\-]/g, ''), 10);
     this.changeValue(newValue || null);
 
     // TODO: validate range on user input
   }
 
-  onMouseWheel(event: MouseWheelEvent) {
+  onMouseWheel(event: MouseWheelEvent): void {
     if (!this.scroll) {
       return;
     }
@@ -55,15 +56,15 @@ export class NumericInputComponent implements OnInit {
     event.deltaY < 0 ? this.increment() : this.decrement();
   }
 
-  increment() {
+  increment(): void {
     this.changeValue(this.value + this.step);
   }
 
-  decrement() {
+  decrement(): void {
     this.changeValue(this.value - this.step);
   }
 
-  private changeValue(value) {
+  private changeValue(value: any): void {
     if (value >= this.minValue && value <= this.maxValue || value === null) {
       this.value = value;
       this.valueChange.emit(value);

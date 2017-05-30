@@ -1,0 +1,37 @@
+.notifications {
+  margin: 0;
+  width: 380px;
+}
+.notifications_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  background-color: #fafafa;
+}
+.notifications_item {
+  position: relative;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5faff;
+    & > .notifications_dismiss {
+      display: block;
+    }
+  }
+}
+.notifications_dismiss {
+    display: none;
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #bbb;
+    &:hover {
+      color: #000;
+    }
+  }
+.notifications_message {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,20 +1,28 @@
-<app-edit-permission *ngIf="displayProperties.editPermit"
-                     [displayProperties]="displayProperties"
-                     [record]="editedPermission"
-                     (save)="onEditPermission($event)">
+<app-edit-permission
+  *ngIf="displayProperties.editPermit"
+  [displayProperties]="displayProperties"
+  [record]="editedPermission"
+  (save)="onEditPermission($event)">
 </app-edit-permission>
 
-<app-add-permission *ngIf="displayProperties.addPermit"
-                    [displayProperties]="displayProperties"
-                    [currentRole]="currentRole"
-                    (cancel)="displayProperties.addPermit = false"
-                    (add)="onAddPermissions($event)">
+<app-add-permission
+  *ngIf="displayProperties.addPermit"
+  [displayProperties]="displayProperties"
+  [currentRole]="currentRole"
+  (cancel)="displayProperties.addPermit = false"
+  (add)="onAddPermissions($event)">
 </app-add-permission>
 
-<app-remove-permission *ngIf="displayProperties.removePermit"
-                       [displayProperties]="displayProperties"
-                       (confirm)="onRemovePermission()">
-</app-remove-permission>
+<app-submitted-popup
+  *ngIf="displayProperties.removePermit"
+  [titleTranslationKey]="'roles.permissions.remove.title'"
+  [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [messageParams]="currentRole"
+  [actionMode]="'danger'"
+  (action)="onRemovePermission()"
+  (cancel)="displayProperties.removePermit = false">
+</app-submitted-popup>
 
 <app-tabstrip>
   <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
@@ -22,6 +30,7 @@
       #permitsGrid
       [styles]="{height: '200px'}"
       [columns]="columns"
+      [columnTranslationKey]="'roles.permissions'"
       [parseFn]="parseFn"
       [dataSource]="dataSource"
       [autoLoad]="false"

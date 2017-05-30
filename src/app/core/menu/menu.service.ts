@@ -1,22 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
+
 import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
 import { AuthService } from '../auth/auth.service';
 import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
   { name: 'menuItemHome' },
-  { name: 'menuItemWorkflow' },
-  { name: 'menuItemQueryBuilder' },
-  {
-    name: 'menuItemGrids',
-    children: [
-      { name: 'menuItemSortable' },
-      { name: 'menuItemReorderable' },
-      { name: 'menuItemGroupable' }
-    ]
-  }
 ];
 
 @Injectable()
@@ -25,7 +17,7 @@ export class MenuService {
 
   constructor(private http: AuthHttp, private authService: AuthService, private router: Router) { }
 
-  loadMenu() {
+  loadMenu(): Observable<boolean> {
     return this.authService
       .getRootUrl()
       .flatMap(root => {
@@ -37,7 +29,7 @@ export class MenuService {
       })
       .catch(error => {
         // TODO: move into wrapper
-        if (error.status === 401 || error.status === 403) {
+        if ([401, 403].find(status => error.status === status)) {
           this.authService.redirectToLogin();
         } else {
           this.router.navigate(['/connection-error']);
@@ -46,7 +38,7 @@ export class MenuService {
       });
   }
 
-  getMenu() {
+  getMenu(): Array<IMenuItem> {
     return this.menuItems;
   }
 

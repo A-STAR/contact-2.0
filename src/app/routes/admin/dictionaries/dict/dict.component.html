@@ -1,0 +1,35 @@
+<app-dict-edit *ngIf="isEntityBeingCreated"
+               [mode]="'create'"
+               [title]="'dictionaries.create.title'"
+               (submit)="onCreateEntity($event)"
+               (cancel)="cancelAction()"></app-dict-edit>
+
+<app-dict-edit *ngIf="isEntityBeingEdited && isReadyForEditing"
+               [mode]="'update'"
+               [title]="'dictionaries.edit.title'"
+               [editedEntity]="selectedEntity"
+               (submit)="onUpdateEntity($event)"
+               (cancel)="cancelAction()"></app-dict-edit>
+
+<app-submitted-popup *ngIf="isEntityBeingRemoved"
+                     [titleTranslationKey]="'dictionaries.remove.title'"
+                     [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
+                     [actionMessage]="'default.buttons.remove'"
+                     [messageParams]="selectedEntity"
+                     [actionMode]="'danger'"
+                     (action)="onRemoveSubmit()"
+                     (cancel)="cancelAction()"></app-submitted-popup>
+
+<app-grid
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [parseFn]="parseFn"
+  [columnTranslationKey]="'dictionaries'"
+  [editPermission]="'DICT_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>

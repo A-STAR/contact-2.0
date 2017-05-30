@@ -1,0 +1,12 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-7">
+        <app-organizations-tree (onSelect)="onSelectMaster($event)"></app-organizations-tree>
+      </div>
+      <div class="col-sm-5">
+        <app-employees [masterEntity]="masterEntity"></app-employees>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissions.interface';
 
@@ -23,8 +24,11 @@ export class UserPermissionsService {
       });
   }
 
-  public hasPermission(permissionName: string): boolean {
-    return this.userPermits.get(permissionName) || false;
+  public hasPermission(permissionName: string | Array<string>): boolean {
+    const permissions = Array.isArray(permissionName) ? permissionName : [ permissionName ];
+    return permissions.reduce((acc, permission) => {
+      return acc || this.userPermits.get(permission);
+    }, false);
   }
 
   private toUserPermissionValue(userPermissionModel: IUserPermissionModel): boolean {

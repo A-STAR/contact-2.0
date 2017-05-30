@@ -1,5 +1,6 @@
 <div class="overlay" *ngIf="display">
-  <div class="dialog">
+  <div class="dialog"
+       [ngStyle]="styles">
     <div class="dialog_header">
       <span class="dialog_close" (click)="onCloseClick()">&#10005;</span>
       <ng-content select="[dialog-header]"></ng-content>

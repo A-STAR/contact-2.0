@@ -1,30 +1,44 @@
-import { Component, ElementRef, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import {
+  Component, ElementRef, EventEmitter, Input, Output, OnDestroy, Renderer2, OnInit, Inject
+} from '@angular/core';
+import { ENVIRONMENT_CONTAINER } from '../../../core/environment/environment.interface';
 
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss']
 })
-export class DialogComponent implements OnDestroy {
-  @Input() display: boolean;
-  @Output() displayChange: EventEmitter<boolean> = new EventEmitter();
-  @Output() onClose: EventEmitter<null> = new EventEmitter();
+export class DialogComponent implements OnDestroy, OnInit {
 
-  constructor(private element: ElementRef) {
-    document.body.appendChild(element.nativeElement);
+  @Input() autoWidth: boolean;
+  @Input() display = true;
+  @Output() displayChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
+
+  constructor(private element: ElementRef,
+              private renderer2: Renderer2,
+              @Inject(ENVIRONMENT_CONTAINER) private environmentContainer: any) {
   }
 
-  onVisibleChange(value: boolean) {
+  onVisibleChange(value: boolean): void {
     this.display = value;
     this.displayChange.emit(value);
   }
 
-  onCloseClick() {
+  onCloseClick(): void {
     this.onVisibleChange(false);
-    this.onClose.emit();
+    this.onClose.emit(null);
   }
 
-  ngOnDestroy() {
-    document.body.removeChild(this.element.nativeElement);
+  ngOnInit(): void {
+    if (this.autoWidth) {
+      this.styles.width = 'auto';
+    }
+    this.renderer2.appendChild(this.environmentContainer, this.element.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.renderer2.removeChild(this.environmentContainer, this.element.nativeElement);
   }
 }

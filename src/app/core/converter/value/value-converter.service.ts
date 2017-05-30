@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { IValueEntity, ValueType } from './value-converter.interface';
+
+import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
@@ -8,16 +9,16 @@ export class ValueConverterService {
   constructor(private datePipe: DatePipe) {
   }
 
-  public serialize(valueEntity: IValueEntity) {
+  public serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
-        valueEntity.valueN = this.toNumber(valueEntity.value);
+        valueEntity.valueN = this.toBooleanNumber(valueEntity.value);
         break;
       case 3:
-        valueEntity.valueS = valueEntity as string;
+        valueEntity.valueS = valueEntity.value as string;
         break;
       case 4:
-        valueEntity.valueB = this.toNumber(valueEntity.value);
+        valueEntity.valueB = this.toBooleanNumber(valueEntity.value);
         break;
     }
     delete valueEntity.value;
@@ -36,7 +37,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueS || '';
         break;
       case 4:
-        valueEntity.value = valueEntity.valueB;
+        valueEntity.value = String(valueEntity.valueB);
         break;
       default:
         valueEntity.value = '';
@@ -52,16 +53,33 @@ export class ValueConverterService {
   }
 
   public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
-    const booleanValue: number = this.toNumber(valueEntity.value);
-    if (valueEntity.typeCode === 1 || valueEntity.typeCode === 3) {
-      return valueEntity.value;
-    } else if (valueEntity.typeCode === 4) {
-      return booleanValue === 1 ? 'Истина' : 'Ложь'; // TODO translator
+    if (valueEntity.typeCode === 4) {
+      return this.toBooleanNumber(valueEntity.value) === 1
+        ? 'default.boolean.TRUE'
+        : 'default.boolean.FALSE';
     }
-    return booleanValue;
+    return valueEntity.value;
   }
 
-  private toNumber(value: ValueType): number {
+  public toLabeledValues(data: string|number|ILabeledValue[]): number|any[] {
+    if (data === '') {
+      return null;
+    }
+    if (Array.isArray(data)) {
+      return data.map((labeledValue: ILabeledValue) => labeledValue.value);
+    }
+    return data as number;
+  }
+
+  public firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
+    const v: number|any[] = this.toLabeledValues(data);
+    if (Array.isArray(v)) {
+      return v && v.length ? v[0] : data;
+    }
+    return v;
+  }
+
+  public toBooleanNumber(value: ValueType): number {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'boolean') {

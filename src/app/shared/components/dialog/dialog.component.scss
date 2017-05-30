@@ -1,21 +1,27 @@
+@import "../../../shared/styles/app/variables";
+@import "../../../shared/styles/bootstrap/bootstrap/_mixins";
+@import "../../../shared/styles/app/utils-definitions";
+
 .overlay {
   position: fixed;
-  z-index: 10000;
+  z-index: $zindex-app-dialog;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: $modal-backdrop-bg;
 }
 
 .dialog {
   position: relative;
   display: inline-block;
-  background-color: #fff;
+  background-color: $modal-content-bg;
   width: 50%;
+  max-width: 50%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  cursor: default;
 }
 
 .dialog_header,
@@ -32,7 +38,7 @@
 .dialog_header /deep/ {
   [dialog-header] {
     padding: 14px 24px;
-    background-color: #add8e6;
+    background-color: lighten($brand-info-light, 20%);
   }
 
   h3 {
@@ -44,15 +50,15 @@
 .dialog_footer {
   padding: 12px 24px;
   text-align: right;
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
+  background-color: $modal-footer-bg;
+  border-top: 1px solid $modal-footer-border-color;
 }
 
 .dialog_content {
   padding: 16px 24px 1px;
   max-height: 80vh;
   overflow-y: auto;
-  background-color: #ffffff;
+  background-color: $modal-content-bg;
 }
 
 .dialog_close {
@@ -61,6 +67,7 @@
   right: 12px;
   font-size: 16px;
   line-height: 16px;
+  /* TODO: put colors to _variables.scss */
   color: #aaa;
   cursor: pointer;
   &:hover {

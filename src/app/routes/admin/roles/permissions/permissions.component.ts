@@ -2,17 +2,16 @@ import {
   Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
 } from '@angular/core';
 
-import { TableColumn } from '@swimlane/ngx-datatable';
-
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
+import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDisplayProperties } from '../roles.interface';
 import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from './permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-permissions',
@@ -30,22 +29,23 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   @ViewChild('permitsGrid') permitsGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
 
-  columns: Array<TableColumn> = [
-    { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
-    { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
-    this.columnDecoratorService.decorateColumn(
-      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
-      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
-    ),
-    { name: 'Описание', prop: 'dsc', minWidth: 200 },
-    { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
-    { name: 'Комментарий', prop: 'comment' },
+  columns: Array<IGridColumn> = [
+    { prop: 'id', minWidth: 70, maxWidth: 100 },
+    { prop: 'name', minWidth: 200, maxWidth: 350 },
+    { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
+    { prop: 'dsc', minWidth: 200 },
+    { prop: 'comment', minWidth: 300 },
   ];
 
+  renderers: IRenderer = {
+    value: (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
+  };
+
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
+    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
+    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
   bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -58,7 +58,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   ];
 
   tabs: Array<any> = [
-    {id: 0, title: 'Доступы', active: true},
+    {id: 0, title: 'roles.permissions.tab.title', active: true},
   ];
 
   dataSource: IDataSource = {
@@ -66,27 +66,37 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     dataKey: 'permits'
   };
 
-  constructor(private permissionsService: PermissionsService,
-              private columnDecoratorService: GridColumnDecoratorService,
-              private valueConverterService: ValueConverterService) {
+  constructor(
+    private permissionsService: PermissionsService,
+    private gridService: GridService,
+    private valueConverterService: ValueConverterService
+  ) {
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
-  public ngAfterViewInit() {
+  ngAfterViewInit(): void {
+    this.permitsGrid.onRowsChange.subscribe(() => {
+      this.editedPermission = null;
+      this.refreshToolbar();
+    });
     this.refreshGrid();
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
     this.refreshGrid();
   }
 
-  private onAction(action: IToolbarAction): void {
+  onAction(action: IToolbarAction): void {
     this.displayProperties.editPermit = false;
     this.displayProperties.addPermit = false;
     this.displayProperties.removePermit = false;
 
     switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.loadGrid();
+        break;
       case ToolbarActionTypeEnum.EDIT:
         this.displayProperties.editPermit = true;
         break;
@@ -107,7 +117,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     if (records.length) {
       this.editedPermission = records[0];
     }
-    this.refreshToolbar(records);
+    this.refreshToolbar();
   }
 
   onEditPermission(permission: IPermissionModel): void {
@@ -153,7 +163,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   private loadGrid(): void {
     this.permitsGrid.load(this.currentRole)
       .subscribe(
-        () => this.refreshToolbar(),
+        () => {},
         // TODO: display & log a message
         err => console.error(err)
       );
@@ -171,12 +181,12 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private refreshToolbar(permissions: IPermissionModel[] = []): void {
-    const isRoleSelected: boolean = !!this.currentRole;
-    const isRolePermissionSelected: boolean = permissions.length > 0;
+  private refreshToolbar(): void {
+    this.setActionsVisibility(this.bottomRoleActionsGroup, !!this.currentRole);
+    this.setActionsVisibility(this.bottomPermitActionsGroup, !!this.editedPermission);
 
-    this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
-    this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
+    this.bottomActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+      .visible = this.permitsGrid.rows.length > 0;
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {

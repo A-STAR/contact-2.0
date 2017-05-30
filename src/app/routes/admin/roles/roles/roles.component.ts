@@ -1,26 +1,27 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import { IDataSource } from '../../../../shared/components/grid/grid.interface';
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { IRoleRecord } from './roles.interface';
+import { IRole } from './roles.interface';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponent {
-  @Output() onSelect: EventEmitter<IRoleRecord> = new EventEmitter();
+export class RolesComponent implements AfterViewInit {
+  @Output() onSelect: EventEmitter<IRole> = new EventEmitter();
   @ViewChild(GridComponent) grid: GridComponent;
 
-  currentRole: IRoleRecord = null;
-  selectedRole: IRoleRecord = null;
+  currentRole: IRole = null;
+  selectedRole: IRole = null;
   action: ToolbarActionTypeEnum = null;
 
   bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
-    { text: 'Копировать', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
+    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
+    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
+    { text: 'toolbar.action.copy', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
+    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
+    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
   bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
@@ -30,9 +31,9 @@ export class RolesComponent {
   ];
 
   columns: Array<any> = [
-    { name: 'ID', prop: 'id', minWidth: 30, maxWidth: 70 },
-    { name: 'Название', prop: 'name', maxWidth: 400 },
-    { name: 'Комментарий', prop: 'comment', width: 200 },
+    { prop: 'id', minWidth: 30, maxWidth: 70 },
+    { prop: 'name', maxWidth: 400 },
+    { prop: 'comment', width: 200 },
   ];
 
   dataSource: IDataSource = {
@@ -40,6 +41,10 @@ export class RolesComponent {
     update: '/api/roles',
     dataKey: 'roles',
   };
+
+  ngAfterViewInit(): void {
+    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+  }
 
   get isRoleBeingCreatedOrEdited(): boolean {
     return this.currentRole && (this.action === ToolbarActionTypeEnum.ADD || this.action === ToolbarActionTypeEnum.EDIT);
@@ -53,19 +58,19 @@ export class RolesComponent {
     return this.currentRole && this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  parseFn(data): Array<IRoleRecord> {
+  parseFn(data: any): Array<IRole> {
     const { dataKey } = this.dataSource;
     return data[dataKey] || [];
   }
 
-  onSelectedRowChange(roles: Array<IRoleRecord>): void {
+  onSelectedRowChange(roles: Array<IRole>): void {
     const role = roles[0];
     if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
       this.selectRole(role);
     }
   }
 
-  onEdit(role: IRoleRecord): void {
+  onEdit(role: IRole): void {
     this.action = ToolbarActionTypeEnum.EDIT;
     this.currentRole = this.selectedRole;
   }
@@ -73,6 +78,9 @@ export class RolesComponent {
   onAction(action: IToolbarAction): void {
     this.action = action.type;
     switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.onUpdate();
+        break;
       case ToolbarActionTypeEnum.EDIT:
         this.currentRole = this.selectedRole;
         break;
@@ -90,7 +98,7 @@ export class RolesComponent {
     this.selectedRole = null;
     this.grid.load().
       subscribe(
-        () => this.refreshToolbar(),
+        () => {},
         // TODO: display & log a message
         err => console.error(err)
       );
@@ -100,13 +108,13 @@ export class RolesComponent {
     this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
   }
 
-  private selectRole(role = null) {
+  private selectRole(role = null): void {
     this.selectedRole = role;
     this.onSelect.emit(role);
     this.refreshToolbar();
   }
 
-  private createEmptyRole(): IRoleRecord {
+  private createEmptyRole(): IRole {
     return {
       id: null,
       name: '',
@@ -122,5 +130,8 @@ export class RolesComponent {
     actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
       this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });
+
+    this.bottomActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+      .visible = this.grid.rows.length > 0;
   }
 }

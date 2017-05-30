@@ -1,0 +1,110 @@
+<ng-template #actionTemplate>
+  <li *ngFor="let action of actions; let index=index" role="menuitem" class="ui-select-unselectable">
+    <div class="ui-select-action"
+         (click)="actionClick(action, $event)">
+      {{ action.text | translate }}<span *ngIf="action.actionIconCls" class="ui-select-action-btn {{action.actionIconCls}}"></span>
+    </div>
+  </li>
+</ng-template>
+
+<div tabindex="0"
+     [attr.disabled]="disabled"
+     *ngIf="multiple === false"
+     (keyup)="mainClick($event)"
+     [offClick]="clickedOutside"
+     class="ui-select-container dropdown open">
+  <div class="ui-select-match"
+       *ngIf="!inputMode">
+      <span tabindex="-1"
+            class="btn btn-default btn-secondary form-control ui-select-toggle"
+            (click)="matchClick($event)"
+            style="outline: 0;">
+        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
+        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
+              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
+              [innerHTML]="toCleanedAndTranslatedLabel(active[0])"></span>
+        <i class="dropdown-toggle pull-right"></i>
+        <i class="caret pull-right"></i>
+        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
+           style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
+           <i class="glyphicon glyphicon-remove"></i>
+        </a>
+      </span>
+  </div>
+  <input type="text"
+         autocomplete="false"
+         tabindex="-1"
+         [attr.readonly]="readonly"
+         [ngClass]="{ hidden: !isInputVisible()}"
+         (keydown)="inputEvent($event)"
+         (keyup)="inputEvent($event, true)"
+         class="form-control ui-select-search"
+         *ngIf="inputMode"
+         placeholder="{{active.length <= 0 ? placeholder : ''}}">
+  <ul *ngIf="optionsOpened"
+      class="ui-select-choices dropdown-menu" role="menu">
+    <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
+      <div class="ui-select-choices-row"
+           [class.active]="isActive(rawItem)"
+           (mouseenter)="selectActive(rawItem)"
+           (click)="selectMatch(rawItem, $event)">
+        <div class="dropdown-item"
+             [innerHtml]="toCleanedAndTranslatedLabel(rawItem) | highlight:inputValue">
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div tabindex="0"
+     [attr.disabled]="disabled"
+     *ngIf="multiple === true"
+     (keyup)="mainClick($event)"
+     (focus)="focusToInput('')"
+     [offClick]="clickedOutside"
+     class="ui-select-container ui-select-multiple dropdown form-control open">
+      <span class="ui-select-match">
+          <span *ngFor="let activeItem of active"
+                class="ui-select-match-item btn btn-default btn-secondary btn-xs"
+                tabindex="-1"
+                type="button"
+                (click)="activeItemClick(activeItem, $event)"
+                [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'context-exist': isItemContextExist(activeItem)}">
+             <a *ngIf="canCloseSelectedItem(activeItem)"
+                class="close"
+                style="margin-left: 5px; padding: 0;"
+                (click)="removeClick(activeItem, $event)">&times;</a>
+             <span [innerHtml]="toCleanedAndTranslatedLabel(activeItem)"></span>
+          </span>
+          <i class="dropdown-toggle pull-right"></i>
+          <i class="caret pull-right"></i>
+    </span>
+  <input type="text"
+         (keydown)="inputEvent($event)"
+         (keyup)="inputEvent($event, true)"
+         (click)="matchClick($event)"
+         [attr.readonly]="readonly"
+         [ngClass]="{ hidden: !isInputVisible()}"
+         autocomplete="false"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"
+         class="form-control ui-select-search"
+         placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
+         role="combobox">
+  <ul *ngIf="optionsOpened"
+      class="ui-select-choices dropdown-menu" role="menu">
+    <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
+      <div class="ui-select-choices-row"
+           [class.active]="isActive(rawItem)"
+           (mouseenter)="selectActive(rawItem)"
+           (click)="selectMatch(rawItem, $event)">
+        <div class="dropdown-item"
+             [innerHtml]="toCleanedAndTranslatedLabel(rawItem) | highlight:inputValue">
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

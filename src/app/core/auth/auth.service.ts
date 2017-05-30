@@ -2,12 +2,13 @@ import { Injectable, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 
 const TOKEN_NAME = 'auth/token';
+const LANGUAGE_TOKEN = 'user/language';
 
 export const getToken = () => localStorage.getItem(TOKEN_NAME);
 
@@ -24,13 +25,16 @@ export class AuthService implements CanActivate, OnInit {
   public redirectUrl: string;
 
   private authenticated = false;
-
   // backend root url
   private rootUrl = '';
-
   private tokenTimer = null;
 
-  constructor(private http: AuthHttp, private router: Router, private jwtHelper: JwtHelper) {
+  constructor(
+    private http: AuthHttp,
+    private router: Router,
+    private jwtHelper: JwtHelper,
+    private translateService: TranslateService,
+  ) {
     const token = getToken();
     if (this.isTokenValid(token)) {
       this.initTokenTimer(token);
@@ -76,11 +80,16 @@ export class AuthService implements CanActivate, OnInit {
     return this.getRootUrl()
       .flatMap((root: string) => {
         return this.http.post(`${root}/auth/login`, body)
-          .do((resp: Response) => this.saveToken(resp))
-          .do((resp: Response) => this.authenticated = true)
+          .map((resp: Response) => resp.headers.get('X-Auth-Token'))
+          .do((token: string) => {
+              this.saveToken(token);
+              this.setLanguage(token);
+              this.authenticated = true;
+          })
           .catch(error => {
             this.authenticated = false;
-            throw new Error(this.getErrorMessage(error.message));
+            const { message } = error.json();
+            throw new Error(this.getErrorMessage(message));
           })
           .map(resp => true);
       });
@@ -141,13 +150,16 @@ export class AuthService implements CanActivate, OnInit {
     this.getRootUrl()
       .flatMap(root => this.http.get(`${root}/api/refresh`))
       .subscribe(
-        resp => this.saveToken(resp),
+        resp => {
+          const token = resp.headers.get('X-Auth-Token');
+          this.saveToken(token);
+          this.setLanguage(token);
+        },
         () => this.redirectToLogin()
       );
   }
 
-  private saveToken(response: Response): void {
-    const token = response.headers.get('X-Auth-Token');
+  private saveToken(token: string): void {
     this.initTokenTimer(token);
     setToken(token);
   }
@@ -168,5 +180,12 @@ export class AuthService implements CanActivate, OnInit {
     if (this.tokenTimer) {
       clearInterval(this.tokenTimer);
     }
-  };
+  }
+
+  private setLanguage(token: string): void {
+    const { language } = this.jwtHelper.decodeToken(token);
+    this.translateService.setDefaultLang(language || 'en');
+    this.translateService.use(language).subscribe();
+    localStorage.setItem(LANGUAGE_TOKEN, language);
+  }
 }

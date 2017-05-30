@@ -1,108 +1,141 @@
-  <form [formGroup]="form">
-    <div *ngFor="let control of controls" class="form-group">
+<form [formGroup]="form">
 
-      <div [ngSwitch]="control.type" class="form-group">
+    <div *ngFor="let control of controls" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
 
-        <label *ngSwitchCase="'number'">{{control.label}}
-          <input type="number"
-                 class="form-control"
-                 [attr.disabled]="control.disabled"
-                 [formControlName]="control.controlName">
-        </label>
+      <ng-container [ngSwitch]="control.type">
 
-        <label *ngSwitchCase="'text'">{{control.label}}
-          <input type="text"
-                 class="form-control"
-                 [attr.disabled]="control.disabled"
-                 [formControlName]="control.controlName">
-        </label>
-
-        <label *ngSwitchCase="'boolean'">{{control.label}}<br>
-          <label class="radio-inline">
-            <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1"> True
-          </label>
-          <label class="radio-inline">
-            <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0"> False
-          </label>
-        </label>
-
-        <label *ngSwitchCase="'select'">{{control.label}}
-          <select class="form-control"
-                  [attr.disabled]="control.disabled"
+        <ng-container *ngSwitchCase="'number'">
+          <label>{{control.label | translate}}
+            <input type="number"
+                  class="form-control"
+                  [attr.placeholder]="(control.placeholder || '') | translate"
                   [formControlName]="control.controlName">
-            <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
-          </select>
-        </label>
+          </label>
+        </ng-container>
 
-        <label *ngSwitchCase="'textarea'">{{control.label}}
-          <textarea
-            [attr.disabled]="control.disabled"
-            [formControlName]="control.controlName"
-            class="form-control"
-            rows="control.rows || 2"
-          ></textarea>
-        </label>
+        <ng-container *ngSwitchCase="'text'">
+          <label>{{control.label | translate}}
+            <input type="text"
+                   class="form-control"
+                   [attr.placeholder]="(control.placeholder || '') | translate"
+                   [formControlName]="control.controlName">
+          </label>
+        </ng-container>
 
-        <div *ngSwitchCase="'dynamic'">
+        <ng-container *ngSwitchCase="'boolean'">
+          {{control.label | translate}}<br>
+          <label class="radio-inline">
+            <input type="radio" [formControlName]="control.controlName" value="1">
+             {{'default.boolean.TRUE' | translate}}
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [formControlName]="control.controlName" value="0">
+             {{'default.boolean.FALSE' | translate}}
+          </label>
+        </ng-container>
 
-          <div *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
+        <ng-container *ngSwitchCase="'checkbox'">
+          <div class="checkbox mt0 mb0">
+            <label>
+              <input type="checkbox" [formControlName]="control.controlName"/>
+              {{ control.label | translate}}
+            </label>
+          </div>
+        </ng-container>
 
-            <div *ngSwitchCase="1" class="form-group">
-              <label>{{control.label}}
-                <input type="number"
-                       class="form-control"
-                       [attr.disabled]="control.disabled"
-                       [formControlName]="control.controlName">
-              </label>
-            </div>
+        <ng-container *ngSwitchCase="'select'">
+          <label>{{control.label | translate}}
+            <app-select [formControlName]="control.controlName"
+                        [allowClear]="true"
+                        [items]="control.options"
+                        [lazyItems]="control.lazyOptions"
+                        [cachingItems]="control.cachingOptions"
+                        [actions]="control.optionsActions"
+                        [loadLazyItemsOnInit]="control.loadLazyItemsOnInit"
+                        [multiple]="control.multiple"
+                        [closableSelectedItem]="control.closableSelectedItem"
+                        [controlDisabled]="control.disabled"
+                        [readonly]="control.readonly"
+                        [placeholder]="control.placeholder"
+                        (selectedControlItemsChanges)="onSelectedControlItemsChanges(control, $event)">
+              </app-select>
+          </label>
+        </ng-container>
 
-            <div *ngSwitchCase="2" class="form-group">
-              <label>{{control.label}}</label>
-              <div>
+        <ng-container *ngSwitchCase="'textarea'">
+          <label>{{control.label | translate}}
+            <textarea
+              [attr.placeholder]="(control.placeholder || '') | translate"
+              [formControlName]="control.controlName"
+              class="form-control"
+              rows="control.rows || 2"
+            ></textarea>
+          </label>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'datepicker'">
+          <label>{{control.label | translate}}</label>
+          <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+        </ng-container>
+
+        <input *ngSwitchCase="'hidden'"
+                type="hidden"
+                class="form-control"
+                [formControlName]="control.controlName">
+
+        <ng-container *ngSwitchCase="'dynamic'">
+
+          <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
+
+              <ng-container *ngSwitchCase="1">
+                <label>{{control.label | translate}}
+                  <input type="number"
+                         class="form-control"
+                         [attr.placeholder]="(control.placeholder || '') | translate"
+                         [formControlName]="control.controlName">
+                </label>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="2">
+                <label>{{control.label | translate}}</label>
                 <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
-              </div>
-            </div>
+              </ng-container>
 
-            <div *ngSwitchCase="4" class="form-group">
-              <label>{{control.label}}</label>
-              <div>
+              <ng-container *ngSwitchCase="4">
+                <label>{{control.label | translate}}</label>
                 <label class="radio-inline">
-                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="1"> True
+                    <input type="radio" [formControlName]="control.controlName" value="1">
+                    {{'default.boolean.TRUE' | translate}}
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" [attr.disabled]="control.disabled" [formControlName]="control.controlName" value="0"> False
+                    <input type="radio" [formControlName]="control.controlName" value="0">
+                    {{'default.boolean.FALSE' | translate}}
                 </label>
-              </div>
-            </div>
+              </ng-container>
 
-            <div *ngSwitchDefault class="form-group">
-              <label>{{control.label}}</label>
-              <div>
-                <input type="text"
-                       class="form-control"
-                       [attr.disabled]="control.disabled"
-                       [formControlName]="control.controlName">
-              </div>
-            </div>
+              <ng-container *ngSwitchDefault>
+                <label>{{control.label | translate}}
+                  <input type="text"
+                         class="form-control"
+                         [attr.placeholder]="(control.placeholder || '') | translate"
+                         [formControlName]="control.controlName">
+                </label>
+              </ng-container>
 
-          </div> <!-- control.dependsOn -->
+          </ng-container> <!-- control.dependsOn -->
 
-        </div> <!-- control.type:'dynamic' -->
+        </ng-container> <!-- control.type:'dynamic' -->
 
-      </div> <!-- ngSwitch:control.type -->
+      </ng-container> <!-- ngSwitch:control.type -->
+
+      <div *ngIf="displayControlErrors(control)" class="error-messages">
+        <ul class="alert alert-danger">
+          <li *ngFor="let error of getControlErrors(control)">
+            {{ error.message | translate:error.data }}
+          </li>
+        </ul>
+      </div>
 
     </div> <!-- ngFor:controls -->
 
-    <!--<div class="form-group">
-      <label>Age
-        <input
-          type="number"
-          formControlName="age"
-          class="form-control"
-          currencyMask
-          [options]="{ align: 'left', prefix: '', suffix: '', thousands: ' ', decimal: '.' }"
-        >
-      </label>
-    </div>-->
-
-  </form>
+</form>

@@ -1,27 +1,10 @@
 <ng-template [ngIf]="node">
-    <li
-        *ngIf="tree.droppableNodes"
-        class="ui-treenode-droppoint"
-        [ngClass]="{'ui-treenode-droppoint-active ui-state-highlight':draghoverPrev}"
-        (drop)="onDropPoint($event,-1)"
-        (dragover)="onDropPointDragOver($event)"
-        (dragenter)="onDropPointDragEnter($event,-1)"
-        (dragleave)="onDropPointDragLeave($event)">
-    </li>
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
-            class="ui-treenode-content"
+            class="ui-treenode-content ui-treenode-droppoint"
             (click)="onNodeClick($event)"
             (contextmenu)="onNodeRightClick($event)"
-            (touchend)="onNodeTouchEnd()"
-            (drop)="onDropNode($event)"
-            (dragover)="onDropNodeDragOver($event)"
-            (dragenter)="onDropNodeDragEnter($event)"
-            (dragleave)="onDropNodeDragLeave($event)"
-            [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false,'ui-treenode-dragover':draghoverNode}"
-            [draggable]="tree.draggableNodes"
-            (dragstart)="onDragStart($event)"
-            (dragend)="onDragStop($event)">
+            [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
                 class="ui-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
                 (click)="toggle($event)">
@@ -45,8 +28,6 @@
                 [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></app-tree-node>
         </ul>
     </li>
-    <li *ngIf="tree.droppableNodes && lastChild" class="ui-treenode-droppoint" [ngClass]="{'ui-treenode-droppoint-active ui-state-highlight':draghoverNext}"
-    (drop)="onDropPoint($event,1)" (dragover)="onDropPointDragOver($event)" (dragenter)="onDropPointDragEnter($event,1)" (dragleave)="onDropPointDragLeave($event)"></li>
     <table *ngIf="tree.horizontal">
         <tbody>
             <tr>
@@ -62,13 +43,16 @@
                         </tbody>
                     </table>
                 </td>
-                <td class="ui-treenode" [ngClass]="{'ui-treenode-collapsed':!node.expanded}">
+                <td class="ui-treenode" [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
+                    [dragula]='"first-bag"'
+                    [attr.nodeid]="node.id"
+                    [dragulaOptions]="dragulaOptions">
                     <div class="ui-treenode-content ui-state-default ui-corner-all"
-                        [ngStyle]="{'background-color':getBgColor()}"
-                        [ngClass]="{'ui-treenode-selectable':tree.selectionMode}"
+                         [ngStyle]="{'background-color':getBgColor()}"
+                         [attr.nodeid]="node.id"
+                        [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
                         (click)="onNodeClick($event)"
-                        (contextmenu)="onNodeRightClick($event)"
-                        (touchend)="onNodeTouchEnd()">
+                        (contextmenu)="onNodeRightClick($event)">
                         <span class="ui-tree-toggler fa fa-fw" [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}" *ngIf="!isLeaf()"
                                 (click)="toggle($event)"></span
                         ><span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span

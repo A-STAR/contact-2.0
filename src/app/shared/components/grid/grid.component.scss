@@ -26,3 +26,10 @@
 :host /deep/ .panel {
   margin-bottom: 0;
 }
+
+:host.flat /deep/ .panel-default {
+  border-color: transparent;
+  & .panel-body {
+    padding: 0;
+  }
+}

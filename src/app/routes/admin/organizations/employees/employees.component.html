@@ -1,0 +1,38 @@
+<app-employee-add
+  *ngIf="isEntityBeingCreated"
+  [masterEntity]="masterEntity"
+  (submit)="onAddSubmit($event)"
+  (cancel)="cancelAction()">
+</app-employee-add>
+
+<app-employee-edit
+  *ngIf="isEntityBeingEdited"
+  [editedEntity]="selectedEntity"
+  (submit)="onEditSubmit($event)"
+  (cancel)="cancelAction()">
+</app-employee-edit>
+
+<app-submitted-popup
+  *ngIf="isEntityBeingRemoved"
+  [titleTranslationKey]="'organizations.employees.remove.title'"
+  [actionTranslationKey]="'organizations.employees.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-submitted-popup>
+
+<app-grid
+  class="flat"
+  selectionType="single"
+  [columns]="columns"
+  [columnTranslationKey]="'organizations.employees'"
+  [dataSource]="dataSource"
+  [autoLoad]="false"
+  [parseFn]="parseFn"
+  [editPermission]="'ORGANIZATION_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [bottomActions]="bottomActions"
+  (onAction)="onAction($event)">
+</app-grid>
