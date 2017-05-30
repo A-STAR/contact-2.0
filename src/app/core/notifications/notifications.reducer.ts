@@ -8,6 +8,7 @@ const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
 const defaultState: INotificationServiceState = {
   notifications: [],
   filters: {
+    DEBUG: false,
     ERROR: true,
     WARNING: true,
     INFO: true

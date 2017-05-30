@@ -1,4 +1,4 @@
-export type INotificationType = 'ERROR' | 'WARNING' | 'INFO';
+export type INotificationType = 'DEBUG' | 'ERROR' | 'WARNING' | 'INFO';
 
 export interface INotification {
   message: string;

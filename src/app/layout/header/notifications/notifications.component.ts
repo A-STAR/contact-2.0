@@ -16,7 +16,7 @@ export class NotificationsComponent {
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR' ];
+  filterTypes: Array<INotificationType> = [ 'DEBUG', 'INFO', 'WARNING', 'ERROR' ];
 
   constructor(private notificationsActions: NotificationsActions) {}
 
@@ -27,6 +27,8 @@ export class NotificationsComponent {
 
   getIconClass(notification: INotification): string {
     switch (notification.type) {
+      case 'DEBUG':
+        return 'fa fa-2x fa-bug text-danger';
       case 'ERROR':
         return 'fa fa-2x fa-times-circle text-danger';
       case 'WARNING':
