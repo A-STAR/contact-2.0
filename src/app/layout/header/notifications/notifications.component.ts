@@ -19,6 +19,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class NotificationsComponent implements OnInit, OnDestroy {
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onCountChange: EventEmitter<number> = new EventEmitter<number>();
 
   notifications: Array<INotification>;
 
@@ -43,6 +44,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       .subscribe((state: INotificationServiceState) => {
         this.filters = state.filters;
         this.notifications = state.notifications;
+        this.onCountChange.emit(state.notifications.length);
       });
   }
 

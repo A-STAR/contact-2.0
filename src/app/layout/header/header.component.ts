@@ -1,13 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
 const browser = require('jquery.browser');
 import { BsDropdownDirective } from 'ngx-bootstrap';
 
-import { INotification } from '../../core/notifications/notifications.interface';
-
 import { AuthService } from '../../core/auth/auth.service';
-import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
@@ -15,7 +11,7 @@ import { SettingsService } from '../../core/settings/settings.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   // the fullscreen button
   @ViewChild('fsbutton') fsbutton;
 
@@ -24,12 +20,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isNavSearchVisible: boolean;
 
-  private notificationsCount = 0;
-  private notificationSubscription: Subscription;
+  public notificationCount = 0;
 
   constructor(
     private authService: AuthService,
-    public notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService
   ) {}
@@ -40,13 +34,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         // Not supported under IE
       this.fsbutton.nativeElement.style.display = 'none';
     }
-
-    this.notificationSubscription = this.notificationsService.notifications
-      .subscribe((notifications: Array<INotification>) => this.notificationsCount = notifications.length);
-  }
-
-  ngOnDestroy(): void {
-    this.notificationSubscription.unsubscribe();
   }
 
   get isAuthenticated(): boolean {
@@ -97,5 +84,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onNotificationsClose(): void {
     this.notificationsDropdown.hide();
+  }
+
+  onNotificationCountChange(n: number): void {
+    this.notificationCount = n;
   }
 }
