@@ -31,21 +31,19 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() cachingItems = false;
   @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
   @Output() selected: EventEmitter<any> = new EventEmitter();
-  @Output() typed: EventEmitter<any> = new EventEmitter();
-  @Output() opened: EventEmitter<any> = new EventEmitter();
   @Output() selectedControlItemsChanges: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
 
   rawData: Array<ILabeledValue> = [];
   activeOption: ILabeledValue;
   sortType: string;
+  optionsOpened = false;
 
   private _inputMode = false;
   private _disabled;
   private _canSelectMultipleItem = true;
-  private _canCloseSelectedItem = true;
+  private _closableSelectedItem = true;
   private _readonly = true;
   private _multiple = false;
-  private _optionsOpened = false;
   private _active: ILabeledValue[] = [];
   private _lazyItemsSubscription: Subscription;
   private _selectActionHandler: SelectActionHandler;
@@ -61,8 +59,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   @Input()
-  set canCloseSelectedItem(value: boolean) {
-    this._canCloseSelectedItem = this.toPropertyValue(value, this._canCloseSelectedItem);
+  set closableSelectedItem(value: boolean) {
+    this._closableSelectedItem = this.toPropertyValue(value, this._closableSelectedItem);
   }
 
   @Input()
@@ -88,8 +86,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this._canSelectMultipleItem;
   }
 
-  get canCloseSelected(): boolean {
-    return this._canCloseSelectedItem;
+  get closableSelectedItem(): boolean {
+    return this._closableSelectedItem;
   }
 
   get multiple(): boolean {
@@ -102,6 +100,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   get disabled(): boolean {
     return this._disabled;
+  }
+
+  get inputMode(): boolean {
+    return this._inputMode;
   }
 
   get active(): Array<ILabeledValue> {
@@ -170,11 +172,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return typeof value === 'undefined' ? defaultValue : (value || undefined);
   }
 
-  private set optionsOpened(value: boolean){
-    this._optionsOpened = value;
-    this.opened.emit(value);
-  }
-
   private initLazyItems(): void {
     if (this.cachingItems && this._lazyItemsSubscription) {
       this.afterInitItems();
@@ -183,11 +180,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this._lazyItemsSubscription = this.lazyItems.subscribe((loadedItems: Array<ILabeledValue>) => {
       this.rawData = loadedItems.map((item: ILabeledValue) => {
         const activatedItem: ILabeledValue = this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value);
-        if (activatedItem) {
-          activatedItem.label = item.label;
-          return activatedItem;
-        }
-        return item;
+        return activatedItem ? Object.assign(activatedItem, item) : item;
       });
 
       this.active = this.rawData.filter((item: ILabeledValue) =>
@@ -197,12 +190,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  isItemContextPresent(item: ILabeledValue): boolean {
+  isItemContextExist(item: ILabeledValue): boolean {
     return item.context && Object.keys(item.context).length > 0;
   }
 
-  private get optionsOpened(): boolean{
-    return this._optionsOpened;
+  canCloseSelectedItem(item: ILabeledValue): boolean {
+    return this.closableSelectedItem
+      && this.active.length > 1
+      && item.canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
@@ -306,7 +301,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   protected matchClick(e: any): void {
-    if (this._disabled === true) {
+    if (this._disabled === true || !this.canSelectMultiItem()) {
       return;
     }
     this._inputMode = !this._inputMode;
@@ -316,8 +311,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  protected  mainClick(event: any): void {
-    if (this._inputMode === true || this._disabled === true) {
+  protected mainClick(event: any): void {
+    if (this._inputMode === true || this._disabled === true || !this.canSelectMultiItem()) {
       return;
     }
     if (event.keyCode === 46) {
@@ -391,9 +386,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private open(): void {
-    if (this.active.length === this.rawData.length) {
-      return;
-    }
     if (this.lazyItems) {
       this.initLazyItems();
     } else {
@@ -442,6 +434,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
     this.selectedControlItemsChanges.emit(this.rawData);
+  }
+
+  private canSelectMultiItem(): boolean {
+    return this.rawData.length > this.active.length;
   }
 
   private stopEvent($event: Event): void {
