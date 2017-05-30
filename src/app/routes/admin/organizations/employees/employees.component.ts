@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import 'rxjs/add/operator/catch';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IEmployeeUser } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { EmployeesService } from './employees.service';
+import { NotificationsActions } from '../../../../core/notifications/notifications.actions';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
@@ -63,6 +65,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   constructor(
     private employeesService: EmployeesService,
     private gridService: GridService,
+    private notificationsActions: NotificationsActions,
     private translateService: TranslateService
   ) {
     super();
@@ -75,34 +78,45 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
 
   onAddSubmit(data: any): void {
     this.submit(
-      this.employeesService.create(this.masterEntity.id, data)
+      this.employeesService
+        .create(this.masterEntity.id, data)
+        .catch(error => {
+          this.notificationsActions.push('organizations.employees.add.errorMessage', 'ERROR');
+          throw error;
+        })
     );
   }
 
   onEditSubmit(data: IEmployeeUser): void {
     this.submit(
-      this.employeesService.save(this.masterEntity.id, this.selectedEntity.userId, {
-        roleCode: data.roleCode[0].id,
-        comment: data.comment
-      })
+      this.employeesService
+        .save(this.masterEntity.id, this.selectedEntity.userId, {
+          roleCode: data.roleCode[0].id,
+          comment: data.comment
+        })
+        .catch(error => {
+          this.notificationsActions.push('organizations.employees.edit.errorMessage', 'ERROR');
+          throw error;
+        })
     );
   }
 
   onRemoveSubmit(data: any): void {
     this.submit(
-      this.employeesService.remove(this.masterEntity.id, this.selectedEntity.userId)
+      this.employeesService
+        .remove(this.masterEntity.id, this.selectedEntity.userId)
+        .catch(error => {
+          this.notificationsActions.push('organizations.employees.remove.errorMessage', 'ERROR');
+          throw error;
+        })
     );
   }
 
   private submit(observable: any): void {
     observable
-      .subscribe(
-        () => {
-          this.afterUpdate();
-          this.cancelAction();
-        },
-        // TODO: handle errors
-        error => console.error(error)
-      );
+      .subscribe(() => {
+        this.afterUpdate();
+        this.cancelAction();
+      });
   }
 }

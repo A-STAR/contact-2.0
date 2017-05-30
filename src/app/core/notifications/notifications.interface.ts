@@ -15,7 +15,7 @@ export interface INotificationServiceState {
   notifications: Array<INotification>;
 }
 
-export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET' | 'NOTIFICATION_FILTER';
+export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET' | 'NOTIFICATION_FILTER' | 'NOTIFICATION_DELETE';
 
 export interface IFilterActionPayload {
   type: INotificationType;
@@ -25,6 +25,7 @@ export interface IFilterActionPayload {
 export interface INotificationActionPayload {
   notification?: INotification;
   filter?: IFilterActionPayload;
+  index?: number;
 }
 
 export interface INotificationAction {

@@ -34,7 +34,7 @@ export function notificationReducer(
     case 'NOTIFICATION_RESET':
       return {
         ...state,
-        notifications: []
+        notifications: state.notifications.filter(notification => !state.filters[notification.type])
       };
     case 'NOTIFICATION_FILTER':
       const filter = action.payload.filter;
@@ -44,6 +44,11 @@ export function notificationReducer(
           ...state.filters,
           [filter.type]: filter.value
         }
+      };
+    case 'NOTIFICATION_DELETE':
+      return {
+        ...state,
+        notifications: state.notifications.filter((_, i) => i !== action.payload.index)
       };
     default:
       return state;

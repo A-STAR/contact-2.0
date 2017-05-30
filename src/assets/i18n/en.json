@@ -326,15 +326,18 @@
             "fullName": "Full name",
             "position": "Position",
             "isBlocked": "Blocked"
-          }
+          },
+          "errorMessage": "Could not add employee"
         },
         "edit": {
           "title": "Employee",
-          "fullName": "Full name"
+          "fullName": "Full name",
+          "errorMessage": "Could not save employee"
         },
         "remove": {
           "title": "Delete employee",
-          "confirmMessage": "Are you sure you want to delete the employee?"
+          "confirmMessage": "Are you sure you want to delete the employee?",
+          "errorMessage": "Could not delete employee"
         },
         "grid": {
           "name": "Name",
@@ -346,6 +349,7 @@
       }
     },
     "notifications": {
+      "dismiss": "Dismiss",
       "types": {
         "debug": "Debug",
         "error": "Error",
