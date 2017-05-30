@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
-const browser = require('jquery.browser');
 import { BsDropdownDirective } from 'ngx-bootstrap';
+const browser = require('jquery.browser');
 
-import { INotification } from '../../core/notifications/notifications.interface';
+import { INotification, INotificationFilters, INotificationServiceState } from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationsActions } from '../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
@@ -24,25 +25,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isNavSearchVisible: boolean;
 
-  private notificationsCount = 0;
+  notifications: Array<INotification>;
+
+  filters: INotificationFilters;
+
   private notificationSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
-    public notificationsService: NotificationsService,
+    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
     public settings: SettingsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
     if (browser.msie) {
-        // Not supported under IE
+      // Not supported under IE
       this.fsbutton.nativeElement.style.display = 'none';
     }
 
-    this.notificationSubscription = this.notificationsService.notifications
-      .subscribe((notifications: Array<INotification>) => this.notificationsCount = notifications.length);
+    this.notificationSubscription = this.notificationsService.state
+      .subscribe((state: INotificationServiceState) => {
+        this.filters = state.filters;
+        this.notifications = state.notifications;
+      });
   }
 
   ngOnDestroy(): void {

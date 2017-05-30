@@ -111,6 +111,8 @@ export class DashboardComponent implements OnInit {
   addNotification(type: INotificationType): void {
     const message = ((t: INotificationType) => {
       switch (t) {
+        case 'DEBUG':
+          return 'I am debug message.';
         case 'ERROR':
           return 'I am error message.';
         case 'WARNING':

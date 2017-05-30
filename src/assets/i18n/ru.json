@@ -346,6 +346,14 @@
       }
     }
   },
+  "notifications": {
+    "types": {
+      "debug": "Дебаг",
+      "error": "Ошибка",
+      "warning": "Предупреждение",
+      "info": "Инфо"
+    }
+  },
   "default": {
     "yesNo": {
       "Yes": "Да",
@@ -366,7 +374,9 @@
     "buttons": {
       "save": "Сохранить",
       "cancel": "Отменить",
-      "remove": "Удалить"
+      "remove": "Удалить",
+      "close": "Закрыть",
+      "clear": "Очистить"
     }
   }
 }

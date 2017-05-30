@@ -1,64 +1,43 @@
-import { Component, EventEmitter, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import {
-  INotification,
-  INotificationFilters,
-  INotificationServiceState,
-  INotificationType,
-} from '../../../core/notifications/notifications.interface';
+import { INotification, INotificationFilters, INotificationType } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class NotificationsComponent {
+
+  @Input() notifications: Array<INotification>;
+  @Input() filters: INotificationFilters;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  notifications: Array<INotification>;
+  filterTypes: Array<INotificationType> = [ 'DEBUG', 'INFO', 'WARNING', 'ERROR' ];
 
-  filters: INotificationFilters;
+  private notificationIconsClasses = {
+    DEBUG: 'fa fa-2x fa-bug text-danger',
+    ERROR: 'fa fa-2x fa-times-circle text-danger',
+    WARNING: 'fa fa-2x fa-warning text-warning',
+    INFO: 'fa fa-2x fa-check-circle text-info',
+  };
 
-  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR' ];
-
-  private notificationSubscription: Subscription;
-
-  constructor(
-    private notificationsActions: NotificationsActions,
-    private notificationsService: NotificationsService
-  ) {}
+  constructor(private notificationsActions: NotificationsActions) {}
 
   @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.stopPropagation();
   }
 
-  ngOnInit(): void {
-    this.notificationSubscription = this.notificationsService.state
-      .subscribe((state: INotificationServiceState) => {
-        this.filters = state.filters;
-        this.notifications = state.notifications;
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.notificationSubscription.unsubscribe();
-  }
-
   getIconClass(notification: INotification): string {
-    switch (notification.type) {
-      case 'ERROR':
-        return 'fa fa-2x fa-times-circle text-danger';
-      case 'WARNING':
-        return 'fa fa-2x fa-warning text-warning';
-      case 'INFO':
-        return 'fa fa-2x fa-check-circle text-info';
-    }
+    return `fa fa-2x ${this.notificationIconsClasses[notification.type]}`;
+  }
+
+  getTranslationKey(type: INotificationType): string {
+    return `notifications.types.${type.toLowerCase()}`;
   }
 
   onFilterChange(type: INotificationType, event: MouseEvent): void {

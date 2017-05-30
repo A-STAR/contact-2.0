@@ -2,8 +2,8 @@
   <div class="panel-heading">
     <ng-container *ngFor="let filterType of filterTypes">
       <label class="checkbox-inline">
-        <!-- TODO: translate -->
-        <input type="checkbox" [checked]="filters[filterType]" (change)="onFilterChange(filterType, $event)"> {{ filterType }}
+        <input type="checkbox" [checked]="filters[filterType]" (change)="onFilterChange(filterType, $event)">
+        {{ getTranslationKey(filterType) | translate }}
       </label>
     </ng-container>
   </div>
@@ -30,7 +30,7 @@
   </scrollable>
 
   <div class="panel-footer text-right">
-    <button class="btn btn-default" (click)="onClearClick()">Clear</button>
-    <button class="btn btn-default" (click)="onCloseClick()">Close</button>
+    <button class="btn btn-default" (click)="onClearClick()">{{ 'default.buttons.clear' | translate }}</button>
+    <button class="btn btn-default" (click)="onCloseClick()">{{ 'default.buttons.close' | translate }}</button>
   </div>
 </div>

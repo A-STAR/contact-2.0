@@ -43,17 +43,15 @@
                 </a>
             </li>
             <!-- START Alert menu-->
-
-            <!-- TODO: refactor -->
-            <li class="dropdown dropdown-list" dropdown [isDisabled]="(notificationsService.notifications | async).length === 0">
+            <li class="dropdown dropdown-list" dropdown [isDisabled]="notifications.length === 0">
                 <a title="Messages" dropdownToggle>
                     <em class="icon-bell"></em>
-                    <div *ngIf="(notificationsService.notifications | async).length" class="label label-danger">
-                      {{ (notificationsService.notifications | async).length }}
+                    <div *ngIf="notifications.length" class="label label-danger">
+                      {{ notifications.length }}
                     </div>
                 </a>
                 <div *dropdownMenu class="dropdown-menu animated fadeIn">
-                    <app-notifications (onClose)="onNotificationsClose()">
+                    <app-notifications [filters]="filters" [notifications]="notifications" (onClose)="onNotificationsClose()">
                     </app-notifications>
                 </div>
             </li>
