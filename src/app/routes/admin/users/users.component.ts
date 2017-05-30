@@ -12,6 +12,8 @@ import { GridService } from '../../../shared/components/grid/grid.service';
   templateUrl: 'users.component.html'
 })
 export class UsersComponent implements AfterViewInit {
+  static COMPONENT_NAME = 'UsersComponent';
+
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<IGridColumn> = [
@@ -67,9 +69,9 @@ export class UsersComponent implements AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService) {
-    const [ languages, roles ] = this.route.snapshot.data.users;
-    this.renderers.languageId = [].concat(languages);
+    const [ roles, languages ] = this.route.snapshot.data.users;
     this.renderers.roleId = [].concat(roles);
+    this.renderers.languageId = [].concat(languages);
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.filter = this.filter.bind(this);
   }

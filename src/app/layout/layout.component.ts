@@ -35,9 +35,9 @@ export class LayoutComponent {
 
   activate(config: any): void {
     const { component, factory, injector } = config;
-    console.log('activated', component.name);
+    // console.log('activated', component.name);
     const path: string = this.router.url;
-    const title: string = this.titles[component.name] || 'Title';
+    const title: string = this.titles[component.COMPONENT_NAME] || 'Title';
 
     const tab = { title, active: true, component, path, factory, injector };
     this.tabService.addTab(tab);

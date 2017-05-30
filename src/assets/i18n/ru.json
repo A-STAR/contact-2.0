@@ -170,7 +170,7 @@
       "workPhone": "Рабочий телефон",
       "intPhone": "Внутренний номер",
       "email": "Эл. почта",
-      "langCode": "Язык"
+      "languageId": "Язык"
     }
   },
   "dictionaries": {

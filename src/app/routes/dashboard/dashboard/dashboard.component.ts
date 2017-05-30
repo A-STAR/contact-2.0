@@ -12,6 +12,7 @@ import { NotificationsActions } from '../../../core/notifications/notifications.
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  static COMPONENT_NAME = 'DashboardComponent';
 
   easyPiePercent = 70;
   pieOptions = {

@@ -10,6 +10,7 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
   styleUrls: ['./dict-and-terms.component.scss'],
 })
 export class DictAndTermsComponent extends MasterDetailComponent<IDict> {
+  static COMPONENT_NAME = 'DictAndTermsComponent';
 
   constructor(private userPermissionsService: UserPermissionsService) {
     super();

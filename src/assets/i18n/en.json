@@ -170,7 +170,7 @@
         "workPhone": "Work phone",
         "intPhone": "Extension",
         "email": "Email",
-        "langCode": "Language"
+        "languageId": "Language"
       }
     },
     "dictionaries": {
