@@ -1,5 +1,5 @@
 export interface ITab {
-  active: boolean;
+  active?: boolean;
   component: any;
   title: string;
   path: string;

@@ -39,7 +39,7 @@ export class LayoutComponent {
     const path: string = this.router.url;
     const key = this.titles[component.COMPONENT_NAME];
     const title: string = key ? `sidebar.nav.menu.${key}` : 'Title';
-    const tab = { title, active: true, component, path, factory, injector };
+    const tab = { title, component, path, factory, injector };
     this.tabService.addTab(tab);
   }
 }
