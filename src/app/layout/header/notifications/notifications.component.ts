@@ -44,15 +44,20 @@ export class NotificationsComponent {
     this.notificationsActions.filter(type, (event.target as HTMLInputElement).checked);
   }
 
-  onClearClick(): void {
-    this.notificationsActions.reset();
-  }
-
   onDismissClick(index: number): void {
     this.notificationsActions.remove(index);
   }
 
+  onClearClick(): void {
+    this.notificationsActions.reset();
+    this.close();
+  }
+
   onCloseClick(): void {
+    this.close();
+  }
+
+  private close(): void {
     this.onClose.emit();
   }
 }
