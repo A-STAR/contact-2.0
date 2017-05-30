@@ -1,12 +1,29 @@
 :host /deep/ .nav-tabs > li {
-  &:not(:first-child) > a {
+  & > a {
     border-left: 0;
-  }
-  & > a.active {
-    background-color: white;
+    &:hover {
+      border-left: 0;
+    }
   }
 }
 
 :host /deep/ ul.nav {
   cursor: default;
+}
+
+.active {
+  background-color: white;
+}
+
+.close {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  opacity: 0;
+  transition: all ease-in-out 250ms;
+  font-size: 12px;
+  z-index: 1;
+  &:hover {
+    opacity: 0.5;
+  }
 }
