@@ -109,17 +109,18 @@ export class DictComponent extends GridEntityComponent<IDict> {
             );
           });
 
-        nameTranslations
+        const updatedTranslations: IEntityTranslation[] = nameTranslations
           .filter((item: ILabeledValue) => !item.removed)
           .map<IEntityTranslation>((item: ILabeledValue) => {
             return { languageId: item.value, value: item.context ? item.context.translation : null };
           })
-          .filter((item: IEntityTranslation) => item.value !== null)
-          .forEach((item: IEntityTranslation) => {
-            editTasks.push(
-              this.entityTranslationsService.saveDictNameTranslation(this.selectedEntity.id, item)
-            );
-          });
+          .filter((item: IEntityTranslation) => item.value !== null);
+
+        if (updatedTranslations.length) {
+          editTasks.push(
+            this.entityTranslationsService.saveDictNameTranslations(this.selectedEntity.id, updatedTranslations)
+          );
+        }
       }
       delete data.translatedName;
       delete data.nameTranslations;
