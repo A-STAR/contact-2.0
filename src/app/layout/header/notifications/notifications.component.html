@@ -1,5 +1,5 @@
 <div class="panel notifications">
-  <div class="panel-heading notifications-heading">
+  <div class="panel-heading notifications_heading">
     <ng-container *ngFor="let filterType of filterTypes">
       <label class="checkbox-inline">
         <input type="checkbox" [checked]="filters[filterType]" (change)="onFilterChange(filterType, $event)">
@@ -12,18 +12,14 @@
     <ul class="list-group">
       <ng-container *ngFor="let notification of notifications">
         <li *ngIf="filters[notification.type]" class="list-group-item">
-          <div class="media">
-            <div class="media-left">
-              <i [class]="getIconClass(notification)"></i>
-            </div>
-            <div class="media-body">
-              <p class="m0">{{ notification.message | translate }}</p>
-              <p class="m0 text-muted">
-                <!-- TODO: translate -->
-                <small>{{ notification.created | date:'medium' }}</small>
-              </p>
-            </div>
-          </div>
+          <p class="m0 notifications_message" [title]="notification.message | translate">
+            <i [class]="getIconClass(notification)"></i>
+            {{ notification.message | translate }}
+          </p>
+          <p class="m0 text-right text-muted">
+            <!-- TODO: translate -->
+            <small>{{ notification.created | date:'medium' }}</small>
+          </p>
         </li>
       </ng-container>
     </ul>
