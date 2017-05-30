@@ -19,10 +19,10 @@ export class NotificationsComponent {
   filterTypes: Array<INotificationType> = [ 'DEBUG', 'INFO', 'WARNING', 'ERROR' ];
 
   private notificationIconsClasses = {
-    DEBUG: 'fa fa-2x fa-bug text-danger',
-    ERROR: 'fa fa-2x fa-times-circle text-danger',
-    WARNING: 'fa fa-2x fa-warning text-warning',
-    INFO: 'fa fa-2x fa-check-circle text-info',
+    DEBUG: 'fa fa-bug text-danger',
+    ERROR: 'fa fa-times-circle text-danger',
+    WARNING: 'fa fa-warning text-warning',
+    INFO: 'fa fa-check-circle text-info',
   };
 
   constructor(private notificationsActions: NotificationsActions) {}
@@ -33,7 +33,7 @@ export class NotificationsComponent {
   }
 
   getIconClass(notification: INotification): string {
-    return `fa fa-2x ${this.notificationIconsClasses[notification.type]}`;
+    return this.notificationIconsClasses[notification.type];
   }
 
   getTranslationKey(type: INotificationType): string {

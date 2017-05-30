@@ -1,5 +1,5 @@
 <div class="panel notifications">
-  <div class="panel-heading">
+  <div class="panel-heading notifications-heading">
     <ng-container *ngFor="let filterType of filterTypes">
       <label class="checkbox-inline">
         <input type="checkbox" [checked]="filters[filterType]" (change)="onFilterChange(filterType, $event)">
