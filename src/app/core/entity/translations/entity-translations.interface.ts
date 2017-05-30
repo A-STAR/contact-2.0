@@ -6,4 +6,5 @@ export class EntityTranslationsConstants {
 export interface IEntityTranslation {
   languageId: number;
   value: string;
+  isMain?: number;
 }
