@@ -18,6 +18,13 @@ export class NotificationsComponent {
 
   filterTypes: Array<INotificationType> = [ 'DEBUG', 'INFO', 'WARNING', 'ERROR' ];
 
+  private notificationIconsClasses = {
+    DEBUG: 'fa fa-2x fa-bug text-danger',
+    ERROR: 'fa fa-2x fa-times-circle text-danger',
+    WARNING: 'fa fa-2x fa-warning text-warning',
+    INFO: 'fa fa-2x fa-check-circle text-info',
+  };
+
   constructor(private notificationsActions: NotificationsActions) {}
 
   @HostListener('click', ['$event'])
@@ -26,16 +33,11 @@ export class NotificationsComponent {
   }
 
   getIconClass(notification: INotification): string {
-    switch (notification.type) {
-      case 'DEBUG':
-        return 'fa fa-2x fa-bug text-danger';
-      case 'ERROR':
-        return 'fa fa-2x fa-times-circle text-danger';
-      case 'WARNING':
-        return 'fa fa-2x fa-warning text-warning';
-      case 'INFO':
-        return 'fa fa-2x fa-check-circle text-info';
-    }
+    return `fa fa-2x ${this.notificationIconsClasses[notification.type]}`;
+  }
+
+  getTranslationKey(type: INotificationType): string {
+    return `notifications.types.${type.toLowerCase()}`;
   }
 
   onFilterChange(type: INotificationType, event: MouseEvent): void {

@@ -345,6 +345,14 @@
         }
       }
     },
+    "notifications": {
+      "types": {
+        "debug": "Debug",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info"
+      }
+    },
     "default": {
       "yesNo": {
         "Yes": "Yes",
@@ -365,7 +373,9 @@
       "buttons": {
         "save": "Save",
         "cancel": "Cancel",
-        "remove": "Remove"
+        "remove": "Remove",
+        "close": "Close",
+        "clear": "Clear"
       }
     }
 }
