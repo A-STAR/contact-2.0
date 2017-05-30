@@ -1,0 +1,36 @@
+<div class="panel notifications">
+  <div class="panel-heading">
+    <ng-container *ngFor="let filterType of filterTypes">
+      <label class="checkbox-inline">
+        <!-- TODO: translate -->
+        <input type="checkbox" [checked]="filters[filterType]" (change)="onFilterChange(filterType, $event)"> {{ filterType }}
+      </label>
+    </ng-container>
+  </div>
+
+  <scrollable height="320">
+    <ul class="list-group">
+      <ng-container *ngFor="let notification of notifications">
+        <li *ngIf="filters[notification.type]" class="list-group-item">
+          <div class="media">
+            <div class="media-left">
+              <i [class]="getIconClass(notification)"></i>
+            </div>
+            <div class="media-body">
+              <p class="m0">{{ notification.message }}</p>
+              <p class="m0 text-muted">
+                <!-- TODO: translate -->
+                <small>{{ notification.created | date:'medium' }}</small>
+              </p>
+            </div>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </scrollable>
+
+  <div class="panel-footer text-right">
+    <button class="btn btn-default" (click)="onClearClick()">Clear</button>
+    <button class="btn btn-default" (click)="onCloseClick()">Close</button>
+  </div>
+</div>

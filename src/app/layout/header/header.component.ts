@@ -1,25 +1,38 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-const browser = require('jquery.browser');
-
-import { SettingsService } from '../../core/settings/settings.service';
-import { AuthService } from '../../core/auth/auth.service';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
+const browser = require('jquery.browser');
+import { BsDropdownDirective } from 'ngx-bootstrap';
+
+import { INotification } from '../../core/notifications/notifications.interface';
+
+import { AuthService } from '../../core/auth/auth.service';
+import { NotificationsService } from '../../core/notifications/notifications.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   // the fullscreen button
   @ViewChild('fsbutton') fsbutton;
+
+  // TODO: what if there are several dropdowns?
+  @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
+
   isNavSearchVisible: boolean;
 
+  private notificationsCount = 0;
+  private notificationSubscription: Subscription;
+
   constructor(
-    public settings: SettingsService,
     private authService: AuthService,
-    private translateService: TranslateService) {
-  }
+    public notificationsService: NotificationsService,
+    public settings: SettingsService,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
@@ -27,6 +40,13 @@ export class HeaderComponent implements OnInit {
         // Not supported under IE
       this.fsbutton.nativeElement.style.display = 'none';
     }
+
+    this.notificationSubscription = this.notificationsService.notifications
+      .subscribe((notifications: Array<INotification>) => this.notificationsCount = notifications.length);
+  }
+
+  ngOnDestroy(): void {
+    this.notificationSubscription.unsubscribe();
   }
 
   get isAuthenticated(): boolean {
@@ -73,5 +93,9 @@ export class HeaderComponent implements OnInit {
   logout(event: UIEvent): void {
     event.preventDefault();
     this.authService.logout().subscribe();
+  }
+
+  onNotificationsClose(): void {
+    this.notificationsDropdown.hide();
   }
 }
