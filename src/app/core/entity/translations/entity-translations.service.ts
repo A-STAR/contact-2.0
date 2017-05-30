@@ -31,7 +31,7 @@ export class EntityTranslationsService {
   }
 
   deleteDictNameTranslation(entityId: string|number, languageId: number): Observable<any> {
-    return this.gridService.delete('/entityAttributes/{entityAttributesId}/entities/{entitiesId}/languages/?id={languagesId}', {
+    return this.gridService.delete('/api/entityAttributes/{entityAttributesId}/entities/{entitiesId}/languages/?id={languagesId}', {
       entityAttributesId: EntityTranslationsConstants.SPEC_DICT_NAME,
       entitiesId: entityId,
       languagesId: languageId
