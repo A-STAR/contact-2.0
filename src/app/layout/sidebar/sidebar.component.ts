@@ -21,13 +21,11 @@ export class SidebarComponent implements OnInit {
     public settings: SettingsService,
     private injector: Injector
   ) {
-    this.menuItems = menuService.getMenu();
-    menuService.loadMenu()
-      .subscribe(
-        () => { this.menuItems = menuService.getMenu(); },
-        // TODO: show a message on failure
-        err => console.error(err)
-      );
+    this.menuService.menu.subscribe(
+      items => this.menuItems = items,
+      // TODO: show a message on failure
+      err => console.error(err)
+    );
   }
 
   ngOnInit(): void {
