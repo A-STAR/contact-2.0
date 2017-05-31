@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+
+import { IMenuItem } from '../../core/menu/menu.interface';
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
@@ -10,30 +13,36 @@ import { NotificationsActions } from '../../core/notifications/notifications.act
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
-  menuItems: Array<any> = [];
+  menuItems: Array<IMenuItem>;
+
+  private routeDataSubscription: Subscription;
 
   constructor(
     private menuService: MenuService,
-    public settings: SettingsService,
-    private router: Router,
     private notificationsActions: NotificationsActions,
+    private route: ActivatedRoute,
+    private router: Router,
+    public settings: SettingsService,
   ) {
-    menuService.loadMenu()
-      .subscribe(
-        () => { this.menuItems = menuService.getMenu(); },
-        err => notificationsActions.push(err, 'ERROR')
-      );
+    this.routeDataSubscription = this.route.data.subscribe(
+      data => this.menuItems = data.menu,
+      err => notificationsActions.push(err, 'ERROR')
+    );
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe(() => {
+    this.router.events.subscribe((val) => {
       // close any submenu opened when route changes
       this.removeFloatingNav();
       // scroll view to top
       window.scrollTo(0, 0);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.routeDataSubscription.unsubscribe();
   }
 
   toggleSubmenuClick(event: UIEvent): void {

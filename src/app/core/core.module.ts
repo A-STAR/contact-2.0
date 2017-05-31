@@ -7,6 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { UserPermissionsResolver } from './user/permissions/user-permissions-resolver.service';
+import { MenuResolver } from './menu/menu-resolver.service';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
@@ -36,6 +37,7 @@ import { rootReducer } from '../core/state/root.reducer';
     DatePipe,
     ConstantsService,
     JwtHelper,
+    MenuResolver,
     MenuService,
     NotificationsActions,
     NotificationsService,
