@@ -4,12 +4,16 @@ import { FormBuilder } from '@angular/forms';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IActionsLogFilterRequest } from './actions-log-filter.interface';
-import { IEmployee } from '../actions-log.interface';
+import { IEmployee, IActionType } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+export const toFullName = (employee: IEmployee) => {
+  return [employee.lastName, employee.firstName, employee.middleName].filter((part: string) => !!part).join('');
+};
 
 @Component({
   selector: 'app-actions-log-filter',
@@ -21,6 +25,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @Input() actionTypesRows;
   @Output() search: EventEmitter<IActionsLogFilterRequest> = new EventEmitter<IActionsLogFilterRequest>();
 
+  private _action: string;
   employeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
@@ -46,8 +51,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   ];
 
   renderers: IRenderer = {
-    fullName: (actionLog: IEmployee) =>
-      [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(''),
+    fullName: toFullName
   };
 
   toolbarActions: IToolbarAction[] = [
@@ -111,14 +115,33 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     super.ngOnInit();
   }
 
+  get selectedEmployees(): string {
+    if (Array.isArray(this.value.employees)) {
+      return (this.value.employees as IEmployee[] || []).map((record: IEmployee) => toFullName(record)).join(', ');
+    }
+    return '';
+  }
+
+  get isEmployeesBeingSelected(): boolean {
+    return this._action === 'employees';
+  }
+
+  closeActionDialog() {
+    this._action = null;
+  }
+
+  onEmployeesSelect(): void {
+    this._action = 'employees';
+  }
+
   onControlsStatusChanges(): void {
     this.toolbarActions[0].visible = this.form.valid;
   }
 
   onSearch(): void {
     const request: IActionsLogFilterRequest = Object.assign({}, this.value);
-    request.employees = (request.employees || []).map((record: any) => record.id);
-    request.actionsTypes = (request.actionsTypes || []).map((record: any) => record.code);
+    request.employees = (request.employees as IEmployee[] || []).map((record: IEmployee) => record.id);
+    request.actionsTypes = (request.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code);
     this.search.emit(request);
   }
 }
