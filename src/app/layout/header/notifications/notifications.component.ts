@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
 
 import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
-import { NotificationsActions } from '../../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
@@ -23,7 +23,7 @@ export class NotificationsComponent {
     NotificationTypeEnum.DEBUG,
   ];
 
-  constructor(private notificationsActions: NotificationsActions) {}
+  constructor(private notificationsService: NotificationsService) {}
 
   @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
@@ -49,15 +49,15 @@ export class NotificationsComponent {
   }
 
   onFilterChange(type: NotificationTypeEnum, event: MouseEvent): void {
-    this.notificationsActions.filter(type, (event.target as HTMLInputElement).checked);
+    this.notificationsService.filter(type, (event.target as HTMLInputElement).checked);
   }
 
   onDismissClick(index: number): void {
-    this.notificationsActions.remove(index);
+    this.notificationsService.remove(index);
   }
 
   onClearClick(): void {
-    this.notificationsActions.reset();
+    this.notificationsService.reset();
     this.close();
   }
 

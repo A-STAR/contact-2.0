@@ -12,7 +12,6 @@ import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
-import { NotificationsActions } from './notifications/notifications.actions';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
@@ -37,7 +36,6 @@ import { rootReducer } from '../core/state/root.reducer';
     ConstantsService,
     JwtHelper,
     MenuService,
-    NotificationsActions,
     NotificationsService,
     SettingsService,
     ThemesService,

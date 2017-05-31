@@ -7,7 +7,6 @@ const browser = require('jquery.browser');
 import { IFilters, INotification, INotificationServiceState } from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { NotificationsActions } from '../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
@@ -33,7 +32,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private notificationsActions: NotificationsActions,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService,

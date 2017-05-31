@@ -7,7 +7,7 @@ import { IEmployeeUser } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { EmployeesService } from './employees.service';
-import { NotificationsActions } from '../../../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
@@ -65,7 +65,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   constructor(
     private employeesService: EmployeesService,
     private gridService: GridService,
-    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
     private translateService: TranslateService
   ) {
     super();
@@ -81,7 +81,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
       .create(this.masterEntity.id, data)
       .subscribe(
         () => this.onSubmitSuccess(),
-        () => this.notificationsActions.error('organizations.employees.add.errorMessage')
+        () => this.notificationsService.error('organizations.employees.add.errorMessage')
       );
   }
 
@@ -93,7 +93,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
       })
       .subscribe(
         () => this.onSubmitSuccess(),
-        () => this.notificationsActions.error('organizations.employees.edit.errorMessage')
+        () => this.notificationsService.error('organizations.employees.edit.errorMessage')
       );
   }
 
@@ -102,7 +102,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
       .remove(this.masterEntity.id, this.selectedEntity.userId)
       .subscribe(
         () => this.onSubmitSuccess(),
-        () => this.notificationsActions.error('organizations.employees.remove.errorMessage')
+        () => this.notificationsService.error('organizations.employees.remove.errorMessage')
       );
   }
 
