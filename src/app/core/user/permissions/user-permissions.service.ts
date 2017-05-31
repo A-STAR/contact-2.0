@@ -7,27 +7,40 @@ import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissio
 @Injectable()
 export class UserPermissionsService {
 
-  private userPermits: Map<string, boolean> = new Map<string, boolean>();
+  private userPermissions: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(private gridService: GridService) {
-    // TODO Temp solution
-    this.loadUserPermissions().subscribe();
   }
 
-  public loadUserPermissions(): Observable<IUserPermissionsResponse> {
+  public getUserPermissions(forceReload?: boolean): Observable<Map<String, boolean>> {
+    if (this.userPermissions.size > 0 && !forceReload) {
+      return Observable.of(this.userPermissions);
+    }
+
     return this.gridService.read('/api/userpermits')
       .map((response: IUserPermissionsResponse) => {
         response.userPermits.forEach((userPermission: IUserPermissionModel) => {
-          this.userPermits.set(userPermission.name, this.toUserPermissionValue(userPermission));
+          this.userPermissions.set(userPermission.name, this.toUserPermissionValue(userPermission));
         });
-        return response;
+        return this.userPermissions;
       });
   }
 
-  public hasPermission(permissionName: string | Array<string>): boolean {
-    const permissions = Array.isArray(permissionName) ? permissionName : [ permissionName ];
+  public hasOnePermission(permissionNames: string | Array<string>): boolean {
+    const permissions = Array.isArray(permissionNames) ? permissionNames : [ permissionNames ];
     return permissions.reduce((acc, permission) => {
-      return acc || this.userPermits.get(permission);
+      return acc || !!this.userPermissions.get(permission);
+    }, false);
+  }
+
+  public hasPermission(permissionName: string): boolean {
+    // get can return undefined
+    return !!this.userPermissions.get(permissionName);
+  }
+
+  public hasAllPermissions(permissionNames: Array<string>): boolean {
+    return permissionNames.reduce((acc, permission) => {
+      return acc && this.userPermissions.get(permission);
     }, false);
   }
 

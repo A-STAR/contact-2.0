@@ -15,7 +15,11 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
 export class MenuService {
   private menuItems: Array<IMenuItem> = [];
 
-  constructor(private http: AuthHttp, private authService: AuthService, private router: Router) { }
+  constructor(
+    private http: AuthHttp,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   loadMenu(): Observable<boolean> {
     return this.authService

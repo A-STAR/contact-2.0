@@ -1,7 +1,7 @@
 {
   "header": {
     "search": {
-      "PLACEHOLDER": "Введите строку поиска и нажмите ввод..."
+      "placeholder": "Введите строку поиска и нажмите ввод..."
     }
   },
   "offsidebar": {
@@ -11,7 +11,7 @@
   },
   "sidebar": {
     "heading": {
-        "HEADER": "Menu Heading"
+      "HEADER": "Меню"
     },
     "nav": {
       "SINGLEVIEW": "Single View",

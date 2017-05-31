@@ -12,7 +12,6 @@ export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[];
   @Input() actionAlign = 'left';
-  @Input() toolbarType = 'grid';
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
 
   ToolbarControlEnum = ToolbarControlEnum;
@@ -29,14 +28,10 @@ export class ToolbarComponent {
   }
 
   isActionAccessible(action: IToolbarAction): boolean {
-    return !action.permission || this.userPermissionsService.hasPermission(action.permission);
+    return !action.permission || this.userPermissionsService.hasOnePermission(action.permission);
   }
 
   toIconCls(action: IToolbarAction): string {
     return this.iconsService.fromActionType(action.type);
-  }
-
-  get formToolbar(): boolean {
-    return this.toolbarType === 'form';
   }
 }
