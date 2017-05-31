@@ -11,8 +11,12 @@ export interface INotification {
   created: Date;
 }
 
+export interface IFilters {
+  [key: number]: boolean;
+}
+
 export interface INotificationServiceState {
-  filters: Array<boolean>;
+  filters: IFilters;
   notifications: Array<INotification>;
 }
 

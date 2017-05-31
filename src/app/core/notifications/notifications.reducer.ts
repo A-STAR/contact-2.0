@@ -1,4 +1,4 @@
-import { INotificationAction, INotificationServiceState } from './notifications.interface';
+import { INotificationAction, INotificationServiceState, NotificationTypeEnum } from './notifications.interface';
 
 import { NotificationsService } from './notifications.service';
 
@@ -8,10 +8,10 @@ const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
 const defaultState: INotificationServiceState = {
   notifications: [],
   filters: {
-    DEBUG: false,
-    ERROR: true,
-    WARNING: true,
-    INFO: true
+    [NotificationTypeEnum.DEBUG]: false,
+    [NotificationTypeEnum.ERROR]: true,
+    [NotificationTypeEnum.WARNING]: true,
+    [NotificationTypeEnum.INFO]: true
   }
 };
 

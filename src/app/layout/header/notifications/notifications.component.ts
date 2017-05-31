@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import { INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 
@@ -12,7 +12,7 @@ import { NotificationsActions } from '../../../core/notifications/notifications.
 export class NotificationsComponent {
 
   @Input() notifications: Array<INotification>;
-  @Input() filters: Array<boolean>;
+  @Input() filters: IFilters;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
