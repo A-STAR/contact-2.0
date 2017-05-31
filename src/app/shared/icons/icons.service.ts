@@ -9,7 +9,8 @@ export class IconsService {
     [ToolbarActionTypeEnum.EDIT, 'pencil'],
     [ToolbarActionTypeEnum.REMOVE, 'trash'],
     [ToolbarActionTypeEnum.ADD, 'plus'],
-    [ToolbarActionTypeEnum.REFRESH, 'refresh']
+    [ToolbarActionTypeEnum.REFRESH, 'refresh'],
+    [ToolbarActionTypeEnum.SEARCH, 'search']
   ]);
 
   public fromActionType(actionType: ToolbarActionTypeEnum): string {

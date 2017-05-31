@@ -18,6 +18,7 @@ export class LayoutComponent {
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
+    ActionsLogComponent: 'ACTIONS_LOG'
   };
 
   constructor(

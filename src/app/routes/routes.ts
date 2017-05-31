@@ -27,6 +27,7 @@ export const routes = [
       { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionary.module#DictionaryModule' },
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
+      { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
       // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },

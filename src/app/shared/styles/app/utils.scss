@@ -211,6 +211,16 @@
   vertical-align: bottom;
 }
 
+.container-align {
+  position: relative;
+}
+
+.child-align-middle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 
 // Background image
 .bg-center {
