@@ -1,5 +1,6 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy, Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IMenuItem } from '../../core/menu/menu.interface';
 
@@ -11,10 +12,12 @@ import { SettingsService } from '../../core/settings/settings.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
   menuItems: Array<IMenuItem>;
   router: Router;
+
+  private routeDataSubscription: Subscription;
 
   constructor(
     private injector: Injector,
@@ -22,7 +25,7 @@ export class SidebarComponent implements OnInit {
     private route: ActivatedRoute,
     public settings: SettingsService,
   ) {
-    this.route.data.subscribe(
+    this.routeDataSubscription = this.route.data.subscribe(
       data => this.menuItems = data.menu,
       // TODO: show a message on failure
       err => console.error(err)
@@ -38,6 +41,10 @@ export class SidebarComponent implements OnInit {
       // scroll view to top
       window.scrollTo(0, 0);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.routeDataSubscription.unsubscribe();
   }
 
   toggleSubmenuClick(event): void {
