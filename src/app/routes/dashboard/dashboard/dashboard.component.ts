@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
+import { NotificationsActions } from '../../../core/notifications/notifications.actions';
+import { INotificationType } from '../../../core/notifications/notifications.interface';
 
 @Component({
     selector: 'app-dashboard',
@@ -89,15 +91,42 @@ export class DashboardComponent implements OnInit {
     shadowSize: 0
   };
 
-  constructor(private colors: ColorsService, private http: AuthHttp) { }
+  constructor(
+    private colors: ColorsService,
+    private http: AuthHttp,
+    private notifications: NotificationsActions,
+  ) { }
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
       .map(data => data.json())
-      .subscribe(data => this.splineData = data);
+      .take(1)
+      .subscribe(
+        data => this.splineData = data,
+        err => this.notifications.push(err, 'ERROR'));
   }
 
   colorByName(name: string): string {
     return this.colors.byName(name);
+  }
+
+  addNotification(type: INotificationType): void {
+    const message = ((t: INotificationType) => {
+      switch (t) {
+        case 'DEBUG':
+          return 'I am debug message.';
+        case 'ERROR':
+          return 'I am error message.';
+        case 'WARNING':
+          return 'I am warning message.';
+        case 'INFO':
+          return 'I am info message.';
+      }
+    })(type);
+    this.notifications.push(message, type);
+  }
+
+  clearNotifications(): void {
+    this.notifications.reset();
   }
 }

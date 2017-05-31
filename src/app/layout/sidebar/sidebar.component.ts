@@ -6,6 +6,7 @@ import { IMenuItem } from '../../core/menu/menu.interface';
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { NotificationsActions } from '../../core/notifications/notifications.actions';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,14 +21,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private menuService: MenuService,
+    private notificationsActions: NotificationsActions,
     private route: ActivatedRoute,
     private router: Router,
     public settings: SettingsService,
   ) {
     this.routeDataSubscription = this.route.data.subscribe(
       data => this.menuItems = data.menu,
-      // TODO: show a message on failure
-      err => console.error(err)
+      err => notificationsActions.push(err, 'ERROR')
     );
   }
 
@@ -44,7 +45,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.routeDataSubscription.unsubscribe();
   }
 
-  toggleSubmenuClick(event): void {
+  toggleSubmenuClick(event: UIEvent): void {
     if (!this.isSidebarCollapsed() && !this.isSidebarCollapsedText() && !this.isEnabledHover()) {
       event.preventDefault();
 
@@ -93,9 +94,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   // Close menu collapsing height
-  closeMenu(elem): void {
-      elem.height(elem[0].scrollHeight); // set height
-      elem.height(0); // and move to zero to collapse
+  closeMenu(elem: any): void {
+      elem.height(elem[0].scrollHeight);
+      // and move to zero to collapse
+      elem.height(0);
       elem.removeClass('opening');
   }
 
@@ -116,11 +118,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       ul = anchor.next();
 
       if (!ul.length) {
-        return; // if not submenu return
+        // if not submenu return
+        return;
       }
 
       const $aside = $('.aside');
-      const $asideInner = $aside.children('.aside-inner'); // for top offset calculation
+      // for top offset calculation
+      const $asideInner = $aside.children('.aside-inner');
       const $sidebar = $asideInner.children('.sidebar');
       const padding = parseInt( $asideInner.css('padding-top'), 0) + parseInt( $aside.css('padding-top'), 0);
       const itemTop = ((anchor.parent().position().top) + padding) - $sidebar.scrollTop();
@@ -142,7 +146,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
       floatingNav
         .on('mouseleave', () => { floatingNav.remove(); })
-        .find('a').on('click', function(e) {
+        .find('a').on('click', function(e: any): void {
           // prevents page reload on click
           e.preventDefault();
           // get the exact route path to navigate

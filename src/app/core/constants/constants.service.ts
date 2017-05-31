@@ -12,7 +12,13 @@ export class ConstantsService {
 
   constructor(private gridService: GridService, private valueConverterService: ValueConverterService) {
     // TODO Temp solution
-    this.loadConstants().subscribe();
+    this.loadConstants()
+      .take(1)
+      .subscribe(
+        () => {},
+        // TODO: log using notification service
+        err => console.error(err)
+      );
   }
 
   public loadConstants(): Observable<IConstantsResponse> {

@@ -30,8 +30,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() bottomActions: IToolbarAction[];
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
+  @Input() editPermission: string;
   @Input() rows: Array<any> = [];
-  @Input() editPermission;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() selectionType: TSelectionType;
@@ -123,7 +123,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    const offset = 43 + 15 + 15 + 50 + 8;
+    const toolbarHeight = this.hasToolbar ? 50 : 0;
+    const offset = 43 + 15 + 15 + toolbarHeight + 8;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }

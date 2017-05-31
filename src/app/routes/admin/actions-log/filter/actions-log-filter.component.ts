@@ -50,8 +50,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(''),
   };
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH },
+  toolbarActions: IToolbarAction[] = [
+    { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
   constructor(

@@ -7,9 +7,9 @@ import { ContentTabService } from '../shared/components/content-tabstrip/tab/con
 import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.interface';
 
 @Component({
-    selector: 'app-layout',
-    templateUrl: './layout.component.html',
-    styleUrls: ['./layout.component.scss']
+  selector: 'app-layout',
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent {
   titles = {
@@ -19,7 +19,8 @@ export class LayoutComponent {
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
-    ActionsLogComponent: 'ACTIONS_LOG'
+    HelpComponent: 'HELP',
+    ActionsLogComponent: 'ACTIONS_LOG',
   };
 
   constructor(
@@ -38,7 +39,7 @@ export class LayoutComponent {
 
   activate(config: any): void {
     const { component, factory, injector } = config;
-    console.log('activate', component.COMPONENT_NAME);
+    // console.log('activate', component.COMPONENT_NAME);
     const path: string = this.router.url;
     const key = this.titles[component.COMPONENT_NAME];
     const title: string = key ? `sidebar.nav.menu.${key}` : 'Title';
