@@ -27,17 +27,20 @@ export class NotificationsActions {
     private translateService: TranslateService,
   ) {}
 
-  push(message: string, type: INotificationType): void {
-    // TODO: refactor as side effect?
-    this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
+  debug(message: string): void {
+    this.push(message, 'DEBUG');
+  }
 
-    this.store.dispatch(createNotificationAction('NOTIFICATION_PUSH', {
-      notification: {
-        message,
-        type,
-        created: new Date()
-      }
-    }));
+  error(message: string): void {
+    this.push(message, 'ERROR');
+  }
+
+  warning(message: string): void {
+    this.push(message, 'WARNING');
+  }
+
+  info(message: string): void {
+    this.push(message, 'INFO');
   }
 
   reset(): void {
@@ -55,5 +58,18 @@ export class NotificationsActions {
 
   remove(index: number): void {
     this.store.dispatch(createNotificationAction('NOTIFICATION_DELETE', { index }));
+  }
+
+  private push(message: string, type: INotificationType): void {
+    // TODO: refactor as side effect?
+    this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
+
+    this.store.dispatch(createNotificationAction('NOTIFICATION_PUSH', {
+      notification: {
+        message,
+        type,
+        created: new Date()
+      }
+    }));
   }
 }

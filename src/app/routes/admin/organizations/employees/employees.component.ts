@@ -81,7 +81,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
       this.employeesService
         .create(this.masterEntity.id, data)
         .catch(error => {
-          this.notificationsActions.push('organizations.employees.add.errorMessage', 'ERROR');
+          this.notificationsActions.error('organizations.employees.add.errorMessage');
           throw error;
         })
     );
@@ -95,7 +95,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
           comment: data.comment
         })
         .catch(error => {
-          this.notificationsActions.push('organizations.employees.edit.errorMessage', 'ERROR');
+          this.notificationsActions.error('organizations.employees.edit.errorMessage');
           throw error;
         })
     );
@@ -106,7 +106,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
       this.employeesService
         .remove(this.masterEntity.id, this.selectedEntity.userId)
         .catch(error => {
-          this.notificationsActions.push('organizations.employees.remove.errorMessage', 'ERROR');
+          this.notificationsActions.error('organizations.employees.remove.errorMessage');
           throw error;
         })
     );
