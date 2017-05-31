@@ -1,3 +1,15 @@
+<ng-template
+  #labelTemplate
+  let-action="action"
+>
+  <span
+    *ngIf="action.hasLabel"
+    class="app-toolbar-action-text"
+  >
+    {{ action.text | translate }}
+  </span>
+</ng-template>
+
 <ul class="app-toolbar app-{{ toolbarType }}-toolbar">
   <li *ngFor="let action of actions" class="app-control app-control-align-{{ actionAlign }}">
     <ng-container
@@ -8,8 +20,13 @@
         >
           <label>
             <!-- TODO: fix styles -->
-            <input type="checkbox" style="position: relative; top: 2px;" [checked]="action.value"
-                   (change)="onActionClick(action, $event)"> {{ action.text | translate }}
+            <input type="checkbox"
+                   style="position: relative; top: 2px;"
+                   [checked]="action.value"
+                   (change)="onActionClick(action, $event)">
+            <ng-container
+              *ngTemplateOutlet="labelTemplate; context: { action: action }">
+            </ng-container>
           </label>
         </span>
       <button
@@ -21,9 +38,9 @@
         aria-hidden="true"
       >
         <i class="fa fa-{{ toIconCls(action) }}" aria-hidden="true"></i>
-        <span *ngIf="formToolbar" class="app-toolbar-action-text">
-          {{ action.text | translate }}
-        </span>
+        <ng-container
+          *ngTemplateOutlet="labelTemplate; context: { action: action }">
+        </ng-container>
       </button>
     </ng-container>
   </li>

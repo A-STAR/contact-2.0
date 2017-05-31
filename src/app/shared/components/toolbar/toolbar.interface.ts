@@ -14,6 +14,7 @@ export enum ToolbarActionTypeEnum {
 
 export interface IToolbarAction {
   text: string;
+  hasLabel?: boolean;
   type: ToolbarActionTypeEnum;
   visible?: boolean;
   permission?: string | Array<string>;

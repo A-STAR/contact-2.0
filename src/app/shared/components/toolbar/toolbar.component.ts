@@ -12,7 +12,6 @@ export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[];
   @Input() actionAlign = 'left';
-  @Input() toolbarType = 'grid';
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
 
   ToolbarControlEnum = ToolbarControlEnum;
@@ -34,9 +33,5 @@ export class ToolbarComponent {
 
   toIconCls(action: IToolbarAction): string {
     return this.iconsService.fromActionType(action.type);
-  }
-
-  get formToolbar(): boolean {
-    return this.toolbarType === 'form';
   }
 }
