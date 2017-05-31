@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -15,14 +15,13 @@ import { SettingsService } from '../../core/settings/settings.service';
 export class SidebarComponent implements OnInit, OnDestroy {
 
   menuItems: Array<IMenuItem>;
-  router: Router;
 
   private routeDataSubscription: Subscription;
 
   constructor(
-    private injector: Injector,
     private menuService: MenuService,
     private route: ActivatedRoute,
+    private router: Router,
     public settings: SettingsService,
   ) {
     this.routeDataSubscription = this.route.data.subscribe(
@@ -33,8 +32,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.router = this.injector.get(Router);
-
     this.router.events.subscribe((val) => {
       // close any submenu opened when route changes
       this.removeFloatingNav();
