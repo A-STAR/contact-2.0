@@ -1,11 +1,21 @@
-import { AfterViewInit, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChange,
+  ViewChild,
+} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IToolbarAction, ToolbarActionTypeEnum } from '../toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../grid/grid.interface';
 
 import { GridComponent } from '../grid/grid.component';
 
-export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit {
+export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, AfterViewInit {
 
   // TODO(a.poterenko): implement a master type
   @Input() masterEntity: any;
@@ -21,8 +31,10 @@ export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit
   renderers: IRenderer = {};
   selectedEntity: T;
 
+  private sub: Subscription;
+
   ngAfterViewInit(): void {
-    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+    this.sub = this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
   }
 
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
@@ -80,6 +92,10 @@ export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit
     }
   }
 
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
   private refreshGrid(): void {
     if (!this.grid) {
       return;
@@ -94,6 +110,7 @@ export abstract class GridEntityComponent<T> implements OnChanges, AfterViewInit
 
   private loadGrid(): void {
     this.grid.load(this.masterEntity)
+      .take(1)
       .subscribe(
         () => {},
         // TODO: display & log a message

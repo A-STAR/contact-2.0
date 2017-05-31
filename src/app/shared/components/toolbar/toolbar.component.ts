@@ -27,7 +27,7 @@ export class ToolbarComponent {
   }
 
   isActionAccessible(action: IToolbarAction): boolean {
-    return !action.permission || this.userPermissionsService.hasPermission(action.permission);
+    return !action.permission || this.userPermissionsService.hasOnePermission(action.permission);
   }
 
   toIconCls(action: IToolbarAction): string {

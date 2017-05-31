@@ -95,13 +95,16 @@ export class DashboardComponent implements OnInit {
   constructor(
     private colors: ColorsService,
     private http: AuthHttp,
-    private notificationsActions: NotificationsActions,
+    private notifications: NotificationsActions,
   ) { }
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
       .map(data => data.json())
-      .subscribe(data => this.splineData = data);
+      .take(1)
+      .subscribe(
+        data => this.splineData = data,
+        err => this.notifications.push(err, 'ERROR'));
   }
 
   colorByName(name: string): string {
@@ -121,10 +124,10 @@ export class DashboardComponent implements OnInit {
           return 'I am info message.';
       }
     })(type);
-    this.notificationsActions.push(message, type);
+    this.notifications.push(message, type);
   }
 
   clearNotifications(): void {
-    this.notificationsActions.reset();
+    this.notifications.reset();
   }
 }

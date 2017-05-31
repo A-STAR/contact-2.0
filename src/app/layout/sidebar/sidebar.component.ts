@@ -13,24 +13,22 @@ import { NotificationsActions } from '../../core/notifications/notifications.act
 export class SidebarComponent implements OnInit {
 
   menuItems: Array<any> = [];
-  // router: Router;
 
   constructor(
-    private menuSrevice: MenuService,
+    private menuService: MenuService,
     public settings: SettingsService,
     private router: Router,
     private notificationsActions: NotificationsActions,
   ) {
-    menuSrevice.loadMenu()
+    menuService.loadMenu()
       .subscribe(
-        () => { this.menuItems = menuSrevice.getMenu(); },
-        // TODO: show a message on failure
+        () => { this.menuItems = menuService.getMenu(); },
         err => notificationsActions.push(err, 'ERROR')
       );
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe((val) => {
+    this.router.events.subscribe(() => {
       // close any submenu opened when route changes
       this.removeFloatingNav();
       // scroll view to top
@@ -38,7 +36,7 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  toggleSubmenuClick(event): void {
+  toggleSubmenuClick(event: UIEvent): void {
     if (!this.isSidebarCollapsed() && !this.isSidebarCollapsedText() && !this.isEnabledHover()) {
       event.preventDefault();
 

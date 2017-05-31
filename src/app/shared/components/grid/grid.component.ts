@@ -29,7 +29,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() bottomActions: IToolbarAction[];
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Input() editPermission;
+  @Input() editPermission: string;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() selectionType: TSelectionType;

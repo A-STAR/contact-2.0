@@ -12,6 +12,6 @@ export class UserPermissionsResolver implements Resolve<any> {
   ) {}
 
   resolve(): Observable<any> {
-    return this.userPermissionsService.loadUserPermissions();
+    return this.userPermissionsService.getUserPermissions();
   }
 }
