@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { IMenuItem } from '../../core/menu/menu.interface';
 
@@ -18,11 +18,12 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private menuService: MenuService,
+    private route: ActivatedRoute,
     public settings: SettingsService,
     private injector: Injector
   ) {
-    this.menuService.menu.subscribe(
-      items => this.menuItems = items,
+    this.route.data.subscribe(
+      data => this.menuItems = data.menu,
       // TODO: show a message on failure
       err => console.error(err)
     );

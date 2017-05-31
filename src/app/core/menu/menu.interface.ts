@@ -15,3 +15,8 @@ export interface IMenuItem {
   icon: string;
   children?: Array<IMenuItem>;
 };
+
+export interface IMenuLogEntry {
+  name: string;
+  delay: number;
+}

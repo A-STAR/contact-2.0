@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/publishLast';
 
-import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
+import { IMenuItem, IMenuApiResponseItem, IMenuLogEntry } from './menu.interface';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -20,33 +20,28 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
 export class MenuService {
   private lastNavigationStartTimestamp: number = null;
 
-  private guiObjectIds = {};
+  private menuLog = new Subject<IMenuLogEntry>();
 
-  private menuLog = new Subject<Array<any>>();
-
-  private menuItems: Observable<Array<IMenuItem>>;
+  public guiObjects: Observable<Array<IMenuApiResponseItem>>;
 
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
     private router: Router
   ) {
-    this.onSectionLoadStart();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.onSectionLoadStart();
-      } else if (event instanceof NavigationEnd) {
-        this.onSectionLoadEnd(event);
-      }
-    });
+    this.initMenu();
+    this.initLogging();
+  }
 
-    this.menuItems = this.authService
+  private initMenu(): void {
+    this.guiObjects = this.authService
       .getRootUrl()
       .flatMap(root => {
         return this.http
           .get(`${root}/api/guiconfigurations`)
           .map(resp => resp.json())
-          .map(resp => this.prepareMenu(resp));
+          .map(resp => resp.appGuiObjects)
+          .map(data => this.prepareMenu(data));
       })
       .publishLast()
       .refCount()
@@ -59,17 +54,23 @@ export class MenuService {
         }
         throw error;
       });
-
-    Observable
-      .combineLatest(this.menuLog, this.menuItems)
-      .subscribe(data => {
-        const [key, delay] = data[0];
-        console.log(`${this.guiObjectIds[key]}, ${delay}`);
-      });
   }
 
-  get menu(): Observable<Array<IMenuItem>> {
-    return this.menuItems;
+  private initLogging(): void {
+    this.onSectionLoadStart();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.onSectionLoadStart();
+      } else if (event instanceof NavigationEnd) {
+        this.onSectionLoadEnd(event);
+      }
+    });
+
+    Observable
+      .combineLatest(this.menuLog, this.guiObjects)
+      .subscribe(data => {
+        // TODO: log data when the API is ready
+      });
   }
 
   private onSectionLoadStart(): void {
@@ -78,19 +79,20 @@ export class MenuService {
 
   private onSectionLoadEnd(event: NavigationEnd): void {
     const delay = Date.now() - this.lastNavigationStartTimestamp;
-    const menuConfigItemKey = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
-    this.menuLog.next([menuConfigItemKey, delay]);
+    const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
+    this.menuLog.next({
+      name,
+      delay
+    });
   }
 
-  private prepareMenu(response: IMenuApiResponse): Array<IMenuItem> {
+  private prepareMenu(appGuiObjects: Array<IMenuApiResponseItem>): Array<IMenuItem> {
     return ADDITIONAL_MENU_ITEMS
-      .concat(response.appGuiObjects)
+      .concat(appGuiObjects)
       .map(item => this.prepareMenuNode(item));
   }
 
   private prepareMenuNode(node: IMenuApiResponseItem): IMenuItem {
-    // This is not pure
-    this.guiObjectIds[node.name] = node.id;
     return {
       ...menuConfig[node.name],
       children: node.children && node.children.length ? node.children.map(child => this.prepareMenuNode(child)) : undefined
