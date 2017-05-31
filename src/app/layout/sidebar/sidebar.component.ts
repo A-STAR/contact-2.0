@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { NotificationsActions } from '../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,12 +18,12 @@ export class SidebarComponent implements OnInit {
     private menuService: MenuService,
     public settings: SettingsService,
     private router: Router,
-    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
   ) {
     menuService.loadMenu()
       .subscribe(
         () => { this.menuItems = menuService.getMenu(); },
-        err => notificationsActions.push(err, 'ERROR')
+        () => notificationsService.error('sidebar.messages.loadError')
       );
   }
 

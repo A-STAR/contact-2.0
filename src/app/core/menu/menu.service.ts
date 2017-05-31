@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
-  { name: 'menuItemHome' },
+  { id: 0, name: 'menuItemHome' },
 ];
 
 @Injectable()
