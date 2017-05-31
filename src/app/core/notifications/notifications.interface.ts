@@ -1,24 +1,25 @@
-export type INotificationType = 'DEBUG' | 'ERROR' | 'WARNING' | 'INFO';
+export enum NotificationTypeEnum {
+  INFO,
+  WARNING,
+  ERROR,
+  DEBUG,
+}
 
 export interface INotification {
   message: string;
-  type: INotificationType;
+  type: NotificationTypeEnum;
   created: Date;
 }
 
-export type INotificationFilters = {
-  [key in INotificationType]: boolean;
-};
-
 export interface INotificationServiceState {
-  filters: INotificationFilters;
+  filters: Array<boolean>;
   notifications: Array<INotification>;
 }
 
 export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET' | 'NOTIFICATION_FILTER' | 'NOTIFICATION_DELETE';
 
 export interface IFilterActionPayload {
-  type: INotificationType;
+  type: NotificationTypeEnum;
   value: boolean;
 }
 

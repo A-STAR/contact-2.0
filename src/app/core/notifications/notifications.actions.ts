@@ -4,7 +4,7 @@ import { ToasterService } from 'angular2-toaster';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IAppState } from '../state/state.interface';
-import { INotificationActionType, INotificationType, INotificationActionPayload } from './notifications.interface';
+import { INotificationActionType, NotificationTypeEnum, INotificationActionPayload } from './notifications.interface';
 
 export const createNotificationAction = (type: INotificationActionType, payload?: INotificationActionPayload) => ({
   type,
@@ -15,10 +15,10 @@ export const createNotificationAction = (type: INotificationActionType, payload?
 export class NotificationsActions {
 
   private toasterMessageTypes = {
-    DEBUG: 'error',
-    ERROR: 'error',
-    WARNING: 'warning',
-    INFO: 'info',
+    [NotificationTypeEnum.INFO]: 'info',
+    [NotificationTypeEnum.WARNING]: 'warning',
+    [NotificationTypeEnum.ERROR]: 'error',
+    [NotificationTypeEnum.DEBUG]: 'error',
   };
 
   constructor(
@@ -28,26 +28,26 @@ export class NotificationsActions {
   ) {}
 
   debug(message: string): void {
-    this.push(message, 'DEBUG');
+    this.push(message, NotificationTypeEnum.DEBUG);
   }
 
   error(message: string): void {
-    this.push(message, 'ERROR');
+    this.push(message, NotificationTypeEnum.ERROR);
   }
 
   warning(message: string): void {
-    this.push(message, 'WARNING');
+    this.push(message, NotificationTypeEnum.WARNING);
   }
 
   info(message: string): void {
-    this.push(message, 'INFO');
+    this.push(message, NotificationTypeEnum.INFO);
   }
 
   reset(): void {
     this.store.dispatch(createNotificationAction('NOTIFICATION_RESET'));
   }
 
-  filter(type: INotificationType, value: boolean): void {
+  filter(type: NotificationTypeEnum, value: boolean): void {
     this.store.dispatch(createNotificationAction('NOTIFICATION_FILTER', {
       filter: {
         type,
@@ -60,7 +60,7 @@ export class NotificationsActions {
     this.store.dispatch(createNotificationAction('NOTIFICATION_DELETE', { index }));
   }
 
-  private push(message: string, type: INotificationType): void {
+  private push(message: string, type: NotificationTypeEnum): void {
     // TODO: refactor as side effect?
     this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
 
