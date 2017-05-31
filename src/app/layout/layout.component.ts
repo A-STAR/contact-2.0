@@ -19,6 +19,7 @@ export class LayoutComponent {
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     HelpComponent: 'HELP',
+    ActionsLogComponent: 'ACTIONS_LOG',
   };
 
   constructor(

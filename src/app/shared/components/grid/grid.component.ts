@@ -26,10 +26,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
+  @Input() footerHeight = 50;
   @Input() bottomActions: IToolbarAction[];
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
   @Input() editPermission: string;
+  @Input() rows: Array<any> = [];
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() selectionType: TSelectionType;
@@ -39,6 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
+  @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
@@ -50,7 +53,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   element: HTMLElement;
   messages: object = {};
-  rows: Array<any> = [];
   selected: Array<any> = [];
   subscription: EventEmitter<any>;
 
@@ -68,7 +70,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get filteredRows(): Array<any> {
-    return this.rows.filter(this.filter);
+    return (this.rows || []).filter(this.filter);
   }
 
   get hasToolbar(): boolean {
@@ -121,7 +123,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    const offset = 43 + 15 + 15 + 50 + 8;
+    const toolbarHeight = this.hasToolbar ? 50 : 0;
+    const offset = 43 + 15 + 15 + toolbarHeight + 8;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
@@ -170,6 +173,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.selected.find(selected => selected.$$id === row.$$id)) {
         this.selected = this.selected.concat(row);
       }
+      this.onRowDoubleSelect.emit(this.selected);
     }
   }
 

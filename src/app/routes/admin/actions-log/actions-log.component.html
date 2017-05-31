@@ -1,0 +1,15 @@
+<app-actions-log-filter
+  [employeesRows]="employeesRows"
+  [actionTypesRows]="actionTypesRows"
+  (search)="onSearch($event)"
+>
+</app-actions-log-filter>
+
+<app-grid
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [autoLoad]="false"
+  [parseFn]="parseFn"
+  [columnTranslationKey]="'actionsLog'">
+</app-grid>

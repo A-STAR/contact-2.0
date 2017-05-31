@@ -44,6 +44,8 @@ import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
 import { SubmittedPopupModule } from './components/popup/submitted-popup.module';
+import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { TimeModule } from './components/form/time/time.module';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -60,9 +62,11 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     TranslateModule,
     ProgressbarModule.forRoot(),
     TextMaskModule,
+    MultiSelectModule,
     // app modules
     ContentTabstripModule,
     DatePickerModule,
+    TimeModule,
     DynamicFormModule,
     GridModule,
     MomentModule,
@@ -117,6 +121,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     RouterOutlet2Directive,
     ContentTabstripModule,
     DatePickerModule,
+    TimeModule,
     DynamicFormModule,
     DialogModule,
     GridModule,
@@ -128,6 +133,7 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     ToolbarModule,
     TreeModule,
     SubmittedPopupModule,
+    MultiSelectModule,
   ]
 })
 

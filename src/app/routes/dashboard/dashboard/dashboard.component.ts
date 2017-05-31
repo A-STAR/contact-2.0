@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 
-import { INotificationType } from '../../../core/notifications/notifications.interface';
-
 import { ColorsService } from '../../../shared/colors/colors.service';
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
+import { INotificationType } from '../../../core/notifications/notifications.interface';
 
 @Component({
     selector: 'app-dashboard',

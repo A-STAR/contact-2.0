@@ -1,7 +1,7 @@
 {
   "header": {
     "search": {
-      "placeholder": "Type and hit enter..."
+      "PLACEHOLDER": "Type and hit enter..."
     }
   },
   "offsidebar": {
@@ -11,7 +11,7 @@
   },
   "sidebar": {
     "heading": {
-      "HEADER": "Menu Header"
+      "HEADER": "Menu Heading"
     },
     "nav": {
       "SINGLEVIEW": "Single View",
@@ -85,7 +85,8 @@
       "edit": "Edit",
       "remove": "Remove",
       "copy": "Copy",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "search": "Search"
     }
   },
   "queryBuilder": {
@@ -120,6 +121,37 @@
       "name": "Name",
       "value": "Value",
       "dsc": "Comments"
+    }
+  },
+  "actionsLog": {
+    "title": "Лог действий операторов",
+    "filter": {
+      "employees": {
+        "title": "Выберите операторов",
+        "grid": {
+          "id": "ID",
+          "position": "Должность",
+          "fullName": "ФИО",
+          "organization": "Подразделение"
+        }
+      },
+      "actionsTypes": {
+        "title": "Выберите тип действия",
+        "grid": {
+          "code": "Код",
+          "name": "Значение"
+        }
+      }
+    },
+    "grid": {
+      "fullName": "ФИО",
+      "position": "Должность",
+      "createDateTime": "Дата",
+      "module": "Модуль",
+      "typeCode": "Тип действия",
+      "dsc": "Описание",
+      "machine": "Компьютер",
+      "duration": "Длительность"
     }
   },
   "users": {
@@ -326,15 +358,18 @@
           "fullName": "Full name",
           "position": "Position",
           "isBlocked": "Blocked"
-        }
+        },
+        "errorMessage": "Could not add employee"
       },
       "edit": {
         "title": "Employee",
-        "fullName": "Full name"
+        "fullName": "Full name",
+        "errorMessage": "Could not save employee"
       },
       "remove": {
         "title": "Delete employee",
-        "confirmMessage": "Are you sure you want to delete the employee?"
+        "confirmMessage": "Are you sure you want to delete the employee?",
+        "errorMessage": "Could not delete employee"
       },
       "grid": {
         "name": "Name",
@@ -346,6 +381,7 @@
     }
   },
   "notifications": {
+    "dismiss": "Dismiss",
     "types": {
       "debug": "Debug",
       "error": "Error",
@@ -375,7 +411,12 @@
       "cancel": "Cancel",
       "remove": "Remove",
       "close": "Close",
-      "clear": "Clear"
+      "clear": "Clear",
+      "search": "Search"
+    },
+    "dateTimeRage": {
+      "from": "Дата и время С",
+      "to": "Дата и время По"
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { ToasterConfig } from 'angular2-toaster';
 
 import { SettingsService } from './core/settings/settings.service';
 
@@ -10,6 +11,13 @@ import { SettingsService } from './core/settings/settings.service';
 })
 export class AppComponent {
   static USER_LANGUAGE = 'user/language';
+
+  toasterConfig = new ToasterConfig({
+    animationClass: 'flyLeft',
+    limit: 10,
+    mouseoverTimerStop: true,
+    positionClass: 'toast-bottom-right',
+  });
 
   @HostBinding('class.aside-collapsed') get isCollapsed(): boolean {
     return this.settings.layout.isCollapsed as boolean;
