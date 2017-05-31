@@ -8,6 +8,7 @@ import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolba
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
+  static COMPONENT_NAME = 'RolesAndPermissionsComponent';
 
   @ViewChild(RolesComponent) rolesComponent: RolesComponent;
   currentRole: IRole;

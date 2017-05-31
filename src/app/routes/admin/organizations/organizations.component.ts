@@ -8,4 +8,5 @@ import { MasterDetailComponent } from '../../../shared/components/entity/master/
 })
 
 export class OrganizationsComponent extends MasterDetailComponent<any> {
+  static COMPONENT_NAME = 'OrganizationsComponent';
 }

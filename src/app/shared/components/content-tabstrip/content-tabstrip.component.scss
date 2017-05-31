@@ -1,7 +1,7 @@
 :host /deep/ .nav-tabs > li {
   & > a {
     border-left: 0;
-    &:hover {
+    &:hover, &:focus {
       border-left: 0;
     }
   }
@@ -17,7 +17,7 @@
 
 .close {
   position: absolute;
-  top: 2px;
+  top: 3px;
   right: 3px;
   opacity: 0;
   transition: all ease-in-out 250ms;

@@ -30,7 +30,7 @@ export interface IDynamicFormControl {
   validationMessages?: IValidationMessages;
 }
 
-export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden' | 'checkbox';
+export type ControlTypes = 'number' | 'text' | 'textarea' | 'select' | 'datepicker' | 'boolean' | 'dynamic' | 'hidden' | 'checkbox' | 'multiselect';
 
 export interface ISelectOptions {
   label: string;

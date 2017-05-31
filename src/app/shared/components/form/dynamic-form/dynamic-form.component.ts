@@ -28,6 +28,8 @@ export class DynamicFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.createForm();
     this.populateForm();
+
+    this.form.statusChanges.subscribe(() => this.onControlsStatusChanges());
   }
 
   get canSubmit(): boolean {
@@ -55,6 +57,9 @@ export class DynamicFormComponent implements OnInit {
 
   onSelectedControlItemsChanges(control: IDynamicFormControl, items: ILabeledValue[]): void {
     this.selectedControlItemsChanges.emit({ control: control, items: items });
+  }
+
+  onControlsStatusChanges(): void {
   }
 
   private createForm(): FormGroup {

@@ -90,7 +90,10 @@ export class GridService {
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
-        return this.http.request(`${rootUrl}${route}`, {
+        const prefix = '/api';
+        const api = route.startsWith(prefix) ? route : prefix + route;
+
+        return this.http.request(`${rootUrl}${api}`, {
           method: method,
           body: body
         })

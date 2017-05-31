@@ -16,6 +16,8 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
   templateUrl: './constants.component.html'
 })
 export class ConstantsComponent extends GridEntityComponent<IConstant> {
+  static COMPONENT_NAME = 'ConstantsComponent';
+
   bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },

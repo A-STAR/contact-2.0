@@ -19,7 +19,7 @@ export class ContentTabService {
   }
 
   addTab(tab: ITab): void {
-    const found = this._tabs.findIndex(el => el.component.name === tab.component.name);
+    const found = this._tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);

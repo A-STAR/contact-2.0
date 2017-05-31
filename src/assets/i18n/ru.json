@@ -85,7 +85,8 @@
       "edit": "Изменить",
       "remove": "Удалить",
       "copy": "Копировать",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "search": "Искать"
     }
   },
   "queryBuilder": {
@@ -120,6 +121,37 @@
       "name": "Название",
       "value": "Значение",
       "dsc": "Комментарий"
+    }
+  },
+  "actionsLog": {
+    "title": "Лог действий операторов",
+    "filter": {
+      "employees": {
+        "title": "Выберите операторов",
+        "grid": {
+          "id": "ID",
+          "position": "Должность",
+          "fullName": "ФИО",
+          "organization": "Подразделение"
+        }
+      },
+      "actionsTypes": {
+        "title": "Выберите тип действия",
+        "grid": {
+          "code": "Код",
+          "name": "Значение"
+        }
+      }
+    },
+    "grid": {
+      "fullName": "ФИО",
+      "position": "Должность",
+      "createDateTime": "Дата",
+      "module": "Модуль",
+      "typeCode": "Тип действия",
+      "dsc": "Описание",
+      "machine": "Компьютер",
+      "duration": "Длительность"
     }
   },
   "users": {
@@ -170,7 +202,7 @@
       "workPhone": "Рабочий телефон",
       "intPhone": "Внутренний номер",
       "email": "Эл. почта",
-      "langCode": "Язык"
+      "languageId": "Язык"
     }
   },
   "dictionaries": {
@@ -380,7 +412,12 @@
       "cancel": "Отменить",
       "remove": "Удалить",
       "close": "Закрыть",
-      "clear": "Очистить"
+      "clear": "Очистить",
+      "search": "Искать"
+    },
+    "dateTimeRage": {
+      "from": "Дата и время С",
+      "to": "Дата и время По"
     }
   }
 }
