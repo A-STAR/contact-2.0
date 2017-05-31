@@ -21,14 +21,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private menuService: MenuService,
-    private notificationsActions: NotificationsActions,
+    private notifications: NotificationsActions,
     private route: ActivatedRoute,
     private router: Router,
     public settings: SettingsService,
   ) {
     this.routeDataSubscription = this.route.data.subscribe(
       data => this.menuItems = data.menu,
-      err => notificationsActions.push(err, 'ERROR')
+      err => notifications.error(err.message)
     );
   }
 

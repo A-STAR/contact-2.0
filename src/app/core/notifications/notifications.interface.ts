@@ -12,7 +12,7 @@ export interface INotification {
 }
 
 export interface IFilters {
-  [key: number]: boolean;
+  [key: string]: boolean;
 }
 
 export interface INotificationServiceState {
