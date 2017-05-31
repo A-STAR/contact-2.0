@@ -43,7 +43,5 @@ export class LayoutComponent {
 
     const tab = { title, active: true, component, path, factory, injector };
     this.tabService.addTab(tab);
-
-    this.menuService.onMenuLoadFinish();
   }
 }

@@ -7,7 +7,6 @@
           [routerLink]="item.link"
           [attr.route]="item.link"
           [title]="(item.text | translate) || item.name"
-          (click)="onMenuItemClick(item)"
         >
           <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
         </a>
@@ -27,7 +26,6 @@
               [routerLink]="subitem.link"
               [attr.route]="subitem.link"
               [title]="subitem.text | translate"
-              (click)="onMenuItemClick(subitem)"
             >
               <em class="{{subitem.icon}}" *ngIf="subitem.icon"></em><span>{{ subitem.text | translate }}</span>
             </a>

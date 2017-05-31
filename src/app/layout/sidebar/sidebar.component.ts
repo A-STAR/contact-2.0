@@ -16,11 +16,15 @@ export class SidebarComponent implements OnInit {
   menuItems: Array<IMenuItem>;
   router: Router;
 
-  constructor(private menuSrevice: MenuService, public settings: SettingsService, private injector: Injector) {
-    this.menuItems = menuSrevice.getMenu();
-    menuSrevice.loadMenu()
+  constructor(
+    private menuService: MenuService,
+    public settings: SettingsService,
+    private injector: Injector
+  ) {
+    this.menuItems = menuService.getMenu();
+    menuService.loadMenu()
       .subscribe(
-        () => { this.menuItems = menuSrevice.getMenu(); },
+        () => { this.menuItems = menuService.getMenu(); },
         // TODO: show a message on failure
         err => console.error(err)
       );
@@ -35,10 +39,6 @@ export class SidebarComponent implements OnInit {
       // scroll view to top
       window.scrollTo(0, 0);
     });
-  }
-
-  onMenuItemClick(item: IMenuItem): void {
-    this.menuSrevice.onMenuLoadStart(item);
   }
 
   toggleSubmenuClick(event): void {
