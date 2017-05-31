@@ -17,10 +17,10 @@ export class SidebarComponent implements OnInit {
   router: Router;
 
   constructor(
+    private injector: Injector,
     private menuService: MenuService,
     private route: ActivatedRoute,
     public settings: SettingsService,
-    private injector: Injector
   ) {
     this.route.data.subscribe(
       data => this.menuItems = data.menu,
