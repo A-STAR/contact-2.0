@@ -27,20 +27,20 @@ export class NotificationsActions {
     private translateService: TranslateService,
   ) {}
 
-  debug(message: string): void {
-    this.push(message, NotificationTypeEnum.DEBUG);
+  debug(message: string, showAlert: boolean = true): void {
+    this.push(message, NotificationTypeEnum.DEBUG, showAlert);
   }
 
-  error(message: string): void {
-    this.push(message, NotificationTypeEnum.ERROR);
+  error(message: string, showAlert: boolean = true): void {
+    this.push(message, NotificationTypeEnum.ERROR, showAlert);
   }
 
-  warning(message: string): void {
-    this.push(message, NotificationTypeEnum.WARNING);
+  warning(message: string, showAlert: boolean = true): void {
+    this.push(message, NotificationTypeEnum.WARNING, showAlert);
   }
 
-  info(message: string): void {
-    this.push(message, NotificationTypeEnum.INFO);
+  info(message: string, showAlert: boolean = true): void {
+    this.push(message, NotificationTypeEnum.INFO, showAlert);
   }
 
   reset(): void {
@@ -60,9 +60,11 @@ export class NotificationsActions {
     this.store.dispatch(createNotificationAction('NOTIFICATION_DELETE', { index }));
   }
 
-  private push(message: string, type: NotificationTypeEnum): void {
-    // TODO: refactor as side effect?
-    this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
+  private push(message: string, type: NotificationTypeEnum, showAlert: boolean): void {
+    if (showAlert) {
+      // TODO: refactor as side effect?
+      this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
+    }
 
     this.store.dispatch(createNotificationAction('NOTIFICATION_PUSH', {
       notification: {
