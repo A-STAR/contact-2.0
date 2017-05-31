@@ -19,7 +19,7 @@ export const toFullName = (employee: IEmployee) => {
   selector: 'app-actions-log-filter',
   templateUrl: './actions-log-filter.component.html'
 })
-export class ActionsLogFilterComponent extends DynamicFormComponent<IActionsLogFilterRequest> implements OnInit {
+export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
 
   @Input() employeesRows;
   @Input() actionTypesRows;

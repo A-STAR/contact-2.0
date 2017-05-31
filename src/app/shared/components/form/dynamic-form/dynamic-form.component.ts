@@ -8,7 +8,7 @@ import { ILabeledValue } from '../../../../core/converter/value/value-converter.
   templateUrl: 'dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent<T> implements OnInit {
+export class DynamicFormComponent implements OnInit {
   static DEFAULT_MESSAGES = {
     required: 'validation.fieldRequired',
     minlength: 'validation.fieldMinLength',
@@ -36,7 +36,7 @@ export class DynamicFormComponent<T> implements OnInit {
     return this.form.dirty && this.form.valid;
   }
 
-  get value(): T {
+  get value(): any {
     return this.form.getRawValue();
   }
 
