@@ -4,8 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { IUser, IUsersResponse } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+
+import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+
+import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-users',
@@ -68,7 +71,10 @@ export class UsersComponent implements AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
-    private gridService: GridService) {
+    private gridService: GridService,
+    // TODO: temp solution; move to resolver
+    private constantsService: ConstantsService,
+  ) {
     const [ roles, languages ] = this.route.snapshot.data.users;
     this.renderers.roleId = [].concat(roles);
     this.renderers.languageId = [].concat(languages);
