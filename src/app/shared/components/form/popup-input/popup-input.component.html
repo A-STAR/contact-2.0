@@ -1,0 +1,19 @@
+<div class="popupinput">
+  <span class="input-group">
+    <input
+      #input
+      class="form-control input-sm"
+      placeholder="{{ placeholder | translate }}"
+      [ngModel]="value"
+    />
+    <span class="input-group-btn">
+      <button
+        class="btn btn-sm btn-default"
+        type="button"
+        (click)="togglePopup()"
+      >
+        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+      </button>
+    </span>
+  </span>
+</div>
