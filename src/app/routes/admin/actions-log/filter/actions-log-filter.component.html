@@ -41,18 +41,16 @@
           class="col-md-12"
           [value]="selectedEmployees"
           [placeholder]="employeesControl.label"
-          (click)="onEmployeesSelect()"
+          (action)="onEmployeesSelect()"
         >
         </app-popup-input>
         <app-action-dialog
           *ngIf="isEmployeesBeingSelected"
+          [titleTranslationKey]="employeesControl.label"
           [autoWidth]="false"
           (action)="closeActionDialog()"
           (cancel)="closeActionDialog()"
         >
-          <label class="col-md-12">
-            {{ employeesControl.label | translate }}
-          </label>
           <app-multi-select
             [formControlName]="employeesControl.controlName"
             [height]="190"
@@ -68,15 +66,30 @@
         <label class="col-md-12">
           {{ actionTypesControl.label | translate }}
         </label>
-        <app-multi-select
-          [formControlName]="actionTypesControl.controlName"
-          [height]="190"
-          [rowsFrom]="actionTypesRows"
-          [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
-          [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
-          [columnsFrom]="actionsTypesColumnsFrom"
-          [columnsTo]="actionsTypesColumnsTo">
-        </app-multi-select>
+        <app-popup-input
+          class="col-md-12"
+          [value]="selectedActionTypes"
+          [placeholder]="actionTypesControl.label"
+          (action)="onActionTypesSelect()"
+        >
+        </app-popup-input>
+        <app-action-dialog
+          *ngIf="isActionTypesBeingSelected"
+          [autoWidth]="false"
+          [titleTranslationKey]="actionTypesControl.label"
+          (action)="closeActionDialog()"
+          (cancel)="closeActionDialog()"
+        >
+          <app-multi-select
+            [formControlName]="actionTypesControl.controlName"
+            [height]="190"
+            [rowsFrom]="actionTypesRows"
+            [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
+            [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
+            [columnsFrom]="actionsTypesColumnsFrom"
+            [columnsTo]="actionsTypesColumnsTo">
+          </app-multi-select>
+        </app-action-dialog>
       </div>
     </div>
   </form>

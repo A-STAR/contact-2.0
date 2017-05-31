@@ -19,7 +19,7 @@ export const toFullName = (employee: IEmployee) => {
   selector: 'app-actions-log-filter',
   templateUrl: './actions-log-filter.component.html'
 })
-export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
+export class ActionsLogFilterComponent extends DynamicFormComponent<IActionsLogFilterRequest> implements OnInit {
 
   @Input() employeesRows;
   @Input() actionTypesRows;
@@ -122,8 +122,19 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return '';
   }
 
+  get selectedActionTypes(): string {
+    if (Array.isArray(this.value.actionsTypes)) {
+      return (this.value.actionsTypes as IActionType[] || []).map((record: IActionType) => record.name).join(', ');
+    }
+    return '';
+  }
+
   get isEmployeesBeingSelected(): boolean {
     return this._action === 'employees';
+  }
+
+  get isActionTypesBeingSelected(): boolean {
+    return this._action === 'actionTypes';
   }
 
   closeActionDialog() {
@@ -132,6 +143,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   onEmployeesSelect(): void {
     this._action = 'employees';
+  }
+
+  onActionTypesSelect(): void {
+    this._action = 'actionTypes';
   }
 
   onControlsStatusChanges(): void {
