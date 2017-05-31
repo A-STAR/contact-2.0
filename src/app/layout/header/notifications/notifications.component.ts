@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import { INotification, INotificationFilters, INotificationType } from '../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsActions } from '../../../core/notifications/notifications.actions';
 
@@ -12,18 +12,16 @@ import { NotificationsActions } from '../../../core/notifications/notifications.
 export class NotificationsComponent {
 
   @Input() notifications: Array<INotification>;
-  @Input() filters: INotificationFilters;
+  @Input() filters: IFilters;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR', 'DEBUG' ];
-
-  private notificationIconsClasses = {
-    DEBUG: 'fa fa-bug text-danger',
-    ERROR: 'fa fa-times-circle text-danger',
-    WARNING: 'fa fa-warning text-warning',
-    INFO: 'fa fa-check-circle text-info',
-  };
+  filterTypes: Array<NotificationTypeEnum> = [
+    NotificationTypeEnum.INFO,
+    NotificationTypeEnum.WARNING,
+    NotificationTypeEnum.ERROR,
+    NotificationTypeEnum.DEBUG,
+  ];
 
   constructor(private notificationsActions: NotificationsActions) {}
 
@@ -32,15 +30,25 @@ export class NotificationsComponent {
     e.stopPropagation();
   }
 
-  getIconClass(notification: INotification): string {
-    return this.notificationIconsClasses[notification.type];
+  getIconClass(type: NotificationTypeEnum): string {
+    switch (type) {
+      case NotificationTypeEnum.DEBUG: return 'fa fa-bug text-danger';
+      case NotificationTypeEnum.ERROR: return 'fa fa-times-circle text-danger';
+      case NotificationTypeEnum.WARNING: return 'fa fa-warning text-warning';
+      case NotificationTypeEnum.INFO: return 'fa fa-check-circle text-info';
+    }
   }
 
-  getTranslationKey(type: INotificationType): string {
-    return `notifications.types.${type.toLowerCase()}`;
+  getTranslationKey(type: NotificationTypeEnum): string {
+    switch (type) {
+      case NotificationTypeEnum.DEBUG: return 'notifications.types.debug';
+      case NotificationTypeEnum.ERROR: return 'notifications.types.error';
+      case NotificationTypeEnum.WARNING: return 'notifications.types.warning';
+      case NotificationTypeEnum.INFO: return 'notifications.types.info';
+    }
   }
 
-  onFilterChange(type: INotificationType, event: MouseEvent): void {
+  onFilterChange(type: NotificationTypeEnum, event: MouseEvent): void {
     this.notificationsActions.filter(type, (event.target as HTMLInputElement).checked);
   }
 

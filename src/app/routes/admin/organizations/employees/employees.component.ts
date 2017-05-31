@@ -77,46 +77,37 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.submit(
-      this.employeesService
-        .create(this.masterEntity.id, data)
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.add.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
+    this.employeesService
+      .create(this.masterEntity.id, data)
+      .subscribe(
+        () => this.onSubmitSuccess(),
+        () => this.notificationsActions.error('organizations.employees.add.errorMessage')
+      );
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.submit(
-      this.employeesService
-        .save(this.masterEntity.id, this.selectedEntity.userId, {
-          roleCode: data.roleCode[0].id,
-          comment: data.comment
-        })
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.edit.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
+    this.employeesService
+      .save(this.masterEntity.id, this.selectedEntity.userId, {
+        roleCode: data.roleCode[0].id,
+        comment: data.comment
+      })
+      .subscribe(
+        () => this.onSubmitSuccess(),
+        () => this.notificationsActions.error('organizations.employees.edit.errorMessage')
+      );
   }
 
   onRemoveSubmit(data: any): void {
-    this.submit(
-      this.employeesService
-        .remove(this.masterEntity.id, this.selectedEntity.userId)
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.remove.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
+    this.employeesService
+      .remove(this.masterEntity.id, this.selectedEntity.userId)
+      .subscribe(
+        () => this.onSubmitSuccess(),
+        () => this.notificationsActions.error('organizations.employees.remove.errorMessage')
+      );
   }
 
-  private submit(observable: any): void {
-    observable
-      .subscribe(() => {
-        this.afterUpdate();
-        this.cancelAction();
-      });
+  private onSubmitSuccess(): void {
+    this.afterUpdate();
+    this.cancelAction();
   }
 }
