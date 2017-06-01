@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, forwardRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IMultiselectItem } from './multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 
 import { GridComponent } from '../../grid/grid.component';
@@ -23,6 +22,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
   gridStyles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
 
+  @Input() equalsFn: Function = (o1: any, o2: any) => o1.id === o2.id;
   @Input() height: number;
   @Input() columnsFrom: IGridColumn[];
   @Input() columnsTo: IGridColumn[];
@@ -35,13 +35,12 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
 
   private _rowDoubleSelectFromSubscription;
   private _rowDoubleSelectToSubscription;
-  private _active: IMultiselectItem[];
+  private _active: any[] = [];
   private onChange: Function = () => {};
   private onTouched: Function = () => {};
 
-  @Input()
-  set active(items: Array<IMultiselectItem>) {
-    this._active = items;
+  constructor() {
+    this.rowsFilterFrom = this.rowsFilterFrom.bind(this);
   }
 
   ngOnInit(): void {
@@ -58,8 +57,10 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     this._rowDoubleSelectToSubscription.unsubscribe();
   }
 
-  writeValue(value: any): void {
-    this.active = value;
+  writeValue(records: any[]): void {
+    if (Array.isArray(records)) {
+      this._active = records;
+    }
   }
 
   registerOnChange(fn: Function): void {
@@ -70,38 +71,38 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     this.onTouched = fn;
   }
 
+  rowsFilterFrom(record: any): boolean {
+    return !this._active || !this._active.length ||
+      !this._active.find((selectedRecord: any) => this.equalsFn(selectedRecord, record));
+  }
+
+  get rowsTo(): any[] {
+    return this._active;
+  }
+
   onRightAction(): void {
-    this.moveSelectedRecords(this.gridTo, this.gridFrom);
+    this._active = this._active.concat(this.gridFrom.selected);
     this.clearSelections();
     this.updateActiveValue();
   }
 
   onRightDoubleAction(): void {
-    this.moveAllRecords(this.gridTo, this.gridFrom);
+    this._active = this._active.concat(this.gridFrom.rows);
     this.clearSelections();
     this.updateActiveValue();
   }
 
   onLeftAction(): void {
-    this.moveSelectedRecords(this.gridFrom, this.gridTo);
+    this._active = this._active.filter((record: any) =>
+      !this.gridTo.selected.find((selectedRecord) => this.equalsFn(selectedRecord, record)));
     this.clearSelections();
     this.updateActiveValue();
   }
 
   onLeftDoubleAction(): void {
-    this.moveAllRecords(this.gridFrom, this.gridTo);
+    this._active = [];
     this.clearSelections();
     this.updateActiveValue();
-  }
-
-  private moveAllRecords(target, source) {
-    target.rows = target.rows.concat(source.rows);
-    source.rows = [];
-  }
-
-  private moveSelectedRecords(target, source) {
-    target.rows = target.rows.concat(source.selected || []);
-    source.rows = source.rows.filter((record: any) => source.selected.indexOf(record) === -1);
   }
 
   private clearSelections(): void {
@@ -110,6 +111,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   }
 
   private updateActiveValue(): void {
-    this.onChange(this.gridTo.rows);
+    this.onChange(this.rowsTo);
   }
 }
