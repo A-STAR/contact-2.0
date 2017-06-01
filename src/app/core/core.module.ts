@@ -6,8 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { UserPermissionsResolver } from './user/permissions/user-permissions-resolver.service';
-import { MenuResolver } from './menu/menu-resolver.service';
+import { environment } from '../../environments/environment';
+
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
@@ -25,10 +25,11 @@ import { rootReducer } from '../core/state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
-    // TODO: remove for production
-    StoreDevtoolsModule.instrumentOnlyWithExtension({
-      maxAge: 5
-    })
+    environment.production ?
+      [] :
+      StoreDevtoolsModule.instrumentOnlyWithExtension({
+        maxAge: 1024
+      })
   ],
   providers: [
     AuthHttpService,
@@ -36,7 +37,6 @@ import { rootReducer } from '../core/state/root.reducer';
     DatePipe,
     ConstantsService,
     JwtHelper,
-    MenuResolver,
     MenuService,
     NotificationsService,
     SettingsService,
@@ -45,7 +45,6 @@ import { rootReducer } from '../core/state/root.reducer';
     UserPermissionsService,
     ValueConverterService,
     EntityTranslationsService,
-    UserPermissionsResolver,
   ],
   exports: [
   ]

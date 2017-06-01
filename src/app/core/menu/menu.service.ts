@@ -61,7 +61,9 @@ export class MenuService {
   private onSectionLoadEnd(event: NavigationEnd): void {
     const delay = Date.now() - this.lastNavigationStartTimestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
-    this.logAction(name, delay);
+    if (name) {
+      this.logAction(name, delay);
+    }
   }
 
   private logAction(name: string, delay: number): void {
