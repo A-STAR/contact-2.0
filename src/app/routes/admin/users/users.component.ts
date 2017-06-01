@@ -59,7 +59,8 @@ export class UsersComponent implements AfterViewInit {
       type: 10,
       visible: true,
       control: ToolbarControlEnum.CHECKBOX,
-      value: this.displayBlockedUsers
+      value: this.displayBlockedUsers,
+      hasLabel: true
     }
   ];
 
