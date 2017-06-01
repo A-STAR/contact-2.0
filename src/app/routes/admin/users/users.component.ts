@@ -1,23 +1,22 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { IUser, IUsersResponse } from './users.interface';
+import { IUser } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { UsersService } from './users.service';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-users',
   templateUrl: 'users.component.html'
 })
-export class UsersComponent implements AfterViewInit {
+export class UsersComponent extends GridEntityComponent<IUser> {
   static COMPONENT_NAME = 'UsersComponent';
-
-  @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -63,18 +62,14 @@ export class UsersComponent implements AfterViewInit {
     }
   ];
 
-  selectedUser: IUser = null;
-
-  currentUser: IUser = null;
-
-  action: ToolbarActionTypeEnum = null;
-
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
     // TODO: temp solution; move to resolver
     private constantsService: ConstantsService,
+    private usersService: UsersService,
   ) {
+    super();
     const [ roles, languages ] = this.route.snapshot.data.users;
     this.renderers.roleId = [].concat(roles);
     this.renderers.languageId = [].concat(languages);
@@ -82,22 +77,34 @@ export class UsersComponent implements AfterViewInit {
     this.filter = this.filter.bind(this);
   }
 
-  ngAfterViewInit(): void {
-    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
-  }
-
   filter(user: IUser): boolean {
     return !user.isBlocked || this.displayBlockedUsers;
   }
 
-  parseFn(data: IUsersResponse): Array<IUser> {
-    return data.users;
+  onAddSubmit(data: any): void {
+    this.usersService
+      .create(data)
+      .subscribe(
+        () => this.onSubmitSuccess(),
+        // () => this.notificationsActions.error('organizations.employees.add.errorMessage')
+      );
   }
 
-  get isUserBeingCreatedOrEdited(): boolean {
-    return this.currentUser && this.action !== null;
+  onEditSubmit(data: any): void {
+    this.usersService
+      .save(this.selectedEntity.id, data)
+      .subscribe(
+        () => this.onSubmitSuccess(),
+        // () => this.notificationsActions.error('organizations.employees.edit.errorMessage')
+      );
   }
 
+  private onSubmitSuccess(): void {
+    this.afterUpdate();
+    this.cancelAction();
+  }
+
+  /*
   onAction(action: IToolbarAction): void {
     this.action = action.type;
     switch (action.type) {
@@ -116,62 +123,5 @@ export class UsersComponent implements AfterViewInit {
         break;
     }
   }
-
-  onEdit(user: IUser): void {
-    this.action = ToolbarActionTypeEnum.EDIT;
-    this.currentUser = this.selectedUser;
-  }
-
-  onUpdate(): void {
-    this.selectedUser = null;
-    this.grid.load().
-      subscribe(
-        () => {},
-        // TODO: display & log a message
-        err => console.error(err)
-      );
-  }
-
-  onSelect(users: Array<IUser>): void {
-    const user = users[0];
-    if (user && user.id && (this.selectedUser && this.selectedUser.id !== user.id || !this.selectedUser)) {
-      this.selectUser(user);
-    }
-  }
-
-  private selectUser(user: IUser): void {
-    this.selectedUser = user;
-    this.refreshToolbar();
-  }
-
-  private refreshToolbar(): void {
-    this.actions
-      .find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.EDIT)
-      .visible = !!this.selectedUser;
-
-    this.actions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
-      .visible = this.grid.rows.length > 0;
-  }
-
-  private createEmptyUser(): IUser {
-    return {
-      id: null,
-      login: '',
-      roleId: null,
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      comment: '',
-      email: '',
-      workPhone: '',
-      mobPhone: '',
-      intPhone: '',
-      workAddress: '',
-      position: '',
-      startWorkDate: '',
-      endWorkDate: '',
-      languageId: null,
-      isBlocked: false
-    };
-  }
+  */
 }

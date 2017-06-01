@@ -1,8 +1,25 @@
 <app-user-edit
+  *ngIf="isEntityBeingCreated"
+  [title]="users.add.title"
+  (submit)="onAddSubmit($event)"
+  (cancel)="cancelAction()">
+</app-user-edit>
+
+<app-user-edit
+  *ngIf="isEntityBeingEdited"
+  [editedEntity]="selectedEntity"
+  [title]="users.edit.title"
+  (submit)="onEditSubmit($event)"
+  (cancel)="cancelAction()">
+</app-user-edit>
+
+<!--
+<app-user-edit
   *ngIf="isUserBeingCreatedOrEdited"
   [(user)]="currentUser"
   (onUpdate)="onUpdate()">
 </app-user-edit>
+-->
 
 <app-grid
   selectionType="single"

@@ -1,32 +1,21 @@
-import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { password } from '../../../../core/validators/password';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ConstantsService } from '../../../../core/constants/constants.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../shared/components/form/select/select-interfaces';
 import { IUser } from '../users.interface';
 import { IRolesResponse } from '../../roles/roles/roles.interface';
 import { UsersService } from '../users.service';
+import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
 @Component({
   selector: 'app-user-edit',
   templateUrl: 'user-edit.component.html'
 })
-export class UserEditComponent implements OnInit {
-  @Input() user: IUser;
-  @Output() userChange: EventEmitter<IUser> = new EventEmitter();
-  @Output() onUpdate: EventEmitter<null> = new EventEmitter();
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  controls: Array<IDynamicFormControl>;
-
-  data: any;
-
-  error: string = null;
-
+export class UserEditComponent extends EntityBaseComponent<IUser> {
   canEditUser = false;
   canEditUserRole = false;
 
@@ -35,58 +24,17 @@ export class UserEditComponent implements OnInit {
     private usersService: UsersService,
     private userPermissionsService: UserPermissionsService,
     private constantsService: ConstantsService
-  ) {}
+  ) {
+    super();
+    this.canEditUser = this.userPermissionsService.hasPermission('USER_EDIT');
+    this.canEditUserRole = this.userPermissionsService.hasPermission('USER_ROLE_EDIT');
+  }
 
   get canEdit(): boolean {
     return this.canEditUser || this.canEditUserRole;
   }
 
-  get canSubmit(): boolean {
-    return this.form.canSubmit;
-  }
-
-  get title(): string {
-    return this.isUpdating ? 'users.edit.title' : 'users.create.title';
-  }
-
-  ngOnInit(): void {
-    this.canEditUser = this.userPermissionsService.hasPermission('USER_EDIT');
-    this.canEditUserRole = this.userPermissionsService.hasPermission('USER_ROLE_EDIT');
-    this.controls = this.getControls();
-    this.data = this.getData();
-  }
-
-  onDisplayChange(event: boolean): void {
-    if (event === false) {
-      this.close();
-    }
-  }
-
-  onActionClick(): void {
-    const action = this.isUpdating ? this.usersService.save(this.user.id, this.payload) : this.usersService.create(this.payload);
-    action
-      .subscribe(
-        data => {
-          if (data.success) {
-            this.onUpdate.emit();
-            this.close();
-          } else {
-            this.error = data.message;
-          }
-        },
-        error => this.error = 'validation.DEFAULT_ERROR_MESSAGE'
-      );
-  }
-
-  onCancelClick(): void {
-    this.close();
-  }
-
-  private get isUpdating(): boolean {
-    return !!(this.user && this.user.id);
-  }
-
-  private getControls(): Array<IDynamicFormControl> {
+  protected getControls(): Array<IDynamicFormControl> {
     const roleSelectOptions = {
       cachingOptions: true,
       lazyOptions: this.gridService
@@ -100,7 +48,7 @@ export class UserEditComponent implements OnInit {
     const passwordValidation = {
       validators: [
         password(
-          !this.isUpdating,
+          !this.editedEntity,
           this.constantsService.get('UserPassword.MinLength') as number,
           this.constantsService.get('UserPassword.Complexity.Use') as boolean
         ),
@@ -148,18 +96,17 @@ export class UserEditComponent implements OnInit {
     }));
   }
 
-  private getData(): any {
+  get formData(): any {
     return {
-      ...this.user,
-      roleId: [{ value: this.user.roleId || 1 }],
-      startWorkDate: this.formatDate(this.user.startWorkDate),
-      endWorkDate: this.formatDate(this.user.endWorkDate),
-      languageId: [{ value: this.user.languageId || 1 }]
+      ...this.editedEntity,
+      roleId: [{ value: this.editedEntity.roleId || 1 }],
+      startWorkDate: this.formatDate(this.editedEntity.startWorkDate),
+      endWorkDate: this.formatDate(this.editedEntity.endWorkDate),
+      languageId: [{ value: this.editedEntity.languageId || 1 }],
     };
   }
 
-  private get payload(): IUser {
-    const value = this.form.value;
+  toSubmittedValues(value: IUser): any {
     return {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
@@ -183,10 +130,5 @@ export class UserEditComponent implements OnInit {
     }
     const ymd = date.split('.');
     return (new Date(parseInt(ymd[2], 10), parseInt(ymd[1], 10) - 1, parseInt(ymd[0], 10))).toISOString();
-  }
-
-  private close(): void {
-    this.user = null;
-    this.userChange.emit(null);
   }
 }
