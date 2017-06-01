@@ -29,6 +29,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   @Input() columnsTranslationKeyFrom: string;
   @Input() columnsTranslationKeyTo: string;
   @Input() rowsFrom;
+  @Input() syncFormControlChanges: boolean = true;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
@@ -82,35 +83,40 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
 
   onRightAction(): void {
     this._active = this._active.concat(this.gridFrom.selected);
-    this.clearSelections();
-    this.updateActiveValue();
+    this.updateState();
   }
 
   onRightDoubleAction(): void {
+    this._active = [];
     this._active = this._active.concat(this.gridFrom.rows);
-    this.clearSelections();
-    this.updateActiveValue();
+    this.updateState();
   }
 
   onLeftAction(): void {
     this._active = this._active.filter((record: any) =>
       !this.gridTo.selected.find((selectedRecord) => this.equalsFn(selectedRecord, record)));
-    this.clearSelections();
-    this.updateActiveValue();
+    this.updateState();
   }
 
   onLeftDoubleAction(): void {
     this._active = [];
-    this.clearSelections();
-    this.updateActiveValue();
+    this.updateState();
   }
 
-  private clearSelections(): void {
+  public syncChanges(): void {
+    this.syncActiveChanges();
+  }
+
+  private updateState(): void {
     this.gridTo.selected = [];
     this.gridFrom.selected = [];
+
+    if (this.syncFormControlChanges) {
+      this.syncActiveChanges();
+    }
   }
 
-  private updateActiveValue(): void {
+  private syncActiveChanges(): void {
     this.onChange(this.rowsTo);
   }
 }

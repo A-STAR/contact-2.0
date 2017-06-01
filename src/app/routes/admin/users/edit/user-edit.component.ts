@@ -35,7 +35,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
       !this.editedEntity,
       this.constantsService.get('UserPassword.MinLength') as number,
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
-    )
+    );
   }
 
   get canEdit(): boolean {
