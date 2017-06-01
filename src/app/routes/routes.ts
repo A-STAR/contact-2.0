@@ -1,3 +1,5 @@
+import { Route } from '@angular/router';
+
 import { AuthService } from '../core/auth/auth.service';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
@@ -6,7 +8,7 @@ import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
 
-export const routes = [
+export const routes: Route[] = [
   {
     path: '',
     component: LayoutComponent,
@@ -14,6 +16,7 @@ export const routes = [
     resolve: {
       menu: MenuResolver
     },
+    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
@@ -27,6 +30,7 @@ export const routes = [
       app: UserPermissionsResolver,
       menu: MenuResolver
     },
+    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
@@ -35,7 +39,7 @@ export const routes = [
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
       { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
-      // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
+      { path: 'qbuilder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },
 

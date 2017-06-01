@@ -6,6 +6,7 @@ import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-actions-log',
@@ -27,7 +28,7 @@ export class ActionsLogComponent {
 
   renderers: IRenderer = {
     fullName: (actionLog: IActionLog) =>
-      [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(''),
+      [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
   };
 
   dataSource: IDataSource = {
@@ -35,16 +36,17 @@ export class ActionsLogComponent {
     dataKey: 'actionsLog',
   };
 
-  parseFn = data => (data[this.dataSource.dataKey] || []) as Array<IActionLog>;
-
   employeesRows: IEmployee[];
   actionTypesRows: IActionType[];
-
   actionsRows = [];
+
+  parseFn = data => (data[this.dataSource.dataKey] || []) as Array<IActionLog>;
 
   constructor(
     private route: ActivatedRoute,
-    private gridService: GridService) {
+    private gridService: GridService,
+    private notifications: NotificationsService,
+  ) {
 
     const [ employees, actionTypes ] = this.route.snapshot.data.actionsLogData;
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -53,6 +55,11 @@ export class ActionsLogComponent {
   }
 
   onSearch(filterValues: IActionsLogFilterRequest): void {
-    this.gridService.read('/actions').subscribe();
+    this.gridService
+      .read('/actions')
+      .subscribe(
+        () => console.log('yahoo!'),
+        error => this.notifications.error('Could not fetch data from the server')
+      );
   }
 }

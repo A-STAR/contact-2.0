@@ -7,15 +7,15 @@ import { PagesModule } from './pages/pages.module';
 import { routes } from './routes';
 
 @NgModule({
-    imports: [
-        SharedModule,
-        RouterModule.forRoot(routes),
-        PagesModule,
-    ],
-    declarations: [],
-    exports: [
-        RouterModule
-    ]
+  imports: [
+    SharedModule,
+    RouterModule.forRoot(routes),
+    PagesModule,
+  ],
+  declarations: [],
+  exports: [
+    RouterModule
+  ]
 })
 
 export class RoutesModule { }
