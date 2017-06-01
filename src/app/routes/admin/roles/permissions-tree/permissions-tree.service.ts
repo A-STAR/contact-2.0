@@ -20,19 +20,21 @@ export class PermissionsTreeService {
 
   save(currentRole: IPermissionRole, removed: TreeNode[], added: TreeNode[]): Observable<any> {
     return Observable.forkJoin(
-      [].concat(
-        this.filterAndConvertToIds(removed)
-          .map((id: number) => this.gridService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: false }))
-      ).concat(
-        this.filterAndConvertToIds(added)
-          .map((id: number) => this.gridService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: true }))
-      )
+      this.filterAndConvertToIds(removed)
+        .map((id: number) => this.updatePermissions(currentRole, id, false))
+        .concat(
+          this.filterAndConvertToIds(added).map((id: number) => this.updatePermissions(currentRole, id, true))
+        )
     );
   }
 
   getDiff(nodes: TreeNode[], nodes2: TreeNode[]): TreeNode[] {
     return nodes
       .filter((node: TreeNode) => !node.children && !nodes2.find((node2: TreeNode) => node2 === node))
+  }
+
+  private updatePermissions(currentRole: IPermissionRole, id: number, add: boolean): Observable<any> {
+    return this.gridService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: add });
   }
 
   private filterAndConvertToIds(nodes: TreeNode[]): number[] {
