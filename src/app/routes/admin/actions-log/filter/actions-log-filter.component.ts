@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -10,6 +10,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
 export const toFullName = (employee: IEmployee) => {
   return [employee.lastName, employee.firstName, employee.middleName].filter((part: string) => !!part).join('');
@@ -25,8 +26,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @Input() employeesRows;
   @Input() actionTypesRows;
   @Output() search: EventEmitter<IActionsLogFilterRequest> = new EventEmitter<IActionsLogFilterRequest>();
+  @ViewChild('employees') employeesComponent: MultiSelectComponent;
+  @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
-  private _action: string;
   employeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
@@ -34,19 +36,24 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   startTimeControl: IDynamicFormControl;
   endTimeControl: IDynamicFormControl;
 
+  actionTypesEqualsFn = (o1: IActionType, o2: IActionType) => o1.code === o2.code;
+
   employeesColumnsFrom: IGridColumn[] = [
     { prop: 'id', width: 50 },
     { prop: 'fullName', width: 150 },
     { prop: 'position', width: 150 },
     { prop: 'organization' },
   ];
+
   employeesColumnsTo: IGridColumn[] = [
     { prop: 'fullName'}
   ];
+
   actionsTypesColumnsFrom: IGridColumn[] = [
     { prop: 'code', maxWidth: 70 },
     { prop: 'name' },
   ];
+
   actionsTypesColumnsTo: IGridColumn[] = [
     { prop: 'name'}
   ];
@@ -58,6 +65,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   toolbarActions: IToolbarAction[] = [
     { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
+
+  private _action: string;
 
   constructor(
     formBuilder: FormBuilder,
@@ -138,7 +147,17 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return this._action === 'actionTypes';
   }
 
-  closeActionDialog(): void {
+  onSaveEmployeesChanges() {
+    this.employeesComponent.syncChanges();
+    this.onCloseActionDialog();
+  }
+
+  onSaveActionTypesChanges() {
+    this.actionTypesComponent.syncChanges();
+    this.onCloseActionDialog();
+  }
+
+  onCloseActionDialog() {
     this._action = null;
   }
 
