@@ -53,10 +53,16 @@
         "ARBITRARY_REPORTS": "Arbitrary Reports",
         "HELP": "Help"
       }
+    },
+    "messages": {
+      "loadError": "Could not load menu"
     }
   },
   "dashboard": {
-    "TITLE": "Dashboard"
+    "TITLE": "Dashboard",
+    "messages": {
+      "chartLoadError": "Could not load chart data"
+    }
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
@@ -415,8 +421,8 @@
       "search": "Search"
     },
     "dateTimeRage": {
-      "from": "Дата и время С",
-      "to": "Дата и время По"
+      "from": "From",
+      "to": "To"
     }
   }
 }

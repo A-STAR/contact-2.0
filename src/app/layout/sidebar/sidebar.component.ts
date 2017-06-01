@@ -6,7 +6,7 @@ import { IMenuItem } from '../../core/menu/menu.interface';
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { NotificationsActions } from '../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,14 +21,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private menuService: MenuService,
-    private notifications: NotificationsActions,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     public settings: SettingsService,
   ) {
     this.routeDataSubscription = this.route.data.subscribe(
       data => this.menuItems = data.menu,
-      err => notifications.error(err.message)
+      () => notificationsService.error('sidebar.messages.loadError')
     );
   }
 

@@ -60,7 +60,8 @@ export class UsersComponent extends GridEntityComponent<IUser> {
       type: this.REFRESH_ACTION,
       visible: true,
       control: ToolbarControlEnum.CHECKBOX,
-      value: this.displayBlockedUsers
+      value: this.displayBlockedUsers,
+      hasLabel: true
     }
   ];
 

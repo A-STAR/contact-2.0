@@ -17,7 +17,8 @@ export const toFullName = (employee: IEmployee) => {
 
 @Component({
   selector: 'app-actions-log-filter',
-  templateUrl: './actions-log-filter.component.html'
+  templateUrl: './actions-log-filter.component.html',
+  styleUrls: ['./actions-log-filter.component.scss']
 })
 export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
 
@@ -137,7 +138,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return this._action === 'actionTypes';
   }
 
-  closeActionDialog() {
+  closeActionDialog(): void {
     this._action = null;
   }
 
