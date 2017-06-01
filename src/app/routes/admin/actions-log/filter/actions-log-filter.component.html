@@ -49,11 +49,13 @@
             *ngIf="isEmployeesBeingSelected"
             [titleTranslationKey]="employeesControl.label"
             [autoWidth]="false"
-            (action)="closeActionDialog()"
-            (cancel)="closeActionDialog()"
+            (action)="onSaveEmployeesChanges()"
+            (cancel)="onCloseActionDialog()"
           >
             <app-multi-select
+              #employees
               [formControlName]="employeesControl.controlName"
+              [syncFormControlChanges]="false"
               [height]="190"
               [rowsFrom]="employeesRows"
               [columnsTranslationKeyFrom]="'actionsLog.filter.employees'"
@@ -80,12 +82,15 @@
             *ngIf="isActionTypesBeingSelected"
             [autoWidth]="false"
             [titleTranslationKey]="actionTypesControl.label"
-            (action)="closeActionDialog()"
-            (cancel)="closeActionDialog()"
+            (action)="onSaveActionTypesChanges()"
+            (cancel)="onCloseActionDialog()"
           >
             <app-multi-select
+              #actionTypes
               [formControlName]="actionTypesControl.controlName"
+              [syncFormControlChanges]="false"
               [height]="190"
+              [equalsFn]="actionTypesEqualsFn"
               [rowsFrom]="actionTypesRows"
               [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
               [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
