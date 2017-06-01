@@ -81,4 +81,8 @@ export class UITreeNodeComponent implements OnInit {
   isSelected(): boolean {
     return this.tree.isSelected(this.node);
   }
+
+  getIcon(): string {
+    return this.node.icon;
+  }
 }

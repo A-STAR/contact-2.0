@@ -95,7 +95,8 @@ export class RolesComponent implements AfterViewInit {
   }
 
   onUpdate(): void {
-    this.selectedRole = null;
+    this.onSelect.emit(this.selectedRole = null);
+
     this.grid.load().
       subscribe(
         () => {},

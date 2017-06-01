@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IPermissionRole } from '../permissions/permissions.interface';
 import { IPermissionsTreeNode } from './permissions-tree.interface';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { menuConfig } from '../../../menu-config';
 
 @Injectable()
 export class PermissionsTreeService {
 
-  constructor(private gridService: GridService) {
+  constructor(private gridService: GridService,
+              private translateService: TranslateService) {
   }
 
   load(currentRole: IPermissionRole, selection: TreeNode[]): Observable<TreeNode[]> {
@@ -57,7 +60,9 @@ export class PermissionsTreeService {
     const hasChildren = permission.children && permission.children.length;
     return {
       id: permission.id,
-      label: permission.name,
+      label: this.translateService.instant(
+        menuConfig.hasOwnProperty(permission.name) ? menuConfig[permission.name].text : permission.name
+      ) || permission.name,
       expanded: true,
       children: hasChildren ? this.convertToTreeNodes(permission.children, selection) : undefined,
       data: permission
