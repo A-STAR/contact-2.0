@@ -65,7 +65,9 @@ export class PermissionsTreeService {
       ) || permission.name,
       expanded: true,
       children: hasChildren ? this.convertToTreeNodes(permission.children, selection) : undefined,
-      data: permission
+      data: permission,
+      icon: hasChildren ? 'fa fa-folder-o' : '',
+      expandedIcon: hasChildren ? 'fa fa-folder-open-o' : ''
     };
   }
 }

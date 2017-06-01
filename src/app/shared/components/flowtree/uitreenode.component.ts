@@ -83,6 +83,8 @@ export class UITreeNodeComponent implements OnInit {
   }
 
   getIcon(): string {
-    return this.node.icon;
+    return this.node.expanded
+      ? this.node.expandedIcon
+      : (this.node.icon || this.node.collapsedIcon);
   }
 }
