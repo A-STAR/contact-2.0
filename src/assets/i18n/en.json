@@ -415,8 +415,8 @@
       "search": "Search"
     },
     "dateTimeRage": {
-      "from": "Дата и время С",
-      "to": "Дата и время По"
+      "from": "From",
+      "to": "To"
     }
   }
 }

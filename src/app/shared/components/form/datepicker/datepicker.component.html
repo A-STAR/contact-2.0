@@ -2,7 +2,7 @@
   <span *ngIf="form" class="input-group" [formGroup]="form">
     <input
       #input
-      class="form-control input-sm"
+      class="form-control"
       [formControlName]="controlName"
       [name]="controlName"
       (ngModelChange)="onValueChange($event)"
@@ -11,7 +11,7 @@
       [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button #trigger class="btn btn-sm btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
+      <button #trigger class="btn btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
         <i class="fa fa-calendar"></i>
       </button>
     </span>
@@ -19,7 +19,7 @@
   <span *ngIf="!form" class="input-group">
     <input
       #input
-      class="form-control input-sm"
+      class="form-control"
       [name]="name"
       [ngModel]="date"
       (ngModelChange)="onValueChange($event)"
@@ -28,7 +28,7 @@
       [textMask]="mask"
     />
     <span class="input-group-btn">
-      <button #trigger class="btn btn-sm btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
+      <button #trigger class="btn btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
         <i class="fa fa-calendar"></i>
       </button>
     </span>

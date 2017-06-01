@@ -1,95 +1,99 @@
 <div class="app-actions-log-filter panel">
-  <form [formGroup]="form" class="panel-body">
+  <form [formGroup]="form" class="log-filter-form">
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group col-md-3"
-             [ngClass]="{'has-error': displayControlErrors(startDateControl)}">
-          <label>
-            {{ startDateControl.label | translate }}
-            <app-input-datepicker
-              [form]="form"
-              [controlName]="startDateControl.controlName">
-            </app-input-datepicker>
-          </label>
-        </div>
-        <div class="form-group col-md-3">
-          <app-time [formControlName]="startTimeControl.controlName">
-          </app-time>
-        </div>
-        <div class="form-group col-md-3"
+        <div class="row">
+          <div class="col-md-4"
+              [ngClass]="{'has-error': displayControlErrors(startDateControl)}">
+            <label>
+              {{ startDateControl.label | translate }}
+              <app-input-datepicker
+                [form]="form"
+                [controlName]="startDateControl.controlName">
+              </app-input-datepicker>
+            </label>
+          </div>
+          <div class="col-md-2 pl0">
+            <app-time [formControlName]="startTimeControl.controlName"></app-time>
+          </div>
+          <div class="col-md-4"
              [ngClass]="{'has-error': displayControlErrors(endDateControl)}">
-          <label>
-            {{ endDateControl.label | translate }}
-            <app-input-datepicker
-              [form]="form"
-              [controlName]="endDateControl.controlName">
-            </app-input-datepicker>
-          </label>
-        </div>
-        <div class="form-group col-md-3">
-          <app-time [formControlName]="endTimeControl.controlName">
-          </app-time>
+            <label>
+              {{ endDateControl.label | translate }}
+              <app-input-datepicker
+                [form]="form"
+                [controlName]="endDateControl.controlName">
+              </app-input-datepicker>
+            </label>
+          </div>
+          <div class="col-md-2 pl0">
+            <app-time [formControlName]="endTimeControl.controlName"></app-time>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <label class="col-md-12">
-          {{ employeesControl.label | translate }}
-        </label>
-        <app-popup-input
-          class="col-md-12"
-          [value]="selectedEmployees"
-          [placeholder]="employeesControl.label"
-          (action)="onEmployeesSelect()"
-        >
-        </app-popup-input>
-        <app-action-dialog
-          *ngIf="isEmployeesBeingSelected"
-          [titleTranslationKey]="employeesControl.label"
-          [autoWidth]="false"
-          (action)="closeActionDialog()"
-          (cancel)="closeActionDialog()"
-        >
-          <app-multi-select
-            [formControlName]="employeesControl.controlName"
-            [height]="190"
-            [rowsFrom]="employeesRows"
-            [columnsTranslationKeyFrom]="'actionsLog.filter.employees'"
-            [columnsTranslationKeyTo]="'actionsLog.filter.employees'"
-            [columnsFrom]="employeesColumnsFrom"
-            [columnsTo]="employeesColumnsTo">
-          </app-multi-select>
-        </app-action-dialog>
+        <div class="row">
+          <label class="col-md-12">
+            {{ employeesControl.label | translate }}
+          </label>
+          <app-popup-input
+            class="col-md-12"
+            [value]="selectedEmployees"
+            [placeholder]="employeesControl.label"
+            (action)="onEmployeesSelect()"
+          >
+          </app-popup-input>
+          <app-action-dialog
+            *ngIf="isEmployeesBeingSelected"
+            [titleTranslationKey]="employeesControl.label"
+            [autoWidth]="false"
+            (action)="closeActionDialog()"
+            (cancel)="closeActionDialog()"
+          >
+            <app-multi-select
+              [formControlName]="employeesControl.controlName"
+              [height]="190"
+              [rowsFrom]="employeesRows"
+              [columnsTranslationKeyFrom]="'actionsLog.filter.employees'"
+              [columnsTranslationKeyTo]="'actionsLog.filter.employees'"
+              [columnsFrom]="employeesColumnsFrom"
+              [columnsTo]="employeesColumnsTo">
+            </app-multi-select>
+          </app-action-dialog>
+        </div>
       </div>
       <div class="col-md-6">
-        <label class="col-md-12">
-          {{ actionTypesControl.label | translate }}
-        </label>
-        <app-popup-input
-          class="col-md-12"
-          [value]="selectedActionTypes"
-          [placeholder]="actionTypesControl.label"
-          (action)="onActionTypesSelect()"
-        >
-        </app-popup-input>
-        <app-action-dialog
-          *ngIf="isActionTypesBeingSelected"
-          [autoWidth]="false"
-          [titleTranslationKey]="actionTypesControl.label"
-          (action)="closeActionDialog()"
-          (cancel)="closeActionDialog()"
-        >
-          <app-multi-select
-            [formControlName]="actionTypesControl.controlName"
-            [height]="190"
-            [rowsFrom]="actionTypesRows"
-            [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
-            [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
-            [columnsFrom]="actionsTypesColumnsFrom"
-            [columnsTo]="actionsTypesColumnsTo">
-          </app-multi-select>
-        </app-action-dialog>
+        <div class="row">
+          <label class="col-md-12">
+            {{ actionTypesControl.label | translate }}
+          </label>
+          <app-popup-input
+            class="col-md-12"
+            [value]="selectedActionTypes"
+            [placeholder]="actionTypesControl.label"
+            (action)="onActionTypesSelect()"
+          >
+          </app-popup-input>
+          <app-action-dialog
+            *ngIf="isActionTypesBeingSelected"
+            [autoWidth]="false"
+            [titleTranslationKey]="actionTypesControl.label"
+            (action)="closeActionDialog()"
+            (cancel)="closeActionDialog()"
+          >
+            <app-multi-select
+              [formControlName]="actionTypesControl.controlName"
+              [height]="190"
+              [rowsFrom]="actionTypesRows"
+              [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
+              [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
+              [columnsFrom]="actionsTypesColumnsFrom"
+              [columnsTo]="actionsTypesColumnsTo">
+            </app-multi-select>
+          </app-action-dialog>
+        </div>
       </div>
     </div>
   </form>

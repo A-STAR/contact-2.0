@@ -12,7 +12,7 @@ import { NotificationsActions } from '../../../core/notifications/notifications.
 export class NotificationsComponent {
 
   @Input() notifications: Array<INotification>;
-  @Input() filters: IFilters;
+  @Input() filters = <IFilters>null;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
