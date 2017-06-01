@@ -1,7 +1,7 @@
 <ng-template [ngIf]="node">
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
-            class="ui-treenode-content ui-treenode-droppoint"
+            class="ui-treenode-content"
             (click)="onNodeClick($event)"
             (contextmenu)="onNodeRightClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">

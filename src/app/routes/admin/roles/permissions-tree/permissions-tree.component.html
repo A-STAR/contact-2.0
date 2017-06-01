@@ -1,0 +1,8 @@
+<app-tree
+  selectionMode="checkbox"
+  [style]="{height: '450px', width: '100%', border: 'none'}"
+  [value]="value"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeEdit)="onNodeEdit($event)"
+  [(selection)]="selection">
+</app-tree>

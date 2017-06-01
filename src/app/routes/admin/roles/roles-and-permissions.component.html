@@ -2,7 +2,16 @@
 
 <br>
 
-<app-permissions
-  (cloneRole)="onRoleClone()"
-  [currentRole]="currentRole">
-</app-permissions>
+<app-tabstrip>
+  <app-tab title="roles.permissions.tab.title">
+    <app-permissions
+      (cloneRole)="onRoleClone()"
+      [currentRole]="currentRole">
+    </app-permissions>
+  </app-tab>
+  <app-tab title="roles.permissions.tab2.title">
+    <app-permissions-tree
+      [currentRole]="currentRole">
+    </app-permissions-tree>
+  </app-tab>
+</app-tabstrip>
