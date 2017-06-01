@@ -40,6 +40,8 @@ export class ActionsLogComponent {
   employeesRows: IEmployee[];
   actionTypesRows: IActionType[];
 
+  actionsRows = [];
+
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService) {
@@ -51,6 +53,6 @@ export class ActionsLogComponent {
   }
 
   onSearch(filterValues: IActionsLogFilterRequest): void {
-    console.log('filterValues', filterValues);
+    this.gridService.read('/actions').subscribe();
   }
 }
