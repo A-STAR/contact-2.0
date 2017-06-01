@@ -92,7 +92,8 @@
       "remove": "Remove",
       "copy": "Copy",
       "refresh": "Refresh",
-      "search": "Search"
+      "search": "Search",
+      "save": "Save"
     }
   },
   "queryBuilder": {

@@ -1,7 +1,7 @@
 <ng-template [ngIf]="node">
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
-            class="ui-treenode-content ui-treenode-droppoint"
+            class="ui-treenode-content"
             (click)="onNodeClick($event)"
             (contextmenu)="onNodeRightClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
@@ -16,7 +16,7 @@
             </div>
             </div>
                 <span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span>
-                <span class="ui-treenode-label ui-corner-all" [ngClass]="{'ui-state-highlight':isSelected()}">
+                <span class="ui-treenode-label ui-corner-all">
                     <span *ngIf="!tree.getTemplateForNode(node)">{{node.label}}</span>
                     <span *ngIf="tree.getTemplateForNode(node)">
                         <app-tree-node-template-loader [node]="node" [template]="tree.getTemplateForNode(node)"></app-tree-node-template-loader>
