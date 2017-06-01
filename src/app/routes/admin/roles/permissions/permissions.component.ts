@@ -41,7 +41,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     value: (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
   };
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
@@ -181,13 +181,13 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     this.setActionsVisibility(this.bottomRoleActionsGroup, !!this.currentRole);
     this.setActionsVisibility(this.bottomPermitActionsGroup, !!this.editedPermission);
 
-    this.bottomActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+    this.toolbarActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
       .visible = this.permitsGrid.rows.length > 0;
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
     actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
+      this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });
   }
 }

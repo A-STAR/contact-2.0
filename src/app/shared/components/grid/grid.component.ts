@@ -27,7 +27,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
   @Input() footerHeight = 50;
-  @Input() bottomActions: IToolbarAction[];
+  @Input() toolbarActions: IToolbarAction[];
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
   @Input() editPermission: string;
@@ -74,7 +74,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get hasToolbar(): boolean {
-    return !!this.bottomActions;
+    return !!this.toolbarActions;
   }
 
   ngOnInit(): void {

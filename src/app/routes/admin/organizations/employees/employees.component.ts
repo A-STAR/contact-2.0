@@ -17,18 +17,18 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
   templateUrl: './employees.component.html'
 })
 export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.ADD,
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];

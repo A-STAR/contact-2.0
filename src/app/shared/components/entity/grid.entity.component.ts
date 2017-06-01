@@ -25,9 +25,9 @@ export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, Af
   action: ToolbarActionTypeEnum;
   dataSource: IDataSource;
   columns: Array<IGridColumn> = [];
-  bottomActionsGroup: Array<ToolbarActionTypeEnum>;
-  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum>;
-  bottomActions: Array<IToolbarAction>;
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum>;
+  toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum>;
+  toolbarActions: Array<IToolbarAction>;
   renderers: IRenderer = {};
   selectedEntity: T;
 
@@ -119,9 +119,9 @@ export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, Af
   }
 
   private refreshToolbar(): void {
-    this.setActionsVisibility(this.bottomActionsGroup, !!this.selectedEntity);
-    if (Array.isArray(this.bottomActionsMasterGroup)) {
-      this.setActionsVisibility(this.bottomActionsMasterGroup, !!this.masterEntity);
+    this.setActionsVisibility(this.toolbarActionsGroup, !!this.selectedEntity);
+    if (Array.isArray(this.toolbarActionsMasterGroup)) {
+      this.setActionsVisibility(this.toolbarActionsMasterGroup, !!this.masterEntity);
     }
 
     const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
@@ -136,6 +136,6 @@ export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, Af
   }
 
   private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
-    return this.bottomActions.find((action: IToolbarAction) => actionType === action.type);
+    return this.toolbarActions.find((action: IToolbarAction) => actionType === action.type);
   }
 }

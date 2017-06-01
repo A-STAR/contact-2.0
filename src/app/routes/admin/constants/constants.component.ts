@@ -18,12 +18,12 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
 export class ConstantsComponent extends GridEntityComponent<IConstant> {
   static COMPONENT_NAME = 'ConstantsComponent';
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
   ];
 

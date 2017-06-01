@@ -52,7 +52,7 @@ export class UsersComponent extends GridEntityComponent<IUser> {
 
   displayBlockedUsers = false;
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
@@ -66,7 +66,7 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     }
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
   ];
 
