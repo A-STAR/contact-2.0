@@ -87,6 +87,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   }
 
   onRightDoubleAction(): void {
+    this._active = [];
     this._active = this._active.concat(this.gridFrom.rows);
     this.updateState();
   }
