@@ -33,9 +33,9 @@ export class NotificationsComponent {
   getIconClass(type: NotificationTypeEnum): string {
     switch (type) {
       case NotificationTypeEnum.DEBUG: return 'fa fa-bug text-danger';
-      case NotificationTypeEnum.ERROR: return 'fa fa-times-circle text-danger';
+      case NotificationTypeEnum.ERROR: return 'fa fa-exclamation-circle text-danger';
       case NotificationTypeEnum.WARNING: return 'fa fa-warning text-warning';
-      case NotificationTypeEnum.INFO: return 'fa fa-check-circle text-info';
+      case NotificationTypeEnum.INFO: return 'fa fa-info-circle text-info';
     }
   }
 

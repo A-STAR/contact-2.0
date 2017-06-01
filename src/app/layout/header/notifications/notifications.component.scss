@@ -17,6 +17,9 @@
       display: block;
     }
   }
+  &.list-group-item:last-child {
+    border-bottom-width: 1px;
+  }
 }
 .notifications_dismiss {
     display: none;
@@ -29,9 +32,13 @@
     &:hover {
       color: #000;
     }
-  }
+}
 .notifications_message {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  i {
+    font-size: 16px;
+    padding-right: 5px;
+  }
 }

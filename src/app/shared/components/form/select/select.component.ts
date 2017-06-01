@@ -299,7 +299,9 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   }
 
   ngOnDestroy(): void {
-    this._lazyItemsSubscription.unsubscribe();
+    if (this._lazyItemsSubscription) {
+      this._lazyItemsSubscription.unsubscribe();
+    }
   }
 
   protected matchClick(e: any): void {

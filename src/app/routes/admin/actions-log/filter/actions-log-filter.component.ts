@@ -12,7 +12,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 export const toFullName = (employee: IEmployee) => {
-  return [employee.lastName, employee.firstName, employee.middleName].filter((part: string) => !!part).join('');
+  return [employee.lastName, employee.firstName, employee.middleName].filter((part: string) => !!part).join(' ');
 };
 
 @Component({
