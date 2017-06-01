@@ -1,4 +1,5 @@
 import { AuthService } from '../core/auth/auth.service';
+import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
 
 import { LayoutComponent } from '../layout/layout.component';
@@ -9,7 +10,10 @@ export const routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [AuthService],
+    canActivate: [ AuthService ],
+    resolve: {
+      menu: MenuResolver
+    },
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
@@ -18,8 +22,11 @@ export const routes = [
   {
     path: 'admin',
     component: LayoutComponent,
-    canActivate: [AuthService],
-    resolve: { app: UserPermissionsResolver },
+    canActivate: [ AuthService ],
+    resolve: {
+      app: UserPermissionsResolver,
+      menu: MenuResolver
+    },
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
@@ -39,5 +46,4 @@ export const routes = [
 
   // Redirect home, if the path is not found
   { path: '**', redirectTo: '' },
-
 ];
