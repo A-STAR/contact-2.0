@@ -5,7 +5,6 @@ import { IUser } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { UsersService } from './users.service';
 
@@ -17,6 +16,9 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
 })
 export class UsersComponent extends GridEntityComponent<IUser> {
   static COMPONENT_NAME = 'UsersComponent';
+
+  // TODO: custom toolbar actions
+  private REFRESH_ACTION = -1;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -49,28 +51,30 @@ export class UsersComponent extends GridEntityComponent<IUser> {
 
   displayBlockedUsers = false;
 
-  actions: Array<IToolbarAction> = [
+  bottomActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
     {
       text: 'users.toolbar.action.show_blocked_users',
-      type: 10,
+      type: this.REFRESH_ACTION,
       visible: true,
       control: ToolbarControlEnum.CHECKBOX,
       value: this.displayBlockedUsers
     }
   ];
 
+  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+    ToolbarActionTypeEnum.EDIT,
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
-    // TODO: temp solution; move to resolver
-    private constantsService: ConstantsService,
     private usersService: UsersService,
   ) {
     super();
-    const [ roles, languages ] = this.route.snapshot.data.users;
+    const { roles, languages } = this.route.snapshot.data.users;
     this.renderers.roleId = [].concat(roles);
     this.renderers.languageId = [].concat(languages);
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -104,24 +108,10 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     this.cancelAction();
   }
 
-  /*
   onAction(action: IToolbarAction): void {
-    this.action = action.type;
-    switch (action.type) {
-      case ToolbarActionTypeEnum.REFRESH:
-        this.onUpdate();
-        break;
-      case ToolbarActionTypeEnum.EDIT:
-        this.currentUser = this.selectedUser;
-        break;
-      case ToolbarActionTypeEnum.ADD:
-        this.currentUser = this.createEmptyUser();
-        break;
-      // FIXME omg!
-      case 10:
-        this.displayBlockedUsers = action.value;
-        break;
+    super.onAction(action);
+    if (action.type === this.REFRESH_ACTION) {
+      this.displayBlockedUsers = action.value;
     }
   }
-  */
 }
