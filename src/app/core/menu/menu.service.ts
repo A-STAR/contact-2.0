@@ -17,22 +17,13 @@ const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
 export class MenuService {
   private lastNavigationStartTimestamp: number = null;
 
-  private guiObjects$: Observable<Array<IMenuApiResponseItem>>;
+  private guiObjects$: Observable<Array<IMenuItem>>;
 
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
     private router: Router
   ) {
-    this.initGuiObjects();
-    this.initLogging();
-  }
-
-  get guiObjects(): Observable<Array<IMenuApiResponseItem>> {
-    return this.guiObjects$;
-  }
-
-  private initGuiObjects(): void {
     this.guiObjects$ = this.authService
       .getRootUrl()
       .flatMap(root => {
@@ -41,19 +32,8 @@ export class MenuService {
           .map(resp => resp.json())
           .map(resp => resp.appGuiObjects)
           .map(data => this.prepareMenu(data));
-      })
-      .catch(error => {
-        // TODO: move into wrapper
-        if ([401, 403].find(status => error.status === status)) {
-          this.authService.redirectToLogin();
-        } else {
-          this.router.navigate(['/connection-error']);
-        }
-        throw error;
       });
-  }
 
-  private initLogging(): void {
     this.onSectionLoadStart();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
@@ -62,6 +42,10 @@ export class MenuService {
         this.onSectionLoadEnd(event);
       }
     });
+  }
+
+  get guiObjects(): Observable<Array<IMenuItem>> {
+    return this.guiObjects$;
   }
 
   private onSectionLoadStart(): void {
