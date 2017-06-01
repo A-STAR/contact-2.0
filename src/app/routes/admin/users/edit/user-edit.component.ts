@@ -16,8 +16,8 @@ import { EntityBaseComponent } from '../../../../shared/components/entity/edit/e
   templateUrl: 'user-edit.component.html'
 })
 export class UserEditComponent extends EntityBaseComponent<IUser> {
-  canEditUser = false;
-  canEditUserRole = false;
+  private canEditUser = false;
+  private canEditUserRole = false;
 
   constructor(
     private gridService: GridService,
@@ -97,12 +97,18 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
   }
 
   get formData(): any {
+    if (!this.editedEntity) {
+      return {
+        roleId: 1,
+        languageId: 1,
+      };
+    }
     return {
       ...this.editedEntity,
-      roleId: [{ value: this.editedEntity.roleId || 1 }],
+      roleId: [{ value: this.editedEntity.roleId }],
       startWorkDate: this.formatDate(this.editedEntity.startWorkDate),
       endWorkDate: this.formatDate(this.editedEntity.endWorkDate),
-      languageId: [{ value: this.editedEntity.languageId || 1 }],
+      languageId: [{ value: this.editedEntity.languageId }],
     };
   }
 

@@ -1,6 +1,6 @@
 <app-user-edit
   *ngIf="isEntityBeingCreated"
-  title="users.add.title"
+  title="users.create.title"
   (submit)="onAddSubmit($event)"
   (cancel)="cancelAction()">
 </app-user-edit>
@@ -23,5 +23,5 @@
   [bottomActions]="bottomActions"
   (onRowSelect)="onSelectedRowChange($event)"
   (onAction)="onAction($event)"
-  (onEdit)="onEdit($event)">
+  (onEdit)="onEdit()">
 </app-grid>
