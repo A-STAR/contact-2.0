@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule as RolesGridModule } from './roles/roles.module';
+import { PermissionsTreeModule } from './permissions-tree/permissions-tree.module';
 
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 
@@ -17,6 +18,7 @@ const routes: Routes = [
     PermissionsModule,
     RolesGridModule,
     SharedModule,
+    PermissionsTreeModule,
   ],
   exports: [
     RouterModule

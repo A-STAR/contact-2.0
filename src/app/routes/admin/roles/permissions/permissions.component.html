@@ -24,22 +24,18 @@
   (cancel)="displayProperties.removePermit = false">
 </app-submitted-popup>
 
-<app-tabstrip>
-  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-    <app-grid
-      #permitsGrid
-      [styles]="{height: '200px'}"
-      [columns]="columns"
-      [columnTranslationKey]="'roles.permissions'"
-      [parseFn]="parseFn"
-      [dataSource]="dataSource"
-      [autoLoad]="false"
-      [selectionType]="'single'"
-      [editPermission]="'PERMIT_EDIT'"
-      [bottomActions]="bottomActions"
-      (onEdit)="onBeginEditPermission($event)"
-      (onRowSelect)="onSelectPermissions($event)"
-      (onAction)="onAction($event)">
-    </app-grid>
-  </app-tab>
-</app-tabstrip>
+<app-grid
+  #permitsGrid
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [columnTranslationKey]="'roles.permissions'"
+  [parseFn]="parseFn"
+  [dataSource]="dataSource"
+  [autoLoad]="false"
+  [selectionType]="'single'"
+  [editPermission]="'PERMIT_EDIT'"
+  [bottomActions]="bottomActions"
+  (onEdit)="onBeginEditPermission()"
+  (onRowSelect)="onSelectPermissions($event)"
+  (onAction)="onAction($event)">
+</app-grid>
