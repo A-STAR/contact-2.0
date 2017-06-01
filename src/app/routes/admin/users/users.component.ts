@@ -6,6 +6,7 @@ import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../..
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UsersService } from './users.service';
 
 import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
@@ -69,17 +70,32 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     ToolbarActionTypeEnum.EDIT,
   ];
 
+  private _roles;
+
+  private _languages;
+
   constructor(
-    private route: ActivatedRoute,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
     private usersService: UsersService,
   ) {
     super();
     const { roles, languages } = this.route.snapshot.data.users;
+    this._roles = roles;
+    this._languages = languages;
     this.renderers.roleId = [].concat(roles);
     this.renderers.languageId = [].concat(languages);
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.filter = this.filter.bind(this);
+  }
+
+  get roles(): Array<any> {
+    return this._roles;
+  }
+
+  get languages(): Array<any> {
+    return this._languages;
   }
 
   filter(user: IUser): boolean {
@@ -91,7 +107,7 @@ export class UsersComponent extends GridEntityComponent<IUser> {
       .create(data)
       .subscribe(
         () => this.onSubmitSuccess(),
-        // () => this.notificationsActions.error('organizations.employees.add.errorMessage')
+        () => this.notificationsService.error('users.add.errorMessage')
       );
   }
 
@@ -100,7 +116,7 @@ export class UsersComponent extends GridEntityComponent<IUser> {
       .save(this.selectedEntity.id, data)
       .subscribe(
         () => this.onSubmitSuccess(),
-        // () => this.notificationsActions.error('organizations.employees.edit.errorMessage')
+        () => this.notificationsService.error('users.edit.errorMessage')
       );
   }
 

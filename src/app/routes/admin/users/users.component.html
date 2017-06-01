@@ -1,6 +1,8 @@
 <app-user-edit
   *ngIf="isEntityBeingCreated"
   title="users.create.title"
+  [roles]="roles"
+  [languages]="languages"
   (submit)="onAddSubmit($event)"
   (cancel)="cancelAction()">
 </app-user-edit>
@@ -8,6 +10,8 @@
 <app-user-edit
   *ngIf="isEntityBeingEdited"
   title="users.edit.title"
+  [roles]="roles"
+  [languages]="languages"
   [editedEntity]="selectedEntity"
   (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
