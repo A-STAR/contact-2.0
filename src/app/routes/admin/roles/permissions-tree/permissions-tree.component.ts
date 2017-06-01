@@ -5,6 +5,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { PermissionsTreeService } from './permissions-tree.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-permissions-tree',
@@ -19,10 +20,11 @@ export class PermissionsTreeComponent implements OnChanges {
   value: TreeNode[];
 
   toolbarActions: IToolbarAction[] = [
-    { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE },
+    { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE, permission: 'GUI_TREE_EDIT' },
   ];
 
-  constructor(private permissionsTreeService: PermissionsTreeService) {
+  constructor(private permissionsTreeService: PermissionsTreeService,
+              private usersPermissionsService: UserPermissionsService) {
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
@@ -48,6 +50,10 @@ export class PermissionsTreeComponent implements OnChanges {
 
   private refreshTree(): void {
     if (!this.currentRole) {
+      this.value = null;
+      this.selection = [];
+      this.initialSelection = [];
+      this.refreshToolbar();
       return;
     }
     this.permissionsTreeService.load(this.currentRole, this.selection)
@@ -67,5 +73,13 @@ export class PermissionsTreeComponent implements OnChanges {
 
   private get getAddedItems(): TreeNode[] {
     return this.permissionsTreeService.getDiff(this.selection, this.initialSelection);
+  }
+
+  get hasViewPermission(): boolean {
+    return this.usersPermissionsService.hasPermission('GUI_TREE_VIEW');
+  }
+
+  get hasEditPermission(): boolean {
+    return this.usersPermissionsService.hasPermission('GUI_TREE_EDIT');
   }
 }

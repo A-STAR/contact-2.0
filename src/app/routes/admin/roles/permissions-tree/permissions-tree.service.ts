@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IPermissionRole } from '../permissions/permissions.interface';
 import { IPermissionsTreeNode } from './permissions-tree.interface';
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { menuConfig } from '../../../menu-config';
 
 @Injectable()
 export class PermissionsTreeService {
 
-  constructor(private gridService: GridService) {
+  constructor(private gridService: GridService,
+              private translateService: TranslateService) {
   }
 
   load(currentRole: IPermissionRole, selection: TreeNode[]): Observable<TreeNode[]> {
@@ -54,13 +57,17 @@ export class PermissionsTreeService {
   }
 
   private convertToTreeNode(permission: IPermissionsTreeNode, selection: TreeNode[]): TreeNode {
-    const hasChildren = permission.children && permission.children.length;
+    const hasChildren: boolean = permission.children && permission.children.length > 0;
+    const cfg = menuConfig.hasOwnProperty(permission.name) ? menuConfig[permission.name] : null;
+
     return {
       id: permission.id,
-      label: permission.name,
-      expanded: true,
+      label: this.translateService.instant(cfg ? cfg.text : permission.name) || permission.name,
+      expanded: hasChildren,
       children: hasChildren ? this.convertToTreeNodes(permission.children, selection) : undefined,
-      data: permission
+      data: permission,
+      icon: hasChildren ? 'fa fa-folder-o' : (cfg ? cfg.icon : ''),
+      expandedIcon: hasChildren ? 'fa fa-folder-open-o' : ''
     };
   }
 }
