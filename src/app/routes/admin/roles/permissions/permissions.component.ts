@@ -57,10 +57,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
     ToolbarActionTypeEnum.ADD,
   ];
 
-  tabs: Array<any> = [
-    {id: 0, title: 'roles.permissions.tab.title', active: true},
-  ];
-
   dataSource: IDataSource = {
     read: '/api/roles/{id}/permits',
     dataKey: 'permits'

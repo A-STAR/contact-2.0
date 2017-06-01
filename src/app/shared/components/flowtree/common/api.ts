@@ -61,8 +61,6 @@ interface TreeNode {
     parent?: TreeNode;
     partialSelected?: boolean;
     styleClass?: string;
-    draggable?: boolean;
-    droppable?: boolean;
     selectable?: boolean;
 }
 

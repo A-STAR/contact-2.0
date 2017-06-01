@@ -1,7 +1,20 @@
 <app-user-edit
-  *ngIf="isUserBeingCreatedOrEdited"
-  [(user)]="currentUser"
-  (onUpdate)="onUpdate()">
+  *ngIf="isEntityBeingCreated"
+  title="users.create.title"
+  [roles]="roles"
+  [languages]="languages"
+  (submit)="onAddSubmit($event)"
+  (cancel)="cancelAction()">
+</app-user-edit>
+
+<app-user-edit
+  *ngIf="isEntityBeingEdited"
+  title="users.edit.title"
+  [roles]="roles"
+  [languages]="languages"
+  [editedEntity]="selectedEntity"
+  (submit)="onEditSubmit($event)"
+  (cancel)="cancelAction()">
 </app-user-edit>
 
 <app-grid
@@ -11,8 +24,8 @@
   [dataSource]="dataSource"
   [filter]="filter"
   [parseFn]="parseFn"
-  [bottomActions]="actions"
-  (onRowSelect)="onSelect($event)"
+  [bottomActions]="bottomActions"
+  (onRowSelect)="onSelectedRowChange($event)"
   (onAction)="onAction($event)"
-  (onEdit)="onEdit($event)">
+  (onEdit)="onEdit()">
 </app-grid>

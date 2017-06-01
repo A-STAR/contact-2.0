@@ -92,7 +92,8 @@
       "remove": "Remove",
       "copy": "Copy",
       "refresh": "Refresh",
-      "search": "Search"
+      "search": "Search",
+      "save": "Save"
     }
   },
   "queryBuilder": {
@@ -107,7 +108,7 @@
   },
   "login": {
     "PLEASE_AUTHENTICATE": "Please, authenticate",
-    "LOGIN_PLACEHOLDER": "Lgon",
+    "LOGIN_PLACEHOLDER": "Login",
     "PASSWORD_PLACEHOLDER": "Password",
     "REMEMBER_ME": "Remember login",
     "FORGOT_PASSWORD": "Forgot password?",
@@ -188,13 +189,13 @@
       "comment": "Comments"
     },
     "select": {
-        "role": {
-          "title": "Choose a role"
-        }
-      },
-      "create": {
-        "title": "New user"
-      },
+      "role": {
+        "title": "Choose a role"
+      }
+    },
+    "create": {
+      "title": "New user"
+    },
     "grid": {
       "id": "Id",
       "login": "Login",
