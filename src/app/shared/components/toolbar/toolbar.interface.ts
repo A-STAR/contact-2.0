@@ -9,7 +9,8 @@ export enum ToolbarActionTypeEnum {
   CLONE,
   REMOVE,
   REFRESH,
-  SEARCH
+  SEARCH,
+  SAVE
 }
 
 export interface IToolbarAction {
