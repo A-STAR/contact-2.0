@@ -5,8 +5,6 @@ import { SharedModule } from '../../../shared/shared.module';
 import { OrganizationsTreeModule } from './organizations-tree/organizations-tree.module';
 import { OrganizationsEmployeesModule } from './employees/employees.module';
 
-import { OrganizationsService } from './organizations.service';
-
 import { OrganizationsComponent } from './organizations.component';
 
 const routes: Routes = [
@@ -25,9 +23,6 @@ const routes: Routes = [
     ],
     declarations: [
       OrganizationsComponent,
-    ],
-    providers: [
-      OrganizationsService,
     ]
 })
 export class OrganizationsModule { }

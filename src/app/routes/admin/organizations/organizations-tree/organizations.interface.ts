@@ -12,7 +12,7 @@ export interface IOrganizationsState {
   data: Array<IOrganization>;
 }
 
-export type IOrganizationsActionType = 'ORGANIZATIONS_LOAD';
+export type IOrganizationsActionType = 'ORGANIZATIONS_FETCH' | 'ORGANIZATIONS_FETCH_SUCCESS' | 'ORGANIZATIONS_FETCH_ERROR' | 'ORGANIZATIONS_CLEAR';
 
 export interface IOrganizationsAction {
   type: IOrganizationsActionType;

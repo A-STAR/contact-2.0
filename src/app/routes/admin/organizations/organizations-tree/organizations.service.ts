@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IOrganizationsActionType, IOrganizationsState } from './organizations.interface';
+import { IOrganizationsState } from './organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
@@ -15,14 +15,9 @@ export class OrganizationsService {
       .filter(Boolean);
   }
 
-  load(): void {
-    this.store.dispatch(this.createAction('ORGANIZATIONS_LOAD'));
-  }
-
-  private createAction(type: IOrganizationsActionType, payload?: any): Action {
-    return {
-      type,
-      payload
-    };
+  fetch(): void {
+    return this.store.dispatch({
+      type: 'ORGANIZATIONS_FETCH'
+    });
   }
 }

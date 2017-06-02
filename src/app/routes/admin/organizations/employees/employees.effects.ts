@@ -5,7 +5,6 @@ import 'rxjs/add/operator/switchMap';
 
 import { IEmployeeCreateData, IEmployee } from '../organizations.interface';
 
-import { EmployeesService } from './employees.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 @Injectable()
@@ -27,7 +26,6 @@ export class EmployeesEffects {
 
   constructor(
     private actions: Actions,
-    private employeesService: EmployeesService,
     private gridService: GridService,
   ) {}
 

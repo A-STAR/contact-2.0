@@ -1,12 +1,12 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+// import { Observable } from 'rxjs/Observable';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IOrganization } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
-import { OrganizationsService } from '../organizations.service';
+import { OrganizationsService } from './organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -17,7 +17,7 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
   templateUrl: './organizations-tree.component.html',
   styleUrls: ['./organizations-tree.component.scss']
 })
-export class OrganizationsTreeComponent implements OnInit {
+export class OrganizationsTreeComponent {
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
@@ -45,7 +45,24 @@ export class OrganizationsTreeComponent implements OnInit {
 
   action: ToolbarActionTypeEnum;
 
-  constructor(private organizationsService: OrganizationsService) { }
+  constructor(private organizationsService: OrganizationsService) {
+    this.organizationsService.fetch();
+    this.organizationsService.state
+      .map(state => this.convertToTreeNodes(state.data))
+      .subscribe(
+        nodes => {
+          const files = {
+            id: 0,
+            label: 'Home',
+            children: [].concat(nodes),
+          };
+          this.value = [files];
+          this.prepareTree(this.rootNode);
+        },
+        // TODO: notifications
+        error => console.error(error)
+      );
+  }
 
   get isEntityBeingCreated(): boolean {
     return this.action === ToolbarActionTypeEnum.ADD;
@@ -59,24 +76,21 @@ export class OrganizationsTreeComponent implements OnInit {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  load(): void {
-    this.organizationsService.load()
-      .subscribe(
-        data => {
-          const files = {
-            id: 0,
-            label: 'Home',
-            children: [].concat(data),
-          };
-          this.value = [files];
-          this.prepareTree(this.rootNode);
-        },
-        error => console.error(error)
-      );
+  private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
+    return organizations
+      .sort((a: IOrganization, b: IOrganization) => a.sortOrder > b.sortOrder ? 1 : -1)
+      .map(organization => this.convertToTreeNode(organization));
   }
 
-  ngOnInit(): void {
-    this.load();
+  private convertToTreeNode(organization: IOrganization): TreeNode {
+    const hasChildren = organization.children && organization.children.length;
+    return {
+      id: organization.id,
+      bgColor: organization.boxColor,
+      label: organization.name,
+      children: hasChildren ? this.convertToTreeNodes(organization.children) : undefined,
+      data: organization
+    };
   }
 
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
@@ -169,14 +183,14 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onToolbarAction(action: IToolbarAction): void {
-    switch (action.type) {
-      case ToolbarActionTypeEnum.REFRESH:
-        this.selection = [];
-        this.load();
-        break;
-      default:
-        this.action = action.type;
-    }
+    // switch (action.type) {
+    //   case ToolbarActionTypeEnum.REFRESH:
+    //     this.selection = [];
+    //     this.load();
+    //     break;
+    //   default:
+    //     this.action = action.type;
+    // }
   }
 
   cancelAction(): void {
