@@ -1,11 +1,13 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+// import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IOrganization } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
+import { EmployeesService } from '../employees/employees.service';
 import { OrganizationsService } from './organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
@@ -17,7 +19,7 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
   templateUrl: './organizations-tree.component.html',
   styleUrls: ['./organizations-tree.component.scss']
 })
-export class OrganizationsTreeComponent implements OnInit {
+export class OrganizationsTreeComponent {
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
@@ -45,7 +47,27 @@ export class OrganizationsTreeComponent implements OnInit {
 
   action: ToolbarActionTypeEnum;
 
-  constructor(private organizationsService: OrganizationsService) { }
+  constructor(
+    private employeesService: EmployeesService,
+    private organizationsService: OrganizationsService,
+  ) {
+    this.organizationsService.fetch();
+    this.organizationsService.state
+      .map(state => this.convertToTreeNodes(state.data))
+      .subscribe(
+        nodes => {
+          const files = {
+            id: 0,
+            label: 'Home',
+            children: [].concat(nodes),
+          };
+          this.value = [files];
+          this.prepareTree(this.rootNode);
+        },
+        // TODO: notifications
+        error => console.error(error)
+      );
+  }
 
   get isEntityBeingCreated(): boolean {
     return this.action === ToolbarActionTypeEnum.ADD;
@@ -59,24 +81,21 @@ export class OrganizationsTreeComponent implements OnInit {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
-  load(): void {
-    this.organizationsService.load()
-      .subscribe(
-        data => {
-          const files = {
-            id: 0,
-            label: 'Home',
-            children: [].concat(data),
-          };
-          this.value = [files];
-          this.prepareTree(this.rootNode);
-        },
-        error => console.error(error)
-      );
+  private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
+    return organizations
+      .sort((a: IOrganization, b: IOrganization) => a.sortOrder > b.sortOrder ? 1 : -1)
+      .map(organization => this.convertToTreeNode(organization));
   }
 
-  ngOnInit(): void {
-    this.load();
+  private convertToTreeNode(organization: IOrganization): TreeNode {
+    const hasChildren = organization.children && organization.children.length;
+    return {
+      id: organization.id,
+      bgColor: organization.boxColor,
+      label: organization.name,
+      children: hasChildren ? this.convertToTreeNodes(organization.children) : undefined,
+      data: organization
+    };
   }
 
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
@@ -119,15 +138,10 @@ export class OrganizationsTreeComponent implements OnInit {
         element.data.parentId = targetElement.data.id;
         element.data.sortOrder = sortOrder;
         this.organizationsService
-          .save(element.data.id, {
+          .update(element.data.id, {
             parentId: element.data.parentId,
             sortOrder: element.data.sortOrder
-          })
-          .subscribe(
-            () => {},
-            // TODO: error handling
-            error => console.error(error)
-          );
+          } as any);
       }
     });
   }
@@ -150,29 +164,32 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onNodeSelect({ node }: { node: TreeNode }): void {
-    // use for node selection, could operate on selection collection as well
-    const parent = this.findParentRecursive(node);
+    this.onNodeSelectOrExpand(node);
     const isExpanded = node.expanded;
-    this.collapseSiblings(parent);
     if (node.children) {
       node.expanded = !isExpanded;
     }
-    this.action = null;
-    this.refreshToolbar();
-    this.onSelect.emit(node.data);
   }
 
   onNodeExpand({ node }: { node: TreeNode }): void {
+    this.onNodeSelectOrExpand(node);
+  }
+
+  onNodeSelectOrExpand(node: TreeNode): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
+    this.employeesService.fetch(node.data.id);
+    this.action = null;
+    this.refreshToolbar();
+    this.onSelect.emit(node.data);
   }
 
   onToolbarAction(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
         this.selection = [];
-        this.load();
+        this.organizationsService.fetch();
         break;
       default:
         this.action = action.type;
@@ -188,28 +205,28 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    const action = create ?
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
-      this.organizationsService.save(this.selection.data.id, data);
-    this.submit(action);
+    if (create) {
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data);
+    } else {
+      this.organizationsService.update(this.selection.data.id, data);
+    }
   }
 
   onRemoveSubmit(): void {
-    const action = this.organizationsService.remove(this.selection.data.id);
-    this.submit(action);
+    this.organizationsService.delete(this.selection.data.id);
   }
 
-  private submit(action: Observable<any>): void {
-    action.subscribe(
-      () => {
-        this.cancelAction();
-        this.selection = [];
-        this.load();
-      },
-      // TODO: error handling
-      error => console.error(error)
-    );
-  }
+  // private submit(action: Observable<any>): void {
+  //   action.subscribe(
+  //     () => {
+  //       this.cancelAction();
+  //       this.selection = [];
+  //       this.load();
+  //     },
+  //     // TODO: error handling
+  //     error => console.error(error)
+  //   );
+  // }
 
   private get rootNode(): TreeNode {
     return this.value[0];

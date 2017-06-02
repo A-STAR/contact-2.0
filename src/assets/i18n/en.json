@@ -359,6 +359,14 @@
       "remove": {
         "title": "Delete company",
         "confirmMessage": "Are you sure you want to delete company?"
+      },
+      "messages": {
+        "errors": {
+          "fetch": "Could not load organizations list",
+          "create": "Could not add organization",
+          "update": "Could not update organization",
+          "delete": "Could not delete organization"
+        }
       }
     },
     "employees": {
@@ -368,18 +376,15 @@
           "fullName": "Full name",
           "position": "Position",
           "isBlocked": "Blocked"
-        },
-        "errorMessage": "Could not add employee"
+        }
       },
       "edit": {
         "title": "Employee",
-        "fullName": "Full name",
-        "errorMessage": "Could not save employee"
+        "fullName": "Full name"
       },
       "remove": {
         "title": "Delete employee",
-        "confirmMessage": "Are you sure you want to delete the employee?",
-        "errorMessage": "Could not delete employee"
+        "confirmMessage": "Are you sure you want to delete the employee?"
       },
       "grid": {
         "name": "Name",
@@ -387,6 +392,14 @@
         "fullName": "Full name",
         "roleCode": "Role code",
         "isBlocked": "Blocked"
+      },
+      "messages": {
+        "errors": {
+          "fetch": "Could not load employees list",
+          "create": "Could not add employee",
+          "update": "Could not update employee",
+          "delete": "Could not delete employee"
+        }
       }
     }
   },
