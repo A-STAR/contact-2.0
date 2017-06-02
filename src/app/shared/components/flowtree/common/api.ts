@@ -11,7 +11,7 @@ interface LazyLoadEvent {
     sortField?: string;
     sortOrder?: number;
     multiSortMeta?: SortMeta[];
-    filters?: {[s: string]: FilterMetadata;};
+    filters?: { [s: string]: FilterMetadata; };
     globalFilter?: any;
 }
 

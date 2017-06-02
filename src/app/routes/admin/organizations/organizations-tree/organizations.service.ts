@@ -1,46 +1,59 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { TreeNode } from '../../../../shared/components/flowtree/common/api';
-import { IOrganization, IOrganizationsResponse } from '../organizations.interface';
+import { IAppState } from '../../../../core/state/state.interface';
+import { IOrganization, IOrganizationsState } from './organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
-  constructor(private gridService: GridService) {}
+  static ORGANIZATIONS_FETCH = 'ORGANIZATIONS_FETCH';
+  static ORGANIZATIONS_FETCH_SUCCESS = 'ORGANIZATIONS_FETCH_SUCCESS';
+  static ORGANIZATIONS_CREATE = 'ORGANIZATIONS_CREATE';
+  static ORGANIZATIONS_UPDATE = 'ORGANIZATIONS_UPDATE';
+  static ORGANIZATIONS_DELETE = 'ORGANIZATIONS_DELETE';
+  static ORGANIZATIONS_CLEAR = 'ORGANIZATIONS_CLEAR';
 
-  load(): Observable<Array<TreeNode>> {
-    return this.gridService
-      .read('/api/organizations')
-      .map((response: IOrganizationsResponse) => this.convertToTreeNodes(response.organizations));
+  constructor(private store: Store<IAppState>) {}
+
+  get state(): Observable<IOrganizationsState> {
+    return this.store
+      .select(state => state.organizations)
+      .filter(Boolean);
   }
 
-  create(parentId: number, organization: any): Observable<any> {
-    return this.gridService.create('/api/organizations', {}, { ...organization, parentId });
+  fetch(): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATIONS_FETCH
+    });
   }
 
-  save(organizationId: number, organization: any): Observable<any> {
-    return this.gridService.update('/api/organizations/{organizationId}', { organizationId }, organization);
+  create(parentId: number, organization: IOrganization): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATIONS_CREATE,
+      payload: {
+        parentId,
+        organization
+      }
+    });
   }
 
-  remove(organizationId: number): Observable<any> {
-    return this.gridService.delete('/api/organizations/{organizationId}', { organizationId });
+  update(organizationId: number, organization: IOrganization): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATIONS_UPDATE,
+      payload: {
+        organizationId,
+        organization
+      }
+    });
   }
 
-  private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
-    return organizations
-      .sort((a: IOrganization, b: IOrganization) => a.sortOrder > b.sortOrder ? 1 : -1)
-      .map(organization => this.convertToTreeNode(organization));
-  }
-
-  private convertToTreeNode(organization: IOrganization): TreeNode {
-    const hasChildren = organization.children && organization.children.length;
-    return {
-      id: organization.id,
-      bgColor: organization.boxColor,
-      label: organization.name,
-      children: hasChildren ? this.convertToTreeNodes(organization.children) : undefined,
-      data: organization
-    };
+  delete(organizationId: number): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATIONS_DELETE,
+      payload: {
+        organizationId
+      }
+    });
   }
 }

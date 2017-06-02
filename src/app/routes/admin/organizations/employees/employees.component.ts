@@ -62,6 +62,8 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
     dataKey: 'users',
   };
 
+  rows = [];
+
   constructor(
     private employeesService: EmployeesService,
     private gridService: GridService,
@@ -70,6 +72,10 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    this.employeesService.state.subscribe(state => {
+      this.rows = state.data;
+    });
   }
 
   transformIsBlocked(isBlocked: number): string {
@@ -77,37 +83,17 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.employeesService
-      .create(this.masterEntity.id, data)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.add.errorMessage')
-      );
+    this.employeesService.create(this.masterEntity.id, data);
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.employeesService
-      .save(this.masterEntity.id, this.selectedEntity.userId, {
-        roleCode: data.roleCode[0].id,
-        comment: data.comment
-      })
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.edit.errorMessage')
-      );
+    this.employeesService.update(this.masterEntity.id, this.selectedEntity.userId, {
+      roleCode: data.roleCode[0].value,
+      comment: data.comment
+    });
   }
 
   onRemoveSubmit(data: any): void {
-    this.employeesService
-      .remove(this.masterEntity.id, this.selectedEntity.userId)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.remove.errorMessage')
-      );
-  }
-
-  private onSubmitSuccess(): void {
-    this.afterUpdate();
-    this.cancelAction();
+     this.employeesService.delete(this.masterEntity.id, this.selectedEntity.userId);
   }
 }
