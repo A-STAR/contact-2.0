@@ -7,6 +7,7 @@ import { IEmployeeCreateRequest, IEmployeeUpdateRequest } from './employees.inte
 
 import { EmployeesService } from './employees.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class EmployeesEffects {
@@ -21,16 +22,10 @@ export class EmployeesEffects {
           type: EmployeesService.EMPLOYEES_FETCH_SUCCESS,
           payload: data
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not fetch users',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.fetch');
+          return null;
+        });
     });
 
   @Effect()
@@ -45,16 +40,10 @@ export class EmployeesEffects {
             organizationId
           }
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not create user',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.create');
+          return null;
+        });
     });
 
   @Effect()
@@ -69,16 +58,10 @@ export class EmployeesEffects {
             organizationId
           }
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not update user',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.update');
+          return null;
+        });
     });
 
   @Effect()
@@ -93,21 +76,16 @@ export class EmployeesEffects {
             organizationId
           }
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not delete user',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.delete');
+          return null;
+        });
     });
 
   constructor(
     private actions: Actions,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
   ) {}
 
   private read(organizationId: number): Observable<any> {

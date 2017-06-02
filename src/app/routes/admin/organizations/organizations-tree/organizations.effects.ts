@@ -5,6 +5,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { OrganizationsService } from './organizations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -18,16 +19,10 @@ export class OrganizationsEffects {
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: data
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not fetch organizations',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
+          return null;
+        });
     });
 
   @Effect()
@@ -39,16 +34,10 @@ export class OrganizationsEffects {
         .map(data => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not create organization',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
+          return null;
+        });
     });
 
   @Effect()
@@ -63,16 +52,10 @@ export class OrganizationsEffects {
             organizationId
           }
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not update organization',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
+          return null;
+        });
     });
 
   @Effect()
@@ -87,21 +70,16 @@ export class OrganizationsEffects {
             organizationId
           }
         }))
-        // TODO: action creator
-        .catch(() => Observable.of({
-          type: 'NOTIFICATION_PUSH',
-          payload: {
-            notification: {
-              message: 'Could not delete organization',
-              type: 'ERROR'
-            }
-          }
-        }));
+        .catch(() => {
+          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
+          return null;
+        });
     });
 
   constructor(
     private actions: Actions,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
   ) {}
 
   read(): Observable<any> {

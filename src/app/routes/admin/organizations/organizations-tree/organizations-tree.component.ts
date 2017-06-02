@@ -53,7 +53,6 @@ export class OrganizationsTreeComponent {
   ) {
     this.organizationsService.fetch();
     this.organizationsService.state
-      .distinctUntilKeyChanged('data')
       .map(state => this.convertToTreeNodes(state.data))
       .subscribe(
         nodes => {
