@@ -17,7 +17,7 @@ import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { UserPermissionsService } from './user/permissions/user-permissions.service';
+import { PermissionsService } from './permissions/permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
 import { rootReducer } from '../core/state/root.reducer';
@@ -42,7 +42,7 @@ import { rootReducer } from '../core/state/root.reducer';
     SettingsService,
     ThemesService,
     TranslateService,
-    UserPermissionsService,
+    PermissionsService,
     ValueConverterService,
     EntityTranslationsService,
   ],

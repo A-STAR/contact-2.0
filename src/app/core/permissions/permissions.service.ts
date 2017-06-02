@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissions.interface';
+import { GridService } from '../../shared/components/grid/grid.service';
+import { IPermission, IPermissionsResponse } from './permissions.interface';
 
 @Injectable()
-export class UserPermissionsService {
+export class PermissionsService {
+  static STORAGE_KEY = 'state/permissions';
 
   private userPermissions: Map<string, boolean> = new Map<string, boolean>();
 
@@ -13,13 +14,13 @@ export class UserPermissionsService {
   }
 
   public getUserPermissions(forceReload?: boolean): Observable<Map<String, boolean>> {
-    if (this.userPermissions.size > 0 && !forceReload) {
+    if (this.userPermissions.size && !forceReload) {
       return Observable.of(this.userPermissions);
     }
 
     return this.gridService.read('/api/userpermits')
-      .map((response: IUserPermissionsResponse) => {
-        response.userPermits.forEach((userPermission: IUserPermissionModel) => {
+      .map((response: IPermissionsResponse) => {
+        response.userPermits.forEach((userPermission: IPermission) => {
           this.userPermissions.set(userPermission.name, this.toUserPermissionValue(userPermission));
         });
         return this.userPermissions;
@@ -44,13 +45,13 @@ export class UserPermissionsService {
     }, false);
   }
 
-  private toUserPermissionValue(userPermissionModel: IUserPermissionModel): boolean {
-    if (userPermissionModel.valueB !== null) {
-      return userPermissionModel.valueB;
-    } else if (userPermissionModel.valueN !== null) {
-      return !!userPermissionModel.valueN;
-    } else if (userPermissionModel.valueS !== null) {
-      return !!parseInt(userPermissionModel.valueS, 10);
+  private toUserPermissionValue(userPermission: IPermission): boolean {
+    if (userPermission.valueB !== null) {
+      return userPermission.valueB;
+    } else if (userPermission.valueN !== null) {
+      return !!userPermission.valueN;
+    } else if (userPermission.valueS !== null) {
+      return !!parseInt(userPermission.valueS, 10);
     }
     return false;
   }

@@ -62,7 +62,7 @@ export class MenuService {
     const delay = Date.now() - this.lastNavigationStartTimestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
     if (name) {
-      this.logAction(name, delay);
+      // this.logAction(name, delay);
     }
   }
 

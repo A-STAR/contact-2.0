@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { IDict } from './dict/dict.interface';
 import { MasterDetailComponent } from '../../../shared/components/entity/master/entity.master.detail.component';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../core/permissions/permissions.service';
 
 @Component({
   selector: 'app-dict-and-terms',
@@ -12,11 +12,11 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 export class DictAndTermsComponent extends MasterDetailComponent<IDict> {
   static COMPONENT_NAME = 'DictAndTermsComponent';
 
-  constructor(private userPermissionsService: UserPermissionsService) {
+  constructor(private permissionsService: PermissionsService) {
     super();
   }
 
   canDictionariesShow(): boolean {
-    return this.userPermissionsService.hasPermission('DICT_VIEW');
+    return this.permissionsService.hasPermission('DICT_VIEW');
   }
 }

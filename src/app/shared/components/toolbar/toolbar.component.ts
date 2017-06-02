@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IToolbarAction, ToolbarControlEnum } from './toolbar.interface';
 import { IconsService } from '../../icons/icons.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../core/permissions/permissions.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,7 +17,7 @@ export class ToolbarComponent {
   ToolbarControlEnum = ToolbarControlEnum;
 
   constructor(private iconsService: IconsService,
-              private userPermissionsService: UserPermissionsService) {
+              private permissionsService: PermissionsService) {
   }
 
   onActionClick(action: IToolbarAction, event: any): void {
@@ -28,7 +28,7 @@ export class ToolbarComponent {
   }
 
   isActionAccessible(action: IToolbarAction): boolean {
-    return !action.permission || this.userPermissionsService.hasOnePermission(action.permission);
+    return !action.permission || this.permissionsService.hasOnePermission(action.permission);
   }
 
   toIconCls(action: IToolbarAction): string {

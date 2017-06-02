@@ -5,7 +5,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 import { PermissionsTreeService } from './permissions-tree.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
 @Component({
   selector: 'app-permissions-tree',
@@ -24,7 +24,7 @@ export class PermissionsTreeComponent implements OnChanges {
   ];
 
   constructor(private permissionsTreeService: PermissionsTreeService,
-              private usersPermissionsService: UserPermissionsService) {
+              private permissionsService: PermissionsService) {
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
@@ -76,10 +76,10 @@ export class PermissionsTreeComponent implements OnChanges {
   }
 
   get hasViewPermission(): boolean {
-    return this.usersPermissionsService.hasPermission('GUI_TREE_VIEW');
+    return this.permissionsService.hasPermission('GUI_TREE_VIEW');
   }
 
   get hasEditPermission(): boolean {
-    return this.usersPermissionsService.hasPermission('GUI_TREE_EDIT');
+    return this.permissionsService.hasPermission('GUI_TREE_EDIT');
   }
 }
