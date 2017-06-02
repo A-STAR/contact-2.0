@@ -19,10 +19,7 @@ export class EditPermissionComponent implements OnInit {
   // TODO: add type
   data: any;
 
-  /**
-   * @override
-   */
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.controls = this.getControls();
     this.data = this.getData();
   }

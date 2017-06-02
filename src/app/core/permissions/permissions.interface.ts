@@ -14,7 +14,12 @@ export interface IPermissionsState {
   permissions: Array<IPermission>;
 }
 
-export type IPermissionActionType = 'PERMISSION_FETCH' | 'PERMISSION_INVALIDATE' | 'PERMISSION_UPDATE' | 'PERMISSION_DELETE';
+export type IPermissionActionType =
+  'PERMISSION_FETCH' |
+  'PERMISSION_FETCH_SUCCESS' |
+  'PERMISSION_INVALIDATE' |
+  'PERMISSION_UPDATE' |
+  'PERMISSION_DELETE';
 
 export interface IPermissionAction {
   type: IPermissionActionType;

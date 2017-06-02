@@ -1,19 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
+import { IAppState } from '../../core/state/state.interface';
 import { GridService } from '../../shared/components/grid/grid.service';
 import { IPermission, IPermissionsResponse } from './permissions.interface';
 
 @Injectable()
 export class PermissionsService {
   static STORAGE_KEY = 'state/permissions';
+  // store actions
+  static PERMISSION_FETCH = 'PERMISSION_FETCH';
+  static PERMISSION_FETCH_SUCCESS = 'PERMISSION_FETCH_SUCCESS';
+  static PERMISSION_FETCH_ERROR = 'PERMISSION_FETCH_ERROR';
+  static PERMISSION_UPDATE = 'PERMISSION_UPDATE';
+  static PERMISSION_DELETE = 'PERMISSION_DELETE';
+  static PERMISSION_INVALIDATE = 'PERMISSION_INVALIDATE';
 
   private userPermissions: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(private gridService: GridService) {
-  }
+  constructor(
+    private gridService: GridService,
+    private store: Store<IAppState>,
+  ) { }
 
-  public getUserPermissions(forceReload?: boolean): Observable<Map<String, boolean>> {
+  getUserPermissions(forceReload?: boolean): Observable<Map<String, boolean>> {
     if (this.userPermissions.size && !forceReload) {
       return Observable.of(this.userPermissions);
     }
@@ -27,19 +38,19 @@ export class PermissionsService {
       });
   }
 
-  public hasOnePermission(permissionNames: string | Array<string>): boolean {
+  hasOnePermission(permissionNames: string | Array<string>): boolean {
     const permissions = Array.isArray(permissionNames) ? permissionNames : [ permissionNames ];
     return permissions.reduce((acc, permission) => {
       return acc || !!this.userPermissions.get(permission);
     }, false);
   }
 
-  public hasPermission(permissionName: string): boolean {
+  hasPermission(permissionName: string): boolean {
     // get can return undefined
     return !!this.userPermissions.get(permissionName);
   }
 
-  public hasAllPermissions(permissionNames: Array<string>): boolean {
+  hasAllPermissions(permissionNames: Array<string>): boolean {
     return permissionNames.reduce((acc, permission) => {
       return acc && this.userPermissions.get(permission);
     }, false);
