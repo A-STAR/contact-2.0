@@ -7,12 +7,12 @@ import { IEmployeeCreateRequest, IEmployeeUpdateRequest, IEmployeesState } from 
 
 @Injectable()
 export class EmployeesService {
-  static EMPLOYEES_FETCH         = 'EMPLOYEES_FETCH';
+  static EMPLOYEES_FETCH = 'EMPLOYEES_FETCH';
   static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
-  static EMPLOYEES_CREATE        = 'EMPLOYEES_CREATE';
-  static EMPLOYEES_UPDATE        = 'EMPLOYEES_UPDATE';
-  static EMPLOYEES_DELETE        = 'EMPLOYEES_DELETE';
-  static EMPLOYEES_CLEAR         = 'EMPLOYEES_CLEAR';
+  static EMPLOYEES_CREATE = 'EMPLOYEES_CREATE';
+  static EMPLOYEES_UPDATE = 'EMPLOYEES_UPDATE';
+  static EMPLOYEES_DELETE = 'EMPLOYEES_DELETE';
+  static EMPLOYEES_CLEAR = 'EMPLOYEES_CLEAR';
 
   constructor(private store: Store<IAppState>) {}
 
