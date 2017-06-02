@@ -77,6 +77,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
+    this.employeesService.create(this.masterEntity.id, data);
     // this.employeesService
     //   .create(this.masterEntity.id, data)
     //   .subscribe(
@@ -86,6 +87,10 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onEditSubmit(data: IEmployeeUser): void {
+    this.employeesService.update(this.masterEntity.id, this.selectedEntity.userId, {
+      roleCode: data.roleCode[0].id,
+      comment: data.comment
+    });
     // this.employeesService
     //   .save(this.masterEntity.id, this.selectedEntity.userId, {
     //     roleCode: data.roleCode[0].id,
@@ -98,6 +103,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onRemoveSubmit(data: any): void {
+     this.employeesService.delete(this.masterEntity.id, this.selectedEntity.userId);
     // this.employeesService
     //   .remove(this.masterEntity.id, this.selectedEntity.userId)
     //   .subscribe(
