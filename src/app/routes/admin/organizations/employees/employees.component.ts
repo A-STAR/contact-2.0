@@ -83,6 +83,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
+    console.log(data);
     this.employeesService.create(this.masterEntity.id, data);
     // this.employeesService
     //   .create(this.masterEntity.id, data)
@@ -94,7 +95,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
 
   onEditSubmit(data: IEmployeeUser): void {
     this.employeesService.update(this.masterEntity.id, this.selectedEntity.userId, {
-      roleCode: data.roleCode[0].id,
+      roleCode: data.roleCode[0].value,
       comment: data.comment
     });
     // this.employeesService

@@ -67,7 +67,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
 
   toSubmittedValues(values: IEmployeeUser): any {
     return {
-      roleCode: this.dynamicForm.value.roleCode[0].id,
+      roleCode: this.dynamicForm.value.roleCode[0].value,
       usersIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
     };
   }
