@@ -10,5 +10,5 @@ export interface IOrganization {
 
 export interface IOrganizationsState {
   data: Array<IOrganization>;
-  selectedRecord: IOrganization;
+  selectedOrganizationId: number;
 }

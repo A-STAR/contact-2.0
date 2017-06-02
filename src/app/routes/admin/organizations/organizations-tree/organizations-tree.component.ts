@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 // import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IOrganization } from '../organizations.interface';
@@ -48,6 +49,7 @@ export class OrganizationsTreeComponent {
   constructor(private organizationsService: OrganizationsService) {
     this.organizationsService.fetch();
     this.organizationsService.state
+      .distinctUntilKeyChanged('data')
       .map(state => this.convertToTreeNodes(state.data))
       .subscribe(
         nodes => {

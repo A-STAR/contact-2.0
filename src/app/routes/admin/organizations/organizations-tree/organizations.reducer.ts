@@ -6,7 +6,7 @@ import { OrganizationsService } from './organizations.service';
 
 const defaultState: IOrganizationsState = {
   data: [],
-  selectedRecord: null
+  selectedOrganizationId: null
 };
 
 export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
@@ -16,11 +16,11 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
         ...state,
         data: action.payload.organizations
       };
-    // case OrganizationsService.ORGANIZATIONS_SELECT:
-    //   return {
-    //     ...state,
-    //     selectedRecord: action.payload
-    //   };
+    case OrganizationsService.ORGANIZATIONS_SELECT:
+      return {
+        ...state,
+        selectedOrganizationId: action.payload.id
+      };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
