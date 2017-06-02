@@ -77,37 +77,37 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.employeesService
-      .create(this.masterEntity.id, data)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.add.errorMessage')
-      );
+    // this.employeesService
+    //   .create(this.masterEntity.id, data)
+    //   .subscribe(
+    //     () => this.onSubmitSuccess(),
+    //     () => this.notificationsService.error('organizations.employees.add.errorMessage')
+    //   );
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.employeesService
-      .save(this.masterEntity.id, this.selectedEntity.userId, {
-        roleCode: data.roleCode[0].id,
-        comment: data.comment
-      })
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.edit.errorMessage')
-      );
+    // this.employeesService
+    //   .save(this.masterEntity.id, this.selectedEntity.userId, {
+    //     roleCode: data.roleCode[0].id,
+    //     comment: data.comment
+    //   })
+    //   .subscribe(
+    //     () => this.onSubmitSuccess(),
+    //     () => this.notificationsService.error('organizations.employees.edit.errorMessage')
+    //   );
   }
 
   onRemoveSubmit(data: any): void {
-    this.employeesService
-      .remove(this.masterEntity.id, this.selectedEntity.userId)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('organizations.employees.remove.errorMessage')
-      );
+    // this.employeesService
+    //   .remove(this.masterEntity.id, this.selectedEntity.userId)
+    //   .subscribe(
+    //     () => this.onSubmitSuccess(),
+    //     () => this.notificationsService.error('organizations.employees.remove.errorMessage')
+    //   );
   }
 
-  private onSubmitSuccess(): void {
-    this.afterUpdate();
-    this.cancelAction();
-  }
+  // private onSubmitSuccess(): void {
+  //   this.afterUpdate();
+  //   this.cancelAction();
+  // }
 }

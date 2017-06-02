@@ -6,7 +6,7 @@ import { IOrganization } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
-import { OrganizationsService } from './organizations.service';
+import { OrganizationsService } from '../organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -113,23 +113,23 @@ export class OrganizationsTreeComponent implements OnInit {
     }
 
     // TODO: do we have to reindex children on previous element parent?
-    targetElement.children.forEach((element: TreeNode, i: number) => {
-      const sortOrder = i + 1;
-      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
-        element.data.parentId = targetElement.data.id;
-        element.data.sortOrder = sortOrder;
-        this.organizationsService
-          .save(element.data.id, {
-            parentId: element.data.parentId,
-            sortOrder: element.data.sortOrder
-          })
-          .subscribe(
-            () => {},
-            // TODO: error handling
-            error => console.error(error)
-          );
-      }
-    });
+    // targetElement.children.forEach((element: TreeNode, i: number) => {
+    //   const sortOrder = i + 1;
+    //   if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
+    //     element.data.parentId = targetElement.data.id;
+    //     element.data.sortOrder = sortOrder;
+    //     this.organizationsService
+    //       .save(element.data.id, {
+    //         parentId: element.data.parentId,
+    //         sortOrder: element.data.sortOrder
+    //       })
+    //       .subscribe(
+    //         () => {},
+    //         // TODO: error handling
+    //         error => console.error(error)
+    //       );
+    //   }
+    // });
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {
@@ -188,28 +188,28 @@ export class OrganizationsTreeComponent implements OnInit {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    const action = create ?
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
-      this.organizationsService.save(this.selection.data.id, data);
-    this.submit(action);
+    // const action = create ?
+    //   this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
+    //   this.organizationsService.save(this.selection.data.id, data);
+    // this.submit(action);
   }
 
   onRemoveSubmit(): void {
-    const action = this.organizationsService.remove(this.selection.data.id);
-    this.submit(action);
+    // const action = this.organizationsService.remove(this.selection.data.id);
+    // this.submit(action);
   }
 
-  private submit(action: Observable<any>): void {
-    action.subscribe(
-      () => {
-        this.cancelAction();
-        this.selection = [];
-        this.load();
-      },
-      // TODO: error handling
-      error => console.error(error)
-    );
-  }
+  // private submit(action: Observable<any>): void {
+  //   action.subscribe(
+  //     () => {
+  //       this.cancelAction();
+  //       this.selection = [];
+  //       this.load();
+  //     },
+  //     // TODO: error handling
+  //     error => console.error(error)
+  //   );
+  // }
 
   private get rootNode(): TreeNode {
     return this.value[0];
