@@ -32,3 +32,18 @@ export interface IEmployeesResponse {
 }
 
 export type IEmployeeUser = IUser & IEmployee;
+
+
+
+export interface IOrganizationsState {
+  organizations: Array<IOrganization>;
+  employees: Array<IEmployee>;
+}
+
+export type IOrganizationsActionType = 'ORGANIZATIONS_LOAD';
+
+export interface IOrganizationsAction {
+  type: IOrganizationsActionType;
+  // TODO: type
+  payload?: any;
+}
