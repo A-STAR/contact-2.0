@@ -13,7 +13,12 @@ export function employeesReducer(state: IEmployeesState = defaultState, action: 
     case EmployeesService.EMPLOYEES_FETCH_SUCCESS:
       return {
         ...state,
-        data: action.payload.organizations
+        data: action.payload.employees
+      };
+    case EmployeesService.EMPLOYEES_CLEAR:
+      return {
+        ...state,
+        data: []
       };
     default:
       return state;
