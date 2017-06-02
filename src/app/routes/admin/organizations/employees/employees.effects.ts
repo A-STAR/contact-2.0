@@ -21,8 +21,15 @@ export class EmployeesEffects {
           type: EmployeesService.EMPLOYEES_FETCH_SUCCESS,
           payload: data
         }))
+        // TODO: action creator
         .catch(() => Observable.of({
-          type: EmployeesService.EMPLOYEES_FETCH_ERROR
+          type: 'NOTIFICATION_PUSH',
+          payload: {
+            notification: {
+              message: 'Could not fetch users',
+              type: 'ERROR'
+            }
+          }
         }));
     });
 
@@ -43,7 +50,7 @@ export class EmployeesEffects {
           type: 'NOTIFICATION_PUSH',
           payload: {
             notification: {
-              message: 'Could not fetch users',
+              message: 'Could not create user',
               type: 'ERROR'
             }
           }
@@ -62,8 +69,15 @@ export class EmployeesEffects {
             organizationId
           }
         }))
+        // TODO: action creator
         .catch(() => Observable.of({
-          type: EmployeesService.EMPLOYEES_UPDATE_ERROR
+          type: 'NOTIFICATION_PUSH',
+          payload: {
+            notification: {
+              message: 'Could not update user',
+              type: 'ERROR'
+            }
+          }
         }));
     });
 
@@ -79,8 +93,15 @@ export class EmployeesEffects {
             organizationId
           }
         }))
+        // TODO: action creator
         .catch(() => Observable.of({
-          type: EmployeesService.EMPLOYEES_DELETE_ERROR
+          type: 'NOTIFICATION_PUSH',
+          payload: {
+            notification: {
+              message: 'Could not delete user',
+              type: 'ERROR'
+            }
+          }
         }));
     });
 

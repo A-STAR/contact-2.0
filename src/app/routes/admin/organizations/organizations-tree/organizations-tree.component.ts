@@ -104,7 +104,7 @@ export class OrganizationsTreeComponent {
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
     // Caution: this assumes source element has parent
-    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
+    // const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
 
     const sourceParentElement: TreeNode = sourceElement.parent;
     const sourceParentChildren: TreeNode[] = sourceParentElement.children;

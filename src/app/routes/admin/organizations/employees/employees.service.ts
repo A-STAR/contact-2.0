@@ -9,13 +9,9 @@ import { IEmployeeCreateRequest, IEmployeeUpdateRequest, IEmployeesState } from 
 export class EmployeesService {
   static EMPLOYEES_FETCH         = 'EMPLOYEES_FETCH';
   static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
-  static EMPLOYEES_FETCH_ERROR   = 'EMPLOYEES_FETCH_ERROR';
   static EMPLOYEES_CREATE        = 'EMPLOYEES_CREATE';
-  static EMPLOYEES_CREATE_ERROR  = 'EMPLOYEES_CREATE_ERROR';
   static EMPLOYEES_UPDATE        = 'EMPLOYEES_UPDATE';
-  static EMPLOYEES_UPDATE_ERROR  = 'EMPLOYEES_UPDATE_ERROR';
   static EMPLOYEES_DELETE        = 'EMPLOYEES_DELETE';
-  static EMPLOYEES_DELETE_ERROR  = 'EMPLOYEES_DELETE_ERROR';
   static EMPLOYEES_CLEAR         = 'EMPLOYEES_CLEAR';
 
   constructor(private store: Store<IAppState>) {}

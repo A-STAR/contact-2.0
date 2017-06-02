@@ -18,8 +18,15 @@ export class OrganizationsEffects {
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: data
         }))
+        // TODO: action creator
         .catch(() => Observable.of({
-          type: OrganizationsService.ORGANIZATIONS_FETCH_ERROR
+          type: 'NOTIFICATION_PUSH',
+          payload: {
+            notification: {
+              message: 'Could not fetch users',
+              type: 'ERROR'
+            }
+          }
         }));
     });
 
