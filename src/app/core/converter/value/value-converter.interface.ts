@@ -5,7 +5,7 @@ export interface IValueEntity {
   valueB?: number | boolean;
   valueS?: string;
   valueN?: number;
-  valueD?: Date;
+  valueD?: string;
   value?: ValueType;
 }
 

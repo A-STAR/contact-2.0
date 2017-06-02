@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
-import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-actions-log',
@@ -16,12 +17,12 @@ export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 150, maxWidth: 200 },
+    { prop: 'fullName', minWidth: 230, maxWidth: 200 },
     { prop: 'position', maxWidth: 150 },
-    { prop: 'createDateTime', maxWidth: 100 },
+    { prop: 'createDateTime', maxWidth: 150 },
     { prop: 'module', maxWidth: 140 },
-    { prop: 'typeCode', maxWidth: 140 },
-    { prop: 'dsc', minWidth: 160 },
+    { prop: 'typeCode', maxWidth: 190 },
+    { prop: 'dsc', minWidth: 110 },
     { prop: 'machine', maxWidth: 120 },
     { prop: 'duration', maxWidth: 120 }
   ];
@@ -29,22 +30,22 @@ export class ActionsLogComponent {
   renderers: IRenderer = {
     fullName: (actionLog: IActionLog) =>
       [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
-  };
-
-  dataSource: IDataSource = {
-    read: '/api/actions',
-    dataKey: 'actionsLog',
+    typeCode: (actionLog: IActionLog) => {
+      const currentActionType: IActionType =
+        this.actionTypesRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
+      return currentActionType ? currentActionType.name : actionLog.typeCode;
+    },
+    createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
   employeesRows: IEmployee[];
   actionTypesRows: IActionType[];
-  actionsRows = [];
-
-  parseFn = data => (data[this.dataSource.dataKey] || []) as Array<IActionLog>;
+  actionsRows: Array<IActionLog> = [];
 
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
+    private converterService: ValueConverterService,
     private notifications: NotificationsService,
   ) {
 
@@ -58,7 +59,7 @@ export class ActionsLogComponent {
     this.gridService
       .read('/actions')
       .subscribe(
-        () => console.log('yahoo!'),
+        (data) => this.actionsRows = data.actions,
         error => this.notifications.error('Could not fetch data from the server')
       );
   }
