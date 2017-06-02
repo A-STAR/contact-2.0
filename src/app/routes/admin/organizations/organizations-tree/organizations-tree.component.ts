@@ -104,7 +104,7 @@ export class OrganizationsTreeComponent {
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
     // Caution: this assumes source element has parent
-    // const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
+    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
 
     const sourceParentElement: TreeNode = sourceElement.parent;
     const sourceParentChildren: TreeNode[] = sourceParentElement.children;
@@ -133,23 +133,18 @@ export class OrganizationsTreeComponent {
     }
 
     // TODO: do we have to reindex children on previous element parent?
-    // targetElement.children.forEach((element: TreeNode, i: number) => {
-    //   const sortOrder = i + 1;
-    //   if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
-    //     element.data.parentId = targetElement.data.id;
-    //     element.data.sortOrder = sortOrder;
-    //     this.organizationsService
-    //       .save(element.data.id, {
-    //         parentId: element.data.parentId,
-    //         sortOrder: element.data.sortOrder
-    //       })
-    //       .subscribe(
-    //         () => {},
-    //         // TODO: error handling
-    //         error => console.error(error)
-    //       );
-    //   }
-    // });
+    targetElement.children.forEach((element: TreeNode, i: number) => {
+      const sortOrder = i + 1;
+      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
+        element.data.parentId = targetElement.data.id;
+        element.data.sortOrder = sortOrder;
+        this.organizationsService
+          .update(element.data.id, {
+            parentId: element.data.parentId,
+            sortOrder: element.data.sortOrder
+          } as any);
+      }
+    });
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {
@@ -192,14 +187,14 @@ export class OrganizationsTreeComponent {
   }
 
   onToolbarAction(action: IToolbarAction): void {
-    // switch (action.type) {
-    //   case ToolbarActionTypeEnum.REFRESH:
-    //     this.selection = [];
-    //     this.load();
-    //     break;
-    //   default:
-    //     this.action = action.type;
-    // }
+    switch (action.type) {
+      case ToolbarActionTypeEnum.REFRESH:
+        this.selection = [];
+        this.organizationsService.fetch();
+        break;
+      default:
+        this.action = action.type;
+    }
   }
 
   cancelAction(): void {
@@ -211,15 +206,15 @@ export class OrganizationsTreeComponent {
   }
 
   onEditSubmit(data: any, create: boolean): void {
-    // const action = create ?
-    //   this.organizationsService.create(this.selection ? this.selection.data.id : null, data) :
-    //   this.organizationsService.save(this.selection.data.id, data);
-    // this.submit(action);
+    if (create) {
+      this.organizationsService.create(this.selection ? this.selection.data.id : null, data);
+    } else {
+      this.organizationsService.update(this.selection.data.id, data);
+    }
   }
 
   onRemoveSubmit(): void {
-    // const action = this.organizationsService.remove(this.selection.data.id);
-    // this.submit(action);
+    this.organizationsService.delete(this.selection.data.id);
   }
 
   // private submit(action: Observable<any>): void {
