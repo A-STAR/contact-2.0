@@ -12,17 +12,8 @@ export class ActionsLogService {
   }
 
   getActionTypes(): Observable<IActionType[]> {
-    // TODO stub
-    return new Observable<IActionType[]>(observer => {
-      setTimeout(() => {
-        observer.next([
-          {code: 1, name: 'Change form'},
-          {code: 2, name: 'Open form'},
-          {code: 3, name: 'Copy form'}
-        ]);
-        observer.complete();
-      }, 1000);
-    });
+    // TODO Move dict type
+    return this.gridService.read('/dictionaries/{code}/terms', { code: 4 }).map(data => data.terms);
   }
 
   getCooperators(): Observable<IEmployee[]> {

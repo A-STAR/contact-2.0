@@ -19,6 +19,7 @@ import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { PermissionsService } from './permissions/permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
+import { DateConverterService } from './converter/date/date-converter.service';
 
 import { rootReducer } from '../core/state/root.reducer';
 
@@ -35,6 +36,7 @@ import { rootReducer } from '../core/state/root.reducer';
     AuthHttpService,
     AuthService,
     DatePipe,
+    DateConverterService,
     ConstantsService,
     JwtHelper,
     MenuService,

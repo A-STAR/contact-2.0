@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
 
 import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
+import { DateConverterService } from '../date/date-converter.service';
 
 @Injectable()
 export class ValueConverterService {
 
-  constructor(private datePipe: DatePipe) {
+  constructor(private dateConverterService: DateConverterService) {
   }
 
   public serialize(valueEntity: IValueEntity): IValueEntity {
@@ -31,7 +31,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.datePipe.transform(new Date(valueEntity.valueD), 'dd.MM.yyyy HH:mm:ss');
+        valueEntity.value = this.dateConverterService.formatDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
