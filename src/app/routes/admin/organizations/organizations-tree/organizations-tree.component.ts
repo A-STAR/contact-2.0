@@ -164,25 +164,25 @@ export class OrganizationsTreeComponent {
   }
 
   onNodeSelect({ node }: { node: TreeNode }): void {
-    // use for node selection, could operate on selection collection as well
-    const parent = this.findParentRecursive(node);
+    this.onNodeSelectOrExpand(node);
     const isExpanded = node.expanded;
-    this.collapseSiblings(parent);
     if (node.children) {
       node.expanded = !isExpanded;
     }
-
-    this.action = null;
-    this.refreshToolbar();
-    this.onSelect.emit(node.data);
-
-    this.employeesService.fetch(node.data.id);
   }
 
   onNodeExpand({ node }: { node: TreeNode }): void {
+    this.onNodeSelectOrExpand(node);
+  }
+
+  onNodeSelectOrExpand(node: TreeNode): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
+    this.employeesService.fetch(node.data.id);
+    this.action = null;
+    this.refreshToolbar();
+    this.onSelect.emit(node.data);
   }
 
   onToolbarAction(action: IToolbarAction): void {
