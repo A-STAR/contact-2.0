@@ -25,3 +25,12 @@ export interface IActionLog {
   dsc: string;
   personId: number;
 }
+
+export interface IActionsLogServiceState {
+  actionsLog: IActionLog[];
+}
+
+export interface IActionsLogAction {
+  type?: any;
+  success?: IActionLog[];
+}

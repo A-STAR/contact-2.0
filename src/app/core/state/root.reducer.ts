@@ -9,4 +9,5 @@ export const rootReducer = {
   notificationService: notificationReducer,
   organizations: organizationsReducer,
   permissionService: permissionReducer,
+  actionsLogService: actionsLogReducer,
 };

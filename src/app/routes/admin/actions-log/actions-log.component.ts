@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
+import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -40,27 +41,26 @@ export class ActionsLogComponent {
 
   employeesRows: IEmployee[];
   actionTypesRows: IActionType[];
-  actionsRows: Array<IActionLog> = [];
+  actionsLogRows: Array<IActionLog> = [];
+
+  private actionLogsSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
     private converterService: ValueConverterService,
-    private notifications: NotificationsService,
+    private actionsLogService: ActionsLogService,
   ) {
-
     const [ employees, actionTypes ] = this.route.snapshot.data.actionsLogData;
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.employeesRows = employees;
     this.actionTypesRows = actionTypes;
+
+    this.actionLogsSubscription = this.actionsLogService.state
+      .subscribe((state: IActionsLogServiceState) => this.actionsLogRows = state.actionsLog);
   }
 
   onSearch(filterValues: IActionsLogFilterRequest): void {
-    this.gridService
-      .read('/actions')
-      .subscribe(
-        (data) => this.actionsRows = data.actions,
-        error => this.notifications.error('Could not fetch data from the server')
-      );
+    this.actionsLogService.search(filterValues);
   }
 }
