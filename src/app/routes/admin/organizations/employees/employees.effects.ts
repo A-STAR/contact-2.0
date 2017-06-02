@@ -34,10 +34,19 @@ export class EmployeesEffects {
       return this.create(organizationId, employee)
         .map(data => ({
           type: EmployeesService.EMPLOYEES_FETCH,
-          payload: data
+          payload: {
+            organizationId
+          }
         }))
+        // TODO: action creator
         .catch(() => Observable.of({
-          type: EmployeesService.EMPLOYEES_CREATE_ERROR
+          type: 'NOTIFICATION_PUSH',
+          payload: {
+            notification: {
+              message: 'Could not fetch users',
+              type: 'ERROR'
+            }
+          }
         }));
     });
 
@@ -49,7 +58,9 @@ export class EmployeesEffects {
       return this.update(organizationId, userId, employee)
         .map(data => ({
           type: EmployeesService.EMPLOYEES_FETCH,
-          payload: data
+          payload: {
+            organizationId
+          }
         }))
         .catch(() => Observable.of({
           type: EmployeesService.EMPLOYEES_UPDATE_ERROR
@@ -64,7 +75,9 @@ export class EmployeesEffects {
       return this.delete(organizationId, userId)
         .map(data => ({
           type: EmployeesService.EMPLOYEES_FETCH,
-          payload: data
+          payload: {
+            organizationId
+          }
         }))
         .catch(() => Observable.of({
           type: EmployeesService.EMPLOYEES_DELETE_ERROR

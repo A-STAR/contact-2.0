@@ -6,7 +6,6 @@ export interface IEmployee {
 
 export interface IEmployeesState {
   data: Array<IEmployee>;
-  selectedUserId: number;
 }
 
 export interface IEmployeeCreateRequest {

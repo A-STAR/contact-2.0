@@ -7,6 +7,7 @@ import { IOrganization } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
+import { EmployeesService } from '../employees/employees.service';
 import { OrganizationsService } from './organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
@@ -46,7 +47,10 @@ export class OrganizationsTreeComponent {
 
   action: ToolbarActionTypeEnum;
 
-  constructor(private organizationsService: OrganizationsService) {
+  constructor(
+    private employeesService: EmployeesService,
+    private organizationsService: OrganizationsService,
+  ) {
     this.organizationsService.fetch();
     this.organizationsService.state
       .distinctUntilKeyChanged('data')
@@ -167,8 +171,6 @@ export class OrganizationsTreeComponent {
 
   onNodeSelect({ node }: { node: TreeNode }): void {
     // use for node selection, could operate on selection collection as well
-    this.organizationsService.select(node.data);
-
     const parent = this.findParentRecursive(node);
     const isExpanded = node.expanded;
     this.collapseSiblings(parent);
@@ -179,6 +181,8 @@ export class OrganizationsTreeComponent {
     this.action = null;
     this.refreshToolbar();
     this.onSelect.emit(node.data);
+
+    this.employeesService.fetch(node.data.id);
   }
 
   onNodeExpand({ node }: { node: TreeNode }): void {

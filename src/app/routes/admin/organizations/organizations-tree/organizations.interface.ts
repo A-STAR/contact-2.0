@@ -10,5 +10,4 @@ export interface IOrganization {
 
 export interface IOrganizationsState {
   data: Array<IOrganization>;
-  selectedOrganizationId: number;
 }
