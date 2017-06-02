@@ -62,6 +62,8 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
     dataKey: 'users',
   };
 
+  rows = [];
+
   constructor(
     private employeesService: EmployeesService,
     private gridService: GridService,
@@ -70,6 +72,10 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    this.employeesService.state.subscribe(state => {
+      this.rows = state.data;
+    });
   }
 
   transformIsBlocked(isBlocked: number): string {

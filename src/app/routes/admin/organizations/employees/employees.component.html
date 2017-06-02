@@ -22,7 +22,7 @@
   (cancel)="cancelAction()">
 </app-submitted-popup>
 
-<app-grid
+<!--<app-grid
   class="flat"
   selectionType="single"
   [columns]="columns"
@@ -30,6 +30,20 @@
   [dataSource]="dataSource"
   [autoLoad]="false"
   [parseFn]="parseFn"
+  [editPermission]="'ORGANIZATION_EDIT'"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  [toolbarActions]="toolbarActions"
+  (onAction)="onAction($event)">
+</app-grid>-->
+
+<app-grid
+  class="flat"
+  selectionType="single"
+  [autoLoad]="false"
+  [columns]="columns"
+  [columnTranslationKey]="'organizations.employees'"
+  [rows]="rows"
   [editPermission]="'ORGANIZATION_EDIT'"
   (onRowSelect)="onSelectedRowChange($event)"
   (onEdit)="onEdit()"

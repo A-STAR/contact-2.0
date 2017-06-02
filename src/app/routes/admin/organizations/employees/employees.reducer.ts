@@ -14,7 +14,7 @@ export function employeesReducer(state: IEmployeesState = defaultState, action: 
     case EmployeesService.EMPLOYEES_FETCH_SUCCESS:
       return {
         ...state,
-        data: action.payload.employees
+        data: action.payload.users
       };
     case EmployeesService.EMPLOYEES_CLEAR:
       return {
