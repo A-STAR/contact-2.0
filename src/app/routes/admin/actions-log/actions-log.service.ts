@@ -16,7 +16,7 @@ export class ActionsLogService {
     return this.gridService.read('/dictionaries/{code}/terms', { code: 4 }).map(data => data.terms);
   }
 
-  getCooperators(): Observable<IEmployee[]> {
+  getOperators(): Observable<IEmployee[]> {
     // TODO stub
     return new Observable<IEmployee[]>(observer => {
       setTimeout(() => {

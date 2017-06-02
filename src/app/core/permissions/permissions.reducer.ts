@@ -17,13 +17,13 @@ export function permissionReducer(
 ): IPermissionsState {
 
   switch (action.type) {
-    case 'PERMISSION_FETCH':
+    case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return {
-        permissions: []
+        permissions: action.payload
       };
     case 'PERMISSION_INVALIDATE':
       return {
-        permissions: state.permissions
+        permissions: []
       };
     case 'PERMISSION_UPDATE':
       return {
