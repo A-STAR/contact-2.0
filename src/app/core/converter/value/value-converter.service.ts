@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
-import { DateConverterService } from '../date/date-converter.service';
 
 @Injectable()
 export class ValueConverterService {
 
-  constructor(private dateConverterService: DateConverterService) {
+  constructor() {
   }
 
-  public serialize(valueEntity: IValueEntity): IValueEntity {
+  serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
         valueEntity.valueN = this.toBooleanNumber(valueEntity.value);
@@ -25,13 +24,13 @@ export class ValueConverterService {
     return valueEntity;
   }
 
-  public deserialize(valueEntity: IValueEntity): IValueEntity {
+  deserialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.dateConverterService.formatDate(valueEntity.valueD);
+        valueEntity.value = this.formatDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -45,14 +44,14 @@ export class ValueConverterService {
     return valueEntity;
   }
 
-  public deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
+  deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
     if (!dataSet) {
       return [];
     }
     return dataSet.map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
   }
 
-  public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
+  deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
       return this.toBooleanNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
@@ -61,7 +60,7 @@ export class ValueConverterService {
     return valueEntity.value;
   }
 
-  public toLabeledValues(data: string|number|ILabeledValue[]): number|any[] {
+  toLabeledValues(data: string|number|ILabeledValue[]): number|any[] {
     if (data === '') {
       return null;
     }
@@ -71,7 +70,7 @@ export class ValueConverterService {
     return data as number;
   }
 
-  public firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
+  firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
     const v: number|any[] = this.toLabeledValues(data);
     if (Array.isArray(v)) {
       return v && v.length ? v[0] : data;
@@ -79,7 +78,7 @@ export class ValueConverterService {
     return v;
   }
 
-  public toBooleanNumber(value: ValueType): number {
+  toBooleanNumber(value: ValueType): number {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'boolean') {
@@ -88,5 +87,16 @@ export class ValueConverterService {
       return parseInt(value as string, 10) ? 1 : 0;
     }
     return value;
+  }
+
+  formatDate(dateAsString: string, useTime: boolean = false) {
+    const momentDate = moment(dateAsString);
+    if (momentDate.isValid()) {
+      return useTime
+        ? momentDate.format('DD.MM.YYYY hh:mm:ss')
+        : momentDate.format('DD.MM.YYYY');
+    } else {
+      return dateAsString;
+    }
   }
 }

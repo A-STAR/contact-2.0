@@ -7,7 +7,7 @@ import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface'
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { DateConverterService } from '../../../core/converter/date/date-converter.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-actions-log',
@@ -35,7 +35,7 @@ export class ActionsLogComponent {
         this.actionTypesRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
       return currentActionType ? currentActionType.name : actionLog.typeCode;
     },
-    createDateTime: (actionLog: IActionLog) => this.dateConverterService.formatDate(actionLog.createDateTime, true)
+    createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
   employeesRows: IEmployee[];
@@ -45,7 +45,7 @@ export class ActionsLogComponent {
   constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
-    private dateConverterService: DateConverterService,
+    private converterService: ValueConverterService,
     private notifications: NotificationsService,
   ) {
 
