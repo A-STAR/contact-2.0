@@ -7,9 +7,9 @@ import { IOrganizationsState } from './organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
-  static ACTION_FETCH = 'ORGANIZATIONS_FETCH';
-  static ACTION_FETCH_SUCCESS = 'ORGANIZATIONS_FETCH_SUCCESS';
-  static ACTION_FETCH_ERROR = 'ORGANIZATIONS_FETCH_ERROR';
+  static ORGANIZATIONS_FETCH = 'ORGANIZATIONS_FETCH';
+  static ORGANIZATIONS_FETCH_SUCCESS = 'ORGANIZATIONS_FETCH_SUCCESS';
+  static ORGANIZATIONS_FETCH_ERROR = 'ORGANIZATIONS_FETCH_ERROR';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -21,7 +21,7 @@ export class OrganizationsService {
 
   fetch(): void {
     return this.store.dispatch({
-      type: OrganizationsService.ACTION_FETCH
+      type: OrganizationsService.ORGANIZATIONS_FETCH
     });
   }
 }

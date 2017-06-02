@@ -10,7 +10,7 @@ const defaultState: IOrganizationsState = {
 
 export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
   switch (action.type) {
-    case OrganizationsService.ACTION_FETCH_SUCCESS:
+    case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
       return {
         ...state,
         data: action.payload.organizations

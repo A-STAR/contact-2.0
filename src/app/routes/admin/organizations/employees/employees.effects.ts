@@ -13,15 +13,15 @@ export class EmployeesEffects {
 
   @Effect()
   fetchEmployees = this.actions
-    .ofType(EmployeesService.ACTION_FETCH)
+    .ofType(EmployeesService.EMPLOYEES_FETCH)
     .switchMap(action => {
       return this.read()
         .map(data => ({
-          type: EmployeesService.ACTION_FETCH_SUCCESS,
+          type: EmployeesService.EMPLOYEES_FETCH_SUCCESS,
           payload: data
         }))
         .catch(() => Observable.of({
-          type: EmployeesService.ACTION_FETCH_ERROR
+          type: EmployeesService.EMPLOYEES_FETCH_ERROR
         }));
     });
 

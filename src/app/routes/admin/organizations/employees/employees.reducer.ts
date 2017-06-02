@@ -10,7 +10,7 @@ const defaultState: IEmployeesState = {
 
 export function employeesReducer(state: IEmployeesState = defaultState, action: Action): IEmployeesState {
   switch (action.type) {
-    case EmployeesService.ACTION_FETCH_SUCCESS:
+    case EmployeesService.EMPLOYEES_FETCH_SUCCESS:
       return {
         ...state,
         data: action.payload.organizations
