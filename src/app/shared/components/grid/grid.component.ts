@@ -16,7 +16,6 @@ import { IToolbarAction } from '../toolbar/toolbar.interface';
 
 import { GridService } from './grid.service';
 import { SettingsService } from '../../../core/settings/settings.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-grid',
@@ -61,7 +60,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     private gridService: GridService,
     public settings: SettingsService,
     private translate: TranslateService,
-    private userPermissionsService: UserPermissionsService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
   }
@@ -167,9 +165,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onActivate(event: any): void {
     if (event.type === 'dblclick') {
-      if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
-        return;
-      }
+      // if (this.editPermission && !this.permissionsService.hasPermission(this.editPermission)) {
+      //   return;
+      // }
       const { row } = event;
       this.onEdit.emit(row);
       // workaround for rows getting unselected on dblclick

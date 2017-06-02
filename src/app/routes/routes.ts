@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
-import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
+import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -27,7 +27,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      app: UserPermissionsResolver,
+      app: PermissionsResolver,
       menu: MenuResolver
     },
     runGuardsAndResolvers: 'paramsChange',

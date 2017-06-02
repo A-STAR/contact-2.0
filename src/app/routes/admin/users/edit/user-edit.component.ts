@@ -5,7 +5,7 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 import { IUser } from '../users.interface';
 
 import { ConstantsService } from '../../../../core/constants/constants.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
@@ -25,12 +25,12 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
   private passwordValidators: ValidatorFn = null;
 
   constructor(
-    private userPermissionsService: UserPermissionsService,
+    private permissionsService: PermissionsService,
     private constantsService: ConstantsService
   ) {
     super();
-    this.canEditUser = this.userPermissionsService.hasPermission('USER_EDIT');
-    this.canEditUserRole = this.userPermissionsService.hasPermission('USER_ROLE_EDIT');
+    this.canEditUser = this.permissionsService.hasPermission('USER_EDIT');
+    this.canEditUserRole = this.permissionsService.hasPermission('USER_ROLE_EDIT');
     this.passwordValidators = password(
       !this.editedEntity,
       this.constantsService.get('UserPassword.MinLength') as number,

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { PagesModule } from './pages/pages.module';
 
-import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
+import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
 
 import { routes } from './routes';
@@ -17,7 +17,7 @@ import { routes } from './routes';
   ],
   providers: [
     MenuResolver,
-    UserPermissionsResolver,
+    PermissionsResolver,
   ],
   exports: [
     RouterModule

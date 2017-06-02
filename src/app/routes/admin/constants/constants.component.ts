@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,7 +9,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/component
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../core/permissions/permissions.service';
 
 import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 
@@ -17,7 +17,7 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
-export class ConstantsComponent extends GridEntityComponent<IConstant> {
+export class ConstantsComponent extends GridEntityComponent<IConstant> implements AfterViewInit {
   static COMPONENT_NAME = 'ConstantsComponent';
 
   toolbarActions: Array<IToolbarAction> = [
@@ -52,10 +52,18 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     private translateService: TranslateService,
     private notifications: NotificationsService,
     private valueConverterService: ValueConverterService,
-    private permissions: UserPermissionsService,
+    private permissions: PermissionsService,
 ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngAfterViewInit(): void {
+    this.grid.load()
+      .subscribe(
+        () => console.log(true),
+        (error) => console.log(error)
+      );
   }
 
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
