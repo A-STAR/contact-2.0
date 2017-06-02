@@ -1,24 +1,30 @@
-<app-term-edit *ngIf="isEntityBeingCreated"
-               [title]="'terms.create.title'"
-               [masterEntity]="masterEntity"
-               (submit)="onEditSubmit($event, true)"
-               (cancel)="cancelAction()"></app-term-edit>
+<app-term-edit
+  *ngIf="isEntityBeingCreated"
+  [title]="'terms.create.title'"
+  [masterEntity]="masterEntity"
+  (submit)="onEditSubmit($event, true)"
+  (cancel)="cancelAction()">
+</app-term-edit>
 
-<app-term-edit *ngIf="isEntityBeingEdited"
-               [title]="'terms.edit.title'"
-               [masterEntity]="masterEntity"
-               [editedEntity]="selectedEntity"
-               (submit)="onEditSubmit($event, false)"
-               (cancel)="cancelAction()"></app-term-edit>
+<app-term-edit
+  *ngIf="isEntityBeingEdited"
+  [title]="'terms.edit.title'"
+  [masterEntity]="masterEntity"
+  [editedEntity]="selectedEntity"
+  (submit)="onEditSubmit($event, false)"
+  (cancel)="cancelAction()">
+</app-term-edit>
 
-<app-submitted-popup *ngIf="isEntityBeingRemoved"
-                     [titleTranslationKey]="'terms.remove.title'"
-                     [actionTranslationKey]="'terms.remove.confirmMessage'"
-                     [actionMessage]="'default.buttons.remove'"
-                     [messageParams]="selectedEntity"
-                     [actionMode]="'danger'"
-                     (action)="onRemoveSubmit()"
-                     (cancel)="cancelAction()"></app-submitted-popup>
+<app-submitted-popup
+  *ngIf="isEntityBeingRemoved"
+  [titleTranslationKey]="'terms.remove.title'"
+  [actionTranslationKey]="'terms.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [messageParams]="selectedEntity"
+  [actionMode]="'danger'"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-submitted-popup>
 
 <app-grid
   selectionType="single"
@@ -31,6 +37,6 @@
   [editPermission]="'DICT_TERM_EDIT'"
   (onRowSelect)="onSelectedRowChange($event)"
   (onEdit)="onEdit()"
-  [bottomActions]="bottomActions"
+  [toolbarActions]="toolbarActions"
   (onAction)="onAction($event)">
 </app-grid>

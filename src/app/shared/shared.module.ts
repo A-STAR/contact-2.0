@@ -32,6 +32,7 @@ import { MomentModule } from 'angular2-moment';
 import { TextMaskModule } from 'angular2-text-mask';
 
 // App directives
+import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
@@ -44,6 +45,9 @@ import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
 import { SubmittedPopupModule } from './components/popup/submitted-popup.module';
+import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { TimeModule } from './components/form/time/time.module';
+import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -60,15 +64,19 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     TranslateModule,
     ProgressbarModule.forRoot(),
     TextMaskModule,
+    MultiSelectModule,
     // app modules
+    ActionDialogModule,
     ContentTabstripModule,
     DatePickerModule,
     DynamicFormModule,
     GridModule,
     MomentModule,
+    PopupInputModule,
     ToasterModule,
     ToolbarModule,
     TreeModule,
+    TimeModule,
     SubmittedPopupModule,
   ],
   providers: [
@@ -114,19 +122,23 @@ import { SubmittedPopupModule } from './components/popup/submitted-popup.module'
     ToasterModule,
     VectormapDirective,
     // App exports
-    RouterOutlet2Directive,
+    ActionDialogModule,
     ContentTabstripModule,
     DatePickerModule,
     DynamicFormModule,
     DialogModule,
     GridModule,
     MomentModule,
+    MultiSelectModule,
     NumericInputComponent,
+    PopupInputModule,
     QBuilderComponent,
+    RouterOutlet2Directive,
     TabComponent,
     TabstripComponent,
     ToolbarModule,
     TreeModule,
+    TimeModule,
     SubmittedPopupModule,
   ]
 })

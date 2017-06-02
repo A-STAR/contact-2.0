@@ -211,6 +211,16 @@
   vertical-align: bottom;
 }
 
+.container-align {
+  position: relative;
+}
+
+.child-align-middle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 
 // Background image
 .bg-center {
@@ -421,4 +431,10 @@
 .media-box-list {
   padding-left: 0;
   list-style: none;
+}
+
+.message-container {
+  height: 50px;
+  padding: .5rem 1.2rem;
+  cursor: default;
 }

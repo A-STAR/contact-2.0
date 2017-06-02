@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { PermissionsService } from '../../../../../core/permissions/permissions.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -21,9 +21,9 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
     { value: 4, label: 'Куратор' },
   ];
 
-  constructor(private gridService: GridService, private userPermissionsService: UserPermissionsService) {
+  constructor(private gridService: GridService, private permissionsService: PermissionsService) {
     super();
-    this.canEdit = this.userPermissionsService.hasPermission('ORGANIZATION_EDIT');
+    this.canEdit = this.permissionsService.hasPermission('ORGANIZATION_EDIT');
   }
 
   get formData(): any {

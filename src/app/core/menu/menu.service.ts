@@ -1,50 +1,98 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationStart, NavigationEnd, Router } from '@angular/router';
+import { Headers } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
-import { IMenuItem, IMenuApiResponseItem, IMenuApiResponse } from './menu.interface';
+import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
+
 import { AuthService } from '../auth/auth.service';
+import { GridService } from '../../shared/components/grid/grid.service';
+
 import { menuConfig } from '../../routes/menu-config';
 
 const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
-  { name: 'menuItemHome' },
+  { id: 0, name: 'menuItemHome' },
 ];
 
 @Injectable()
 export class MenuService {
-  private menuItems: Array<IMenuItem> = [];
+  private lastNavigationStartTimestamp: number = null;
 
-  constructor(private http: AuthHttp, private authService: AuthService, private router: Router) { }
+  private guiObjects$: Observable<Array<IMenuItem>>;
 
-  loadMenu(): Observable<boolean> {
-    return this.authService
+  private guiObjectIds: { [key: string]: number };
+
+  constructor(
+    private http: AuthHttp,
+    private authService: AuthService,
+    private gridService: GridService,
+    private router: Router
+  ) {
+    this.guiObjects$ = this.authService
       .getRootUrl()
       .flatMap(root => {
         return this.http
           .get(`${root}/api/guiconfigurations`)
           .map(resp => resp.json())
-          .do(resp => this.prepareMenu(resp))
-          .map(resp => true);
-      })
-      .catch(error => {
-        // TODO: move into wrapper
-        if ([401, 403].find(status => error.status === status)) {
-          this.authService.redirectToLogin();
-        } else {
-          this.router.navigate(['/connection-error']);
-        }
-        throw error;
+          .map(resp => resp.appGuiObjects)
+          .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
+          .map(data => this.prepareMenu(data));
       });
+
+    this.onSectionLoadStart();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.onSectionLoadStart();
+      } else if (event instanceof NavigationEnd) {
+        this.onSectionLoadEnd(event);
+      }
+    });
   }
 
-  getMenu(): Array<IMenuItem> {
-    return this.menuItems;
+  get guiObjects(): Observable<Array<IMenuItem>> {
+    return this.guiObjects$;
   }
 
-  private prepareMenu(response: IMenuApiResponse): void {
-    this.menuItems = ADDITIONAL_MENU_ITEMS
-      .concat(response.appGuiObjects)
+  private onSectionLoadStart(): void {
+    this.lastNavigationStartTimestamp = Date.now();
+  }
+
+  private onSectionLoadEnd(event: NavigationEnd): void {
+    const delay = Date.now() - this.lastNavigationStartTimestamp;
+    const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
+    if (name) {
+      // this.logAction(name, delay);
+    }
+  }
+
+  private logAction(name: string, delay: number): void {
+    // TODO: add headers options to GridService
+    this.authService
+      .getRootUrl()
+      .flatMap(root => {
+        return this.http
+          .post(
+            `${root}/api/actions`,
+            {
+              typeCode: 1,
+              duration: delay
+            },
+            {
+              headers: new Headers({
+                'X-Gui-Object': this.guiObjectIds[name]
+              })
+            }
+          )
+          .map(resp => resp.json());
+      })
+      .take(1)
+      .subscribe();
+  }
+
+  private prepareMenu(appGuiObjects: Array<IMenuApiResponseItem>): Array<IMenuItem> {
+    return ADDITIONAL_MENU_ITEMS
+      .concat(appGuiObjects)
       .map(item => this.prepareMenuNode(item));
   }
 
@@ -53,5 +101,13 @@ export class MenuService {
       ...menuConfig[node.name],
       children: node.children && node.children.length ? node.children.map(child => this.prepareMenuNode(child)) : undefined
     };
+  }
+
+  private flattenGuiObjectIds(appGuiObjects: Array<IMenuApiResponseItem>): any {
+    return appGuiObjects.reduce((acc, guiObject) => ({
+      ...acc,
+      ...this.flattenGuiObjectIds(guiObject.children),
+      [guiObject.name]: guiObject.id
+    }), {});
   }
 }

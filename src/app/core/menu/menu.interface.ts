@@ -1,4 +1,5 @@
 export interface IMenuApiResponseItem {
+  id: number;
   name: string;
   children?: Array<IMenuApiResponseItem>;
 }

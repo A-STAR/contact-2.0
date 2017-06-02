@@ -24,14 +24,14 @@ export class DictComponent extends GridEntityComponent<IDict> {
 
   private dictReady = false;
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_DELETE' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];
@@ -75,10 +75,11 @@ export class DictComponent extends GridEntityComponent<IDict> {
     this.dictReady = false;
 
     this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
-      .subscribe((translations: IEntityTranslation[]) => this.onLoadNameTranslations(translations));
+      .take(1)
+      .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
   }
 
-  onLoadNameTranslations(currentTranslations: IEntityTranslation[]): void {
+  loadNameTranslations(currentTranslations: IEntityTranslation[]): void {
     this.dictReady = true;
 
     this.selectedEntity.nameTranslations = currentTranslations
@@ -125,9 +126,13 @@ export class DictComponent extends GridEntityComponent<IDict> {
       delete data.translatedName;
       delete data.nameTranslations;
 
-      Observable.forkJoin(editTasks).subscribe(() => this.onSuccess());
+      Observable.forkJoin(editTasks)
+        .take(1)
+        .subscribe(() => this.onSuccess());
     } else {
-      this.gridService.create('/api/dictionaries', {}, data).subscribe(() => this.onSuccess());
+      this.gridService.create('/api/dictionaries', {}, data)
+        .take(1)
+        .subscribe(() => this.onSuccess());
     }
   }
 

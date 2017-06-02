@@ -25,14 +25,13 @@
 <app-grid
   class="flat"
   selectionType="single"
+  [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'organizations.employees'"
-  [dataSource]="dataSource"
-  [autoLoad]="false"
-  [parseFn]="parseFn"
+  [rows]="rows"
   [editPermission]="'ORGANIZATION_EDIT'"
   (onRowSelect)="onSelectedRowChange($event)"
   (onEdit)="onEdit()"
-  [bottomActions]="bottomActions"
+  [toolbarActions]="toolbarActions"
   (onAction)="onAction($event)">
 </app-grid>

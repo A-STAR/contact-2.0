@@ -4,10 +4,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { BsDropdownDirective } from 'ngx-bootstrap';
 const browser = require('jquery.browser');
 
-import { INotification, INotificationFilters, INotificationServiceState } from '../../core/notifications/notifications.interface';
+import { IFilters, INotification, INotificationServiceState } from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { NotificationsActions } from '../../core/notifications/notifications.actions';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
@@ -27,13 +26,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   notifications: Array<INotification>;
 
-  filters: INotificationFilters;
+  filters: IFilters;
 
   private notificationSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
-    private notificationsActions: NotificationsActions,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService,

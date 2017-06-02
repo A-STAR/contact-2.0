@@ -10,11 +10,11 @@
   [columns]="columns"
   [columnTranslationKey]="'constants'"
   [dataSource]="dataSource"
-  [autoLoad]="true"
+  [autoLoad]="false"
   [parseFn]="parseFn"
   [editPermission]="'CONST_VALUE_EDIT'"
   (onRowSelect)="onSelectedRowChange($event)"
   (onEdit)="onEdit()"
-  [bottomActions]="bottomActions"
+  [toolbarActions]="toolbarActions"
   (onAction)="onAction($event)">
 </app-grid>

@@ -1,26 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { IConstant } from './constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
-import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
+
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { IConstant } from './constants.interface';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { PermissionsService } from '../../../core/permissions/permissions.service';
+
+import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html'
 })
-export class ConstantsComponent extends GridEntityComponent<IConstant> {
+export class ConstantsComponent extends GridEntityComponent<IConstant> implements AfterViewInit {
   static COMPONENT_NAME = 'ConstantsComponent';
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
   ];
 
@@ -41,22 +46,25 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     dataKey: 'constants',
   };
 
-  tabs: Array<any> = [
-    { id: 0, title: 'Константы', active: true },
-  ];
-
   constructor(
     private datePipe: DatePipe,
     private gridService: GridService,
     private translateService: TranslateService,
-    private valueConverterService: ValueConverterService) {
-
+    private notifications: NotificationsService,
+    private valueConverterService: ValueConverterService,
+    private permissions: PermissionsService,
+  ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
-  onTabClose(id: number): void {
-    this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
+  ngAfterViewInit(): void {
+    this.grid.load()
+      .take(1)
+      .subscribe(
+        () => {},
+        error => this.handleError(error, 'VIEW')
+      );
   }
 
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
@@ -84,14 +92,13 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     }
 
     this.gridService
-      .update('/api/constants/{id}', { id }, body)
+      .update(this.dataSource.update, { id }, body)
       .subscribe(
         () => {
           this.afterUpdate();
           this.cancelAction();
         },
-        // TODO: display error
-        error => console.error(error)
+        error => this.notifications.error('Could not save the changes')
       );
   }
 
@@ -99,5 +106,18 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     // TODO: move to date service
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  }
+
+  private handleError(error: XMLHttpRequest, action?: string): void {
+    const { status } = error;
+    switch (status) {
+      case 401:
+        this.notifications.error(`Authentication error. Please try to relogin.`);
+        break;
+      case 403:
+        this.notifications.error(`Insufficient user permissions for '${action}' action`);
+        break;
+      default:
+    }
   }
 }

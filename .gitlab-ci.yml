@@ -18,7 +18,7 @@ job_build:
   script:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
-    - npm install
+    - node -v && npm install
     - npm run build -- --prod --progress=false
   artifacts:
     name: "frontend_default_build"

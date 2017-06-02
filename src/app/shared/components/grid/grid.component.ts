@@ -12,10 +12,10 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IDataSource, IParameters, TSelectionType } from './grid.interface';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { SettingsService } from '../../../core/settings/settings.service';
-import { GridService } from './grid.service';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
+
+import { GridService } from './grid.service';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-grid',
@@ -26,10 +26,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
-  @Input() bottomActions: IToolbarAction[];
+  @Input() footerHeight = 50;
+  @Input() toolbarActions: IToolbarAction[];
   @Input() columns: Array<any> = [];
   @Input() dataSource: IDataSource;
-  @Input() editPermission;
+  @Input() editPermission: string;
+  @Input() rows: Array<any> = [];
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() selectionType: TSelectionType;
@@ -39,6 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
+  @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
@@ -50,7 +53,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   element: HTMLElement;
   messages: object = {};
-  rows: Array<any> = [];
   selected: Array<any> = [];
   subscription: EventEmitter<any>;
 
@@ -58,7 +60,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     private gridService: GridService,
     public settings: SettingsService,
     private translate: TranslateService,
-    private userPermissionsService: UserPermissionsService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
   }
@@ -68,18 +69,20 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get filteredRows(): Array<any> {
-    return this.rows.filter(this.filter);
+    return (this.rows || []).filter(this.filter);
   }
 
   get hasToolbar(): boolean {
-    return !!this.bottomActions;
+    return !!this.toolbarActions;
   }
 
   ngOnInit(): void {
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
     if (this.autoLoad) {
-      this.load(this.initialParameters).subscribe();
+      this.load(this.initialParameters)
+        .take(1)
+        .subscribe();
     }
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
@@ -121,7 +124,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    const offset = 43 + 15 + 15 + 50 + 8;
+    const toolbarHeight = this.hasToolbar ? 50 : 0;
+    const offset = 43 + 15 + 15 + toolbarHeight + 8;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
@@ -130,12 +134,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.gridService
       .read(this.dataSource.read, parameters)
       .map(data => this.parseFn(data))
-      .do(data => this.updateRows(data))
-      .catch(err => {
-        // TODO: gisplay message & log
-        console.error(err);
-        throw new Error(err);
-      });
+      .do(data => this.updateRows(data));
   }
 
   update(routeParams: object, body: object): Observable<any> {
@@ -161,15 +160,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onActivate(event: any): void {
     if (event.type === 'dblclick') {
-      if (this.editPermission && !this.userPermissionsService.hasPermission(this.editPermission)) {
-        return;
-      }
+      // if (this.editPermission && !this.permissionsService.hasPermission(this.editPermission)) {
+      //   return;
+      // }
       const { row } = event;
       this.onEdit.emit(row);
       // workaround for rows getting unselected on dblclick
       if (!this.selected.find(selected => selected.$$id === row.$$id)) {
         this.selected = this.selected.concat(row);
       }
+      this.onRowDoubleSelect.emit(this.selected);
     }
   }
 

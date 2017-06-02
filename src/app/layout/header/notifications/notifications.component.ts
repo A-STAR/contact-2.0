@@ -1,8 +1,8 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import { INotification, INotificationFilters, INotificationType } from '../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
-import { NotificationsActions } from '../../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
@@ -12,44 +12,52 @@ import { NotificationsActions } from '../../../core/notifications/notifications.
 export class NotificationsComponent {
 
   @Input() notifications: Array<INotification>;
-  @Input() filters: INotificationFilters;
+  @Input() filters = <IFilters>null;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
-  filterTypes: Array<INotificationType> = [ 'INFO', 'WARNING', 'ERROR', 'DEBUG' ];
+  filterTypes: Array<NotificationTypeEnum> = [
+    NotificationTypeEnum.INFO,
+    NotificationTypeEnum.WARNING,
+    NotificationTypeEnum.ERROR,
+    NotificationTypeEnum.DEBUG,
+  ];
 
-  private notificationIconsClasses = {
-    DEBUG: 'fa fa-bug text-danger',
-    ERROR: 'fa fa-times-circle text-danger',
-    WARNING: 'fa fa-warning text-warning',
-    INFO: 'fa fa-check-circle text-info',
-  };
-
-  constructor(private notificationsActions: NotificationsActions) {}
+  constructor(private notificationsService: NotificationsService) {}
 
   @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.stopPropagation();
   }
 
-  getIconClass(notification: INotification): string {
-    return this.notificationIconsClasses[notification.type];
+  getIconClass(type: NotificationTypeEnum): string {
+    switch (type) {
+      case NotificationTypeEnum.DEBUG: return 'fa fa-bug text-danger';
+      case NotificationTypeEnum.ERROR: return 'fa fa-exclamation-circle text-danger';
+      case NotificationTypeEnum.WARNING: return 'fa fa-warning text-warning';
+      case NotificationTypeEnum.INFO: return 'fa fa-info-circle text-info';
+    }
   }
 
-  getTranslationKey(type: INotificationType): string {
-    return `notifications.types.${type.toLowerCase()}`;
+  getTranslationKey(type: NotificationTypeEnum): string {
+    switch (type) {
+      case NotificationTypeEnum.DEBUG: return 'notifications.types.debug';
+      case NotificationTypeEnum.ERROR: return 'notifications.types.error';
+      case NotificationTypeEnum.WARNING: return 'notifications.types.warning';
+      case NotificationTypeEnum.INFO: return 'notifications.types.info';
+    }
   }
 
-  onFilterChange(type: INotificationType, event: MouseEvent): void {
-    this.notificationsActions.filter(type, (event.target as HTMLInputElement).checked);
+  onFilterChange(type: NotificationTypeEnum, event: MouseEvent): void {
+    this.notificationsService.filter(type, (event.target as HTMLInputElement).checked);
   }
 
   onDismissClick(index: number): void {
-    this.notificationsActions.remove(index);
+    this.notificationsService.remove(index);
   }
 
   onClearClick(): void {
-    this.notificationsActions.reset();
+    this.notificationsService.reset();
     this.close();
   }
 

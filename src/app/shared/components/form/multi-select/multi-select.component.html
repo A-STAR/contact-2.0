@@ -1,0 +1,43 @@
+<div [ngStyle]="styles">
+  <div class="multiselect-container col-md-8">
+    <app-grid
+      #gridFrom
+      [styles]="gridStyles"
+      [columns]="columnsFrom"
+      [rows]="rowsFrom"
+      [filter]="rowsFilterFrom"
+      [autoLoad]="false"
+      [footerHeight]="false"
+      [columnTranslationKey]="columnsTranslationKeyFrom">
+    </app-grid>
+  </div>
+  <div class="multiselect-control-bar col-md-1">
+      <div class="row container-align">
+        <div class="child-align-middle">
+          <div class="btn" (click)="onRightAction()">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </div>
+          <div class="btn" (click)="onRightDoubleAction()">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+          </div>
+          <div class="btn" (click)="onLeftAction()">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+          </div>
+          <div class="btn" (click)="onLeftDoubleAction()">
+            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="multiselect-container col-md-3">
+    <app-grid
+      #gridTo
+      [styles]="gridStyles"
+      [columns]="columnsTo"
+      [rows]="rowsTo"
+      [autoLoad]="false"
+      [footerHeight]="0"
+      [columnTranslationKey]="columnsTranslationKeyTo">
+    </app-grid>
+  </div>
+</div>

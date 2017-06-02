@@ -1,32 +1,38 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+
+import { IMenuItem } from '../../core/menu/menu.interface';
 
 import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
-  menuItems: Array<any>;
-  router: Router;
+  menuItems: Array<IMenuItem>;
 
-  constructor(private menuSrevice: MenuService, public settings: SettingsService, private injector: Injector) {
-    this.menuItems = menuSrevice.getMenu();
-    menuSrevice.loadMenu()
-      .subscribe(
-        () => { this.menuItems = menuSrevice.getMenu(); },
-        // TODO: show a message on failure
-        err => console.error(err)
-      );
+  private routeDataSubscription: Subscription;
+
+  constructor(
+    private menuService: MenuService,
+    private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public settings: SettingsService,
+  ) {
+    this.routeDataSubscription = this.route.data.subscribe(
+      data => this.menuItems = data.menu,
+      () => notificationsService.error('sidebar.messages.loadError')
+    );
   }
 
   ngOnInit(): void {
-    this.router = this.injector.get(Router);
-
     this.router.events.subscribe((val) => {
       // close any submenu opened when route changes
       this.removeFloatingNav();
@@ -35,7 +41,11 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  toggleSubmenuClick(event): void {
+  ngOnDestroy(): void {
+    this.routeDataSubscription.unsubscribe();
+  }
+
+  toggleSubmenuClick(event: UIEvent): void {
     if (!this.isSidebarCollapsed() && !this.isSidebarCollapsedText() && !this.isEnabledHover()) {
       event.preventDefault();
 
@@ -84,9 +94,10 @@ export class SidebarComponent implements OnInit {
   }
 
   // Close menu collapsing height
-  closeMenu(elem): void {
-      elem.height(elem[0].scrollHeight); // set height
-      elem.height(0); // and move to zero to collapse
+  closeMenu(elem: any): void {
+      elem.height(elem[0].scrollHeight);
+      // and move to zero to collapse
+      elem.height(0);
       elem.removeClass('opening');
   }
 
@@ -107,11 +118,13 @@ export class SidebarComponent implements OnInit {
       ul = anchor.next();
 
       if (!ul.length) {
-        return; // if not submenu return
+        // if not submenu return
+        return;
       }
 
       const $aside = $('.aside');
-      const $asideInner = $aside.children('.aside-inner'); // for top offset calculation
+      // for top offset calculation
+      const $asideInner = $aside.children('.aside-inner');
       const $sidebar = $asideInner.children('.sidebar');
       const padding = parseInt( $asideInner.css('padding-top'), 0) + parseInt( $aside.css('padding-top'), 0);
       const itemTop = ((anchor.parent().position().top) + padding) - $sidebar.scrollTop();
@@ -133,7 +146,7 @@ export class SidebarComponent implements OnInit {
 
       floatingNav
         .on('mouseleave', () => { floatingNav.remove(); })
-        .find('a').on('click', function(e) {
+        .find('a').on('click', function(e: any): void {
           // prevents page reload on click
           e.preventDefault();
           // get the exact route path to navigate

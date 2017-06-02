@@ -16,7 +16,7 @@ export class RolesComponent implements AfterViewInit {
   selectedRole: IRole = null;
   action: ToolbarActionTypeEnum = null;
 
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
     { text: 'toolbar.action.copy', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
@@ -24,7 +24,7 @@ export class RolesComponent implements AfterViewInit {
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.CLONE,
     ToolbarActionTypeEnum.REMOVE,
@@ -95,7 +95,8 @@ export class RolesComponent implements AfterViewInit {
   }
 
   onUpdate(): void {
-    this.selectedRole = null;
+    this.onSelect.emit(this.selectedRole = null);
+
     this.grid.load().
       subscribe(
         () => {},
@@ -105,10 +106,10 @@ export class RolesComponent implements AfterViewInit {
   }
 
   callActionByType(type: ToolbarActionTypeEnum): void {
-    this.onAction(this.bottomActions.find((action: IToolbarAction) => type === action.type));
+    this.onAction(this.toolbarActions.find((action: IToolbarAction) => type === action.type));
   }
 
-  private selectRole(role = null): void {
+  private selectRole(role: IRole = null): void {
     this.selectedRole = role;
     this.onSelect.emit(role);
     this.refreshToolbar();
@@ -123,15 +124,15 @@ export class RolesComponent implements AfterViewInit {
   }
 
   private refreshToolbar(): void {
-    this.setActionsVisibility(this.bottomActionsGroup, !!this.selectedRole);
+    this.setActionsVisibility(this.toolbarActionsGroup, !!this.selectedRole);
   }
 
   private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
     actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
+      this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
     });
 
-    this.bottomActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
+    this.toolbarActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
       .visible = this.grid.rows.length > 0;
   }
 }

@@ -1,20 +1,45 @@
+<ng-template
+  #labelTemplate
+  let-action="action"
+>
+  <span
+    *ngIf="action.hasLabel"
+    class="app-toolbar-action-text"
+  >
+    {{ action.text | translate }}
+  </span>
+</ng-template>
+
 <ul class="app-toolbar">
-    <li *ngFor="let action of actions" class="app-control">
-        <ng-container [ngSwitch]="action.control">
-            <span *ngSwitchCase="ToolbarControlEnum.CHECKBOX" class="checkbox mt0 mb0">
-                <label>
-                    <!-- TODO: fix styles -->
-                    <input type="checkbox" style="position: relative; top: 2px;" [checked]="action.value" (change)="onActionClick(action, $event)"> {{ action.text | translate }}
-                </label>
-            </span>
-            <button
-                *ngSwitchDefault
-                [attr.title]="action.text | translate"
-                [disabled]="!action.visible || !isActionAccessible(action)"
-                (click)="onActionClick(action, $event)"
-                class="app-button fa fa-{{ toIconCls(action) }}"
-                aria-hidden="true">
-            </button>
+  <li *ngFor="let action of actions" class="app-control app-control-align-{{ actionAlign }}">
+    <ng-container
+      [ngSwitch]="action.control">
+        <span
+          *ngSwitchCase="ToolbarControlEnum.CHECKBOX"
+          class="checkbox mt0 mb0"
+        >
+          <label>
+            <input type="checkbox"
+                   [checked]="action.value"
+                   (change)="onActionClick(action, $event)">
+            <ng-container
+              *ngTemplateOutlet="labelTemplate; context: { action: action }">
+            </ng-container>
+          </label>
+        </span>
+      <button
+        *ngSwitchDefault
+        [attr.title]="action.text | translate"
+        [disabled]="!action.visible || !isActionAccessible(action)"
+        (click)="onActionClick(action, $event)"
+        class="app-button"
+        aria-hidden="true"
+      >
+        <i class="fa fa-{{ toIconCls(action) }}" aria-hidden="true"></i>
+        <ng-container
+          *ngTemplateOutlet="labelTemplate; context: { action: action }">
         </ng-container>
-    </li>
+      </button>
+    </ng-container>
+  </li>
 </ul>

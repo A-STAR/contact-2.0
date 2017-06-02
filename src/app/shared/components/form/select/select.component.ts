@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, OnDestroy, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
@@ -22,7 +22,7 @@ import { SelectActionHandler } from './select-action';
     }
   ],
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
+export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() allowClear = false;
   @Input() placeholder = '';
   @Input() actions: Array<ISelectionAction> = [];
@@ -126,9 +126,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
          * edit mode + set initial form values +
          * number input item
          */
-        currentSelectedItems = [
-          { value: currentSelectedItems }
-        ];
+        currentSelectedItems = [ { value: currentSelectedItems } ];
       }
     }
     this._active = currentSelectedItems || [];
@@ -168,30 +166,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
-    return typeof value === 'undefined' ? defaultValue : (value || undefined);
-  }
-
-  private initLazyItems(): void {
-    if (this.cachingItems && this._lazyItemsSubscription) {
-      this.afterInitItems();
-      return;
-    }
-    this._lazyItemsSubscription = this.lazyItems.subscribe((loadedItems: Array<ILabeledValue>) => {
-      this.rawData = loadedItems.map((item: ILabeledValue) => {
-        const activatedItem: ILabeledValue = this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value);
-        return activatedItem ? Object.assign(activatedItem, item) : item;
-      });
-
-      this.active = this.rawData.filter((item: ILabeledValue) =>
-        this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value));
-
-      this.afterInitItems();
-    });
-  }
-
   isItemContextExist(item: ILabeledValue): boolean {
-    return item.context && Object.keys(item.context).length > 0;
+    return item.context && !!Object.keys(item.context).length;
   }
 
   canCloseSelectedItem(item: ILabeledValue): boolean {
@@ -213,7 +189,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       : item.value;
   }
 
-  public inputEvent(e: any, isUpMode: boolean = false): void {
+  inputEvent(e: any, isUpMode: boolean = false): void {
     // tab
     if (e.keyCode === 9) {
       return;
@@ -284,7 +260,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public doEvent(type: string, value: any): void {
+  doEvent(type: string, value: any): void {
     if ((this as any)[type] && value) {
       (this as any)[type].next(value);
     }
@@ -295,9 +271,37 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  public clickedOutside(): void {
+  clickedOutside(): void {
     this._inputMode = false;
     this.optionsOpened = false;
+  }
+
+  activeItemClick(item: ILabeledValue, $event: MouseEvent): void {
+    this.stopEvent($event);
+
+    if (this.canSelectMultipleItem) {
+      this.active.forEach((i: ILabeledValue) => i.selected = false);
+      if (!item.selected) {
+        item.selected = true;
+      }
+      this.selectedControlItemsChanges.emit(this.rawData);
+    }
+  }
+
+  isInputVisible(): boolean {
+    return !this.multiple || !this.active.length;
+  }
+
+  removeClick(item: ILabeledValue, $event: Event): void {
+    this.stopEvent($event);
+    this.remove(item);
+    this.selectedControlItemsChanges.emit(this.rawData);
+  }
+
+  ngOnDestroy(): void {
+    if (this._lazyItemsSubscription) {
+      this._lazyItemsSubscription.unsubscribe();
+    }
   }
 
   protected matchClick(e: any): void {
@@ -349,26 +353,26 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this.activeOption.value === value.value;
   }
 
-  activeItemClick(item: ILabeledValue, $event: MouseEvent): void {
-    this.stopEvent($event);
+  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
+    return typeof value === 'undefined' ? defaultValue : (value || undefined);
+  }
 
-    if (this.canSelectMultipleItem) {
-      this.active.forEach((i: ILabeledValue) => i.selected = false);
-      if (!item.selected) {
-        item.selected = true;
-      }
-      this.selectedControlItemsChanges.emit(this.rawData);
+  private initLazyItems(): void {
+    if (this.cachingItems && this._lazyItemsSubscription) {
+      this.afterInitItems();
+      return;
     }
-  }
+    this._lazyItemsSubscription = this.lazyItems.subscribe((loadedItems: Array<ILabeledValue>) => {
+      this.rawData = loadedItems.map((item: ILabeledValue) => {
+        const activatedItem: ILabeledValue = this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value);
+        return activatedItem ? Object.assign(activatedItem, item) : item;
+      });
 
-  isInputVisible(): boolean {
-    return !this.multiple || !this.active.length;
-  }
+      this.active = this.rawData.filter((item: ILabeledValue) =>
+        this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value));
 
-  removeClick(item: ILabeledValue, $event: Event): void {
-    this.stopEvent($event);
-    this.remove(item);
-    this.selectedControlItemsChanges.emit(this.rawData);
+      this.afterInitItems();
+    });
   }
 
   private focusToInput(value: string = ''): void {
@@ -447,15 +451,15 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 }
 
 export class Behavior {
-  public optionsMap: Map<string, number> = new Map<string, number>();
+  optionsMap: Map<string, number> = new Map<string, number>();
 
-  public actor: SelectComponent;
+  actor: SelectComponent;
 
-  public constructor(actor: SelectComponent) {
+  constructor(actor: SelectComponent) {
     this.actor = actor;
   }
 
-  public ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
+  ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
     const container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
     if (!container) {
       return;
@@ -491,28 +495,28 @@ export class Behavior {
 }
 
 export class GenericBehavior extends Behavior implements OptionsBehavior {
-  public constructor(actor: SelectComponent) {
+  constructor(actor: SelectComponent) {
     super(actor);
   }
 
-  public first(): void {
+  first(): void {
     this.actor.activeOption = this.actor.rawData[0];
     super.ensureHighlightVisible();
   }
 
-  public last(): void {
+  last(): void {
     this.actor.activeOption = this.actor.rawData[this.actor.rawData.length - 1];
     super.ensureHighlightVisible();
   }
 
-  public prev(): void {
+  prev(): void {
     const index = this.actor.rawData.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .rawData[index - 1 < 0 ? this.actor.rawData.length - 1 : index - 1];
     super.ensureHighlightVisible();
   }
 
-  public next(): void {
+  next(): void {
     const index = this.actor.rawData.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .rawData[index + 1 > this.actor.rawData.length - 1 ? 0 : index + 1];

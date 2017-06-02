@@ -6,18 +6,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { UserPermissionsResolver } from './user/permissions/user-permissions-resolver.service';
+import { environment } from '../../environments/environment';
+
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
-import { NotificationsActions } from './notifications/notifications.actions';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { UserPermissionsService } from './user/permissions/user-permissions.service';
+import { PermissionsService } from './permissions/permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
 import { rootReducer } from '../core/state/root.reducer';
@@ -25,10 +25,11 @@ import { rootReducer } from '../core/state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
-    // TODO: remove for production
-    StoreDevtoolsModule.instrumentOnlyWithExtension({
-      maxAge: 5
-    })
+    environment.production ?
+      [] :
+      StoreDevtoolsModule.instrumentOnlyWithExtension({
+        maxAge: 1024
+      })
   ],
   providers: [
     AuthHttpService,
@@ -37,15 +38,13 @@ import { rootReducer } from '../core/state/root.reducer';
     ConstantsService,
     JwtHelper,
     MenuService,
-    NotificationsActions,
     NotificationsService,
     SettingsService,
     ThemesService,
     TranslateService,
-    UserPermissionsService,
+    PermissionsService,
     ValueConverterService,
     EntityTranslationsService,
-    UserPermissionsResolver,
   ],
   exports: [
   ]

@@ -7,6 +7,7 @@ export interface IUser {
   lastName: string;
   comment: string;
   email: string;
+  password: string;
   workPhone: string;
   mobPhone: string;
   intPhone: string;

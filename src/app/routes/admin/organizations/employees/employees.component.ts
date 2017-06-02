@@ -7,7 +7,7 @@ import { IEmployeeUser } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { EmployeesService } from './employees.service';
-import { NotificationsActions } from '../../../../core/notifications/notifications.actions';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
@@ -17,18 +17,18 @@ import { GridEntityComponent } from '../../../../shared/components/entity/grid.e
   templateUrl: './employees.component.html'
 })
 export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
-  bottomActions: Array<IToolbarAction> = [
+  toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_EDIT' },
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
   ];
 
-  bottomActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.ADD,
   ];
 
-  bottomActionsGroup: Array<ToolbarActionTypeEnum> = [
+  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
     ToolbarActionTypeEnum.REMOVE,
   ];
@@ -62,14 +62,20 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
     dataKey: 'users',
   };
 
+  rows = [];
+
   constructor(
     private employeesService: EmployeesService,
     private gridService: GridService,
-    private notificationsActions: NotificationsActions,
+    private notificationsService: NotificationsService,
     private translateService: TranslateService
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    this.employeesService.state.subscribe(state => {
+      this.rows = state.data;
+    });
   }
 
   transformIsBlocked(isBlocked: number): string {
@@ -77,46 +83,17 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.submit(
-      this.employeesService
-        .create(this.masterEntity.id, data)
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.add.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
+    this.employeesService.create(this.masterEntity.id, data);
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.submit(
-      this.employeesService
-        .save(this.masterEntity.id, this.selectedEntity.userId, {
-          roleCode: data.roleCode[0].id,
-          comment: data.comment
-        })
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.edit.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
+    this.employeesService.update(this.masterEntity.id, this.selectedEntity.userId, {
+      roleCode: data.roleCode[0].value,
+      comment: data.comment
+    });
   }
 
   onRemoveSubmit(data: any): void {
-    this.submit(
-      this.employeesService
-        .remove(this.masterEntity.id, this.selectedEntity.userId)
-        .catch(error => {
-          this.notificationsActions.push('organizations.employees.remove.errorMessage', 'ERROR');
-          throw error;
-        })
-    );
-  }
-
-  private submit(observable: any): void {
-    observable
-      .subscribe(() => {
-        this.afterUpdate();
-        this.cancelAction();
-      });
+     this.employeesService.delete(this.masterEntity.id, this.selectedEntity.userId);
   }
 }

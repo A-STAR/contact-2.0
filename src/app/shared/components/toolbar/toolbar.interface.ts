@@ -8,11 +8,14 @@ export enum ToolbarActionTypeEnum {
   EDIT,
   CLONE,
   REMOVE,
-  REFRESH
+  REFRESH,
+  SEARCH,
+  SAVE
 }
 
 export interface IToolbarAction {
   text: string;
+  hasLabel?: boolean;
   type: ToolbarActionTypeEnum;
   visible?: boolean;
   permission?: string | Array<string>;

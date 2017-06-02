@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -89,12 +90,20 @@ export class DashboardComponent implements OnInit {
     shadowSize: 0
   };
 
-  constructor(private colors: ColorsService, private http: AuthHttp) { }
+  constructor(
+    private colors: ColorsService,
+    private http: AuthHttp,
+    private notificationsService: NotificationsService,
+  ) { }
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
       .map(data => data.json())
-      .subscribe(data => this.splineData = data);
+      .take(1)
+      .subscribe(
+        data => this.splineData = data,
+        () => this.notificationsService.error('dashboard.messages.chartLoadError')
+      );
   }
 
   colorByName(name: string): string {

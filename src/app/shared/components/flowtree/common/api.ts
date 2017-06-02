@@ -11,7 +11,7 @@ interface LazyLoadEvent {
     sortField?: string;
     sortOrder?: number;
     multiSortMeta?: SortMeta[];
-    filters?: {[s: string]: FilterMetadata;};
+    filters?: { [s: string]: FilterMetadata; };
     globalFilter?: any;
 }
 
@@ -61,8 +61,6 @@ interface TreeNode {
     parent?: TreeNode;
     partialSelected?: boolean;
     styleClass?: string;
-    draggable?: boolean;
-    droppable?: boolean;
     selectable?: boolean;
 }
 

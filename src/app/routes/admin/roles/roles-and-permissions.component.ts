@@ -13,11 +13,11 @@ export class RolesAndPermissionsComponent {
   @ViewChild(RolesComponent) rolesComponent: RolesComponent;
   currentRole: IRole;
 
-  onSelect(role: IRole) {
+  onSelect(role: IRole): void {
     this.currentRole = role;
   }
 
-  onRoleClone() {
+  onRoleClone(): void {
     this.rolesComponent.callActionByType(ToolbarActionTypeEnum.CLONE);
   }
 }

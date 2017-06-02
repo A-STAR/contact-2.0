@@ -1,15 +1,22 @@
+import { Route } from '@angular/router';
+
 import { AuthService } from '../core/auth/auth.service';
-import { UserPermissionsResolver } from '../core/user/permissions/user-permissions-resolver.service';
+import { MenuResolver } from '../core/menu/menu-resolver.service';
+import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
 
-export const routes = [
+export const routes: Route[] = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [AuthService],
+    canActivate: [ AuthService ],
+    resolve: {
+      menu: MenuResolver
+    },
+    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
@@ -18,8 +25,12 @@ export const routes = [
   {
     path: 'admin',
     component: LayoutComponent,
-    canActivate: [AuthService],
-    resolve: { app: UserPermissionsResolver },
+    canActivate: [ AuthService ],
+    resolve: {
+      app: PermissionsResolver,
+      menu: MenuResolver
+    },
+    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
@@ -27,7 +38,8 @@ export const routes = [
       { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionary.module#DictionaryModule' },
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
-      // { path: 'query-builder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
+      { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
+      { path: 'qbuilder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },
 
@@ -38,5 +50,4 @@ export const routes = [
 
   // Redirect home, if the path is not found
   { path: '**', redirectTo: '' },
-
 ];

@@ -1,0 +1,106 @@
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+
+import { IEmployeeCreateRequest, IEmployeeUpdateRequest } from './employees.interface';
+
+import { EmployeesService } from './employees.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
+
+@Injectable()
+export class EmployeesEffects {
+
+  @Effect()
+  fetch$ = this.actions
+    .ofType(EmployeesService.EMPLOYEES_FETCH)
+    .switchMap(action => {
+      const { organizationId } = action.payload;
+      return this.read(organizationId)
+        .map(data => ({
+          type: EmployeesService.EMPLOYEES_FETCH_SUCCESS,
+          payload: data
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  create$ = this.actions
+    .ofType(EmployeesService.EMPLOYEES_CREATE)
+    .switchMap(action => {
+      const { organizationId, employee } = action.payload;
+      return this.create(organizationId, employee)
+        .map(data => ({
+          type: EmployeesService.EMPLOYEES_FETCH,
+          payload: {
+            organizationId
+          }
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.create');
+          return null;
+        });
+    });
+
+  @Effect()
+  update$ = this.actions
+    .ofType(EmployeesService.EMPLOYEES_UPDATE)
+    .switchMap(action => {
+      const { organizationId, userId, employee } = action.payload;
+      return this.update(organizationId, userId, employee)
+        .map(data => ({
+          type: EmployeesService.EMPLOYEES_FETCH,
+          payload: {
+            organizationId
+          }
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.update');
+          return null;
+        });
+    });
+
+  @Effect()
+  delete$ = this.actions
+    .ofType(EmployeesService.EMPLOYEES_DELETE)
+    .switchMap(action => {
+      const { organizationId, userId } = action.payload;
+      return this.delete(organizationId, userId)
+        .map(data => ({
+          type: EmployeesService.EMPLOYEES_FETCH,
+          payload: {
+            organizationId
+          }
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.delete');
+          return null;
+        });
+    });
+
+  constructor(
+    private actions: Actions,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+  ) {}
+
+  private read(organizationId: number): Observable<any> {
+    return this.gridService.read('/api/organizations/{organizationId}/users', { organizationId });
+  }
+
+  private create(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {
+    return this.gridService.create('/api/organizations/{organizationId}/users', { organizationId }, employee);
+  }
+
+  private update(organizationId: number, userId: number, employee: IEmployeeUpdateRequest): Observable<any> {
+    return this.gridService.update('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
+  }
+
+  private delete(organizationId: number, userId: number): Observable<any> {
+    return this.gridService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
+  }
+}

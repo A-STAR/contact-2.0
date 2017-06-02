@@ -3,22 +3,23 @@ import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
 
-import { IUser } from './users.interface';
-
+import { ConstantsService } from '../../../core/constants/constants.service';
 import { UsersService } from './users.service';
 
 @Injectable()
-export class UsersResolver implements Resolve<Array<IUser>> {
+export class UsersResolver implements Resolve<any> {
 
   constructor(
-    private usersService: UsersService
+    private constantsService: ConstantsService,
+    private usersService: UsersService,
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<any>> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     return Observable.zip(
       this.usersService.getRoles(),
       this.usersService.getLanguages(),
-      (roles, languages) => [ roles, languages ]
+      this.constantsService.loadConstants(),
+      (roles, languages) => ({ roles, languages })
     );
   }
 }
