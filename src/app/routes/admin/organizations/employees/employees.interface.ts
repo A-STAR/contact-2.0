@@ -6,6 +6,7 @@ export interface IEmployee {
 
 export interface IEmployeesState {
   data: Array<IEmployee>;
+  selectedRecord: IEmployee;
 }
 
 export interface IEmployeeCreateRequest {

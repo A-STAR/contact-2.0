@@ -26,9 +26,12 @@ export class EmployeesService {
       .filter(Boolean);
   }
 
-  fetch(): void {
+  fetch(organizationId: number): void {
     return this.store.dispatch({
-      type: EmployeesService.EMPLOYEES_FETCH
+      type: EmployeesService.EMPLOYEES_FETCH,
+      payload: {
+        organizationId
+      }
     });
   }
 

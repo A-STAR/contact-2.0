@@ -3,8 +3,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-
-
+import { EmployeesService } from '../employees/employees.service';
 import { OrganizationsService } from './organizations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
@@ -12,7 +11,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 export class OrganizationsEffects {
 
   @Effect()
-  fetchEmployees = this.actions
+  fetch$ = this.actions
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
     .switchMap(action => {
       return this.read()
@@ -24,6 +23,16 @@ export class OrganizationsEffects {
           type: OrganizationsService.ORGANIZATIONS_FETCH_ERROR
         }));
     });
+
+  @Effect()
+  select$ = this.actions
+    .ofType(OrganizationsService.ORGANIZATIONS_SELECT)
+    .map(action => ({
+      type: EmployeesService.EMPLOYEES_FETCH,
+      payload: {
+        organizationId: action.payload.id
+      }
+    }));
 
   constructor(
     private actions: Actions,

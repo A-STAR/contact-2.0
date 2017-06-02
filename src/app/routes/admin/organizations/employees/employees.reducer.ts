@@ -5,7 +5,8 @@ import { IEmployeesState } from './employees.interface';
 import { EmployeesService } from './employees.service';
 
 const defaultState: IEmployeesState = {
-  data: []
+  data: [],
+  selectedRecord: null
 };
 
 export function employeesReducer(state: IEmployeesState = defaultState, action: Action): IEmployeesState {

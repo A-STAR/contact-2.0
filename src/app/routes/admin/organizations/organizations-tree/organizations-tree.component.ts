@@ -165,12 +165,15 @@ export class OrganizationsTreeComponent {
 
   onNodeSelect({ node }: { node: TreeNode }): void {
     // use for node selection, could operate on selection collection as well
+    this.organizationsService.select(node.data);
+
     const parent = this.findParentRecursive(node);
     const isExpanded = node.expanded;
     this.collapseSiblings(parent);
     if (node.children) {
       node.expanded = !isExpanded;
     }
+
     this.action = null;
     this.refreshToolbar();
     this.onSelect.emit(node.data);

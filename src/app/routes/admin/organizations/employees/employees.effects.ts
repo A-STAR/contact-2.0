@@ -15,7 +15,8 @@ export class EmployeesEffects {
   fetch$ = this.actions
     .ofType(EmployeesService.EMPLOYEES_FETCH)
     .switchMap(action => {
-      return this.read()
+      const { organizationId } = action.payload;
+      return this.read(organizationId)
         .map(data => ({
           type: EmployeesService.EMPLOYEES_FETCH_SUCCESS,
           payload: data
@@ -75,8 +76,8 @@ export class EmployeesEffects {
     private gridService: GridService,
   ) {}
 
-  private read(): Observable<any> {
-    return this.gridService.read('/api/organizations');
+  private read(organizationId: number): Observable<any> {
+    return this.gridService.read('/api/organizations/{organizationId}/users', { organizationId });
   }
 
   private create(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {
