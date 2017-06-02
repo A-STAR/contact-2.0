@@ -12,10 +12,11 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IDataSource, IParameters, TSelectionType } from './grid.interface';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { SettingsService } from '../../../core/settings/settings.service';
-import { GridService } from './grid.service';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
+
+import { GridService } from './grid.service';
+import { SettingsService } from '../../../core/settings/settings.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-grid',
@@ -81,7 +82,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
     if (this.autoLoad) {
-      this.load(this.initialParameters).subscribe();
+      this.load(this.initialParameters)
+        .take(1)
+        .subscribe();
     }
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);

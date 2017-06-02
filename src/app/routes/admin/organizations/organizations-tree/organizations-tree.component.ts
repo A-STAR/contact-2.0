@@ -1,12 +1,14 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { TreeNode } from '../../../../shared/components/flowtree/common/api';
-import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { OrganizationsService } from './organizations.service';
 import { IOrganization } from '../organizations.interface';
+import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { TreeNode } from '../../../../shared/components/flowtree/common/api';
+
+import { OrganizationsService } from './organizations.service';
+
+import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
 // TODO: extend from GridEntityComponent
 // TODO: separate tree rendering from organizations logic
@@ -16,7 +18,7 @@ import { IOrganization } from '../organizations.interface';
   styleUrls: ['./organizations-tree.component.scss']
 })
 export class OrganizationsTreeComponent implements OnInit {
-  @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter;
+  @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
   // TODO: TreeNode<IOrganization> { ..., data: IOrganization }
@@ -147,7 +149,7 @@ export class OrganizationsTreeComponent implements OnInit {
     return null;
   }
 
-  onNodeSelect({ node }): void {
+  onNodeSelect({ node }: { node: TreeNode }): void {
     // use for node selection, could operate on selection collection as well
     const parent = this.findParentRecursive(node);
     const isExpanded = node.expanded;
@@ -160,7 +162,7 @@ export class OrganizationsTreeComponent implements OnInit {
     this.onSelect.emit(node.data);
   }
 
-  onNodeExpand({ node }): void {
+  onNodeExpand({ node }: { node: TreeNode }): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;

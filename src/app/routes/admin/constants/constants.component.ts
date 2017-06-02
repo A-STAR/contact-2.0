@@ -7,7 +7,9 @@ import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.i
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
 
@@ -44,22 +46,16 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
     dataKey: 'constants',
   };
 
-  tabs: Array<any> = [
-    { id: 0, title: 'Константы', active: true },
-  ];
-
   constructor(
     private datePipe: DatePipe,
     private gridService: GridService,
     private translateService: TranslateService,
-    private valueConverterService: ValueConverterService) {
-
+    private notifications: NotificationsService,
+    private valueConverterService: ValueConverterService,
+    private permissions: UserPermissionsService,
+) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-  }
-
-  onTabClose(id: number): void {
-    this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
   }
 
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
@@ -93,8 +89,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> {
           this.afterUpdate();
           this.cancelAction();
         },
-        // TODO: display error
-        error => console.error(error)
+        error => this.notifications.error('Could not save the changes')
       );
   }
 

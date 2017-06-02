@@ -2,10 +2,10 @@ import {
   AfterViewInit,
   EventEmitter,
   Input,
-  OnChanges,
+  // OnChanges,
   OnDestroy,
   Output,
-  SimpleChange,
+  // SimpleChange,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
@@ -15,7 +15,7 @@ import { IDataSource, IGridColumn, IRenderer } from '../grid/grid.interface';
 
 import { GridComponent } from '../grid/grid.component';
 
-export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, AfterViewInit {
+export abstract class GridEntityComponent<T> implements OnDestroy, AfterViewInit {
 
   // TODO(a.poterenko): implement a master type
   @Input() masterEntity: any;
@@ -37,18 +37,24 @@ export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, Af
     this.sub = this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
   }
 
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
-    this.refreshGrid();
-  }
+  // NOTE: Dead code, either never fires or refreshes the grid unnecessarily
+  // NOTE: We manipulate the grid refresh manually, upon each action
+  // ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
+  //   console.log('refresh fired');
+  //   this.refreshGrid();
+  // }
 
+  // TODO(a.tymchuk): rename to a more semantic `isRecordBeingCreated`
   get isEntityBeingCreated(): boolean {
     return this.action === ToolbarActionTypeEnum.ADD;
   }
 
+  // TODO(a.tymchuk): rename to a more semantic `isRecordBeingEdited`
   get isEntityBeingEdited(): boolean {
     return this.action === ToolbarActionTypeEnum.EDIT;
   }
 
+  // TODO(a.tymchuk): rename to a more semantic `isRecordBeingRemoved`
   get isEntityBeingRemoved(): boolean {
     return this.action === ToolbarActionTypeEnum.REMOVE;
   }
@@ -96,19 +102,19 @@ export abstract class GridEntityComponent<T> implements OnChanges, OnDestroy, Af
     this.sub.unsubscribe();
   }
 
-  private refreshGrid(): void {
-    if (!this.grid) {
-      return;
-    }
+  // private refreshGrid(): void {
+  //   if (!this.grid) {
+  //     return;
+  //   }
 
-    if (this.masterEntity) {
-      this.loadGrid();
-    } else {
-      this.grid.clear();
-    }
-  }
+  //   if (this.masterEntity) {
+  //     this.loadGrid();
+  //   } else {
+  //     this.grid.clear();
+  //   }
+  // }
 
-  private loadGrid(): void {
+  loadGrid(): void {
     this.grid.load(this.masterEntity)
       .take(1)
       .subscribe(
