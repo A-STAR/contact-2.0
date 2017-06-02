@@ -134,12 +134,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.gridService
       .read(this.dataSource.read, parameters)
       .map(data => this.parseFn(data))
-      .do(data => this.updateRows(data))
-      .catch(err => {
-        // TODO: gisplay message & log
-        console.error(err);
-        throw new Error(err);
-      });
+      .do(data => this.updateRows(data));
   }
 
   update(routeParams: object, body: object): Observable<any> {

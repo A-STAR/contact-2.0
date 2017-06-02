@@ -31,10 +31,10 @@ export abstract class GridEntityComponent<T> implements OnDestroy, AfterViewInit
   renderers: IRenderer = {};
   selectedEntity: T;
 
-  private sub: Subscription;
+  private rowChangeSub: Subscription;
 
   ngAfterViewInit(): void {
-    this.sub = this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+    this.rowChangeSub = this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
   }
 
   // NOTE: Dead code, either never fires or refreshes the grid unnecessarily
@@ -88,9 +88,9 @@ export abstract class GridEntityComponent<T> implements OnDestroy, AfterViewInit
   }
 
   onSelectedRowChange(entities: T[]): void {
+    const entity = entities[0];
     this.action = null;
 
-    const entity = entities[0];
     if (entity) {
       this.selectedEntity = entity;
       this.refreshToolbar();
@@ -99,7 +99,9 @@ export abstract class GridEntityComponent<T> implements OnDestroy, AfterViewInit
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if (this.rowChangeSub) {
+      this.rowChangeSub.unsubscribe();
+    }
   }
 
   // private refreshGrid(): void {

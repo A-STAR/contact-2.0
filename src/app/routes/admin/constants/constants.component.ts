@@ -53,16 +53,17 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     private notifications: NotificationsService,
     private valueConverterService: ValueConverterService,
     private permissions: PermissionsService,
-) {
+  ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   ngAfterViewInit(): void {
     this.grid.load()
+      .take(1)
       .subscribe(
-        () => console.log(true),
-        (error) => console.log(error)
+        () => {},
+        error => this.handleError(error, 'VIEW')
       );
   }
 
@@ -91,7 +92,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     }
 
     this.gridService
-      .update('/api/constants/{id}', { id }, body)
+      .update(this.dataSource.update, { id }, body)
       .subscribe(
         () => {
           this.afterUpdate();
@@ -105,5 +106,18 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     // TODO: move to date service
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  }
+
+  private handleError(error: XMLHttpRequest, action?: string): void {
+    const { status } = error;
+    switch (status) {
+      case 401:
+        this.notifications.error(`Authentication error. Please try to relogin.`);
+        break;
+      case 403:
+        this.notifications.error(`Insufficient user permissions for '${action}' action`);
+        break;
+      default:
+    }
   }
 }

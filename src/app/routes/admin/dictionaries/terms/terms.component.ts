@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ITerm } from './terms.interface';
@@ -13,7 +13,7 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
-export class TermsComponent extends GridEntityComponent<ITerm> {
+export class TermsComponent extends GridEntityComponent<ITerm> implements OnChanges {
 
   toolbarActions: Array<IToolbarAction> = [
     { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
@@ -59,6 +59,16 @@ export class TermsComponent extends GridEntityComponent<ITerm> {
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const { masterEntity: master } = changes;
+    if (master.currentValue === master.previousValue) {
+      return;
+    }
+    this.grid.load({ code: master.currentValue.code })
+      .take(1)
+      .subscribe();
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {

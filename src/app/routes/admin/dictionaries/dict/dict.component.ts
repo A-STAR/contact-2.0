@@ -75,10 +75,11 @@ export class DictComponent extends GridEntityComponent<IDict> {
     this.dictReady = false;
 
     this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
-      .subscribe((translations: IEntityTranslation[]) => this.onLoadNameTranslations(translations));
+      .take(1)
+      .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
   }
 
-  onLoadNameTranslations(currentTranslations: IEntityTranslation[]): void {
+  loadNameTranslations(currentTranslations: IEntityTranslation[]): void {
     this.dictReady = true;
 
     this.selectedEntity.nameTranslations = currentTranslations
@@ -125,9 +126,13 @@ export class DictComponent extends GridEntityComponent<IDict> {
       delete data.translatedName;
       delete data.nameTranslations;
 
-      Observable.forkJoin(editTasks).subscribe(() => this.onSuccess());
+      Observable.forkJoin(editTasks)
+        .take(1)
+        .subscribe(() => this.onSuccess());
     } else {
-      this.gridService.create('/api/dictionaries', {}, data).subscribe(() => this.onSuccess());
+      this.gridService.create('/api/dictionaries', {}, data)
+        .take(1)
+        .subscribe(() => this.onSuccess());
     }
   }
 

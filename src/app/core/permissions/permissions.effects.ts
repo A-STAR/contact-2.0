@@ -12,8 +12,7 @@ import { GridService } from '../../shared/components/grid/grid.service';
 @Injectable()
 export class PermissionsEffects {
 
-  @Effect()
-  fetchPermissions = this.actions
+  @Effect() fetchPermissions = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap(action => {
       return this.read()
@@ -26,8 +25,7 @@ export class PermissionsEffects {
         }));
     });
 
-  @Effect()
-  updatePermissions = this.actions
+  @Effect() updatePermissions = this.actions
     .ofType(PermissionsService.PERMISSION_UPDATE)
     .switchMap(action => {
       return this.read()
