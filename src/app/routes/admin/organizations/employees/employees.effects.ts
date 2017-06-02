@@ -5,6 +5,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { IEmployeeCreateData, IEmployee } from '../organizations.interface';
 
+import { EmployeesService } from './employees.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 @Injectable()
@@ -12,15 +13,15 @@ export class EmployeesEffects {
 
   @Effect()
   fetchEmployees = this.actions
-    .ofType('EMPLOYEES_FETCH')
+    .ofType(EmployeesService.ACTION_FETCH)
     .switchMap(action => {
       return this.read()
         .map(data => ({
-          type: 'EMPLOYEES_FETCH_SUCCESS',
+          type: EmployeesService.ACTION_FETCH_SUCCESS,
           payload: data
         }))
         .catch(() => Observable.of({
-          type: 'EMPLOYEES_FETCH_ERROR'
+          type: EmployeesService.ACTION_FETCH_ERROR
         }));
     });
 

@@ -7,6 +7,10 @@ import { IOrganizationsState } from './organizations.interface';
 
 @Injectable()
 export class OrganizationsService {
+  static ACTION_FETCH = 'ORGANIZATIONS_FETCH';
+  static ACTION_FETCH_SUCCESS = 'ORGANIZATIONS_FETCH_SUCCESS';
+  static ACTION_FETCH_ERROR = 'ORGANIZATIONS_FETCH_ERROR';
+
   constructor(private store: Store<IAppState>) {}
 
   get state(): Observable<IOrganizationsState> {
@@ -17,7 +21,7 @@ export class OrganizationsService {
 
   fetch(): void {
     return this.store.dispatch({
-      type: 'ORGANIZATIONS_FETCH'
+      type: OrganizationsService.ACTION_FETCH
     });
   }
 }

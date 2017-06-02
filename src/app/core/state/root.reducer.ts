@@ -5,8 +5,8 @@ import { permissionReducer } from '../permissions/permissions.reducer';
 
 export const rootReducer = {
   // TODO: rename notificationService -> notifications
+  employees: employeesReducer,
   notificationService: notificationReducer,
   organizations: organizationsReducer,
-  employees: employeesReducer,
   permissionService: permissionReducer,
 };

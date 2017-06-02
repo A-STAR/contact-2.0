@@ -1,14 +1,16 @@
-import { IOrganizationsAction, IOrganizationsState } from './organizations.interface';
+import { Action } from '@ngrx/store';
+
+import { IOrganizationsState } from './organizations.interface';
+
+import { OrganizationsService } from './organizations.service';
 
 const defaultState: IOrganizationsState = {
   data: []
 };
 
-// This should NOT be an arrow function in order to pass AoT compilation
-// See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-export function organizationsReducer(state: IOrganizationsState = defaultState, action: IOrganizationsAction): IOrganizationsState {
+export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
   switch (action.type) {
-    case 'ORGANIZATIONS_FETCH_SUCCESS':
+    case OrganizationsService.ACTION_FETCH_SUCCESS:
       return {
         ...state,
         data: action.payload.organizations

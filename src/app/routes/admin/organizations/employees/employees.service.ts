@@ -7,6 +7,10 @@ import { IEmployeesState } from './employees.interface';
 
 @Injectable()
 export class EmployeesService {
+  static ACTION_FETCH = 'EMPLOYEES_FETCH';
+  static ACTION_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
+  static ACTION_FETCH_ERROR = 'EMPLOYEES_FETCH_ERROR';
+
   constructor(private store: Store<IAppState>) {}
 
   get state(): Observable<IEmployeesState> {
@@ -17,7 +21,7 @@ export class EmployeesService {
 
   fetch(): void {
     return this.store.dispatch({
-      type: 'EMPLOYEES_FETCH'
+      type: EmployeesService.ACTION_FETCH
     });
   }
 }
