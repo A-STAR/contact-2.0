@@ -1,6 +1,5 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { EffectsModule } from '@ngrx/effects';
 
 import { JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,14 +19,12 @@ import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { PermissionsService } from './permissions/permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
-import { ActionsLogService } from '../routes/admin/actions-log/actions-log.service';
 
 import { rootReducer } from './state/root.reducer';
 
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
-    EffectsModule.run(ActionsLogService),
     environment.production ?
       [] :
       StoreDevtoolsModule.instrumentOnlyWithExtension({
