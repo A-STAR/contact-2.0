@@ -48,6 +48,8 @@ export class OrganizationsTreeComponent {
 
   action: IOrganizationDialogActionEnum;
 
+  editedEntity: IOrganization;
+
   constructor(
     private organizationsService: OrganizationsService,
   ) {
@@ -58,6 +60,8 @@ export class OrganizationsTreeComponent {
       .subscribe(
         state => {
           this.action = state.dialogAction;
+
+          this.editedEntity = state.organizations.data.find(organization => organization.id === state.organizations.selectedId);
 
           const nodes = this.convertToTreeNodes(state.organizations.data);
           const files = {

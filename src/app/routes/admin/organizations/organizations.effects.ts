@@ -40,7 +40,7 @@ export class OrganizationsEffects {
       return this.createOrganization(parentId, organization)
         .mergeMap(data => Observable.from([
           {
-            type: OrganizationsService.EMPLOYEES_FETCH
+            type: OrganizationsService.ORGANIZATIONS_FETCH
           },
           {
             type: OrganizationsService.DIALOG_ACTION,
@@ -63,7 +63,7 @@ export class OrganizationsEffects {
       return this.updateOrganization(store.organizations.organizations.selectedId, action.payload.organization)
         .mergeMap(data => Observable.from([
           {
-            type: OrganizationsService.EMPLOYEES_FETCH
+            type: OrganizationsService.ORGANIZATIONS_FETCH
           },
           {
             type: OrganizationsService.DIALOG_ACTION,
@@ -86,7 +86,7 @@ export class OrganizationsEffects {
       return this.deleteOrganization(store.organizations.organizations.selectedId)
         .mergeMap(data => Observable.from([
           {
-            type: OrganizationsService.EMPLOYEES_FETCH
+            type: OrganizationsService.ORGANIZATIONS_FETCH
           },
           {
             type: OrganizationsService.DIALOG_ACTION,

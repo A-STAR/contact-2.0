@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IEmployeeUser, IEmployee, IOrganizationDialogActionEnum, IOrganizationsState } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
@@ -61,12 +61,9 @@ export class EmployeesComponent {
     isBlocked: ({ isBlocked }) => this.transformIsBlocked(isBlocked),
   };
 
-  dataSource: IDataSource = {
-    read: '/api/organizations/{id}/users',
-    dataKey: 'users',
-  };
-
   action: IOrganizationDialogActionEnum;
+
+  editedEntity: IEmployee;
 
   constructor(
     private gridService: GridService,
@@ -81,6 +78,7 @@ export class EmployeesComponent {
       .subscribe(
         state => {
           this.action = state.dialogAction;
+          this.editedEntity = state.employees.data.find(employee => employee.userId === state.employees.selectedUserId);
           this.refreshToolbar(!!state.organizations.selectedId, !!state.employees.selectedUserId, state.employees.data.length > 0);
         },
         // TODO: notifications
@@ -173,117 +171,4 @@ export class EmployeesComponent {
   private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
     return this.toolbarActions.find((action: IToolbarAction) => actionType === action.type);
   }
-
-
-
-
-  // @Input() masterEntity: any;
-  // @Output() onSelect: EventEmitter<T> = new EventEmitter();
-  // @ViewChild(GridComponent) grid: GridComponent;
-
-  // action: ToolbarActionTypeEnum;
-  // dataSource: IDataSource;
-  // columns: Array<IGridColumn> = [];
-  // toolbarActionsGroup: Array<ToolbarActionTypeEnum>;
-  // toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum>;
-  // toolbarActions: Array<IToolbarAction>;
-  // renderers: IRenderer = {};
-  // selectedEntity: T;
-
-  // private rowChangeSub: Subscription;
-
-  // ngAfterViewInit(): void {
-  //   this.rowChangeSub = this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
-  // }
-
-  // // NOTE: Dead code, either never fires or refreshes the grid unnecessarily
-  // // NOTE: We manipulate the grid refresh manually, upon each action
-  // // ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
-  // //   console.log('refresh fired');
-  // //   this.refreshGrid();
-  // // }
-
-  // // TODO(a.tymchuk): rename to a more semantic `isRecordBeingCreated`
-  // get isEntityBeingCreated(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.ADD;
-  // }
-
-  // // TODO(a.tymchuk): rename to a more semantic `isRecordBeingEdited`
-  // get isEntityBeingEdited(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.EDIT;
-  // }
-
-  // // TODO(a.tymchuk): rename to a more semantic `isRecordBeingRemoved`
-  // get isEntityBeingRemoved(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.REMOVE;
-  // }
-
-  // parseFn = data => (data[this.dataSource.dataKey] || []) as Array<T>;
-
-  // onAction(action: IToolbarAction): void {
-  //   switch (action.type) {
-  //     case ToolbarActionTypeEnum.REFRESH:
-  //       this.afterUpdate();
-  //       break;
-  //     case ToolbarActionTypeEnum.EDIT:
-  //       this.onEdit();
-  //       break;
-  //     default:
-  //       this.action = action.type;
-  //   }
-  // }
-
-  // cancelAction(): void {
-  //   this.action = null;
-  // }
-
-  // onEdit(): void {
-  //   this.action = ToolbarActionTypeEnum.EDIT;
-  // }
-
-  // afterUpdate(): void {
-  //   this.selectedEntity = null;
-  //   this.loadGrid();
-  // }
-
-  // onSelectedRowChange(entities: T[]): void {
-  //   const entity = entities[0];
-  //   this.action = null;
-
-  //   if (entity) {
-  //     this.selectedEntity = entity;
-  //     this.refreshToolbar();
-  //     this.onSelect.emit(entity);
-  //   }
-  // }
-
-  // ngOnDestroy(): void {
-  //   if (this.rowChangeSub) {
-  //     this.rowChangeSub.unsubscribe();
-  //   }
-  // }
-
-  // // private refreshGrid(): void {
-  // //   if (!this.grid) {
-  // //     return;
-  // //   }
-
-  // //   if (this.masterEntity) {
-  // //     this.loadGrid();
-  // //   } else {
-  // //     this.grid.clear();
-  // //   }
-  // // }
-
-  // loadGrid(): void {
-  //   this.grid.load(this.masterEntity)
-  //     .take(1)
-  //     .subscribe(
-  //       () => {},
-  //       // TODO: display & log a message
-  //       err => console.error(err)
-  //     );
-  // }
-
-
 }

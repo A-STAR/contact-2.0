@@ -6,7 +6,7 @@
 
 <app-employee-edit
   *ngIf="isEntityBeingEdited"
-  [editedEntity]="selectedEntity"
+  [editedEntity]="editedEntity"
   (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
 </app-employee-edit>
