@@ -48,11 +48,11 @@ export class ActionsLogService {
       this.getEmployees(),
       this.getActionTypes(),
       (employees, actionTypes) => {
-        this.store.next({
+        this.store.dispatch({
           type: ActionsLogService.EMPLOYEES_FETCH_SUCCESS,
           payload: employees
         });
-        this.store.next({
+        this.store.dispatch({
           type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
           payload: actionTypes
         });
