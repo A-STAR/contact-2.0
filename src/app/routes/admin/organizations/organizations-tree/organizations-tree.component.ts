@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
@@ -17,7 +18,7 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
   templateUrl: './organizations-tree.component.html',
   styleUrls: ['./organizations-tree.component.scss']
 })
-export class OrganizationsTreeComponent {
+export class OrganizationsTreeComponent implements OnDestroy {
   @Input() organizations: Array<IOrganization>;
 
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
@@ -49,13 +50,15 @@ export class OrganizationsTreeComponent {
 
   editedEntity: IOrganization;
 
+  private state$: Subscription;
+  private stateOrganizations$: Subscription;
+
   constructor(
     private organizationsService: OrganizationsService,
   ) {
     this.organizationsService.fetchOrganizations();
 
-    // TODO: unsubscribe
-    this.organizationsService.state
+    this.stateOrganizations$ = this.organizationsService.state
       .distinctUntilKeyChanged('organizations')
       .subscribe(
         state => {
@@ -71,8 +74,7 @@ export class OrganizationsTreeComponent {
         error => console.error(error)
       );
 
-    // TODO: unsubscribe
-    this.organizationsService.state
+    this.state$ = this.organizationsService.state
       .subscribe(
         state => {
           this.action = state.dialogAction;
@@ -84,6 +86,11 @@ export class OrganizationsTreeComponent {
         // TODO: notifications
         error => console.error(error)
       );
+  }
+
+  ngOnDestroy(): void {
+    this.state$.unsubscribe();
+    this.stateOrganizations$.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
@@ -196,10 +203,7 @@ export class OrganizationsTreeComponent {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
-
-    // this.organizationsService.fetchEmployees(node.data.id);
     this.organizationsService.selectOrganization(node.data.id);
-    // this.action = null;
     this.onSelect.emit(node.data);
   }
 

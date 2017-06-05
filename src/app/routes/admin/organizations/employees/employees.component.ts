@@ -1,6 +1,7 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -17,7 +18,7 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
   selector: 'app-employees',
   templateUrl: './employees.component.html'
 })
-export class EmployeesComponent {
+export class EmployeesComponent implements OnDestroy {
   @Input() employees: Array<IEmployee>;
   @ViewChild(GridComponent) grid: GridComponent;
 
@@ -65,6 +66,8 @@ export class EmployeesComponent {
 
   editedEntity: IEmployee;
 
+  private state$: Subscription;
+
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -73,8 +76,7 @@ export class EmployeesComponent {
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
-    // TODO: unsubscribe
-    this.organizationsService.state
+    this.state$ = this.organizationsService.state
       .subscribe(
         state => {
           this.action = state.dialogAction;
@@ -84,6 +86,10 @@ export class EmployeesComponent {
         // TODO: notifications
         error => console.error(error)
       );
+  }
+
+  ngOnDestroy(): void {
+    this.state$.unsubscribe();
   }
 
   get state(): Observable<IOrganizationsState> {
