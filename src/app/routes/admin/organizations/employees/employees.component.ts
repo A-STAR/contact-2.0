@@ -6,7 +6,7 @@ import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/componen
 import { IEmployeeUser } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { EmployeesService } from './employees.service';
+import { OrganizationsService } from '../organizations.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
@@ -65,7 +65,7 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   rows = [];
 
   constructor(
-    private employeesService: EmployeesService,
+    private organizationsService: OrganizationsService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private translateService: TranslateService
@@ -73,8 +73,8 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
-    this.employeesService.state.subscribe(state => {
-      this.rows = state.data;
+    this.organizationsService.state.subscribe(state => {
+      this.rows = state.employees.data;
     });
   }
 
@@ -83,17 +83,17 @@ export class EmployeesComponent extends GridEntityComponent<IEmployeeUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.employeesService.create(this.masterEntity.id, data);
+    this.organizationsService.createEmployee(this.masterEntity.id, data);
   }
 
   onEditSubmit(data: IEmployeeUser): void {
-    this.employeesService.update(this.masterEntity.id, this.selectedEntity.userId, {
+    this.organizationsService.updateEmployee(this.masterEntity.id, this.selectedEntity.userId, {
       roleCode: data.roleCode[0].value,
       comment: data.comment
     });
   }
 
   onRemoveSubmit(data: any): void {
-     this.employeesService.delete(this.masterEntity.id, this.selectedEntity.userId);
+     this.organizationsService.deleteEmployee(this.masterEntity.id, this.selectedEntity.userId);
   }
 }

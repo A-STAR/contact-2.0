@@ -7,8 +7,7 @@ import { IOrganization } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
-import { EmployeesService } from '../employees/employees.service';
-import { OrganizationsService } from './organizations.service';
+import { OrganizationsService } from '../organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -48,12 +47,11 @@ export class OrganizationsTreeComponent {
   action: ToolbarActionTypeEnum;
 
   constructor(
-    private employeesService: EmployeesService,
     private organizationsService: OrganizationsService,
   ) {
-    this.organizationsService.fetch();
+    this.organizationsService.fetchOrganizations();
     this.organizationsService.state
-      .map(state => this.convertToTreeNodes(state.data))
+      .map(state => this.convertToTreeNodes(state.organizations.data))
       .subscribe(
         nodes => {
           const files = {
@@ -138,7 +136,7 @@ export class OrganizationsTreeComponent {
         element.data.parentId = targetElement.data.id;
         element.data.sortOrder = sortOrder;
         this.organizationsService
-          .update(element.data.id, {
+          .updateOrganization(element.data.id, {
             parentId: element.data.parentId,
             sortOrder: element.data.sortOrder
           } as any);
@@ -179,7 +177,7 @@ export class OrganizationsTreeComponent {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
-    this.employeesService.fetch(node.data.id);
+    this.organizationsService.fetchEmployees(node.data.id);
     this.action = null;
     this.refreshToolbar();
     this.onSelect.emit(node.data);
@@ -189,7 +187,7 @@ export class OrganizationsTreeComponent {
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
         this.selection = [];
-        this.organizationsService.fetch();
+        this.organizationsService.fetchOrganizations();
         break;
       default:
         this.action = action.type;
@@ -206,14 +204,14 @@ export class OrganizationsTreeComponent {
 
   onEditSubmit(data: any, create: boolean): void {
     if (create) {
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data);
+      this.organizationsService.createOrganization(this.selection ? this.selection.data.id : null, data);
     } else {
-      this.organizationsService.update(this.selection.data.id, data);
+      this.organizationsService.updateOrganization(this.selection.data.id, data);
     }
   }
 
   onRemoveSubmit(): void {
-    this.organizationsService.delete(this.selection.data.id);
+    this.organizationsService.deleteOrganization(this.selection.data.id);
   }
 
   // private submit(action: Observable<any>): void {
