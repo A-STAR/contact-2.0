@@ -83,13 +83,15 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         label: 'actionsLog.filter.employees.title',
         controlName: 'employees',
         type: 'multiselect',
-        required: true
+        required: true,
+        placeholder: 'actionsLog.filter.employees.placeholder'
       },
       this.actionTypesControl = {
         label: 'actionsLog.filter.actionsTypes.title',
         controlName: 'actionsTypes',
         type: 'multiselect',
-        required: true
+        required: true,
+        placeholder: 'actionsLog.filter.actionsTypes.placeholder'
       },
       this.startDateControl = {
         label: 'default.dateTimeRage.from',

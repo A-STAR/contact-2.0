@@ -12,7 +12,7 @@ export class ActionsLogResolver implements Resolve<Array<any>> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<any>> {
     return Observable.zip(
-      this.actionsLogService.getOperators(),
+      this.actionsLogService.getEmployees(),
       this.actionsLogService.getActionTypes(),
       (employees, actionTypes) => [ employees, actionTypes ]
     );
