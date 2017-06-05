@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 
 import { IActionLog, IActionsLogPayload, IActionType, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
@@ -40,6 +39,23 @@ export class ActionsLogService {
   get actionTypesRows(): Observable<IActionType[]> {
     return this.store
       .select((state: IAppState) => state.actionsLog.actionTypes);
+  }
+
+  get employeesAndActionTypes(): Observable<void> {
+    return Observable.zip(
+      this.getEmployees(),
+      this.getActionTypes(),
+      (employees, actionTypes) => {
+        this.store.next({
+          type: ActionsLogService.EMPLOYEES_FETCH_SUCCESS,
+          payload: employees
+        });
+        this.store.next({
+          type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
+          payload: actionTypes
+        });
+      }
+    );
   }
 
   @Effect() onSearchEffect = this.effectActions
