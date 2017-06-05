@@ -73,7 +73,7 @@ export class ActionsLogService {
           });
       }
     ).catch(() => {
-      this.notifications.error('Could not fetch data from the server');
+      this.notifications.error('actionsLog.actionsLog.messages.errors.fetch');
       return null;
     });
 
