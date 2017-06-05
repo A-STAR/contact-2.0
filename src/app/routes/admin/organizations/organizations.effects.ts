@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IEmployeeCreateRequest, IEmployeeUpdateRequest } from './organizations.interface';
+import { IEmployeeCreateRequest, IEmployeeUpdateRequest, IEmployeesResponse } from './organizations.interface';
 
 import { OrganizationsService } from './organizations.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -18,7 +18,7 @@ export class OrganizationsEffects {
   @Effect()
   fetchOrganizations$ = this.actions
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
-    .switchMap(action => {
+    .switchMap((action: Action) => {
       return this.readOrganizations()
         .map(data => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
@@ -35,7 +35,7 @@ export class OrganizationsEffects {
   @Effect()
   createOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_CREATE)
-    .switchMap(action => {
+    .switchMap((action: Action) => {
       const { parentId, organization } = action.payload;
       return this.createOrganization(parentId, organization)
         .mergeMap(data => Observable.from([
@@ -59,9 +59,10 @@ export class OrganizationsEffects {
   updateOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_UPDATE)
     .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
       return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => Observable.from([
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
@@ -82,9 +83,10 @@ export class OrganizationsEffects {
   deleteOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_DELETE)
     .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
       return this.deleteOrganization(store.organizations.selectedOrganizationId)
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => Observable.from([
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
@@ -124,12 +126,13 @@ export class OrganizationsEffects {
   fetchEmployees$ = this.actions
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
       return this.readEmployees(store.organizations.selectedOrganizationId)
-        .map(data => ({
+        .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
           payload: {
-            employees: data.users
+            employees: response.users
           }
         }))
         .catch(() => {
@@ -142,12 +145,13 @@ export class OrganizationsEffects {
   fetchNotAddedEmployees$ = this.actions
     .ofType(OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED)
     .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
       return this.readNotAddedEmployees(store.organizations.selectedOrganizationId)
-        .map(data => ({
+        .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
           payload: {
-            employees: data.users
+            employees: response.users
           }
         }))
         .catch(() => {
@@ -160,9 +164,10 @@ export class OrganizationsEffects {
   createEmployee$ = this.actions
     .ofType(OrganizationsService.EMPLOYEE_CREATE)
     .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
       return this.createEmployee(store.organizations.selectedOrganizationId, action.payload.employee)
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => Observable.from([
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
@@ -183,13 +188,14 @@ export class OrganizationsEffects {
   updateEmployee$ = this.actions
     .ofType(OrganizationsService.EMPLOYEE_UPDATE)
     .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
       return this.updateEmployee(
         store.organizations.selectedOrganizationId,
         store.organizations.selectedEmployeeUserId,
         action.payload.employee
       )
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => Observable.from([
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
@@ -210,9 +216,10 @@ export class OrganizationsEffects {
   deleteEmployee$ = this.actions
     .ofType(OrganizationsService.EMPLOYEE_DELETE)
     .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
       return this.deleteEmployee(store.organizations.selectedOrganizationId, store.organizations.selectedEmployeeUserId)
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => Observable.from([
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
