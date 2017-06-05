@@ -6,7 +6,7 @@
 </app-actions-log-filter>
 
 <app-grid
-  [rows]="actionsLogRows"
+  [rows]="actionsLogRows | async"
   [styles]="{height: '500px'}"
   [columns]="columns"
   [autoLoad]="false"

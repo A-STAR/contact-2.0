@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
-import { IActionLog, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
@@ -41,9 +41,7 @@ export class ActionsLogComponent {
 
   employeesRows: IEmployee[];
   actionTypesRows: IActionType[];
-  actionsLogRows: Array<IActionLog> = [];
-
-  private actionLogsSubscription: Subscription;
+  actionsLogRows: Observable<IActionLog[]>;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,9 +53,7 @@ export class ActionsLogComponent {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.employeesRows = employees;
     this.actionTypesRows = actionTypes;
-
-    this.actionLogsSubscription = this.actionsLogService.state
-      .subscribe((state: IActionsLogServiceState) => this.actionsLogRows = state.actionsLog);
+    this.actionsLogRows = this.actionsLogService.actionsLogRows;
   }
 
   onSearch(filterValues: IActionsLogFilterRequest): void {

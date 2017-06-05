@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionsLogPayload, IActionType, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
@@ -25,7 +25,12 @@ export class ActionsLogService {
   ) {
   }
 
-  @Effect() actionsLogService$ = this.effectActions
+  get actionsLogRows(): Observable<IActionLog[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLogService.actionsLog);
+  }
+
+  @Effect() actionsLogEffect$ = this.effectActions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
     .switchMap(
       (action: { payload: IActionsLogFilterRequest }): Observable<IActionsLogPayload> => {
@@ -41,11 +46,6 @@ export class ActionsLogService {
       this.notifications.error('Could not fetch data from the server');
       return null;
     });
-
-  get state(): Observable<IActionsLogServiceState> {
-    return this.store
-      .select((state) => state.actionsLogService);
-  }
 
   search(payload: IActionsLogFilterRequest): void {
     this.store.dispatch({
