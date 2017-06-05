@@ -52,17 +52,24 @@ export class OrganizationsTreeComponent {
     private organizationsService: OrganizationsService,
   ) {
     this.organizationsService.fetchOrganizations();
+
+    // TODO: unsubscribe
     this.organizationsService.state
-      .map(state => this.convertToTreeNodes(state.organizations.data))
       .subscribe(
-        nodes => {
+        state => {
+          this.action = state.dialogAction;
+
+          const nodes = this.convertToTreeNodes(state.organizations.data);
           const files = {
-            id: 0,
-            label: 'Home',
-            children: [].concat(nodes),
-          };
-          this.value = [files];
-          this.prepareTree(this.rootNode);
+              id: 0,
+              label: 'Home',
+              children: [].concat(nodes),
+            };
+            this.value = [files];
+            this.prepareTree(this.rootNode);
+
+          // FIXME
+          this.refreshToolbar();
         },
         // TODO: notifications
         error => console.error(error)
@@ -183,7 +190,6 @@ export class OrganizationsTreeComponent {
     // this.organizationsService.fetchEmployees(node.data.id);
     this.organizationsService.selectOrganization(node.data.id);
     // this.action = null;
-    this.refreshToolbar();
     this.onSelect.emit(node.data);
   }
 
@@ -208,13 +214,13 @@ export class OrganizationsTreeComponent {
     }
   }
 
-  // cancelAction(): void {
-  //   this.action = null;
-  // }
+  cancelAction(): void {
+    this.organizationsService.setDialogAction(null);
+  }
 
-  // onNodeEdit(data: any): void {
-  //   this.action = ToolbarActionTypeEnum.EDIT;
-  // }
+  onNodeEdit(data: any): void {
+    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+  }
 
   onEditSubmit(data: any, create: boolean): void {
     if (create) {
@@ -227,18 +233,6 @@ export class OrganizationsTreeComponent {
   onRemoveSubmit(): void {
     this.organizationsService.deleteOrganization();
   }
-
-  // private submit(action: Observable<any>): void {
-  //   action.subscribe(
-  //     () => {
-  //       this.cancelAction();
-  //       this.selection = [];
-  //       this.load();
-  //     },
-  //     // TODO: error handling
-  //     error => console.error(error)
-  //   );
-  // }
 
   private get rootNode(): TreeNode {
     return this.value[0];
