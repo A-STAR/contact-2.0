@@ -14,8 +14,10 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 @Injectable()
 export class ActionsLogService {
 
+  public static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
+  public static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
   public static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
-  public static ACTIONS_LOG_SUCCESS_FETCH = 'ACTIONS_LOG_SUCCESS_FETCH';
+  public static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
 
   constructor(
     private gridService: GridService,
@@ -27,7 +29,17 @@ export class ActionsLogService {
 
   get actionsLogRows(): Observable<IActionLog[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLogService.actionsLog);
+      .select((state: IAppState) => state.actionsLog.actionsLog);
+  }
+
+  get employeesRows(): Observable<IEmployee[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.employees);
+  }
+
+  get actionTypesRows(): Observable<IActionType[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionTypes);
   }
 
   @Effect() onSearchEffect = this.effectActions
@@ -37,7 +49,7 @@ export class ActionsLogService {
         return this.gridService.read('/actions')
           .map((data: { actions: IActionLog[] }): IActionsLogPayload => {
             return {
-              type: ActionsLogService.ACTIONS_LOG_SUCCESS_FETCH,
+              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
               payload: data.actions
             };
           });

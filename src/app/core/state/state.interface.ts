@@ -6,7 +6,7 @@ import { IActionsLogServiceState } from '../../routes/admin/actions-log/actions-
 export interface IAppState {
   // TODO: rename notificationService -> notifications
   readonly notificationService: INotificationServiceState;
-  readonly actionsLogService: IActionsLogServiceState;
+  readonly actionsLog: IActionsLogServiceState;
   readonly employees: IEmployeesState;
   readonly organizations: IOrganizationsState;
 }

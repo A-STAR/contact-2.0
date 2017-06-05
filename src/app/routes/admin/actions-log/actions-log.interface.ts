@@ -29,9 +29,11 @@ export interface IActionLog {
 
 export interface IActionsLogServiceState {
   actionsLog: IActionLog[];
+  employees: IEmployee[];
+  actionTypes: IActionType[];
 }
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IActionLog[];
+  payload?: IActionLog[]|IEmployee[]|IActionType[];
 }

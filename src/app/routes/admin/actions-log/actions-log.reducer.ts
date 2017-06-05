@@ -1,9 +1,11 @@
-import { IActionsLogPayload, IActionsLogServiceState } from './actions-log.interface';
+import {IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee} from './actions-log.interface';
 
 import { ActionsLogService } from './actions-log.service';
 
 const defaultState: IActionsLogServiceState = {
-  actionsLog: []
+  actionsLog: [],
+  employees: [],
+  actionTypes: []
 };
 
 export function actionsLogReducer(
@@ -11,10 +13,20 @@ export function actionsLogReducer(
   action: IActionsLogPayload
 ): IActionsLogServiceState {
   switch (action.type) {
-    case ActionsLogService.ACTIONS_LOG_SUCCESS_FETCH:
+    case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
       return {
         ...state,
-        actionsLog: action.payload
+        actionTypes: action.payload as Array<IActionType>
+      };
+    case ActionsLogService.EMPLOYEES_FETCH_SUCCESS:
+      return {
+        ...state,
+        employees: action.payload as Array<IEmployee>
+      };
+    case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
+      return {
+        ...state,
+        actionsLog: action.payload as Array<IActionLog>
       };
   }
   return state;

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
@@ -33,26 +32,24 @@ export class ActionsLogComponent {
       [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
     typeCode: (actionLog: IActionLog) => {
       const currentActionType: IActionType =
-        this.actionTypesRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
+       null; // this.actionTypesRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
       return currentActionType ? currentActionType.name : actionLog.typeCode;
     },
     createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
-  employeesRows: IEmployee[];
-  actionTypesRows: IActionType[];
+  employeesRows: Observable<IEmployee[]>;
+  actionTypesRows: Observable<IActionType[]>;
   actionsLogRows: Observable<IActionLog[]>;
 
   constructor(
-    private route: ActivatedRoute,
     private gridService: GridService,
     private converterService: ValueConverterService,
     private actionsLogService: ActionsLogService,
   ) {
-    const [ employees, actionTypes ] = this.route.snapshot.data.actionsLogData;
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.employeesRows = employees;
-    this.actionTypesRows = actionTypes;
+    this.employeesRows = this.actionsLogService.employeesRows;
+    this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.actionsLogRows = this.actionsLogService.actionsLogRows;
   }
 
