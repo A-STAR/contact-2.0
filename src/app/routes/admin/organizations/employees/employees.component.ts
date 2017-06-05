@@ -132,6 +132,10 @@ export class EmployeesComponent {
     }
   }
 
+  onEdit(): void {
+    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+  }
+
   onAddSubmit(data: any): void {
     this.organizationsService.createEmployee(data);
   }
