@@ -30,7 +30,7 @@ export class ActionsLogService {
       .select((state: IAppState) => state.actionsLogService.actionsLog);
   }
 
-  @Effect() actionsLogEffect$ = this.effectActions
+  @Effect() onSearchEffect = this.effectActions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
     .switchMap(
       (action: { payload: IActionsLogFilterRequest }): Observable<IActionsLogPayload> => {
