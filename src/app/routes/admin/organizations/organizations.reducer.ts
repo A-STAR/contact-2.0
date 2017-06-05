@@ -26,6 +26,14 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
           data: action.payload.organizations
         }
       };
+    case OrganizationsService.ORGANIZATION_SELECT:
+      return {
+        ...state,
+        organizations: {
+          ...state.organizations,
+          selectedId: action.payload.organizationId
+        }
+      };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
@@ -42,6 +50,14 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
           data: action.payload.employees
         }
       };
+    case OrganizationsService.EMPLOYEE_SELECT:
+      return {
+        ...state,
+        employees: {
+          ...state.employees,
+          selectedUserId: action.payload.employeeUserId
+        }
+      };
     case OrganizationsService.EMPLOYEES_CLEAR:
       return {
         ...state,
@@ -49,6 +65,11 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
           ...state.employees,
           data: []
         }
+      };
+    case OrganizationsService.DIALOG_ACTION:
+      return {
+        ...state,
+        dialogAction: action.payload.dialogAction
       };
     default:
       return state;

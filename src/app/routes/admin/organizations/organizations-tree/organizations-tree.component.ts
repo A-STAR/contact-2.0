@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 // import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
@@ -19,6 +19,8 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
   styleUrls: ['./organizations-tree.component.scss']
 })
 export class OrganizationsTreeComponent {
+  @Input() organizations: Array<IOrganization>;
+
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
@@ -67,17 +69,17 @@ export class OrganizationsTreeComponent {
       );
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.action === ToolbarActionTypeEnum.ADD;
-  }
+  // get isEntityBeingCreated(): boolean {
+  //   return this.action === ToolbarActionTypeEnum.ADD;
+  // }
 
-  get isEntityBeingEdited(): boolean {
-    return this.action === ToolbarActionTypeEnum.EDIT;
-  }
+  // get isEntityBeingEdited(): boolean {
+  //   return this.action === ToolbarActionTypeEnum.EDIT;
+  // }
 
-  get isEntityBeingRemoved(): boolean {
-    return this.action === ToolbarActionTypeEnum.REMOVE;
-  }
+  // get isEntityBeingRemoved(): boolean {
+  //   return this.action === ToolbarActionTypeEnum.REMOVE;
+  // }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
     return organizations
@@ -136,7 +138,7 @@ export class OrganizationsTreeComponent {
         element.data.parentId = targetElement.data.id;
         element.data.sortOrder = sortOrder;
         this.organizationsService
-          .updateOrganization(element.data.id, {
+          .updateOrganization({
             parentId: element.data.parentId,
             sortOrder: element.data.sortOrder
           } as any);
@@ -177,8 +179,10 @@ export class OrganizationsTreeComponent {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
-    this.organizationsService.fetchEmployees(node.data.id);
-    this.action = null;
+
+    // this.organizationsService.fetchEmployees(node.data.id);
+    this.organizationsService.selectOrganization(node.data.id);
+    // this.action = null;
     this.refreshToolbar();
     this.onSelect.emit(node.data);
   }
@@ -194,24 +198,24 @@ export class OrganizationsTreeComponent {
     }
   }
 
-  cancelAction(): void {
-    this.action = null;
-  }
+  // cancelAction(): void {
+  //   this.action = null;
+  // }
 
-  onNodeEdit(data: any): void {
-    this.action = ToolbarActionTypeEnum.EDIT;
-  }
+  // onNodeEdit(data: any): void {
+  //   this.action = ToolbarActionTypeEnum.EDIT;
+  // }
 
   onEditSubmit(data: any, create: boolean): void {
     if (create) {
       this.organizationsService.createOrganization(this.selection ? this.selection.data.id : null, data);
     } else {
-      this.organizationsService.updateOrganization(this.selection.data.id, data);
+      this.organizationsService.updateOrganization(data);
     }
   }
 
   onRemoveSubmit(): void {
-    this.organizationsService.deleteOrganization(this.selection.data.id);
+    this.organizationsService.deleteOrganization();
   }
 
   // private submit(action: Observable<any>): void {
