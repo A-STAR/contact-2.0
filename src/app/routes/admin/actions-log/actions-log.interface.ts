@@ -5,6 +5,7 @@ export interface IEmployee {
   middleName: string;
   position: string;
   organization: string;
+  isBlocked: number;
 }
 
 export interface IActionType {

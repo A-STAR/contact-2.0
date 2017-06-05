@@ -58,11 +58,18 @@
               [syncFormControlChanges]="false"
               [height]="190"
               [rowsFrom]="employeesRows"
+              [rowsFilterFrom]="employeesRowsFilter"
               [columnsTranslationKeyFrom]="'actionsLog.filter.employees'"
               [columnsTranslationKeyTo]="'actionsLog.filter.employees'"
               [columnsFrom]="employeesColumnsFrom"
               [columnsTo]="employeesColumnsTo">
             </app-multi-select>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" [formControlName]="blockingEmployeesControl.controlName"/>
+                {{ blockingEmployeesControl.label | translate}}
+              </label>
+            </div>
           </app-action-dialog>
         </div>
       </div>
