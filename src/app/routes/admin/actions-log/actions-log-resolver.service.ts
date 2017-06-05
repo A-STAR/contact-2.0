@@ -10,6 +10,6 @@ export class ActionsLogResolver implements Resolve<void> {
   constructor(private actionsLogService: ActionsLogService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<void> {
-    return this.actionsLogService.employeesAndActionTypes;
+    return this.actionsLogService.getEmployeesAndActionTypes();
   }
 }

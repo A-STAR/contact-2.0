@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/zip';
 
 import { IActionLog, IActionsLogPayload, IActionType, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
@@ -41,7 +43,7 @@ export class ActionsLogService {
       .select((state: IAppState) => state.actionsLog.actionTypes);
   }
 
-  get employeesAndActionTypes(): Observable<void> {
+  getEmployeesAndActionTypes(): Observable<void> {
     return Observable.zip(
       this.getEmployees(),
       this.getActionTypes(),
