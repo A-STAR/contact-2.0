@@ -1,4 +1,4 @@
-import {IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee} from './actions-log.interface';
+import { IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
 
 import { ActionsLogService } from './actions-log.service';
 
