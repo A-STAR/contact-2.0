@@ -79,7 +79,10 @@ export class EmployeesComponent {
     // TODO: unsubscribe
     this.organizationsService.state
       .subscribe(
-        state => this.action = state.dialogAction,
+        state => {
+          this.action = state.dialogAction;
+          this.refreshToolbar(!!state.organizations.selectedId, !!state.employees.selectedUserId, state.employees.data.length > 0);
+        },
         // TODO: notifications
         error => console.error(error)
       );
@@ -109,7 +112,6 @@ export class EmployeesComponent {
     const employee = employees[0];
     if (employee) {
       this.organizationsService.selectEmployee(employee.userId);
-      this.refreshToolbar();
     }
   }
 
@@ -151,18 +153,15 @@ export class EmployeesComponent {
     this.organizationsService.setDialogAction(null);
   }
 
-  private refreshToolbar(): void {
-    const selectedEntity = true; // !!this.selectedEntity;
-    const masterEntity = true; // !!this.masterEntity;
-
-    this.setActionsVisibility(this.toolbarActionsGroup, selectedEntity);
+  private refreshToolbar(isOrganizationSelected: boolean, isEmployeeSelected: boolean, hasData: boolean): void {
+    this.setActionsVisibility(this.toolbarActionsGroup, isEmployeeSelected);
     if (Array.isArray(this.toolbarActionsMasterGroup)) {
-      this.setActionsVisibility(this.toolbarActionsMasterGroup, masterEntity);
+      this.setActionsVisibility(this.toolbarActionsMasterGroup, isOrganizationSelected);
     }
 
     const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
     if (refreshAction) {
-      refreshAction.visible = this.grid.rows.length > 0;
+      refreshAction.visible = hasData;
     }
   }
 
