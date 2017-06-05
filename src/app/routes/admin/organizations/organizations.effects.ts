@@ -16,97 +16,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class OrganizationsEffects {
 
   @Effect()
-  fetchEmployees$ = this.actions
-    .ofType(OrganizationsService.EMPLOYEES_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
-      return this.readEmployees(store.organizations.organizations.selectedId)
-        .map(data => ({
-          type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
-          payload: {
-            employees: data.users
-          }
-        }))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.fetch');
-          return null;
-        });
-    });
-
-  @Effect()
-  createEmployee$ = this.actions
-    .ofType(OrganizationsService.EMPLOYEE_CREATE)
-    .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
-      return this.createEmployee(store.organizations.organizations.selectedId, action.payload.employee)
-        .mergeMap(data => Observable.from([
-          {
-            type: OrganizationsService.EMPLOYEES_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ]))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.create');
-          return null;
-        });
-    });
-
-  @Effect()
-  updateEmployee$ = this.actions
-    .ofType(OrganizationsService.EMPLOYEE_UPDATE)
-    .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
-      return this.updateEmployee(
-        store.organizations.organizations.selectedId,
-        store.organizations.employees.selectedUserId,
-        action.payload.employee
-      )
-        .mergeMap(data => Observable.from([
-          {
-            type: OrganizationsService.EMPLOYEES_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ]))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.update');
-          return null;
-        });
-    });
-
-  @Effect()
-  deleteEmployee$ = this.actions
-    .ofType(OrganizationsService.EMPLOYEE_DELETE)
-    .withLatestFrom(this.store)
-    .switchMap(([_, store]) => {
-      return this.deleteEmployee(store.organizations.organizations.selectedId, store.organizations.employees.selectedUserId)
-        .mergeMap(data => Observable.from([
-          {
-            type: OrganizationsService.EMPLOYEES_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ]))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.delete');
-          return null;
-        });
-    });
-
-  @Effect()
   fetchOrganizations$ = this.actions
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
     .switchMap(action => {
@@ -199,6 +108,115 @@ export class OrganizationsEffects {
       type: OrganizationsService.EMPLOYEES_FETCH
     }));
 
+  @Effect()
+  fetchEmployees$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEES_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(([_, store]) => {
+      return this.readEmployees(store.organizations.organizations.selectedId)
+        .map(data => ({
+          type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
+          payload: {
+            employees: data.users
+          }
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  fetchNotAddedEmployees$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED)
+    .withLatestFrom(this.store)
+    .switchMap(([_, store]) => {
+      return this.readNotAddedEmployees(store.organizations.organizations.selectedId)
+        .map(data => ({
+          type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
+          payload: {
+            employees: data.users
+          }
+        }))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  createEmployee$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEE_CREATE)
+    .withLatestFrom(this.store)
+    .switchMap(([action, store]) => {
+      return this.createEmployee(store.organizations.organizations.selectedId, action.payload.employee)
+        .mergeMap(data => Observable.from([
+          {
+            type: OrganizationsService.EMPLOYEES_FETCH
+          },
+          {
+            type: OrganizationsService.DIALOG_ACTION,
+            payload: {
+              dialogAction: null
+            }
+          }
+        ]))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.create');
+          return null;
+        });
+    });
+
+  @Effect()
+  updateEmployee$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEE_UPDATE)
+    .withLatestFrom(this.store)
+    .switchMap(([action, store]) => {
+      return this.updateEmployee(
+        store.organizations.organizations.selectedId,
+        store.organizations.employees.selectedUserId,
+        action.payload.employee
+      )
+        .mergeMap(data => Observable.from([
+          {
+            type: OrganizationsService.EMPLOYEES_FETCH
+          },
+          {
+            type: OrganizationsService.DIALOG_ACTION,
+            payload: {
+              dialogAction: null
+            }
+          }
+        ]))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.update');
+          return null;
+        });
+    });
+
+  @Effect()
+  deleteEmployee$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEE_DELETE)
+    .withLatestFrom(this.store)
+    .switchMap(([_, store]) => {
+      return this.deleteEmployee(store.organizations.organizations.selectedId, store.organizations.employees.selectedUserId)
+        .mergeMap(data => Observable.from([
+          {
+            type: OrganizationsService.EMPLOYEES_FETCH
+          },
+          {
+            type: OrganizationsService.DIALOG_ACTION,
+            payload: {
+              dialogAction: null
+            }
+          }
+        ]))
+        .catch(() => {
+          this.notificationsService.error('organizations.employees.messages.errors.delete');
+          return null;
+        });
+    });
+
   constructor(
     private actions: Actions,
     private gridService: GridService,
@@ -224,6 +242,10 @@ export class OrganizationsEffects {
 
   private readEmployees(organizationId: number): Observable<any> {
     return this.gridService.read('/api/organizations/{organizationId}/users', { organizationId });
+  }
+
+  private readNotAddedEmployees(organizationId: number): Observable<any> {
+    return this.gridService.read('/api/organizations/{organizationId}/users/notadded', { organizationId });
   }
 
   private createEmployee(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {

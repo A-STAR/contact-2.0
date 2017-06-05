@@ -1,9 +1,10 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IEmployeeUser, IEmployee, IOrganizationDialogActionEnum } from '../organizations.interface';
+import { IEmployeeUser, IEmployee, IOrganizationDialogActionEnum, IOrganizationsState } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { OrganizationsService } from '../organizations.service';
@@ -65,30 +66,27 @@ export class EmployeesComponent {
     dataKey: 'users',
   };
 
-  rows = [];
-
   action: IOrganizationDialogActionEnum;
 
-  selectedEntity: IEmployee;
-
   constructor(
-    private organizationsService: OrganizationsService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private organizationsService: OrganizationsService,
     private translateService: TranslateService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
+    // TODO: unsubscribe
     this.organizationsService.state
       .subscribe(
-        state => {
-          this.rows = state.employees.data;
-          this.action = state.dialogAction;
-          this.selectedEntity = state.employees.data.find(employee => employee.userId === state.employees.selectedUserId);
-        },
+        state => this.action = state.dialogAction,
         // TODO: notifications
         error => console.error(error)
       );
+  }
+
+  get state(): Observable<IOrganizationsState> {
+    return this.organizationsService.state;
   }
 
   get isEntityBeingCreated(): boolean {

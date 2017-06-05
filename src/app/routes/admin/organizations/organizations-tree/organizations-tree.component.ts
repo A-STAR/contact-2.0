@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
-import { IOrganization } from '../organizations.interface';
+import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
@@ -46,7 +46,7 @@ export class OrganizationsTreeComponent {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
-  action: ToolbarActionTypeEnum;
+  action: IOrganizationDialogActionEnum;
 
   constructor(
     private organizationsService: OrganizationsService,
@@ -69,17 +69,17 @@ export class OrganizationsTreeComponent {
       );
   }
 
-  // get isEntityBeingCreated(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.ADD;
-  // }
+  get isEntityBeingCreated(): boolean {
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_ADD;
+  }
 
-  // get isEntityBeingEdited(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.EDIT;
-  // }
+  get isEntityBeingEdited(): boolean {
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_EDIT;
+  }
 
-  // get isEntityBeingRemoved(): boolean {
-  //   return this.action === ToolbarActionTypeEnum.REMOVE;
-  // }
+  get isEntityBeingRemoved(): boolean {
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE;
+  }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
     return organizations
@@ -190,11 +190,21 @@ export class OrganizationsTreeComponent {
   onToolbarAction(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
+        // FIXME
         this.selection = [];
         this.organizationsService.fetchOrganizations();
         break;
+      case ToolbarActionTypeEnum.ADD:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD);
+        break;
+      case ToolbarActionTypeEnum.EDIT:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+        break;
+      case ToolbarActionTypeEnum.REMOVE:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
+        break;
       default:
-        this.action = action.type;
+        this.organizationsService.setDialogAction(null);
     }
   }
 

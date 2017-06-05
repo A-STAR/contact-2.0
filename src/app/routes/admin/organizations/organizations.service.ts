@@ -13,23 +13,23 @@ import {
 
 @Injectable()
 export class OrganizationsService {
-  static ORGANIZATIONS_FETCH         = 'ORGANIZATIONS_FETCH';
-  static ORGANIZATIONS_FETCH_SUCCESS = 'ORGANIZATIONS_FETCH_SUCCESS';
-  static ORGANIZATIONS_CLEAR         = 'ORGANIZATIONS_CLEAR';
-  static ORGANIZATION_CREATE         = 'ORGANIZATION_CREATE';
-  static ORGANIZATION_UPDATE         = 'ORGANIZATION_UPDATE';
-  static ORGANIZATION_DELETE         = 'ORGANIZATION_DELETE';
-  static ORGANIZATION_SELECT         = 'ORGANIZATION_SELECT';
-
-  static EMPLOYEES_FETCH         = 'EMPLOYEES_FETCH';
-  static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
-  static EMPLOYEES_CLEAR         = 'EMPLOYEES_CLEAR';
-  static EMPLOYEE_CREATE         = 'EMPLOYEE_CREATE';
-  static EMPLOYEE_UPDATE         = 'EMPLOYEE_UPDATE';
-  static EMPLOYEE_DELETE         = 'EMPLOYEE_DELETE';
-  static EMPLOYEE_SELECT         = 'EMPLOYEE_SELECT';
-
-  static DIALOG_ACTION = 'DIALOG_ACTION';
+  static ORGANIZATIONS_FETCH               = 'ORGANIZATIONS_FETCH';
+  static ORGANIZATIONS_FETCH_SUCCESS       = 'ORGANIZATIONS_FETCH_SUCCESS';
+  static ORGANIZATIONS_CLEAR               = 'ORGANIZATIONS_CLEAR';
+  static ORGANIZATION_CREATE               = 'ORGANIZATION_CREATE';
+  static ORGANIZATION_UPDATE               = 'ORGANIZATION_UPDATE';
+  static ORGANIZATION_DELETE               = 'ORGANIZATION_DELETE';
+  static ORGANIZATION_SELECT               = 'ORGANIZATION_SELECT';
+  static EMPLOYEES_FETCH                   = 'EMPLOYEES_FETCH';
+  static EMPLOYEES_FETCH_SUCCESS           = 'EMPLOYEES_FETCH_SUCCESS';
+  static EMPLOYEES_FETCH_NOT_ADDED         = 'EMPLOYEES_FETCH_NOT_ADDED';
+  static EMPLOYEES_FETCH_NOT_ADDED_SUCCESS = 'EMPLOYEES_FETCH_NOT_ADDED_SUCCESS';
+  static EMPLOYEES_CLEAR                   = 'EMPLOYEES_CLEAR';
+  static EMPLOYEE_CREATE                   = 'EMPLOYEE_CREATE';
+  static EMPLOYEE_UPDATE                   = 'EMPLOYEE_UPDATE';
+  static EMPLOYEE_DELETE                   = 'EMPLOYEE_DELETE';
+  static EMPLOYEE_SELECT                   = 'EMPLOYEE_SELECT';
+  static DIALOG_ACTION                     = 'DIALOG_ACTION';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -82,6 +82,12 @@ export class OrganizationsService {
   fetchEmployees(): void {
     return this.store.dispatch({
       type: OrganizationsService.EMPLOYEES_FETCH
+    });
+  }
+
+  fetchNotAddedEmployees(): void {
+    return this.store.dispatch({
+      type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED
     });
   }
 

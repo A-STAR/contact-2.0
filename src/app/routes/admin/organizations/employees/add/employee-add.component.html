@@ -10,10 +10,9 @@
       class="flat"
       [styles]="{ height: '200px' }"
       [columns]="columns"
-      [parseFn]="parseFn"
       [autoLoad]="false"
       [columnTranslationKey]="'organizations.employees.add'"
-      [dataSource]="dataSource"
+      [rows]="(state | async).employees.add.data"
       (onRowSelect)="onSelectEmployees($event)">
     </app-grid>
   </div>

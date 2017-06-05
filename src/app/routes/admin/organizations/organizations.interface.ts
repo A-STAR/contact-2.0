@@ -53,6 +53,9 @@ export interface IOrganizationsState {
   employees: {
     data: Array<IEmployee>;
     selectedUserId: number;
+    add: {
+      data: Array<IEmployee>;
+    }
   };
   dialogAction: IOrganizationDialogActionEnum;
 }

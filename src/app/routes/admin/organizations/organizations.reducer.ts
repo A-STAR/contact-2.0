@@ -11,7 +11,10 @@ const defaultState: IOrganizationsState = {
   },
   employees: {
     data: [],
-    selectedUserId: null
+    selectedUserId: null,
+    add: {
+      data: []
+    }
   },
   dialogAction: null
 };
@@ -48,6 +51,17 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
         employees: {
           ...state.employees,
           data: action.payload.employees
+        }
+      };
+    case OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS:
+      return {
+        ...state,
+        employees: {
+          ...state.employees,
+          add: {
+            ...state.employees.add,
+            data: action.payload.employees
+          }
         }
       };
     case OrganizationsService.EMPLOYEE_SELECT:

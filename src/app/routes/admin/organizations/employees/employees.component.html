@@ -34,7 +34,7 @@
   [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'organizations.employees'"
-  [rows]="rows"
+  [rows]="(state | async).employees.data"
   [editPermission]="'ORGANIZATION_EDIT'"
   (onRowSelect)="onSelectedRowChange($event)"
   (onEdit)="onEdit()"
