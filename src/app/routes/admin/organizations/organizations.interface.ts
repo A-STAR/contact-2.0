@@ -46,17 +46,11 @@ export enum IOrganizationDialogActionEnum {
 }
 
 export interface IOrganizationsState {
-  organizations: {
-    data: Array<IOrganization>;
-    selectedId: number;
-  };
-  employees: {
-    data: Array<IEmployee>;
-    selectedUserId: number;
-    add: {
-      data: Array<IEmployee>;
-    }
-  };
+  organizations: Array<IOrganization>;
+  selectedOrganizationId: number;
+  employees: Array<IEmployee>;
+  notAddedEmployees: Array<IEmployee>;
+  selectedEmployeeUserId: number;
   dialogAction: IOrganizationDialogActionEnum;
 }
 

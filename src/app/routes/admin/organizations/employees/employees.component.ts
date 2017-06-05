@@ -78,8 +78,8 @@ export class EmployeesComponent {
       .subscribe(
         state => {
           this.action = state.dialogAction;
-          this.editedEntity = state.employees.data.find(employee => employee.userId === state.employees.selectedUserId);
-          this.refreshToolbar(!!state.organizations.selectedId, !!state.employees.selectedUserId, state.employees.data.length > 0);
+          this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
+          this.refreshToolbar(!!state.selectedOrganizationId, !!state.selectedEmployeeUserId, state.employees.length > 0);
         },
         // TODO: notifications
         error => console.error(error)

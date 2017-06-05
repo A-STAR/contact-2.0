@@ -5,17 +5,11 @@ import { IOrganizationsState } from './organizations.interface';
 import { OrganizationsService } from './organizations.service';
 
 const defaultState: IOrganizationsState = {
-  organizations: {
-    data: [],
-    selectedId: null
-  },
-  employees: {
-    data: [],
-    selectedUserId: null,
-    add: {
-      data: []
-    }
-  },
+  organizations: [],
+  selectedOrganizationId: null,
+  employees: [],
+  notAddedEmployees: [],
+  selectedEmployeeUserId: null,
   dialogAction: null
 };
 
@@ -24,61 +18,37 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
       return {
         ...state,
-        organizations: {
-          ...state.organizations,
-          data: action.payload.organizations
-        }
+        organizations: action.payload.organizations
       };
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        organizations: {
-          ...state.organizations,
-          selectedId: action.payload.organizationId
-        }
+        selectedOrganizationId: action.payload.organizationId
       };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
-        organizations: {
-          ...state.organizations,
-          data: []
-        }
+        organizations: []
       };
     case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
       return {
         ...state,
-        employees: {
-          ...state.employees,
-          data: action.payload.employees
-        }
+        employees: action.payload.employees
       };
     case OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS:
       return {
         ...state,
-        employees: {
-          ...state.employees,
-          add: {
-            ...state.employees.add,
-            data: action.payload.employees
-          }
-        }
+        notAddedEmployees: action.payload.employees
       };
     case OrganizationsService.EMPLOYEE_SELECT:
       return {
         ...state,
-        employees: {
-          ...state.employees,
-          selectedUserId: action.payload.employeeUserId
-        }
+        selectedEmployeeUserId: action.payload.employeeUserId
       };
     case OrganizationsService.EMPLOYEES_CLEAR:
       return {
         ...state,
-        employees: {
-          ...state.employees,
-          data: []
-        }
+        employees: []
       };
     case OrganizationsService.DIALOG_ACTION:
       return {

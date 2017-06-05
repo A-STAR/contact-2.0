@@ -60,7 +60,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATION_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(([action, store]) => {
-      return this.updateOrganization(store.organizations.organizations.selectedId, action.payload.organization)
+      return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
         .mergeMap(data => Observable.from([
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -83,7 +83,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATION_DELETE)
     .withLatestFrom(this.store)
     .switchMap(([_, store]) => {
-      return this.deleteOrganization(store.organizations.organizations.selectedId)
+      return this.deleteOrganization(store.organizations.selectedOrganizationId)
         .mergeMap(data => Observable.from([
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -92,6 +92,12 @@ export class OrganizationsEffects {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
               dialogAction: null
+            }
+          },
+          {
+            type: OrganizationsService.ORGANIZATION_SELECT,
+            payload: {
+              selectedOrganizationId: null
             }
           }
         ]))
@@ -113,7 +119,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)
     .switchMap(([_, store]) => {
-      return this.readEmployees(store.organizations.organizations.selectedId)
+      return this.readEmployees(store.organizations.selectedOrganizationId)
         .map(data => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
           payload: {
@@ -131,7 +137,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED)
     .withLatestFrom(this.store)
     .switchMap(([_, store]) => {
-      return this.readNotAddedEmployees(store.organizations.organizations.selectedId)
+      return this.readNotAddedEmployees(store.organizations.selectedOrganizationId)
         .map(data => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
           payload: {
@@ -149,7 +155,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEE_CREATE)
     .withLatestFrom(this.store)
     .switchMap(([action, store]) => {
-      return this.createEmployee(store.organizations.organizations.selectedId, action.payload.employee)
+      return this.createEmployee(store.organizations.selectedOrganizationId, action.payload.employee)
         .mergeMap(data => Observable.from([
           {
             type: OrganizationsService.EMPLOYEES_FETCH
@@ -173,8 +179,8 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(([action, store]) => {
       return this.updateEmployee(
-        store.organizations.organizations.selectedId,
-        store.organizations.employees.selectedUserId,
+        store.organizations.selectedOrganizationId,
+        store.organizations.selectedEmployeeUserId,
         action.payload.employee
       )
         .mergeMap(data => Observable.from([
@@ -199,7 +205,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEE_DELETE)
     .withLatestFrom(this.store)
     .switchMap(([_, store]) => {
-      return this.deleteEmployee(store.organizations.organizations.selectedId, store.organizations.employees.selectedUserId)
+      return this.deleteEmployee(store.organizations.selectedOrganizationId, store.organizations.selectedEmployeeUserId)
         .mergeMap(data => Observable.from([
           {
             type: OrganizationsService.EMPLOYEES_FETCH
@@ -208,6 +214,12 @@ export class OrganizationsEffects {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
               dialogAction: null
+            }
+          },
+          {
+            type: OrganizationsService.EMPLOYEE_SELECT,
+            payload: {
+              selectedEmployeeUserId: null
             }
           }
         ]))

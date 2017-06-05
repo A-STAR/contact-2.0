@@ -12,7 +12,7 @@
       [columns]="columns"
       [autoLoad]="false"
       [columnTranslationKey]="'organizations.employees.add'"
-      [rows]="(state | async).employees.add.data"
+      [rows]="(state | async).notAddedEmployees"
       (onRowSelect)="onSelectEmployees($event)">
     </app-grid>
   </div>

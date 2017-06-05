@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-// import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
@@ -57,13 +56,10 @@ export class OrganizationsTreeComponent {
 
     // TODO: unsubscribe
     this.organizationsService.state
+      .distinctUntilKeyChanged('organizations')
       .subscribe(
         state => {
-          this.action = state.dialogAction;
-
-          this.editedEntity = state.organizations.data.find(organization => organization.id === state.organizations.selectedId);
-
-          const nodes = this.convertToTreeNodes(state.organizations.data);
+          const nodes = this.convertToTreeNodes(state.organizations);
           const files = {
               id: 0,
               label: 'Home',
@@ -71,6 +67,16 @@ export class OrganizationsTreeComponent {
             };
             this.value = [files];
             this.prepareTree(this.rootNode);
+        },
+        error => console.error(error)
+      );
+
+    // TODO: unsubscribe
+    this.organizationsService.state
+      .subscribe(
+        state => {
+          this.action = state.dialogAction;
+          this.editedEntity = state.organizations.find(organization => organization.id === state.selectedOrganizationId);
 
           // FIXME
           this.refreshToolbar();
