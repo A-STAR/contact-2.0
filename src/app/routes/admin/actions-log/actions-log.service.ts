@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
@@ -15,6 +15,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class ActionsLogService {
 
   public static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
+  public static ACTIONS_LOG_SUCCESS_FETCH = 'ACTIONS_LOG_SUCCESS_FETCH';
 
   constructor(
     private gridService: GridService,
@@ -27,13 +28,14 @@ export class ActionsLogService {
   @Effect() actionsLogService$ = this.effectActions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
     .switchMap(
-      action => {
-        return this.gridService.read('/actions').map(data => {
-          return {
-            type: ActionsLogService.ACTIONS_LOG_FETCH,
-            success: data.actions
-          };
-        });
+      (action: { payload: IActionsLogFilterRequest }): Observable<IActionsLogPayload> => {
+        return this.gridService.read('/actions')
+          .map((data: { actions: IActionLog[] }): IActionsLogPayload => {
+            return {
+              type: ActionsLogService.ACTIONS_LOG_SUCCESS_FETCH,
+              payload: data.actions
+            };
+          });
       }
     ).catch(() => {
       this.notifications.error('Could not fetch data from the server');

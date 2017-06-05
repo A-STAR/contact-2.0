@@ -1,4 +1,4 @@
-import { IActionsLogAction, IActionsLogServiceState } from './actions-log.interface';
+import { IActionsLogPayload, IActionsLogServiceState } from './actions-log.interface';
 
 import { ActionsLogService } from './actions-log.service';
 
@@ -8,16 +8,14 @@ const defaultState: IActionsLogServiceState = {
 
 export function actionsLogReducer(
   state: IActionsLogServiceState = defaultState,
-  action: IActionsLogAction
-) {
+  action: IActionsLogPayload
+): IActionsLogServiceState {
   switch (action.type) {
-    case ActionsLogService.ACTIONS_LOG_FETCH:
-      if (action.success) {
-        return {
-          ...state,
-          actionsLog: action.success
-        };
-      }
+    case ActionsLogService.ACTIONS_LOG_SUCCESS_FETCH:
+      return {
+        ...state,
+        actionsLog: action.payload
+      };
   }
   return state;
 }

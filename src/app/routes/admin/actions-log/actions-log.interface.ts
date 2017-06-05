@@ -30,7 +30,7 @@ export interface IActionsLogServiceState {
   actionsLog: IActionLog[];
 }
 
-export interface IActionsLogAction {
+export interface IActionsLogPayload {
   type?: any;
-  success?: IActionLog[];
+  payload?: IActionLog[];
 }
