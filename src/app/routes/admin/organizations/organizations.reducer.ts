@@ -28,7 +28,8 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
-        organizations: []
+        organizations: [],
+        selectedOrganizationId: null
       };
     case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
       return {
@@ -48,7 +49,8 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.EMPLOYEES_CLEAR:
       return {
         ...state,
-        employees: []
+        employees: [],
+        selectedEmployeeUserId: null
       };
     case OrganizationsService.DIALOG_ACTION:
       return {

@@ -89,15 +89,15 @@ export class OrganizationsEffects {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
           {
-            type: OrganizationsService.DIALOG_ACTION,
+            type: OrganizationsService.ORGANIZATION_SELECT,
             payload: {
-              dialogAction: null
+              organizationId: null
             }
           },
           {
-            type: OrganizationsService.ORGANIZATION_SELECT,
+            type: OrganizationsService.DIALOG_ACTION,
             payload: {
-              selectedOrganizationId: null
+              dialogAction: null
             }
           }
         ]))
@@ -110,9 +110,15 @@ export class OrganizationsEffects {
   @Effect()
   selectOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_SELECT)
-    .map(() => ({
-      type: OrganizationsService.EMPLOYEES_FETCH
-    }));
+    .switchMap(action => {
+      return action.payload.organizationId ?
+        Observable.of({
+          type: OrganizationsService.EMPLOYEES_FETCH
+        }) :
+        Observable.of({
+          type: OrganizationsService.EMPLOYEES_CLEAR
+        });
+    });
 
   @Effect()
   fetchEmployees$ = this.actions
@@ -214,12 +220,6 @@ export class OrganizationsEffects {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
               dialogAction: null
-            }
-          },
-          {
-            type: OrganizationsService.EMPLOYEE_SELECT,
-            payload: {
-              selectedEmployeeUserId: null
             }
           }
         ]))
