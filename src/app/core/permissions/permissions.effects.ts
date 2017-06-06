@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IPermission } from './permissions.interface';
+import { IAppState } from '../state/state.interface';
 
+import { GridService } from '../../shared/components/grid/grid.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PermissionsService } from './permissions.service';
-import { GridService } from '../../shared/components/grid/grid.service';
 
 @Injectable()
 export class PermissionsEffects {
@@ -20,9 +22,10 @@ export class PermissionsEffects {
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
           payload: data
         }))
-        .catch(() => Observable.of({
-          type: PermissionsService.PERMISSION_FETCH_ERROR
-        }));
+        .catch(() => {
+          this.notifications.error('Could not fetch permissions');
+          return null;
+        });
     });
 
   @Effect() updatePermissions = this.actions
@@ -33,32 +36,60 @@ export class PermissionsEffects {
           type: PermissionsService.PERMISSION_UPDATE,
           payload: data
         }))
-        .catch((error) => {
+        .catch(() => {
           this.notifications.error('Could not update the permission');
+          return null;
+        });
+    });
+
+  @Effect() invalidatePermission = this.actions
+      .ofType(PermissionsService.PERMISSION_INVALIDATE)
+      .switchMap(action => {
+        return this.read()
+          .map(data => ({
+            type: PermissionsService.PERMISSION_FETCH_SUCCESS,
+            payload: data
+          }));
+      });
+
+
+  @Effect() createPermission = this.actions
+    .ofType(PermissionsService.PERMISSION_CREATE)
+    .map(action => action.payload)
+    .switchMap(params => {
+      const { permissionId, permission } = params;
+      return this.create(permissionId, permission)
+        .map(data => ({
+          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
+          payload: data
+        }))
+        .catch(() => {
+          this.notifications.error('Could not fetch permissions');
           return null;
         });
     });
 
   constructor(
     private actions: Actions,
-    private permissionsService: PermissionsService,
+    private store: Store<IAppState>,
     private gridService: GridService,
     private notifications: NotificationsService,
   ) {}
 
-  read(): Observable<any> {
+  private read(): Observable<IPermission[]> {
     return this.gridService.read('/userpermits');
   }
 
-  create(permissionId: number, permission: IPermission): Observable<any> {
+  private create(permissionId: number, permission: IPermission): Observable<any> {
     return this.gridService.create('/userpermits/{permissionId}/users', { permissionId }, permission);
   }
 
-  update(permissionId: number, userId: number, permission: IPermission): Observable<any> {
+  private update(permissionId: number, userId: number, permission: IPermission): Observable<any> {
     return this.gridService.update('/userpermits/{permissionId}/users/{userId}', { permissionId, userId }, permission);
   }
 
-  delete(permissionId: number, userId: number): Observable<any> {
+  private delete(permissionId: number, userId: number): Observable<any> {
     return this.gridService.delete('/userpermits/{permissionId}/?id={userId}', { permissionId, userId });
   }
+
 }

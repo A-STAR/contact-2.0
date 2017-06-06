@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser } from '../users.interface';
@@ -15,12 +16,15 @@ import { password } from '../../../../core/validators/password';
   selector: 'app-user-edit',
   templateUrl: 'user-edit.component.html'
 })
-export class UserEditComponent extends EntityBaseComponent<IUser> {
+export class UserEditComponent extends EntityBaseComponent<IUser> implements OnDestroy {
   @Input() roles;
   @Input() languages;
 
   private canEditUser = false;
   private canEditUserRole = false;
+
+  private editUserSub: Subscription;
+  private editUserRoleSub: Subscription;
 
   private passwordValidators: ValidatorFn = null;
 
@@ -29,8 +33,16 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
     private constantsService: ConstantsService
   ) {
     super();
-    this.canEditUser = this.permissionsService.hasPermission('USER_EDIT');
-    this.canEditUserRole = this.permissionsService.hasPermission('USER_ROLE_EDIT');
+
+    this.editUserSub = this.permissionsService.hasPermission2('USER_EDIT')
+      .subscribe(permission => {
+        this.canEditUser = permission;
+      });
+    this.editUserRoleSub = this.permissionsService.hasPermission2('USER_ROLE_EDIT')
+      .subscribe(permission => {
+        this.canEditUserRole = permission;
+      });
+
     this.passwordValidators = password(
       !this.editedEntity,
       this.constantsService.get('UserPassword.MinLength') as number,
@@ -99,8 +111,13 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
     };
   }
 
+  ngOnDestroy(): void {
+    this.editUserSub.unsubscribe();
+    this.editUserRoleSub.unsubscribe();
+  }
+
   private formatDate(date: string): string {
-    // TODO: move to a service, format properly
+    // TODO(d.maltsev): move to the value-converter service, format properly
     return date ? (new Date(date)).toLocaleDateString() : '';
   }
 

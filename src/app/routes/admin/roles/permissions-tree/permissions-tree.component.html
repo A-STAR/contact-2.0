@@ -1,4 +1,4 @@
-<ng-container *ngIf="hasViewPermission">
+<ng-container *ngIf="hasViewPermission | async">
   <app-toolbar
     class="app-toolbar"
     [actions]="toolbarActions"
@@ -7,7 +7,7 @@
   </app-toolbar>
   <app-tree
     *ngIf="value"
-    [selectionMode]="hasEditPermission ? 'checkbox' : ''"
+    [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
     [style]="{height: '100%', width: '100%', border: 'none'}"
     [value]="value"
     (selectionChange)="onSelectionChange($event)"
@@ -19,7 +19,7 @@
     {{ 'default.data.empty' | translate }}
   </div>
 </ng-container>
-<ng-container *ngIf="!hasViewPermission">
+<ng-container *ngIf="!(hasViewPermission | async)">
   <div class="message-container">
     {{ 'roles.permissions.tree.access_denied' | translate }}
   </div>

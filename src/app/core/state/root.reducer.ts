@@ -8,5 +8,5 @@ export const rootReducer = {
   employees: employeesReducer,
   notificationService: notificationReducer,
   organizations: organizationsReducer,
-  permissionService: permissionReducer,
+  permissions: permissionReducer,
 };

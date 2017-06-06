@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { IToolbarAction, ToolbarControlEnum } from './toolbar.interface';
+
 import { IconsService } from '../../icons/icons.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
 

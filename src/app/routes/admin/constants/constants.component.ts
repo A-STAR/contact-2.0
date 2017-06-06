@@ -1,7 +1,10 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
+import { IAppState } from '../../../core/state/state.interface';
 import { IConstant } from './constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
@@ -46,7 +49,10 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     dataKey: 'constants',
   };
 
+  // rows: Observable<IConstant[]>;
+
   constructor(
+    private store: Store<IAppState>,
     private datePipe: DatePipe,
     private gridService: GridService,
     private translateService: TranslateService,
@@ -56,15 +62,21 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    // this.rows = store.select('constants');
   }
 
   ngAfterViewInit(): void {
-    this.grid.load()
-      .take(1)
-      .subscribe(
-        () => {},
-        error => this.handleError(error, 'VIEW')
-      );
+    const permission = 'CONST_VALUE_VIEW';
+    this.permissions.hasPermission2(permission)
+      .subscribe(hasPermission => {
+        if (!hasPermission) {
+          this.notifications.error(`No user permissions for '${permission}'`);
+        } else {
+          this.grid.load()
+            .take(1)
+            .subscribe();
+        }
+      });
   }
 
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
