@@ -12,18 +12,19 @@
   title="users.edit.title"
   [roles]="roles"
   [languages]="languages"
-  [editedEntity]="selectedEntity"
+  [editedEntity]="editedEntity"
   (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
 </app-user-edit>
 
 <app-grid
   selectionType="single"
+  [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'users'"
   [dataSource]="dataSource"
   [filter]="filter"
-  [parseFn]="parseFn"
+  [rows]="(state | async).users"
   [toolbarActions]="toolbarActions"
   (onRowSelect)="onSelectedRowChange($event)"
   (onAction)="onAction($event)"

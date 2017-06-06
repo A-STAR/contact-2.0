@@ -23,3 +23,14 @@ export interface IUsersResponse {
   success: boolean;
   users: Array<IUser>;
 }
+
+export enum IUserDialogActionEnum {
+  USER_ADD,
+  USER_EDIT
+}
+
+export interface IUsersState {
+  users: Array<IUser>;
+  selectedUserId: number;
+  dialogAction: IUserDialogActionEnum;
+}

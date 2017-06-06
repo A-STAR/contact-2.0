@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -15,7 +15,7 @@ import { password } from '../../../../core/validators/password';
   selector: 'app-user-edit',
   templateUrl: 'user-edit.component.html'
 })
-export class UserEditComponent extends EntityBaseComponent<IUser> {
+export class UserEditComponent extends EntityBaseComponent<IUser> implements OnInit {
   @Input() roles;
   @Input() languages;
 
@@ -31,11 +31,15 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
     super();
     this.canEditUser = this.permissionsService.hasPermission('USER_EDIT');
     this.canEditUserRole = this.permissionsService.hasPermission('USER_ROLE_EDIT');
+  }
+
+  ngOnInit(): void {
     this.passwordValidators = password(
       !this.editedEntity,
       this.constantsService.get('UserPassword.MinLength') as number,
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
     );
+    super.ngOnInit();
   }
 
   get canEdit(): boolean {
@@ -91,10 +95,12 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
-      roleId: value.roleId[0].value,
+      // TODO: fix this in select control?
+      roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.toIsoDate(value.startWorkDate),
       endWorkDate: this.toIsoDate(value.endWorkDate),
-      languageId: value.languageId[0].value
+      // TODO: fix this in select control?
+      languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
   }
 
