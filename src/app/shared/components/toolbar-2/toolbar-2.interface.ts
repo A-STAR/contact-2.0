@@ -23,6 +23,7 @@ export interface IToolbarButton extends IToolbarElement {
 
 export interface IToolbarCheckbox extends IToolbarElement {
   type: ToolbarToolbarItemTypeEnum.CHECKBOX;
+  state: (state: IAppState) => boolean;
 }
 
 export type IToolbarItem = IToolbarButton | IToolbarCheckbox;

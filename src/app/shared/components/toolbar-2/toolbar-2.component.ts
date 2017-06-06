@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IToolbarItem, ToolbarToolbarItemTypeEnum } from './toolbar-2.interface';
+import { IToolbarItem, IToolbarCheckbox, ToolbarToolbarItemTypeEnum } from './toolbar-2.interface';
 
 import { PermissionsService } from '../../../core/permissions/permissions.service';
 
@@ -27,7 +27,8 @@ export class Toolbar2Component implements OnInit {
       this.items.map(item => ({
         ...item,
         // TODO: maybe use hasPermission2 with zip?
-        disabled: this.isDisabled(item, state) || this.isForbidden(item)
+        disabled: this.isDisabled(item, state) || this.isForbidden(item),
+        state: this.getState(item, state)
       }))
     );
   }
@@ -58,5 +59,9 @@ export class Toolbar2Component implements OnInit {
 
   private isForbidden(item: IToolbarItem): boolean {
     return item.permissions ? !this.permissionsService.hasAllPermissions(item.permissions) : false;
+  }
+
+  private getState(item: IToolbarItem, state: IAppState): boolean {
+    return this.isCheckbox(item) ? (item as IToolbarCheckbox).state(state) : undefined;
   }
 }

@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IToolbarItem, ToolbarToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
@@ -19,9 +18,6 @@ import { UsersService } from './users.service';
 })
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
-
-  // TODO: custom toolbar actions
-  private DISPLAY_BLOCKED_ACTION = -1;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -52,7 +48,7 @@ export class UsersComponent implements OnDestroy {
     dataKey: 'users',
   };
 
-  displayBlockedUsers = false;
+  displayBlockedUsers: boolean;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -80,7 +76,8 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarToolbarItemTypeEnum.CHECKBOX,
       action: () => this.usersService.toggleBlockedFilter(),
-      label: 'users.toolbar.action.show_blocked_users'
+      label: 'users.toolbar.action.show_blocked_users',
+      state: (state: IAppState) => state.users.displayBlocked
     }
   ];
 

@@ -15,7 +15,12 @@
     <!-- Checkbox -->
     <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">
       <label>
-        <input type="checkbox" (change)="onClick(item)">
+        <input
+          type="checkbox"
+          [checked]="item.state"
+          [disabled]="item.disabled"
+          (change)="onClick(item)"
+        >
         {{ item.label | translate }}
       </label>
     </span>
