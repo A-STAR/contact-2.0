@@ -1,14 +1,87 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/zip';
 
-import { IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionsLogPayload, IActionType, IEmployee } from './actions-log.interface';
+import { IAppState } from '../../../core/state/state.interface';
+import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
 export class ActionsLogService {
 
-  constructor(private gridService: GridService) {
+  public static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
+  public static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
+  public static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
+  public static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
+
+  constructor(
+    private gridService: GridService,
+    private store: Store<IAppState>,
+    private effectActions: Actions,
+    private notifications: NotificationsService,
+  ) {
+  }
+
+  get actionsLogRows(): Observable<IActionLog[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLog);
+  }
+
+  get employeesRows(): Observable<IEmployee[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.employees);
+  }
+
+  get actionTypesRows(): Observable<IActionType[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionTypes);
+  }
+
+  getEmployeesAndActionTypes(): Observable<void> {
+    return Observable.zip(
+      this.getEmployees(),
+      this.getActionTypes(),
+      (employees, actionTypes) => {
+        this.store.dispatch({
+          type: ActionsLogService.EMPLOYEES_FETCH_SUCCESS,
+          payload: employees
+        });
+        this.store.dispatch({
+          type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
+          payload: actionTypes
+        });
+      }
+    );
+  }
+
+  @Effect() onSearchEffect = this.effectActions
+    .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
+    .switchMap(
+      (action: { payload: IActionsLogFilterRequest }): Observable<IActionsLogPayload> => {
+        return this.gridService.read('/actions')
+          .map((data: { actions: IActionLog[] }): IActionsLogPayload => {
+            return {
+              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
+              payload: data.actions
+            };
+          });
+      }
+    ).catch(() => {
+      this.notifications.error('actionsLog.actionsLog.messages.errors.fetch');
+      return null;
+    });
+
+  search(payload: IActionsLogFilterRequest): void {
+    this.store.dispatch({
+      type: ActionsLogService.ACTIONS_LOG_FETCH,
+      payload
+    });
   }
 
   getActionTypes(): Observable<IActionType[]> {
@@ -16,30 +89,7 @@ export class ActionsLogService {
     return this.gridService.read('/dictionaries/{code}/terms', { code: 4 }).map(data => data.terms);
   }
 
-  getOperators(): Observable<IEmployee[]> {
-    // TODO stub
-    return new Observable<IEmployee[]>(observer => {
-      setTimeout(() => {
-        observer.next([
-          {
-            id: 100,
-            lastName: 'Last name 1',
-            firstName: 'First name 1',
-            middleName: 'Middle name 1',
-            position: 'Position 1',
-            organization: 'Organization 1'
-          },
-          {
-            id: 200,
-            lastName: 'Last name 2',
-            firstName: 'First name 2',
-            middleName: 'Middle name 2',
-            position: 'Position 2',
-            organization: 'Organization 2'
-          }
-        ]);
-        observer.complete();
-      }, 1000);
-    });
+  getEmployees(): Observable<IEmployee[]> {
+    return this.gridService.read('/users').map(data => data.users);
   }
 }

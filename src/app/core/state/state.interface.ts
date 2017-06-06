@@ -1,12 +1,12 @@
-import { IEmployeesState } from '../../routes/admin/organizations/employees/employees.interface';
-import { IOrganizationsState } from '../../routes/admin/organizations/organizations-tree/organizations.interface';
+import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
 import { INotificationServiceState } from '../notifications/notifications.interface';
 import { IPermissionsState } from '../permissions/permissions.interface';
+import { IActionsLogServiceState } from '../../routes/admin/actions-log/actions-log.interface';
 
 export interface IAppState {
   // TODO: rename notificationService -> notifications
   readonly permissions: IPermissionsState;
   readonly notificationService: INotificationServiceState;
-  readonly employees: IEmployeesState;
+  readonly actionsLog: IActionsLogServiceState;
   readonly organizations: IOrganizationsState;
 }

@@ -28,7 +28,8 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   @Input() columnsTo: IGridColumn[];
   @Input() columnsTranslationKeyFrom: string;
   @Input() columnsTranslationKeyTo: string;
-  @Input() rowsFrom;
+  @Input() rowsFrom: Array<any>;
+  @Input() rowsFilterFrom: Function;
   @Input() syncFormControlChanges: boolean = true;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
@@ -41,7 +42,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private onTouched: Function = () => {};
 
   constructor() {
-    this.rowsFilterFrom = this.rowsFilterFrom.bind(this);
+    this.rowsFilter = this.rowsFilter.bind(this);
   }
 
   ngOnInit(): void {
@@ -72,9 +73,11 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     this.onTouched = fn;
   }
 
-  rowsFilterFrom(record: any): boolean {
-    return !this._active || !this._active.length ||
-      !this._active.find((selectedRecord: any) => this.equalsFn(selectedRecord, record));
+  rowsFilter(record: any): boolean {
+    return (!this.rowsFilterFrom || this.rowsFilterFrom(record)) && (
+        !this._active || !this._active.length ||
+        !this._active.find((selectedRecord: any) => this.equalsFn(selectedRecord, record))
+      );
   }
 
   get rowsTo(): any[] {

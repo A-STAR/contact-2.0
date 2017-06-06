@@ -99,7 +99,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnD
   }
 
   toSubmittedValues(value: IUser): any {
-    console.log(value);
     return {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,

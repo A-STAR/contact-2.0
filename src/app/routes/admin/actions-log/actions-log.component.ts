@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
+import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-actions-log',
   templateUrl: './actions-log.component.html'
 })
-export class ActionsLogComponent {
+export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
@@ -32,35 +33,38 @@ export class ActionsLogComponent {
       [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
     typeCode: (actionLog: IActionLog) => {
       const currentActionType: IActionType =
-        this.actionTypesRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
+        this.actionTypesRawRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
       return currentActionType ? currentActionType.name : actionLog.typeCode;
     },
     createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
-  employeesRows: IEmployee[];
-  actionTypesRows: IActionType[];
-  actionsRows: Array<IActionLog> = [];
+  employeesRows: Observable<IEmployee[]>;
+  actionTypesRows: Observable<IActionType[]>;
+  actionsLogRows: Observable<IActionLog[]>;
+
+  private actionTypesRawRows: IActionType[];
+  private actionTypesRowsSubscription: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private gridService: GridService,
     private converterService: ValueConverterService,
-    private notifications: NotificationsService,
+    private actionsLogService: ActionsLogService,
   ) {
-
-    const [ employees, actionTypes ] = this.route.snapshot.data.actionsLogData;
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.employeesRows = employees;
-    this.actionTypesRows = actionTypes;
+    this.employeesRows = this.actionsLogService.employeesRows;
+    this.actionTypesRows = this.actionsLogService.actionTypesRows;
+    this.actionsLogRows = this.actionsLogService.actionsLogRows;
+
+    this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
+      this.actionTypesRawRows = actionTypesRawRows);
+  }
+
+  ngOnDestroy(): void {
+    this.actionTypesRowsSubscription.unsubscribe();
   }
 
   onSearch(filterValues: IActionsLogFilterRequest): void {
-    this.gridService
-      .read('/actions')
-      .subscribe(
-        (data) => this.actionsRows = data.actions,
-        error => this.notifications.error('Could not fetch data from the server')
-      );
+    this.actionsLogService.search(filterValues);
   }
 }

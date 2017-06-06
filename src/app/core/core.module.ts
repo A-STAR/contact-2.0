@@ -22,7 +22,7 @@ import { PermissionsEffects } from './permissions/permissions.effects';
 import { PermissionsService } from './permissions/permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
-import { rootReducer } from '../core/state/root.reducer';
+import { rootReducer } from './state/root.reducer';
 
 @NgModule({
   imports: [

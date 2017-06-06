@@ -1,14 +1,13 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-// import { Observable } from 'rxjs/Observable';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
-import { IOrganization } from '../organizations.interface';
+import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
-import { EmployeesService } from '../employees/employees.service';
-import { OrganizationsService } from './organizations.service';
+import { OrganizationsService } from '../organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -19,7 +18,9 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
   templateUrl: './organizations-tree.component.html',
   styleUrls: ['./organizations-tree.component.scss']
 })
-export class OrganizationsTreeComponent {
+export class OrganizationsTreeComponent implements OnDestroy {
+  @Input() organizations: Array<IOrganization>;
+
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
@@ -45,40 +46,63 @@ export class OrganizationsTreeComponent {
     ToolbarActionTypeEnum.REMOVE,
   ];
 
-  action: ToolbarActionTypeEnum;
+  action: IOrganizationDialogActionEnum;
+
+  editedEntity: IOrganization;
+
+  private state$: Subscription;
+  private stateOrganizations$: Subscription;
 
   constructor(
-    private employeesService: EmployeesService,
     private organizationsService: OrganizationsService,
   ) {
-    this.organizationsService.fetch();
-    this.organizationsService.state
-      .map(state => this.convertToTreeNodes(state.data))
+    this.organizationsService.fetchOrganizations();
+
+    this.stateOrganizations$ = this.organizationsService.state
+      .distinctUntilKeyChanged('organizations')
       .subscribe(
-        nodes => {
+        state => {
+          const nodes = this.convertToTreeNodes(state.organizations);
           const files = {
-            id: 0,
-            label: 'Home',
-            children: [].concat(nodes),
-          };
-          this.value = [files];
-          this.prepareTree(this.rootNode);
+              id: 0,
+              label: 'Home',
+              children: [].concat(nodes),
+            };
+            this.value = [files];
+            this.prepareTree(this.rootNode);
+        },
+        error => console.error(error)
+      );
+
+    this.state$ = this.organizationsService.state
+      .subscribe(
+        state => {
+          this.action = state.dialogAction;
+          this.editedEntity = state.organizations.find(organization => organization.id === state.selectedOrganizationId);
+
+          // FIXME
+          this.refreshToolbar();
         },
         // TODO: notifications
         error => console.error(error)
       );
   }
 
+  ngOnDestroy(): void {
+    this.state$.unsubscribe();
+    this.stateOrganizations$.unsubscribe();
+  }
+
   get isEntityBeingCreated(): boolean {
-    return this.action === ToolbarActionTypeEnum.ADD;
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_ADD;
   }
 
   get isEntityBeingEdited(): boolean {
-    return this.action === ToolbarActionTypeEnum.EDIT;
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_EDIT;
   }
 
   get isEntityBeingRemoved(): boolean {
-    return this.action === ToolbarActionTypeEnum.REMOVE;
+    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE;
   }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
@@ -138,7 +162,7 @@ export class OrganizationsTreeComponent {
         element.data.parentId = targetElement.data.id;
         element.data.sortOrder = sortOrder;
         this.organizationsService
-          .update(element.data.id, {
+          .updateOrganization({
             parentId: element.data.parentId,
             sortOrder: element.data.sortOrder
           } as any);
@@ -179,54 +203,50 @@ export class OrganizationsTreeComponent {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
-    this.employeesService.fetch(node.data.id);
-    this.action = null;
-    this.refreshToolbar();
+    this.organizationsService.selectOrganization(node.data.id);
     this.onSelect.emit(node.data);
   }
 
   onToolbarAction(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.REFRESH:
+        // FIXME
         this.selection = [];
-        this.organizationsService.fetch();
+        this.organizationsService.fetchOrganizations();
+        break;
+      case ToolbarActionTypeEnum.ADD:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD);
+        break;
+      case ToolbarActionTypeEnum.EDIT:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+        break;
+      case ToolbarActionTypeEnum.REMOVE:
+        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
         break;
       default:
-        this.action = action.type;
+        this.organizationsService.setDialogAction(null);
     }
   }
 
   cancelAction(): void {
-    this.action = null;
+    this.organizationsService.setDialogAction(null);
   }
 
   onNodeEdit(data: any): void {
-    this.action = ToolbarActionTypeEnum.EDIT;
+    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
   }
 
   onEditSubmit(data: any, create: boolean): void {
     if (create) {
-      this.organizationsService.create(this.selection ? this.selection.data.id : null, data);
+      this.organizationsService.createOrganization(this.selection ? this.selection.data.id : null, data);
     } else {
-      this.organizationsService.update(this.selection.data.id, data);
+      this.organizationsService.updateOrganization(data);
     }
   }
 
   onRemoveSubmit(): void {
-    this.organizationsService.delete(this.selection.data.id);
+    this.organizationsService.deleteOrganization();
   }
-
-  // private submit(action: Observable<any>): void {
-  //   action.subscribe(
-  //     () => {
-  //       this.cancelAction();
-  //       this.selection = [];
-  //       this.load();
-  //     },
-  //     // TODO: error handling
-  //     error => console.error(error)
-  //   );
-  // }
 
   private get rootNode(): TreeNode {
     return this.value[0];
