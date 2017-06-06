@@ -13,7 +13,7 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
 export const toFullName = (employee: IEmployee) => {
-  return [employee.lastName, employee.firstName, employee.middleName].filter((part: string) => !!part).join(' ');
+  return [ employee.lastName, employee.firstName, employee.middleName ].filter((part: string) => !!part).join(' ');
 };
 
 @Component({
@@ -30,6 +30,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
   employeesControl: IDynamicFormControl;
+  blockingEmployeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
   endDateControl: IDynamicFormControl;
@@ -66,6 +67,11 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
+  employeesRowsFilter: Function = (record: IEmployee) => {
+    const blockingEmployees: boolean = this.value[this.blockingEmployeesControl.controlName];
+    return blockingEmployees || !record.isBlocked;
+  };
+
   private _action: string;
 
   constructor(
@@ -85,6 +91,11 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         type: 'multiselect',
         required: true,
         placeholder: 'actionsLog.filter.employees.placeholder'
+      },
+      this.blockingEmployeesControl = {
+        label: 'actionsLog.filter.employees.blocking',
+        controlName: 'blockingEmployees',
+        type: 'checkbox',
       },
       this.actionTypesControl = {
         label: 'actionsLog.filter.actionsTypes.title',
@@ -176,7 +187,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   }
 
   onSearch(): void {
-    const request: IActionsLogFilterRequest = Object.assign({}, this.value);
+    const request: IActionsLogFilterRequest = this.value;
     request.employees = (request.employees as IEmployee[] || []).map((record: IEmployee) => record.id);
     request.actionsTypes = (request.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code);
     this.search.emit(request);
