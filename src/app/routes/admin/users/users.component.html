@@ -17,6 +17,10 @@
   (cancel)="cancelAction()">
 </app-user-edit>
 
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
+
 <app-grid
   selectionType="single"
   [autoLoad]="false"
@@ -25,8 +29,6 @@
   [dataSource]="dataSource"
   [filter]="filter"
   [rows]="(state | async).users"
-  [toolbarActions]="toolbarActions"
   (onRowSelect)="onSelectedRowChange($event)"
-  (onAction)="onAction($event)"
   (onEdit)="onEdit()">
 </app-grid>

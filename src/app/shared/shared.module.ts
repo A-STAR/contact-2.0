@@ -42,6 +42,7 @@ import { TabComponent } from './components/tabstrip/tab.component';
 import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
+import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
 import { SubmittedPopupModule } from './components/popup/submitted-popup.module';
@@ -75,6 +76,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     PopupInputModule,
     ToasterModule,
     ToolbarModule,
+    Toolbar2Module,
     TreeModule,
     TimeModule,
     SubmittedPopupModule,
@@ -137,6 +139,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     TabComponent,
     TabstripComponent,
     ToolbarModule,
+    Toolbar2Module,
     TreeModule,
     TimeModule,
     SubmittedPopupModule,

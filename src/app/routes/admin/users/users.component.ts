@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem, ToolbarToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -17,9 +18,6 @@ import { UsersService } from './users.service';
 })
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
-
-  // TODO: custom toolbar actions
-  private DISPLAY_BLOCKED_ACTION = -1;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -50,24 +48,37 @@ export class UsersComponent implements OnDestroy {
     dataKey: 'users',
   };
 
-  displayBlockedUsers = false;
+  displayBlockedUsers: boolean;
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'USER_ADD' },
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: ['USER_EDIT', 'USER_ROLE_EDIT'] },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
+  toolbarItems: Array<IToolbarItem> = [
     {
-      text: 'users.toolbar.action.show_blocked_users',
-      type: this.DISPLAY_BLOCKED_ACTION,
-      visible: true,
-      control: ToolbarControlEnum.CHECKBOX,
-      value: this.displayBlockedUsers,
-      hasLabel: true
+      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      action: () => this.usersService.setDialogAddAction(),
+      icon: 'fa fa-plus',
+      label: 'toolbar.action.add',
+      permissions: [ 'USER_ADD' ]
+    },
+    {
+      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      action: () => this.usersService.setDialogEditAction(),
+      icon: 'fa fa-pencil',
+      label: 'toolbar.action.edit',
+      permissions: [ 'USER_EDIT', 'USER_ROLE_EDIT' ],
+      disabled: (state: IAppState) => state.users.selectedUserId === null
+    },
+    {
+      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      action: () => this.usersService.fetch(),
+      icon: 'fa fa-refresh',
+      label: 'toolbar.action.refresh',
+      permissions: [ 'USER_VIEW' ]
+    },
+    {
+      type: ToolbarToolbarItemTypeEnum.CHECKBOX,
+      action: () => this.usersService.toggleBlockedFilter(),
+      label: 'users.toolbar.action.show_blocked_users',
+      state: (state: IAppState) => state.users.displayBlocked
     }
-  ];
-
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
   ];
 
   action: IUserDialogActionEnum;
@@ -99,9 +110,9 @@ export class UsersComponent implements OnDestroy {
     this.users$ = this.usersService.state
       .subscribe(
         state => {
+          this.displayBlockedUsers = state.displayBlocked;
           this.action = state.dialogAction;
           this.editedEntity = state.users.find(users => users.id === state.selectedUserId);
-          this.refreshToolbar(!!state.selectedUserId, state.users.length > 0);
         },
         // TODO: notifications
         error => console.error(error)
@@ -157,40 +168,5 @@ export class UsersComponent implements OnDestroy {
     if (user) {
       this.usersService.select(user.id);
     }
-  }
-
-  onAction(action: IToolbarAction): void {
-    switch (action.type) {
-      case ToolbarActionTypeEnum.ADD:
-        this.usersService.setDialogAction(IUserDialogActionEnum.USER_ADD);
-        break;
-      case ToolbarActionTypeEnum.EDIT:
-        this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT);
-        break;
-      case ToolbarActionTypeEnum.REFRESH:
-        this.usersService.fetch();
-        break;
-      case this.DISPLAY_BLOCKED_ACTION:
-        this.displayBlockedUsers = action.value;
-        break;
-    }
-  }
-
-  private refreshToolbar(isUserSelected: boolean, hasData: boolean): void {
-    this.setActionsVisibility(this.toolbarActionsGroup, isUserSelected);
-
-    const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
-    if (refreshAction) {
-      refreshAction.visible = hasData;
-    }
-  }
-
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) =>
-      this.findToolbarActionByType(actionType).visible = visible);
-  }
-
-  private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
-    return this.toolbarActions.find((action: IToolbarAction) => actionType === action.type);
   }
 }
