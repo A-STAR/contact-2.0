@@ -9,6 +9,6 @@ export const rootReducer = {
   // TODO: rename notificationService -> notifications
   notificationService: notificationReducer,
   organizations: organizationsReducer,
-  users: usersReducer,
   permissions: permissionReducer,
+  users: usersReducer,
 };

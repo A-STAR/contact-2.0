@@ -47,7 +47,7 @@ export class PermissionsService {
       return this.state.map(permissions => {
         return permissionName.reduce((acc, permission) => {
           return acc && permissions[permission];
-        }, false);
+        }, true);
       });
     }
     return this.state.map(permissions => !!permissions[permissionName]);
@@ -57,7 +57,7 @@ export class PermissionsService {
     return this.state.map(permissions => {
       return permissionNames.reduce((acc, permission) => {
         return acc && permissions[permission];
-      }, false);
+      }, true);
     });
   }
 
@@ -65,10 +65,10 @@ export class PermissionsService {
     return (userPermission.valueB !== null) ? userPermission.valueB : false;
   }
 
-  addPermission(permission: string): void {
+  addPermission(permissionId: number, permission: IPermission): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_CREATE,
-      payload: permission,
+      payload: { permissionId, permission },
     });
   }
 }

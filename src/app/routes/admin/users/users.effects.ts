@@ -20,12 +20,20 @@ export class UsersEffects {
     .ofType(UsersService.USERS_FETCH)
     .switchMap((action: Action) => {
       return this.readUsers()
-        .map(data => ({
-          type: UsersService.USERS_FETCH_SUCCESS,
-          payload: {
-            users: data.users
+        .mergeMap(data => Observable.from([
+          {
+            type: UsersService.USERS_FETCH_SUCCESS,
+            payload: {
+              users: data.users
+            }
+          },
+          {
+            type: UsersService.USER_SELECT,
+            payload: {
+              userId: null
+            }
           }
-        }))
+        ]))
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;
