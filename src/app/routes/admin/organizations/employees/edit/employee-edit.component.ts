@@ -23,7 +23,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
 
   constructor(private gridService: GridService, private permissionsService: PermissionsService) {
     super();
-    this.permissionsService.hasPermission2('ORGANIZATION_EDIT')
+    this.permissionsService.hasPermission('ORGANIZATION_EDIT')
       .subscribe(permission => {
         this.canEdit = permission;
       });

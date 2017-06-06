@@ -12,8 +12,7 @@
 
 <ul class="app-toolbar">
   <li *ngFor="let action of actions" class="app-control app-control-align-{{ actionAlign }}">
-    <ng-container
-      [ngSwitch]="action.control">
+    <ng-container [ngSwitch]="action.control">
         <span
           *ngSwitchCase="ToolbarControlEnum.CHECKBOX"
           class="checkbox mt0 mb0"
@@ -30,7 +29,7 @@
       <button
         *ngSwitchDefault
         [attr.title]="action.text | translate"
-        [disabled]="!action.visible || !isActionAccessible(action)"
+        [disabled]="isActionDisabled(action) | async"
         (click)="onActionClick(action, $event)"
         class="app-button"
         aria-hidden="true"

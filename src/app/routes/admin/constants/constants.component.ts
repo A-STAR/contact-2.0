@@ -67,7 +67,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
 
   ngAfterViewInit(): void {
     const permission = 'CONST_VALUE_VIEW';
-    this.permissions.hasPermission2(permission)
+    this.permissions.hasPermission(permission)
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.notifications.error(`No user permissions for '${permission}'`);

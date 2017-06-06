@@ -36,11 +36,11 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   }
 
   ngOnInit(): void {
-    this.editUserSub = this.permissionsService.hasPermission2('USER_EDIT')
+    this.editUserSub = this.permissionsService.hasPermission('USER_EDIT')
       .subscribe(permission => {
         this.canEditUser = permission;
       });
-    this.editUserRoleSub = this.permissionsService.hasPermission2('USER_ROLE_EDIT')
+    this.editUserRoleSub = this.permissionsService.hasPermission('USER_ROLE_EDIT')
       .subscribe(permission => {
         this.canEditUserRole = permission;
       });

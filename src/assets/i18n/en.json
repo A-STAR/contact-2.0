@@ -97,13 +97,13 @@
     }
   },
   "queryBuilder": {
-    "TITLE": "Построитель запросов",
-    "ADD_CONDITION": "Добавить условие",
-    "ADD_GROUP": "Добавить группу",
-    "REMOVE_GROUP": "Удалить группу",
+    "TITLE": "Query builder",
+    "ADD_CONDITION": "Add condition",
+    "ADD_GROUP": "Add group",
+    "REMOVE_GROUP": "Remove group",
     "buttons": {
-      "GET_QUERY": "Получить запрос",
-      "BACK": "Вернуться к построителю запросов"
+      "GET_QUERY": "Build the query",
+      "BACK": "Back"
     }
   },
   "login": {
@@ -131,42 +131,42 @@
     }
   },
   "actionsLog": {
-    "title": "Лог действий операторов",
+    "title": "Operator log",
     "filter": {
       "employees": {
-        "title": "Операторы",
-        "placeholder": "Выберите операторов",
-        "blocking": "Отображать заблокированных операторов",
+        "title": "Oprators",
+        "placeholder": "Select operator(s)",
+        "blocking": "Show blocked operators",
         "grid": {
-          "id": "ID",
-          "position": "Должность",
-          "fullName": "ФИО",
-          "organization": "Подразделение"
+          "id": "Id",
+          "position": "Position",
+          "fullName": "Full name",
+          "organization": "Department"
         }
       },
       "actionsTypes": {
-        "title": "Типы действий",
-        "placeholder": "Выберите тип действия",
+        "title": "Action types",
+        "placeholder": "Select action type(s)",
         "grid": {
-          "code": "Код",
-          "name": "Значение"
+          "code": "Code",
+          "name": "Name"
         }
       }
     },
     "grid": {
-      "fullName": "ФИО",
-      "position": "Должность",
-      "createDateTime": "Дата",
-      "module": "Модуль",
-      "typeCode": "Тип действия",
-      "dsc": "Описание",
-      "machine": "Компьютер",
-      "duration": "Длительность"
+      "fullName": "Full name",
+      "position": "Position",
+      "createDateTime": "Date",
+      "module": "Module",
+      "typeCode": "Action type",
+      "dsc": "Description",
+      "machine": "Machine",
+      "duration": "Duration"
     },
     "actionsLog": {
       "messages": {
         "errors": {
-          "fetch": "При загрузке лога действия операторов произошла ошибка!"
+          "fetch": "Error when loading the oprator logs"
         }
       }
     }
@@ -338,7 +338,7 @@
         "comment": "Comments"
       },
       "tree": {
-        "access_denied": "Доступ к дереву доступов к элементам интерфейса для роли ограничен. Обратитесь к администратору"
+        "access_denied": "The current roles does not have a permission to access data. Please contact the administrator"
       },
       "remove": {
         "title": "Remove role permission",
@@ -350,6 +350,14 @@
         "value": "Value",
         "dsc": "Description",
         "comment": "Comments"
+      },
+      "api": {
+        "errors": {
+          "fetch": "Could not fetch permissions",
+          "create": "Could not create the permission",
+          "update": "Could not update the permission",
+          "delete": "Could not remove the permission"
+        }
       }
     }
   },

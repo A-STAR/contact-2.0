@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
@@ -16,11 +16,11 @@ export class PermissionsEffects {
 
   @Effect() fetchPermissions = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
-    .switchMap(action => {
+    .switchMap((action: Action) => {
       return this.read()
-        .map(data => ({
+        .map(permissions => ({
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: data
+          payload: permissions
         }))
         .catch(() => {
           this.notifications.error('Could not fetch permissions');
@@ -30,28 +30,24 @@ export class PermissionsEffects {
 
   @Effect() updatePermissions = this.actions
     .ofType(PermissionsService.PERMISSION_UPDATE)
-    .switchMap(action => {
-      return this.read()
-        .map(data => ({
-          type: PermissionsService.PERMISSION_UPDATE,
-          payload: data
-        }))
+    .map(action => action.payload)
+    .switchMap(params => {
+      const { permissionId, userId, permission } = params;
+      return this.update(permissionId, userId, permission)
         .catch(() => {
           this.notifications.error('Could not update the permission');
           return null;
-        });
+        })
+        .mergeMap(() => Observable.from([
+          { type: PermissionsService.PERMISSION_FETCH }
+        ]));
     });
 
   @Effect() invalidatePermission = this.actions
       .ofType(PermissionsService.PERMISSION_INVALIDATE)
-      .switchMap(action => {
-        return this.read()
-          .map(data => ({
-            type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-            payload: data
-          }));
-      });
-
+      .switchMap(() => Observable.from([
+          { type: PermissionsService.PERMISSION_FETCH }
+      ]));
 
   @Effect() createPermission = this.actions
     .ofType(PermissionsService.PERMISSION_CREATE)
@@ -59,14 +55,28 @@ export class PermissionsEffects {
     .switchMap(params => {
       const { permissionId, permission } = params;
       return this.create(permissionId, permission)
-        .map(data => ({
-          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: data
-        }))
         .catch(() => {
-          this.notifications.error('Could not fetch permissions');
+          this.notifications.error('permissions.api.errors.create');
           return null;
-        });
+        })
+        .mergeMap(() => Observable.from([
+          { type: PermissionsService.PERMISSION_FETCH }
+        ]));
+    });
+
+  @Effect() deletePermissions = this.actions
+    .ofType(PermissionsService.PERMISSION_DELETE)
+    .map(action => action.payload)
+    .switchMap(params => {
+      const { permissionId, userId } = params;
+      return this.delete(permissionId, userId)
+        .catch(() => {
+          this.notifications.error('Could not delete the permission');
+          return null;
+        })
+        .mergeMap(() => Observable.from([
+          { type: PermissionsService.PERMISSION_FETCH }
+        ]));
     });
 
   constructor(

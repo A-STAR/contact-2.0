@@ -78,10 +78,10 @@ export class PermissionsTreeComponent implements OnChanges {
   }
 
   get hasViewPermission(): Observable<boolean> {
-    return this.permissionsService.hasPermission2('GUI_TREE_VIEW');
+    return this.permissionsService.hasPermission('GUI_TREE_VIEW');
   }
 
   get hasEditPermission(): Observable<boolean> {
-    return this.permissionsService.hasPermission2('GUI_TREE_EDIT');
+    return this.permissionsService.hasPermission('GUI_TREE_EDIT');
   }
 }

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IToolbarAction, ToolbarControlEnum } from './toolbar.interface';
 
@@ -18,9 +19,10 @@ export class ToolbarComponent {
 
   ToolbarControlEnum = ToolbarControlEnum;
 
-  constructor(private iconsService: IconsService,
-              private permissionsService: PermissionsService) {
-  }
+  constructor(
+    private iconsService: IconsService,
+    private permissionsService: PermissionsService
+  ) {}
 
   onActionClick(action: IToolbarAction, event: any): void {
     this.actionClick.emit({
@@ -29,8 +31,9 @@ export class ToolbarComponent {
     });
   }
 
-  isActionAccessible(action: IToolbarAction): boolean {
-    return !action.permission || this.permissionsService.hasOnePermission(action.permission);
+  isActionDisabled(action: IToolbarAction): Observable<boolean> {
+    return this.permissionsService.hasPermission(action.permission)
+      .map(permission => !action.visible || !(!action.permission || permission));
   }
 
   toIconCls(action: IToolbarAction): string {
