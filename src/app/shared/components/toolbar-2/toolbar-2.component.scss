@@ -1,13 +1,40 @@
+$button-size: 32px;
+$checkbox-size: 15px;
+
 .toolbar {
   width: 100%;
-  padding: 5px;
+  padding: 8px;
+  background-color: #fff;
+}
+
+.toolbar-item {
+  display: inline-block;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
 }
 
 .btn {
-  width: 32px;
-  height: 32px;
+  width: $button-size;
+  height: $button-size;
   padding: 0;
-  line-height: 32px;
+  line-height: $button-size;
   text-align: center;
   font-size: 14px;
+  // This prevents changing default button styles on hover
+  // TODO: fix this in global app theme
+  &[disabled]:hover {
+    background-color: #fff;
+    border-color: #eaeaea;
+  }
+}
+
+.checkbox {
+  display: inline-block;
+  label {
+    padding-left: $checkbox-size;
+  }
+  input[type="checkbox"] {
+    margin-left: -$checkbox-size;
+  }
 }

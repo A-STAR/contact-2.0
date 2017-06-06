@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IToolbarItem, IToolbarButton } from './toolbar-2.interface';
+import { IToolbarItem, ToolbarToolbarItemTypeEnum } from './toolbar-2.interface';
 
 import { PermissionsService } from '../../../core/permissions/permissions.service';
 
@@ -15,7 +15,7 @@ import { PermissionsService } from '../../../core/permissions/permissions.servic
 export class Toolbar2Component implements OnInit {
   @Input() items: Array<IToolbarItem> = [];
 
-  private items$: Observable<Array<IToolbarButton>>;
+  private _items$: Observable<Array<any>>;
 
   constructor(
     private permissionsService: PermissionsService,
@@ -23,26 +23,40 @@ export class Toolbar2Component implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.items$ = this.store.map(state =>
+    this._items$ = this.store.map(state =>
       this.items.map(item => ({
         ...item,
         // TODO: maybe use hasPermission2 with zip?
-        disabled: this.isDisabled(item, state) || !this.permissionsService.hasAllPermissions(item.permissions)
+        disabled: this.isDisabled(item, state) || this.isForbidden(item)
       }))
     );
   }
 
-  get buttons$(): Observable<Array<IToolbarButton>> {
-    return this.items$;
+  get items$(): Observable<Array<any>> {
+    return this._items$;
+  }
+
+  isButton(item: IToolbarItem): boolean {
+    return item.type === ToolbarToolbarItemTypeEnum.BUTTON;
+  }
+
+  isCheckbox(item: IToolbarItem): boolean {
+    return item.type === ToolbarToolbarItemTypeEnum.CHECKBOX;
   }
 
   onClick(item: IToolbarItem): void {
-    this.store.dispatch({
-      type: item.action
-    });
+    if (typeof item.action === 'function') {
+      item.action();
+    } else {
+      this.store.dispatch(item.action);
+    }
   }
 
   private isDisabled(item: IToolbarItem, state: IAppState): boolean {
-    return typeof item.disabled === 'boolean' ? item.disabled : item.disabled(state);
+    return item.disabled ? item.disabled(state) : false;
+  }
+
+  private isForbidden(item: IToolbarItem): boolean {
+    return item.permissions ? !this.permissionsService.hasAllPermissions(item.permissions) : false;
   }
 }

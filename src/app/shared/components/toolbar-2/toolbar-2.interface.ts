@@ -1,20 +1,32 @@
+import { Action } from '@ngrx/store';
+
 import { IAppState } from '../../../core/state/state.interface';
 
-export interface IToolbarItem {
-  action: string;
-  icon: string;
-  label: string;
-  permissions: Array<string>;
-  disabled: (state: IAppState) => boolean;
+export enum ToolbarToolbarItemTypeEnum {
+  BUTTON,
+  CHECKBOX
 }
+
+export type IToolbarActionCreator = () => void;
+
+export interface IToolbarElement {
+  action: IToolbarActionCreator | Action;
+  label: string;
+  permissions?: Array<string>;
+  disabled?: (state: IAppState) => boolean;
+}
+
+export interface IToolbarButton extends IToolbarElement {
+  type: ToolbarToolbarItemTypeEnum.BUTTON;
+  icon: string;
+}
+
+export interface IToolbarCheckbox extends IToolbarElement {
+  type: ToolbarToolbarItemTypeEnum.CHECKBOX;
+}
+
+export type IToolbarItem = IToolbarButton | IToolbarCheckbox;
 
 export interface IToolbar {
   items: Array<IToolbarItem>;
-}
-
-export interface IToolbarButton {
-  action: string;
-  icon: string;
-  label: string;
-  disabled: boolean;
 }

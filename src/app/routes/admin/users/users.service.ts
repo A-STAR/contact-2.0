@@ -17,6 +17,7 @@ export class UsersService {
   static USER_UPDATE         = 'USER_UPDATE';
   static USER_SELECT         = 'USER_SELECT';
   static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
+  static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
     private gridService: GridService,
@@ -68,6 +69,20 @@ export class UsersService {
       payload: {
         dialogAction
       }
+    });
+  }
+
+  setDialogAddAction(): void {
+    this.setDialogAction(IUserDialogActionEnum.USER_ADD);
+  }
+
+  setDialogEditAction(): void {
+    this.setDialogAction(IUserDialogActionEnum.USER_EDIT);
+  }
+
+  toggleBlockedFilter(): void {
+    return this.store.dispatch({
+      type: UsersService.USER_TOGGLE_BLOCKED
     });
   }
 

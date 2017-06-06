@@ -33,4 +33,5 @@ export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
   dialogAction: IUserDialogActionEnum;
+  displayBlocked: boolean;
 }
