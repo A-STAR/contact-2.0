@@ -1,9 +1,9 @@
-<ng-container *ngIf="canDictionariesShow()">
+<ng-container *ngIf="canDictionariesShow | async">
   <app-dict (onSelect)="onSelectMaster($event)"></app-dict>
   <br>
   <app-terms [masterEntity]="masterEntity"></app-terms>
 </ng-container>
 
-<div class="access-denied-offset" *ngIf="!canDictionariesShow()">
+<div class="access-denied-offset" *ngIf="!canDictionariesShow | async">
   {{ 'dictionaries.access_denied' | translate }}
 </div>

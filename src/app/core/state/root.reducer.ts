@@ -5,10 +5,10 @@ import { permissionReducer } from '../permissions/permissions.reducer';
 import { usersReducer } from '../../routes/admin/users/users.reducer';
 
 export const rootReducer = {
-  // TODO: rename notificationService -> notifications
   actionsLog: actionsLogReducer,
+  // TODO: rename notificationService -> notifications
   notificationService: notificationReducer,
   organizations: organizationsReducer,
-  permissionService: permissionReducer,
   users: usersReducer,
+  permissions: permissionReducer,
 };

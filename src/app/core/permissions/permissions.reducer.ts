@@ -1,13 +1,11 @@
-import { IPermissionAction, IPermissionsState } from './permissions.interface';
+import { IPermissionAction, IPermissionsState, IPermission } from './permissions.interface';
 
 import { PermissionsService } from './permissions.service';
 
 // TODO: separate service for persisting global state?
 const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
-const defaultState: IPermissionsState = {
-  permissions: [],
-};
+const defaultState: IPermissionsState = {};
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
@@ -18,22 +16,22 @@ export function permissionReducer(
 
   switch (action.type) {
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
-      return {
-        permissions: action.payload
-      };
-    case 'PERMISSION_INVALIDATE':
-      return {
-        permissions: []
-      };
-    case 'PERMISSION_UPDATE':
+      return Object.assign({}, action.payload);
+    case PermissionsService.PERMISSION_INVALIDATE:
+      return {};
+    case PermissionsService.PERMISSION_UPDATE:
       return {
         ...state,
+        ...action.payload
       };
-    case 'PERMISSION_DELETE':
+    case PermissionsService.PERMISSION_DELETE:
+      const newState = Object.assign({}, state);
+      delete newState.permissions[action.payload];
       return {
-        permissions: state.permissions
+        ...newState
       };
     default:
       return state;
   }
 };
+

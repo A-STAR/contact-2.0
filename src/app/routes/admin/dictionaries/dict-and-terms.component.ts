@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Observable } from 'rxjs/Observable';
 import { IDict } from './dict/dict.interface';
 import { MasterDetailComponent } from '../../../shared/components/entity/master/entity.master.detail.component';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
@@ -16,7 +16,7 @@ export class DictAndTermsComponent extends MasterDetailComponent<IDict> {
     super();
   }
 
-  canDictionariesShow(): boolean {
-    return this.permissionsService.hasPermission('DICT_VIEW');
+  get canDictionariesShow(): Observable<boolean> {
+    return this.permissionsService.hasPermission2('DICT_VIEW');
   }
 }

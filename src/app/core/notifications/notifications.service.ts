@@ -9,7 +9,8 @@ import {
   INotificationActionType,
   NotificationTypeEnum,
   INotificationActionPayload,
-  INotificationServiceState
+  INotificationServiceState,
+  INotification,
 } from './notifications.interface';
 
 @Injectable()
@@ -36,6 +37,10 @@ export class NotificationsService {
       .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)))
       // TODO: double check this:
       .filter(Boolean);
+  }
+
+  get notifications(): Observable<INotification[]> {
+    return this.store.select(state => state.notificationService.notifications);
   }
 
   debug(message: string, showAlert: boolean = true): void {

@@ -13,7 +13,7 @@ import { SettingsService } from '../../core/settings/settings.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   // the fullscreen button
@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(event: UIEvent): void {
     event.preventDefault();
-    this.authService.logout().subscribe();
+    this.authService.logout().take(1).subscribe();
   }
 
   onNotificationsClose(): void {

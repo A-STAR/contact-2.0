@@ -13,7 +13,7 @@ import { IEmployeeUser } from '../../organizations.interface';
 export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
   private canEdit = false;
 
-  // TODO: dictionary service
+  // TODO(a.poterenko): use dictionary service
   private options = [
     { value: 1, label: 'Сотрудник' },
     { value: 2, label: 'Руководитель' },
@@ -23,7 +23,10 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
 
   constructor(private gridService: GridService, private permissionsService: PermissionsService) {
     super();
-    this.canEdit = this.permissionsService.hasPermission('ORGANIZATION_EDIT');
+    this.permissionsService.hasPermission2('ORGANIZATION_EDIT')
+      .subscribe(permission => {
+        this.canEdit = permission;
+      });
   }
 
   get formData(): any {

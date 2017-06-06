@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IPermissionRole } from '../permissions/permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -23,8 +24,9 @@ export class PermissionsTreeComponent implements OnChanges {
     { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE, permission: 'GUI_TREE_EDIT' },
   ];
 
-  constructor(private permissionsTreeService: PermissionsTreeService,
-              private permissionsService: PermissionsService) {
+  constructor(
+    private permissionsTreeService: PermissionsTreeService,
+    private permissionsService: PermissionsService) {
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
@@ -45,7 +47,7 @@ export class PermissionsTreeComponent implements OnChanges {
   }
 
   private refreshToolbar(): void {
-    this.toolbarActions[0].visible = this.getRemovedItems.length > 0 || this.getAddedItems.length > 0;
+    this.toolbarActions[0].visible = !!this.getRemovedItems.length || !!this.getAddedItems.length;
   }
 
   private refreshTree(): void {
@@ -75,11 +77,11 @@ export class PermissionsTreeComponent implements OnChanges {
     return this.permissionsTreeService.getDiff(this.selection, this.initialSelection);
   }
 
-  get hasViewPermission(): boolean {
-    return this.permissionsService.hasPermission('GUI_TREE_VIEW');
+  get hasViewPermission(): Observable<boolean> {
+    return this.permissionsService.hasPermission2('GUI_TREE_VIEW');
   }
 
-  get hasEditPermission(): boolean {
-    return this.permissionsService.hasPermission('GUI_TREE_EDIT');
+  get hasEditPermission(): Observable<boolean> {
+    return this.permissionsService.hasPermission2('GUI_TREE_EDIT');
   }
 }
