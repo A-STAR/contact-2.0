@@ -33,9 +33,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private constantsService: ConstantsService
   ) {
     super();
-  }
-
-  ngOnInit(): void {
     this.editUserSub = this.permissionsService.hasPermission2('USER_EDIT')
       .subscribe(permission => {
         this.canEditUser = permission;
@@ -44,7 +41,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       .subscribe(permission => {
         this.canEditUserRole = permission;
       });
+  }
 
+  ngOnInit(): void {
     this.passwordValidators = password(
       !this.editedEntity,
       this.constantsService.get('UserPassword.MinLength') as number,
