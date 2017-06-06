@@ -11,7 +11,7 @@ export interface IPermission {
 }
 
 export interface IPermissionsState {
-  permissions: Array<IPermission>;
+  [key: string]: boolean;
 }
 
 export type IPermissionActionType =
