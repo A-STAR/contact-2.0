@@ -4,7 +4,7 @@ export interface IToolbarItem {
   action: string;
   icon: string;
   label: string;
-  permissions: string | Array<string>;
+  permissions: Array<string>;
   disabled: (state: IAppState) => boolean;
 }
 

@@ -3,7 +3,7 @@
     <button
       class="btn btn-default"
       [disabled]="item.disabled"
-      [title]="item.label"
+      [title]="item.label | translate"
       (click)="onClick(item)"
     >
       <i [ngClass]="item.icon"></i>

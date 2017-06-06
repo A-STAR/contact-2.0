@@ -89,7 +89,7 @@ export class PermissionsService {
       return this.state.map(permissions => {
         return permissionName.reduce((acc, permission) => {
           return acc && permissions[permission];
-        }, false);
+        }, true);
       });
     }
     // can be undefined
@@ -99,7 +99,7 @@ export class PermissionsService {
   hasAllPermissions(permissionNames: Array<string>): boolean {
     return permissionNames.reduce((acc, permission) => {
       return acc && this.userPermissions[permission];
-    }, false);
+    }, true);
   }
 
   toPermissionValue(userPermission: IPermission): boolean {

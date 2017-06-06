@@ -77,7 +77,7 @@ export class UsersComponent implements OnDestroy {
       action: 'TOOLBAR_ACTION',
       icon: 'fa fa-plus',
       label: 'Add',
-      permissions: [],
+      permissions: [ 'USER_ADD' ],
       disabled: (state: IAppState) => false
     }
   ];
