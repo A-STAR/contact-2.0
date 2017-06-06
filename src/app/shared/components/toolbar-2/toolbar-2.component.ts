@@ -58,7 +58,7 @@ export class Toolbar2Component implements OnInit {
   }
 
   private isForbidden(item: IToolbarItem): boolean {
-    return item.permissions ? !this.permissionsService.hasAllPermissions(item.permissions) : false;
+    return item.permissions ? !this.permissionsService.hasOnePermission(item.permissions) : false;
   }
 
   private getState(item: IToolbarItem, state: IAppState): boolean {

@@ -63,7 +63,7 @@ export class UsersComponent implements OnDestroy {
       action: () => this.usersService.setDialogEditAction(),
       icon: 'fa fa-pencil',
       label: 'toolbar.action.edit',
-      permissions: [ 'USER_EDIT' ],
+      permissions: [ 'USER_EDIT', 'USER_ROLE_EDIT' ],
       disabled: (state: IAppState) => state.users.selectedUserId === null
     },
     {
