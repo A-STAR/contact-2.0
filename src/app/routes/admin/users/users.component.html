@@ -17,8 +17,8 @@
   (cancel)="cancelAction()">
 </app-user-edit>
 
-<app-toolbar-2>
-  <app-toolbar-2-button action="ACTION_TYPE" icon="fa fa-plus" label="Add" [permissions]="[]"></app-toolbar-2-button>
+<app-toolbar-2
+  [items]="toolbarItems">
 </app-toolbar-2>
 
 <app-grid

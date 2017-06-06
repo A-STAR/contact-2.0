@@ -1,4 +1,12 @@
 <div class="toolbar">
-  <ng-content>
-  </ng-content>
+  <div *ngFor="let item of buttons$ | async">
+    <button
+      class="btn btn-default"
+      [disabled]="item.disabled"
+      [title]="item.label"
+      (click)="onClick(item)"
+    >
+      <i [ngClass]="item.icon"></i>
+    </button>
+  </div>
 </div>

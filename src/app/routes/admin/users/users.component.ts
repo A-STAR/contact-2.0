@@ -3,8 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -68,6 +70,16 @@ export class UsersComponent implements OnDestroy {
 
   toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
     ToolbarActionTypeEnum.EDIT,
+  ];
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      action: 'TOOLBAR_ACTION',
+      icon: 'fa fa-plus',
+      label: 'Add',
+      permissions: [],
+      disabled: (state: IAppState) => false
+    }
   ];
 
   action: IUserDialogActionEnum;
