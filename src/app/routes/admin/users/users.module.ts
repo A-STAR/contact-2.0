@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { UserEditModule } from './edit/user-edit.module';
 
+import { UsersEffects } from './users.effects';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users-resolver.service';
 
@@ -18,6 +20,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     UserEditModule,
+    EffectsModule.run(UsersEffects),
   ],
   exports: [
     RouterModule

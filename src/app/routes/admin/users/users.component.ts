@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IUser } from './users.interface';
+import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IToolbarAction, ToolbarActionTypeEnum, ToolbarControlEnum } from '../../../shared/components/toolbar/toolbar.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
@@ -9,17 +11,15 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UsersService } from './users.service';
 
-import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
-
 @Component({
   selector: 'app-users',
   templateUrl: 'users.component.html'
 })
-export class UsersComponent extends GridEntityComponent<IUser> {
+export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
 
   // TODO: custom toolbar actions
-  private REFRESH_ACTION = -1;
+  private DISPLAY_BLOCKED_ACTION = -1;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -58,7 +58,7 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
     {
       text: 'users.toolbar.action.show_blocked_users',
-      type: this.REFRESH_ACTION,
+      type: this.DISPLAY_BLOCKED_ACTION,
       visible: true,
       control: ToolbarControlEnum.CHECKBOX,
       value: this.displayBlockedUsers,
@@ -70,9 +70,15 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     ToolbarActionTypeEnum.EDIT,
   ];
 
+  action: IUserDialogActionEnum;
+
+  editedEntity: IUser;
+
   private _roles;
 
   private _languages;
+
+  private users$: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -80,7 +86,6 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     private route: ActivatedRoute,
     private usersService: UsersService,
   ) {
-    super();
     const { roles, languages } = this.route.snapshot.data.users;
     this._roles = roles;
     this._languages = languages;
@@ -88,6 +93,35 @@ export class UsersComponent extends GridEntityComponent<IUser> {
     this.renderers.languageId = [].concat(languages);
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.filter = this.filter.bind(this);
+
+    this.usersService.fetch();
+
+    this.users$ = this.usersService.state
+      .subscribe(
+        state => {
+          this.action = state.dialogAction;
+          this.editedEntity = state.users.find(users => users.id === state.selectedUserId);
+          this.refreshToolbar(!!state.selectedUserId, state.users.length > 0);
+        },
+        // TODO: notifications
+        error => console.error(error)
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.users$.unsubscribe();
+  }
+
+  get isEntityBeingCreated(): boolean {
+    return this.action === IUserDialogActionEnum.USER_ADD;
+  }
+
+  get isEntityBeingEdited(): boolean {
+    return this.action === IUserDialogActionEnum.USER_EDIT;
+  }
+
+  get state(): Observable<IUsersState> {
+    return this.usersService.state;
   }
 
   get roles(): Array<any> {
@@ -103,32 +137,60 @@ export class UsersComponent extends GridEntityComponent<IUser> {
   }
 
   onAddSubmit(data: any): void {
-    this.usersService
-      .create(data)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('users.add.errorMessage')
-      );
+    this.usersService.create(data);
   }
 
   onEditSubmit(data: any): void {
-    this.usersService
-      .save(this.selectedEntity.id, data)
-      .subscribe(
-        () => this.onSubmitSuccess(),
-        () => this.notificationsService.error('users.edit.errorMessage')
-      );
+    this.usersService.update(data);
   }
 
-  private onSubmitSuccess(): void {
-    this.afterUpdate();
-    this.cancelAction();
+  cancelAction(): void {
+    this.usersService.setDialogAction(null);
+  }
+
+  onEdit(): void {
+    this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT);
+  }
+
+  onSelectedRowChange(users: Array<IUser>): void {
+    const user = users[0];
+    if (user) {
+      this.usersService.select(user.id);
+    }
   }
 
   onAction(action: IToolbarAction): void {
-    super.onAction(action);
-    if (action.type === this.REFRESH_ACTION) {
-      this.displayBlockedUsers = action.value;
+    switch (action.type) {
+      case ToolbarActionTypeEnum.ADD:
+        this.usersService.setDialogAction(IUserDialogActionEnum.USER_ADD);
+        break;
+      case ToolbarActionTypeEnum.EDIT:
+        this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT);
+        break;
+      case ToolbarActionTypeEnum.REFRESH:
+        this.usersService.fetch();
+        break;
+      case this.DISPLAY_BLOCKED_ACTION:
+        this.displayBlockedUsers = action.value;
+        break;
     }
+  }
+
+  private refreshToolbar(isUserSelected: boolean, hasData: boolean): void {
+    this.setActionsVisibility(this.toolbarActionsGroup, isUserSelected);
+
+    const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
+    if (refreshAction) {
+      refreshAction.visible = hasData;
+    }
+  }
+
+  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
+    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) =>
+      this.findToolbarActionByType(actionType).visible = visible);
+  }
+
+  private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
+    return this.toolbarActions.find((action: IToolbarAction) => actionType === action.type);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -16,7 +16,7 @@ import { password } from '../../../../core/validators/password';
   selector: 'app-user-edit',
   templateUrl: 'user-edit.component.html'
 })
-export class UserEditComponent extends EntityBaseComponent<IUser> implements OnDestroy {
+export class UserEditComponent extends EntityBaseComponent<IUser> implements OnInit, OnDestroy {
   @Input() roles;
   @Input() languages;
 
@@ -33,7 +33,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnD
     private constantsService: ConstantsService
   ) {
     super();
+  }
 
+  ngOnInit(): void {
     this.editUserSub = this.permissionsService.hasPermission2('USER_EDIT')
       .subscribe(permission => {
         this.canEditUser = permission;
@@ -48,6 +50,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnD
       this.constantsService.get('UserPassword.MinLength') as number,
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
     );
+    super.ngOnInit();
   }
 
   get canEdit(): boolean {
@@ -103,10 +106,12 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnD
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
-      roleId: value.roleId[0].value,
+      // TODO: fix this in select control?
+      roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.toIsoDate(value.startWorkDate),
       endWorkDate: this.toIsoDate(value.endWorkDate),
-      languageId: value.languageId[0].value
+      // TODO: fix this in select control?
+      languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
   }
 
