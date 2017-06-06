@@ -9,6 +9,10 @@ import { IOrganization } from '../../organizations.interface';
   templateUrl: './organization-edit.component.html'
 })
 export class OrganizationEditComponent extends EntityBaseComponent<IOrganization> {
+  get title(): string {
+    return this.editedEntity ? 'organizations.organizations.edit.title' : 'organizations.organizations.create.title';
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
     return [
       { label: 'organizations.organizations.edit.name', controlName: 'name', type: 'text', required: true },

@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IEmployeeUser, IEmployee, IEmployeesResponse, IOrganization } from '../../organizations.interface';
+import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { OrganizationsService } from '../../organizations.service';
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
@@ -15,8 +17,7 @@ import { GridComponent } from '../../../../../shared/components/grid/grid.compon
   selector: 'app-employee-add',
   templateUrl: './employee-add.component.html'
 })
-export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> implements AfterViewInit {
-  @Input() masterEntity: IOrganization;
+export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @ViewChild('addEmplpoyeeGrid') addEmplpoyeeGrid: GridComponent;
@@ -56,24 +57,24 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> imp
 
   constructor(
     private gridService: GridService,
+    private organizationsService: OrganizationsService,
+    private translateService: TranslateService,
     private valueConverterService: ValueConverterService,
-    private translateService: TranslateService
   ) {
     super();
+    this.organizationsService.fetchNotAddedEmployees();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
-  parseFn = (data: IEmployeesResponse) => data.users;
+  get state(): Observable<IOrganizationsState> {
+    return this.organizationsService.state;
+  }
 
   toSubmittedValues(values: IEmployeeUser): any {
     return {
       roleCode: this.dynamicForm.value.roleCode[0].value,
       usersIds: this.selectedEmployees.map((employee: IEmployee) => employee.userId)
     };
-  }
-
-  ngAfterViewInit(): void {
-    this.addEmplpoyeeGrid.load({ id: this.masterEntity.id }).subscribe();
   }
 
   onSelectEmployees(employees: Array<IEmployeeUser>): void {

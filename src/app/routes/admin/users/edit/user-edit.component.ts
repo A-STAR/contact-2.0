@@ -87,7 +87,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> {
   }
 
   toSubmittedValues(value: IUser): any {
-    console.log(value);
     return {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
