@@ -5,8 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IToolbarItem, IToolbarCheckbox, ToolbarToolbarItemTypeEnum } from './toolbar-2.interface';
 
-import { PermissionsService } from '../../../core/permissions/permissions.service';
-
 @Component({
   selector: 'app-toolbar-2',
   templateUrl: './toolbar-2.component.html',
@@ -18,7 +16,6 @@ export class Toolbar2Component implements OnInit {
   private _items$: Observable<Array<any>>;
 
   constructor(
-    private permissionsService: PermissionsService,
     private store: Store<IAppState>
   ) {}
 
@@ -26,8 +23,7 @@ export class Toolbar2Component implements OnInit {
     this._items$ = this.store.map(state =>
       this.items.map(item => ({
         ...item,
-        // TODO: maybe use hasPermission2 with zip?
-        disabled: this.isDisabled(item, state) || this.isForbidden(item),
+        disabled: this.isDisabled(item, state) || this.isForbidden(item, state),
         state: this.getState(item, state)
       }))
     );
@@ -57,8 +53,9 @@ export class Toolbar2Component implements OnInit {
     return item.disabled ? item.disabled(state) : false;
   }
 
-  private isForbidden(item: IToolbarItem): boolean {
-    return item.permissions ? !this.permissionsService.hasOnePermission(item.permissions) : false;
+  private isForbidden(item: IToolbarItem, state: IAppState): boolean {
+    // TODO: use permissionsService methods instead
+    return item.permissions ? item.permissions.reduce((acc, name) => acc && !state.permissions[name], true) : false;
   }
 
   private getState(item: IToolbarItem, state: IAppState): boolean {
