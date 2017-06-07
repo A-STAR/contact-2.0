@@ -20,7 +20,7 @@ export class UsersEffects {
     .ofType(UsersService.USERS_FETCH)
     .switchMap((action: Action) => {
       return this.readUsers()
-        .mergeMap(data => Observable.from([
+        .mergeMap(data => [
           {
             type: UsersService.USERS_FETCH_SUCCESS,
             payload: {
@@ -33,7 +33,7 @@ export class UsersEffects {
               userId: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;
@@ -45,7 +45,7 @@ export class UsersEffects {
     .ofType(UsersService.USER_CREATE)
     .switchMap((action: Action) => {
       return this.createUser(action.payload.user)
-        .mergeMap(data => Observable.from([
+        .mergeMap(data => [
           {
             type: UsersService.USERS_FETCH
           },
@@ -55,7 +55,7 @@ export class UsersEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;
@@ -69,7 +69,7 @@ export class UsersEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateUser(store.users.selectedUserId, action.payload.user)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: UsersService.USERS_FETCH
           },
@@ -79,7 +79,7 @@ export class UsersEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;
