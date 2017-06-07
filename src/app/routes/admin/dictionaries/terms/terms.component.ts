@@ -1,11 +1,10 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ITerm } from './terms.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
-
+import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -13,23 +12,25 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
-export class TermsComponent extends GridEntityComponent<ITerm> implements OnChanges {
+export class TermsComponent {
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
-    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  ];
+  toolbarItems = [];
 
-  toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD
-  ];
+  // toolbarActions: Array<IToolbarAction> = [
+  //   { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
+  //   { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
+  //   { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
+  //   { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
+  // ];
 
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE,
-  ];
+  // toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
+  //   ToolbarActionTypeEnum.ADD
+  // ];
+
+  // toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
+  //   ToolbarActionTypeEnum.EDIT,
+  //   ToolbarActionTypeEnum.REMOVE,
+  // ];
 
   columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
@@ -48,27 +49,36 @@ export class TermsComponent extends GridEntityComponent<ITerm> implements OnChan
     isClosed: (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : ''
   };
 
-  dataSource: IDataSource = {
-    read: '/api/dictionaries/{code}/terms',
-    dataKey: 'terms',
-  };
+  rows = [];
+
+  action: any = null;
+
+  selectedEntity: ITerm;
 
   constructor(
+    private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
   ) {
-    super();
+    this.dictionariesService.state.subscribe(state => {
+      this.action = state.dialogAction;
+      this.rows = state.terms;
+      this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
+    });
+
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const { masterEntity: master } = changes;
-    if (master.currentValue === master.previousValue) {
-      return;
-    }
-    this.grid.load({ code: master.currentValue.code })
-      .take(1)
-      .subscribe();
+  get isEntityBeingCreated(): boolean {
+    return this.action === ToolbarActionTypeEnum.ADD;
+  }
+
+  get isEntityBeingEdited(): boolean {
+    return this.action === ToolbarActionTypeEnum.EDIT;
+  }
+
+  get isEntityBeingRemoved(): boolean {
+    return this.action === ToolbarActionTypeEnum.REMOVE;
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {
@@ -77,23 +87,47 @@ export class TermsComponent extends GridEntityComponent<ITerm> implements OnChan
     data.isClosed = this.valueConverterService.toBooleanNumber(data.isClosed);
 
     if (createMode) {
-      this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
-        .subscribe(() => this.onSuccess());
+      // this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
+      //   .subscribe(() => this.onSuccess());
     } else {
-      const termsId: number = this.selectedEntity.id;
-      this.gridService.update(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity, data)
-        .subscribe(() => this.onSuccess());
+      // const termsId: number = this.selectedEntity.id;
+      // this.gridService.update(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity, data)
+      //   .subscribe(() => this.onSuccess());
     }
   }
 
   onRemoveSubmit(): void {
-    const termsId: number = this.selectedEntity.id;
-    this.gridService.delete(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity)
-      .subscribe(() => this.onSuccess());
+    // const termsId: number = this.selectedEntity.id;
+    // this.gridService.delete(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity)
+    //   .subscribe(() => this.onSuccess());
   }
 
   onSuccess(): void {
     this.cancelAction();
     this.afterUpdate();
+  }
+
+  cancelAction(): void {
+    this.action = null;
+  }
+
+  onEdit(): void {
+    this.action = ToolbarActionTypeEnum.EDIT;
+  }
+
+  afterUpdate(): void {
+    // this.selectedEntity = null;
+    // this.loadGrid();
+  }
+
+  onSelectedRowChange(entities: Array<ITerm>): void {
+    const entity = entities[0];
+    this.action = null;
+
+    if (entity) {
+      // this.selectedEntity = entity;
+      // this.refreshToolbar();
+      // this.onSelect.emit(entity);
+    }
   }
 }

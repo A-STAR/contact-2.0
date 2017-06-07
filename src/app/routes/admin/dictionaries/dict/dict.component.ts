@@ -9,7 +9,6 @@ import { IDictionary, DictionariesDialogActionEnum } from '../../../../core/dict
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
-import { DictService } from './dict.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
@@ -75,8 +74,7 @@ export class DictComponent {
   rows: Array<IDictionary>;
 
   constructor(
-    public dictionariesService: DictionariesService,
-    private dictService: DictService,
+    private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
     private entityTranslationsService: EntityTranslationsService,

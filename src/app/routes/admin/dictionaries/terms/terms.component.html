@@ -26,6 +26,24 @@
   (cancel)="cancelAction()">
 </app-submitted-popup>
 
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [autoLoad]="false"
+  [columnTranslationKey]="'terms'"
+  [editPermission]="'DICT_TERM_EDIT'"
+  [rows]="rows"
+  (onRowSelect)="onSelectedRowChange($event)"
+  (onEdit)="onEdit()"
+  (onAction)="onAction($event)">
+</app-grid>
+
+<!--
 <app-grid
   selectionType="single"
   [styles]="{height: '200px'}"
@@ -40,3 +58,4 @@
   [toolbarActions]="toolbarActions"
   (onAction)="onAction($event)">
 </app-grid>
+-->

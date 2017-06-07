@@ -1,19 +1,26 @@
 import { ILabeledValue } from '../converter/value/value-converter.interface';
 
+export type IDictionaryValue = number | Array<ILabeledValue>;
+
 export interface IDictionary {
   id: number;
   code: string;
   name: string;
   translatedName: string;
   nameTranslations: Array<ILabeledValue>;
-  parentCode: number|Array<ILabeledValue>;
-  typeCode: number|Array<ILabeledValue>;
-  termTypeCode: number|Array<ILabeledValue>;
+  parentCode: IDictionaryValue;
+  typeCode: IDictionaryValue;
+  termTypeCode: IDictionaryValue;
 }
 
 export interface ITerm {
   id: number;
-  // TODO
+  code: number;
+  name: string;
+  typeCode: IDictionaryValue;
+  parentCode: IDictionaryValue;
+  parentCodeName: string;
+  isClosed: number;
 }
 
 // TODO
