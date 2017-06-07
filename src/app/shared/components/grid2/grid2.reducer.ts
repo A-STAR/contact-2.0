@@ -9,10 +9,10 @@ import {
 
 import { Grid2Component } from './grid2.component';
 
-const defaultState: IGrid2State = Object.freeze({
-  columns: Object.freeze({}),
+const defaultState: IGrid2State = {
+  columns: {},
   columnsPositions: []
-});
+};
 
 export function grid2Reducer(
   state: IGrid2State = defaultState,
