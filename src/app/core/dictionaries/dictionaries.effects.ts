@@ -7,7 +7,8 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../state/state.interface';
-import { IDictionaryCreateRequest, IDictionaryUpdateRequest, ITerm } from './dictionaries.interface';
+import { IDictionary, ITerm } from './dictionaries.interface';
+import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 
 import { DictionariesService } from './dictionaries.service';
 import { EntityTranslationsService } from '../entity/translations/entity-translations.service';
@@ -241,17 +242,16 @@ export class DictionariesEffects {
     return this.gridService.read('/api/dictionaries');
   }
 
-  private createDictionary(dictionary: IDictionaryCreateRequest): Observable<any> {
+  private createDictionary(dictionary: IDictionary): Observable<any> {
     return this.gridService.create('/api/dictionaries', {}, dictionary);
   }
 
   private updateDictionary(
     dictionaryCode: string,
     dictionaryId: number,
-    dictionary: IDictionaryUpdateRequest,
+    dictionary: IDictionary,
     deletedTranslations: Array<number>,
-    // TODO: type
-    updatedTranslations: Array<any>,
+    updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
     return Observable.forkJoin([
       this.gridService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary),

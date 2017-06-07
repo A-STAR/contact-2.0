@@ -23,12 +23,6 @@ export interface ITerm {
   isClosed: number;
 }
 
-// TODO
-export type IDictionaryCreateRequest = any;
-
-// TODO
-export type IDictionaryUpdateRequest = any;
-
 export enum DictionariesDialogActionEnum {
   DICTIONARY_ADD,
   DICTIONARY_EDIT,

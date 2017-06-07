@@ -3,13 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
-import {
-  IDictionariesState,
-  DictionariesDialogActionEnum,
-  IDictionaryCreateRequest,
-  IDictionaryUpdateRequest,
-  ITerm
-} from './dictionaries.interface';
+import { IDictionary, IDictionariesState, DictionariesDialogActionEnum, ITerm } from './dictionaries.interface';
 
 @Injectable()
 export class DictionariesService {
@@ -49,7 +43,7 @@ export class DictionariesService {
     });
   }
 
-  createDictionary(dictionary: IDictionaryCreateRequest): void {
+  createDictionary(dictionary: IDictionary): void {
     this.store.dispatch({
       type: DictionariesService.DICTIONARY_CREATE,
       payload: {
@@ -58,8 +52,7 @@ export class DictionariesService {
     });
   }
 
-  // TODO: types
-  updateDictionary(dictionary: IDictionaryUpdateRequest, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
+  updateDictionary(dictionary: IDictionary, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
     this.store.dispatch({
       type: DictionariesService.DICTIONARY_UPDATE,
       payload: {
