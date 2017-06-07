@@ -30,7 +30,7 @@ export class DictionariesEffects {
           }
         }))
         .catch(() => {
-          this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
+          this.notificationsService.error('dictionaries.messages.errors.fetch');
           return null;
         });
     });
@@ -62,7 +62,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
+          this.notificationsService.error('dictionaries.messages.errors.fetch');
           return null;
         });
     });
@@ -89,7 +89,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
+          this.notificationsService.error('dictionaries.messages.errors.fetch');
           return null;
         });
     });
@@ -113,7 +113,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
+          this.notificationsService.error('dictionaries.messages.errors.fetch');
           return null;
         });
     });
@@ -139,7 +139,7 @@ export class DictionariesEffects {
           }
         }))
         .catch(() => {
-          this.notificationsService.error('dictionaries.terms.messages.errors.fetch');
+          this.notificationsService.error('terms.messages.errors.fetch');
           return null;
         });
     });
@@ -173,7 +173,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.terms.messages.errors.create');
+          this.notificationsService.error('terms.messages.errors.create');
           return null;
         });
     });
@@ -201,7 +201,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.terms.messages.errors.update');
+          this.notificationsService.error('terms.messages.errors.update');
           return null;
         });
     });
@@ -225,7 +225,7 @@ export class DictionariesEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('dictionaries.terms.messages.errors.delete');
+          this.notificationsService.error('terms.messages.errors.delete');
           return null;
         });
     });
