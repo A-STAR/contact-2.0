@@ -181,7 +181,8 @@ export class DictComponent {
 
   onSelectedRowChange(dictionaries: Array<IDictionary>): void {
     const dictionary = dictionaries[0];
-    if (dictionary) {
+    const selectedDictionaryId = this.selectedEntity && this.selectedEntity.id;
+    if (dictionary && dictionary.id !== selectedDictionaryId) {
       this.dictionariesService.selectDictionary(dictionary.code);
     }
   }
