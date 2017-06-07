@@ -35,6 +35,16 @@ export class DictionariesEffects {
     });
 
   @Effect()
+  fetchDictionariesSuccess$ = this.actions
+    .ofType(DictionariesService.DICTIONARIES_FETCH_SUCCESS)
+    .map(() => ({
+      type: DictionariesService.DICTIONARY_SELECT,
+      payload: {
+        dictionaryCode: null
+      }
+    }));
+
+  @Effect()
   createDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_CREATE)
     .switchMap((action: Action) => {
@@ -95,12 +105,6 @@ export class DictionariesEffects {
             type: DictionariesService.DICTIONARIES_FETCH
           },
           {
-            type: DictionariesService.DICTIONARY_SELECT,
-            payload: {
-              dictionaryCode: null
-            }
-          },
-          {
             type: DictionariesService.DICTIONARY_DIALOG_ACTION,
             payload: {
               dialogAction: null
@@ -116,15 +120,9 @@ export class DictionariesEffects {
   @Effect()
   selectDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_SELECT)
-    .switchMap(action => {
-      return action.payload.dictionaryCode ?
-        Observable.of({
-          type: DictionariesService.TERMS_FETCH
-        }) :
-        Observable.of({
-          type: DictionariesService.TERMS_CLEAR
-        });
-    });
+    .map(action => ({
+      type: action.payload.dictionaryCode ? DictionariesService.TERMS_FETCH : DictionariesService.TERMS_CLEAR
+    }));
 
   @Effect()
   fetchTerms$ = this.actions
