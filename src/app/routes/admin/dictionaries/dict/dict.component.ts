@@ -1,39 +1,56 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IDict } from './dict.interface';
-import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IAppState } from '../../../../core/state/state.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
+import { IDictionary, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { DictService } from './dict.service';
+import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
-
-import { GridEntityComponent } from '../../../../shared/components/entity/grid.entity.component';
 
 @Component({
   selector: 'app-dict',
   templateUrl: './dict.component.html'
 })
-export class DictComponent extends GridEntityComponent<IDict> {
+export class DictComponent implements OnDestroy {
 
   private dictReady = false;
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'DICT_ADD' },
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_EDIT' },
-    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_DELETE' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  ];
-
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE,
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogAddDictionaryAction(),
+      icon: 'fa fa-plus',
+      label: 'toolbar.action.add',
+      permissions: [ 'DICT_ADD' ]
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogEditDictionaryAction(),
+      icon: 'fa fa-pencil',
+      label: 'toolbar.action.edit',
+      permissions: [ 'DICT_EDIT' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
+      icon: 'fa fa-trash',
+      label: 'toolbar.action.remove',
+      permissions: [ 'DICT_DELETE' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.fetchDictionaries(),
+      icon: 'fa fa-refresh',
+      label: 'toolbar.action.refresh'
+    }
   ];
 
   columns: Array<IGridColumn> = [
@@ -51,32 +68,65 @@ export class DictComponent extends GridEntityComponent<IDict> {
     ]
   };
 
-  dataSource: IDataSource = {
-    read: '/api/dictionaries',
-    dataKey: 'dictNames',
-  };
+  action: DictionariesDialogActionEnum;
+
+  selectedEntity: IDictionary;
+
+  rows: Array<IDictionary>;
+
+  private dictionariesService$: Subscription;
 
   constructor(
-    private dictService: DictService,
+    private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
     private entityTranslationsService: EntityTranslationsService,
-    private route: ActivatedRoute,
   ) {
-    super();
+    this.dictionariesService.fetchDictionaries();
 
-    this.renderers.parentCode = this.route.snapshot.data.dictionaries.dictNames
-      .map(dict => ({ label: dict.name, value: dict.code }));
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
+      this.action = state.dialogAction;
+      this.rows = state.dictionaries;
+      this.selectedEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
+
+      this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dictionariesService$.unsubscribe();
+  }
+
+  get isEntityBeingCreated(): boolean {
+    return this.action === DictionariesDialogActionEnum.DICTIONARY_ADD;
+  }
+
+  get isEntityBeingEdited(): boolean {
+    return this.action === DictionariesDialogActionEnum.DICTIONARY_EDIT;
+  }
+
+  get isEntityBeingRemoved(): boolean {
+    return this.action === DictionariesDialogActionEnum.DICTIONARY_REMOVE;
+  }
+
+  get isReadyForEditing(): boolean {
+    // TODO replace dictReady with router resolve
+    return this.selectedEntity && this.dictReady;
   }
 
   onEdit(): void {
-    super.onEdit();
     this.dictReady = false;
+
+    this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
 
     this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
       .take(1)
       .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
+  }
+
+  cancelAction(): void {
+    this.dictionariesService.setDialogAction(null);
   }
 
   loadNameTranslations(currentTranslations: IEntityTranslation[]): void {
@@ -91,70 +141,52 @@ export class DictComponent extends GridEntityComponent<IDict> {
       });
   }
 
-  modifyEntity(data: IDict, editMode: boolean): void {
+  modifyEntity(data: IDictionary, editMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
     data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
 
     if (editMode) {
-      const editTasks = [
-        this.gridService.update(`/api/dictionaries/{code}`, this.selectedEntity, data)
-      ];
       const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
-      if (nameTranslations.length) {
-        nameTranslations
-          .filter((item: ILabeledValue) => item.removed)
-          .forEach((item: ILabeledValue) => {
-            editTasks.push(
-              this.entityTranslationsService.deleteDictNameTranslation(this.selectedEntity.id, item.value)
-            );
-          });
 
-        const updatedTranslations: IEntityTranslation[] = nameTranslations
-          .filter((item: ILabeledValue) => !item.removed)
-          .map<IEntityTranslation>((item: ILabeledValue) => {
-            return { languageId: item.value, value: item.context ? item.context.translation : null };
-          })
-          .filter((item: IEntityTranslation) => item.value !== null);
+      const deletedTranslations = nameTranslations
+        .filter((item: ILabeledValue) => item.removed)
+        .map((item: ILabeledValue) => item.value);
 
-        if (updatedTranslations.length) {
-          editTasks.push(
-            this.entityTranslationsService.saveDictNameTranslations(this.selectedEntity.id, updatedTranslations)
-          );
-        }
-      }
+      const updatedTranslations = nameTranslations
+        .filter((item: ILabeledValue) => !item.removed)
+        .map((item: ILabeledValue) => ({
+          languageId: item.value,
+          value: item.context ? item.context.translation : null
+        }))
+        .filter((item: IEntityTranslation) => item.value !== null);
+
       delete data.translatedName;
       delete data.nameTranslations;
 
-      Observable.forkJoin(editTasks)
-        .take(1)
-        .subscribe(() => this.onSuccess());
+      this.dictionariesService.updateDictionary(data, deletedTranslations, updatedTranslations);
     } else {
-      this.gridService.create('/api/dictionaries', {}, data)
-        .take(1)
-        .subscribe(() => this.onSuccess());
+      this.dictionariesService.createDictionary(data);
     }
   }
 
-  onUpdateEntity(data: IDict): void {
+  onUpdateEntity(data: IDictionary): void {
     this.modifyEntity(data, true);
   }
 
-  onCreateEntity(data: IDict): void {
+  onCreateEntity(data: IDictionary): void {
     this.modifyEntity(data, false);
   }
 
   onRemoveSubmit(): void {
-    this.dictService.removeDict(this.selectedEntity).subscribe(() => this.onSuccess());
+    this.dictionariesService.deleteDictionary();
   }
 
-  onSuccess(): void {
-    this.cancelAction();
-    this.afterUpdate();
-  }
-
-  get isReadyForEditing(): boolean {
-    // TODO replace dictReady with router resolve
-    return this.selectedEntity && this.dictReady;
+  onSelectedRowChange(dictionaries: Array<IDictionary>): void {
+    const dictionary = dictionaries[0];
+    const selectedDictionaryId = this.selectedEntity && this.selectedEntity.id;
+    if (dictionary && dictionary.id !== selectedDictionaryId) {
+      this.dictionariesService.selectDictionary(dictionary.code);
+    }
   }
 }
