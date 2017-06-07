@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -17,7 +18,7 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   selector: 'app-dict',
   templateUrl: './dict.component.html'
 })
-export class DictComponent {
+export class DictComponent implements OnDestroy {
 
   private dictReady = false;
 
@@ -74,6 +75,8 @@ export class DictComponent {
 
   rows: Array<IDictionary>;
 
+  private dictionariesService$: Subscription;
+
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
@@ -83,7 +86,7 @@ export class DictComponent {
   ) {
     this.dictionariesService.fetchDictionaries();
 
-    this.dictionariesService.state.subscribe(state => {
+    this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.dictionaries;
       this.selectedEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
@@ -92,6 +95,10 @@ export class DictComponent {
     this.renderers.parentCode = this.route.snapshot.data.dictionaries.dictNames
       .map(dict => ({ label: dict.name, value: dict.code }));
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngOnDestroy(): void {
+    this.dictionariesService$.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {

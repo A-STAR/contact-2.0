@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
@@ -13,7 +14,7 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
-export class TermsComponent {
+export class TermsComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -44,7 +45,8 @@ export class TermsComponent {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.fetchTerms(),
       icon: 'fa fa-refresh',
-      label: 'toolbar.action.refresh'
+      label: 'toolbar.action.refresh',
+      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     }
   ];
 
@@ -73,12 +75,14 @@ export class TermsComponent {
 
   selectedEntity: ITerm;
 
+  private dictionariesService$: Subscription;
+
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.dictionariesService.state.subscribe(state => {
+    this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.terms;
       this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
@@ -86,6 +90,10 @@ export class TermsComponent {
     });
 
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngOnDestroy(): void {
+    this.dictionariesService$.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
