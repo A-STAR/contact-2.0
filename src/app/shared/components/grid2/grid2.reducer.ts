@@ -9,16 +9,18 @@ import {
 
 import { Grid2Component } from './grid2.component';
 
-const defaultState: IGrid2State = {
-  columns: {},
+const defaultState: IGrid2State = Object.freeze({
+  columns: Object.freeze({}),
   columnsPositions: []
-};
+});
 
 export function grid2Reducer(
   state: IGrid2State = defaultState,
   action: IActionGrid2Payload
 ): IGrid2State {
   switch (action.type) {
+    case Grid2Component.DESTROY_STATE:
+      return defaultState;
     case Grid2Component.MOVING_COLUMN:
       return {
         ...state,

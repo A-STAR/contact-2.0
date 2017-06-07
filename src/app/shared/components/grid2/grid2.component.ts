@@ -31,17 +31,18 @@ import { GridHeaderComponent } from './header/grid-header.component';
   styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.ag-theme-fresh.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
-  public static SORTING_DIRECTION = 'SORTING_DIRECTION';
-  public static COLUMNS_POSITIONS = 'COLUMNS_POSITIONS';
-  public static OPEN_FILTER = 'OPEN_FILTER';
-  public static CLOSE_FILTER = 'CLOSE_FILTER';
-  public static MOVING_COLUMN = 'MOVING_COLUMN';
+  public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
+  public static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
+  public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
+  public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
+  public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
+  public static DESTROY_STATE = 'GRID2_MOVING_COLUMN';
 
   @Input() stateKey: string;
   @Input() footerPresent = true;
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
-  @Input() filterEnabled: boolean = true;                   // ag-grid definition
+  @Input() filterEnabled: boolean = true;
   @Input() rows: Array<any> = [];
   @Input() styles: { [key: string]: any };
   @Input() toolbarActions: IToolbarAction[];
@@ -129,8 +130,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   ngOnDestroy(): void {
-    this.langSubscription.unsubscribe();
+    this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
 
+    this.selectedNodes = null;
+    this.headerColumns = null;
+
+    this.langSubscription.unsubscribe();
     if (this.stateSubscription) {
       this.stateSubscription.unsubscribe();
     }

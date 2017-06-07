@@ -22,6 +22,7 @@ export function actionsLogReducer(
     case Grid2Component.OPEN_FILTER:
     case Grid2Component.CLOSE_FILTER:
     case Grid2Component.MOVING_COLUMN:
+    case Grid2Component.DESTROY_STATE:
       return {
         ...state,
         actionsLogGrid: grid2Reducer(state.actionsLogGrid, action as IActionGrid2Payload)
