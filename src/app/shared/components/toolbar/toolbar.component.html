@@ -13,19 +13,24 @@
 <ul class="app-toolbar">
   <li *ngFor="let action of actions" class="app-control app-control-align-{{ actionAlign }}">
     <ng-container [ngSwitch]="action.control">
-        <span
-          *ngSwitchCase="ToolbarControlEnum.CHECKBOX"
-          class="checkbox mt0 mb0"
-        >
-          <label>
-            <input type="checkbox"
-                   [checked]="action.value"
-                   (change)="onActionClick(action, $event)">
-            <ng-container
-              *ngTemplateOutlet="labelTemplate; context: { action: action }">
-            </ng-container>
-          </label>
-        </span>
+      <span
+        *ngSwitchCase="ToolbarControlEnum.CHECKBOX"
+        class="checkbox mt0 mb0"
+      >
+        <label>
+          <input type="checkbox"
+                 [checked]="action.value"
+                 (change)="onActionClick(action, $event)">
+          <ng-container
+            *ngTemplateOutlet="labelTemplate; context: { action: action }">
+          </ng-container>
+        </label>
+      </span>
+      <span
+        *ngSwitchCase="ToolbarControlEnum.LABEL"
+      >
+        <span class="app-label">{{ action.text }}</span>
+      </span>
       <button
         *ngSwitchDefault
         [attr.title]="action.text | translate"

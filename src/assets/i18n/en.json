@@ -461,6 +461,15 @@
     },
     "data": {
       "empty": "No data to display"
+    },
+    "grid": {
+      "filter": {
+        "title": "Фильтр",
+        "showOnlyLines": "Показать только те строки, значения которых:",
+        "and": "И",
+        "or": "Или"
+      },
+      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
     }
   }
 }

@@ -35,6 +35,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
+import { Grid2Module } from './components/grid2/grid2.module';
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -72,6 +73,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     DatePickerModule,
     DynamicFormModule,
     GridModule,
+    Grid2Module,
     MomentModule,
     PopupInputModule,
     ToasterModule,
@@ -130,6 +132,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     DynamicFormModule,
     DialogModule,
     GridModule,
+    Grid2Module,
     MomentModule,
     MultiSelectModule,
     NumericInputComponent,
