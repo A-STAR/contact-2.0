@@ -38,7 +38,7 @@ export class OrganizationsEffects {
     .switchMap((action: Action) => {
       const { parentId, organization } = action.payload;
       return this.createOrganization(parentId, organization)
-        .mergeMap(data => Observable.from([
+        .mergeMap(data => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
@@ -48,7 +48,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.organizations.messages.errors.fetch');
           return null;
@@ -62,7 +62,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
@@ -72,7 +72,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.organizations.messages.errors.fetch');
           return null;
@@ -86,7 +86,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.deleteOrganization(store.organizations.selectedOrganizationId)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
@@ -102,7 +102,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.organizations.messages.errors.fetch');
           return null;
@@ -167,7 +167,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.createEmployee(store.organizations.selectedOrganizationId, action.payload.employee)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
@@ -177,7 +177,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.employees.messages.errors.create');
           return null;
@@ -195,7 +195,7 @@ export class OrganizationsEffects {
         store.organizations.selectedEmployeeUserId,
         action.payload.employee
       )
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
@@ -205,7 +205,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.employees.messages.errors.update');
           return null;
@@ -219,7 +219,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.deleteEmployee(store.organizations.selectedOrganizationId, store.organizations.selectedEmployeeUserId)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
           },
@@ -229,7 +229,7 @@ export class OrganizationsEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('organizations.employees.messages.errors.delete');
           return null;

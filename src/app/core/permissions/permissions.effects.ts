@@ -38,6 +38,7 @@ export class PermissionsEffects {
           this.notifications.error('Could not update the permission');
           return null;
         })
+        // TODO: do we need Observable.from here?
         .mergeMap(() => Observable.from([
           { type: PermissionsService.PERMISSION_FETCH }
         ]));
@@ -45,6 +46,7 @@ export class PermissionsEffects {
 
   @Effect() invalidatePermission = this.actions
       .ofType(PermissionsService.PERMISSION_INVALIDATE)
+      // TODO: do we need Observable.from here?
       .switchMap(() => Observable.from([
           { type: PermissionsService.PERMISSION_FETCH }
       ]));
@@ -59,6 +61,7 @@ export class PermissionsEffects {
           this.notifications.error('permissions.api.errors.create');
           return null;
         })
+        // TODO: do we need Observable.from here?
         .mergeMap(() => Observable.from([
           { type: PermissionsService.PERMISSION_FETCH }
         ]));
@@ -74,6 +77,7 @@ export class PermissionsEffects {
           this.notifications.error('Could not delete the permission');
           return null;
         })
+        // TODO: do we need Observable.from here?
         .mergeMap(() => Observable.from([
           { type: PermissionsService.PERMISSION_FETCH }
         ]));
