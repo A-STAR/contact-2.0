@@ -20,7 +20,8 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    const dictCode: number = this.masterEntity.code;
+    // const dictCode: number = this.masterEntity.code;
+    const dictCode = 1;
     return [
       {
         label: 'terms.edit.code',

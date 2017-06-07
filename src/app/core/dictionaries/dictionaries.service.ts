@@ -144,4 +144,16 @@ export class DictionariesService {
   setDialogRemoveDictionaryAction(): void {
     this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_REMOVE);
   }
+
+  setDialogAddTermAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.TERM_ADD);
+  }
+
+  setDialogEditTermAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.TERM_EDIT);
+  }
+
+  setDialogRemoveTermAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.TERM_REMOVE);
+  }
 }

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
+import { IAppState } from '../../../../core/state/state.interface';
+import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { ITerm } from './terms.interface';
-import { ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -14,23 +15,38 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 })
 export class TermsComponent {
 
-  toolbarItems = [];
-
-  // toolbarActions: Array<IToolbarAction> = [
-  //   { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'DICT_TERM_ADD' },
-  //   { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'DICT_TERM_EDIT' },
-  //   { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'DICT_TERM_DELETE' },
-  //   { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  // ];
-
-  // toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
-  //   ToolbarActionTypeEnum.ADD
-  // ];
-
-  // toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-  //   ToolbarActionTypeEnum.EDIT,
-  //   ToolbarActionTypeEnum.REMOVE,
-  // ];
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogAddTermAction(),
+      icon: 'fa fa-plus',
+      label: 'toolbar.action.add',
+      permissions: [ 'DICT_TERM_ADD' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogEditTermAction(),
+      icon: 'fa fa-pencil',
+      label: 'toolbar.action.edit',
+      permissions: [ 'DICT_TERM_EDIT' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.setDialogRemoveTermAction(),
+      icon: 'fa fa-trash',
+      label: 'toolbar.action.remove',
+      permissions: [ 'DICT_TERM_DELETE' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      action: () => this.dictionariesService.fetchTerms(),
+      icon: 'fa fa-refresh',
+      label: 'toolbar.action.refresh'
+    }
+  ];
 
   columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 100, maxWidth: 150 },
@@ -51,7 +67,9 @@ export class TermsComponent {
 
   rows = [];
 
-  action: any = null;
+  action: DictionariesDialogActionEnum = null;
+
+  masterEntity: IDictionary;
 
   selectedEntity: ITerm;
 
@@ -64,21 +82,22 @@ export class TermsComponent {
       this.action = state.dialogAction;
       this.rows = state.terms;
       this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
+      this.masterEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
     });
 
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
   }
 
   get isEntityBeingCreated(): boolean {
-    return this.action === ToolbarActionTypeEnum.ADD;
+    return this.action === DictionariesDialogActionEnum.TERM_ADD;
   }
 
   get isEntityBeingEdited(): boolean {
-    return this.action === ToolbarActionTypeEnum.EDIT;
+    return this.action === DictionariesDialogActionEnum.TERM_EDIT;
   }
 
   get isEntityBeingRemoved(): boolean {
-    return this.action === ToolbarActionTypeEnum.REMOVE;
+    return this.action === DictionariesDialogActionEnum.TERM_REMOVE;
   }
 
   onEditSubmit(data: ITerm, createMode: boolean): void {
@@ -87,47 +106,29 @@ export class TermsComponent {
     data.isClosed = this.valueConverterService.toBooleanNumber(data.isClosed);
 
     if (createMode) {
-      // this.gridService.create('/api/dictionaries/{code}/terms', this.masterEntity, data)
-      //   .subscribe(() => this.onSuccess());
+      this.dictionariesService.createTerm(data);
     } else {
-      // const termsId: number = this.selectedEntity.id;
-      // this.gridService.update(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity, data)
-      //   .subscribe(() => this.onSuccess());
+      this.dictionariesService.updateTerm(data);
     }
   }
 
   onRemoveSubmit(): void {
-    // const termsId: number = this.selectedEntity.id;
-    // this.gridService.delete(`/api/dictionaries/{code}/terms/${termsId}`, this.masterEntity)
-    //   .subscribe(() => this.onSuccess());
-  }
-
-  onSuccess(): void {
-    this.cancelAction();
-    this.afterUpdate();
+    this.dictionariesService.deleteTerm();
   }
 
   cancelAction(): void {
-    this.action = null;
+    this.dictionariesService.setDialogAction(null);
   }
 
   onEdit(): void {
-    this.action = ToolbarActionTypeEnum.EDIT;
+    this.dictionariesService.setDialogEditTermAction();
   }
 
-  afterUpdate(): void {
-    // this.selectedEntity = null;
-    // this.loadGrid();
-  }
-
-  onSelectedRowChange(entities: Array<ITerm>): void {
-    const entity = entities[0];
-    this.action = null;
-
-    if (entity) {
-      // this.selectedEntity = entity;
-      // this.refreshToolbar();
-      // this.onSelect.emit(entity);
+  onSelectedRowChange(terms: Array<ITerm>): void {
+    const term = terms[0];
+    const selectedTermId = this.selectedEntity && this.selectedEntity.id;
+    if (term && term.id !== selectedTermId) {
+      this.dictionariesService.selectTerm(term.id);
     }
   }
 }

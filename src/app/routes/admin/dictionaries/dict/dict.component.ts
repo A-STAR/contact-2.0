@@ -42,7 +42,8 @@ export class DictComponent {
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
       icon: 'fa fa-trash',
       label: 'toolbar.action.remove',
-      permissions: [ 'DICT_DELETE' ]
+      permissions: [ 'DICT_DELETE' ],
+      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,

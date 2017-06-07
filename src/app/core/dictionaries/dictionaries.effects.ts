@@ -144,6 +144,16 @@ export class DictionariesEffects {
     });
 
   @Effect()
+  fetchTermsSuccess$ = this.actions
+    .ofType(DictionariesService.TERMS_FETCH_SUCCESS)
+    .map(() => ({
+      type: DictionariesService.TERM_SELECT,
+      payload: {
+        termId: null
+      }
+    }));
+
+  @Effect()
   createTerm$ = this.actions
     .ofType(DictionariesService.TERM_CREATE)
     .withLatestFrom(this.store)
@@ -267,6 +277,6 @@ export class DictionariesEffects {
   }
 
   private deleteTerm(dictionaryCode: string, termId: number): Observable<any> {
-    return this.gridService.delete('/api/dictionaries/{code}/terms/{termId}', { dictionaryCode, termId });
+    return this.gridService.delete('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId });
   }
 }
