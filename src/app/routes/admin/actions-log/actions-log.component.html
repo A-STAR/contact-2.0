@@ -5,10 +5,10 @@
 >
 </app-actions-log-filter>
 
-<app-grid
+<app-grid2
+  [stateKey]="'actionsLog.actionsLogGrid'"
   [rows]="actionsLogRows | async"
-  [styles]="{height: '500px'}"
   [columns]="columns"
-  [autoLoad]="false"
+  [styles]="{height: '500px'}"
   [columnTranslationKey]="'actionsLog'">
-</app-grid>
+</app-grid2>

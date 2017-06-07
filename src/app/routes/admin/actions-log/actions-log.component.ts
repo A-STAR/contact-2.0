@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionType, IEmployee, toFullName } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
@@ -12,13 +12,13 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 
 @Component({
   selector: 'app-actions-log',
-  templateUrl: './actions-log.component.html'
+  templateUrl: './actions-log.component.html',
 })
 export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 230, maxWidth: 200 },
+    { prop: 'fullName', minWidth: 230 },
     { prop: 'position', maxWidth: 150 },
     { prop: 'createDateTime', maxWidth: 150 },
     { prop: 'module', maxWidth: 140 },
@@ -29,8 +29,7 @@ export class ActionsLogComponent implements OnDestroy {
   ];
 
   renderers: IRenderer = {
-    fullName: (actionLog: IActionLog) =>
-      [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
+    fullName: toFullName,
     typeCode: (actionLog: IActionLog) => {
       const currentActionType: IActionType =
         this.actionTypesRawRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);

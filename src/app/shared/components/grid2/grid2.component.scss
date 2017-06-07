@@ -1,0 +1,21 @@
+.app-grid {
+  width: 100%;
+
+  .header-item-wrapper {
+    width: 100%;
+  }
+
+  .header-item-wrapper > * {
+    display: inline-block;
+  }
+
+  .header-display-item {
+    float: left;
+  }
+
+  .header-filter-item, .header-sort-item {
+    width: 20px;
+    float: right;
+    cursor: pointer;
+  }
+}
