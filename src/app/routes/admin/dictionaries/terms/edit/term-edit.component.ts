@@ -14,7 +14,7 @@ import { EntityBaseComponent } from '../../../../../shared/components/entity/edi
 })
 export class TermEditComponent extends EntityBaseComponent<ITerm> {
 
-  @Input() masterEntity: IDictionary;
+  @Input() masterEntity = null as IDictionary;
 
   constructor(private gridService: GridService) {
     super();
