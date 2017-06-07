@@ -58,7 +58,7 @@ export class DictionariesService {
   }
 
   // TODO: types
-  updateDictionary(dictionary: IDictionaryUpdateRequest, deletedTranslations: Array<any>, updatedTranslations: Array<any>): void {
+  updateDictionary(dictionary: IDictionaryUpdateRequest, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
     return this.store.dispatch({
       type: DictionariesService.DICTIONARY_UPDATE,
       payload: {
