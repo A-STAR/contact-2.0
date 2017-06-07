@@ -17,8 +17,6 @@ export function permissionReducer(
   switch (action.type) {
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return Object.assign({}, action.payload);
-    case PermissionsService.PERMISSION_INVALIDATE:
-      return {};
     case PermissionsService.PERMISSION_UPDATE:
       return {
         ...state,

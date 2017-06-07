@@ -16,7 +16,6 @@ export class PermissionsService {
   static PERMISSION_CREATE = 'PERMISSION_CREATE';
   static PERMISSION_UPDATE = 'PERMISSION_UPDATE';
   static PERMISSION_DELETE = 'PERMISSION_DELETE';
-  static PERMISSION_INVALIDATE = 'PERMISSION_INVALIDATE';
 
   constructor(
     private gridService: GridService,
@@ -27,11 +26,11 @@ export class PermissionsService {
     return this.store.select(state => state.permissions);
   }
 
-  resolvePermissions(forceReload?: boolean): Observable<IPermissionsState> {
+  resolvePermissions(): Observable<IPermissionsState> {
     return this.gridService.read('/api/userpermits')
       .map((response: IPermissionsResponse) => {
         return response.userPermits.reduce((acc, userPermission: IPermission) => {
-          acc[userPermission.name] = this.toPermissionValue(userPermission);
+          acc[userPermission.name] = this.valueToBoolean(userPermission);
           return acc;
         }, {});
       })
@@ -61,7 +60,7 @@ export class PermissionsService {
     });
   }
 
-  toPermissionValue(userPermission: IPermission): boolean {
+  valueToBoolean(userPermission: IPermission): boolean {
     return (userPermission.valueB !== null) ? userPermission.valueB : false;
   }
 

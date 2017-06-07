@@ -7,6 +7,11 @@ import { IConstant, IConstantsResponse, TConstantValue } from './constants.inter
 
 @Injectable()
 export class ConstantsService {
+  static STORAGE_KEY = 'state/constants';
+
+  static CONSTANT_FETCH = 'CONSTANT_FETCH';
+  static CONSTANT_FETCH_SUCCESS = 'CONSTANT_FETCH_SUCCESS';
+  static CONSTANT_UPDATE = 'CONSTANT_UPDATE';
 
   private constants: Map<string, TConstantValue> = new Map<string, TConstantValue>();
 

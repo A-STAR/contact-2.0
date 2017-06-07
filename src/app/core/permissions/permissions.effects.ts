@@ -43,12 +43,6 @@ export class PermissionsEffects {
         ]));
     });
 
-  @Effect() invalidatePermission = this.actions
-      .ofType(PermissionsService.PERMISSION_INVALIDATE)
-      .switchMap(() => Observable.from([
-          { type: PermissionsService.PERMISSION_FETCH }
-      ]));
-
   @Effect() createPermission = this.actions
     .ofType(PermissionsService.PERMISSION_CREATE)
     .map(action => action.payload)
