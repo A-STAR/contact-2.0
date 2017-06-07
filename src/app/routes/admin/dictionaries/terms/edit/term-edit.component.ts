@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 
+import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { ITerm } from '../terms.interface';
-import { IDict } from '../../dict/dict.interface';
+
+import { GridService } from '../../../../../shared/components/grid/grid.service';
+
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 
 @Component({
   selector: 'app-term-edit',
@@ -13,7 +14,7 @@ import { IDict } from '../../dict/dict.interface';
 })
 export class TermEditComponent extends EntityBaseComponent<ITerm> {
 
-  @Input() masterEntity: IDict;
+  @Input() masterEntity: IDictionary;
 
   constructor(private gridService: GridService) {
     super();

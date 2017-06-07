@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../core/state/state.interface';
@@ -82,7 +81,6 @@ export class DictComponent implements OnDestroy {
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
     private entityTranslationsService: EntityTranslationsService,
-    private route: ActivatedRoute,
   ) {
     this.dictionariesService.fetchDictionaries();
 
@@ -90,11 +88,10 @@ export class DictComponent implements OnDestroy {
       this.action = state.dialogAction;
       this.rows = state.dictionaries;
       this.selectedEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
-    });
 
-    this.renderers.parentCode = this.route.snapshot.data.dictionaries.dictNames
-      .map(dict => ({ label: dict.name, value: dict.code }));
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    });
   }
 
   ngOnDestroy(): void {

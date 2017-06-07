@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IDict } from '../dict.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
@@ -19,7 +19,7 @@ const NAME_CONTROL_NAME = 'name';
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html'
 })
-export class DictEditComponent extends EntityBaseComponent<IDict> implements OnInit {
+export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit {
 
   constructor(private gridService: GridService) {
     super();
@@ -28,7 +28,7 @@ export class DictEditComponent extends EntityBaseComponent<IDict> implements OnI
   ngOnInit(): void {
     if (this.isEditMode()) {
       this.extensions.push(
-        new TranslationFieldsExtension<IDict>(this, TRANSLATED_NAME_CONTROL_NAME, NAME_TRANSLATIONS_CONTROL_NAME)
+        new TranslationFieldsExtension<IDictionary>(this, TRANSLATED_NAME_CONTROL_NAME, NAME_TRANSLATIONS_CONTROL_NAME)
       );
     }
     super.ngOnInit();
