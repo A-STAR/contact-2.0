@@ -7,7 +7,8 @@ import {
   IDictionariesState,
   DictionariesDialogActionEnum,
   IDictionaryCreateRequest,
-  IDictionaryUpdateRequest
+  IDictionaryUpdateRequest,
+  ITerm
 } from './dictionaries.interface';
 
 @Injectable()
@@ -49,7 +50,7 @@ export class DictionariesService {
   }
 
   createDictionary(dictionary: IDictionaryCreateRequest): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: DictionariesService.DICTIONARY_CREATE,
       payload: {
         dictionary
@@ -59,7 +60,7 @@ export class DictionariesService {
 
   // TODO: types
   updateDictionary(dictionary: IDictionaryUpdateRequest, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: DictionariesService.DICTIONARY_UPDATE,
       payload: {
         dictionary,
@@ -70,16 +71,55 @@ export class DictionariesService {
   }
 
   deleteDictionary(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: DictionariesService.DICTIONARY_DELETE
     });
   }
 
   selectDictionary(dictionaryCode: string): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: DictionariesService.DICTIONARY_SELECT,
       payload: {
         dictionaryCode
+      }
+    });
+  }
+
+  fetchTerms(): void {
+    this.store.dispatch({
+      type: DictionariesService.TERMS_FETCH
+    });
+  }
+
+  createTerm(term: ITerm): void {
+    this.store.dispatch({
+      type: DictionariesService.TERM_CREATE,
+      payload: {
+        term
+      }
+    });
+  }
+
+  updateTerm(term: ITerm): void {
+    this.store.dispatch({
+      type: DictionariesService.TERM_UPDATE,
+      payload: {
+        term
+      }
+    });
+  }
+
+  deleteTerm(): void {
+    return this.store.dispatch({
+      type: DictionariesService.TERM_DELETE,
+    });
+  }
+
+  selectTerm(termId: number): void {
+    return this.store.dispatch({
+      type: DictionariesService.TERM_SELECT,
+      payload: {
+        termId
       }
     });
   }
