@@ -3,6 +3,7 @@ import { ColDef, IComponent } from 'ag-grid';
 import {
   Grid2SortingEnum, IGrid2ColumnState, IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2State
 } from '../grid2.interface';
+import {Renderer2} from "@angular/core";
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;
@@ -11,19 +12,21 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private eFilterIcon;
   private eSortUpButton;
   private eSortDownButton;
-  private currentSortingDirection: Grid2SortingEnum;
+  private currentState: IGrid2State;
+  private unlistenClickColumnListener: Function;
+  private unlistenFilterClickListener: Function;
 
   init(agParams: IGrid2HeaderParams): void {
     this.agParams = agParams;
     this.buildHeaderColumn();
     this.bindSubElements();
 
-    this.onClickColumnListener = this.onClickColumnListener.bind(this);
-    this.eGui.addEventListener('click', this.onClickColumnListener);
+    this.unlistenClickColumnListener =
+      this.renderer.listen(this.eGui, 'click', this.onClickColumnListener.bind(this));
 
     if (this.agParams.enableMenu) {
-      this.onFilterClickListener = this.onFilterClickListener.bind(this);
-      this.eFilterButton.addEventListener('click', this.onFilterClickListener);
+      this.unlistenFilterClickListener =
+        this.eFilterButton.addEventListener('click', this.onFilterClickListener.bind(this));
     } else {
       this.eGui.removeChild(this.eFilterButton);
     }
@@ -32,25 +35,40 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   };
 
   destroy() {
+    this.unlistenClickColumnListener();
+    if (this.unlistenFilterClickListener) {
+      this.unlistenFilterClickListener();
+    }
     this.agParams.headerColumns = this.agParams.headerColumns
       .filter((gridHeaderComponent: GridHeaderComponent) => this !== gridHeaderComponent);
   }
 
   onClickColumnListener($event: MouseEvent): void {
+    if (this.statedMovingColumnInProgress) {
+      return;
+    }
+
     const gridService: IGrid2ServiceDispatcher = this.agParams.serviceDispatcher;
 
     gridService.dispatchSortingDirection({
       columnId: this.columnId,
       multiSort: $event.shiftKey,
-      sortingDirection: this.currentSortingDirection === Grid2SortingEnum.ASC
+      sortingDirection: this.statedSortingDirection === Grid2SortingEnum.ASC
         ? Grid2SortingEnum.DESC
         : Grid2SortingEnum.ASC
     });
   }
 
   onFilterClickListener($event: MouseEvent) {
+    if (this.statedMovingColumnInProgress) {
+      return;
+    }
     this.stopEvent($event);
     this.agParams.serviceDispatcher.dispatchShowFilter({ filterColumnName: this.columnId });
+  }
+
+  get renderer(): Renderer2 {
+    return this.agParams.renderer2;
   }
 
   get columnId(): string {
@@ -66,16 +84,21 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   refreshState(state: IGrid2State): void {
-    const columnState: IGrid2ColumnState = state.columns[this.columnId];
-    if (!columnState) {
-      this.setDefaultStyles();
-      return;
-    }
-    this.setStyles(this.currentSortingDirection = columnState.sortingDirection);
+    this.currentState = state;
+    this.setStyles();
   }
 
   getGui(): HTMLElement {
     return this.eGui;
+  }
+
+  get statedMovingColumnInProgress(): boolean {
+    return this.currentState && this.currentState.movingColumnInProgress;
+  }
+
+  get statedSortingDirection(): Grid2SortingEnum {
+    const columnState: IGrid2ColumnState = this.currentState.columns[this.columnId];
+    return columnState ? columnState.sortingDirection : null;
   }
 
   private bindSubElements(): void {
@@ -102,15 +125,18 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     $event.stopPropagation();
   }
 
-  private setStyles(sortingDirection: Grid2SortingEnum): void {
+  private setStyles(): void {
     this.setDefaultStyles();
-    switch (sortingDirection) {
-      case Grid2SortingEnum.DESC:
-        this.eSortDownButton.style.display = '';
-        break;
-      case Grid2SortingEnum.ASC:
-        this.eSortUpButton.style.display = '';
-        break;
+
+    if (this.statedSortingDirection !== null) {
+      switch (this.statedSortingDirection) {
+        case Grid2SortingEnum.DESC:
+          this.eSortDownButton.style.display = '';
+          break;
+        case Grid2SortingEnum.ASC:
+          this.eSortUpButton.style.display = '';
+          break;
+      }
     }
   }
 

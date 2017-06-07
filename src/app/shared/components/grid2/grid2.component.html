@@ -16,6 +16,7 @@
       enableColResize
       rowHeight="rowHeight"
       rowSelection="multiple"
+      (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
       (rowSelected)="onSelect($event)"
       (rowDoubleClicked)="onRowDoubleClicked()"

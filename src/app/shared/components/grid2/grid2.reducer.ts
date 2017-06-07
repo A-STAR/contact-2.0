@@ -1,6 +1,7 @@
 import {
   IActionGrid2Payload,
   IGrid2ColumnsPositionsChangePayload,
+  IGrid2MovedColumnPayload,
   IGrid2ShowFilterPayload,
   IGrid2SortingDirectionSwitchPayload,
   IGrid2State
@@ -18,6 +19,11 @@ export function grid2Reducer(
   action: IActionGrid2Payload
 ): IGrid2State {
   switch (action.type) {
+    case Grid2Component.MOVING_COLUMN:
+      return {
+        ...state,
+        movingColumnInProgress: (action.payload as IGrid2MovedColumnPayload).movingColumnInProgress
+      };
     case Grid2Component.OPEN_FILTER:
       return {
         ...state,

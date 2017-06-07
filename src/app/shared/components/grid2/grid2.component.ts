@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
   OnChanges,
   SimpleChanges,
+  Renderer2,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -34,6 +35,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   public static COLUMNS_POSITIONS = 'COLUMNS_POSITIONS';
   public static OPEN_FILTER = 'OPEN_FILTER';
   public static CLOSE_FILTER = 'CLOSE_FILTER';
+  public static MOVING_COLUMN = 'MOVING_COLUMN';
 
   @Input() stateKey: string;
   @Input() footerPresent = true;
@@ -62,6 +64,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private stateSubscription: Subscription;
 
   constructor(
+    private renderer2: Renderer2,
     private translate: TranslateService,
     private store: Store<IAppState>,
   ) {
@@ -151,7 +154,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.onRowDoubleSelect.emit(this.selected.map(rowNode => rowNode.data));
   }
 
+  onDragStarted(): void {
+    this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: true } });
+  }
+
   onDragStopped(): void {
+    this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: false } });
+
     const currentGridColumns: Column[] = this.gridOptions.columnApi.getAllGridColumns();
     this.dispatchColumnsPositions({
       columnsPositions: currentGridColumns.map((column: Column) => column.getColDef().field)
@@ -266,7 +275,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         headerHeight: 25,
         enableMenu: true,
         serviceDispatcher: this,
-        headerColumns: this.headerColumns
+        headerColumns: this.headerColumns,
+        renderer2: this.renderer2
       } as IGrid2HeaderParams
     };
   }
