@@ -36,7 +36,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
   public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
   public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
-  public static DESTROY_STATE = 'GRID2_MOVING_COLUMN';
+  public static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   @Input() stateKey: string;
   @Input() footerPresent = true;

@@ -97,7 +97,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   get statedSortingDirection(): Grid2SortingEnum {
-    const columnState: IGrid2ColumnState = this.currentState.columns[this.columnId];
+    const columnState: IGrid2ColumnState = this.currentState && this.currentState.columns[this.columnId];
     return columnState ? columnState.sortingDirection : null;
   }
 
