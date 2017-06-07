@@ -57,11 +57,14 @@ export class DictionariesService {
     });
   }
 
-  updateDictionary(dictionary: IDictionaryUpdateRequest): void {
+  // TODO: types
+  updateDictionary(dictionary: IDictionaryUpdateRequest, deletedTranslations: Array<any>, updatedTranslations: Array<any>): void {
     return this.store.dispatch({
       type: DictionariesService.DICTIONARY_UPDATE,
       payload: {
-        dictionary
+        dictionary,
+        deletedTranslations,
+        updatedTranslations
       }
     });
   }
@@ -72,11 +75,11 @@ export class DictionariesService {
     });
   }
 
-  selectDictionary(dictionaryId: number): void {
+  selectDictionary(dictionaryCode: string): void {
     return this.store.dispatch({
       type: DictionariesService.DICTIONARY_SELECT,
       payload: {
-        dictionaryId
+        dictionaryCode
       }
     });
   }
@@ -88,5 +91,17 @@ export class DictionariesService {
         dialogAction
       }
     });
+  }
+
+  setDialogAddDictionaryAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_ADD);
+  }
+
+  setDialogEditDictionaryAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
+  }
+
+  setDialogRemoveDictionaryAction(): void {
+    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_REMOVE);
   }
 }

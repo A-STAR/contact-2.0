@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IToolbarItem, ToolbarToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -52,14 +52,14 @@ export class UsersComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.usersService.setDialogAddAction(),
       icon: 'fa fa-plus',
       label: 'toolbar.action.add',
       permissions: [ 'USER_ADD' ]
     },
     {
-      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.usersService.setDialogEditAction(),
       icon: 'fa fa-pencil',
       label: 'toolbar.action.edit',
@@ -67,14 +67,14 @@ export class UsersComponent implements OnDestroy {
       disabled: (state: IAppState) => state.users.selectedUserId === null
     },
     {
-      type: ToolbarToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.usersService.fetch(),
       icon: 'fa fa-refresh',
       label: 'toolbar.action.refresh',
       permissions: [ 'USER_VIEW' ]
     },
     {
-      type: ToolbarToolbarItemTypeEnum.CHECKBOX,
+      type: ToolbarItemTypeEnum.CHECKBOX,
       action: () => this.usersService.toggleBlockedFilter(),
       label: 'users.toolbar.action.show_blocked_users',
       state: (state: IAppState) => state.users.displayBlocked

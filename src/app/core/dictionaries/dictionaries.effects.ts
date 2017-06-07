@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
@@ -9,6 +10,7 @@ import { IAppState } from '../state/state.interface';
 import { IDictionaryCreateRequest, IDictionaryUpdateRequest, ITerm } from './dictionaries.interface';
 
 import { DictionariesService } from './dictionaries.service';
+import { EntityTranslationsService } from '../entity/translations/entity-translations.service';
 import { GridService } from '../../shared/components/grid/grid.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -23,7 +25,7 @@ export class DictionariesEffects {
         .map(response => ({
           type: DictionariesService.DICTIONARIES_FETCH_SUCCESS,
           payload: {
-            dictionaries: response.dictionaries
+            dictionaries: response.dictNames
           }
         }))
         .catch(() => {
@@ -37,7 +39,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARY_CREATE)
     .switchMap((action: Action) => {
       return this.createDictionary(action.payload.dictionary)
-        .mergeMap(data => Observable.from([
+        .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
@@ -47,7 +49,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
           return null;
@@ -60,8 +62,11 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.updateDictionary(store.dictionaries.selectedDictionaryCode, action.payload.dictionary)
-        .mergeMap(() => Observable.from([
+      const selectedDictionary = store.dictionaries.dictionaries
+        .find(dictionary => dictionary.code === store.dictionaries.selectedDictionaryCode);
+      const { dictionary, updatedTranslations, deletedTranslations } = action.payload;
+      return this.updateDictionary(selectedDictionary.code, selectedDictionary.id, dictionary, deletedTranslations, updatedTranslations)
+        .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
@@ -71,7 +76,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
           return null;
@@ -85,7 +90,7 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.deleteDictionary(store.dictionaries.selectedDictionaryCode)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
@@ -101,7 +106,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.dictionaries.messages.errors.fetch');
           return null;
@@ -112,12 +117,12 @@ export class DictionariesEffects {
   selectDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_SELECT)
     .switchMap(action => {
-      return action.payload.organizationId ?
+      return action.payload.dictionaryCode ?
         Observable.of({
-          type: DictionariesService.DICTIONARIES_FETCH
+          type: DictionariesService.TERMS_FETCH
         }) :
         Observable.of({
-          type: DictionariesService.DICTIONARIES_CLEAR
+          type: DictionariesService.TERMS_CLEAR
         });
     });
 
@@ -147,7 +152,7 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.createTerm(store.dictionaries.selectedDictionaryCode, action.payload.term)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
           },
@@ -157,7 +162,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.terms.messages.errors.create');
           return null;
@@ -175,7 +180,7 @@ export class DictionariesEffects {
         store.dictionaries.selectedTermId,
         action.payload.term
       )
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
           },
@@ -185,7 +190,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.terms.messages.errors.update');
           return null;
@@ -199,7 +204,7 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.deleteTerm(store.dictionaries.selectedDictionaryCode, store.dictionaries.selectedTermId)
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
           },
@@ -209,7 +214,7 @@ export class DictionariesEffects {
               dialogAction: null
             }
           }
-        ]))
+        ])
         .catch(() => {
           this.notificationsService.error('dictionaries.terms.messages.errors.delete');
           return null;
@@ -218,6 +223,7 @@ export class DictionariesEffects {
 
   constructor(
     private actions: Actions,
+    private entityTranslationsService: EntityTranslationsService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
@@ -231,12 +237,22 @@ export class DictionariesEffects {
     return this.gridService.create('/api/dictionaries', {}, dictionary);
   }
 
-  private updateDictionary(dictionaryCode: string, dictionary: IDictionaryUpdateRequest): Observable<any> {
-    return this.gridService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary);
+  private updateDictionary(
+    dictionaryCode: string,
+    dictionaryId: number,
+    dictionary: IDictionaryUpdateRequest,
+    deletedTranslations: Array<number>,
+    // TODO: type
+    updatedTranslations: Array<any>,
+  ): Observable<any> {
+    return Observable.forkJoin([
+      this.gridService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary),
+      this.entityTranslationsService.saveDictNameTranslations(dictionaryId, updatedTranslations),
+      this.entityTranslationsService.deleteDictNameTranslation(dictionaryId, deletedTranslations)
+    ]);
   }
 
   private deleteDictionary(dictionaryCode: string): Observable<any> {
-    // TODO: double check
     return this.gridService.delete('/api/dictionaries/{dictionaryCode}', { dictionaryCode });
   }
 
@@ -249,7 +265,7 @@ export class DictionariesEffects {
   }
 
   private updateTerm(dictionaryCode: string, termId: number, term: ITerm): Observable<any> {
-    return this.gridService.create('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term);
+    return this.gridService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term);
   }
 
   private deleteTerm(dictionaryCode: string, termId: number): Observable<any> {

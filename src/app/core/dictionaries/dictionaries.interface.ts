@@ -2,7 +2,7 @@ import { ILabeledValue } from '../converter/value/value-converter.interface';
 
 export interface IDictionary {
   id: number;
-  code: number;
+  code: string;
   name: string;
   translatedName: string;
   nameTranslations: Array<ILabeledValue>;
