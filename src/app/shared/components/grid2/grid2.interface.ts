@@ -17,10 +17,13 @@ export interface IGrid2State {
   movingColumnInProgress?: boolean;
 }
 
-export interface IGrid2SortingDirectionSwitchPayload {
+export interface IGrid2ColumnsSortingDirectionInfo {
   columnId: string;
-  multiSort: boolean;
   sortingDirection: Grid2SortingEnum;
+}
+
+export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
+  multiSort: boolean;
 }
 
 export interface IGrid2ColumnsPositionsChangePayload {
