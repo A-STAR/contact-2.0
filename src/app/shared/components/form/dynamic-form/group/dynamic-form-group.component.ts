@@ -21,7 +21,7 @@ export class DynamicFormGroupComponent {
   @Input() collapsible = false;
   @Input() form: FormGroup;
   @Input() items = [] as Array<IDynamicFormItem>;
-  @Input() width = 12;
+  @Input() width: number;
 
   @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
 
