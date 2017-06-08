@@ -261,6 +261,14 @@
       "select": {
         "translation": "Select language"
       }
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch dictionaries",
+        "create": "Could not create dictionary",
+        "update": "Could not update dictionary",
+        "delete": "Could not remove dictionary"
+      }
     }
   },
   "terms": {
@@ -288,6 +296,14 @@
     "remove": {
       "title": "Remove term",
       "confirmMessage": "Do you really want to remove the term {{ name }}?"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch dictionary terms",
+        "create": "Could not create dictionary term",
+        "update": "Could not update dictionary term",
+        "delete": "Could not remove dictionary term"
+      }
     }
   },
   "roles": {
@@ -462,6 +478,16 @@
     },
     "data": {
       "empty": "No data to display"
+    },
+    "grid": {
+      "groupColumn": "Группировка",
+      "filter": {
+        "title": "Фильтр",
+        "showOnlyLines": "Показать только те строки, значения которых:",
+        "and": "И",
+        "or": "Или"
+      },
+      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
     }
   }
 }

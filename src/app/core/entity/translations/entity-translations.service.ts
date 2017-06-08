@@ -30,11 +30,13 @@ export class EntityTranslationsService {
     });
   }
 
-  deleteDictNameTranslation(entityId: string|number, languageId: number): Observable<any> {
-    return this.gridService.delete('/api/entityAttributes/{entityAttributesId}/entities/{entitiesId}/languages/?id={languagesId}', {
+  deleteDictNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
+    const languageIds = Array.isArray(languageId) ? languageId : [ languageId ];
+
+    return this.gridService.delete('/api/entityAttributes/{entityAttributesId}/entities/{entityId}/languages/?id={languageIds}', {
       entityAttributesId: EntityTranslationsConstants.SPEC_DICT_NAME,
-      entitiesId: entityId,
-      languagesId: languageId
+      entityId,
+      languageIds: languageIds.join(',')
     });
   }
 }

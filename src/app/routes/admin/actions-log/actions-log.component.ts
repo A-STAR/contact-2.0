@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionLog, IActionType, IEmployee } from './actions-log.interface';
+import { IActionLog, IActionType, IEmployee, toFullName } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
@@ -12,25 +12,24 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 
 @Component({
   selector: 'app-actions-log',
-  templateUrl: './actions-log.component.html'
+  templateUrl: './actions-log.component.html',
 })
 export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 230, maxWidth: 200 },
-    { prop: 'position', maxWidth: 150 },
-    { prop: 'createDateTime', maxWidth: 150 },
-    { prop: 'module', maxWidth: 140 },
-    { prop: 'typeCode', maxWidth: 190 },
-    { prop: 'dsc', minWidth: 110 },
-    { prop: 'machine', maxWidth: 120 },
-    { prop: 'duration', maxWidth: 120 }
+    { prop: 'fullName', minWidth: 200 },
+    { prop: 'position', minWidth: 100 },
+    { prop: 'createDateTime', width: 150, maxWidth: 150, suppressSizeToFit: true },
+    { prop: 'module' },
+    { prop: 'typeCode' },
+    { prop: 'dsc', minWidth: 150 },
+    { prop: 'machine', minWidth: 100 },
+    { prop: 'duration', minWidth: 100 }
   ];
 
   renderers: IRenderer = {
-    fullName: (actionLog: IActionLog) =>
-      [actionLog.lastName, actionLog.firstName, actionLog.middleName].filter((part: string) => !!part).join(' '),
+    fullName: toFullName,
     typeCode: (actionLog: IActionLog) => {
       const currentActionType: IActionType =
         this.actionTypesRawRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);

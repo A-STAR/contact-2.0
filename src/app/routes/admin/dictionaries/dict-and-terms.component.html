@@ -1,7 +1,7 @@
 <ng-container *ngIf="canDictionariesShow | async">
-  <app-dict (onSelect)="onSelectMaster($event)"></app-dict>
+  <app-dict></app-dict>
   <br>
-  <app-terms [masterEntity]="masterEntity"></app-terms>
+  <app-terms></app-terms>
 </ng-container>
 
 <div class="access-denied-offset" *ngIf="!canDictionariesShow | async">

@@ -5,12 +5,10 @@ import { DictModule } from './dict/dict.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { TermsModule } from './terms/terms.module';
 
-import { DictionaryResolver } from './dictionary-resolver.service';
-
 import { DictAndTermsComponent } from './dict-and-terms.component';
 
 const routes: Routes = [
-  { path: '', component: DictAndTermsComponent, resolve: { dictionaries: DictionaryResolver } }
+  { path: '', component: DictAndTermsComponent }
 ];
 
 @NgModule({
@@ -25,9 +23,6 @@ const routes: Routes = [
   ],
   declarations: [
     DictAndTermsComponent,
-  ],
-  providers: [
-    DictionaryResolver
   ]
 })
 export class DictionaryModule {

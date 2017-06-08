@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { BsDropdownDirective } from 'ngx-bootstrap';
-const browser = require('jquery.browser');
 
 import { IFilters, INotification, INotificationServiceState } from '../../core/notifications/notifications.interface';
 
@@ -16,9 +15,6 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  // the fullscreen button
-  @ViewChild('fsbutton') fsbutton;
-
   // TODO: what if there are several dropdowns?
   @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
@@ -39,10 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
-    if (browser.msie) {
-      // Not supported under IE
-      this.fsbutton.nativeElement.style.display = 'none';
-    }
 
     this.notificationSubscription = this.notificationsService.state
       .subscribe((state: INotificationServiceState) => {

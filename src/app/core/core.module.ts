@@ -12,6 +12,8 @@ import { environment } from '../../environments/environment';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ConstantsService } from './constants/constants.service';
+import { DictionariesEffects } from './dictionaries/dictionaries.effects';
+import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
 import { NotificationsService } from './notifications/notifications.service';
@@ -27,6 +29,7 @@ import { rootReducer } from './state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
+    EffectsModule.run(DictionariesEffects),
     EffectsModule.run(PermissionsEffects),
     environment.production
       ? []
@@ -39,6 +42,7 @@ import { rootReducer } from './state/root.reducer';
     AuthService,
     EntityTranslationsService,
     ConstantsService,
+    DictionariesService,
     DatePipe,
     JwtHelper,
     MenuService,

@@ -1,6 +1,7 @@
 export enum ToolbarControlEnum {
   BUTTON,
-  CHECKBOX
+  CHECKBOX,
+  LABEL
 }
 
 export enum ToolbarActionTypeEnum {
@@ -10,13 +11,13 @@ export enum ToolbarActionTypeEnum {
   REMOVE,
   REFRESH,
   SEARCH,
-  SAVE
+  SAVE,
 }
 
 export interface IToolbarAction {
-  text: string;
+  text?: string;
   hasLabel?: boolean;
-  type: ToolbarActionTypeEnum;
+  type?: ToolbarActionTypeEnum;
   visible?: boolean;
   permission?: string | Array<string>;
   control?: ToolbarControlEnum;

@@ -1,0 +1,7 @@
+1. git.exe clone --progress -v "git@github.com:ceolter/ag-grid.git" "C:\ag-grid"
+2. fix package section like this
+  "scripts": {
+    "gulp": "gulp",
+    ...
+  },
+3. npm run gulp webpack-minify

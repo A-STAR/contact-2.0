@@ -26,16 +26,18 @@
   (cancel)="cancelAction()">
 </app-submitted-popup>
 
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
+
 <app-grid
   selectionType="single"
+  [autoLoad]="false"
   [styles]="{height: '200px'}"
   [columns]="columns"
-  [dataSource]="dataSource"
-  [parseFn]="parseFn"
   [columnTranslationKey]="'dictionaries'"
   [editPermission]="'DICT_EDIT'"
-  (onRowSelect)="onSelectedRowChange($event)"
+  [rows]="rows"
   (onEdit)="onEdit()"
-  [toolbarActions]="toolbarActions"
-  (onAction)="onAction($event)">
+  (onRowSelect)="onSelectedRowChange($event)">
 </app-grid>

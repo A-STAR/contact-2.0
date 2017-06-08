@@ -1,0 +1,83 @@
+<div class="grid grid-default">
+  <div class="grid-body">
+    <app-toolbar
+      *ngIf="hasToolbar"
+      class="app-toolbar"
+      [actions]="toolbarActions"
+      (actionClick)="onActionClick($event)"
+    >
+    </app-toolbar>
+    <ag-grid-angular
+      class="app-grid ag-contact2"
+      [ngStyle]="styles"
+      [ngClass]="{ 'app-empty-data': !gridRows }"
+      [gridOptions]="gridOptions"
+      [columnDefs]="columnDefs"
+      [rowData]="gridRows"
+      [pagination]="pagination"
+      [paginationAutoPageSize]="true"
+      [overlayLoadingTemplate]="'default.data.empty' | translate"
+      enableColResize
+      rowHeight="rowHeight"
+      rowSelection="multiple"
+      (dragStarted)="onDragStarted()"
+      (dragStopped)="onDragStopped()"
+      (rowSelected)="onSelect($event)"
+      (rowDoubleClicked)="onRowDoubleClicked()"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+<app-toolbar
+  *ngIf="gridToolbarActions"
+  class="app-toolbar"
+  [actions]="gridToolbarActions"
+>
+</app-toolbar>
+<app-action-dialog
+  *ngIf="filterColumnName"
+  [titleTranslationKey]="'default.grid.filter.title'"
+  (action)="onSaveFilterChanges()"
+  (cancel)="onCloseFilterDialog()"
+>
+  {{ 'default.grid.filter.showOnlyLines' | translate }}
+  <br>
+  <strong>{{ filterColumnName }}</strong>:<br>
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        <div class="form-group" style="width: 200px;">
+          <app-select [allowClear]="true"
+                      [items]="[{ label: 'Равно', value: 0}, { label: 'Неравно', value: 1}, { label: 'Пусто', value: 2}]"
+                      [readonly]="true">
+          </app-select>
+        </div>
+      </td>
+      <td>
+        <input type="text">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="radio">{{ 'default.grid.filter.and' | translate }}&nbsp;&nbsp;<input type="radio">{{ 'default.grid.filter.or' | translate }}
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group" style="width: 200px;">
+          <app-select [allowClear]="true"
+                      [items]="[{ label: 'Равно', value: 0}, { label: 'Неравно', value: 1}, { label: 'Пусто', value: 2}]"
+                      [readonly]="true">
+          </app-select>
+        </div>
+      </td>
+      <td>
+        <input type="text">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</app-action-dialog>

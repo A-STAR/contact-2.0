@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IToolbarItem, IToolbarCheckbox, ToolbarToolbarItemTypeEnum } from './toolbar-2.interface';
+import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum } from './toolbar-2.interface';
 
 @Component({
   selector: 'app-toolbar-2',
@@ -34,11 +34,11 @@ export class Toolbar2Component implements OnInit {
   }
 
   isButton(item: IToolbarItem): boolean {
-    return item.type === ToolbarToolbarItemTypeEnum.BUTTON;
+    return item.type === ToolbarItemTypeEnum.BUTTON;
   }
 
   isCheckbox(item: IToolbarItem): boolean {
-    return item.type === ToolbarToolbarItemTypeEnum.CHECKBOX;
+    return item.type === ToolbarItemTypeEnum.CHECKBOX;
   }
 
   onClick(item: IToolbarItem): void {
