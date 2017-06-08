@@ -18,12 +18,7 @@ import { Store } from '@ngrx/store';
 
 import { IToolbarAction, ToolbarControlEnum } from '../toolbar/toolbar.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import {
-  IGrid2ColumnsPositionsChangePayload,
-  IGrid2ShowFilterPayload,
-  IGrid2ColumnsSortingDirectionInfo,
-  IGrid2ColumnsState, Grid2SortingEnum
-} from './grid2.interface';
+import { IGrid2ColumnsPositionsChangePayload, IGrid2ShowFilterPayload, Grid2SortingEnum } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2SortingDirectionSwitchPayload, IGrid2State } from './grid2.interface';
 
@@ -33,7 +28,7 @@ import { GridHeaderComponent } from './header/grid-header.component';
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.ag-theme-fresh.css'],
+  styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
   public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
@@ -263,7 +258,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       return state.columns[columnId]
         ? {
           colId: columnId,
-          sort: state.columns[columnId].sortingDirection === Grid2SortingEnum.ASC ? 'asc' : 'desc'
+          sort: state.columns[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
         } : null
     }).filter(item => !!item);
 
@@ -302,12 +297,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.gridOptions = this.gridOptions || {};
     this.gridOptions.enableFilter = true;
     this.gridOptions.enableSorting = true;
+    this.gridOptions.headerHeight = 30;
     this.gridOptions.isExternalFilterPresent = () => this.filterEnabled;
     this.gridOptions.doesExternalFilterPass = (node: RowNode) => this.filter(node.data);
     this.gridOptions.onGridReady = (params) => params.api.sizeColumnsToFit();
     this.gridOptions.defaultColDef = {
       headerComponentParams: {
-        headerHeight: 25,
+        headerHeight: this.gridOptions.headerHeight,
         enableMenu: true,
         serviceDispatcher: this,
         headerColumns: this.headerColumns,
