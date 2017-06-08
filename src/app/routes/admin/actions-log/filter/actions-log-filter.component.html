@@ -3,8 +3,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="row">
-          <div class="col-md-4"
-              [ngClass]="{'has-error': displayControlErrors(startDateControl)}">
+          <div class="col-md-4">
             <label>
               {{ startDateControl.label | translate }}
               <app-input-datepicker
@@ -16,8 +15,7 @@
           <div class="col-md-2 pl0">
             <app-time [formControlName]="startTimeControl.controlName"></app-time>
           </div>
-          <div class="col-md-4"
-             [ngClass]="{'has-error': displayControlErrors(endDateControl)}">
+          <div class="col-md-4">
             <label>
               {{ endDateControl.label | translate }}
               <app-input-datepicker
