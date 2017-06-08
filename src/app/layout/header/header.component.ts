@@ -16,9 +16,6 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  // the fullscreen button
-  @ViewChild('fsbutton') fsbutton;
-
   // TODO: what if there are several dropdowns?
   @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
@@ -39,10 +36,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
-    if (browser.msie) {
-      // Not supported under IE
-      this.fsbutton.nativeElement.style.display = 'none';
-    }
 
     this.notificationSubscription = this.notificationsService.state
       .subscribe((state: INotificationServiceState) => {
