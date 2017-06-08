@@ -6,7 +6,8 @@ import { ILabeledValue } from '../../../../../core/converter/value/value-convert
 
 @Component({
   selector: 'app-dynamic-form-group',
-  templateUrl: './dynamic-form-group.component.html'
+  templateUrl: './dynamic-form-group.component.html',
+  styleUrls: [ './dynamic-form-group.component.scss' ]
 })
 export class DynamicFormGroupComponent {
   static DEFAULT_MESSAGES = {
@@ -17,25 +18,26 @@ export class DynamicFormGroupComponent {
     hasuppercasechars: 'validation.fieldUpperCase',
   };
 
+  @Input() collapsible = false;
   @Input() form: FormGroup;
   @Input() items = [] as Array<IDynamicFormItem>;
+  @Input() width = 12;
+
   @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
 
   displayControlErrors(control: IDynamicFormControl): boolean {
     const formControl = this.form.controls[control.controlName];
 
     // TODO: double check this
-    // return formControl.errors && (formControl.dirty || formControl.touched);
-    return false;
+    return formControl.errors && (formControl.dirty || formControl.touched);
   }
 
   getControlErrors(control: IDynamicFormControl): Array<any> {
-    // const errors = this.form.controls[control.controlName].errors;
-    // return Object.keys(errors).map(key => ({
-    //   message: control.validationMessages && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
-    //   data: errors[key]
-    // }));
-    return [];
+    const errors = this.form.controls[control.controlName].errors;
+    return Object.keys(errors).map(key => ({
+      message: control.validationMessages && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
+      data: errors[key]
+    }));
   }
 
   // TODO: duplication

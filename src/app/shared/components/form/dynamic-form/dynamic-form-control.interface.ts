@@ -36,6 +36,7 @@ export interface IDynamicFormControl {
   rows?: number;
   validators?: Array<ValidatorFn>;
   validationMessages?: IValidationMessages;
+  width?: number;
 }
 
 export type ControlTypes = 'number'

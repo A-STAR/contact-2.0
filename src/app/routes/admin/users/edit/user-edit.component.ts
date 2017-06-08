@@ -61,13 +61,18 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     return [
       {
         children: [
-          { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
-          { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
-          { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+          {
+            children: [
+              { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+              { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+              { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+              { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+            ],
+            width: 6
+          }
+          // TODO: insert photo upload control here
         ]
       },
-      // TODO: insert photo upload control here
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ this.passwordValidators ] },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole,

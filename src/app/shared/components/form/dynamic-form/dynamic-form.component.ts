@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormGroup, IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload, IValue } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
-  templateUrl: 'dynamic-form.component.html',
-  styleUrls: ['./dynamic-form.component.scss']
+  templateUrl: 'dynamic-form.component.html'
 })
 export class DynamicFormComponent implements OnInit {
 
@@ -40,16 +39,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   private createForm(): FormGroup {
-    const controls = this.controls
-      // TODO: recursion
-      // TODO: item type
-      .reduce((acc, item: any) => {
-        const addControls = item.children || [ item ];
-        return [
-          ...acc,
-          ...addControls
-        ];
-      }, [] as Array<IDynamicFormControl>)
+    const controls = this.flattenFormControls(this.controls)
       .reduce((acc, control: IDynamicFormControl) => {
         const options = {
           disabled: control.disabled,
@@ -64,6 +54,17 @@ export class DynamicFormComponent implements OnInit {
       }, {} as IControls);
 
     return this.formBuilder.group(controls);
+  }
+
+  private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
+    // TODO: item type
+    return formControls.reduce((acc, control: any) => {
+      const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
+      return [
+        ...acc,
+        ...controls
+      ];
+    }, [] as Array<IDynamicFormControl>);
   }
 
   private populateForm(): void {
