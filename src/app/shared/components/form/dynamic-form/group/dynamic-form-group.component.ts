@@ -18,6 +18,7 @@ export class DynamicFormGroupComponent {
     hasuppercasechars: 'validation.fieldUpperCase',
   };
 
+  // TODO: collapse button
   @Input() collapsible = false;
   @Input() form: FormGroup;
   @Input() items = [] as Array<IDynamicFormItem>;
