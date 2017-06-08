@@ -14,6 +14,7 @@ export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
   localized?: boolean;
+  suppressSizeToFit?: boolean,
   prop: string;
   name?: string;
   width?: number;

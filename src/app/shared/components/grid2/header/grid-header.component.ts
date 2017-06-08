@@ -41,6 +41,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     }
     this.agParams.headerColumns = this.agParams.headerColumns
       .filter((gridHeaderComponent: GridHeaderComponent) => this !== gridHeaderComponent);
+
+    this.renderer.removeChild(this.eGui.parentNode, this.eGui);
   }
 
   onClickColumnListener($event: MouseEvent): void {

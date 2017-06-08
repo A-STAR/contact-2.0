@@ -18,14 +18,14 @@ export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 230 },
-    { prop: 'position', maxWidth: 150 },
-    { prop: 'createDateTime', maxWidth: 150 },
-    { prop: 'module', maxWidth: 140 },
-    { prop: 'typeCode', maxWidth: 190 },
-    { prop: 'dsc', minWidth: 110 },
-    { prop: 'machine', maxWidth: 120 },
-    { prop: 'duration', maxWidth: 120 }
+    { prop: 'fullName', minWidth: 200 },
+    { prop: 'position', minWidth: 100 },
+    { prop: 'createDateTime', width: 150, maxWidth: 150, suppressSizeToFit: true },
+    { prop: 'module' },
+    { prop: 'typeCode' },
+    { prop: 'dsc', minWidth: 150 },
+    { prop: 'machine', minWidth: 100 },
+    { prop: 'duration', minWidth: 100 }
   ];
 
   renderers: IRenderer = {

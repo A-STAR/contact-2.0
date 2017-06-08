@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 
 import { IToolbarAction, ToolbarControlEnum } from '../toolbar/toolbar.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import {IGrid2ColumnsPositionsChangePayload, IGrid2ShowFilterPayload} from './grid2.interface';
+import { IGrid2ColumnsPositionsChangePayload, IGrid2ShowFilterPayload, Grid2SortingEnum } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2SortingDirectionSwitchPayload, IGrid2State } from './grid2.interface';
 
@@ -28,7 +28,7 @@ import { GridHeaderComponent } from './header/grid-header.component';
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.ag-theme-fresh.css'],
+  styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
   public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
@@ -38,15 +38,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
   public static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
-  @Input() stateKey: string;
+  // Inputs with presets
+  @Input() remoteSorting = false;
   @Input() footerPresent = true;
+  @Input() pagination = false;
+  @Input() filter(record: any): boolean { return record; }
+
+  // Inputs without presets
+  @Input() stateKey: string;
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
   @Input() filterEnabled: boolean = true;
-  @Input() rows: Array<any> = [];
-  @Input() styles: { [key: string]: any };
+  @Input() rows: any[];
+  @Input() styles: CSSStyleDeclaration;
   @Input() toolbarActions: IToolbarAction[];
-  @Input() filter(record: any): boolean { return record; }
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
@@ -56,7 +61,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   gridToolbarActions: IToolbarAction[];
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
-  filterColumn: Column;
+
+  // Links to the state
+  private statedFilterColumn: Column;
 
   private langSubscription: EventEmitter<any>;
   private selectedNodes: { [key: string]: RowNode } = {};
@@ -71,12 +78,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   ) {
   }
 
+  get gridRows(): any[] {
+    return this.rows && this.rows.length ? this.rows : null;
+  }
+
   get hasToolbar(): boolean {
     return !!this.toolbarActions;
   }
 
   get filterColumnName(): string {
-    return this.filterColumn.getColDef().headerName;
+    return this.statedFilterColumn && this.statedFilterColumn.getColDef().headerName;
+  }
+
+  get allGridColumns(): Column[] {
+    return this.gridOptions.columnApi.getAllGridColumns();
   }
 
   get state(): Observable<IGrid2State> {
@@ -197,9 +212,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private getColumnByName(field: string): Column {
-    return this.gridOptions.columnApi
-      .getAllGridColumns()
-      .find((column: Column) => column.getColDef().field === field);
+    return this.allGridColumns.find((column: Column) => column.getColDef().field === field);
   }
 
   private translateColumns(columnTranslations: object): void {
@@ -227,13 +240,31 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     if (!state) {
       return;
     }
-    if (state.filterColumnName) {
-      this.filterColumn = this.getColumnByName(state.filterColumnName);
-    } else {
-      this.filterColumn = null;
-    }
+    this.statedFilterColumn = state.filterColumnName ? this.getColumnByName(state.filterColumnName) : null;
     this.headerColumns
       .forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
+
+    if (!this.remoteSorting) {
+      this.applyClientSorting(state);
+    }
+  }
+
+  private applyClientSorting(state: IGrid2State): void {
+    if (!state.columns || !Object.keys(state.columns).length) {
+      return;
+    }
+    const sortModel = this.allGridColumns.map((column: Column) => {
+      const columnId: string = column.getColDef().field;
+      return state.columns[columnId]
+        ? {
+          colId: columnId,
+          sort: state.columns[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
+        } : null
+    }).filter(item => !!item);
+
+    if (sortModel.length) {
+      this.gridOptions.api.setSortModel(sortModel);
+    }
   }
 
   private defineGridToolbarActions() {
@@ -249,20 +280,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       const colDef: ColDef = {
         field: column.prop,
         headerName: column.prop,
-        headerComponent: GridHeaderComponent
+        headerComponent: GridHeaderComponent,
+        suppressSizeToFit: column.suppressSizeToFit,
+        maxWidth: column.maxWidth,
+        minWidth: column.minWidth,
+        width: column.width
       };
-      if (column.maxWidth) {
-        colDef.maxWidth = column.maxWidth;
-      }
-      if (column.minWidth) {
-        colDef.minWidth = column.minWidth;
-      }
-      if (column.width) {
-        colDef.width = column.width;
-      }
-      if (!colDef.width) {
-        colDef.width = Math.max(colDef.minWidth || 0, colDef.maxWidth || 0);
-      }
       if (column.$$valueGetter) {
         colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
       }
@@ -273,11 +296,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private setRowsOptions(): void {
     this.gridOptions = this.gridOptions || {};
     this.gridOptions.enableFilter = true;
+    this.gridOptions.enableSorting = true;
+    this.gridOptions.headerHeight = 30;
     this.gridOptions.isExternalFilterPresent = () => this.filterEnabled;
     this.gridOptions.doesExternalFilterPass = (node: RowNode) => this.filter(node.data);
+    this.gridOptions.onGridReady = (params) => params.api.sizeColumnsToFit();
     this.gridOptions.defaultColDef = {
       headerComponentParams: {
-        headerHeight: 25,
+        headerHeight: this.gridOptions.headerHeight,
         enableMenu: true,
         serviceDispatcher: this,
         headerColumns: this.headerColumns,

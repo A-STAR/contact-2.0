@@ -9,12 +9,23 @@ app-grid2 {
     width: 100%;
   }
 
+  .header-item-wrapper:hover {
+    .header-filter-item {
+      visibility: visible;
+    }
+  }
+
   .header-item-wrapper > * {
     display: inline-block;
   }
 
   .header-display-item {
+    padding-left: 1.2rem;
     float: left;
+  }
+
+  .header-filter-item {
+    visibility: hidden;
   }
 
   .header-filter-item, .header-sort-item {
