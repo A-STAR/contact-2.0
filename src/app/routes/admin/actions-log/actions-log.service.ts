@@ -16,7 +16,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class ActionsLogService {
 
   public static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
-  public static EMPLOYEES_FETCH_SUCCESS = 'EMPLOYEES_FETCH_SUCCESS';
+  public static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
   public static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
   public static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
 
@@ -49,7 +49,7 @@ export class ActionsLogService {
       this.getActionTypes(),
       (employees, actionTypes) => {
         this.store.dispatch({
-          type: ActionsLogService.EMPLOYEES_FETCH_SUCCESS,
+          type: ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS,
           payload: employees
         });
         this.store.dispatch({
