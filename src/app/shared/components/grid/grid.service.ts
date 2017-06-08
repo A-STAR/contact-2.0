@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod } from '@angular/http';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RequestMethod, ResponseContentType } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,13 +17,21 @@ export class GridService {
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService) { }
+    private sanitizer: DomSanitizer,
+    private translateService: TranslateService
+  ) { }
 
   localRequest(): GridService {
     this._localRequest = true;
     return this;
   }
 
+  /**
+   * NOTE: route params have to be enclosed in curly braces
+   * Example:
+   *  url = '/api/roles/{id}/permits', params = { id: 5 }
+   *  route = '/api/roles/5/permits
+   */
   read(url: string, routeParams: object = {}): Observable<any> {
     if (this._localRequest) {
       // this would not be a default value, so clear the flag for further requests
@@ -34,12 +43,19 @@ export class GridService {
     return this.request(url, RequestMethod.Get, routeParams);
   }
 
-  /**
-   * NOTE: route params have to be enclosed in curly braces
-   * Example:
-   *  url = '/api/roles/{id}/permits', params = { id: 5 }
-   *  route = '/api/roles/5/permits
-   */
+  readBlob(url: string, routeParams: object = {}): Observable<any> {
+    return this.validateUrl(url)
+      .flatMap(rootUrl => {
+        const route = this.createRoute(url, routeParams);
+        const prefix = '/api';
+        const api = route.startsWith(prefix) ? route : prefix + route;
+
+        return this.http.request(`${rootUrl}${api}`, { method: RequestMethod.Get, responseType: ResponseContentType.Blob });
+      })
+      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }))
+      .map(data => data.size ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null);
+  }
+
   create(url: string, routeParams: object = {}, body: object): Observable<any> {
     return this.request(url, RequestMethod.Post, routeParams, body);
   }

@@ -3,6 +3,8 @@
     <h3>{{ title | translate:{id: editedEntity && editedEntity.id} }}</h3>
   </div>
 
+  <img *ngIf="userPhotoUrl$ | async" [src]="userPhotoUrl$ | async"/>
+
   <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 
   <div dialog-footer>
