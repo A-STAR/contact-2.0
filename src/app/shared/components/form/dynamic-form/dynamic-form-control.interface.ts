@@ -7,6 +7,14 @@ export interface IValidationMessages {
   [key: string]: string;
 }
 
+export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
+
+export interface IDynamicFormGroup {
+  children: Array<IDynamicFormItem>;
+  collapsible?: boolean;
+  width?: number;
+}
+
 export interface IDynamicFormControl {
   label: string;
   controlName: string;

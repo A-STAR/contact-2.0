@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormControl, ISelectedControlItemsPayload, IValue } from './dynamic-form-control.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { IControls, IDynamicFormGroup, IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -9,16 +8,9 @@ import { ILabeledValue } from '../../../../core/converter/value/value-converter.
   styleUrls: ['./dynamic-form.component.scss']
 })
 export class DynamicFormComponent implements OnInit {
-  static DEFAULT_MESSAGES = {
-    required: 'validation.fieldRequired',
-    minlength: 'validation.fieldMinLength',
-    hasdigits: 'validation.fieldDigits',
-    haslowercasechars: 'validation.fieldLowerCase',
-    hasuppercasechars: 'validation.fieldUpperCase',
-  };
 
   @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
-  @Input() controls: Array<IDynamicFormControl>;
+  @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
 
   form: FormGroup;
@@ -40,30 +32,24 @@ export class DynamicFormComponent implements OnInit {
     return this.form.getRawValue();
   }
 
-  displayControlErrors(control: IDynamicFormControl): boolean {
-    const formControl = this.form.controls[control.controlName];
-
-    // TODO: double check this
-    return formControl.errors && (formControl.dirty || formControl.touched);
-  }
-
-  getControlErrors(control: IDynamicFormControl): Array<any> {
-    const errors = this.form.controls[control.controlName].errors;
-    return Object.keys(errors).map(key => ({
-      message: control.validationMessages && control.validationMessages[key] || DynamicFormComponent.DEFAULT_MESSAGES[key] || key,
-      data: errors[key]
-    }));
-  }
-
-  onSelectedControlItemsChanges(control: IDynamicFormControl, items: ILabeledValue[]): void {
-    this.selectedControlItemsChanges.emit({ control: control, items: items });
-  }
-
   onControlsStatusChanges(): void {
+  }
+
+  onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
+    this.selectedControlItemsChanges.emit(event);
   }
 
   private createForm(): FormGroup {
     const controls = this.controls
+      // TODO: recursion
+      // TODO: item type
+      .reduce((acc, item: any) => {
+        const addControls = item.children || [ item ];
+        return [
+          ...acc,
+          ...addControls
+        ];
+      }, [] as Array<IDynamicFormControl>)
       .reduce((acc, control: IDynamicFormControl) => {
         const options = {
           disabled: control.disabled,

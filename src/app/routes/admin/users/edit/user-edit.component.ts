@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser } from '../users.interface';
 
 import { ConstantsService } from '../../../../core/constants/constants.service';
@@ -57,11 +57,15 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     return this.canEditUser || this.canEditUserRole;
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
+  protected getControls(): Array<IDynamicFormItem> {
     return [
-      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
-      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
-      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+      {
+        children: [
+          { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+          { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+          { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+        ]
+      },
       // TODO: insert photo upload control here
       { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
