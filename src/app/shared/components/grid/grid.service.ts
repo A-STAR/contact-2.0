@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { RequestMethod, ResponseContentType } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
@@ -17,7 +16,6 @@ export class GridService {
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
-    private sanitizer: DomSanitizer,
     private translateService: TranslateService
   ) { }
 
@@ -40,32 +38,23 @@ export class GridService {
         .map(data => data.json());
     }
 
-    return this.request(url, RequestMethod.Get, routeParams);
+    return this.jsonRequest(url, RequestMethod.Get, routeParams);
   }
 
   readBlob(url: string, routeParams: object = {}): Observable<any> {
-    return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        const prefix = '/api';
-        const api = route.startsWith(prefix) ? route : prefix + route;
-
-        return this.http.request(`${rootUrl}${api}`, { method: RequestMethod.Get, responseType: ResponseContentType.Blob });
-      })
-      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }))
-      .map(data => data.size ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null);
+    return this.blobRequest(url, RequestMethod.Get, routeParams);
   }
 
   create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Post, routeParams, body);
+    return this.jsonRequest(url, RequestMethod.Post, routeParams, body);
   }
 
   update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Put, routeParams, body);
+    return this.jsonRequest(url, RequestMethod.Put, routeParams, body);
   }
 
   delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.request(url, RequestMethod.Delete, routeParams);
+    return this.jsonRequest(url, RequestMethod.Delete, routeParams);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
@@ -102,18 +91,30 @@ export class GridService {
     return column;
   }
 
-  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
+  private jsonRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<any> {
+    return this.request(url, method, routeParams, body)
+      .map(data => data.json());
+  }
+
+  private blobRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<any> {
+    return this.request(url, method, routeParams, body, ResponseContentType.Blob)
+      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }))
+  }
+
+  private request(
+    url: string,
+    method: RequestMethod,
+    routeParams: object,
+    body: object = undefined,
+    responseType: ResponseContentType = undefined
+  ): Observable<any> {
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
         const prefix = '/api';
         const api = route.startsWith(prefix) ? route : prefix + route;
 
-        return this.http.request(`${rootUrl}${api}`, {
-          method: method,
-          body: body
-        })
-        .map(data => data.json());
+        return this.http.request(`${rootUrl}${api}`, { method, body, responseType });
       });
   }
 

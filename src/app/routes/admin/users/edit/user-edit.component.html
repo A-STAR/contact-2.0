@@ -3,7 +3,7 @@
     <h3>{{ title | translate:{id: editedEntity && editedEntity.id} }}</h3>
   </div>
 
-  <img *ngIf="userPhotoUrl$ | async" [src]="userPhotoUrl$ | async"/>
+  <img *ngIf="userPhotoUrl$ | async" [src]="userPhotoUrl$ | async" style="max-width: 120px; max-height: 120px;"/>
 
   <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 

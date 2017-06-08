@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -36,6 +37,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private constantsService: ConstantsService,
     private gridService: GridService,
     private permissionsService: PermissionsService,
+    private sanitizer: DomSanitizer,
   ) {
     super();
   }
@@ -56,7 +58,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
     );
 
-    this.userPhotoUrl$ = this.gridService.readBlob('/api/users/{id}/photo', this.editedEntity);
+    this.userPhotoUrl$ = this.gridService
+      .readBlob('/api/users/{id}/photo', this.editedEntity)
+      .map(data => data.size ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null);
 
     super.ngOnInit();
   }
