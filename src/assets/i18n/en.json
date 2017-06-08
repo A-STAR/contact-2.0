@@ -331,6 +331,7 @@
         }
       },
       "edit": {
+        "title": "Permission",
         "type": "Type",
         "name": "Name",
         "value": "Value",
@@ -354,7 +355,7 @@
       "api": {
         "errors": {
           "fetch": "Could not fetch permissions",
-          "create": "Could not create the permission",
+          "add": "Could not add the permission",
           "update": "Could not update the permission",
           "delete": "Could not remove the permission"
         }

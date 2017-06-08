@@ -1,22 +1,23 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
-import { IDisplayProperties } from '../../roles.interface';
 import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../permissions.interface';
 import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 
+import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+
 @Component({
   selector: 'app-add-permission',
-  templateUrl: './add.permission.component.html'
+  templateUrl: './add.permission.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class AddPermissionComponent implements AfterViewInit {
 
-  @ViewChild('addPermitGrid') addPermitGrid: GridComponent;
-  @Input() displayProperties: IDisplayProperties;
+  @ViewChild(GridComponent) addPermitGrid: GridComponent;
   @Input() currentRole: IPermissionRole;
-  @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
 
   private selectedPermissions: IPermissionModel[];
@@ -31,16 +32,12 @@ export class AddPermissionComponent implements AfterViewInit {
     dataKey: 'permits'
   };
 
-  constructor(private valueConverterService: ValueConverterService) {
-  }
+  constructor(private valueConverterService: ValueConverterService) { }
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
 
-  /**
-   * @template
-   */
-  public ngAfterViewInit(): void {
-    this.addPermitGrid.load(this.currentRole).subscribe();
+  ngAfterViewInit(): void {
+    this.addPermitGrid.load(this.currentRole).take(1).subscribe();
   }
 
   onSelectPermissions(permissions: IPermissionModel[]): void {
@@ -48,7 +45,7 @@ export class AddPermissionComponent implements AfterViewInit {
   }
 
   onCancel(): void {
-    this.cancel.emit(false);
+    this.cancel.emit();
   }
 
   onDisplayChange(event: boolean): void {
@@ -62,6 +59,6 @@ export class AddPermissionComponent implements AfterViewInit {
   }
 
   canAddPermissions(): boolean {
-    return this.selectedPermissions && this.selectedPermissions.length > 0;
+    return this.selectedPermissions && !!this.selectedPermissions.length;
   }
 }

@@ -4,7 +4,7 @@ import { Store, Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IPermission } from './permissions.interface';
+import { IRawPermission, IPermission, IPermissionsDisplayEnum } from './permissions.interface';
 import { IAppState } from '../state/state.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
@@ -23,7 +23,7 @@ export class PermissionsEffects {
           payload: permissions
         }))
         .catch(() => {
-          this.notifications.error('Could not fetch permissions');
+          this.notifications.error('permissions.api.errors.fetch');
           return null;
         });
     });
@@ -35,27 +35,31 @@ export class PermissionsEffects {
       const { permissionId, userId, permission } = params;
       return this.update(permissionId, userId, permission)
         .catch(() => {
-          this.notifications.error('Could not update the permission');
+          this.notifications.error('permissions.api.errors.update');
           return null;
         })
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
           { type: PermissionsService.PERMISSION_FETCH }
-        ]));
+        ]);
     });
 
   @Effect() createPermission = this.actions
-    .ofType(PermissionsService.PERMISSION_CREATE)
+    .ofType(PermissionsService.PERMISSION_ADD)
     .map(action => action.payload)
     .switchMap(params => {
-      const { permissionId, permission } = params;
-      return this.create(permissionId, permission)
+      const { role, permissionIds } = params;
+      return this.add(role, permissionIds)
         .catch(() => {
           this.notifications.error('permissions.api.errors.create');
           return null;
         })
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
+          {
+            type: PermissionsService.PERMISSION_DISPLAY,
+            payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
+          },
           { type: PermissionsService.PERMISSION_FETCH }
-        ]));
+        ]);
     });
 
   @Effect() deletePermissions = this.actions
@@ -65,12 +69,16 @@ export class PermissionsEffects {
       const { permissionId, userId } = params;
       return this.delete(permissionId, userId)
         .catch(() => {
-          this.notifications.error('Could not delete the permission');
+          this.notifications.error('permissions.api.errors.delete');
           return null;
         })
-        .mergeMap(() => Observable.from([
+        .mergeMap(() => [
+          {
+            type: PermissionsService.PERMISSION_DISPLAY,
+            payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
+          },
           { type: PermissionsService.PERMISSION_FETCH }
-        ]));
+        ]);
     });
 
   constructor(
@@ -80,12 +88,12 @@ export class PermissionsEffects {
     private notifications: NotificationsService,
   ) {}
 
-  private read(): Observable<IPermission[]> {
+  private read(): Observable<IRawPermission[]> {
     return this.gridService.read('/userpermits');
   }
 
-  private create(permissionId: number, permission: IPermission): Observable<any> {
-    return this.gridService.create('/userpermits/{permissionId}/users', { permissionId }, permission);
+  private add(role: { id: number }, permissionsIds: number[]): Observable<any> {
+    return this.gridService.create(`/roles/{id}/permits`, role, { permitIds: permissionsIds });
   }
 
   private update(permissionId: number, userId: number, permission: IPermission): Observable<any> {

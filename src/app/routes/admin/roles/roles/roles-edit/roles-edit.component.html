@@ -1,6 +1,6 @@
 <app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ popupTitle | translate:role }}</h3>
+    <h3>{{ popupTitle | translate: role }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
