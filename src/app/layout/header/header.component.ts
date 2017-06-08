@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { BsDropdownDirective } from 'ngx-bootstrap';
-const browser = require('jquery.browser');
 
 import { IFilters, INotification, INotificationServiceState } from '../../core/notifications/notifications.interface';
 
