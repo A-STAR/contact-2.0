@@ -48,7 +48,8 @@ export type ControlTypes = 'number'
   | 'dynamic'
   | 'hidden'
   | 'checkbox'
-  | 'multiselect';
+  | 'multiselect'
+  | 'image';
 
 export interface ISelectOptions {
   label: string;

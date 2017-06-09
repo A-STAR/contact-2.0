@@ -76,8 +76,14 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'datepicker'">
-              <label>{{control.label | translate}}</label>
+              <label class="mb0">{{control.label | translate}}</label>
               <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'image'">
+              <label class="mb0">{{control.label | translate}}</label>
+              <app-form-image [url]="control.url">
+              </app-form-image>
             </ng-container>
 
             <input *ngSwitchCase="'hidden'"

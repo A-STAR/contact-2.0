@@ -1,0 +1,17 @@
+<div>
+  <div class='image-container'>
+    <img
+      *ngIf="imageSrcUrl$ | async"
+      [src]="imageSrcUrl$ | async"
+      [ngStyle]="{ 'max-width': size + 'px', 'max-height': size + 'px' }"
+    />
+  </div>
+  <div>
+    <button class="btn btn-xs btn-default">
+      <i class="fa fa-edit"></i> {{ actionButtonTitle$ | async | translate }}
+    </button>
+    <button class="btn btn-xs btn-danger" *ngIf="imageSrcUrl$ | async">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
+    </button>
+  </div>
+</div>

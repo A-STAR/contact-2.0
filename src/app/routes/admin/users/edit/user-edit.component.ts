@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -37,7 +36,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private constantsService: ConstantsService,
     private gridService: GridService,
     private permissionsService: PermissionsService,
-    private sanitizer: DomSanitizer,
   ) {
     super();
   }
@@ -58,10 +56,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
     );
 
-    this.userPhotoUrl$ = this.gridService
-      .readBlob('/api/users/{id}/photo', this.editedEntity)
-      .map(data => data.size ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null);
-
     super.ngOnInit();
   }
 
@@ -81,8 +75,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
               { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
             ],
             width: 6
-          }
-          // TODO: insert photo upload control here
+          },
+          // TODO: controlName should be optional
+          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: `/api/users/${this.editedEntity.id}/photo`, width: 6 }
         ]
       },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
@@ -100,6 +95,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true,
           options: this.languages },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
+    // TODO: disable recursively
     ].map((control: IDynamicFormControl) => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : !this.canEditUser
