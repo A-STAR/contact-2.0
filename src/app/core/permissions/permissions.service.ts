@@ -23,7 +23,7 @@ export class PermissionsService {
   static PERMISSION_ADD           = 'PERMISSION_ADD';
   static PERMISSION_UPDATE        = 'PERMISSION_UPDATE';
   static PERMISSION_DELETE        = 'PERMISSION_DELETE';
-  static PERMISSION_DISPLAY       = 'PERMISSION_DISPLAY';
+  static PERMISSION_DIALOG        = 'PERMISSION_DIALOG';
 
   constructor(
     private gridService: GridService,
@@ -80,14 +80,6 @@ export class PermissionsService {
     });
   }
 
-  // updatePermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Observable<any> {
-    // return this.gridService.update(
-    //   `/roles/{id}/permits/{permissionId}`,
-    //   { id: role.id, permissionId: permissionId },
-    //   permission
-    // );
-  // }
-
   updatePermission(roleId: number, permissionId: number, permission: IValueEntity): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_UPDATE,
@@ -95,8 +87,8 @@ export class PermissionsService {
     });
   }
 
-  permissionDisplay(payload: any): void {
-    this.store.dispatch({ type: PermissionsService.PERMISSION_DISPLAY, payload });
+  permissionDialodAction(payload: { display: any; editedPermission: any }): void {
+    this.store.dispatch({ type: PermissionsService.PERMISSION_DIALOG, payload });
   }
 
 }

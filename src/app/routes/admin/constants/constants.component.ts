@@ -40,7 +40,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
   ];
 
   renderers = {
-    value: (constant: any) => this.valueConverterService.deserializeBooleanViewValue(constant),
+    value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
   };
 
   dataSource: IDataSource = {

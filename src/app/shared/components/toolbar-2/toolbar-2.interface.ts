@@ -4,21 +4,25 @@ import { IAppState } from '../../../core/state/state.interface';
 
 export enum ToolbarItemTypeEnum {
   BUTTON,
-  CHECKBOX
+  BUUTON_ADD,
+  BUTTON_EDIT,
+  BUTTON_DELETE,
+  BUTTON_REFRESH,
+  CHECKBOX,
 }
 
 export type IToolbarActionCreator = () => void;
 
 export interface IToolbarElement {
   action: IToolbarActionCreator | Action;
-  label: string;
+  label?: string;
   permissions?: Array<string>;
   disabled?: (state: IAppState) => boolean;
 }
 
 export interface IToolbarButton extends IToolbarElement {
   type: ToolbarItemTypeEnum.BUTTON;
-  icon: string;
+  icon?: string;
 }
 
 export interface IToolbarCheckbox extends IToolbarElement {

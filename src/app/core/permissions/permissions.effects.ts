@@ -20,7 +20,7 @@ import { PermissionsService } from './permissions.service';
 export class PermissionsEffects {
 
   hideActionFormAction = {
-    type: PermissionsService.PERMISSION_DISPLAY,
+    type: PermissionsService.PERMISSION_DIALOG,
     payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
   };
 

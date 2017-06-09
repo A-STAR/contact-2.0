@@ -30,6 +30,7 @@ export interface IPermissionsState {
   permissions: IPermission;
   display: IPermissionsDisplayEnum;
   editedPermission: IPermissionModel;
+  currentRole: IPermissionRole;
 }
 
 export type IPermissionActionType =
