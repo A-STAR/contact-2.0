@@ -41,7 +41,7 @@ export class GridService {
     return this.jsonRequest(url, RequestMethod.Get, routeParams);
   }
 
-  readBlob(url: string, routeParams: object = {}): Observable<any> {
+  readBlob(url: string, routeParams: object = {}): Observable<Blob> {
     return this.blobRequest(url, RequestMethod.Get, routeParams);
   }
 
@@ -96,7 +96,7 @@ export class GridService {
       .map(data => data.json());
   }
 
-  private blobRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<any> {
+  private blobRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<Blob> {
     return this.request(url, method, routeParams, body, ResponseContentType.Blob)
       .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }))
   }

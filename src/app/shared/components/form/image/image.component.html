@@ -1,18 +1,17 @@
 <div>
   <div class='image-container'>
     <img
-      *ngIf="imageSrcUrl$ | async"
       class="image"
       [src]="imageSrcUrl$ | async"
     />
   </div>
   <div>
-    <button class="btn btn-sm btn-default">
+    <button class="btn btn-sm btn-default" (click)="file.click()">
       <i class="fa fa-edit"></i> {{ actionButtonTitle$ | async | translate }}
     </button>
     <button class="btn btn-sm btn-danger" *ngIf="imageSrcUrl$ | async">
       <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>
-  <input type="file">
+  <input #file type="file" (change)="onFileChange($event)">
 </div>
