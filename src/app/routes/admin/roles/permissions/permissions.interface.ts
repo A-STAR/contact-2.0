@@ -2,6 +2,8 @@ import { IValueEntity } from '../../../../core/converter/value/value-converter.i
 
 export interface IPermissionRole {
   id: number;
+  name: string;
+  comment: string;
 }
 
 export interface IPermissionsRequest {

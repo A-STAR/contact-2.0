@@ -9,16 +9,30 @@ import {
   OnChanges,
   SimpleChanges,
   Renderer2,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
-import { ColDef, ICellRendererParams, GridOptions, RowNode, Column } from 'ag-grid';
+import {
+  ColDef,
+  ICellRendererParams,
+  GridOptions,
+  RowNode,
+  Column,
+  ColumnChangeEvent
+} from 'ag-grid';
 import { Store } from '@ngrx/store';
 
 import { IToolbarAction, ToolbarControlEnum } from '../toolbar/toolbar.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IGrid2ColumnsPositionsChangePayload, IGrid2ShowFilterPayload, Grid2SortingEnum } from './grid2.interface';
+import {
+  IGrid2ColumnsPositionsChangePayload,
+  IGrid2ShowFilterPayload,
+  Grid2SortingEnum,
+  IGrid2SelectedRowChangePayload
+} from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2SortingDirectionSwitchPayload, IGrid2State } from './grid2.interface';
 
@@ -28,19 +42,23 @@ import { GridHeaderComponent } from './header/grid-header.component';
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
-  public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
-  public static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
-  public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
-  public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
-  public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
-  public static DESTROY_STATE = 'GRID2_DESTROY_STATE';
+  static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
+  static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
+  static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
+  static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
+  static OPEN_FILTER = 'GRID2_OPEN_FILTER';
+  static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
+  static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
+  static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
+  @Input() groupColumnMinWidth = 120;
   @Input() showDndGroupPanel = true;
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
@@ -60,7 +78,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
-  selected: Array<any> = [];
+  selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
@@ -69,7 +87,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private statedFilterColumn: Column;
 
   private langSubscription: EventEmitter<any>;
-  private selectedNodes: { [key: string]: RowNode } = {};
   private headerColumns: GridHeaderComponent[] = [];
   private rowsCounterElement;
   private stateSubscription: Subscription;
@@ -78,6 +95,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     private renderer2: Renderer2,
     private translate: TranslateService,
     private store: Store<IAppState>,
+    private ref: ChangeDetectorRef,
   ) {
   }
 
@@ -151,7 +169,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   ngOnDestroy(): void {
     this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
 
-    this.selectedNodes = null;
     this.headerColumns = null;
 
     this.langSubscription.unsubscribe();
@@ -161,13 +178,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onSelect(event: any): void {
-    const rowNode = event.node;
-    this.selectedNodes[rowNode.id] = rowNode.isSelected() ? rowNode : null;
-    this.selected = Object.keys(this.selectedNodes)
-      .map((nodeId: string) => this.selectedNodes[nodeId] ? this.selectedNodes[nodeId].data : null)
-      .filter(data => !!data);
-
-    this.setRowsInfo();
+    const rowNode: RowNode = event.node;
+    this.store.dispatch({
+      type: Grid2Component.SELECTED_ROWS, payload: {
+        rowData: rowNode.data,
+        selected: rowNode.isSelected()
+      } as IGrid2SelectedRowChangePayload
+    });
   }
 
   onActionClick(event: any): void {
@@ -252,13 +269,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     if (!state) {
       return;
     }
+    this.selected = state.selectedRows;
     this.statedFilterColumn = state.filterColumnName ? this.getColumnByName(state.filterColumnName) : null;
-    this.headerColumns
-      .forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
+    this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
 
     if (!this.remoteSorting) {
       this.applyClientSorting(state);
     }
+    this.setRowsInfo();
+
+    this.ref.detectChanges();
   }
 
   private applyClientSorting(state: IGrid2State): void {
@@ -313,6 +333,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
         headerValueGetter: () => this.translate.instant('default.grid.groupColumn'),
+        minWidth: this.groupColumnMinWidth,
         suppressMenu: true,
         suppressMovable: true,
         suppressFilter: true,
@@ -346,7 +367,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
       onGridReady: (params) => this.fitGridSize(),
       onGridSizeChanged: (params) => this.fitGridSize(),
-      onColumnRowGroupChanged: (event?: any) => this.fitGridSize()
+      onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
   }
 
@@ -358,5 +379,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       // Ag-grid workaround. The official examples have the same issue
       gridPanel.columnController.sizeColumnsToFit(availableWidth - gridPanel.scrollWidth * 2);
     }
+  }
+
+  private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
+    this.fitGridSize();
+
+    this.store.dispatch({
+      type: Grid2Component.GROUPING_COLUMNS, payload: {
+        groupingColumns: event.getColumns().map((column: Column) => column.getColId())
+      }
+    });
   }
 }

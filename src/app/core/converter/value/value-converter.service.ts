@@ -52,7 +52,7 @@ export class ValueConverterService {
     return dataSet.map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
   }
 
-  deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
+  deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
       return this.toBooleanNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'

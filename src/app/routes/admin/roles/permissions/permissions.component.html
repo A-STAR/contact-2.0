@@ -26,6 +26,10 @@
 >
 </app-submitted-popup>
 
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
+
 <app-grid
   [styles]="{height: '200px'}"
   [columns]="columns"
@@ -35,9 +39,7 @@
   [autoLoad]="false"
   [selectionType]="'single'"
   [editPermission]="'PERMIT_EDIT'"
-  [toolbarActions]="toolbarActions"
   (onEdit)="onBeforeEditPermission()"
   (onRowSelect)="onSelectPermissions($event)"
-  (onAction)="onAction($event)"
 >
 </app-grid>

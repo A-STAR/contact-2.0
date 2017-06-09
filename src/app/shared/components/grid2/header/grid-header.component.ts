@@ -1,9 +1,9 @@
+import { Renderer2 } from '@angular/core';
 import { ColDef, IComponent } from 'ag-grid';
 
 import {
   Grid2SortingEnum, IGrid2ColumnState, IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2State
 } from '../grid2.interface';
-import {Renderer2} from "@angular/core";
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;
@@ -116,9 +116,9 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     this.eGui.style.height = this.eGui.style.lineHeight = this.agParams.headerHeight + 'px';
     this.eGui.innerHTML = `
         <div class="header-display-item">${this.columnDisplayName}</div>
-        <div class="header-filter-item"><i class="fa fa-filter" aria-hidden="true"></i></div>
         <div class="header-sort-item sort-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></div>
         <div class="header-sort-item sort-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></div>
+        <div class="header-filter-item"><i class="fa fa-filter" aria-hidden="true"></i></div>
       `;
   }
 

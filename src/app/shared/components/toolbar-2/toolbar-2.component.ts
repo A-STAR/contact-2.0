@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -8,7 +8,8 @@ import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum } from './toolbar-2
 @Component({
   selector: 'app-toolbar-2',
   templateUrl: './toolbar-2.component.html',
-  styleUrls: [ './toolbar-2.component.scss' ]
+  styleUrls: [ './toolbar-2.component.scss' ],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar2Component implements OnInit {
   @Input() items: Array<IToolbarItem> = [];
@@ -16,7 +17,7 @@ export class Toolbar2Component implements OnInit {
   private _items$: Observable<Array<any>>;
 
   constructor(
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
   ) {}
 
   ngOnInit(): void {
