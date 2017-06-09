@@ -15,7 +15,7 @@
   (cancel)="cancelAction()">
 </app-dict-edit>
 
-<app-submitted-popup
+<app-dialog-action
   *ngIf="isEntityBeingRemoved"
   [titleTranslationKey]="'dictionaries.remove.title'"
   [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
@@ -24,7 +24,7 @@
   [actionMode]="'danger'"
   (action)="onRemoveSubmit()"
   (cancel)="cancelAction()">
-</app-submitted-popup>
+</app-dialog-action>
 
 <app-toolbar-2
   [items]="toolbarItems">

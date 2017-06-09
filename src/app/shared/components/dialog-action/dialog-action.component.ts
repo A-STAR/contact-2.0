@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-submitted-popup',
-  templateUrl: './submitted-popup.html'
+  selector: 'app-dialog-action',
+  templateUrl: './dialog-action.html'
 })
-export class SubmittedPopupComponent {
+export class DialogActionComponent {
 
   @Input() titleParams;
   @Input() messageParams;

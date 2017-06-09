@@ -100,6 +100,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
   ngAfterViewInit(): void {
     this.gridRowChangeSub = this.permitsGrid.onRowsChange.subscribe(() => {
       this.currentPermission = null;
+      // TODO(a.tymchuk): replace with this.changeCurrentRecord
       this.dialogAction(IPermissionsDialogEnum.NONE);
     });
   }

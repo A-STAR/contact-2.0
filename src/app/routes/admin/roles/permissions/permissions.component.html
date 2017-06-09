@@ -14,7 +14,7 @@
 >
 </app-edit-permission>
 
-<app-submitted-popup
+<app-dialog-action
   *ngIf="isDialog(3) | async"
   [actionMode]="'danger'"
   [actionMessage]="'default.buttons.remove'"
@@ -24,7 +24,7 @@
   (action)="onRemovePermission()"
   (cancel)="onCancel()"
 >
-</app-submitted-popup>
+</app-dialog-action>
 
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
