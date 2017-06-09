@@ -46,14 +46,14 @@ import { GridHeaderComponent } from './header/grid-header.component';
   styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
-  public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
-  public static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
-  public static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
-  public static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
-  public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
-  public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
-  public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
-  public static DESTROY_STATE = 'GRID2_DESTROY_STATE';
+  static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
+  static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
+  static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
+  static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
+  static OPEN_FILTER = 'GRID2_OPEN_FILTER';
+  static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
+  static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
+  static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
   @Input() headerHeight = 30;
