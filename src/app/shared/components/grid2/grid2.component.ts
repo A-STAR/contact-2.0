@@ -39,6 +39,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   public static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
+  @Input() headerHeight = 30;
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
   @Input() pagination = false;
@@ -215,6 +216,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return this.allGridColumns.find((column: Column) => column.getColDef().field === field);
   }
 
+  private getSimpleColumnByName(field: string): IGridColumn {
+    return this.columns.find((column: IGridColumn) => column.prop === field);
+  }
+
+  private getValueGetterByName(field: string): Function {
+    return this.getSimpleColumnByName(field).$$valueGetter;
+  }
+
   private translateColumns(columnTranslations: object): void {
     this.columnDefs = this.columnDefs.map((col: ColDef) => {
       col.headerName = columnTranslations[col.field];
@@ -287,28 +296,62 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         width: column.width
       };
       if (column.$$valueGetter) {
-        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
+        colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.$$valueGetter(params.data);
       }
       return colDef;
     });
   }
 
   private setRowsOptions(): void {
-    this.gridOptions = this.gridOptions || {};
-    this.gridOptions.enableFilter = true;
-    this.gridOptions.enableSorting = true;
-    this.gridOptions.headerHeight = 30;
-    this.gridOptions.isExternalFilterPresent = () => this.filterEnabled;
-    this.gridOptions.doesExternalFilterPass = (node: RowNode) => this.filter(node.data);
-    this.gridOptions.onGridReady = (params) => params.api.sizeColumnsToFit();
-    this.gridOptions.defaultColDef = {
-      headerComponentParams: {
-        headerHeight: this.gridOptions.headerHeight,
-        enableMenu: true,
-        serviceDispatcher: this,
-        headerColumns: this.headerColumns,
-        renderer2: this.renderer2
-      } as IGrid2HeaderParams
+    this.gridOptions = {
+      headerHeight: this.headerHeight,
+      enableFilter: true,
+      enableColResize: true,
+      enableSorting: true,
+      rowGroupPanelShow: 'always',
+      showToolPanel: false,
+      groupColumnDef: {
+        headerValueGetter: () => this.translate.instant('default.grid.groupColumn'),
+        suppressMenu: true,
+        suppressMovable: true,
+        suppressFilter: true,
+        cellRenderer: 'group',
+        cellRendererParams: {
+          innerRenderer: (params) => {
+            const rowNode: RowNode = params.node;
+            const groupField: string = rowNode.field;
+            if (rowNode.group) {
+              if (rowNode.allLeafChildren.length) {
+                const $$valueGetter: Function = this.getValueGetterByName(rowNode.field);
+                const recordData = rowNode.allLeafChildren[0].data;
+                return $$valueGetter ? $$valueGetter(recordData) : recordData[groupField];
+              }
+            }
+            return '';
+          },
+        }
+      },
+      defaultColDef: {
+        enableRowGroup: true,
+        headerComponentParams: {
+          headerHeight: this.headerHeight,
+          enableMenu: true,
+          serviceDispatcher: this,
+          headerColumns: this.headerColumns,
+          renderer2: this.renderer2
+        } as IGrid2HeaderParams
+      },
+      isExternalFilterPresent: () => this.filterEnabled,
+      doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
+      onGridReady: (params) => {
+        const gridPanel = params.api.gridPanel;
+        const availableWidth: number = gridPanel.getWidthForSizeColsToFit();
+        if (availableWidth > 0) {
+          // Prevent horizontal scrollbar
+          // Ag-grid workaround. The official examples have the same issue
+          gridPanel.columnController.sizeColumnsToFit(availableWidth - gridPanel.scrollWidth * 2);
+        }
+      }
     };
   }
 }

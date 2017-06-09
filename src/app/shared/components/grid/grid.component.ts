@@ -1,4 +1,6 @@
-import { Component,
+import {
+  ChangeDetectorRef,
+  Component,
   ElementRef,
   ViewChild,
   OnInit,
@@ -33,7 +35,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() editPermission: string;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
-  @Input() rows: Array<any> = [];
   @Input() selectionType: TSelectionType;
   @Input() styles: { [key: string]: any };
   @Input() toolbarActions: IToolbarAction[];
@@ -43,6 +44,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
+  _rows: Array<any> = [];
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -57,6 +59,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   subscription: EventEmitter<any>;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     public settings: SettingsService,
     private translate: TranslateService,
@@ -64,12 +67,17 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
   }
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
+  get rows(): Array<any> {
+    return (this._rows || []).filter(this.filter);
   }
 
-  get filteredRows(): Array<any> {
-    return (this.rows || []).filter(this.filter);
+  @Input()
+  set rows(rows: Array<any>) {
+    this._rows = rows;
+  }
+
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
   }
 
   get hasToolbar(): boolean {
@@ -84,10 +92,13 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
         .take(1)
         .subscribe();
     }
+
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
     }
+
     this.translate.get(translationKeys)
+      .take(1)
       .subscribe(
         (translation) => {
           this.messages = translation[gridMessagesKey];
@@ -155,6 +166,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateRows(data: any[]): void {
     this.rows = data;
+    this.cdRef.detectChanges();
     this.onRowsChange.emit(data);
   }
 

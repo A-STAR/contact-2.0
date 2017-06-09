@@ -1,31 +1,32 @@
-<app-edit-permission
-  *ngIf="displayProperties.editPermit"
-  [displayProperties]="displayProperties"
-  [record]="editedPermission"
-  (save)="onEditPermission($event)">
-</app-edit-permission>
-
 <app-add-permission
-  *ngIf="displayProperties.addPermit"
-  [displayProperties]="displayProperties"
+  *ngIf="shouldDisplay(1) | async"
   [currentRole]="currentRole"
-  (cancel)="displayProperties.addPermit = false"
-  (add)="onAddPermissions($event)">
+  (add)="onAddPermissions($event)"
+  (cancel)="onCancel()"
+>
 </app-add-permission>
 
+<app-edit-permission
+  *ngIf="shouldDisplay(2) | async"
+  [record]="editedPermission"
+  (save)="onAfterEditPermission($event)"
+  (cancel)="onCancel()"
+>
+</app-edit-permission>
+
 <app-submitted-popup
-  *ngIf="displayProperties.removePermit"
+  *ngIf="shouldDisplay(3) | async"
   [titleTranslationKey]="'roles.permissions.remove.title'"
   [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
-  [messageParams]="currentRole"
+  [messageParams]="editedPermission"
   [actionMode]="'danger'"
   (action)="onRemovePermission()"
-  (cancel)="displayProperties.removePermit = false">
+  (cancel)="onCancel()"
+>
 </app-submitted-popup>
 
 <app-grid
-  #permitsGrid
   [styles]="{height: '200px'}"
   [columns]="columns"
   [columnTranslationKey]="'roles.permissions'"
@@ -35,7 +36,8 @@
   [selectionType]="'single'"
   [editPermission]="'PERMIT_EDIT'"
   [toolbarActions]="toolbarActions"
-  (onEdit)="onBeginEditPermission()"
+  (onEdit)="onBeforeEditPermission()"
   (onRowSelect)="onSelectPermissions($event)"
-  (onAction)="onAction($event)">
+  (onAction)="onAction($event)"
+>
 </app-grid>

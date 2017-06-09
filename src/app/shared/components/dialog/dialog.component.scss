@@ -59,6 +59,9 @@
   max-height: 80vh;
   overflow-y: auto;
   background-color: $modal-content-bg;
+  & /deep/ .dialog_message {
+    padding: 30px 10px 50px;
+  }
 }
 
 .dialog_close {
@@ -67,7 +70,7 @@
   right: 12px;
   font-size: 16px;
   line-height: 16px;
-  /* TODO: put colors to _variables.scss */
+  /* TODO(a.tymchuk): put colors to _variables.scss */
   color: #aaa;
   cursor: pointer;
   &:hover {

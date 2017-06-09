@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IDisplayProperties } from '../../roles.interface';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-edit-permission',
-  templateUrl: './edit.permission.component.html'
+  templateUrl: './edit.permission.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() displayProperties: IDisplayProperties;
   @Input() record: any;
   @Output() save: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl>;
@@ -80,7 +81,7 @@ export class EditPermissionComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.displayProperties.editPermit = false;
+    this.cancel.emit();
   }
 
   onSave(): void {

@@ -347,6 +347,7 @@
         }
       },
       "edit": {
+        "title": "Permission",
         "type": "Type",
         "name": "Name",
         "value": "Value",
@@ -370,7 +371,7 @@
       "api": {
         "errors": {
           "fetch": "Could not fetch permissions",
-          "create": "Could not create the permission",
+          "add": "Could not add the permission",
           "update": "Could not update the permission",
           "delete": "Could not remove the permission"
         }
@@ -479,6 +480,7 @@
       "empty": "No data to display"
     },
     "grid": {
+      "groupColumn": "Группировка",
       "filter": {
         "title": "Фильтр",
         "showOnlyLines": "Показать только те строки, значения которых:",

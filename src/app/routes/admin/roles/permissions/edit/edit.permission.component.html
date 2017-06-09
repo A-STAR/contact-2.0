@@ -1,15 +1,12 @@
-<app-dialog [display]="displayProperties.editPermit"
-            (displayChange)="onDisplayChange($event)">
+<app-dialog (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>Доступ</h3>
+    <h3>{{ 'roles.permissions.edit.title' | translate }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-success"
-            [disabled]="!form.canSubmit"
-            (click)="onSave()">
+    <button class="btn btn-success" [disabled]="!form.canSubmit" (click)="onSave()">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">

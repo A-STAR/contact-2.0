@@ -32,7 +32,7 @@ export function actionsLogReducer(
         ...state,
         actionTypes: action.payload as Array<IActionType>
       };
-    case ActionsLogService.EMPLOYEES_FETCH_SUCCESS:
+    case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:
       return {
         ...state,
         employees: action.payload as Array<IEmployee>

@@ -117,8 +117,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     this.eGui.innerHTML = `
         <div class="header-display-item">${this.columnDisplayName}</div>
         <div class="header-filter-item"><i class="fa fa-filter" aria-hidden="true"></i></div>
-        <div class="header-sort-item sort-up"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
-        <div class="header-sort-item sort-down"><i class="fa fa-arrow-down" aria-hidden="true"></i></div>
+        <div class="header-sort-item sort-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></div>
+        <div class="header-sort-item sort-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></div>
       `;
   }
 
