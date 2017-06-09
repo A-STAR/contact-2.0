@@ -74,10 +74,10 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
               { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
               { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
             ],
-            width: 6
+            width: 7
           },
           // TODO: controlName should be optional
-          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: `/api/users/${this.editedEntity.id}/photo`, width: 6 }
+          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: `/api/users/${this.editedEntity.id}/photo`, width: 5 }
         ]
       },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },

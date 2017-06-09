@@ -11,7 +11,6 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 })
 export class FormImageComponent implements OnInit {
   @Input() url = null as string;
-  @Input() size = 120;
 
   imageSrcUrl$: Observable<string>;
 
