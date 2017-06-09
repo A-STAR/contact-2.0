@@ -8,7 +8,7 @@ import { IUsersState } from '../../routes/admin/users/users.interface';
 export interface IAppState {
   readonly actionsLog: IActionsLogServiceState;
   readonly dictionaries: IDictionariesState;
-  // TODO: rename notificationService -> notifications
+  // TODO(d.maltsev): rename notificationService -> notifications
   readonly notificationService: INotificationServiceState;
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;

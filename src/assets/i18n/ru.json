@@ -355,7 +355,7 @@
         "type": "Тип",
         "name": "Название",
         "value": "Значение",
-        "description": "Значение",
+        "description": "Описание",
         "comment": "Комментарий"
       },
       "tree": {

@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Store, Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IRawPermission, IPermission, IPermissionsDisplayEnum } from './permissions.interface';
+import {
+  IRawPermission,
+  IPermissionsDisplayEnum,
+  IPermissionRole,
+  IPermissionModel,
+} from './permissions.interface';
 import { IAppState } from '../state/state.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
@@ -14,7 +19,15 @@ import { PermissionsService } from './permissions.service';
 @Injectable()
 export class PermissionsEffects {
 
-  @Effect() fetchPermissions = this.actions
+  hideActionFormAction = {
+    type: PermissionsService.PERMISSION_DISPLAY,
+    payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
+  };
+
+  permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
+
+  @Effect()
+  fetchPermissions = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap((action: Action) => {
       return this.read()
@@ -28,41 +41,42 @@ export class PermissionsEffects {
         });
     });
 
-  @Effect() updatePermissions = this.actions
+  @Effect()
+  updatePermissions = this.actions
     .ofType(PermissionsService.PERMISSION_UPDATE)
-    .map(action => action.payload)
-    .switchMap(params => {
-      const { permissionId, userId, permission } = params;
-      return this.update(permissionId, userId, permission)
+    .map(toPayload)
+    .switchMap(payload => {
+      const { roleId, permissionId, permission } = payload;
+      return this.update(roleId, permissionId, permission)
         .catch(() => {
           this.notifications.error('permissions.api.errors.update');
           return null;
         })
         .mergeMap(() => [
-          { type: PermissionsService.PERMISSION_FETCH }
+          this.hideActionFormAction,
+          this.permissionFetchAction,
         ]);
     });
 
-  @Effect() createPermission = this.actions
+  @Effect()
+  addPermission = this.actions
     .ofType(PermissionsService.PERMISSION_ADD)
-    .map(action => action.payload)
-    .switchMap(params => {
-      const { role, permissionIds } = params;
+    .map(toPayload)
+    .switchMap(payload => {
+      const { role, permissionIds } = payload;
       return this.add(role, permissionIds)
         .catch(() => {
           this.notifications.error('permissions.api.errors.create');
           return null;
         })
         .mergeMap(() => [
-          {
-            type: PermissionsService.PERMISSION_DISPLAY,
-            payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
-          },
-          { type: PermissionsService.PERMISSION_FETCH }
+          this.hideActionFormAction,
+          this.permissionFetchAction,
         ]);
     });
 
-  @Effect() deletePermissions = this.actions
+  @Effect()
+  deletePermissions = this.actions
     .ofType(PermissionsService.PERMISSION_DELETE)
     .map(action => action.payload)
     .switchMap(params => {
@@ -73,11 +87,8 @@ export class PermissionsEffects {
           return null;
         })
         .mergeMap(() => [
-          {
-            type: PermissionsService.PERMISSION_DISPLAY,
-            payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
-          },
-          { type: PermissionsService.PERMISSION_FETCH }
+          this.hideActionFormAction,
+          this.permissionFetchAction,
         ]);
     });
 
@@ -92,12 +103,20 @@ export class PermissionsEffects {
     return this.gridService.read('/userpermits');
   }
 
-  private add(role: { id: number }, permissionsIds: number[]): Observable<any> {
-    return this.gridService.create(`/roles/{id}/permits`, role, { permitIds: permissionsIds });
+  private add(role: IPermissionRole, permissionIds: number[]): Observable<any> {
+    return this.gridService.create(`/roles/{id}/permits`, role, { permitIds: permissionIds });
   }
 
-  private update(permissionId: number, userId: number, permission: IPermission): Observable<any> {
-    return this.gridService.update('/userpermits/{permissionId}/users/{userId}', { permissionId, userId }, permission);
+  // private update(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Observable<any> {
+  //   return this.gridService.update( '/roles/{id}/permits/{permissionId}', { id: role.id, permissionId: permissionId }, permission);
+  // }
+
+  private update(roleId: number, permissionId: number, permission: IPermissionModel): Observable<any> {
+    return this.gridService.update(
+      `/roles/{roleId}/permits/{permissionId}`,
+      { roleId, permissionId },
+      permission
+    );
   }
 
   private delete(permissionId: number, userId: number): Observable<any> {

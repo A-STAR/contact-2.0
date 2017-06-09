@@ -133,16 +133,11 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   }
 
   onAfterEditPermission(permission: IPermissionModel): void {
-    const permissionId: number = this.editedPermission.id;
-    this.permissionsService.editPermission(this.currentRole, permissionId, permission)
-      .subscribe(
-        () => {
-          this.onCancel();
-          this.refreshGrid();
-        },
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+    this.permService.updatePermission(
+      this.currentRole.id,
+      this.editedPermission.id,
+      this.valueConverterService.serialize(permission)
+    );
   }
 
   onCancel(): void {
@@ -193,7 +188,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges {
   private refreshToolbar(): void {
     this.setActionsVisibility(this.roleActionsGroup, !!this.currentRole);
     this.setActionsVisibility(this.permitActionsGroup, !!this.editedPermission);
-    console.log('current role', this.currentRole);
+    // console.log('current role', this.currentRole);
     console.log('edited permission', !!this.editedPermission);
   }
 
