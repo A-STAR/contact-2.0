@@ -6,9 +6,9 @@
 </app-actions-log-filter>
 
 <app-grid2
+  [ngClass]="'actions-log-grid'"
   [stateKey]="'actionsLog.actionsLogGrid'"
   [rows]="actionsLogRows | async"
   [columns]="columns"
-  [styles]="{height: '500px'}"
   [columnTranslationKey]="'actionsLog'">
 </app-grid2>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import {Component, OnDestroy, ViewEncapsulation} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -13,6 +13,8 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 @Component({
   selector: 'app-actions-log',
   templateUrl: './actions-log.component.html',
+  styleUrls: ['./actions-log.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
@@ -20,10 +22,10 @@ export class ActionsLogComponent implements OnDestroy {
   columns: IGridColumn[] = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position', minWidth: 100 },
-    { prop: 'createDateTime', width: 150, maxWidth: 150, suppressSizeToFit: true },
-    { prop: 'module' },
-    { prop: 'typeCode' },
-    { prop: 'dsc', minWidth: 150 },
+    { prop: 'createDateTime', minWidth: 150, suppressSizeToFit: true },
+    { prop: 'module', minWidth: 150 },
+    { prop: 'typeCode', minWidth: 150 },
+    { prop: 'dsc', minWidth: 200 },
     { prop: 'machine', minWidth: 100 },
     { prop: 'duration', minWidth: 100 }
   ];
