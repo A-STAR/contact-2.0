@@ -321,12 +321,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           innerRenderer: (params) => {
             const rowNode: RowNode = params.node;
             const groupField: string = rowNode.field;
-            if (rowNode.group) {
-              if (rowNode.allLeafChildren.length) {
-                const $$valueGetter: Function = this.getValueGetterByName(rowNode.field);
-                const recordData = rowNode.allLeafChildren[0].data;
-                return $$valueGetter ? $$valueGetter(recordData) : recordData[groupField];
-              }
+            if (rowNode.group && rowNode.allLeafChildren.length) {
+              const $$valueGetter: Function = this.getValueGetterByName(rowNode.field);
+              const recordData = rowNode.allLeafChildren[0].data;
+              return $$valueGetter
+                ? $$valueGetter(recordData)
+                : (recordData[groupField] || rowNode.rowGroupColumn.getColDef().headerName);
             }
             return '';
           },
