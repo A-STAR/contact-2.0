@@ -8,17 +8,19 @@
     >
     </app-toolbar>
     <ag-grid-angular
-      class="app-grid ag-contact2"
+      class="app-grid2 ag-contact2"
       [ngStyle]="styles"
-      [ngClass]="{ 'app-empty-data': !gridRows }"
       [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
       [rowData]="gridRows"
       [pagination]="pagination"
+      [enableColResize]="true"
+      [enableFilter]="true"
+      [enableSorting]="true"
+      [showToolPanel]="false"
       [paginationAutoPageSize]="true"
+      [overlayNoRowsTemplate]="'default.data.empty' | translate"
       [overlayLoadingTemplate]="'default.data.empty' | translate"
-      enableColResize
-      rowHeight="rowHeight"
       rowSelection="multiple"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
