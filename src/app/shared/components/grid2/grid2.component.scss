@@ -1,3 +1,5 @@
+@import "../../styles/app/variables.scss";
+
 app-grid2 {
   line-height: 0;
 }
@@ -8,6 +10,12 @@ app-grid2 {
 
   .ag-root {
     height: 100%;
+  }
+
+  .ag-row {
+    &.ag-row-hover {
+      background-color: #eeeeee;
+    }
   }
 
   .header-item-wrapper {
@@ -38,4 +46,8 @@ app-grid2 {
     float: right;
     cursor: pointer;
   }
+}
+
+.ag-dnd-ghost {
+  z-index: $zindex-app-grid2-dnd-ghost;
 }
