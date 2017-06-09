@@ -1,9 +1,9 @@
+import { Renderer2 } from '@angular/core';
 import { ColDef, IComponent } from 'ag-grid';
 
 import {
   Grid2SortingEnum, IGrid2ColumnState, IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2State
 } from '../grid2.interface';
-import {Renderer2} from "@angular/core";
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;

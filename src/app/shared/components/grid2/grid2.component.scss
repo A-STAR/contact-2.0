@@ -15,6 +15,9 @@ app-grid2 {
   .ag-row {
     &.ag-row-hover {
       background-color: #eeeeee;
+      &.ag-row-selected {
+        background-color: #23b7e5;
+      }
     }
   }
 
