@@ -1,16 +1,12 @@
 <div>
-  <!-- TODO(d.maltsev): hide this when there is no image -->
-  <div class='image-container'>
-    <img
-      class="image"
-      [src]="imageSrcUrl$ | async"
-    />
+  <div *ngIf="hasImage" class='image-container'>
+    <img class="image" [src]="src"/>
   </div>
   <div>
     <button class="btn btn-sm btn-default" (click)="file.click()">
-      <i class="fa fa-edit"></i> {{ actionButtonTitle$ | async | translate }}
+      <i class="fa fa-edit"></i> {{ actionButtonTitle | translate }}
     </button>
-    <button *ngIf="imageSrcUrl$ | async" class="btn btn-sm btn-danger" (click)="onFileRemove()">
+    <button *ngIf="hasImage" class="btn btn-sm btn-danger" (click)="onFileRemove()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>

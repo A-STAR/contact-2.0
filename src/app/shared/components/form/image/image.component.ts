@@ -1,9 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { AuthHttp } from 'angular2-jwt';
-import { Observable } from 'rxjs/Observable';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/observable/combineLatest';
+import { Subscription } from 'rxjs/Subscription';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
@@ -12,32 +10,42 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
   templateUrl: './image.component.html',
   styleUrls: [ './image.component.scss' ]
 })
-export class FormImageComponent implements OnInit {
+export class FormImageComponent implements OnInit, OnDestroy {
   @Input() url = null as string;
 
-  imageSrcUrl$: Observable<string>;
+  hasImage = false;
 
-  actionButtonTitle$: Observable<string>;
+  src = null as SafeUrl;
+
+  actionButtonTitle = null as string;
 
   private preview$ = new Subject<File | Blob>();
 
+  private previewSubscription: Subscription;
+
   constructor(
-    private http: AuthHttp,
     private gridService: GridService,
     private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {
-    this.imageSrcUrl$ = this.preview$
-      .map(data => data && data.size ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null);
-
-    this.actionButtonTitle$ = this.preview$
-      .map(data => data && data.size ? 'default.buttons.change' : 'default.buttons.add');
+    // Async pipe doesn't work on image src with ngIf
+    // Possible solution - use placeholder images instead of hiding with ngIf
+    this.previewSubscription = this.preview$
+      .subscribe(data => {
+        this.hasImage = data && data.size > 0;
+        this.src = this.hasImage ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data)) : null;
+        this.actionButtonTitle = this.hasImage ? 'default.buttons.change' : 'default.buttons.add';
+      });
 
     this.gridService
       .readBlob(this.url)
       .take(1)
       .subscribe(blob => this.preview$.next(blob));
+  }
+
+  ngOnDestroy(): void {
+    this.previewSubscription.unsubscribe();
   }
 
   // TODO(d.maltsev): somehow clear file input after upload so that it would be possible to upload same file twice
