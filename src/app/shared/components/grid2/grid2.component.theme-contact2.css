@@ -29,11 +29,11 @@
   background-color: rgba(0,0,0,0.4);
 }
 .ag-contact2 .ag-cell-focus {
-  border: 1px solid #a9a9a9;
+  border: 1px solid #d9d9d9;
 }
 .ag-contact2 .ag-cell-no-focus {
   border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #d9d9d9;
 }
 .ag-contact2 .ag-ltr .ag-cell-no-focus {
   border-right: 1px dotted #808080;
