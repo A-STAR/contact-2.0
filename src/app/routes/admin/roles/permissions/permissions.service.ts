@@ -22,7 +22,6 @@ export class PermissionsService {
   }
 
   removePermission(role: IPermissionRole, permissionId: number): Observable<any> {
-    // console.log(role, permissionId);
     return this.gridService.delete(
       `/roles/{id}/permits/{permissionId}`, { id: role.id, permissionId: permissionId }
     );

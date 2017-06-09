@@ -11,7 +11,7 @@
   border: 0;
 }
 .ag-contact2 .ag-root {
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
 }
 .ag-contact2 .ag-cell-not-inline-editing {
   padding: 2px;
@@ -44,16 +44,16 @@
   border-left: 1px dotted #808080;
 }
 .ag-contact2 .ag-rtl .ag-cell-first-right-pinned {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-ltr .ag-cell-first-right-pinned {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-rtl .ag-cell-last-left-pinned {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-ltr .ag-cell-last-left-pinned {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-cell-highlight {
   border: 1px solid #006400;
@@ -95,7 +95,7 @@
 }
 .ag-contact2 .ag-rich-select {
   font-size: 14px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
   background-color: #fff;
 }
 .ag-contact2 .ag-rich-select-value {
@@ -111,7 +111,7 @@
   background-color: #bde2e5;
 }
 .ag-contact2 .ag-large-text {
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
 }
 .ag-contact2 .ag-header-select-all {
   padding: 5px 0px 0px 3px;
@@ -120,7 +120,7 @@
 .ag-contact2 .ag-header {
   color: #000;
   background: #e8e8e8;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
   font-weight: bold;
 }
 .ag-contact2 .ag-header-icon {
@@ -130,13 +130,13 @@
 }
 .ag-contact2 .ag-no-scrolls .ag-header-container {
   background: #e8e8e8;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
 }
 .ag-contact2 .ag-ltr .ag-header-cell {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-rtl .ag-header-cell {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-header-cell-moving .ag-header-cell-label {
   opacity: 0.5;
@@ -147,13 +147,13 @@
   background-color: #bebebe;
 }
 .ag-contact2 .ag-ltr .ag-header-group-cell {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-rtl .ag-header-group-cell {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-header-group-cell-with-group {
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
 }
 .ag-contact2 .ag-header-cell-label {
   padding: 4px 2px 4px 2px;
@@ -189,16 +189,16 @@
   line-height: 0px /* normal line height, a space was appearing below the menu button */;
 }
 .ag-contact2 .ag-ltr .ag-pinned-right-header {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-rtl .ag-pinned-left-header {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-header-cell-menu-button:hover {
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
 }
 .ag-contact2 .ag-body {
-  background-color: #f6f6f6;
+  background-color: #fff;
 }
 .ag-contact2 .ag-row-odd {
   background-color: #fff;
@@ -226,23 +226,23 @@
 }
 .ag-contact2 .ag-overlay-loading-center {
   background-color: #fff;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
   border-radius: 10px;
   padding: 10px;
   color: #000;
 }
 .ag-contact2 .ag-overlay-no-rows-center {
   background-color: #fff;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
   border-radius: 10px;
   padding: 10px;
 }
 .ag-contact2 .ag-group-cell-entire-row {
-  background-color: #f6f6f6;
+  background-color: #fff;
   padding: 2px;
 }
 .ag-contact2 .ag-footer-cell-entire-row {
-  background-color: #f6f6f6;
+  background-color: #fff;
   padding: 2px;
 }
 .ag-contact2 .ag-group-cell {
@@ -286,7 +286,7 @@
 }
 .ag-contact2 .ag-menu {
   border: 1px solid #d6d6d6;
-  background-color: #f6f6f6;
+  background-color: #fff;
   cursor: default;
   font-family: "Fira Sans Extra Condensed", sans-serif;
   font-size: 14px;
@@ -373,25 +373,25 @@
   width: 300px;
 }
 .ag-contact2 .ag-tool-panel {
-  background-color: #f6f6f6;
-  border-bottom: 1px solid #d6d6d6;
-  border-top: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
+  border-top: 1px solid #fff;
   color: #222;
 }
 .ag-contact2 .ltr .ag-tool-panel {
-  border-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .rtl .ag-tool-panel {
-  border-left: 1px solid #d6d6d6;
+  border-left: 1px solid #fff;
 }
 .ag-contact2 .ag-status-bar {
   color: #222;
-  background-color: #f6f6f6;
+  background-color: #fff;
   font-size: 14px;
   height: 22px;
-  border-bottom: 1px solid #d6d6d6;
-  border-left: 1px solid #d6d6d6;
-  border-right: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
   padding: 2px;
 }
 .ag-contact2 .ag-status-bar-aggregations {
@@ -421,7 +421,7 @@
   border-radius: 3px;
 }
 .ag-contact2 .ag-column-drop-cell-button:hover {
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
 }
 .ag-contact2 .ag-column-drop-empty-message {
   padding-left: 2px;
@@ -432,17 +432,17 @@
   margin: 3px;
 }
 .ag-contact2 .ag-column-drop {
-  background-color: #f6f6f6;
+  background-color: #fff;
 }
 .ag-contact2 .ag-column-drop-horizontal {
   padding: 2px;
-  border-top: 1px solid #d6d6d6;
-  border-left: 1px solid #d6d6d6;
-  border-right: 1px solid #d6d6d6;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
 }
 .ag-contact2 .ag-column-drop-vertical {
   padding: 4px 4px 10px 4px;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
 }
 .ag-contact2 .ag-column-drop-vertical .ag-column-drop-cell {
   margin-top: 2px;
@@ -452,19 +452,19 @@
   padding: 5px;
 }
 .ag-contact2 .ag-pivot-mode {
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
   padding: 4px;
-  background-color: #f6f6f6;
+  background-color: #fff;
 }
 .ag-contact2 .ag-tool-panel .ag-column-select-panel {
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #fff;
 }
 .ag-contact2 .ag-select-agg-func-popup {
   cursor: default;
   position: absolute;
   font-size: 14px;
   background-color: #fff;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #fff;
 }
 .ag-contact2 .ag-select-agg-func-item {
   padding-left: 2px;

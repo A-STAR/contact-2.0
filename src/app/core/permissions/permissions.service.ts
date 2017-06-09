@@ -3,7 +3,14 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../core/state/state.interface';
-import { IPermission, IRawPermission, IPermissionsResponse, IPermissionsState } from './permissions.interface';
+import {
+  IPermission,
+  IPermissionRole,
+  IValueEntity,
+  IRawPermission,
+  IPermissionsResponse,
+  IPermissionsState,
+} from './permissions.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
 
@@ -66,10 +73,25 @@ export class PermissionsService {
     return (userPermission.valueB !== null) ? userPermission.valueB : false;
   }
 
-  addPermission(role: { id: number}, permissionIds: number[] ): void {
+  addPermission(role: IPermissionRole, permissionIds: number[]): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_ADD,
       payload: { role,  permissionIds },
+    });
+  }
+
+  // updatePermission(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Observable<any> {
+    // return this.gridService.update(
+    //   `/roles/{id}/permits/{permissionId}`,
+    //   { id: role.id, permissionId: permissionId },
+    //   permission
+    // );
+  // }
+
+  updatePermission(roleId: number, permissionId: number, permission: IValueEntity): void {
+    this.store.dispatch({
+      type: PermissionsService.PERMISSION_UPDATE,
+      payload: { roleId, permissionId, permission },
     });
   }
 

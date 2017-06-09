@@ -1,4 +1,7 @@
-import { IPermissionModel } from '../../routes/admin/roles/permissions/permissions.interface';
+import { IPermissionModel, IPermissionRole } from '../../routes/admin/roles/permissions/permissions.interface';
+import { IValueEntity } from '../converter/value/value-converter.interface';
+
+export { IPermissionModel, IPermissionRole, IValueEntity };
 
 export interface IPermissionsResponse {
   success: boolean;
