@@ -15,7 +15,7 @@ export interface IRawPermission {
   valueS: string;
 }
 
-export enum IPermissionsDisplayEnum {
+export enum IPermissionsDialogEnum {
   NONE,
   ADD,
   EDIT,
@@ -28,8 +28,8 @@ export interface IPermission {
 
 export interface IPermissionsState {
   permissions: IPermission;
-  display: IPermissionsDisplayEnum;
-  editedPermission: IPermissionModel;
+  dialog: IPermissionsDialogEnum;
+  currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
 }
 

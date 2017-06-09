@@ -80,6 +80,13 @@ export class PermissionsService {
     });
   }
 
+  removePermission(role: IPermissionRole, permissionId: number): void {
+    this.store.dispatch({
+      type: PermissionsService.PERMISSION_DELETE,
+      payload: { role, permissionId },
+    });
+  }
+
   updatePermission(roleId: number, permissionId: number, permission: IValueEntity): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_UPDATE,
@@ -87,7 +94,7 @@ export class PermissionsService {
     });
   }
 
-  permissionDialodAction(payload: { display: any; editedPermission: any }): void {
+  permissionDialodAction(payload: { dialog: any; currentPermission: any }): void {
     this.store.dispatch({ type: PermissionsService.PERMISSION_DIALOG, payload });
   }
 

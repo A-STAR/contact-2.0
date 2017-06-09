@@ -1,4 +1,4 @@
-import { IPermissionAction, IPermissionsState, IPermissionsDisplayEnum } from './permissions.interface';
+import { IPermissionAction, IPermissionsState, IPermissionsDialogEnum } from './permissions.interface';
 
 import { PermissionsService } from './permissions.service';
 
@@ -7,8 +7,8 @@ const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
 const defaultState: IPermissionsState = {
   permissions: {},
-  display: IPermissionsDisplayEnum.NONE,
-  editedPermission: null,
+  dialog: IPermissionsDialogEnum.NONE,
+  currentPermission: null,
   currentRole: null,
 };
 
@@ -32,12 +32,25 @@ export function permissionReducer(
         permissions: { ...action.payload },
       };
 
+    case PermissionsService.PERMISSION_DELETE:
+      const filteredKeys = Object.keys(state.permissions)
+        .filter(key => key !== action.payload.name);
+      const permissions = filteredKeys.reduce((acc, key) => {
+        acc[key] = state.permissions[key];
+        return acc;
+      }, {});
+
+      return {
+        ...state,
+        permissions: { ...permissions },
+      };
+
     case PermissionsService.PERMISSION_DIALOG:
       return {
         ...state,
         ...action.payload,
       };
-
+    // case PermissionsService.PERMISSION_CHANGE_CURRENT_PERMISSION
     default:
       return state;
   }

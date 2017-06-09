@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import {
   IRawPermission,
-  IPermissionsDisplayEnum,
+  IPermissionsDialogEnum,
   IPermissionRole,
   IPermissionModel,
 } from './permissions.interface';
@@ -19,9 +19,9 @@ import { PermissionsService } from './permissions.service';
 @Injectable()
 export class PermissionsEffects {
 
-  hideActionFormAction = {
+  hideDialogAction = {
     type: PermissionsService.PERMISSION_DIALOG,
-    payload: { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
+    payload: { dialog: IPermissionsDialogEnum.NONE, currentPermission: null }
   };
 
   permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
@@ -53,7 +53,7 @@ export class PermissionsEffects {
           return null;
         })
         .mergeMap(() => [
-          this.hideActionFormAction,
+          this.hideDialogAction,
           this.permissionFetchAction,
         ]);
     });
@@ -70,7 +70,7 @@ export class PermissionsEffects {
           return null;
         })
         .mergeMap(() => [
-          this.hideActionFormAction,
+          this.hideDialogAction,
           this.permissionFetchAction,
         ]);
     });
@@ -78,16 +78,16 @@ export class PermissionsEffects {
   @Effect()
   deletePermissions = this.actions
     .ofType(PermissionsService.PERMISSION_DELETE)
-    .map(action => action.payload)
-    .switchMap(params => {
-      const { permissionId, userId } = params;
-      return this.delete(permissionId, userId)
+    .map(toPayload)
+    .switchMap(payload => {
+      const { role, permissionId } = payload;
+      return this.delete(role, permissionId)
         .catch(() => {
           this.notifications.error('permissions.api.errors.delete');
           return null;
         })
         .mergeMap(() => [
-          this.hideActionFormAction,
+          this.hideDialogAction,
           this.permissionFetchAction,
         ]);
     });
@@ -104,12 +104,8 @@ export class PermissionsEffects {
   }
 
   private add(role: IPermissionRole, permissionIds: number[]): Observable<any> {
-    return this.gridService.create(`/roles/{id}/permits`, role, { permitIds: permissionIds });
+    return this.gridService.create(`/roles/{id}/permits`, { id: role.id } , { permitIds: permissionIds });
   }
-
-  // private update(role: IPermissionRole, permissionId: number, permission: IPermissionModel): Observable<any> {
-  //   return this.gridService.update( '/roles/{id}/permits/{permissionId}', { id: role.id, permissionId: permissionId }, permission);
-  // }
 
   private update(roleId: number, permissionId: number, permission: IPermissionModel): Observable<any> {
     return this.gridService.update(
@@ -119,8 +115,8 @@ export class PermissionsEffects {
     );
   }
 
-  private delete(permissionId: number, userId: number): Observable<any> {
-    return this.gridService.delete('/userpermits/{permissionId}/?id={userId}', { permissionId, userId });
+  private delete(role: IPermissionRole, permissionId: number): Observable<any> {
+    return this.gridService.delete('/roles/{roleId}/permits/{permissionId}', { roleId: role.id, permissionId });
   }
 
 }
