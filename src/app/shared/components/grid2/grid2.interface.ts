@@ -14,6 +14,7 @@ export interface IGrid2State {
   columns: IGrid2ColumnsState;
   columnsPositions: string[];
   groupingColumns: string[];
+  selectedRows: any[];
   filterColumnName?: string;
   movingColumnInProgress?: boolean;
 }
@@ -35,6 +36,11 @@ export interface IGrid2GroupingColumnsChangePayload {
   groupingColumns: string[]
 }
 
+export interface IGrid2SelectedRowChangePayload {
+  rowData: any;
+  selected: boolean;
+}
+
 export interface IGrid2ShowFilterPayload {
   filterColumnName: string;
 }
@@ -54,7 +60,8 @@ export interface IActionGrid2Payload {
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ShowFilterPayload
     |IGrid2MovedColumnPayload
-    |IGrid2GroupingColumnsChangePayload;
+    |IGrid2GroupingColumnsChangePayload
+    |IGrid2SelectedRowChangePayload;
 }
 
 export interface IGrid2ServiceDispatcher {

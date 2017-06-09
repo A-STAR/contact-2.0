@@ -3,6 +3,7 @@ import {
   IGrid2ColumnsPositionsChangePayload,
   IGrid2GroupingColumnsChangePayload,
   IGrid2MovedColumnPayload,
+  IGrid2SelectedRowChangePayload,
   IGrid2ShowFilterPayload,
   IGrid2SortingDirectionSwitchPayload,
   IGrid2State
@@ -13,7 +14,8 @@ import { Grid2Component } from './grid2.component';
 const defaultState: IGrid2State = {
   columns: {},
   columnsPositions: [],
-  groupingColumns: []
+  groupingColumns: [],
+  selectedRows: []
 };
 
 export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function): Function {
@@ -29,6 +31,7 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       case Grid2Component.MOVING_COLUMN:
       case Grid2Component.DESTROY_STATE:
       case Grid2Component.GROUPING_COLUMNS:
+      case Grid2Component.SELECTED_ROWS:
         return {
           ...state,
           [stateKey]: grid2Reducer(state[stateKey], action as IActionGrid2Payload)
@@ -60,6 +63,14 @@ export function grid2Reducer(
       return {
         ...state,
         filterColumnName: null
+      };
+    case Grid2Component.SELECTED_ROWS:
+      const selectedRowPayload: IGrid2SelectedRowChangePayload = action.payload as IGrid2SelectedRowChangePayload;
+      return {
+        ...state,
+        selectedRows: state.selectedRows
+          .filter((rowData: any) => selectedRowPayload.rowData !== rowData)
+          .concat(selectedRowPayload.selected ? [selectedRowPayload.rowData] : [])
       };
     case Grid2Component.GROUPING_COLUMNS:
       const groupingColumnsPayload: IGrid2GroupingColumnsChangePayload = action.payload as IGrid2GroupingColumnsChangePayload;

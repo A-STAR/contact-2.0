@@ -27,7 +27,12 @@ import { Store } from '@ngrx/store';
 
 import { IToolbarAction, ToolbarControlEnum } from '../toolbar/toolbar.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IGrid2ColumnsPositionsChangePayload, IGrid2ShowFilterPayload, Grid2SortingEnum } from './grid2.interface';
+import {
+  IGrid2ColumnsPositionsChangePayload,
+  IGrid2ShowFilterPayload,
+  Grid2SortingEnum,
+  IGrid2SelectedRowChangePayload
+} from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2SortingDirectionSwitchPayload, IGrid2State } from './grid2.interface';
 
@@ -44,6 +49,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
   public static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
   public static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
+  public static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
   public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
   public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
   public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
@@ -72,7 +78,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
-  selected: Array<any> = [];
+  selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
@@ -81,7 +87,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private statedFilterColumn: Column;
 
   private langSubscription: EventEmitter<any>;
-  private selectedNodes: { [key: string]: RowNode } = {};
   private headerColumns: GridHeaderComponent[] = [];
   private rowsCounterElement;
   private stateSubscription: Subscription;
@@ -164,7 +169,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   ngOnDestroy(): void {
     this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
 
-    this.selectedNodes = null;
     this.headerColumns = null;
 
     this.langSubscription.unsubscribe();
@@ -174,13 +178,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onSelect(event: any): void {
-    const rowNode = event.node;
-    this.selectedNodes[rowNode.id] = rowNode.isSelected() ? rowNode : null;
-    this.selected = Object.keys(this.selectedNodes)
-      .map((nodeId: string) => this.selectedNodes[nodeId] ? this.selectedNodes[nodeId].data : null)
-      .filter(data => !!data);
-
-    this.setRowsInfo();
+    const rowNode: RowNode = event.node;
+    this.store.dispatch({
+      type: Grid2Component.SELECTED_ROWS, payload: {
+        rowData: rowNode.data,
+        selected: rowNode.isSelected()
+      } as IGrid2SelectedRowChangePayload
+    });
   }
 
   onActionClick(event: any): void {
@@ -265,13 +269,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     if (!state) {
       return;
     }
+    this.selected = state.selectedRows;
     this.statedFilterColumn = state.filterColumnName ? this.getColumnByName(state.filterColumnName) : null;
-    this.headerColumns
-      .forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
+    this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
 
     if (!this.remoteSorting) {
       this.applyClientSorting(state);
     }
+    this.setRowsInfo();
+
     this.ref.detectChanges();
   }
 
