@@ -1,4 +1,5 @@
 <div>
+  <!-- TODO(d.maltsev): hide this when there is no image -->
   <div class='image-container'>
     <img
       class="image"
@@ -9,9 +10,9 @@
     <button class="btn btn-sm btn-default" (click)="file.click()">
       <i class="fa fa-edit"></i> {{ actionButtonTitle$ | async | translate }}
     </button>
-    <button class="btn btn-sm btn-danger" *ngIf="imageSrcUrl$ | async">
+    <button *ngIf="imageSrcUrl$ | async" class="btn btn-sm btn-danger" (click)="onFileRemove()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>
-  <input #file type="file" (change)="onFileChange($event)">
+  <input #file type="file" style="display: none" (change)="onFileChange($event)">
 </div>

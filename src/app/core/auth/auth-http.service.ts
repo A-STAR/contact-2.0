@@ -9,10 +9,7 @@ import { getToken } from '../auth/auth.service';
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
     tokenGetter: getToken,
-    noJwtError: true,
-    globalHeaders: [{
-      'Content-Type': 'application/json'
-    }],
+    noJwtError: true
   }), http, options);
 }
 

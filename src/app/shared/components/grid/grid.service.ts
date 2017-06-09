@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod, ResponseContentType } from '@angular/http';
+import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,23 +38,23 @@ export class GridService {
         .map(data => data.json());
     }
 
-    return this.jsonRequest(url, RequestMethod.Get, routeParams);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get });
   }
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
-    return this.blobRequest(url, RequestMethod.Get, routeParams);
+    return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
   }
 
   create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, RequestMethod.Post, routeParams, body);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Post, body });
   }
 
   update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, RequestMethod.Put, routeParams, body);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Put, body });
   }
 
   delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.jsonRequest(url, RequestMethod.Delete, routeParams);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Delete } );
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
@@ -91,30 +91,33 @@ export class GridService {
     return column;
   }
 
-  private jsonRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<any> {
-    return this.request(url, method, routeParams, body)
+  // Request that expects JSON for *response*.
+  // Request content type can be application/json, multipart/form-data, etc.
+  private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
+    return this.request(url, routeParams, options)
       .map(data => data.json());
   }
 
-  private blobRequest(url: string, method: RequestMethod, routeParams: object, body: object = undefined): Observable<Blob> {
-    return this.request(url, method, routeParams, body, ResponseContentType.Blob)
-      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }))
+  // Request that expects binary data for *response*.
+  // Request content type can be application/json, multipart/form-data, etc.
+  private blobRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<Blob> {
+    return this.request(url, routeParams, { ...options, responseType: ResponseContentType.Blob })
+      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
   }
 
-  private request(
-    url: string,
-    method: RequestMethod,
-    routeParams: object,
-    body: object = undefined,
-    responseType: ResponseContentType = undefined
-  ): Observable<any> {
+  private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
+    const headers = new Headers();
+    if (options.body && options.body.constructor === Object) {
+      headers.append('Content-Type', 'application/json');
+    }
+
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
         const prefix = '/api';
         const api = route.startsWith(prefix) ? route : prefix + route;
 
-        return this.http.request(`${rootUrl}${api}`, { method, body, responseType });
+        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
       });
   }
 
