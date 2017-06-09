@@ -1,5 +1,12 @@
 import {
-  Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit, OnDestroy
+  Component,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChange,
+  ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -20,7 +27,8 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 
 @Component({
   selector: 'app-permissions',
-  templateUrl: './permissions.component.html'
+  templateUrl: './permissions.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy {
 
@@ -73,19 +81,9 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
       label: 'toolbar.action.refresh',
       icon: 'fa fa-refresh',
       permissions: [ 'PERMIT_VIEW' ],
-      action: this.refreshGrid,
+      action: () => this.refreshGrid(),
     },
   ];
-
-  // permitActionsGroup: Array<ToolbarActionTypeEnum> = [
-  //   ToolbarActionTypeEnum.EDIT,
-  //   ToolbarActionTypeEnum.REMOVE,
-  // ];
-
-  // roleActionsGroup: Array<ToolbarActionTypeEnum> = [
-  //   ToolbarActionTypeEnum.ADD,
-  //   ToolbarActionTypeEnum.REFRESH,
-  // ];
 
   dataSource: IDataSource = {
     read: '/api/roles/{id}/permits',
@@ -124,28 +122,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
   ngOnDestroy(): void {
     this.gridRowChangeSub.unsubscribe();
   }
-  // onAction(action: IToolbarAction): void {
-  //   switch (action.type) {
-  //     case ToolbarActionTypeEnum.REFRESH:
-  //       this.loadGrid();
-  //       break;
-  //     case ToolbarActionTypeEnum.EDIT:
-  //       this.permService.permissionDialodAction(
-  //         { display: IPermissionsDisplayEnum.EDIT, editedPermission: this.editedPermission }
-  //       );
-  //       break;
-  //     case ToolbarActionTypeEnum.ADD:
-  //       this.permService.permissionDialodAction(
-  //         { display: IPermissionsDisplayEnum.ADD, editedPermission: this.editedPermission }
-  //       );
-  //       break;
-  //     case ToolbarActionTypeEnum.REMOVE:
-  //       this.permService.permissionDialodAction(
-  //         { display: IPermissionsDisplayEnum.DELETE, editedPermission: this.editedPermission }
-  //       );
-  //       break;
-  //   }
-  // }
 
   onBeforeEditPermission(): void {
     if (!this.editedPermission) {
@@ -158,7 +134,6 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
   }
 
   onSelectPermissions(records: IPermissionModel[]): void {
-    console.log('select');
     if (records.length) {
       this.editedPermission = records[0];
       this.permService.permissionDialodAction(
@@ -177,7 +152,7 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
 
   onCancel(): void {
     this.permService.permissionDialodAction(
-      { display: IPermissionsDisplayEnum.NONE, editedPermission: null }
+      { display: IPermissionsDisplayEnum.NONE, editedPermission: this.editedPermission }
     );
   }
 
@@ -225,17 +200,4 @@ export class PermissionsComponent implements AfterViewInit, OnChanges, OnDestroy
     );
   }
 
-  // private refreshToolbar(): void {
-  //   this.setActionsVisibility(this.roleActionsGroup, !!this.currentRole);
-  //   this.setActionsVisibility(this.permitActionsGroup, !!this.editedPermission);
-  //   // console.log('current role', this.currentRole);
-  //   console.log('edited permission', !!this.editedPermission);
-  // }
-
-  // private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-  //   actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-  //     // console.log(actionType, visible);
-  //     this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-  //   });
-  // }
 }

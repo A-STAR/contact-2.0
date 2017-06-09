@@ -9,7 +9,7 @@ import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum } from './toolbar-2
   selector: 'app-toolbar-2',
   templateUrl: './toolbar-2.component.html',
   styleUrls: [ './toolbar-2.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar2Component implements OnInit {
   @Input() items: Array<IToolbarItem> = [];
@@ -17,7 +17,7 @@ export class Toolbar2Component implements OnInit {
   private _items$: Observable<Array<any>>;
 
   constructor(
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
   ) {}
 
   ngOnInit(): void {
