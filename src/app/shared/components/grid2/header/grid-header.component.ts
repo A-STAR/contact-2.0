@@ -116,9 +116,9 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     this.eGui.style.height = this.eGui.style.lineHeight = this.agParams.headerHeight + 'px';
     this.eGui.innerHTML = `
         <div class="header-display-item">${this.columnDisplayName}</div>
-        <div class="header-filter-item"><i class="fa fa-filter" aria-hidden="true"></i></div>
         <div class="header-sort-item sort-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></div>
         <div class="header-sort-item sort-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></div>
+        <div class="header-filter-item"><i class="fa fa-filter" aria-hidden="true"></i></div>
       `;
   }
 

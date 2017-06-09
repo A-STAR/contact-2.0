@@ -20,6 +20,7 @@ app-grid2 {
 
   .header-item-wrapper {
     width: 100%;
+    text-align: left;
   }
 
   .header-item-wrapper:hover {
@@ -33,17 +34,34 @@ app-grid2 {
   }
 
   .header-display-item {
-    padding-left: 1.2rem;
-    float: left;
+    width: 70%;
+    padding-left: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: break-word;
   }
 
   .header-filter-item {
     visibility: hidden;
+    right: 4px;
+    .fa:hover {
+      color: #23b7e5;
+    }
+  }
+
+  .header-sort-item {
+    right: 22px;
+    .fa:hover {
+      color: #23b7e5;
+    }
   }
 
   .header-filter-item, .header-sort-item {
-    width: 20px;
-    float: right;
+    width: 18px;
+    position: absolute;
+    text-align: center;
     cursor: pointer;
   }
 }
