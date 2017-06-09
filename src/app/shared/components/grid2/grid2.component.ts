@@ -9,11 +9,19 @@ import {
   OnChanges,
   SimpleChanges,
   Renderer2,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
-import { ColDef, ICellRendererParams, GridOptions, RowNode, Column } from 'ag-grid';
+import {
+  ColDef,
+  ICellRendererParams,
+  GridOptions,
+  RowNode,
+  Column,
+  ColumnChangeEvent
+} from 'ag-grid';
 import { Store } from '@ngrx/store';
 
 import { IToolbarAction, ToolbarControlEnum } from '../toolbar/toolbar.interface';
@@ -28,11 +36,13 @@ import { GridHeaderComponent } from './header/grid-header.component';
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
   public static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
   public static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
+  public static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
   public static OPEN_FILTER = 'GRID2_OPEN_FILTER';
   public static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
   public static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
@@ -41,6 +51,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   // Inputs with presets
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
+  @Input() groupColumnMinWidth = 120;
   @Input() showDndGroupPanel = true;
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
@@ -313,6 +324,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
         headerValueGetter: () => this.translate.instant('default.grid.groupColumn'),
+        minWidth: this.groupColumnMinWidth,
         suppressMenu: true,
         suppressMovable: true,
         suppressFilter: true,
@@ -346,7 +358,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
       onGridReady: (params) => this.fitGridSize(),
       onGridSizeChanged: (params) => this.fitGridSize(),
-      onColumnRowGroupChanged: (event?: any) => this.fitGridSize()
+      onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
   }
 
@@ -358,5 +370,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       // Ag-grid workaround. The official examples have the same issue
       gridPanel.columnController.sizeColumnsToFit(availableWidth - gridPanel.scrollWidth * 2);
     }
+  }
+
+  private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
+    this.fitGridSize();
+
+    this.store.dispatch({
+      type: Grid2Component.GROUPING_COLUMNS, payload: {
+        groupingColumns: event.getColumns().map((column: Column) => column.getColId())
+      }
+    });
   }
 }

@@ -1,6 +1,7 @@
 import {
   IActionGrid2Payload,
   IGrid2ColumnsPositionsChangePayload,
+  IGrid2GroupingColumnsChangePayload,
   IGrid2MovedColumnPayload,
   IGrid2ShowFilterPayload,
   IGrid2SortingDirectionSwitchPayload,
@@ -11,8 +12,32 @@ import { Grid2Component } from './grid2.component';
 
 const defaultState: IGrid2State = {
   columns: {},
-  columnsPositions: []
+  columnsPositions: [],
+  groupingColumns: []
 };
+
+export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function): Function {
+  return function (
+    state,
+    action
+  ) {
+    switch (action.type) {
+      case Grid2Component.COLUMNS_POSITIONS:
+      case Grid2Component.SORTING_DIRECTION:
+      case Grid2Component.OPEN_FILTER:
+      case Grid2Component.CLOSE_FILTER:
+      case Grid2Component.MOVING_COLUMN:
+      case Grid2Component.DESTROY_STATE:
+      case Grid2Component.GROUPING_COLUMNS:
+        return {
+          ...state,
+          [stateKey]: grid2Reducer(state[stateKey], action as IActionGrid2Payload)
+        };
+      default:
+        return outerReducer(state, action);
+    }
+  }
+}
 
 export function grid2Reducer(
   state: IGrid2State = defaultState,
@@ -35,6 +60,12 @@ export function grid2Reducer(
       return {
         ...state,
         filterColumnName: null
+      };
+    case Grid2Component.GROUPING_COLUMNS:
+      const groupingColumnsPayload: IGrid2GroupingColumnsChangePayload = action.payload as IGrid2GroupingColumnsChangePayload;
+      return {
+        ...state,
+        groupingColumns: groupingColumnsPayload.groupingColumns
       };
     case Grid2Component.COLUMNS_POSITIONS:
       const columnsPositionsPayload: IGrid2ColumnsPositionsChangePayload = action.payload as IGrid2ColumnsPositionsChangePayload;
