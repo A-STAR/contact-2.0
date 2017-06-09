@@ -9,29 +9,31 @@ const defaultState: IActionsLogServiceState = {
   actionTypes: []
 };
 
-export const actionsLogReducer: Function = combineWithGrid2Reducer(
-  'actionsLogGrid',
-  function (
-    state: IActionsLogServiceState = defaultState,
-    action: IActionsLogPayload
-  ): IActionsLogServiceState {
-    switch (action.type) {
-      case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
-        return {
-          ...state,
-          actionTypes: action.payload as Array<IActionType>
-        };
-      case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:
-        return {
-          ...state,
-          employees: action.payload as Array<IEmployee>
-        };
-      case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
-        return {
-          ...state,
-          actionsLog: action.payload as Array<IActionLog>
-        };
+export function actionsLogReducer(
+  state: IActionsLogServiceState = defaultState,
+  action: IActionsLogPayload
+) {
+  return combineWithGrid2Reducer(
+    'actionsLogGrid',
+    function (state: IActionsLogServiceState, action: IActionsLogPayload): IActionsLogServiceState {
+      switch (action.type) {
+        case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
+          return {
+            ...state,
+            actionTypes: action.payload as Array<IActionType>
+          };
+        case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:
+          return {
+            ...state,
+            employees: action.payload as Array<IEmployee>
+          };
+        case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
+          return {
+            ...state,
+            actionsLog: action.payload as Array<IActionLog>
+          };
+      }
+      return state;
     }
-    return state;
-  }
-);
+  )(state, action);
+}
