@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 

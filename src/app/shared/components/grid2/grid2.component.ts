@@ -9,7 +9,6 @@ import {
   OnChanges,
   SimpleChanges,
   Renderer2,
-  HostListener,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -42,6 +41,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   // Inputs with presets
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
+  @Input() showDndGroupPanel = true;
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
   @Input() pagination = false;
@@ -79,11 +79,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     private translate: TranslateService,
     private store: Store<IAppState>,
   ) {
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.fitGridSize();
   }
 
   get gridRows(): any[] {
@@ -312,9 +307,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private setRowsOptions(): void {
     this.gridOptions = {
-      headerHeight: this.headerHeight,
-      rowHeight: this.rowHeight,
-      rowGroupPanelShow: 'always',
+      localeText: {
+        rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
+      },
+      rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
         headerValueGetter: () => this.translate.instant('default.grid.groupColumn'),
         suppressMenu: true,
@@ -348,7 +344,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
-      onGridReady: (params) => this.fitGridSize()
+      onGridReady: (params) => this.fitGridSize(),
+      onGridSizeChanged: (params) => this.fitGridSize(),
+      onColumnRowGroupChanged: (event?: any) => this.fitGridSize()
     };
   }
 
