@@ -29,8 +29,8 @@ export class DragAndDropComponentPluginFactory {
 
 export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
-  private static SWAPPED_NODES_COUNT: number = 2;
-  private static MOVED_NODES_COUNT: number = 1;
+  private static SWAPPED_NODES_COUNT = 2;
+  private static MOVED_NODES_COUNT = 1;
 
   private _draggedElementPosition: INodeOffset;
   private _isNodeAlreadyMoved: boolean;
