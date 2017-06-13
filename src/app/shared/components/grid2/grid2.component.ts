@@ -167,14 +167,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
-
     this.headerColumns = null;
 
     this.langSubscription.unsubscribe();
     if (this.stateSubscription) {
       this.stateSubscription.unsubscribe();
     }
+
+    this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
   }
 
   onSelect(event: any): void {
