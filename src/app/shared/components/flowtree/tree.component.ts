@@ -12,6 +12,8 @@ import {
   OnInit,
   OnDestroy,
   Renderer2,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 
 import { TreeNode } from './common/api';
@@ -25,7 +27,7 @@ import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.int
   templateUrl: './tree.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, AfterContentInit {
+export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, OnChanges, AfterContentInit {
 
   @Input() value: TreeNode[];
   @Input() selectionMode: string;
@@ -67,6 +69,10 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
 
   ngOnInit(): void {
     this.dragAndDropPlugin.ngOnInit();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dragAndDropPlugin.ngOnChanges(changes);
   }
 
   ngOnDestroy(): void {

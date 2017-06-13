@@ -2,7 +2,9 @@ import {
   OnInit,
   OnDestroy,
   Injectable,
-  Renderer2
+  Renderer2,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -31,7 +33,7 @@ export class DragAndDropComponentPluginFactory {
   }
 }
 
-export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
+export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges {
 
   private _draggedElementPosition: INodeOffset;
   private _isNodeAlreadySwapped: boolean;
@@ -50,9 +52,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   ) {
   }
 
-  onMouseMove(event: MouseEvent): void {
+  private onMouseMove(event: MouseEvent): void {
     this._clientX = event.clientX;
     this._clientY = event.clientY;
+
     this.deactivateNodes();
 
     const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
@@ -113,11 +116,15 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.clearCache();
+  }
+
   ngOnDestroy(): void {
-    this._cachedElements.clear();
     this._dragEndSubscription.unsubscribe();
     this._dropSubscription.unsubscribe();
     this._dragSubscription.unsubscribe();
+    this.clearCache();
     this.removeMouseMoveListener();
   }
 
@@ -148,6 +155,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private get renderer(): Renderer2 {
     return this.component.renderer;
+  }
+
+  private clearCache(): void {
+    this._cachedElements.clear();
   }
 
   private get draggedElementPosition(): INodeOffset {

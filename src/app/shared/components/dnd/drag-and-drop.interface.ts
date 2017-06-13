@@ -1,4 +1,11 @@
-import { ElementRef, EventEmitter, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import {
+  ElementRef,
+  EventEmitter,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Renderer2
+} from '@angular/core';
 
 export interface IDragAndDropPayload {
   swap: boolean;
@@ -21,7 +28,7 @@ export interface IIntersectedNodeInfo {
   y2: number
 }
 
-export interface IDraggedComponent extends OnInit, OnDestroy {
+export interface IDraggedComponent extends OnInit, OnChanges, OnDestroy {
   changeLocation: EventEmitter<IDragAndDropPayload>;
   elementRef: ElementRef;
   elementSelector: string;
