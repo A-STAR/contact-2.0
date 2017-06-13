@@ -8,7 +8,6 @@ import {
   QueryList,
   TemplateRef,
   ViewEncapsulation,
-  HostListener,
   ElementRef,
   OnInit,
   OnDestroy,
@@ -64,11 +63,6 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
               public renderer: Renderer2,
               dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
     this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
-  }
-
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.dragAndDropPlugin.onMouseMove(event);
   }
 
   ngOnInit(): void {
