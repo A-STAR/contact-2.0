@@ -98,7 +98,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Array<Element>) => {
       this._dragMirror = null; // Here mirror element does not already exist
 
-      const attr: string = this.toNodeId(value[1]);
+      const sourceNodeId: string = this.toNodeId(value[1]);
       this.renderer.removeChild(value[1].parentNode, value[1]);
 
       if (!this._isNodeAlreadyMoved) {
@@ -108,7 +108,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
           this.component.changeLocation.emit({
             swap: true,
             target: this.toNodeId(intersectedByTargetElements[0].element),
-            source: attr
+            source: sourceNodeId
           });
         }
       }
