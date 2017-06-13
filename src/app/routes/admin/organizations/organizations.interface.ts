@@ -11,11 +11,6 @@ export interface IOrganization {
   children?: Array<IOrganization>;
 }
 
-export interface IOrganizationsResponse {
-  success: boolean;
-  organizations: Array<IOrganization>;
-}
-
 export interface IEmployee {
   userId: number;
   roleCode: number;

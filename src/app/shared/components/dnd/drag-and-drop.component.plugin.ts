@@ -3,19 +3,13 @@ import {
   OnDestroy,
   Injectable,
   Renderer2,
-  OnChanges,
-  SimpleChanges
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { DragulaService } from 'ng2-dragula';
 
 import { DragAndDropDomHelper } from './drag-and-drop.dom-helper';
-import {
-  IDraggedComponent,
-  IIntersectedNodeInfo,
-  INodeOffset
-} from './drag-and-drop.interface';
+import { IDraggedComponent, IIntersectedNodeInfo, INodeOffset } from './drag-and-drop.interface';
 
 @Injectable()
 export class DragAndDropComponentPluginFactory {
@@ -33,13 +27,19 @@ export class DragAndDropComponentPluginFactory {
   }
 }
 
-export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges {
+export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
+
+  private static SWAPPED_NODES_COUNT = 2;
+  private static MOVED_NODES_COUNT = 1;
 
   private _draggedElementPosition: INodeOffset;
-  private _isNodeAlreadySwapped: boolean;
+  private _isNodeAlreadyMoved: boolean;
   private _clientX: number;
   private _clientY: number;
+  private _dragNode: Element;
+  private _dragMirror: Element;
   private _cachedElements: Set<Element> = new Set<Element>();
+  private _allElements: HTMLCollectionOf<Element>;
   private _dragSubscription: Subscription;
   private _dropSubscription: Subscription;
   private _dragEndSubscription: Subscription;
@@ -62,12 +62,13 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
 
-    if (intersectedByTargetElements.length === 1
+    if (intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
+      && this._dragNode !== firstNode.element
       && this.domHandler.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
 
       this._cachedElements.add(firstNode.element);
       this.renderer.addClass(firstNode.element, 'tree-dnd-active');
-    } else if (intersectedByTargetElements.length === 2) {
+    } else if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
 
       this._cachedElements.add(firstNode.element);
       this._cachedElements.add(secondNode.element);
@@ -77,8 +78,9 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnInit(): void {
-    this._dragSubscription = this.dragulaService.drag.subscribe(() => {
-      this._isNodeAlreadySwapped = false;
+    this._dragSubscription = this.dragulaService.drag.subscribe((value: Array<Element>) => {
+      this._isNodeAlreadyMoved = false;
+      this._dragNode = value[1];
       this.addMouseMoveListener();
     });
 
@@ -92,32 +94,29 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
           source: this.toNodeId(value[1]),
           target: this.toNodeId(value[2])
         });
-        this._isNodeAlreadySwapped = true;
+        this._isNodeAlreadyMoved = true;
       }
     });
 
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Array<Element>) => {
-      const attr: string = this.toNodeId(value[1]);
+      this._dragMirror = null; // Here mirror element does not already exist
+
+      const sourceNodeId: string = this.toNodeId(value[1]);
       this.renderer.removeChild(value[1].parentNode, value[1]);
 
-      if (this._isNodeAlreadySwapped) {
-        return;
+      if (!this._isNodeAlreadyMoved) {
+        const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
+        if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
+          // The change location operation can be executed when only two nodes are intersected at the same time
+          this.component.changeLocation.emit({
+            swap: true,
+            target: this.toNodeId(intersectedByTargetElements[0].element),
+            source: sourceNodeId
+          });
+        }
       }
-
-      const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
-      if (intersectedByTargetElements.length === 2) {
-        // The change location operation can be executed when only two nodes are intersected at the same time
-        this.component.changeLocation.emit({
-          swap: true,
-          target: this.toNodeId(intersectedByTargetElements[0].element),
-          source: attr
-        });
-      }
+      this.clearCache();
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.clearCache();
   }
 
   ngOnDestroy(): void {
@@ -149,7 +148,8 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   private get intersectedByTargetElements(): IIntersectedNodeInfo[] {
     return this.domHandler.getIntersectedByTargetElements(
       this.draggedElementPosition,
-      this.component.elementRef.nativeElement.querySelectorAll(this.component.elementSelector)
+      this._allElements = this._allElements ||
+        this.component.elementRef.nativeElement.querySelectorAll(this.component.elementSelector)
     );
   }
 
@@ -158,11 +158,14 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   }
 
   private clearCache(): void {
+    this._dragMirror = null;
+    this._dragNode = null;
+    this._allElements = null;
     this._cachedElements.clear();
   }
 
   private get draggedElementPosition(): INodeOffset {
-    const mirrorEl: Element = document.body.getElementsByClassName('gu-mirror')[0];
+    const mirrorEl: Element = this._dragMirror = this._dragMirror || document.body.getElementsByClassName('gu-mirror')[0];
     return mirrorEl
       ? this._draggedElementPosition = this.domHandler.getOffset(mirrorEl)
       : this._draggedElementPosition;
