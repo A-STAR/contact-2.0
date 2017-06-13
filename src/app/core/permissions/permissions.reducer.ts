@@ -10,6 +10,7 @@ const defaultState: IPermissionsState = {
   dialog: IPermissionsDialogEnum.NONE,
   currentPermission: null,
   currentRole: null,
+  rawPermissions: null,
 };
 
 // This should NOT be an arrow function in order to pass AoT compilation
@@ -29,7 +30,10 @@ export function permissionReducer(
     case PermissionsService.PERMISSION_UPDATE:
       return {
         ...state,
-        permissions: { ...action.payload },
+        permissions: {
+          ...state.permissions,
+          [action.payload.permission.name]: !!action.payload.permission.valueB
+        },
       };
 
     case PermissionsService.PERMISSION_DELETE:
@@ -50,7 +54,13 @@ export function permissionReducer(
         ...state,
         ...action.payload,
       };
-    // case PermissionsService.PERMISSION_CHANGE_CURRENT_PERMISSION
+
+    case PermissionsService.PERMISSION_SELECTED_PERMISSION:
+      return {
+        ...state,
+        currentPermission: action.payload,
+      };
+
     default:
       return state;
   }

@@ -1,8 +1,8 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant } from './constants.interface';
@@ -18,9 +18,10 @@ import { GridEntityComponent } from '../../../shared/components/entity/grid.enti
 
 @Component({
   selector: 'app-constants',
-  templateUrl: './constants.component.html'
+  templateUrl: './constants.component.html',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConstantsComponent extends GridEntityComponent<IConstant> implements AfterViewInit {
+export class ConstantsComponent extends GridEntityComponent<IConstant> implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ConstantsComponent';
 
   toolbarActions: Array<IToolbarAction> = [
@@ -49,6 +50,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     dataKey: 'constants',
   };
 
+  permissionSub: Subscription;
   // rows: Observable<IConstant[]>;
 
   constructor(
@@ -62,21 +64,25 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    // this.rows = store.select('constants');
   }
 
   ngAfterViewInit(): void {
     const permission = 'CONST_VALUE_VIEW';
-    this.permissions.hasPermission(permission)
+    this.permissionSub = this.permissions.hasPermission(permission)
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.notifications.error(`No user permissions for '${permission}'`);
+          this.grid.clear();
         } else {
           this.grid.load()
             .take(1)
             .subscribe();
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.permissionSub.unsubscribe();
   }
 
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
@@ -105,6 +111,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
 
     this.gridService
       .update(this.dataSource.update, { id }, body)
+      .take(1)
       .subscribe(
         () => {
           this.afterUpdate();
@@ -120,16 +127,16 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
 
-  private handleError(error: XMLHttpRequest, action?: string): void {
-    const { status } = error;
-    switch (status) {
-      case 401:
-        this.notifications.error(`Authentication error. Please try to relogin.`);
-        break;
-      case 403:
-        this.notifications.error(`Insufficient user permissions for '${action}' action`);
-        break;
-      default:
-    }
-  }
+  // private handleError(error: XMLHttpRequest, action?: string): void {
+  //   const { status } = error;
+  //   switch (status) {
+  //     case 401:
+  //       this.notifications.error(`Authentication error. Please try to relogin.`);
+  //       break;
+  //     case 403:
+  //       this.notifications.error(`Insufficient user permissions for '${action}' action`);
+  //       break;
+  //     default:
+  //   }
+  // }
 }

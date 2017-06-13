@@ -32,7 +32,7 @@ export class NotificationsService {
 
   get state(): Observable<INotificationServiceState> {
     return this.store
-      .select(state => state.notificationService)
+      .select(state => state.notifications)
       // TODO: separate service for persisting global state?
       .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)))
       // TODO: double check this:
@@ -40,7 +40,7 @@ export class NotificationsService {
   }
 
   get notifications(): Observable<INotification[]> {
-    return this.store.select(state => state.notificationService.notifications);
+    return this.store.select(state => state.notifications.notifications);
   }
 
   debug(message: string, showAlert: boolean = true): void {

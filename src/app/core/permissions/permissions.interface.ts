@@ -31,6 +31,7 @@ export interface IPermissionsState {
   dialog: IPermissionsDialogEnum;
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
+  rawPermissions: IPermissionModel[];
 }
 
 export type IPermissionActionType =

@@ -1,9 +1,8 @@
 import { OnInit, OnChanges, OnDestroy, Directive, ElementRef, Input, Output, SimpleChange, EventEmitter } from '@angular/core';
 
-declare var $: any;
-
 @Directive({
-    selector: '[flot]'
+  // tslint:disable-next-line
+  selector: '[flot]'
 })
 export class FlotDirective implements OnInit, OnChanges, OnDestroy {
 

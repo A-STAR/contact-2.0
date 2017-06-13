@@ -9,7 +9,7 @@ export const rootReducer = {
   actionsLog: actionsLogReducer,
   dictionaries: dictionariesReducer,
   // TODO: rename notificationService -> notifications
-  notificationService: notificationReducer,
+  notifications: notificationReducer,
   organizations: organizationsReducer,
   permissions: permissionReducer,
   users: usersReducer,

@@ -2,8 +2,14 @@ import { INotificationAction, INotificationServiceState, NotificationTypeEnum } 
 
 import { NotificationsService } from './notifications.service';
 
-// TODO: separate service for persisting global state?
+// TODO(a.tymchuk): take this to a separate service for persisting global state
 const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
+let parsedState;
+try {
+  parsedState = JSON.parse(savedState);
+} catch (e) {
+  parsedState = null;
+}
 
 const defaultState: INotificationServiceState = {
   notifications: [],
@@ -18,7 +24,7 @@ const defaultState: INotificationServiceState = {
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
 export function notificationReducer(
-  state: INotificationServiceState = savedState ? JSON.parse(savedState) : defaultState,
+  state: INotificationServiceState = parsedState || defaultState,
   action: INotificationAction
 ): INotificationServiceState {
 

@@ -9,7 +9,6 @@ import {
   IPermissionsResponse,
   IPermissionRole,
   IPermissionModel,
-  IRawPermission,
 } from './permissions.interface';
 import { IAppState } from '../state/state.interface';
 
@@ -32,16 +31,10 @@ export class PermissionsEffects {
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map(response => {
-          const payload = response.userPermits.reduce((acc, rawPermission: IRawPermission) => {
-            acc[rawPermission.name] = this.permissionsService.valueToBoolean(rawPermission);
-            return acc;
-          }, {});
-          return {
-            type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-            payload,
-          };
-        })
+        .map(response => ({
+          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
+          payload: this.permissionsService.normalizePermissions(response)
+        }))
         .catch(() => {
           this.notifications.error('permissions.api.errors.fetch');
           return null;
@@ -53,8 +46,8 @@ export class PermissionsEffects {
     .ofType(PermissionsService.PERMISSION_UPDATE)
     .map(toPayload)
     .switchMap(payload => {
-      const { roleId, permissionId, permission } = payload;
-      return this.update(roleId, permissionId, permission)
+      const { roleId, permission } = payload;
+      return this.update(roleId, permission)
         .catch(() => {
           this.notifications.error('permissions.api.errors.update');
           return null;
@@ -115,10 +108,10 @@ export class PermissionsEffects {
     return this.gridService.create(`/roles/{id}/permits`, { id: role.id } , { permitIds: permissionIds });
   }
 
-  private update(roleId: number, permissionId: number, permission: IPermissionModel): Observable<any> {
+  private update(roleId: number, permission: IPermissionModel): Observable<any> {
     return this.gridService.update(
       `/roles/{roleId}/permits/{permissionId}`,
-      { roleId, permissionId },
+      { roleId, permissionId: permission.id },
       permission
     );
   }
