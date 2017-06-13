@@ -148,38 +148,19 @@ export class OrganizationsTreeComponent implements OnDestroy {
       sourceElement.parent = targetElement;
     }
 
+    let payloads: IOrganization[];
     if (payload.swap) {
-      const payloads: IOrganization[] = [];
-      targetElement.parent.children.forEach((node: TreeNode, i: number) => {
-        const sortOrder: number = i + 1;
-        payloads.push(
-          {
-            id: node.id,
-            parentId: node.parent.id,
-            sortOrder: sortOrder
-          }
-        );
+      payloads = targetElement.parent.children.map((node: TreeNode, i: number) => {
+        return {id: node.id, parentId: node.parent.id, sortOrder: i + 1};
       });
-      this.organizationsService.updateOrganizations(payloads);
     } else {
-
+      payloads = [{
+        id: sourceElement.id,
+        parentId: sourceElement.parent.id,
+        sortOrder: sourceElement.parent.children.indexOf((node: TreeNode) => node === sourceElement) + 1
+      }];
     }
-
-
-
-    // TODO: do we have to reindex children on previous element parent?
-    /*targetElement.children.forEach((element: TreeNode, i: number) => {
-      const sortOrder = i + 1;
-      if (element.data.sortOrder !== sortOrder || (!payload.swap && element.id === sourceElement.id)) {
-        element.data.parentId = targetElement.data.id;
-        element.data.sortOrder = sortOrder;
-        this.organizationsService
-          .updateOrganization({
-            parentId: element.data.parentId,
-            sortOrder: element.data.sortOrder
-          } as any);
-      }
-    });*/
+    this.organizationsService.updateOrganizations(payloads);
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {

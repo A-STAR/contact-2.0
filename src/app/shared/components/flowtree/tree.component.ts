@@ -72,7 +72,9 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, OnCh
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dragAndDropPlugin.ngOnChanges(changes);
+    if ('value' in changes) {
+      this.dragAndDropPlugin.ngOnChanges(changes);
+    }
   }
 
   ngOnDestroy(): void {
