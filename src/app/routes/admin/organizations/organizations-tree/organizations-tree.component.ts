@@ -130,13 +130,9 @@ export class OrganizationsTreeComponent implements OnDestroy {
     const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
 
     const sourceParentElement: TreeNode = sourceElement.parent;
-    const sourceParentChildren: TreeNode[] = sourceParentElement.children;
+    sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
 
-    const sourceElementPosition: number = sourceParentChildren.findIndex((d) => d === sourceElement);
-    if (sourceElementPosition > -1) {
-      sourceParentChildren.splice(sourceElementPosition, 1);
-    }
-    if (!sourceParentChildren.length) {
+    if (!sourceParentElement.children.length) {
       delete sourceParentElement.children;
       sourceParentElement.expanded = false;
     }
