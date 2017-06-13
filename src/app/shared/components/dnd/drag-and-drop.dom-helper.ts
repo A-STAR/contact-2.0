@@ -45,13 +45,8 @@ export class DragAndDropDomHelper {
         (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
         (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
         (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
-        result.push({
-          element: el,
-          x1: x1,
-          y1: y1,
-          x2: x2,
-          y2: y2
-        });
+
+        result.push({ element: el, x1: x1, y1: y1, x2: x2, y2: y2 });
       }
     });
     return result;

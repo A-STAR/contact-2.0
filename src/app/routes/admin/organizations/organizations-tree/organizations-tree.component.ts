@@ -126,17 +126,10 @@ export class OrganizationsTreeComponent implements OnDestroy {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
-    // Caution: this assumes source element has parent
-    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
-
     const sourceParentElement: TreeNode = sourceElement.parent;
-    const sourceParentChildren: TreeNode[] = sourceParentElement.children;
+    sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
 
-    const sourceElementPosition: number = sourceParentChildren.findIndex((d) => d === sourceElement);
-    if (sourceElementPosition > -1) {
-      sourceParentChildren.splice(sourceElementPosition, 1);
-    }
-    if (!sourceParentChildren.length) {
+    if (!sourceParentElement.children.length) {
       delete sourceParentElement.children;
       sourceParentElement.expanded = false;
     }
@@ -155,19 +148,19 @@ export class OrganizationsTreeComponent implements OnDestroy {
       sourceElement.parent = targetElement;
     }
 
-    // TODO: do we have to reindex children on previous element parent?
-    targetElement.children.forEach((element: TreeNode, i: number) => {
-      const sortOrder = i + 1;
-      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
-        element.data.parentId = targetElement.data.id;
-        element.data.sortOrder = sortOrder;
-        this.organizationsService
-          .updateOrganization({
-            parentId: element.data.parentId,
-            sortOrder: element.data.sortOrder
-          } as any);
-      }
-    });
+    let payloads: IOrganization[];
+    if (payload.swap) {
+      payloads = targetElement.parent.children.map((node: TreeNode, i: number) => {
+        return {id: node.id, parentId: node.parent.id, sortOrder: i + 1};
+      });
+    } else {
+      payloads = [{
+        id: sourceElement.id,
+        parentId: sourceElement.parent.id,
+        sortOrder: sourceElement.parent.children.indexOf((node: TreeNode) => node === sourceElement) + 1
+      }];
+    }
+    this.organizationsService.updateOrganizations(payloads);
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {
