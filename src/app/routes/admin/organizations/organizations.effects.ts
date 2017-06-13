@@ -94,9 +94,6 @@ export class OrganizationsEffects {
         .map((organization: IOrganization) => this.updateOrganization(organization.id, organization)))
         .mergeMap(() => [
           {
-            type: OrganizationsService.ORGANIZATIONS_FETCH
-          },
-          {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
               dialogAction: null
