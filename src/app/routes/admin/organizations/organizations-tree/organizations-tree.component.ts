@@ -126,9 +126,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
     const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
 
-    // Caution: this assumes source element has parent
-    const hasChangedParent = sourceElement.parent.data.id !== targetElement.data.id;
-
     const sourceParentElement: TreeNode = sourceElement.parent;
     sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
 
@@ -151,10 +148,29 @@ export class OrganizationsTreeComponent implements OnDestroy {
       sourceElement.parent = targetElement;
     }
 
+    if (payload.swap) {
+      const payloads: IOrganization[] = [];
+      targetElement.parent.children.forEach((node: TreeNode, i: number) => {
+        const sortOrder: number = i + 1;
+        payloads.push(
+          {
+            id: node.id,
+            parentId: node.parent.id,
+            sortOrder: sortOrder
+          }
+        );
+      });
+      this.organizationsService.updateOrganizations(payloads);
+    } else {
+
+    }
+
+
+
     // TODO: do we have to reindex children on previous element parent?
-    targetElement.children.forEach((element: TreeNode, i: number) => {
+    /*targetElement.children.forEach((element: TreeNode, i: number) => {
       const sortOrder = i + 1;
-      if (element.data.sortOrder !== sortOrder || (hasChangedParent && element.id === sourceElement.id)) {
+      if (element.data.sortOrder !== sortOrder || (!payload.swap && element.id === sourceElement.id)) {
         element.data.parentId = targetElement.data.id;
         element.data.sortOrder = sortOrder;
         this.organizationsService
@@ -163,7 +179,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
             sortOrder: element.data.sortOrder
           } as any);
       }
-    });
+    });*/
   }
 
   findNodeRecursively(node: TreeNode, id: string): TreeNode {

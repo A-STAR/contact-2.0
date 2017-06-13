@@ -6,7 +6,12 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IEmployeeCreateRequest, IEmployeeUpdateRequest, IEmployeesResponse } from './organizations.interface';
+import {
+  IEmployeeCreateRequest,
+  IEmployeeUpdateRequest,
+  IEmployeesResponse,
+  IOrganization
+} from './organizations.interface';
 
 import { OrganizationsService } from './organizations.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -62,6 +67,30 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
+        .mergeMap(() => [
+          {
+            type: OrganizationsService.ORGANIZATIONS_FETCH
+          },
+          {
+            type: OrganizationsService.DIALOG_ACTION,
+            payload: {
+              dialogAction: null
+            }
+          }
+        ])
+        .catch(() => {
+          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  updateOrganizationsOrder$ = this.actions
+    .ofType(OrganizationsService.ORGANIZATIONS_ORDER_UPDATE)
+    .switchMap(data => {
+      const organizations: IOrganization[] = data.payload;
+      return Observable.forkJoin(organizations
+        .map((organization: IOrganization) => this.updateOrganization(organization.id, organization)))
         .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
