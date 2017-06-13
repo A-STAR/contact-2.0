@@ -90,7 +90,9 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
       const sourceElement: Element = value[1];
       const targetElement: Element = value[2];
-      if (sourceElement && targetElement) {
+      if (sourceElement && targetElement
+        && this.intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
+      ) {
         this.component.changeLocation.emit({
           swap: false,
           source: this.toNodeId(sourceElement),
