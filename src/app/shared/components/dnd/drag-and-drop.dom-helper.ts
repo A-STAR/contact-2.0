@@ -59,11 +59,6 @@ export class DragAndDropDomHelper {
       && nodeInfo.y2 >= cursorY;
   }
 
-  public isElementContains(el: Element, target: Element, selector: string): boolean {
-    return !!Array.prototype.find.call(this.queryElements(el, selector),
-      (element: Element) => element === target);
-  }
-
   public queryElements(el: Element, selector: string): HTMLCollectionOf<Element> {
     return el.querySelectorAll(selector) as HTMLCollectionOf<Element>;
   }
