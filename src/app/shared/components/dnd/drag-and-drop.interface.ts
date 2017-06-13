@@ -1,7 +1,6 @@
 import {
   ElementRef,
   EventEmitter,
-  OnChanges,
   OnDestroy,
   OnInit,
   Renderer2
@@ -28,7 +27,7 @@ export interface IIntersectedNodeInfo {
   y2: number
 }
 
-export interface IDraggedComponent extends OnInit, OnChanges, OnDestroy {
+export interface IDraggedComponent extends OnInit, OnDestroy {
   changeLocation: EventEmitter<IDragAndDropPayload>;
   elementRef: ElementRef;
   elementSelector: string;
