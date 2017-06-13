@@ -29,6 +29,9 @@ export class DragAndDropComponentPluginFactory {
 
 export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
+  private static SWAPPED_NODES_COUNT: number = 2;
+  private static MOVED_NODES_COUNT: number = 1;
+
   private _draggedElementPosition: INodeOffset;
   private _isNodeAlreadyMoved: boolean;
   private _clientX: number;
@@ -59,13 +62,13 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
 
-    if (intersectedByTargetElements.length === 1
+    if (intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       && this._dragNode !== firstNode.element
       && this.domHandler.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
 
       this._cachedElements.add(firstNode.element);
       this.renderer.addClass(firstNode.element, 'tree-dnd-active');
-    } else if (intersectedByTargetElements.length === 2) {
+    } else if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
 
       this._cachedElements.add(firstNode.element);
       this._cachedElements.add(secondNode.element);
@@ -103,7 +106,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
       if (!this._isNodeAlreadyMoved) {
         const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
-        if (intersectedByTargetElements.length === 2) {
+        if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
           // The change location operation can be executed when only two nodes are intersected at the same time
           this.component.changeLocation.emit({
             swap: true,
