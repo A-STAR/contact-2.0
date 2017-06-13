@@ -9,7 +9,7 @@ import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum, IToolbarDefaultEle
   selector: 'app-toolbar-2',
   templateUrl: './toolbar-2.component.html',
   styleUrls: [ './toolbar-2.component.scss' ],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar2Component implements OnInit {
   @Input() items: Array<IToolbarItem> = [];
@@ -48,6 +48,8 @@ export class Toolbar2Component implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // TODO(a.tymchuk): refactor to consume only inputs since this will fire
+    // on every store update and negatively affect performance
     this._items$ = this.store.map(state =>
       this.items.map(el => {
         const defaultItem = this.defaultItems[el.type];
@@ -87,7 +89,7 @@ export class Toolbar2Component implements OnInit {
   }
 
   private isForbidden(item: IToolbarItem, state: IAppState): boolean {
-    // TODO: use permissionsService methods instead
+    // TODO(d.maltsev): use permissionsService methods instead (asynchronous?)
     return item.permissions ? item.permissions.reduce((acc, name) => acc && !state.permissions.permissions[name], true) : false;
   }
 

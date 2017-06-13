@@ -5,10 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import {
-  IRawPermission,
   IPermissionsDialogEnum,
+  IPermissionsResponse,
   IPermissionRole,
   IPermissionModel,
+  IRawPermission,
 } from './permissions.interface';
 import { IAppState } from '../state/state.interface';
 
@@ -31,10 +32,16 @@ export class PermissionsEffects {
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map(permissions => ({
-          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: permissions
-        }))
+        .map(response => {
+          const payload = response.userPermits.reduce((acc, rawPermission: IRawPermission) => {
+            acc[rawPermission.name] = this.permissionsService.valueToBoolean(rawPermission);
+            return acc;
+          }, {});
+          return {
+            type: PermissionsService.PERMISSION_FETCH_SUCCESS,
+            payload,
+          };
+        })
         .catch(() => {
           this.notifications.error('permissions.api.errors.fetch');
           return null;
@@ -96,10 +103,11 @@ export class PermissionsEffects {
     private actions: Actions,
     private store: Store<IAppState>,
     private gridService: GridService,
+    private permissionsService: PermissionsService,
     private notifications: NotificationsService,
   ) {}
 
-  private read(): Observable<IRawPermission[]> {
+  private read(): Observable<IPermissionsResponse> {
     return this.gridService.read('/userpermits');
   }
 
