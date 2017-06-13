@@ -127,7 +127,6 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private removeMouseMoveListener(): void {
-    console.log('removeMouseMoveListener');
     if (this._moveSubscription) {
       this._moveSubscription();
     }
