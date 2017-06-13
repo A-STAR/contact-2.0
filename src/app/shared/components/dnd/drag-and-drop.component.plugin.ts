@@ -30,7 +30,7 @@ export class DragAndDropComponentPluginFactory {
 export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private _draggedElementPosition: INodeOffset;
-  private _isNodeAlreadySwapped: boolean;
+  private _isNodeAlreadyMoved: boolean;
   private _clientX: number;
   private _clientY: number;
   private _dragNode: Element;
@@ -76,7 +76,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._dragSubscription = this.dragulaService.drag.subscribe((value: Array<Element>) => {
-      this._isNodeAlreadySwapped = false;
+      this._isNodeAlreadyMoved = false;
       this._dragNode = value[1];
       this.addMouseMoveListener();
     });
@@ -91,7 +91,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
           source: this.toNodeId(value[1]),
           target: this.toNodeId(value[2])
         });
-        this._isNodeAlreadySwapped = true;
+        this._isNodeAlreadyMoved = true;
       }
     });
 
@@ -101,7 +101,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       const attr: string = this.toNodeId(value[1]);
       this.renderer.removeChild(value[1].parentNode, value[1]);
 
-      if (!this._isNodeAlreadySwapped) {
+      if (!this._isNodeAlreadyMoved) {
         const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
         if (intersectedByTargetElements.length === 2) {
           // The change location operation can be executed when only two nodes are intersected at the same time
