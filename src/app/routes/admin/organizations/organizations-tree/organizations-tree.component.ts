@@ -124,7 +124,12 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
-    const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
+    const sourceElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.source);
+
+    if (this.findNodeRecursively(sourceElement, payload.target)) {
+      // User can not move the node under its child
+      return;
+    }
 
     const sourceParentElement: TreeNode = sourceElement.parent;
     sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
@@ -148,18 +153,11 @@ export class OrganizationsTreeComponent implements OnDestroy {
       sourceElement.parent = targetElement;
     }
 
-    let payloads: IOrganization[];
-    if (payload.swap) {
-      payloads = targetElement.parent.children.map((node: TreeNode, i: number) => {
-        return {id: node.id, parentId: node.parent.id, sortOrder: i + 1};
+    const payloads: IOrganization[] = (payload.swap ? targetElement : sourceElement)
+      .parent.children.map((node: TreeNode, i: number) => {
+        return { id: node.id, parentId: node.parent.id, sortOrder: i + 1 };
       });
-    } else {
-      payloads = [{
-        id: sourceElement.id,
-        parentId: sourceElement.parent.id,
-        sortOrder: sourceElement.parent.children.indexOf((node: TreeNode) => node === sourceElement) + 1
-      }];
-    }
+
     this.organizationsService.updateOrganizations(payloads);
   }
 
