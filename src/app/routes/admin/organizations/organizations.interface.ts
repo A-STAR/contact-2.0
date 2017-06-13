@@ -2,17 +2,13 @@ import { IUser } from '../users/users.interface';
 
 export interface IOrganization {
   id: number;
-  name: string;
-  comment: string;
-  branchCode: number;
-  boxColor: string;
-  sortOrder: number;
+  name?: string;
+  comment?: string;
+  branchCode?: number;
+  boxColor?: string;
+  sortOrder?: number;
+  parentId?: number;
   children?: Array<IOrganization>;
-}
-
-export interface IOrganizationsResponse {
-  success: boolean;
-  organizations: Array<IOrganization>;
 }
 
 export interface IEmployee {

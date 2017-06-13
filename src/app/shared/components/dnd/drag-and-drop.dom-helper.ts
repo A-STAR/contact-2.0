@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { INodeOffset } from './drag-and-drop.interface';
+import {
+  IIntersectedNodeInfo,
+  INodeOffset
+} from './drag-and-drop.interface';
 
 @Injectable()
 export class DragAndDropDomHelper {
@@ -19,11 +22,11 @@ export class DragAndDropDomHelper {
     return {top: y, left: x, width: originalElement.clientWidth, height: originalElement.clientHeight};
   }
 
-  public getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): Element[] {
-    const targetElements: Element[] = [];
+  public getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
+    const result: IIntersectedNodeInfo[] = [];
 
     if (!targetPosition) {
-      return targetElements;
+      return result;
     }
 
     Array.prototype.forEach.call(elements, (el: Element) => {
@@ -42,9 +45,17 @@ export class DragAndDropDomHelper {
         (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
         (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
         (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
-        targetElements.push(el);
+
+        result.push({ element: el, x1: x1, y1: y1, x2: x2, y2: y2 });
       }
     });
-    return targetElements;
+    return result;
+  }
+
+  public isCursorInsideElement(nodeInfo: IIntersectedNodeInfo, cursorX: number, cursorY: number): boolean {
+    return nodeInfo.x1 <= cursorX
+      && nodeInfo.x2 >= cursorX
+      && nodeInfo.y1 <= cursorY
+      && nodeInfo.y2 >= cursorY;
   }
 }

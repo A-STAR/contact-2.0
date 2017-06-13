@@ -8,11 +8,11 @@ import {
   QueryList,
   TemplateRef,
   ViewEncapsulation,
-  HostListener,
   ElementRef,
   OnInit,
   OnDestroy,
   Renderer2,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { TreeNode } from './common/api';
@@ -24,7 +24,8 @@ import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.int
   selector: 'app-tree',
   styleUrls: ['./tree.component.scss'],
   templateUrl: './tree.component.html',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, AfterContentInit {
 
@@ -64,11 +65,6 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
               public renderer: Renderer2,
               dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
     this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
-  }
-
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.dragAndDropPlugin.onMouseMove(event);
   }
 
   ngOnInit(): void {
