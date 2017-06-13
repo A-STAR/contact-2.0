@@ -39,6 +39,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   private _isNodeAlreadySwapped: boolean;
   private _clientX: number;
   private _clientY: number;
+  private _dragNode: Element;
   private _cachedElements: Set<Element> = new Set<Element>();
   private _dragSubscription: Subscription;
   private _dropSubscription: Subscription;
@@ -63,6 +64,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
 
     if (intersectedByTargetElements.length === 1
+      && this._dragNode !== firstNode.element
       && this.domHandler.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
 
       this._cachedElements.add(firstNode.element);
@@ -77,8 +79,9 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnInit(): void {
-    this._dragSubscription = this.dragulaService.drag.subscribe(() => {
+    this._dragSubscription = this.dragulaService.drag.subscribe((value: Array<Element>) => {
       this._isNodeAlreadySwapped = false;
+      this._dragNode = value[1];
       this.addMouseMoveListener();
     });
 
@@ -158,6 +161,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy, OnChanges 
   }
 
   private clearCache(): void {
+    this._dragNode = null;
     this._cachedElements.clear();
   }
 
