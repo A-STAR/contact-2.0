@@ -87,7 +87,7 @@ export class OrganizationsEffects {
 
   @Effect()
   updateOrganizationsOrder$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATIONS_ORDER_UPDATE)
+    .ofType(OrganizationsService.ORGANIZATION_ORDER_UPDATE)
     .switchMap(data => {
       const organizations: IOrganization[] = data.payload;
       return Observable.forkJoin(organizations
