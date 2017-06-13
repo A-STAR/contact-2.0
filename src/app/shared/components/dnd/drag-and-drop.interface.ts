@@ -13,6 +13,14 @@ export interface INodeOffset {
   height: number;
 }
 
+export interface IIntersectedNodeInfo {
+  element: Element;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number
+}
+
 export interface IDraggedComponent extends OnInit, OnDestroy {
   changeLocation: EventEmitter<IDragAndDropPayload>;
   elementRef: ElementRef;
