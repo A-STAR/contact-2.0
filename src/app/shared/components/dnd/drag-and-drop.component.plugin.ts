@@ -33,7 +33,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private static MOVED_NODES_COUNT = 1;
 
   private _draggedElementPosition: INodeOffset;
-  private _isNodeAlreadyMoved: boolean;
+  private _isNodeAlreadyMovedOrRejected: boolean;
   private _clientX: number;
   private _clientY: number;
   private _dragNode: Element;
@@ -78,36 +78,39 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._dragSubscription = this.dragulaService.drag.subscribe((value: Array<Element>) => {
-      this._isNodeAlreadyMoved = false;
+    this._dragSubscription = this.dragulaService.drag.subscribe((value: Element[]) => {
+      this._isNodeAlreadyMovedOrRejected = false;
       this._dragNode = value[1];
       this.addMouseMoveListener();
     });
 
-    this._dropSubscription = this.dragulaService.drop.subscribe((value: Array<Element>) => {
+    this._dropSubscription = this.dragulaService.drop.subscribe((value: Element[]) => {
       this.deactivateNodes();
       this.removeMouseMoveListener();
 
-      if (value[1] && value[2]) {
+      const sourceElement: Element = value[1];
+      const targetElement: Element = value[2];
+      if (sourceElement && targetElement) {
         this.component.changeLocation.emit({
           swap: false,
-          source: this.toNodeId(value[1]),
-          target: this.toNodeId(value[2])
+          source: this.toNodeId(sourceElement),
+          target: this.toNodeId(targetElement)
         });
-        this._isNodeAlreadyMoved = true;
+        this._isNodeAlreadyMovedOrRejected = true;
       }
     });
 
-    this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Array<Element>) => {
+    this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Element[]) => {
       this._dragMirror = null; // Here mirror element does not already exist
 
-      const sourceNodeId: string = this.toNodeId(value[1]);
-      this.renderer.removeChild(value[1].parentNode, value[1]);
+      const sourceElement: Element = value[1];
+      const sourceNodeId: string = this.toNodeId(sourceElement);
+      this.renderer.removeChild(sourceElement.parentNode, sourceElement);
 
-      if (!this._isNodeAlreadyMoved) {
+      if (!this._isNodeAlreadyMovedOrRejected) {
         const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
         if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
-          // The change location operation can be executed when only two nodes are intersected at the same time
+          // The change location operation can be executed only two nodes are intersected at the same time
           this.component.changeLocation.emit({
             swap: true,
             target: this.toNodeId(intersectedByTargetElements[0].element),
@@ -149,7 +152,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     return this.domHandler.getIntersectedByTargetElements(
       this.draggedElementPosition,
       this._allElements = this._allElements ||
-        this.component.elementRef.nativeElement.querySelectorAll(this.component.elementSelector)
+        this.domHandler.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
     );
   }
 
