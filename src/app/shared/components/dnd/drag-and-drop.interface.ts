@@ -27,6 +27,7 @@ export interface IIntersectedNodeInfo {
 }
 
 export interface IDraggedComponent extends OnInit, OnDestroy {
+  dragulaOptions: any;
   elementRef: ElementRef;
   elementSelector: string;
   renderer: Renderer2;

@@ -32,7 +32,6 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
   @Input() index: number;
   @Input() firstChild: boolean;
   @Input() lastChild: boolean;
-  @Input() dragulaOptions: any;
 
   private clickComponentPlugin: IClickableComponentPlugin;
 
@@ -40,14 +39,13 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
     this.clickComponentPlugin = new ClickComponentPlugin(this);
   }
 
+  get dragulaOptions(): any {
+    return this.tree.dragulaOptions;
+  }
+
   ngOnInit(): void {
     if (typeof this.parentNode !== 'undefined') {
       this.node.parent = this.parentNode;
-    }
-    if (!this.dragulaOptions) {
-      this.dragulaOptions = {
-        invalid: () => true // prevent any drags from initiating by default
-      };
     }
   }
 

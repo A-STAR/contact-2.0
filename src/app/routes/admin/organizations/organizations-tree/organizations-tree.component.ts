@@ -29,11 +29,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
   selection: TreeNode;
   value: TreeNode[];
 
-  dragulaOptions = {
-    copy: true,
-    moves: (el: Element, source: Element) => !source.classList.contains('ui-treenode-root')
-  };
-
   toolbarActions: Array<IToolbarAction> = [
     { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_ADD' },
     { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },

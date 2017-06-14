@@ -39,20 +39,20 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
-  @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeEdit: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Input() style: any;
   @Input() styleClass: string;
-  @Input() contextMenu: any;
   @Input() layout = 'vertical';
   @Input() metaKeySelection = true;
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
-  @Input() dragulaOptions: any;
   @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
-  public templateMap: any;
+  templateMap: any;
+  dragulaOptions: any = {
+    invalid: () => true // prevent any drags by default
+  };
   private dragAndDropPlugin: DragAndDropComponentPlugin;
 
   get horizontal(): boolean {
