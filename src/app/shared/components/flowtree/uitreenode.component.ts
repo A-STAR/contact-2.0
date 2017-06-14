@@ -1,14 +1,27 @@
-import { Component, OnInit, Input, Inject, forwardRef, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Inject,
+  forwardRef,
+} from '@angular/core';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/combineLatest';
 
 import { TreeNode } from './common/api';
 import { TreeComponent } from './tree.component';
+import { ClickComponentPlugin } from './click.component.plugin';
+import {
+  IClickableComponent,
+  IClickableComponentPlugin
+} from './tree.interface';
 
 @Component({
   selector: 'app-tree-node',
   templateUrl: './uitreenode.component.html'
 })
-export class UITreeNodeComponent implements OnInit {
+export class UITreeNodeComponent implements OnInit, IClickableComponent {
 
   static DEFAULT_BG_COLOR = '#fff';
   static DEFAULT_SELECTED_BG_COLOR = '#def';
@@ -19,34 +32,20 @@ export class UITreeNodeComponent implements OnInit {
   @Input() index: number;
   @Input() firstChild: boolean;
   @Input() lastChild: boolean;
-  @Input() dragulaOptions: any;
 
-  click: EventEmitter<MouseEvent> = new EventEmitter();
+  private clickComponentPlugin: IClickableComponentPlugin;
 
   constructor(@Inject(forwardRef(() => TreeComponent)) public tree: TreeComponent) {
-    /*
-     * TODO:
-     * 1. Break onNodeClick into two events: onNodeSelect (fires immediately) and onNodeExpand (debounced).
-     * 2. Fire onDoubleNodeClick immediately after two clicks.
-     */
-    this.click
-      .debounceTime(250)
-      .subscribe(event => {
-        this.tree.onNodeClick(event, this.node);
-        if (event.detail > 1) {
-          this.tree.onDoubleNodeClick(event, this.node);
-        }
-      });
+    this.clickComponentPlugin = new ClickComponentPlugin(this);
+  }
+
+  get dragulaOptions(): any {
+    return this.tree.dragulaOptions;
   }
 
   ngOnInit(): void {
     if (typeof this.parentNode !== 'undefined') {
       this.node.parent = this.parentNode;
-    }
-    if (!this.dragulaOptions) {
-      this.dragulaOptions = {
-        invalid: () => true // prevent any drags from initiating by default
-      };
     }
   }
 
@@ -61,21 +60,26 @@ export class UITreeNodeComponent implements OnInit {
   }
 
   toggle(event: Event): void {
+    this.stopEvent(event);
     if (this.node.expanded) {
       this.tree.onNodeCollapse.emit({originalEvent: event, node: this.node});
     } else {
       this.tree.onNodeExpand.emit({originalEvent: event, node: this.node});
     }
-
     this.node.expanded = !this.node.expanded;
   }
 
-  onNodeClick(event: MouseEvent): void {
-    this.click.emit(event);
+  onClick(event: MouseEvent): void {
+    this.tree.onNodeClick(event, this.node);
   }
 
-  onNodeRightClick(event: MouseEvent): void {
-    this.tree.onNodeRightClick(event, this.node);
+  onDoubleClick(event: MouseEvent): void {
+    this.tree.onDoubleNodeClick(event, this.node);
+  }
+
+  delegateClick(event: MouseEvent): void {
+    this.stopEvent(event);
+    this.clickComponentPlugin.delegateClick(event);
   }
 
   isSelected(): boolean {
@@ -86,5 +90,10 @@ export class UITreeNodeComponent implements OnInit {
     return this.node.expanded
       ? this.node.expandedIcon
       : (this.node.icon || this.node.collapsedIcon);
+  }
+
+  private stopEvent($event: Event): void {
+    $event.stopPropagation();
+    $event.preventDefault();
   }
 }
