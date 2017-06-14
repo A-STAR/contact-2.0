@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as R from 'ramda';
 
 import { IIntersectedNodeInfo, INodeOffset } from './drag-and-drop.interface';
 
@@ -9,26 +10,31 @@ export class DragAndDropDomHelper {
 
   getOffset(el: Element): INodeOffset {
     const originalElement: HTMLElement = el as HTMLElement;
+    const scrollOffset: { x: number, y: number } = this.getScrollOffset(originalElement);
     let currentElement: HTMLElement = el as HTMLElement;
 
     let x = 0;
     let y = 0;
-    while (currentElement && !isNaN(currentElement.offsetLeft) && !isNaN(currentElement.offsetTop)) {
-      x += currentElement.offsetLeft - currentElement.scrollLeft;
-      y += currentElement.offsetTop - currentElement.scrollTop;
+    while (currentElement) {
+      x += currentElement.offsetLeft;
+      y += currentElement.offsetTop;
       currentElement = currentElement.offsetParent as HTMLElement;
     }
-    return {top: y, left: x, width: originalElement.clientWidth, height: originalElement.clientHeight};
+    return {
+      top: y - scrollOffset.y,
+      left: x - scrollOffset.x,
+      width: originalElement.clientWidth,
+      height: originalElement.clientHeight
+    };
   }
 
   getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
     const result: IIntersectedNodeInfo[] = [];
-
     if (!targetPosition) {
       return result;
     }
 
-    Array.prototype.forEach.call(elements, (el: Element) => {
+    R.forEach((el: Element) => {
       const elPos: INodeOffset = this.getOffset(el);
       const x1: number = elPos.left;
       const x2: number = elPos.left + elPos.width;
@@ -47,7 +53,8 @@ export class DragAndDropDomHelper {
 
         result.push({ element: el, x1: x1, y1: y1, x2: x2, y2: y2 });
       }
-    });
+    }, Array.from(elements));
+
     return result;
   }
 
@@ -68,5 +75,17 @@ export class DragAndDropDomHelper {
 
   extractNodeId(element: Element): string {
     return element.getAttribute(DragAndDropDomHelper.DND_ATTRIBUTE_NAME);
+  }
+
+  private getScrollOffset(el: Element): { x: number, y: number } {
+    let currentElement: HTMLElement = el as HTMLElement;
+    let x = 0;
+    let y = 0;
+    while (currentElement) {
+      x += isNaN(currentElement.scrollLeft) ? 0 : currentElement.scrollLeft;
+      y += isNaN(currentElement.scrollTop) ? 0 : currentElement.scrollTop;
+      currentElement = currentElement.parentNode as HTMLElement;
+    }
+    return { x, y };
   }
 }
