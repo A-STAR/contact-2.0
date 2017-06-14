@@ -58,4 +58,8 @@ export class DragAndDropDomHelper {
       && nodeInfo.y1 <= cursorY
       && nodeInfo.y2 >= cursorY;
   }
+
+  public queryElements(el: Element, selector: string): HTMLCollectionOf<Element> {
+    return el.querySelectorAll(selector) as HTMLCollectionOf<Element>;
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
+import * as R from 'ramda';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
@@ -124,7 +125,12 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   onNodeChangeLocation(payload: IDragAndDropPayload): void {
     const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
-    const sourceElement = this.findNodeRecursively(this.rootNode, payload.source);
+    const sourceElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.source);
+
+    if (this.findNodeRecursively(sourceElement, payload.target)) {
+      // User can not move the node under its child
+      return;
+    }
 
     const sourceParentElement: TreeNode = sourceElement.parent;
     sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
@@ -135,31 +141,24 @@ export class OrganizationsTreeComponent implements OnDestroy {
     }
 
     if (payload.swap) {
-      const indexOf = targetElement.parent.children.findIndex((d) => d === targetElement);
-      if (indexOf > -1) {
-        targetElement.parent.children.splice(indexOf + 1, 0, sourceElement);
-      }
-      sourceElement.parent = targetElement.parent;
+      const targetParent: TreeNode = targetElement.parent;
+      targetParent.children = R.insert(
+        R.findIndex((node: TreeNode) => node === targetElement, targetParent.children) + 1,
+        sourceElement,
+        targetParent.children
+      );
+      sourceElement.parent = targetParent;
     } else {
-      if (!targetElement.children) {
-        targetElement.children = [];
-      }
-      targetElement.children.push(sourceElement);
+      targetElement.children = R.insert(
+        (targetElement.children || []).length, sourceElement, targetElement.children || []
+      );
       sourceElement.parent = targetElement;
     }
 
-    let payloads: IOrganization[];
-    if (payload.swap) {
-      payloads = targetElement.parent.children.map((node: TreeNode, i: number) => {
-        return {id: node.id, parentId: node.parent.id, sortOrder: i + 1};
-      });
-    } else {
-      payloads = [{
-        id: sourceElement.id,
-        parentId: sourceElement.parent.id,
-        sortOrder: sourceElement.parent.children.indexOf((node: TreeNode) => node === sourceElement) + 1
-      }];
-    }
+    const payloads: IOrganization[] = R.addIndex(R.map)((node: TreeNode, index: number) => {
+      return {id: node.id, parentId: node.parent.id, sortOrder: index + 1};
+    }, (payload.swap ? targetElement : sourceElement).parent.children);
+
     this.organizationsService.updateOrganizations(payloads);
   }
 
