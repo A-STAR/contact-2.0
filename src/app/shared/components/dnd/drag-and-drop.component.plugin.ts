@@ -35,6 +35,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private static DND_ACTIVE_CLS = 'dnd-active';
   private static DND_MIRROR_CLS = 'gu-mirror';
 
+  private _isCursorInsideElement: boolean;
   private _draggedElementPosition: INodeOffset;
   private _isNodeAlreadyMovedOrRejected: boolean;
   private _clientX: number;
@@ -46,6 +47,8 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private _dragSubscription: Subscription;
   private _dropSubscription: Subscription;
   private _dragEndSubscription: Subscription;
+  private _overSubscription: Subscription;
+  private _outSubscription: Subscription;
   private _moveSubscription: Function;
 
   constructor(
@@ -67,7 +70,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
     if (intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       && this._dragNode !== firstNode.element
-      && this.domHelper.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
+      && this._isCursorInsideElement) {
 
       this._cachedElements.add(firstNode.element);
       this.renderer.addClass(firstNode.element, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
@@ -86,6 +89,9 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       this._dragNode = value[1];
       this.addMouseMoveListener();
     });
+
+    this._overSubscription = this.dragulaService.over.subscribe(() => this._isCursorInsideElement = true);
+    this._outSubscription = this.dragulaService.out.subscribe(() => this._isCursorInsideElement = false);
 
     this._dropSubscription = this.dragulaService.drop.subscribe((value: Element[]) => {
       this.deactivateNodes();
@@ -131,6 +137,8 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._dragEndSubscription.unsubscribe();
     this._dropSubscription.unsubscribe();
     this._dragSubscription.unsubscribe();
+    this._overSubscription.unsubscribe();
+    this._outSubscription.unsubscribe();
     this.clearCache();
     this.removeMouseMoveListener();
   }
