@@ -174,6 +174,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private canMove(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
+
     return intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       && this._dragNode !== firstNode.element
       && this._isCursorInsideElement;
@@ -182,6 +183,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private canSwap(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
+
     return intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT
       && this._dragNode !== secondNode.element
       && this._dragNode !== firstNode.element;
