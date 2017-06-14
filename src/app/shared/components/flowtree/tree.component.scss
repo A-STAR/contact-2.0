@@ -2,10 +2,10 @@
     width: 18em;
 
     .ui-treenode-content {
-      &.tree-dnd-swapped-active {
+      &.dnd-swapped-active {
         background-color: #d8ffe1 !important;
       }
-      &.tree-dnd-active {
+      &.dnd-active {
         background-color: #99e5a9 !important;
       }
     }

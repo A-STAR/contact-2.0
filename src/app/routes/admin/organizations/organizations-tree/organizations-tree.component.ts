@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
-import * as R from 'ramda';
 
-import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
+import { ITreeNodeInfo } from '../../../../shared/components/flowtree/tree.interface';
 import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
@@ -70,7 +69,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
               children: [].concat(nodes),
             };
             this.value = [files];
-            this.prepareTree(this.rootNode);
+            this.prepareTree(this.value[0]);
         },
         error => console.error(error)
       );
@@ -123,60 +122,8 @@ export class OrganizationsTreeComponent implements OnDestroy {
     };
   }
 
-  onNodeChangeLocation(payload: IDragAndDropPayload): void {
-    const targetElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.target);
-    const sourceElement: TreeNode = this.findNodeRecursively(this.rootNode, payload.source);
-
-    if (this.findNodeRecursively(sourceElement, payload.target)) {
-      // User can not move the node under its child
-      return;
-    }
-
-    const sourceParentElement: TreeNode = sourceElement.parent;
-    sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
-
-    if (!sourceParentElement.children.length) {
-      delete sourceParentElement.children;
-      sourceParentElement.expanded = false;
-    }
-
-    if (payload.swap) {
-      const targetParent: TreeNode = targetElement.parent;
-      targetParent.children = R.insert(
-        R.findIndex((node: TreeNode) => node === targetElement, targetParent.children) + 1,
-        sourceElement,
-        targetParent.children
-      );
-      sourceElement.parent = targetParent;
-    } else {
-      targetElement.children = R.insert(
-        (targetElement.children || []).length, sourceElement, targetElement.children || []
-      );
-      sourceElement.parent = targetElement;
-    }
-
-    const payloads: IOrganization[] = R.addIndex(R.map)((node: TreeNode, index: number) => {
-      return {id: node.id, parentId: node.parent.id, sortOrder: index + 1};
-    }, (payload.swap ? targetElement : sourceElement).parent.children);
-
-    this.organizationsService.updateOrganizations(payloads);
-  }
-
-  findNodeRecursively(node: TreeNode, id: string): TreeNode {
-    if (node.id === parseInt(id, 10)) {
-      return node;
-    }
-    if (node.children) {
-      let result: TreeNode;
-      node.children.forEach((childNode: TreeNode) => {
-        const currentNode: TreeNode = this.findNodeRecursively(childNode, id);
-        if (currentNode) {
-          result = currentNode;
-        }
-      });
-      return result;
-    }
-    return null;
+  onChangeNodesLocation(payload: ITreeNodeInfo[]): void {
+    this.organizationsService.updateOrganizations(payload);
   }
 
   onNodeSelect({ node }: { node: TreeNode }): void {
@@ -238,10 +185,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   onRemoveSubmit(): void {
     this.organizationsService.deleteOrganization();
-  }
-
-  private get rootNode(): TreeNode {
-    return this.value[0];
   }
 
   private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {

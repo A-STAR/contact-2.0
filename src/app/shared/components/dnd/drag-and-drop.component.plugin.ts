@@ -31,6 +31,9 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private static SWAPPED_NODES_COUNT = 2;
   private static MOVED_NODES_COUNT = 1;
+  private static DND_SWAPPED_ACTIVE_CLS = 'dnd-swapped-active';
+  private static DND_ACTIVE_CLS = 'dnd-active';
+  private static DND_MIRROR_CLS = 'gu-mirror';
 
   private _draggedElementPosition: INodeOffset;
   private _isNodeAlreadyMovedOrRejected: boolean;
@@ -48,7 +51,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   constructor(
     private component: IDraggedComponent,
     private dragulaService: DragulaService,
-    private domHandler: DragAndDropDomHelper,
+    private domHelper: DragAndDropDomHelper,
   ) {
   }
 
@@ -64,16 +67,16 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
     if (intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       && this._dragNode !== firstNode.element
-      && this.domHandler.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
+      && this.domHelper.isCursorInsideElement(firstNode, this._clientX, this._clientY)) {
 
       this._cachedElements.add(firstNode.element);
-      this.renderer.addClass(firstNode.element, 'tree-dnd-active');
+      this.renderer.addClass(firstNode.element, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
     } else if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
 
       this._cachedElements.add(firstNode.element);
       this._cachedElements.add(secondNode.element);
       intersectedByTargetElements.forEach((value: IIntersectedNodeInfo) =>
-        this.renderer.addClass(value.element, 'tree-dnd-swapped-active'));
+        this.renderer.addClass(value.element, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS));
     }
   }
 
@@ -93,10 +96,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       if (sourceElement && targetElement
         && this.intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       ) {
-        this.component.changeLocation.emit({
+        this.component.changeLocation({
           swap: false,
-          source: this.toNodeId(sourceElement),
-          target: this.toNodeId(targetElement)
+          source: this.domHelper.extractNodeId(sourceElement),
+          target: this.domHelper.extractNodeId(targetElement)
         });
         this._isNodeAlreadyMovedOrRejected = true;
       }
@@ -106,16 +109,16 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       this._dragMirror = null; // Here mirror element does not already exist
 
       const sourceElement: Element = value[1];
-      const sourceNodeId: string = this.toNodeId(sourceElement);
+      const sourceNodeId: string = this.domHelper.extractNodeId(sourceElement);
       this.renderer.removeChild(sourceElement.parentNode, sourceElement);
 
       if (!this._isNodeAlreadyMovedOrRejected) {
         const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
         if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
           // The change location operation can be executed only two nodes are intersected at the same time
-          this.component.changeLocation.emit({
+          this.component.changeLocation({
             swap: true,
-            target: this.toNodeId(intersectedByTargetElements[0].element),
+            target: this.domHelper.extractNodeId(intersectedByTargetElements[0].element),
             source: sourceNodeId
           });
         }
@@ -145,16 +148,16 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private deactivateNodes(): void {
     this._cachedElements.forEach((el: Element) => {
-      this.renderer.removeClass(el, 'tree-dnd-active');
-      this.renderer.removeClass(el, 'tree-dnd-swapped-active');
+      this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
+      this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS);
     });
   }
 
   private get intersectedByTargetElements(): IIntersectedNodeInfo[] {
-    return this.domHandler.getIntersectedByTargetElements(
+    return this.domHelper.getIntersectedByTargetElements(
       this.draggedElementPosition,
       this._allElements = this._allElements ||
-        this.domHandler.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
+        this.domHelper.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
     );
   }
 
@@ -170,13 +173,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private get draggedElementPosition(): INodeOffset {
-    const mirrorEl: Element = this._dragMirror = this._dragMirror || document.body.getElementsByClassName('gu-mirror')[0];
+    const mirrorEl: Element = this._dragMirror = this._dragMirror ||
+      this.domHelper.queryElementByClassName(DragAndDropComponentPlugin.DND_MIRROR_CLS);
     return mirrorEl
-      ? this._draggedElementPosition = this.domHandler.getOffset(mirrorEl)
+      ? this._draggedElementPosition = this.domHelper.getOffset(mirrorEl)
       : this._draggedElementPosition;
-  }
-
-  private toNodeId(element: Element): string {
-    return element.getAttribute('nodeid');
   }
 }
