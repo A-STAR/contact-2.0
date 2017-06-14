@@ -9,60 +9,36 @@ export class DragAndDropDomHelper {
   private static DND_ATTRIBUTE_NAME = 'nodeid';
 
   getOffset(el: Element): INodeOffset {
-    const originalElement: HTMLElement = el as HTMLElement;
-    const scrollOffset: { x: number, y: number } = this.getScrollOffset(originalElement);
-    let currentElement: HTMLElement = el as HTMLElement;
-
-    let x = 0;
-    let y = 0;
-    while (currentElement) {
-      x += currentElement.offsetLeft;
-      y += currentElement.offsetTop;
-      currentElement = currentElement.offsetParent as HTMLElement;
-    }
-    return {
-      top: y - scrollOffset.y,
-      left: x - scrollOffset.x,
-      width: originalElement.clientWidth,
-      height: originalElement.clientHeight
-    };
+    return Object.assign({ width: el.clientWidth, height: el.clientHeight }, $(el).offset());
   }
 
   getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
-    const result: IIntersectedNodeInfo[] = [];
-    if (!targetPosition) {
-      return result;
-    }
+    return targetPosition
+      ? R.filter(
+        (info: IIntersectedNodeInfo) => !!info,
+        R.map((el: Element) => {
+          const elPos: INodeOffset = this.getOffset(el);
+          const x1: number = elPos.left;
+          const x2: number = elPos.left + elPos.width;
+          const y1: number = elPos.top;
+          const y2: number = elPos.top + elPos.height;
 
-    R.forEach((el: Element) => {
-      const elPos: INodeOffset = this.getOffset(el);
-      const x1: number = elPos.left;
-      const x2: number = elPos.left + elPos.width;
-      const y1: number = elPos.top;
-      const y2: number = elPos.top + elPos.height;
+          const x1Mirror: number = targetPosition.left;
+          const x2Mirror: number = targetPosition.left + targetPosition.width;
+          const y1Mirror: number = targetPosition.top;
+          const y2Mirror: number = targetPosition.top + targetPosition.height;
 
-      const x1Mirror: number = targetPosition.left;
-      const x2Mirror: number = targetPosition.left + targetPosition.width;
-      const y1Mirror: number = targetPosition.top;
-      const y2Mirror: number = targetPosition.top + targetPosition.height;
+          if ((x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
+            (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
+            (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
+            (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
 
-      if ((x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
-        (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y1Mirror && y1Mirror <= y2) ||
-        (x1 <= x1Mirror && x1Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2) ||
-        (x1 <= x2Mirror && x2Mirror <= x2 && y1 <= y2Mirror && y2Mirror <= y2)) {
-
-        result.push({ element: el, x1: x1, y1: y1, x2: x2, y2: y2 });
-      }
-    }, Array.from(elements));
-
-    return result;
-  }
-
-  isCursorInsideElement(nodeInfo: IIntersectedNodeInfo, cursorX: number, cursorY: number): boolean {
-    return nodeInfo.x1 <= cursorX
-      && nodeInfo.x2 >= cursorX
-      && nodeInfo.y1 <= cursorY
-      && nodeInfo.y2 >= cursorY;
+            return { element: el, x1: x1, y1: y1, x2: x2, y2: y2 };
+          }
+          return null;
+        }, Array.from(elements))
+      )
+      : [];
   }
 
   queryElements(el: Element, selector: string): HTMLCollectionOf<Element> {
@@ -75,17 +51,5 @@ export class DragAndDropDomHelper {
 
   extractNodeId(element: Element): string {
     return element.getAttribute(DragAndDropDomHelper.DND_ATTRIBUTE_NAME);
-  }
-
-  private getScrollOffset(el: Element): { x: number, y: number } {
-    let currentElement: HTMLElement = el as HTMLElement;
-    let x = 0;
-    let y = 0;
-    while (currentElement) {
-      x += isNaN(currentElement.scrollLeft) ? 0 : currentElement.scrollLeft;
-      y += isNaN(currentElement.scrollTop) ? 0 : currentElement.scrollTop;
-      currentElement = currentElement.parentNode as HTMLElement;
-    }
-    return { x, y };
   }
 }
