@@ -10,10 +10,12 @@ export class DragAndDropDomHelper {
   private static DND_MIRROR_CLS = 'gu-mirror';
 
   getOffset(el: Element): INodeOffset {
+    // jQuery
     return Object.assign({ width: el.clientWidth, height: el.clientHeight }, $(el).offset());
   }
 
-  getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
+  getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>):
+    IIntersectedNodeInfo[] {
     return targetPosition
       ? R.filter(
         (info: IIntersectedNodeInfo) => !!info,
