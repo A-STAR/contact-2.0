@@ -7,6 +7,7 @@ import { IIntersectedNodeInfo, INodeOffset } from './drag-and-drop.interface';
 export class DragAndDropDomHelper {
 
   private static DND_ATTRIBUTE_NAME = 'nodeid';
+  private static DND_MIRROR_CLS = 'gu-mirror';
 
   getOffset(el: Element): INodeOffset {
     return Object.assign({ width: el.clientWidth, height: el.clientHeight }, $(el).offset());
@@ -45,8 +46,9 @@ export class DragAndDropDomHelper {
     return el.querySelectorAll(selector) as HTMLCollectionOf<Element>;
   }
 
-  queryElementByClassName(clsName: string): Element {
-    return document.body.getElementsByClassName(clsName)[0];
+  queryDragulaMirrorElement(): Element {
+    return R.find((el: Element) => el.classList.contains(DragAndDropDomHelper.DND_MIRROR_CLS),
+      Array.from(document.body.children));
   }
 
   extractNodeId(element: Element): string {

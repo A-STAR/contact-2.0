@@ -33,7 +33,6 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private static MOVED_NODES_COUNT = 1;
   private static DND_SWAPPED_ACTIVE_CLS = 'dnd-swapped-active';
   private static DND_ACTIVE_CLS = 'dnd-active';
-  private static DND_MIRROR_CLS = 'gu-mirror';
 
   private _isCursorInsideElement: boolean;
   private _draggedElementPosition: INodeOffset;
@@ -69,14 +68,11 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
 
-    if (intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
-      && this._dragNode !== firstNode.element
-      && this._isCursorInsideElement) {
-
+    if (this.canMove(intersectedByTargetElements)) {
       this._cachedElements.add(firstNode.element);
       this.renderer.addClass(firstNode.element, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
-    } else if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
 
+    } else if (this.canSwap(intersectedByTargetElements)) {
       this._cachedElements.add(firstNode.element);
       this._cachedElements.add(secondNode.element);
       intersectedByTargetElements.forEach((value: IIntersectedNodeInfo) =>
@@ -100,9 +96,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
       const sourceElement: Element = value[1];
       const targetElement: Element = value[2];
-      if (sourceElement && targetElement
-        && this.intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
-      ) {
+      if (sourceElement && targetElement && this.canMove(this.intersectedByTargetElements)) {
         this.component.changeLocation({
           swap: false,
           source: this.domHelper.extractNodeId(sourceElement),
@@ -119,16 +113,13 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       const sourceNodeId: string = this.domHelper.extractNodeId(sourceElement);
       this.renderer.removeChild(sourceElement.parentNode, sourceElement);
 
-      if (!this._isNodeAlreadyMovedOrRejected) {
-        const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
-        if (intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
-          // The change location operation can be executed only two nodes are intersected at the same time
+      const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
+      if (!this._isNodeAlreadyMovedOrRejected && this.canSwap(intersectedByTargetElements)) {
           this.component.changeLocation({
             swap: true,
             target: this.domHelper.extractNodeId(intersectedByTargetElements[0].element),
             source: sourceNodeId
           });
-        }
       }
       this.clearCache();
     });
@@ -181,9 +172,23 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._cachedElements.clear();
   }
 
+  private canMove(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
+    const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
+    return intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
+      && this._dragNode !== firstNode.element
+      && this._isCursorInsideElement;
+  }
+
+  private canSwap(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
+    const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
+    const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
+    return intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT
+      && this._dragNode !== secondNode.element
+      && this._dragNode !== firstNode.element;
+  }
+
   private get draggedElementPosition(): INodeOffset {
-    const mirrorEl: Element = this._dragMirror = this._dragMirror ||
-      this.domHelper.queryElementByClassName(DragAndDropComponentPlugin.DND_MIRROR_CLS);
+    const mirrorEl: Element = this._dragMirror = this._dragMirror || this.domHelper.queryDragulaMirrorElement();
     return mirrorEl
       ? this._draggedElementPosition = this.domHelper.getOffset(mirrorEl)
       : this._draggedElementPosition;
