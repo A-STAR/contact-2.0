@@ -318,7 +318,7 @@
         }
       },
       "edit": {
-        "title": "Edit role: {{ id }} ",
+        "title": "Edit role: {{ id }}",
         "name": "Name",
         "comment": "Comments"
       },
@@ -355,7 +355,7 @@
         "comment": "Comments"
       },
       "tree": {
-        "access_denied": "The current roles does not have a permission to access data. Please contact the administrator"
+        "access_denied": "The current role does not have a permission to access data. Please contact the administrator"
       },
       "remove": {
         "title": "Remove role permission",
@@ -375,6 +375,12 @@
           "update": "Could not update the permission",
           "delete": "Could not remove the permission"
         }
+      },
+      "messages": {
+        "no_view": "You do not have the rights '{{ permission }}' for viewing records",
+        "no_add": "You do not have the rights '{{ permission }}' for adding records",
+        "no_edit": "You do not have the rights '{{ permission }}' for editing records",
+        "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
       }
     }
   },
@@ -481,14 +487,14 @@
     },
     "grid": {
       "groupColumn": "Группировка",
-      "groupDndTitle": "Для группировки перенесите сюда заголовок колонки",
+      "groupDndTitle": "Drag here for row groups",
       "filter": {
-        "title": "Фильтр",
-        "showOnlyLines": "Показать только те строки, значения которых:",
-        "and": "И",
-        "or": "Или"
+        "title": "Filter",
+        "showOnlyLines": "Show only records, where:",
+        "and": "And",
+        "or": "Or"
       },
-      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
+      "selectedCounts": "{{ selected }} selected / {{ length }} total"
     }
   }
 }

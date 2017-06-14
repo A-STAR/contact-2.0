@@ -75,7 +75,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
       .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          this.notifications.error(`No user permissions for '${permission}'`);
+          this.notifications.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
           this.grid.clear();
         } else {
           this.grid.load()
