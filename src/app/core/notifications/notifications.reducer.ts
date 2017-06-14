@@ -1,15 +1,10 @@
+import * as R from 'ramda';
 import { INotificationAction, INotificationServiceState, NotificationTypeEnum } from './notifications.interface';
 
 import { NotificationsService } from './notifications.service';
 
 // TODO(a.tymchuk): take this to a separate service for persisting global state
 const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
-let parsedState;
-try {
-  parsedState = JSON.parse(savedState);
-} catch (e) {
-  parsedState = null;
-}
 
 const defaultState: INotificationServiceState = {
   notifications: [],
@@ -24,7 +19,7 @@ const defaultState: INotificationServiceState = {
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
 export function notificationReducer(
-  state: INotificationServiceState = parsedState || defaultState,
+  state: INotificationServiceState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: INotificationAction
 ): INotificationServiceState {
 
@@ -37,11 +32,13 @@ export function notificationReducer(
           ...state.notifications
         ]
       };
+
     case 'NOTIFICATION_RESET':
       return {
         ...state,
         notifications: state.notifications.filter(notification => !state.filters[notification.type])
       };
+
     case 'NOTIFICATION_FILTER':
       const filter = action.payload.filter;
       return {
@@ -51,11 +48,13 @@ export function notificationReducer(
           [filter.type]: filter.value
         }
       };
+
     case 'NOTIFICATION_DELETE':
       return {
         ...state,
         notifications: state.notifications.filter((_, i) => i !== action.payload.index)
       };
+
     default:
       return state;
   }

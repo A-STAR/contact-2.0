@@ -1,5 +1,6 @@
-import { IPermissionAction, IPermissionsState, IPermissionsDialogEnum } from './permissions.interface';
+import * as R from 'ramda';
 
+import { IPermissionAction, IPermissionsState, IPermissionsDialogEnum } from './permissions.interface';
 import { PermissionsService } from './permissions.service';
 
 // TODO: separate service for persisting global state?
@@ -16,7 +17,7 @@ const defaultState: IPermissionsState = {
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
 export function permissionReducer(
-  state: IPermissionsState = savedState ? JSON.parse(savedState) : defaultState,
+  state: IPermissionsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IPermissionAction
 ): IPermissionsState {
 
@@ -27,6 +28,8 @@ export function permissionReducer(
         permissions: { ...action.payload },
       };
 
+    /*
+     ** Intentionally left for communication via sockets
     case PermissionsService.PERMISSION_UPDATE:
       return {
         ...state,
@@ -48,17 +51,24 @@ export function permissionReducer(
         ...state,
         permissions: { ...permissions },
       };
+    */
 
     case PermissionsService.PERMISSION_DIALOG:
       return {
         ...state,
-        ...action.payload,
+        dialog: action.payload,
       };
 
     case PermissionsService.PERMISSION_SELECTED_PERMISSION:
       return {
         ...state,
         currentPermission: action.payload,
+      };
+
+    case PermissionsService.PERMISSION_SELECTED_ROLE:
+      return {
+        ...state,
+        currentRole: action.payload,
       };
 
     default:

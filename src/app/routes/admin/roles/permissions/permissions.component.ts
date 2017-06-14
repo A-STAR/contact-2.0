@@ -51,19 +51,19 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       permissions: [ 'PERMIT_ADD' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.ADD, this.currentPermission),
+      action: () => this.dialogAction(IPermissionsDialogEnum.ADD),
       disabled: () => !this.currentRole,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       permissions: [ 'PERMIT_EDIT' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.EDIT, this.currentPermission),
+      action: () => this.dialogAction(IPermissionsDialogEnum.EDIT),
       disabled: () => !this.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       permissions: [ 'PERMIT_DELETE' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.DELETE, this.currentPermission),
+      action: () => this.dialogAction(IPermissionsDialogEnum.DELETE),
       disabled: () => !this.currentPermission,
     },
     {
@@ -112,12 +112,12 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.dialogAction(IPermissionsDialogEnum.EDIT, this.currentPermission);
+    this.dialogAction(IPermissionsDialogEnum.EDIT);
   }
 
   onSelectPermissions(records: IPermissionModel[]): void {
     if (records.length) {
-      this.dialogAction(IPermissionsDialogEnum.NONE, records[0]);
+      this.changeSelectedPermission(records[0]);
     }
   }
 
@@ -129,9 +129,7 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
   }
 
   onCancel(): void {
-    this.dialogAction(
-      IPermissionsDialogEnum.NONE, this.currentPermission
-    );
+    this.dialogAction(IPermissionsDialogEnum.NONE);
   }
 
   onAddPermissions(addedPermissions: IPermissionModel[]): void {
@@ -148,8 +146,8 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     return this.dialog === dialog;
   }
 
-  // private loadGrid(): void {
-  //   this.permitsGrid.load(this.currentRole)
+  // private loadGrid(currentRole: IPermissionRole): void {
+  //   this.permitsGrid.load(currentRole)
   //     .take(1)
   //     .subscribe(
   //       () => {},
@@ -163,7 +161,6 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     }
 
     if (this.currentRole) {
-      // this.loadGrid();
       this.gridService
         .read(this.dataSource.read, this.currentRole)
         .map(data => this.parseFn(data))
@@ -173,6 +170,7 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
             this.rawPermissions = rawPermissions;
             // this.permitsGrid.cdRef.detectChanges();
             this.permitsGrid.updateRows(rawPermissions);
+            this.changeSelectedPermission(null);
           },
           err => this.notificationsService.error('permissions.api.errors.fetch')
         );
@@ -182,10 +180,12 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private dialogAction(dialog: IPermissionsDialogEnum, currentPermission: IPermissionModel): void {
-    this.permissionsService.permissionDialogAction(
-      { dialog, currentPermission }
-    );
+  private dialogAction(dialog: IPermissionsDialogEnum): void {
+    this.permissionsService.permissionDialog(dialog);
+  }
+
+  private changeSelectedPermission(currentPermission: IPermissionModel): void {
+    this.permissionsService.changeSelected(currentPermission);
   }
 
 }

@@ -5,8 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../core/state/state.interface';
 import {
   IPermission,
-  IPermissionsState,
+  IPermissionModel,
   IPermissionRole,
+  IPermissionsDialogEnum,
+  IPermissionsState,
   IValueEntity,
   IRawPermission,
   IPermissionsResponse,
@@ -96,8 +98,12 @@ export class PermissionsService {
     });
   }
 
-  permissionDialogAction(payload: { dialog: any; currentPermission: any }): void {
+  permissionDialog(payload: IPermissionsDialogEnum): void {
     this.store.dispatch({ type: PermissionsService.PERMISSION_DIALOG, payload });
+  }
+
+  changeSelected(payload: IPermissionModel): void {
+    this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED_PERMISSION, payload });
   }
 
   normalizePermissions(response: IPermissionsResponse): IPermission {

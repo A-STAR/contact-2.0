@@ -362,7 +362,7 @@
         "confirmMessage": "Do you really want to remove the permission {{ name }}?"
       },
       "grid": {
-        "id": "ID",
+        "id": "Id",
         "name": "Name",
         "value": "Value",
         "dsc": "Description",

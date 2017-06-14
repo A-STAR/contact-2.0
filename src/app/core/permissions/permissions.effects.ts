@@ -21,7 +21,7 @@ export class PermissionsEffects {
 
   hideDialogAction = {
     type: PermissionsService.PERMISSION_DIALOG,
-    payload: { dialog: IPermissionsDialogEnum.NONE, currentPermission: null }
+    payload: IPermissionsDialogEnum.NONE,
   };
 
   permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
@@ -31,14 +31,14 @@ export class PermissionsEffects {
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map(response => ({
-          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: this.permissionsService.normalizePermissions(response)
-        }))
         .catch(() => {
           this.notifications.error('permissions.api.errors.fetch');
           return null;
-        });
+        })
+        .map(response => ({
+          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
+          payload: this.permissionsService.normalizePermissions(response as IPermissionsResponse)
+        }));
     });
 
   @Effect()
