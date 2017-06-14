@@ -135,7 +135,6 @@
 }
 
 .ui-tree.ui-tree-horizontal .ui-treenode {
-    background: url(data:image/gif;base64,R0lGODlhAQABAPAAAMzMzP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==) repeat-x scroll center center transparent;
     &:first-child {
         padding-left: 0;
     }
@@ -151,17 +150,8 @@
     margin: 0;
 }
 
-.ui-tree.ui-tree-horizontal .ui-treenode-connector {
-    width: 1px;
-}
-
 .ui-tree.ui-tree-horizontal .ui-treenode-connector-table {
     height: 100%;
-    width: 1px;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode-connector-line {
-    background: url(data:image/gif;base64,R0lGODlhAQABAPAAAMzMzP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==) repeat-y scroll 0 0 transparent;
     width: 1px;
 }
 
