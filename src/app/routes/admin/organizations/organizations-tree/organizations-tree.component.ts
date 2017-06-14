@@ -141,16 +141,17 @@ export class OrganizationsTreeComponent implements OnDestroy {
     }
 
     if (payload.swap) {
-      const indexOf = targetElement.parent.children.findIndex((d) => d === targetElement);
-      if (indexOf > -1) {
-        targetElement.parent.children.splice(indexOf + 1, 0, sourceElement);
-      }
-      sourceElement.parent = targetElement.parent;
+      const targetParent: TreeNode = targetElement.parent;
+      targetParent.children = R.insert(
+        R.findIndex((node: TreeNode) => node === targetElement, targetParent.children) + 1,
+        sourceElement,
+        targetParent.children
+      );
+      sourceElement.parent = targetParent;
     } else {
-      if (!targetElement.children) {
-        targetElement.children = [];
-      }
-      targetElement.children.push(sourceElement);
+      targetElement.children = R.insert(
+        (targetElement.children || []).length, sourceElement, targetElement.children || []
+      );
       sourceElement.parent = targetElement;
     }
 
