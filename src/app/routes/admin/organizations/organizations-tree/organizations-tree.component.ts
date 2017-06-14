@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
+import * as R from 'ramda';
 
 import { IDragAndDropPayload } from '../../../../shared/components/dnd/drag-and-drop.interface';
 import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
@@ -153,10 +154,9 @@ export class OrganizationsTreeComponent implements OnDestroy {
       sourceElement.parent = targetElement;
     }
 
-    const payloads: IOrganization[] = (payload.swap ? targetElement : sourceElement)
-      .parent.children.map((node: TreeNode, i: number) => {
-        return { id: node.id, parentId: node.parent.id, sortOrder: i + 1 };
-      });
+    const payloads: IOrganization[] = R.addIndex(R.map)((node: TreeNode, index: number) => {
+      return {id: node.id, parentId: node.parent.id, sortOrder: index + 1};
+    }, (payload.swap ? targetElement : sourceElement).parent.children);
 
     this.organizationsService.updateOrganizations(payloads);
   }
