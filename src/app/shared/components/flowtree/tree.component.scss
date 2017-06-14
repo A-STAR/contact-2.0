@@ -1,14 +1,13 @@
 .ui-tree {
-    width: 18em;
-
-    .ui-treenode-content {
-      &.dnd-swapped-active {
-        background-color: #d8ffe1 !important;
-      }
-      &.dnd-active {
-        background-color: #99e5a9 !important;
-      }
+  .ui-treenode-content {
+    min-width: 160px;
+    &.dnd-swapped-active {
+      background-color: #d8ffe1 !important;
     }
+    &.dnd-active {
+      background-color: #99e5a9 !important;
+    }
+  }
 
     .ui-treenode-selectable.ui-treenode-content {
         cursor: pointer;
@@ -51,8 +50,9 @@
     }
 
     .ui-treenode-label {
-        display: inline-block;
-        vertical-align: middle;
+      display: inline-block;
+      white-space: nowrap;
+      vertical-align: middle;
     }
 
     .ui-treenode-label.ui-state-hover,
@@ -136,7 +136,6 @@
 
 .ui-tree.ui-tree-horizontal .ui-treenode {
     background: url(data:image/gif;base64,R0lGODlhAQABAPAAAMzMzP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==) repeat-x scroll center center transparent;
-    padding: .25em 2.5em;
     &:first-child {
         padding-left: 0;
     }

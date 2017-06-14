@@ -2,7 +2,8 @@
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
             class="ui-treenode-content"
-            (click)="onNodeClick($event)"
+            (click)="delegateClick($event)"
+            (dblclick)="delegateClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
                 class="ui-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
@@ -55,7 +56,8 @@
           [ngStyle]="{'background-color':getBgColor()}"
           [attr.nodeid]="node.id"
           [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
-          (click)="onNodeClick($event)"
+          (click)="delegateClick($event)"
+          (dblclick)="delegateClick($event)"
         >
           <span
             class="ui-tree-toggler fa fa-fw"
