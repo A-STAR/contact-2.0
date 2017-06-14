@@ -51,7 +51,8 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
 
   templateMap: any;
   dragulaOptions: any = {
-    invalid: () => true // prevent any drags by default
+    // prevent any drags by default
+    invalid: () => true
   };
   private dragAndDropPlugin: DragAndDropComponentPlugin;
 
