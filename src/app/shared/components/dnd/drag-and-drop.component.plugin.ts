@@ -56,6 +56,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     private dragulaService: DragulaService,
     private domHelper: DragAndDropDomHelper,
   ) {
+    component.dragulaOptions = { copy: true };
   }
 
   private onMouseMove(event: MouseEvent): void {
