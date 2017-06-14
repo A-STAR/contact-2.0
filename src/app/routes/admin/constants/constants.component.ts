@@ -2,7 +2,9 @@ import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
+import { Observable,  } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant } from './constants.interface';
@@ -60,7 +62,7 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     private translateService: TranslateService,
     private notifications: NotificationsService,
     private valueConverterService: ValueConverterService,
-    private permissions: PermissionsService,
+    private permissionService: PermissionsService,
   ) {
     super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -68,7 +70,9 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
 
   ngAfterViewInit(): void {
     const permission = 'CONST_VALUE_VIEW';
-    this.permissionSub = this.permissions.hasPermission(permission)
+
+    this.permissionSub = this.permissionService.hasPermission(permission)
+      .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.notifications.error(`No user permissions for '${permission}'`);

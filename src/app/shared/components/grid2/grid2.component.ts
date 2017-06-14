@@ -63,7 +63,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
   @Input() pagination = false;
-  @Input() filter(record: any): boolean { return record; }
 
   // Inputs without presets
   @Input() stateKey: string;
@@ -90,6 +89,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private headerColumns: GridHeaderComponent[] = [];
   private rowsCounterElement;
   private stateSubscription: Subscription;
+  @Input() filter(record: any): boolean { return record; }
 
   constructor(
     private renderer2: Renderer2,
@@ -291,7 +291,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         ? {
           colId: columnId,
           sort: state.columns[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
-        } : null
+        } : null;
     }).filter(item => !!item);
 
     if (sortModel.length) {
