@@ -24,6 +24,12 @@ export class ClickComponentPlugin implements IClickableComponentPlugin {
   }
 
   delegateClick(event: MouseEvent): void {
+    this.stopEvent(event);
     this.clickEventsQueue.emit(event);
+  }
+
+  stopEvent($event: Event): void {
+    $event.stopPropagation();
+    $event.preventDefault();
   }
 }

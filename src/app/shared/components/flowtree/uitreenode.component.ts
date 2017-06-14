@@ -59,7 +59,7 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
     return !(this.node.children && this.node.children.length);
   }
 
-  toggle(event: Event): void {
+  toggle(event: MouseEvent): void {
     this.stopEvent(event);
     if (this.node.expanded) {
       this.tree.onNodeCollapse.emit({originalEvent: event, node: this.node});
@@ -67,6 +67,10 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
       this.tree.onNodeExpand.emit({originalEvent: event, node: this.node});
     }
     this.node.expanded = !this.node.expanded;
+  }
+
+  toggleDbClick(event: MouseEvent): void {
+    this.stopEvent(event);
   }
 
   onClick(event: MouseEvent): void {
@@ -78,8 +82,11 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
   }
 
   delegateClick(event: MouseEvent): void {
-    this.stopEvent(event);
     this.clickComponentPlugin.delegateClick(event);
+  }
+
+  stopEvent(event: MouseEvent): void {
+    this.clickComponentPlugin.stopEvent(event);
   }
 
   isSelected(): boolean {
@@ -90,10 +97,5 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
     return this.node.expanded
       ? this.node.expandedIcon
       : (this.node.icon || this.node.collapsedIcon);
-  }
-
-  private stopEvent($event: Event): void {
-    $event.stopPropagation();
-    $event.preventDefault();
   }
 }
