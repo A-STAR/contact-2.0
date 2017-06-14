@@ -5,16 +5,6 @@ interface SortMeta {
     order: number;
 }
 
-interface LazyLoadEvent {
-    first?: number;
-    rows?: number;
-    sortField?: string;
-    sortOrder?: number;
-    multiSortMeta?: SortMeta[];
-    filters?: { [s: string]: FilterMetadata; };
-    globalFilter?: any;
-}
-
 interface FilterMetadata {
     value?: any;
     matchMode?: string;
@@ -64,23 +54,6 @@ interface TreeNode {
     selectable?: boolean;
 }
 
-interface Confirmation {
-    message: string;
-    key?: string;
-    icon?: string;
-    header?: string;
-    accept?: Function;
-    reject?: Function;
-    acceptVisible?: boolean;
-    rejectVisible?: boolean;
-    acceptEvent?: EventEmitter<any>;
-    rejectEvent?: EventEmitter<any>;
-}
-
-interface BlockableUI {
-    getBlockableElement(): HTMLElement;
-}
-
 interface TreeNodeDragEvent {
     tree?: any;
     node?: TreeNode;
@@ -91,13 +64,10 @@ interface TreeNodeDragEvent {
 
 export {
   SortMeta,
-  LazyLoadEvent,
   FilterMetadata,
   MenuItem,
   Message,
   SelectItem,
   TreeNode,
-  Confirmation,
-  BlockableUI,
   TreeNodeDragEvent
 }

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import {
-  IIntersectedNodeInfo,
-  INodeOffset
-} from './drag-and-drop.interface';
+import { IIntersectedNodeInfo, INodeOffset } from './drag-and-drop.interface';
 
 @Injectable()
 export class DragAndDropDomHelper {
 
-  public getOffset(el: Element): INodeOffset {
+  private static DND_ATTRIBUTE_NAME = 'nodeid';
+
+  getOffset(el: Element): INodeOffset {
     const originalElement: HTMLElement = el as HTMLElement;
     let currentElement: HTMLElement = el as HTMLElement;
 
@@ -22,7 +21,7 @@ export class DragAndDropDomHelper {
     return {top: y, left: x, width: originalElement.clientWidth, height: originalElement.clientHeight};
   }
 
-  public getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
+  getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>): IIntersectedNodeInfo[] {
     const result: IIntersectedNodeInfo[] = [];
 
     if (!targetPosition) {
@@ -52,14 +51,22 @@ export class DragAndDropDomHelper {
     return result;
   }
 
-  public isCursorInsideElement(nodeInfo: IIntersectedNodeInfo, cursorX: number, cursorY: number): boolean {
+  isCursorInsideElement(nodeInfo: IIntersectedNodeInfo, cursorX: number, cursorY: number): boolean {
     return nodeInfo.x1 <= cursorX
       && nodeInfo.x2 >= cursorX
       && nodeInfo.y1 <= cursorY
       && nodeInfo.y2 >= cursorY;
   }
 
-  public queryElements(el: Element, selector: string): HTMLCollectionOf<Element> {
+  queryElements(el: Element, selector: string): HTMLCollectionOf<Element> {
     return el.querySelectorAll(selector) as HTMLCollectionOf<Element>;
+  }
+
+  queryElementByClassName(clsName: string): Element {
+    return document.body.getElementsByClassName(clsName)[0];
+  }
+
+  extractNodeId(element: Element): string {
+    return element.getAttribute(DragAndDropDomHelper.DND_ATTRIBUTE_NAME);
   }
 }
