@@ -74,10 +74,6 @@ export class UITreeNodeComponent implements OnInit {
     this.click.emit(event);
   }
 
-  onNodeRightClick(event: MouseEvent): void {
-    this.tree.onNodeRightClick(event, this.node);
-  }
-
   isSelected(): boolean {
     return this.tree.isSelected(this.node);
   }

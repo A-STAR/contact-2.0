@@ -3,7 +3,6 @@
         <div
             class="ui-treenode-content"
             (click)="onNodeClick($event)"
-            (contextmenu)="onNodeRightClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
                 class="ui-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
@@ -28,52 +27,75 @@
                 [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></app-tree-node>
         </ul>
     </li>
-    <table *ngIf="tree.horizontal">
-        <tbody>
-            <tr>
-                <td class="ui-treenode-connector" *ngIf="!root">
-                    <table class="ui-treenode-connector-table">
-                        <tbody>
-                            <tr>
-                                <td [ngClass]="{'ui-treenode-connector-line':!firstChild}"></td>
-                            </tr>
-                            <tr>
-                                <td [ngClass]="{'ui-treenode-connector-line':!lastChild}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-                <td class="ui-treenode" [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
-                    [dragula]='"first-bag"'
-                    [attr.nodeid]="node.id"
-                    [dragulaOptions]="dragulaOptions">
-                    <div class="ui-treenode-content ui-state-default ui-corner-all"
-                         [ngStyle]="{'background-color':getBgColor()}"
-                         [attr.nodeid]="node.id"
-                        [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
-                        (click)="onNodeClick($event)"
-                        (contextmenu)="onNodeRightClick($event)">
-                        <span class="ui-tree-toggler fa fa-fw" [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}" *ngIf="!isLeaf()"
-                                (click)="toggle($event)"></span
-                        ><span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span
-                        ><span class="ui-treenode-label ui-corner-all">
-                                <span *ngIf="!tree.getTemplateForNode(node)">{{node.label}}</span>
-                                <span *ngIf="tree.getTemplateForNode(node)">
-                                    <app-tree-node-template-loader [node]="node" [template]="tree.getTemplateForNode(node)"></app-tree-node-template-loader>
-                                </span>
-                        </span>
-                    </div>
-                </td>
-                <td class="ui-treenode-children-container" *ngIf="node.children && node.expanded" [style.display]="node.expanded ? 'table-cell' : 'none'">
-                    <div class="ui-treenode-children">
-                        <app-tree-node *ngFor="let childNode of node.children;let firstChild=first;let lastChild=last;"
-                            [node]="childNode"
-                            [firstChild]="firstChild"
-                            [lastChild]="lastChild">
-                        </app-tree-node>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <table *ngIf="tree.horizontal">
+    <tbody>
+    <tr>
+      <td
+        class="ui-treenode-connector"
+        *ngIf="!root"
+      >
+        <table class="ui-treenode-connector-table">
+          <tbody>
+          <tr>
+            <td [ngClass]="{'ui-treenode-connector-line':!firstChild}"></td>
+          </tr>
+          <tr>
+            <td [ngClass]="{'ui-treenode-connector-line':!lastChild}"></td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+      <td class="ui-treenode"
+          [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
+          [dragula]='"first-bag"'
+          [attr.nodeid]="node.id"
+          [dragulaOptions]="dragulaOptions">
+        <div
+          class="ui-treenode-content ui-state-default ui-corner-all"
+          [ngStyle]="{'background-color':getBgColor()}"
+          [attr.nodeid]="node.id"
+          [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
+          (click)="onNodeClick($event)"
+        >
+          <span
+            class="ui-tree-toggler fa fa-fw"
+            [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}"
+            *ngIf="!isLeaf()"
+            (click)="toggle($event)">
+          </span>
+          <span
+            [class]="getIcon()"
+            *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
+          </span>
+          <span class="ui-treenode-label ui-corner-all">
+            <span *ngIf="!tree.getTemplateForNode(node)">
+              {{node.label}}
+            </span>
+            <span *ngIf="tree.getTemplateForNode(node)">
+              <app-tree-node-template-loader
+                [node]="node"
+                [template]="tree.getTemplateForNode(node)"
+              >
+              </app-tree-node-template-loader>
+            </span>
+          </span>
+        </div>
+      </td>
+      <td
+        class="ui-treenode-children-container"
+        *ngIf="node.children && node.expanded"
+        [style.display]="node.expanded ? 'table-cell' : 'none'"
+      >
+        <div class="ui-treenode-children">
+          <app-tree-node
+            *ngFor="let childNode of node.children; let firstChild = first; let lastChild = last;"
+            [node]="childNode"
+            [firstChild]="firstChild"
+            [lastChild]="lastChild">
+          </app-tree-node>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </ng-template>
