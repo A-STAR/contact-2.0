@@ -11,7 +11,7 @@ crossvent.add = function (el: Element, type: string, fn: Function, capturing: bo
   const originalFn = fn;
   if (fn.name === 'startBecauseMouseMoved') {
     fn = function (event: MouseEvent): void {
-      if ((Math.abs(event.clientY - _moveY) < 2) || (Math.abs(event.clientX - _moveX) < 2)) {
+      if ((Math.abs(event.clientY - _moveY) < 2) && (Math.abs(event.clientX - _moveX) < 2)) {
         return;
       }
       return originalFn.apply(this, arguments);
