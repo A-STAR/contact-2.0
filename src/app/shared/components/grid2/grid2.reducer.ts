@@ -48,7 +48,7 @@ export function grid2Reducer(
 ): IGrid2State {
   switch (action.type) {
     case Grid2Component.DESTROY_STATE:
-      return defaultState;
+      return { ...defaultState };
     case Grid2Component.MOVING_COLUMN:
       return {
         ...state,
@@ -109,6 +109,7 @@ export function grid2Reducer(
           }
         };
       }
+    default:
+      return state;
   }
-  return state;
 }

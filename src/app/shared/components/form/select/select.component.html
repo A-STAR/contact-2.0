@@ -17,15 +17,14 @@
        *ngIf="!inputMode">
       <span tabindex="-1"
             class="btn btn-default btn-secondary form-control ui-select-toggle"
-            (click)="matchClick($event)"
-            style="outline: 0;">
+            (click)="matchClick($event)">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
+        <span *ngIf="active.length" class="ui-select-match-text pull-left"
+              [ngClass]="{'ui-select-allow-clear': allowClear && active.length}"
               [innerHTML]="toCleanedAndTranslatedLabel(active[0])"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
+        <a *ngIf="allowClear && active.length" class="btn btn-xs btn-link pull-right"
            style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
            <i class="glyphicon glyphicon-remove"></i>
         </a>
@@ -74,7 +73,8 @@
              <a *ngIf="canCloseSelectedItem(activeItem)"
                 class="close"
                 style="margin-left: 5px; padding: 0;"
-                (click)="removeClick(activeItem, $event)">&times;</a>
+                (click)="removeClick(activeItem, $event)">&times;
+             </a>
              <span [innerHtml]="toCleanedAndTranslatedLabel(activeItem)"></span>
           </span>
           <i class="dropdown-toggle pull-right"></i>

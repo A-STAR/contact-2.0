@@ -106,11 +106,11 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
-      // TODO: fix this in select control?
+      // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.toIsoDate(value.startWorkDate),
       endWorkDate: this.toIsoDate(value.endWorkDate),
-      // TODO: fix this in select control?
+      // TODO(a.poterenko): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
   }

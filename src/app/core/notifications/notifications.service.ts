@@ -36,14 +36,12 @@ export class NotificationsService {
     return this.store
       .select(state => state.notifications)
       // TODO: separate service for persisting global state?
-      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)))
-      // TODO: double check this:
-      .filter(Boolean);
+      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)));
   }
 
-  get notifications(): Observable<INotification[]> {
-    return this.store.select(state => state.notifications.notifications);
-  }
+  // get notifications(): Observable<INotification[]> {
+  //   return this.store.select(state => state.notifications.notifications);
+  // }
 
   debug(message: string | IMessage, showAlert: boolean = true): void {
     this.push(message, NotificationTypeEnum.DEBUG, showAlert);

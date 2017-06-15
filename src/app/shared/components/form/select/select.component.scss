@@ -17,6 +17,9 @@
   /* Instead of center because of .btn */
   text-align: left !important;
   font-size: 14px;
+  &.btn-default {
+    border-color: #dde6e9;
+  }
 }
 
 .ui-select-match > .caret {
