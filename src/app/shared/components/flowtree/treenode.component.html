@@ -49,17 +49,18 @@
       </td>
       <td class="ui-treenode"
           [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
-          [dragula]='"first-bag"'
-          [attr.nodeid]="node.id"
-          [dragulaOptions]="dragulaOptions">
+      >
         <div
-          class="app-treenode-content ui-state-default ui-corner-all"
-          [ngStyle]="{'background-color':getBgColor()}"
-          [attr.nodeid]="node.id"
-          [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
-          (click)="delegateClick($event)"
-          (dblclick)="delegateClick($event)"
-        >
+          [dragula]='"tree-node"'
+          [dragulaOptions]="dragulaOptions">
+          <div
+            class="app-treenode-content ui-state-default ui-corner-all"
+            [ngStyle]="{'background-color':getBgColor()}"
+            [attr.nodeid]="node.id"
+            [ngClass]="{'ui-treenode-selectable': tree.selectionMode}"
+            (click)="delegateClick($event)"
+            (dblclick)="delegateClick($event)"
+          >
           <span
             class="app-tree-toggler fa fa-fw"
             [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}"
@@ -67,11 +68,11 @@
             (click)="toggle($event)"
             (dblclick)="toggleDbClick($event)">
           </span>
-          <span
-            [class]="getIcon()"
-            *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
+            <span
+              [class]="getIcon()"
+              *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
           </span>
-          <span class="app-treenode-label ui-corner-all">
+            <span class="app-treenode-label ui-corner-all">
             <span *ngIf="!tree.getTemplateForNode(node)">
               {{node.label}}
             </span>
@@ -83,6 +84,7 @@
               </app-tree-node-template-loader>
             </span>
           </span>
+          </div>
         </div>
       </td>
       <td
