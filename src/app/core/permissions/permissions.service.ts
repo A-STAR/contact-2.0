@@ -20,20 +20,23 @@ import { GridService } from '../../shared/components/grid/grid.service';
 export class PermissionsService {
   static STORAGE_KEY = 'state/permissions';
   // store actions
-  static ROLE_FETCH               = 'ROLE_FETCH';
-  static ROLE_FETCH_SUCCESS       = 'ROLE_FETCH_SUCCESS';
-  static ROLE_ADD                 = 'ROLE_ADD';
-  static ROLE_UPDATE              = 'ROLE_UPDATE';
-  static ROLE_COPY                = 'ROLE_COPY';
-  static ROLE_DELETE              = 'ROLE_DELETE';
-  static ROLE_SELECTED            = 'ROLE_SELECTED';
-  static PERMISSION_FETCH         = 'PERMISSION_FETCH';
-  static PERMISSION_FETCH_SUCCESS = 'PERMISSION_FETCH_SUCCESS';
-  static PERMISSION_ADD           = 'PERMISSION_ADD';
-  static PERMISSION_UPDATE        = 'PERMISSION_UPDATE';
-  static PERMISSION_DELETE        = 'PERMISSION_DELETE';
-  static PERMISSION_SELECTED      = 'PERMISSION_SELECTED';
-  static PERMISSION_DIALOG        = 'PERMISSION_DIALOG';
+  static ROLE_FETCH                    = 'ROLE_FETCH';
+  static ROLE_FETCH_SUCCESS            = 'ROLE_FETCH_SUCCESS';
+  static ROLE_ADD                      = 'ROLE_ADD';
+  static ROLE_UPDATE                   = 'ROLE_UPDATE';
+  static ROLE_COPY                     = 'ROLE_COPY';
+  static ROLE_DELETE                   = 'ROLE_DELETE';
+  static ROLE_SELECTED                 = 'ROLE_SELECTED';
+  static ROLE_PERMISSION_FETCH         = 'ROLE_PERMISSION_FETCH';
+  static ROLE_PERMISSION_FETCH_SUCCESS = 'ROLE_PERMISSION_FETCH_SUCCESS';
+  static PERMISSION_FETCH              = 'PERMISSION_FETCH';
+  static PERMISSION_FETCH_SUCCESS      = 'PERMISSION_FETCH_SUCCESS';
+  static PERMISSION_CLEAR              = 'PERMISSION_CLEAR';
+  static PERMISSION_ADD                = 'PERMISSION_ADD';
+  static PERMISSION_UPDATE             = 'PERMISSION_UPDATE';
+  static PERMISSION_DELETE             = 'PERMISSION_DELETE';
+  static PERMISSION_SELECTED           = 'PERMISSION_SELECTED';
+  static PERMISSION_DIALOG             = 'PERMISSION_DIALOG';
 
   constructor(
     private gridService: GridService,
@@ -134,10 +137,9 @@ export class PermissionsService {
     });
   }
 
-  fetchPermissions(roleId: number): void {
+  fetchPermissions(): void {
     this.store.dispatch({
-      type: PermissionsService.PERMISSION_FETCH,
-      payload: { roleId }
+      type: PermissionsService.ROLE_PERMISSION_FETCH
     });
   }
 

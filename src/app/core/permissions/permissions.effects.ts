@@ -113,6 +113,13 @@ export class PermissionsEffects {
     });
 
   @Effect()
+  selectRole$ = this.actions
+    .ofType(PermissionsService.ROLE_SELECTED)
+    .map(action => ({
+      type: action.payload.role ? PermissionsService.ROLE_PERMISSION_FETCH : PermissionsService.PERMISSION_CLEAR
+    }));
+
+  @Effect()
   fetchPermissions = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .switchMap((action: Action) => {
@@ -125,6 +132,25 @@ export class PermissionsEffects {
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
           payload: this.permissionsService.normalizePermissions(response as IPermissionsResponse)
         }));
+    });
+
+  @Effect()
+  fetchRolePermissions$ = this.actions
+    .ofType(PermissionsService.ROLE_PERMISSION_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
+      return this.readPermissions(store.permissions.currentRole.id)
+        .map(response => ({
+          type: PermissionsService.ROLE_PERMISSION_FETCH_SUCCESS,
+          payload: {
+            permissions: response.permits
+          }
+        }))
+        .catch(() => {
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        });
     });
 
   @Effect()
@@ -190,8 +216,12 @@ export class PermissionsEffects {
     return this.gridService.read('/userpermits');
   }
 
+  private readPermissions(roleId: number): Observable<any> {
+    return this.gridService.read('/roles/{roleId}/permits', { roleId });
+  }
+
   private add(role: IPermissionRole, permissionIds: number[]): Observable<any> {
-    return this.gridService.create(`/roles/{id}/permits`, { id: role.id } , { permitIds: permissionIds });
+    return this.gridService.create(`/roles/{id}/permits`, { id: role.id }, { permitIds: permissionIds });
   }
 
   private update(roleId: number, permission: IPermissionModel): Observable<any> {
