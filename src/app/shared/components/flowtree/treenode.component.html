@@ -67,13 +67,14 @@
           [ngClass]="{'ui-treenode-collapsed':!node.expanded, 'ui-treenode-ending' : !node.children, 'ui-treenode-root': !node.parent.parent}"
       >
         <div
+          [attr.nodeid]="node.id"
           [dragula]='"tree-node"'
           [dragulaOptions]="dragulaOptions"
         >
           <div
             class="app-treenode-content ui-state-default ui-corner-all"
-            [ngStyle]="{'background-color':getBgColor()}"
             [attr.nodeid]="node.id"
+            [ngStyle]="{'background-color':getBgColor()}"
             [ngClass]="{'ui-treenode-selectable': tree.selectionMode}"
             (click)="delegateClick($event)"
             (dblclick)="delegateClick($event)"
