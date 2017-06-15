@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IAppState } from '../../../core/state/state.interface';
 import { IConstant } from '../../../core/constants/constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -79,6 +78,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
+          this.selectedRecord = null;
           this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
           this.grid.clear();
         } else {

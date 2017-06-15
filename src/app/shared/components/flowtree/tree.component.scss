@@ -1,47 +1,72 @@
-.ui-tree {
-  .ui-treenode-content {
-    min-width: 160px;
-    &.dnd-swapped-active {
-      background-color: #d8ffe1 !important;
-    }
-    &.dnd-active {
-      background-color: #99e5a9 !important;
-    }
+.app-treenode-content {
+  &.dnd-swapped-active {
+    background-color: #d8ffe1 !important;
   }
+  &.dnd-active {
+    background-color: #99e5a9 !important;
+  }
+}
 
-    .ui-treenode-selectable.ui-treenode-content {
+.app-tree-container {
+  height: 100%;
+  overflow: auto;
+  padding: .25em;
+}
+
+.app-tree-toggler {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ui-tree-horizontal {
+  width: auto;
+  padding: .5em 1em;
+  overflow: auto;
+}
+
+.ui-tree-horizontal .app-treenode-label, .gu-mirror .app-treenode-label {
+  display: inline-block;
+  text-align: center;
+  min-width: 130px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 12px;
+}
+
+.ui-tree-horizontal .app-tree-toggler, .gu-mirror .app-tree-toggler {
+  position: absolute;
+  left: 2px;
+  height: 36px;
+  line-height: 36px;
+}
+
+.ui-tree-horizontal .ui-treenode.ui-treenode-leaf, .ui-tree-horizontal .ui-treenode.ui-treenode-collapsed {
+  padding-right: 0;
+}
+
+.ui-tree-horizontal .app-treenode-content, .app-treenode-content.gu-mirror {
+  padding: 6px 14px;
+}
+
+.ui-treenode-children {
+  padding: 0 0 0 1em;
+}
+
+.ui-treenode {
+  background-attachment: scroll;
+  background-color: transparent;
+  background-image: none;
+  background-position: 0 0;
+  background-repeat: repeat-y;
+  list-style: none outside none;
+  padding: .125em 0 0 0;
+}
+
+.ui-tree {
+   .ui-treenode-selectable.app-treenode-content {
         cursor: pointer;
         user-select: none;
-    }
-
-    .ui-tree-container {
-        height: 100%;
-        margin: 0;
-        overflow: auto;
-        padding: .25em;
-        white-space: nowrap;
-    }
-
-    .ui-treenode-children {
-        margin: 0;
-        padding: 0 0 0 1em;
-    }
-
-    .ui-treenode {
-        background-attachment: scroll;
-        background-color: transparent;
-        background-image: none;
-        background-position: 0 0;
-        background-repeat: repeat-y;
-        list-style: none outside none;
-        margin: 0;
-        padding: .125em 0 0 0;
-    }
-
-    .ui-tree-toggler {
-        cursor: pointer;
-        display: inline-block;
-        vertical-align: middle;
     }
 
     .ui-treenode-icon {
@@ -49,19 +74,7 @@
         vertical-align: middle;
     }
 
-    .ui-treenode-label {
-      display: inline-block;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    .ui-treenode-label.ui-state-hover,
-    .ui-treenode-label.ui-state-highlight {
-        font-weight: normal;
-        border: 0 none;
-    }
-
-    .ui-treenode.ui-treenode-leaf > .ui-treenode-content > .ui-tree-toggler {
+    .ui-treenode.ui-treenode-leaf > .app-treenode-content > .app-tree-toggler {
         visibility: hidden;
     }
 
@@ -79,134 +92,40 @@
     }
 }
 
-/** Fluid **/
-.ui-fluid .ui-tree {
-    width: 100%;
+.ui-tree-horizontal table, .ui-tree-horizontal tr, .ui-tree-horizontal td {
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
 }
 
-/** Horizontal Tree **/
 .ui-tree-horizontal {
-    width: auto;
-    padding: .5em 1em;
-    overflow: auto;
-}
-
-.ui-tree.ui-tree-horizontal table,
-.ui-tree.ui-tree-horizontal tr,
-.ui-tree.ui-tree-horizontal td {
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode-content {
+  .app-treenode-content {
     position: relative;
-}
+  }
 
-.ui-tree.ui-tree-horizontal .ui-tree-toggler {
-    position: absolute;
-    height: 16px;
-    line-height: 16px;
-    left: 2px;
-    top: 50%;
-    margin: 0;
-    transform: translateY(-50%);
-}
+  table {
+    height: 0;
+  }
 
-.ui-tree-horizontal .ui-treenode-content, .ui-treenode-content.gu-mirror {
-    font-size: 12px;
-    font-weight: normal;
-    padding: 0.5em 1.2em;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode-label {
-    display: table-cell;
-    width: 130px;
-    height: 36px;
-    margin: 0;
-    vertical-align: middle;
-    text-align: center;
-}
-
-.ui-tree-horizontal .ui-treenode-parent .ui-treenode-content {
-    font-weight: normal;
-    white-space: nowrap;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode {
-    &:first-child {
-        padding-left: 0;
-    }
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode.ui-treenode-leaf,
-.ui-tree.ui-tree-horizontal .ui-treenode.ui-treenode-collapsed {
-    padding-right: 0;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode-children {
-    padding: 0;
-    margin: 0;
-}
-
-.ui-tree.ui-tree-horizontal .ui-treenode-connector-table {
-    height: 100%;
-    width: 1px;
-}
-
-.ui-tree.ui-tree-horizontal table {
-	height: 0;
-}
-
-.ui-tree.ui-tree-horizontal .ui-chkbox {
+  .ui-chkbox {
     vertical-align: bottom;
     margin-right: .25em;
-}
+  }
 
-.gu-mirror{position:fixed!important;margin:0!important;z-index:9999!important;opacity:.8;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80)}.gu-hide{display:none!important}.gu-unselectable{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}.gu-transit{opacity:.2;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";filter:alpha(opacity=20)}
+  .ui-treenode-connector-table {
+    height: 100%;
+    width: 1px;
+  }
 
+  .ui-treenode-children {
+    padding: 0;
+    margin: 0;
+  }
 
-/*
- * note that styling gu-mirror directly is a bad practice because it's too generic.
- * you're better off giving the draggable elements a unique class and styling that directly!
- */
-.container div,
-.gu-mirror {
-  margin: 10px;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.2);
-  transition: opacity 0.4s ease-in-out;
-}
-.container div {
-  cursor: move;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-}
-.gu-mirror {
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-.container .ex-moved {
-  background-color: #e74c3c;
-}
-.container.ex-over {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-.handle {
-  padding: 0 5px;
-  margin-right: 5px;
-  background-color: rgba(0, 0, 0, 0.4);
-  cursor: move;
-}
-nested-repeat-example .container span {
-  display: block;
-  padding: 8px;
-}
-
-.ui-treenode .gu-transit {
-  top: -10000px !important;
-  position: absolute !important;
+  .ui-treenode {
+    &:first-child {
+      padding-left: 0;
+    }
+  }
 }
