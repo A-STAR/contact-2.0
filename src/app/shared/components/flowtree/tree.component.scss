@@ -11,12 +11,11 @@
   height: 100%;
   overflow: auto;
   padding: .25em;
-  white-space: nowrap;
 }
 
 .app-treenode-label {
-  white-space: nowrap;
   vertical-align: middle;
+  padding: 0 4px;
 }
 
 .app-tree-toggler {
@@ -32,11 +31,10 @@
 }
 
 .ui-tree-horizontal .app-treenode-label, .gu-mirror .app-treenode-label {
-  min-width: 160px;
-  height: 36px;
   display: table-cell;
-  vertical-align: middle;
   text-align: center;
+  min-width: 130px;
+  height: 36px;
 }
 
 .ui-tree-horizontal .app-tree-toggler, .gu-mirror .app-tree-toggler {
