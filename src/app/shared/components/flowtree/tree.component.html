@@ -3,7 +3,7 @@
   [ngClass]="{'ui-tree ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
   [ngStyle]="style"
   [class]="styleClass">
-  <ul class="ui-tree-container">
+  <ul class="app-tree-container">
     <app-tree-node
       *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index"
       [node]="node"

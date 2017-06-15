@@ -1,12 +1,12 @@
 <ng-template [ngIf]="node">
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
-            class="ui-treenode-content"
+            class="app-treenode-content"
             (click)="delegateClick($event)"
             (dblclick)="delegateClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
-                class="ui-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
+                class="app-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
                 (click)="toggle($event)"
                 (dblclick)="toggleDbClick($event)">
             </span>
@@ -17,7 +17,7 @@
             </div>
             </div>
                 <span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span>
-                <span class="ui-treenode-label ui-corner-all">
+                <span class="app-treenode-label ui-corner-all">
                     <span *ngIf="!tree.getTemplateForNode(node)">{{node.label}}</span>
                     <span *ngIf="tree.getTemplateForNode(node)">
                         <app-tree-node-template-loader [node]="node" [template]="tree.getTemplateForNode(node)"></app-tree-node-template-loader>
@@ -53,7 +53,7 @@
           [attr.nodeid]="node.id"
           [dragulaOptions]="dragulaOptions">
         <div
-          class="ui-treenode-content ui-state-default ui-corner-all"
+          class="app-treenode-content ui-state-default ui-corner-all"
           [ngStyle]="{'background-color':getBgColor()}"
           [attr.nodeid]="node.id"
           [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
@@ -61,7 +61,7 @@
           (dblclick)="delegateClick($event)"
         >
           <span
-            class="ui-tree-toggler fa fa-fw"
+            class="app-tree-toggler fa fa-fw"
             [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}"
             *ngIf="!isLeaf()"
             (click)="toggle($event)"
@@ -71,7 +71,7 @@
             [class]="getIcon()"
             *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
           </span>
-          <span class="ui-treenode-label ui-corner-all">
+          <span class="app-treenode-label ui-corner-all">
             <span *ngIf="!tree.getTemplateForNode(node)">
               {{node.label}}
             </span>
