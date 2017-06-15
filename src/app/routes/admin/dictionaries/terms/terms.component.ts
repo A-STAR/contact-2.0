@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from '../../../../core/state/state.interface';
+// import { IAppState } from '../../../../core/state/state.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -22,31 +22,31 @@ export class TermsComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogAddTermAction(),
       icon: 'fa fa-plus',
       label: 'toolbar.action.add',
-      permissions: [ 'DICT_TERM_ADD' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      // permissions: [ 'DICT_TERM_ADD' ],
+      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogEditTermAction(),
       icon: 'fa fa-pencil',
       label: 'toolbar.action.edit',
-      permissions: [ 'DICT_TERM_EDIT' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
+      // permissions: [ 'DICT_TERM_EDIT' ],
+      // disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
       icon: 'fa fa-trash',
       label: 'toolbar.action.remove',
-      permissions: [ 'DICT_TERM_DELETE' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
+      // permissions: [ 'DICT_TERM_DELETE' ],
+      // disabled: (state: IAppState) => state.dictionaries.selectedTermId === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.fetchTerms(),
       icon: 'fa fa-refresh',
       label: 'toolbar.action.refresh',
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     }
   ];
 

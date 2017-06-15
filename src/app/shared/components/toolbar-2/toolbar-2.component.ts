@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum, IToolbarDefaultElement } from './toolbar-2.interface';
+import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultElement } from './toolbar-2.interface';
 
 @Component({
   selector: 'app-toolbar-2',
@@ -11,10 +10,8 @@ import { IToolbarItem, IToolbarCheckbox, ToolbarItemTypeEnum, IToolbarDefaultEle
   styleUrls: [ './toolbar-2.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Toolbar2Component implements OnInit {
+export class Toolbar2Component {
   @Input() items: Array<IToolbarItem> = [];
-
-  private _items$: Observable<Array<any>>;
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IToolbarDefaultElement } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: {
@@ -47,27 +44,6 @@ export class Toolbar2Component implements OnInit {
     private store: Store<IAppState>,
   ) {}
 
-  ngOnInit(): void {
-    // TODO(a.tymchuk): refactor to consume only inputs since this will fire
-    // on every store update and negatively affect performance
-    this._items$ = this.store.map(state =>
-      this.items.map(el => {
-        const defaultItem = this.defaultItems[el.type];
-        const item = defaultItem ? { ...defaultItem, ...el } : el;
-
-        return {
-          ...item,
-          disabled: this.isDisabled(item, state) || this.isForbidden(item, state),
-          state: this.getCheckboxState(item, state)
-        };
-      })
-    );
-  }
-
-  get items$(): Observable<Array<any>> {
-    return this._items$;
-  }
-
   isButton(item: IToolbarItem): boolean {
     return this.buttonTypes.includes(item.type);
   }
@@ -84,16 +60,11 @@ export class Toolbar2Component implements OnInit {
     }
   }
 
-  private isDisabled(item: IToolbarItem, state: IAppState): boolean {
-    return item.disabled ? item.disabled(state) : false;
+  getIcon(item: IToolbarButton): string {
+    return item.icon || this.defaultItems[item.type].icon;
   }
 
-  private isForbidden(item: IToolbarItem, state: IAppState): boolean {
-    // TODO(d.maltsev): use permissionsService methods instead (asynchronous?)
-    return item.permissions ? item.permissions.reduce((acc, name) => acc && !state.permissions.permissions[name], true) : false;
-  }
-
-  private getCheckboxState(item: IToolbarItem, state: IAppState): boolean {
-    return this.isCheckbox(item) ? (item as IToolbarCheckbox).state(state) : undefined;
+  getLabel(item: IToolbarButton): string {
+    return item.label || this.defaultItems[item.type].label;
   }
 }

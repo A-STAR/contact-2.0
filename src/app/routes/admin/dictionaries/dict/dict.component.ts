@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from '../../../../core/state/state.interface';
+// import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
@@ -27,23 +27,23 @@ export class DictComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
       icon: 'fa fa-plus',
       label: 'toolbar.action.add',
-      permissions: [ 'DICT_ADD' ]
+      // permissions: [ 'DICT_ADD' ]
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
       icon: 'fa fa-pencil',
       label: 'toolbar.action.edit',
-      permissions: [ 'DICT_EDIT' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      // permissions: [ 'DICT_EDIT' ],
+      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
       icon: 'fa fa-trash',
       label: 'toolbar.action.remove',
-      permissions: [ 'DICT_DELETE' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      // permissions: [ 'DICT_DELETE' ],
+      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,

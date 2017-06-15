@@ -2,14 +2,17 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/zip';
+import 'rxjs/add/observable/combineLatest';
 
-import { IAppState } from '../../../core/state/state.interface';
+// import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { PermissionsService } from '../../../core/permissions/permissions.service';
 import { UsersService } from './users.service';
 
 @Component({
@@ -52,32 +55,29 @@ export class UsersComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.usersService.setDialogAddAction(),
-      icon: 'fa fa-plus',
-      label: 'toolbar.action.add',
-      permissions: [ 'USER_ADD' ]
+      disabled: this.permissionsService.hasPermission('USER_ADD').map(hasPermission => !hasPermission)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.usersService.setDialogEditAction(),
-      icon: 'fa fa-pencil',
-      label: 'toolbar.action.edit',
-      permissions: [ 'USER_EDIT', 'USER_ROLE_EDIT' ],
-      disabled: (state: IAppState) => state.users.selectedUserId === null
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
+        this.usersService.state.map(state => !!state.selectedUserId)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.usersService.fetch(),
-      icon: 'fa fa-refresh',
-      label: 'toolbar.action.refresh',
-      permissions: [ 'USER_VIEW' ]
+      disabled: this.permissionsService.hasPermission('USER_VIEW').map(hasPermission => !hasPermission)
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
       action: () => this.usersService.toggleBlockedFilter(),
       label: 'users.toolbar.action.show_blocked_users',
-      state: (state: IAppState) => state.users.displayBlocked
+      state: this.usersService.state.map(state => state.displayBlocked)
     }
   ];
 
@@ -91,10 +91,13 @@ export class UsersComponent implements OnDestroy {
 
   private users$: Subscription;
 
+  private canAddUser$: Observable<boolean>;
+
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
+    private permissionsService: PermissionsService,
     private usersService: UsersService,
   ) {
     const { roles, languages } = this.route.snapshot.data.users;
@@ -117,6 +120,8 @@ export class UsersComponent implements OnDestroy {
         // TODO: notifications
         error => console.error(error)
       );
+
+    this.canAddUser$ = this.permissionsService.hasPermission('USER_ADD');
   }
 
   ngOnDestroy(): void {

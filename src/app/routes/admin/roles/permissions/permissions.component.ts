@@ -50,25 +50,25 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      permissions: [ 'PERMIT_ADD' ],
+      // permissions: [ 'PERMIT_ADD' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ADD),
-      disabled: () => !this.currentRole,
+      // disabled: () => !this.currentRole,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      permissions: [ 'PERMIT_EDIT' ],
+      // permissions: [ 'PERMIT_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.EDIT),
-      disabled: () => !this.currentPermission,
+      // disabled: () => !this.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      permissions: [ 'PERMIT_DELETE' ],
+      // permissions: [ 'PERMIT_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.DELETE),
-      disabled: () => !this.currentPermission,
+      // disabled: () => !this.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      permissions: [ 'PERMIT_VIEW' ],
+      // permissions: [ 'PERMIT_VIEW' ],
       action: () => this.refreshGrid(),
     },
   ];
@@ -87,14 +87,14 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     private permissionsService: PermissionsService,
     private valueConverterService: ValueConverterService
   ) {
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.permissionsSub = this.permissionsService.permissions
-        .subscribe(
-          (permissions: IPermissionsState) => {
-            this.currentPermission = permissions.currentPermission;
-            this.dialog = permissions.dialog;
-          }
-        );
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.permissionsSub = this.permissionsService.permissions
+      .subscribe(
+        (permissions: IPermissionsState) => {
+          this.currentPermission = permissions.currentPermission;
+          this.dialog = permissions.dialog;
+        }
+      );
   }
 
   parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
