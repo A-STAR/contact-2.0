@@ -16,7 +16,6 @@ import { TreeComponent } from '../../../../shared/components/flowtree/tree.compo
 @Component({
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
-  styleUrls: ['./organizations-tree.component.scss']
 })
 export class OrganizationsTreeComponent implements OnDestroy {
   @Input() organizations: Array<IOrganization>;

@@ -1,0 +1,22 @@
+.gu-mirror {
+  position: fixed !important;
+  z-index: 9999 !important;
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  @include opacity(.7);
+  transition: opacity 0.4s ease-in-out;
+}
+
+.gu-hide {
+  display: none !important
+}
+
+.gu-unselectable {
+  @include user-select(none);
+}
+
+.gu-transit {
+  top: -10000px !important;
+  position: absolute !important;
+}
