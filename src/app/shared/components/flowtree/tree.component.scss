@@ -13,10 +13,6 @@
   padding: .25em;
 }
 
-.app-treenode-label {
-  vertical-align: middle;
-}
-
 .app-tree-toggler {
   cursor: pointer;
   display: inline-block;
@@ -30,19 +26,18 @@
 }
 
 .ui-tree-horizontal .app-treenode-label, .gu-mirror .app-treenode-label {
-  display: table-cell;
+  display: inline-block;
   text-align: center;
   min-width: 130px;
   height: 36px;
+  line-height: 36px;
 }
 
 .ui-tree-horizontal .app-tree-toggler, .gu-mirror .app-tree-toggler {
   position: absolute;
   left: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 16px;
-  line-height: 16px;
+  height: 36px;
+  line-height: 36px;
 }
 
 .ui-tree-horizontal .ui-treenode.ui-treenode-leaf, .ui-tree-horizontal .ui-treenode.ui-treenode-collapsed {

@@ -1,3 +1,22 @@
+<ng-template
+  #treenodeLabelTemplate
+  let-node="node"
+  let-tree="tree"
+>
+  <span class="app-treenode-label ui-corner-all">
+    <ng-container *ngIf="!tree.getTemplateForNode(node)">
+      {{ node.label }}
+    </ng-container>
+    <ng-container *ngIf="tree.getTemplateForNode(node)">
+      <app-tree-node-template-loader
+        [node]="node"
+        [template]="tree.getTemplateForNode(node)"
+      >
+      </app-tree-node-template-loader>
+    </ng-container>
+  </span>
+</ng-template>
+
 <ng-template [ngIf]="node">
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
@@ -17,12 +36,9 @@
             </div>
             </div>
                 <span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span>
-                <span class="app-treenode-label ui-corner-all">
-                    <span *ngIf="!tree.getTemplateForNode(node)">{{node.label}}</span>
-                    <span *ngIf="tree.getTemplateForNode(node)">
-                        <app-tree-node-template-loader [node]="node" [template]="tree.getTemplateForNode(node)"></app-tree-node-template-loader>
-                    </span>
-                </span>
+            <ng-container
+              *ngTemplateOutlet="treenodeLabelTemplate; context: { node: node, tree: tree }">
+            </ng-container>
         </div>
         <ul class="ui-treenode-children" style="display: none;" *ngIf="node.children && node.expanded" [style.display]="node.expanded ? 'block' : 'none'">
             <app-tree-node *ngFor="let childNode of node.children;let firstChild=first;let lastChild=last; let index=index" [node]="childNode" [parentNode]="node"
@@ -52,7 +68,8 @@
       >
         <div
           [dragula]='"tree-node"'
-          [dragulaOptions]="dragulaOptions">
+          [dragulaOptions]="dragulaOptions"
+        >
           <div
             class="app-treenode-content ui-state-default ui-corner-all"
             [ngStyle]="{'background-color':getBgColor()}"
@@ -61,29 +78,20 @@
             (click)="delegateClick($event)"
             (dblclick)="delegateClick($event)"
           >
-          <span
-            class="app-tree-toggler fa fa-fw"
-            [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}"
-            *ngIf="!isLeaf()"
-            (click)="toggle($event)"
-            (dblclick)="toggleDbClick($event)">
-          </span>
             <span
-              [class]="getIcon()"
-              *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
-          </span>
-            <span class="app-treenode-label ui-corner-all">
-            <span *ngIf="!tree.getTemplateForNode(node)">
-              {{node.label}}
+              class="app-tree-toggler fa fa-fw"
+              [ngClass]="{'fa-plus':!node.expanded,'fa-minus':node.expanded}"
+              *ngIf="!isLeaf()"
+              (click)="toggle($event)"
+              (dblclick)="toggleDbClick($event)">
             </span>
-            <span *ngIf="tree.getTemplateForNode(node)">
-              <app-tree-node-template-loader
-                [node]="node"
-                [template]="tree.getTemplateForNode(node)"
-              >
-              </app-tree-node-template-loader>
+              <span
+                [class]="getIcon()"
+                *ngIf="node.icon||node.expandedIcon||node.collapsedIcon">
             </span>
-          </span>
+            <ng-container
+              *ngTemplateOutlet="treenodeLabelTemplate; context: { node: node, tree: tree }">
+            </ng-container>
           </div>
         </div>
       </td>
