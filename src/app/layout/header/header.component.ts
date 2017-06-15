@@ -20,9 +20,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isNavSearchVisible: boolean;
 
-  notifications: Array<INotification>;
+  notifications: Array<INotification> = [];
 
-  filters: IFilters;
+  filters: IFilters = {};
 
   private notificationSubscription: Subscription;
 
@@ -38,8 +38,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.notificationSubscription = this.notificationsService.state
       .subscribe((state: INotificationServiceState) => {
-        this.filters = state.filters;
-        this.notifications = state.notifications;
+        // NOTE: dirty hack, no other solution for the moment
+        setTimeout(() => {
+          this.filters = state.filters;
+          this.notifications = state.notifications;
+        }, 0);
       });
   }
 
@@ -85,7 +88,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // STUB: to test the language switching options
     const lang = this.translateService.currentLang;
     const nextLang = lang === 'ru' ? 'en' : 'ru';
-    this.translateService.use(nextLang).subscribe();
+    this.translateService.use(nextLang).take(1).subscribe();
   }
 
   logout(event: UIEvent): void {

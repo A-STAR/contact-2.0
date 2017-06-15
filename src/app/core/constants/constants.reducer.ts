@@ -1,25 +1,34 @@
+import * as R from 'ramda';
+
 import { IConstantAction, IConstantsState, IConstant } from './constants.interface';
 
 import { ConstantsService } from './constants.service';
 
-// TODO(a.tymchuk): separate service for persisting global state?
 const savedState = localStorage.getItem(ConstantsService.STORAGE_KEY);
 
-const defaultState: IConstantsState = {};
+const defaultState: IConstantsState = {
+  constants: [],
+  currentConstant: null,
+};
 
-export function permissionReducer(
-  state: IConstantsState = savedState ? JSON.parse(savedState) : defaultState,
+export function constantsReducer(
+  state: IConstantsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IConstantAction
 ): IConstantsState {
 
   switch (action.type) {
     case ConstantsService.CONSTANT_FETCH_SUCCESS:
-      return Object.assign({}, action.payload);
-    case ConstantsService.CONSTANT_UPDATE:
       return {
         ...state,
-        ...action.payload as IConstant
+        constants: { ...action.payload }
       };
+
+    case ConstantsService.CONSTANT_SELECTED_CONSTANT:
+      return {
+        ...state,
+        currentConstant: action.payload as IConstant
+      };
+
     default:
       return state;
   }
