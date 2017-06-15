@@ -34,7 +34,7 @@
     <tr>
       <td
         class="ui-treenode-connector"
-        *ngIf="!root"
+        *ngIf="!root && canShowConnector()"
       >
         <table class="ui-treenode-connector-table">
           <tbody>
