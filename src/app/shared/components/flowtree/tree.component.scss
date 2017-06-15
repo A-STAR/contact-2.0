@@ -1,25 +1,26 @@
-.ui-tree {
-  .ui-treenode-content {
-    min-width: 160px;
-    &.dnd-swapped-active {
-      background-color: #d8ffe1 !important;
-    }
-    &.dnd-active {
-      background-color: #99e5a9 !important;
-    }
-  }
+.app-treenode-content {
+  min-width: 160px;
 
-    .ui-treenode-selectable.ui-treenode-content {
+  &.dnd-swapped-active {
+    background-color: #d8ffe1 !important;
+  }
+  &.dnd-active {
+    background-color: #99e5a9 !important;
+  }
+}
+
+.app-tree-container {
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+  padding: .25em;
+  white-space: nowrap;
+}
+
+.ui-tree {
+   .ui-treenode-selectable.app-treenode-content {
         cursor: pointer;
         user-select: none;
-    }
-
-    .ui-tree-container {
-        height: 100%;
-        margin: 0;
-        overflow: auto;
-        padding: .25em;
-        white-space: nowrap;
     }
 
     .ui-treenode-children {
@@ -61,7 +62,7 @@
         border: 0 none;
     }
 
-    .ui-treenode.ui-treenode-leaf > .ui-treenode-content > .ui-tree-toggler {
+    .ui-treenode.ui-treenode-leaf > .app-treenode-content > .ui-tree-toggler {
         visibility: hidden;
     }
 
@@ -100,7 +101,7 @@
     vertical-align: middle;
 }
 
-.ui-tree.ui-tree-horizontal .ui-treenode-content {
+.ui-tree.ui-tree-horizontal .app-treenode-content {
     position: relative;
 }
 
@@ -114,7 +115,7 @@
     transform: translateY(-50%);
 }
 
-.ui-tree-horizontal .ui-treenode-content, .ui-treenode-content.gu-mirror {
+.ui-tree-horizontal .app-treenode-content, .app-treenode-content.gu-mirror {
     font-size: 12px;
     font-weight: normal;
     padding: 0.5em 1.2em;
@@ -129,7 +130,7 @@
     text-align: center;
 }
 
-.ui-tree-horizontal .ui-treenode-parent .ui-treenode-content {
+.ui-tree-horizontal .ui-treenode-parent .app-treenode-content {
     font-weight: normal;
     white-space: nowrap;
 }

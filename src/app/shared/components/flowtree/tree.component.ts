@@ -61,7 +61,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   }
 
   get elementSelector(): string {
-    return '.ui-treenode-content';
+    return '.app-treenode-content';
   }
 
   constructor(public elementRef: ElementRef,

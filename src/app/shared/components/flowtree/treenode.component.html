@@ -1,7 +1,7 @@
 <ng-template [ngIf]="node">
     <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
         <div
-            class="ui-treenode-content"
+            class="app-treenode-content"
             (click)="delegateClick($event)"
             (dblclick)="delegateClick($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
@@ -53,7 +53,7 @@
           [attr.nodeid]="node.id"
           [dragulaOptions]="dragulaOptions">
         <div
-          class="ui-treenode-content ui-state-default ui-corner-all"
+          class="app-treenode-content ui-state-default ui-corner-all"
           [ngStyle]="{'background-color':getBgColor()}"
           [attr.nodeid]="node.id"
           [ngClass]="{'ui-treenode-selectable': tree.selectionMode }"
