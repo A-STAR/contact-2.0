@@ -4,6 +4,7 @@ const crossvent: { add: Function, remove: Function } = require('crossvent');
 const crossventAddFn: Function = crossvent.add;
 const crossventRemoveFn: Function = crossvent.remove;
 const cachedFn = {};
+const SLIDE_FACTOR_IN_PIXELS = 2;
 
 let _moveX = 0, _moveY = 0;
 
@@ -11,7 +12,8 @@ crossvent.add = function (el: Element, type: string, fn: Function, capturing: bo
   const originalFn = fn;
   if (fn.name === 'startBecauseMouseMoved') {
     fn = function (event: MouseEvent): void {
-      if ((Math.abs(event.clientY - _moveY) < 2) && (Math.abs(event.clientX - _moveX) < 2)) {
+      if ((Math.abs(event.clientY - _moveY) <= SLIDE_FACTOR_IN_PIXELS)
+        && (Math.abs(event.clientX - _moveX) <= SLIDE_FACTOR_IN_PIXELS)) {
         return;
       }
       return originalFn.apply(this, arguments);
