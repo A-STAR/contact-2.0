@@ -88,7 +88,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   onNodeClick(event: MouseEvent, node: TreeNode): void {
     const eventTarget = (<Element> event.target);
 
-    if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
+    if (eventTarget.className && eventTarget.className.indexOf('app-tree-toggler') === 0) {
       return;
     } else if (this.selectionMode) {
       if (node.selectable === false) {
