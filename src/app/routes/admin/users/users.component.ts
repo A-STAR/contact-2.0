@@ -2,10 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/zip';
 import 'rxjs/add/observable/combineLatest';
 
-// import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';

@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
-// import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
@@ -11,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -27,23 +29,29 @@ export class DictComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
       icon: 'fa fa-plus',
       label: 'toolbar.action.add',
-      // permissions: [ 'DICT_ADD' ]
+      disabled: this.permissionsService.hasPermission('DICT_ADD').map(hasPermission => !hasPermission)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
       icon: 'fa fa-pencil',
       label: 'toolbar.action.edit',
-      // permissions: [ 'DICT_EDIT' ],
-      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('DICT_EDIT'),
+        this.dictionariesService.state.map(state => state.selectedDictionaryCode)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
       icon: 'fa fa-trash',
       label: 'toolbar.action.remove',
-      // permissions: [ 'DICT_DELETE' ],
-      // disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('DICT_DELETE'),
+        this.dictionariesService.state.map(state => state.selectedDictionaryCode)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
@@ -80,6 +88,7 @@ export class DictComponent implements OnDestroy {
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
+    private permissionsService: PermissionsService,
     private entityTranslationsService: EntityTranslationsService,
   ) {
     this.dictionariesService.fetchDictionaries();

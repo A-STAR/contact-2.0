@@ -7,7 +7,9 @@ import {
   SimpleChange,
   ViewChild,
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../../../../core/permissions/permissions.interface';
@@ -50,26 +52,36 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      // permissions: [ 'PERMIT_ADD' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ADD),
-      // disabled: () => !this.currentRole,
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_ADD'),
+        // TODO(d.maltsev): seems like currentRole is not changing atm
+        this.permissionsService.permissions.map(state => state.currentRole)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      // permissions: [ 'PERMIT_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.EDIT),
-      // disabled: () => !this.currentPermission,
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_EDIT'),
+        this.permissionsService.permissions.map(state => state.currentPermission)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      // permissions: [ 'PERMIT_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.DELETE),
-      // disabled: () => !this.currentPermission,
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_DELETE'),
+        this.permissionsService.permissions.map(state => state.currentPermission)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      // permissions: [ 'PERMIT_VIEW' ],
       action: () => this.refreshGrid(),
+      disabled: this.permissionsService.hasPermission('PERMIT_VIEW').map(hasPermission => !hasPermission)
     },
   ];
 
