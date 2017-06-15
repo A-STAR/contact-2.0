@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import './crossvent.patch';
 import { TreeComponent } from './tree.component';
-import { UITreeNodeComponent } from './uitreenode.component';
+import { TreeNodeComponent } from './treenode.component';
 import { TreeNodeTemplateLoaderComponent } from './treenodetemplateloader.component';
 import { DragAndDropModule } from '../dnd/drag-and-drop.module';
 
@@ -17,7 +17,7 @@ import { DragAndDropModule } from '../dnd/drag-and-drop.module';
   ],
   declarations: [
     TreeComponent,
-    UITreeNodeComponent,
+    TreeNodeComponent,
     TreeNodeTemplateLoaderComponent,
   ],
 })

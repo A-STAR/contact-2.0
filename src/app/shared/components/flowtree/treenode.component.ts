@@ -19,9 +19,9 @@ import {
 
 @Component({
   selector: 'app-tree-node',
-  templateUrl: './uitreenode.component.html'
+  templateUrl: './treenode.component.html'
 })
-export class UITreeNodeComponent implements OnInit, IClickableComponent {
+export class TreeNodeComponent implements OnInit, IClickableComponent {
 
   static DEFAULT_BG_COLOR = '#fff';
   static DEFAULT_SELECTED_BG_COLOR = '#def';
@@ -51,8 +51,8 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
 
   getBgColor(): string {
     return this.isSelected() ?
-      this.node.selectedBgColor || UITreeNodeComponent.DEFAULT_SELECTED_BG_COLOR :
-      this.node.bgColor || UITreeNodeComponent.DEFAULT_BG_COLOR;
+      this.node.selectedBgColor || TreeNodeComponent.DEFAULT_SELECTED_BG_COLOR :
+      this.node.bgColor || TreeNodeComponent.DEFAULT_BG_COLOR;
   }
 
   isLeaf(): boolean {
@@ -97,5 +97,9 @@ export class UITreeNodeComponent implements OnInit, IClickableComponent {
     return this.node.expanded
       ? this.node.expandedIcon
       : (this.node.icon || this.node.collapsedIcon);
+  }
+
+  canShowConnector(): boolean {
+    return this.node.parent.children.length > 1;
   }
 }
