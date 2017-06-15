@@ -20,14 +20,20 @@ import { GridService } from '../../shared/components/grid/grid.service';
 export class PermissionsService {
   static STORAGE_KEY = 'state/permissions';
   // store actions
-  static PERMISSION_FETCH               = 'PERMISSION_FETCH';
-  static PERMISSION_FETCH_SUCCESS       = 'PERMISSION_FETCH_SUCCESS';
-  static PERMISSION_ADD                 = 'PERMISSION_ADD';
-  static PERMISSION_UPDATE              = 'PERMISSION_UPDATE';
-  static PERMISSION_DELETE              = 'PERMISSION_DELETE';
-  static PERMISSION_DIALOG              = 'PERMISSION_DIALOG';
-  static PERMISSION_SELECTED_PERMISSION = 'PERMISSION_SELECTED_PERMISSION';
-  static PERMISSION_SELECTED_ROLE       = 'PERMISSION_SELECTED_ROLE';
+  static ROLE_FETCH               = 'ROLE_FETCH';
+  static ROLE_FETCH_SUCCESS       = 'ROLE_FETCH_SUCCESS';
+  static ROLE_ADD                 = 'ROLE_ADD';
+  static ROLE_UPDATE              = 'ROLE_UPDATE';
+  static ROLE_COPY                = 'ROLE_COPY';
+  static ROLE_DELETE              = 'ROLE_DELETE';
+  static ROLE_SELECTED            = 'ROLE_SELECTED';
+  static PERMISSION_FETCH         = 'PERMISSION_FETCH';
+  static PERMISSION_FETCH_SUCCESS = 'PERMISSION_FETCH_SUCCESS';
+  static PERMISSION_ADD           = 'PERMISSION_ADD';
+  static PERMISSION_UPDATE        = 'PERMISSION_UPDATE';
+  static PERMISSION_DELETE        = 'PERMISSION_DELETE';
+  static PERMISSION_SELECTED      = 'PERMISSION_SELECTED';
+  static PERMISSION_DIALOG        = 'PERMISSION_DIALOG';
 
   constructor(
     private gridService: GridService,
@@ -77,6 +83,64 @@ export class PermissionsService {
     return (rawPermission.valueB !== null) ? !!rawPermission.valueB : false;
   }
 
+  fetchRoles(): void {
+    this.store.dispatch({
+      type: PermissionsService.ROLE_FETCH
+    });
+  }
+
+  // TODO(d.maltsev): role type
+  selectRole(role: any): void {
+    this.store.dispatch({
+      type: PermissionsService.ROLE_SELECTED,
+      payload: { role }
+    });
+  }
+
+  // TODO(d.maltsev): role type
+  createRole(role: any): void {
+    return this.store.dispatch({
+      type: PermissionsService.ROLE_ADD,
+      payload: {
+        role
+      }
+    });
+  }
+
+  // TODO(d.maltsev): role type
+  updateRole(role: any): void {
+    return this.store.dispatch({
+      type: PermissionsService.ROLE_UPDATE,
+      payload: {
+        role
+      }
+    });
+  }
+
+  // TODO(d.maltsev): role type
+  copyRole(originalRoleId: number, role: any): void {
+    return this.store.dispatch({
+      type: PermissionsService.ROLE_COPY,
+      payload: {
+        originalRoleId,
+        role
+      }
+    });
+  }
+
+  removeRole(): void {
+    return this.store.dispatch({
+      type: PermissionsService.ROLE_DELETE
+    });
+  }
+
+  fetchPermissions(roleId: number): void {
+    this.store.dispatch({
+      type: PermissionsService.PERMISSION_FETCH,
+      payload: { roleId }
+    });
+  }
+
   addPermission(role: IPermissionRole, permissionIds: number[]): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_ADD,
@@ -103,7 +167,7 @@ export class PermissionsService {
   }
 
   changeSelected(payload: IPermissionModel): void {
-    this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED_PERMISSION, payload });
+    this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED, payload });
   }
 
   normalizePermissions(response: IPermissionsResponse): IPermission {

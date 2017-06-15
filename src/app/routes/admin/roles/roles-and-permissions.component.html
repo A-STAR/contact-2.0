@@ -1,17 +1,16 @@
-<app-roles (onSelect)="onSelect($event)"></app-roles>
+<app-roles></app-roles>
 
 <br>
 
 <app-tabstrip>
   <app-tab title="roles.permissions.tab.title">
-    <app-permissions
-      (cloneRole)="onRoleClone()"
-      [currentRole]="currentRole">
-    </app-permissions>
+    <app-permissions></app-permissions>
   </app-tab>
   <app-tab title="roles.permissions.tab2.title" [closable]="false">
+    <!--
     <app-permissions-tree
       [currentRole]="currentRole">
     </app-permissions-tree>
+    -->
   </app-tab>
 </app-tabstrip>

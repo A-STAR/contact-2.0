@@ -17,9 +17,13 @@ export interface IRawPermission {
 
 export enum IPermissionsDialogEnum {
   NONE,
-  ADD,
-  EDIT,
-  DELETE,
+  PERMISSION_ADD,
+  PERMISSION_EDIT,
+  PERMISSION_DELETE,
+  ROLE_ADD,
+  ROLE_EDIT,
+  ROLE_DELETE,
+  ROLE_COPY
 }
 
 export interface IPermission {
@@ -32,6 +36,8 @@ export interface IPermissionsState {
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
   rawPermissions: IPermissionModel[];
+  // TODO(d.maltsev): role type
+  roles: Array<any>;
 }
 
 export type IPermissionActionType =

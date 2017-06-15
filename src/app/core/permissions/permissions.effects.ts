@@ -24,7 +24,93 @@ export class PermissionsEffects {
     payload: IPermissionsDialogEnum.NONE,
   };
 
+  rolesFetchAction = { type: PermissionsService.ROLE_FETCH };
+
   permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
+
+  @Effect()
+  fetchRoles = this.actions
+    .ofType(PermissionsService.ROLE_FETCH)
+    .switchMap((action: Action) => {
+      return this.readRoles()
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        })
+        .map(response => ({
+          type: PermissionsService.ROLE_FETCH_SUCCESS,
+          payload: response.roles
+        }));
+    });
+
+  @Effect()
+  createRole$ = this.actions
+    .ofType(PermissionsService.ROLE_ADD)
+    .switchMap((action: Action) => {
+      return this.addRole(action.payload.role)
+        .mergeMap(() => [
+          this.rolesFetchAction,
+          this.hideDialogAction
+        ])
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  copyRole$ = this.actions
+    .ofType(PermissionsService.ROLE_COPY)
+    .switchMap((action: Action) => {
+      return this.copyRole(action.payload.originalRoleId, action.payload.role)
+        .mergeMap(() => [
+          this.rolesFetchAction,
+          this.hideDialogAction
+        ])
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  updateRole$ = this.actions
+    .ofType(PermissionsService.ROLE_UPDATE)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      return this.updateRole(store.permissions.currentRole.id, action.payload.role)
+        .mergeMap(() => [
+          this.rolesFetchAction,
+          this.hideDialogAction
+        ])
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  deleteRole$ = this.actions
+    .ofType(PermissionsService.ROLE_DELETE)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
+      return this.deleteRole(store.permissions.currentRole.id)
+        .mergeMap(() => [
+          this.rolesFetchAction,
+          this.hideDialogAction
+        ])
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notifications.error('permissions.api.errors.fetch');
+          return null;
+        });
+    });
 
   @Effect()
   fetchPermissions = this.actions
@@ -120,4 +206,23 @@ export class PermissionsEffects {
     return this.gridService.delete('/roles/{roleId}/permits/{permissionId}', { roleId: role.id, permissionId });
   }
 
+  private readRoles(): Observable<any> {
+    return this.gridService.read('/roles');
+  }
+
+  private addRole(role: any): Observable<any> {
+    return this.gridService.create('/roles', {}, role);
+  }
+
+  private copyRole(originalRoleId: number, role: any): Observable<any> {
+    return this.gridService.create('/roles/{originalRoleId}/copy', { originalRoleId }, role);
+  }
+
+  private updateRole(roleId: number, role: any): Observable<any> {
+    return this.gridService.update('/roles/{roleId}', { roleId }, role);
+  }
+
+  private deleteRole(roleId: number): Observable<any> {
+    return this.gridService.delete('/roles/{roleId}', {roleId});
+  }
 }

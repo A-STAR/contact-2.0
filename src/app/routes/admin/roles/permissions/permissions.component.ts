@@ -51,19 +51,19 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       permissions: [ 'PERMIT_ADD' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.ADD),
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
       disabled: () => !this.currentRole,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       permissions: [ 'PERMIT_EDIT' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.EDIT),
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
       disabled: () => !this.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       permissions: [ 'PERMIT_DELETE' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.DELETE),
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
       disabled: () => !this.currentPermission,
     },
     {
@@ -112,7 +112,7 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.dialogAction(IPermissionsDialogEnum.EDIT);
+    this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
   }
 
   onSelectPermissions(records: IPermissionModel[]): void {

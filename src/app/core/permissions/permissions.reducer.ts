@@ -12,6 +12,7 @@ const defaultState: IPermissionsState = {
   currentPermission: null,
   currentRole: null,
   rawPermissions: null,
+  roles: []
 };
 
 // This should NOT be an arrow function in order to pass AoT compilation
@@ -22,6 +23,17 @@ export function permissionReducer(
 ): IPermissionsState {
 
   switch (action.type) {
+    case PermissionsService.ROLE_FETCH_SUCCESS:
+      return {
+        ...state,
+        roles: action.payload,
+        currentRole: null
+      };
+    case PermissionsService.ROLE_SELECTED:
+      return {
+        ...state,
+        currentRole: action.payload.role
+      };
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return {
         ...state,
@@ -59,13 +71,13 @@ export function permissionReducer(
         dialog: action.payload,
       };
 
-    case PermissionsService.PERMISSION_SELECTED_PERMISSION:
+    case PermissionsService.PERMISSION_SELECTED:
       return {
         ...state,
         currentPermission: action.payload,
       };
 
-    case PermissionsService.PERMISSION_SELECTED_ROLE:
+    case PermissionsService.ROLE_SELECTED:
       return {
         ...state,
         currentRole: action.payload,
