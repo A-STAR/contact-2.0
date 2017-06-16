@@ -95,9 +95,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   onSubmit(constant: IConstant): void {
     // TODO: move the logic to constants service
-    const id = constant.id;
-    const typeCode = constant.typeCode;
-    const value = constant.value;
+    const { id, typeCode, value } = constant;
     const fieldMap: object = {
       1: 'valueN',
       2: 'valueD',

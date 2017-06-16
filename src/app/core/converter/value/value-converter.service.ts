@@ -12,19 +12,20 @@ export class ValueConverterService {
   ) { }
 
   serialize(valueEntity: IValueEntity): IValueEntity {
-    switch (valueEntity.typeCode) {
+    const result: IValueEntity = Object.assign({}, valueEntity);
+    switch (result.typeCode) {
       case 1:
-        valueEntity.valueN = this.toBooleanNumber(valueEntity.value);
+        result.valueN = this.toBooleanNumber(result.value);
         break;
       case 3:
-        valueEntity.valueS = valueEntity.value as string;
+        result.valueS = String(result.value);
         break;
       case 4:
-        valueEntity.valueB = this.toBooleanNumber(valueEntity.value);
+        result.valueB = this.toBooleanNumber(result.value);
         break;
     }
-    delete valueEntity.value;
-    return valueEntity;
+    delete result.value;
+    return result;
   }
 
   deserialize(valueEntity: IValueEntity): IValueEntity {
@@ -48,15 +49,12 @@ export class ValueConverterService {
   }
 
   deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
-    if (!dataSet) {
-      return [];
-    }
-    return dataSet.map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
+    return (dataSet || []).map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
   }
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      // TODO(a.tymchuk): use dictionaries here
+      // TODO(a.tymchuk): use dictionary service
       return this.toBooleanNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
