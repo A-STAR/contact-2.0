@@ -22,6 +22,7 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-actions-log',
@@ -31,7 +32,6 @@ import { ActionsLogFilterComponent } from './filter/actions-log-filter.component
 })
 export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
-  static DEFAULT_PAGE_SIZE = 10;
 
   columns: IGridColumn[] = [
     { prop: 'fullName', minWidth: 200 },
@@ -84,7 +84,7 @@ export class ActionsLogComponent implements OnDestroy {
   onSearch(): void {
     this.doSearch({
       currentPage: 1,
-      pageSize: ActionsLogComponent.DEFAULT_PAGE_SIZE
+      pageSize: Grid2Component.DEFAULT_PAGE_SIZE
     });
   }
 

@@ -55,6 +55,8 @@ import { GridHeaderComponent } from './header/grid-header.component';
   styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
+  static DEFAULT_PAGE_SIZE = 50;
+
   static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
   static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
   static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
@@ -73,7 +75,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
   @Input() pagination = false;
-  @Input() pageSizes = [10, 50, 100, 250, 500, 1000];
+  @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
 
   // Inputs without presets
   @Input() stateKey: string;
@@ -321,13 +323,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private updatePaginationElements(): void {
     const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
     if (this.pagination) {
+      const pagesCount: number = this.getPagesCount();
       this.backwardElement.noRender = false;
       this.forwardElement.noRender = false;
       this.pageElement.noRender = false;
       this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
-      this.forwardElement.visible = this.currentPage < this.getPagesCount() && paginationElementsVisible;
+      this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
       this.pageElement.visible = true;
-      this.pageElement.text = this.currentPage;
+      this.pageElement.text = `${this.currentPage}/${pagesCount}`;
     }
   }
 
