@@ -10,5 +10,5 @@
       <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>
-  <input #file type="file" style="display: none" (change)="onFileChange($event)">
+  <input #file type="file" accept="image/*" style="display: none" (change)="onFileChange($event)">
 </div>
