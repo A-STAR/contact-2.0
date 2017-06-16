@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -8,14 +8,13 @@ import 'rxjs/add/observable/zip';
 import {
   IActionLog,
   IActionsLogData,
-  IActionsLogFilterRequestPayload,
   IActionsLogPayload,
   IActionType,
   IEmployee
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IGrid2PaginationInfo } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2State } from '../../../shared/components/grid2/grid2.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -35,6 +34,17 @@ export class ActionsLogService {
     private notifications: NotificationsService,
   ) {
   }
+
+  get actionsLogCurrentPage(): Observable<number> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentPage);
+  }
+
+  get actionsLogCurrentPageSize(): Observable<number> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.pageSize);
+  }
+
 
   get actionsLogRows(): Observable<IActionsLogData> {
     return this.store
@@ -70,12 +80,15 @@ export class ActionsLogService {
 
   @Effect() onSearchEffect = this.effectActions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
+    .withLatestFrom(this.store)
     .switchMap(
-      (action: { payload: IActionsLogFilterRequestPayload }): Observable<IActionsLogPayload> => {
+      (payload): Observable<IActionsLogPayload> => {
+        const [_, store]: [Action, IAppState] = payload;
+        const gridState: IGrid2State = store.actionsLog.actionsLogGrid;
         return this.gridService.create('/actions/grid', {}, {
           paging: {
-            pageNumber: action.payload.pageInfo.currentPage,
-            resultsPerPage: action.payload.pageInfo.pageSize
+            pageNumber: gridState.currentPage,
+            resultsPerPage: gridState.pageSize
           }
         })
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
@@ -93,13 +106,10 @@ export class ActionsLogService {
       return null;
     });
 
-  search(payload: IActionsLogFilterRequest, pageInfo: IGrid2PaginationInfo): void {
+  search(payload: IActionsLogFilterRequest): void {
     this.store.dispatch({
       type: ActionsLogService.ACTIONS_LOG_FETCH,
-      payload: {
-        payload: payload,
-        pageInfo: pageInfo
-      }
+      payload: payload
     });
   }
 

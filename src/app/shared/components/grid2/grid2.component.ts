@@ -11,8 +11,7 @@ import {
   Renderer2,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+
 import { TranslateService } from '@ngx-translate/core';
 import {
   ColDef,
@@ -22,7 +21,6 @@ import {
   Column,
   ColumnChangeEvent
 } from 'ag-grid';
-import { Store } from '@ngrx/store';
 
 import {
   IToolbarAction,
@@ -30,12 +28,12 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
-import { IAppState } from '../../../core/state/state.interface';
+
 import {
   IGrid2ColumnsPositionsChangePayload,
   IGrid2ShowFilterPayload,
   Grid2SortingEnum,
-  IGrid2SelectedRowChangePayload
+  IGrid2EventPayload
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import {
@@ -43,7 +41,6 @@ import {
   IGrid2ServiceDispatcher,
   IGrid2SortingDirectionSwitchPayload,
   IGrid2State,
-  IGrid2PaginationInfo
 } from './grid2.interface';
 
 import { GridHeaderComponent } from './header/grid-header.component';
@@ -58,6 +55,9 @@ import { GridHeaderComponent } from './header/grid-header.component';
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
   static DEFAULT_PAGE_SIZE = 50;
 
+  static NEXT_PAGE = 'GRID2_NEXT_PAGE';
+  static PREVIOUS_PAGE = 'GRID2_PREVIOUS_PAGE';
+  static PAGE_SIZE = 'GRID2_PAGE_SIZE';
   static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
   static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
   static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
@@ -69,6 +69,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
+  @Input() currentPage = 1;
+  @Input() currentPageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
   @Input() groupColumnMinWidth = 120;
@@ -79,7 +81,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
 
   // Inputs without presets
-  @Input() stateKey: string;
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
@@ -91,9 +92,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
-  @Output() nextPage: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
-  @Output() previousPage: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
-  @Output() changePageSize: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
+  @Output() nextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() previousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() pageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -110,15 +111,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private forwardElement: IToolbarAction;
   private pageElement: IToolbarAction;
   private pagesSizeElement: IToolbarAction;
-  private stateSubscription: Subscription;
-  private currentPage = 1;
-  private currentPageSize: number;
+  private initialized = false;
   @Input() filter(record: any): boolean { return record; }
 
   constructor(
     private renderer2: Renderer2,
     private translate: TranslateService,
-    private store: Store<IAppState>,
   ) {
   }
 
@@ -139,19 +137,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return this.gridOptions.columnApi.getAllGridColumns();
   }
 
-  get state(): Observable<IGrid2State> {
-    return this.store
-      .select((state: IAppState): IGrid2State => {
-        let gridState: any = state;
-        this.stateKey.split('.').forEach((path: string) => gridState = gridState[path]);
-        return gridState as IGrid2State;
-      });
-  }
-
   ngOnInit(): void {
     this.setRowsOptions();
     this.createColumnDefs();
-    this.initPageSize();
     this.defineGridToolbarActions();
     this.subscribeStateChanges();
 
@@ -182,24 +170,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           this.translateColumns(columnTranslations);
         }
       });
+
+    this.initialized = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('rows' in changes && this.rowsCounterElement) {
-      this.setRowsInfo();
-      this.updatePaginationElements();
+    if (this.initialized) {
+      if ('rows' in changes || 'currentPage' in changes || 'currentPageSize' in changes) {
+        this.setRowsInfo();
+        this.updatePaginationElements();
+      }
     }
   }
 
   ngOnDestroy(): void {
     this.headerColumns = null;
-
     this.langSubscription.unsubscribe();
-    if (this.stateSubscription) {
-      this.stateSubscription.unsubscribe();
-    }
-
-    this.store.dispatch( { type: Grid2Component.DESTROY_STATE } );
   }
 
   onSelect(event: any): void {
@@ -208,18 +194,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private changeRowSelection(data: any, selected: boolean): void {
-    this.store.dispatch({
+    /* this.store.dispatch({
       type: Grid2Component.SELECTED_ROWS, payload: {
         rowData: data,
         selected: selected
       } as IGrid2SelectedRowChangePayload
-    });
+    });*/
   }
 
-  private clearAllSelections(): void {
+ /* private clearAllSelections(): void {
     this.store.dispatch({ type: Grid2Component.NO_SELECTED_ROWS });
     this.gridOptions.api.clearFocusedCell();
-  }
+  }*/
 
   onActionClick(event: any): void {
     this.onAction.emit(event);
@@ -230,11 +216,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onDragStarted(): void {
-    this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: true } });
+    // this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: true } });
   }
 
   onDragStopped(): void {
-    this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: false } });
+    // this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: false } });
 
     const currentGridColumns: Column[] = this.gridOptions.columnApi.getAllGridColumns();
     this.dispatchColumnsPositions({
@@ -253,50 +239,32 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   onToolbarActionClick(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.BACKWARD:
-        this.previousPage.emit({
-          currentPage: --this.currentPage,
-          pageSize: this.currentPageSize
-        });
-        this.clearAllSelections();
+        this.previousPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.currentPage });
         break;
       case ToolbarActionTypeEnum.FORWARD:
-        this.nextPage.emit({
-          currentPage: ++this.currentPage,
-          pageSize: this.currentPageSize
-        });
-        this.clearAllSelections();
+        this.nextPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.currentPage });
         break;
     }
   }
 
   onToolbarActionSelect(payload: IToolbarActionSelectPayload): void {
-    this.currentPage = 1;
-    this.currentPageSize = payload.value.value;
-
-    this.changePageSize.emit({
-      currentPage: this.currentPage,
-      pageSize: this.currentPageSize
-    });
+    this.pageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value.value });
   }
 
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {
-    this.store.dispatch({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
+    // this.store.dispatch({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
   }
 
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void {
-    this.store.dispatch({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
+    // this.store.dispatch({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
   }
 
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void {
-    this.store.dispatch({ type: Grid2Component.OPEN_FILTER, payload: payload });
+    // this.store.dispatch({ type: Grid2Component.OPEN_FILTER, payload: payload });
   }
 
   dispatchCloseFilter(): void {
-    this.store.dispatch({ type: Grid2Component.CLOSE_FILTER });
-  }
-
-  private initPageSize(): void {
-    this.currentPageSize = this.pageSizes[0];
+    // this.store.dispatch({ type: Grid2Component.CLOSE_FILTER });
   }
 
   private getColumnByName(field: string): Column {
@@ -319,6 +287,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private setRowsInfo(): void {
+    if (!this.rowsCounterElement) {
+      return;
+    }
     this.rowsCounterElement.text = this.translate.instant('default.grid.selectedCounts', {
       length: this.getRowsTotalCount(),
       selected: this.selected.length
@@ -353,13 +324,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private subscribeStateChanges(): void {
-    if (!this.stateKey) {
-      return;
-    }
-    this.stateSubscription = this.state.subscribe(this.onStateChange.bind(this));
+   // this.stateSubscription = this.state.subscribe(this.onStateChange.bind(this));
   }
 
-  private onStateChange(state: IGrid2State): void {
+  /*private onStateChange(state: IGrid2State): void {
     if (!state) {
       return;
     }
@@ -371,7 +339,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.applyClientSorting(state);
     }
     this.setRowsInfo();
-  }
+  }*/
 
   private applyClientSorting(state: IGrid2State): void {
     if (!state.columns || !Object.keys(state.columns).length) {
@@ -489,10 +457,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
     this.fitGridSize();
 
-    this.store.dispatch({
+    /* this.store.dispatch({
       type: Grid2Component.GROUPING_COLUMNS, payload: {
         groupingColumns: event.getColumns().map((column: Column) => column.getColId())
       }
-    });
+    }); */
   }
 }

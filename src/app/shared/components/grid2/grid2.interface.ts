@@ -11,6 +11,8 @@ export interface IGrid2ColumnsState {
 }
 
 export interface IGrid2State {
+  currentPage: number;
+  pageSize: number;
   columns: IGrid2ColumnsState;
   columnsPositions: string[];
   groupingColumns: string[];
@@ -61,7 +63,8 @@ export interface IActionGrid2Payload {
     |IGrid2ShowFilterPayload
     |IGrid2MovedColumnPayload
     |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload;
+    |IGrid2SelectedRowChangePayload
+    |number;
 }
 
 export interface IGrid2ServiceDispatcher {
@@ -80,7 +83,7 @@ export interface IGrid2HeaderParams {
   renderer2: Renderer2;
 }
 
-export interface IGrid2PaginationInfo {
-  currentPage: number;
-  pageSize: number;
+export interface IGrid2EventPayload {
+  type: string;
+  payload: number;
 }

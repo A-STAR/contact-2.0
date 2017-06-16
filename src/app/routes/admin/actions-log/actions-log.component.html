@@ -2,20 +2,21 @@
   #filter
   [employeesRows]="employeesRows"
   [actionTypesRows]="actionTypesRows"
-  (search)="onSearch()"
+  (search)="doSearch()"
 >
 </app-actions-log-filter>
 
 <app-grid2
   columnTranslationKey="actionsLog"
   [ngClass]="'actions-log-grid'"
-  [stateKey]="'actionsLog.actionsLogGrid'"
   [rows]="(actionsLogData | async).data"
   [rowsTotalCount]="(actionsLogData | async).total"
   [columns]="columns"
   [pagination]="true"
+  [currentPage]="actionsLogCurrentPage | async"
+  [currentPageSize]="actionsLogCurrentPageSize | async"
   (nextPage)="onPage($event)"
   (previousPage)="onPage($event)"
-  (changePageSize)="onPage($event)"
+  (pageSize)="onPage($event)"
 >
 </app-grid2>

@@ -6,13 +6,14 @@ import {
   IEmployee
 } from './actions-log.interface';
 
-import { combineWithGrid2Reducer } from '../../../shared/components/grid2/grid2.reducer';
+import { combineWithGrid2Reducer, GRID2_DEFAULT_STATE } from '../../../shared/components/grid2/grid2.reducer';
 import { ActionsLogService } from './actions-log.service';
 
 const defaultState: IActionsLogServiceState = {
   actionsLog: { data: [], total: 0 },
   employees: [],
-  actionTypes: []
+  actionTypes: [],
+  actionsLogGrid: GRID2_DEFAULT_STATE
 };
 
 export function actionsLogReducer(

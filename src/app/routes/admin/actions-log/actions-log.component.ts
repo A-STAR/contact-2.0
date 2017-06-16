@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Store } from '@ngrx/store';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import {
   IActionLog,
@@ -15,14 +17,14 @@ import {
   toFullName
 } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2PaginationInfo } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
-import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-actions-log',
@@ -57,6 +59,8 @@ export class ActionsLogComponent implements OnDestroy {
   employeesRows: Observable<IEmployee[]>;
   actionTypesRows: Observable<IActionType[]>;
   actionsLogData: Observable<IActionsLogData>;
+  actionsLogCurrentPage: Observable<number>;
+  actionsLogCurrentPageSize: Observable<number>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
@@ -64,14 +68,17 @@ export class ActionsLogComponent implements OnDestroy {
   private actionTypesRowsSubscription: Subscription;
 
   constructor(
+    private store: Store<IAppState>,
     private gridService: GridService,
     private converterService: ValueConverterService,
     private actionsLogService: ActionsLogService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.employeesRows = this.actionsLogService.employeesRows;
-    this.actionTypesRows = this.actionsLogService.actionTypesRows;
-    this.actionsLogData = this.actionsLogService.actionsLogRows;
+    this.employeesRows = this.actionsLogService.employeesRows.distinctUntilChanged();
+    this.actionTypesRows = this.actionsLogService.actionTypesRows.distinctUntilChanged();
+    this.actionsLogData = this.actionsLogService.actionsLogRows.distinctUntilChanged();
+    this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage.distinctUntilChanged();
+    this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize.distinctUntilChanged();
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);
@@ -81,21 +88,12 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionTypesRowsSubscription.unsubscribe();
   }
 
-  onSearch(): void {
-    this.doSearch({
-      currentPage: 1,
-      pageSize: Grid2Component.DEFAULT_PAGE_SIZE
-    });
+  onPage(eventPayload: IGrid2EventPayload): void {
+    this.store.dispatch(eventPayload);
+    this.doSearch();
   }
 
-  onPage(pageInfo: IGrid2PaginationInfo): void {
-    this.doSearch(pageInfo);
-  }
-
-  private doSearch(pageInfo: IGrid2PaginationInfo): void {
-    this.actionsLogService.search(this.filter.getFilterValues(), {
-      currentPage: pageInfo.currentPage,
-      pageSize: pageInfo.pageSize
-    });
+  doSearch(): void {
+    this.actionsLogService.search(this.filter.getFilterValues());
   }
 }
