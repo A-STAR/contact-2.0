@@ -68,30 +68,17 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   protected getControls(): Array<IDynamicFormItem> {
     const userId = this.editedEntity && this.editedEntity.id;
 
-    return [
-      {
-        children: [
-          {
-            children: [
-              { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
-              { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
-              { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-              { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
-            ],
-            width: 8
-          },
-          // TODO(d.maltsev): fix user create form
-          // TODO(d.maltsev): controlName should be optional
-          {
-            label: 'users.edit.photo',
-            controlName: 'image',
-            type: 'image',
-            url: `/api/users/${userId}/photo`,
-            action: (file: File) => this.usersService.changePhoto(file),
-            width: 4,
-          }
-        ]
-      },
+    const nameBlock = ([
+      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+    ] as Array<IDynamicFormControl>).map(control => ({
+      ...control,
+      disabled: !this.canEditUser
+    }));
+
+    const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ this.passwordValidators ] },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole,
@@ -104,14 +91,32 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'users.edit.email', controlName: 'email', type: 'text' },
       { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
-      { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true,
-          options: this.languages },
+      { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true, options: this.languages },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
-    // TODO: disable recursively
-    ].map((control: IDynamicFormControl) => ({
+    ] as Array<IDynamicFormControl>).map(control => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : !this.canEditUser
     }));
+
+    return [
+      {
+        children: [
+          {
+            children: nameBlock,
+            width: 8
+          },
+          {
+            label: 'users.edit.photo',
+            controlName: 'image',
+            type: 'image',
+            url: userId ? `/api/users/${userId}/photo` : null,
+            action: (file: File) => this.usersService.changePhoto(file),
+            width: 4,
+          }
+        ]
+      },
+      ...detailsBlock
+    ] as Array<IDynamicFormItem>;
   }
 
   get formData(): any {
