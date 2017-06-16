@@ -44,10 +44,12 @@ export class FormImageComponent implements OnInit, OnDestroy {
         this.actionButtonTitle = this.hasImage ? 'default.buttons.change' : 'default.buttons.add';
       });
 
-    this.gridService
-      .readBlob(this.url)
-      .take(1)
-      .subscribe(blob => this.preview$.next(blob));
+    if (this.url) {
+      this.gridService
+        .readBlob(this.url)
+        .take(1)
+        .subscribe(blob => this.preview$.next(blob));
+    }
   }
 
   ngOnDestroy(): void {

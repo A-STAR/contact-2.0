@@ -38,7 +38,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    return [
+    return ([
       { label: 'organizations.employees.edit.fullName', controlName: 'fullName', type: 'text' },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
       { label: 'users.edit.email', controlName: 'email', type: 'text' },
@@ -47,7 +47,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'users.edit.role', controlName: 'roleCode', type: 'select', required: true, disabled: !this.canEdit, options: this.options },
       { label: 'users.edit.comment', controlName: 'comment', type: 'text', disabled: !this.canEdit }
-    ].map((control: IDynamicFormControl) => ({
+    ] as Array<IDynamicFormControl>).map((control: IDynamicFormControl) => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : true
     }));

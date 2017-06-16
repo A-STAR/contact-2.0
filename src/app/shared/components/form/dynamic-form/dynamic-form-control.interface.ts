@@ -17,7 +17,7 @@ export interface IDynamicFormGroup {
 
 export interface IDynamicFormControl {
   label: string;
-  controlName: string;
+  controlName?: string;
   type: ControlTypes;
   dependsOn?: string;
   required?: boolean;

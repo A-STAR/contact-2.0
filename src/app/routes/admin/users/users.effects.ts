@@ -118,24 +118,24 @@ export class UsersEffects {
   ) {}
 
   private readUsers(): Observable<any> {
-    return this.gridService.read('/api/users');
+    return this.gridService.read('/users');
   }
 
   private createUser(user: IUser): Observable<any> {
-    return this.gridService.create('/api/users', {}, user);
+    return this.gridService.create('/users', {}, user);
   }
 
   private updateUser(userId: number, user: IUser): Observable<any> {
-    return this.gridService.update('/api/users/{userId}', { userId }, user);
+    return this.gridService.update('/users/{userId}', { userId }, user);
   }
 
   private updatePhoto(userId: number, photo: File | false): Observable<any> {
     if (!photo) {
-      return this.gridService.delete('/api/users/{userId}/photo', { userId });
+      return this.gridService.delete('/users/{userId}/photo', { userId });
     }
 
     const data = new FormData();
     data.append('file', photo);
-    return this.gridService.create('/api/users/{userId}/photo', { userId }, data);
+    return this.gridService.create('/users/{userId}/photo', { userId }, data);
   }
 }
