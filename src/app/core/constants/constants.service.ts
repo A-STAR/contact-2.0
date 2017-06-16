@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
-import { IConstant, IConstantsResponse, TConstantValue } from './constants.interface';
+import { IConstant, IConstantsResponse, TConstantValue, IConstantsState } from './constants.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../converter/value/value-converter.service';
@@ -31,6 +31,10 @@ export class ConstantsService {
         // TODO: log using notification service
         err => console.error(err)
       );
+  }
+
+  get state(): Observable<IConstantsState> {
+    return this.store.select('constants');
   }
 
   loadConstants(): Observable<IConstantsResponse> {
