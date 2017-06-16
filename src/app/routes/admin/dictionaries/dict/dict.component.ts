@@ -46,10 +46,8 @@ export class DictComponent implements OnDestroy {
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-      action: () => this.dictionariesService.fetchDictionaries(),
-      icon: 'fa fa-refresh',
-      label: 'toolbar.action.refresh'
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.dictionariesService.fetchDictionaries()
     }
   ];
 

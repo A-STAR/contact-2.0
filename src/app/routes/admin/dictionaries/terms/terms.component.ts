@@ -44,11 +44,9 @@ export class TermsComponent implements OnDestroy {
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.dictionariesService.fetchTerms(),
-      icon: 'fa fa-refresh',
-      label: 'toolbar.action.refresh',
-      enabled: this.dictionariesService.state.map(state => !state.selectedDictionaryCode)
+      enabled: this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
     }
   ];
 

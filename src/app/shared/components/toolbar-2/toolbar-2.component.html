@@ -5,7 +5,7 @@
     <button
       *ngIf="isButton(item)"
       class="btn btn-default"
-      [disabled]="!(item.enabled | async)"
+      [disabled]="isDisabled(item) | async"
       [title]="getLabel(item) | translate"
       (click)="onClick(item)"
     >

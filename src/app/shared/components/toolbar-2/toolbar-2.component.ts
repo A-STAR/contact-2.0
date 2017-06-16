@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultElement } from './toolbar-2.interface';
@@ -66,5 +67,9 @@ export class Toolbar2Component {
 
   getLabel(item: IToolbarButton): string {
     return item.label || this.defaultItems[item.type].label;
+  }
+
+  isDisabled(item: IToolbarItem): Observable<boolean> {
+    return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
   }
 }
