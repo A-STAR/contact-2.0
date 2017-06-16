@@ -30,19 +30,19 @@ export class RolesComponent {
       label: 'toolbar.action.copy',
       permissions: [ 'ROLE_COPY' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       permissions: [ 'ROLE_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       permissions: [ 'ROLE_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
