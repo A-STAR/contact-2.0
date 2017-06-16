@@ -40,7 +40,7 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
         ...state,
         displayBlocked: !state.displayBlocked
       };
-    case UsersService.USER_CHANGE_PHOTO:
+    case UsersService.USER_PHOTO_PREVIEW:
       return {
         ...state,
         photo: action.payload.photo

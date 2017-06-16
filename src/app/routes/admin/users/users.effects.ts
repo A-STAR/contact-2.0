@@ -68,10 +68,17 @@ export class UsersEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.updateUser(store.users.selectedUserId, action.payload.user)
+      const { selectedUserId, photo } = store.users;
+      return this.updateUser(selectedUserId, action.payload.user)
         .mergeMap(() => {
-          console.log(store.users.photo);
           return [
+            {
+              type: UsersService.USER_UPDATE_PHOTO,
+              payload: {
+                userId: selectedUserId,
+                photo
+              }
+            },
             {
               type: UsersService.USERS_FETCH
             },
@@ -85,6 +92,20 @@ export class UsersEffects {
         })
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  @Effect()
+  updateUserPhoto$ = this.actions
+    .ofType(UsersService.USER_UPDATE_PHOTO)
+    .switchMap(data => {
+      const { userId, photo } = data.payload;
+      return this.createPhoto(userId, photo)
+        .mergeMap(() => [])
+        .catch(() => {
+          // TODO(d.maltsev): i18n
+          this.notificationsService.error('Could not save photo');
           return null;
         });
     });
@@ -111,10 +132,10 @@ export class UsersEffects {
   private createPhoto(userId: number, photo: File): Observable<any> {
     const data = new FormData();
     data.append('file', photo);
-    return this.gridService.create('/api/users/{userId}/photo', { userId }, photo);
+    return this.gridService.create('/api/users/{userId}/photo', { userId }, data);
   }
 
-  private deletePhoto(userId: number): Observable<any> {
-    return this.gridService.delete('/api/users/{userId}/photo', { userId });
-  }
+  // private deletePhoto(userId: number): Observable<any> {
+  //   return this.gridService.delete('/api/users/{userId}/photo', { userId });
+  // }
 }
