@@ -1,4 +1,4 @@
-import { IPermissionModel, IPermissionRole } from '../../routes/admin/roles/permissions/permissions.interface';
+import { IPermissionModel, IPermissionRole } from '../../routes/admin/roles/roles-and-permissions.interface';
 import { IValueEntity } from '../converter/value/value-converter.interface';
 
 export { IPermissionModel, IPermissionRole, IValueEntity };
@@ -15,11 +15,15 @@ export interface IRawPermission {
   valueS: string;
 }
 
-export enum IPermissionsDisplayEnum {
+export enum IPermissionsDialogEnum {
   NONE,
-  ADD,
-  EDIT,
-  DELETE,
+  PERMISSION_ADD,
+  PERMISSION_EDIT,
+  PERMISSION_DELETE,
+  ROLE_ADD,
+  ROLE_EDIT,
+  ROLE_DELETE,
+  ROLE_COPY
 }
 
 export interface IPermission {
@@ -28,9 +32,11 @@ export interface IPermission {
 
 export interface IPermissionsState {
   permissions: IPermission;
-  display: IPermissionsDisplayEnum;
-  editedPermission: IPermissionModel;
+  dialog: IPermissionsDialogEnum;
+  currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
+  rawPermissions: IPermissionModel[];
+  roles: Array<IPermissionRole>;
 }
 
 export type IPermissionActionType =

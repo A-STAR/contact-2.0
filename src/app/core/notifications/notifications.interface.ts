@@ -15,6 +15,11 @@ export interface IFilters {
   [key: string]: boolean;
 }
 
+export interface IMessage {
+  message: string;
+  param: Object;
+}
+
 export interface INotificationServiceState {
   filters: IFilters;
   notifications: Array<INotification>;

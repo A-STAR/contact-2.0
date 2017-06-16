@@ -59,13 +59,14 @@ export class MenuService {
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {
-    const delay = Date.now() - this.lastNavigationStartTimestamp;
+    // const delay = Date.now() - this.lastNavigationStartTimestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
     if (name) {
       // this.logAction(name, delay);
     }
   }
 
+  // tslint:disable-next-line
   private logAction(name: string, delay: number): void {
     // TODO: add headers options to GridService
     this.authService

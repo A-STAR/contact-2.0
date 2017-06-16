@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Store, Action } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IConstant } from './constants.interface';
-import { IAppState } from '../state/state.interface';
+// import { IAppState } from '../state/state.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -23,16 +23,16 @@ export class ConstantsEffects {
           payload: constants
         }))
         .catch(() => {
-          this.notifications.error('Could not fetch constants');
+          this.notificationService.error('constants.api.errors.fetch');
           return null;
         });
     });
 
   constructor(
     private actions: Actions,
-    private store: Store<IAppState>,
+    // private store: Store<IAppState>,
     private gridService: GridService,
-    private notifications: NotificationsService,
+    private notificationService: NotificationsService,
   ) {}
 
   private read(): Observable<IConstant[]> {

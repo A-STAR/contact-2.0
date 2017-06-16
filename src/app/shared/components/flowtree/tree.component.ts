@@ -8,23 +8,26 @@ import {
   QueryList,
   TemplateRef,
   ViewEncapsulation,
-  HostListener,
   ElementRef,
   OnInit,
   OnDestroy,
   Renderer2,
+  ChangeDetectionStrategy,
 } from '@angular/core';
+import * as R from 'ramda';
 
 import { TreeNode } from './common/api';
 import { PrimeTemplate } from './common/shared';
 import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
 import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.interface';
+import { ITreeNodeInfo } from './tree.interface';
 
 @Component({
   selector: 'app-tree',
   styleUrls: ['./tree.component.scss'],
   templateUrl: './tree.component.html',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, AfterContentInit {
 
@@ -36,20 +39,21 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
-  @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeEdit: EventEmitter<any> = new EventEmitter();
-  @Output() changeLocation: EventEmitter<IDragAndDropPayload> = new EventEmitter();
+  @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Input() style: any;
   @Input() styleClass: string;
-  @Input() contextMenu: any;
   @Input() layout = 'vertical';
   @Input() metaKeySelection = true;
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
-  @Input() dragulaOptions: any;
   @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
-  public templateMap: any;
+  templateMap: any;
+  dragulaOptions: any = {
+    // prevent any drags by default
+    invalid: () => true
+  };
   private dragAndDropPlugin: DragAndDropComponentPlugin;
 
   get horizontal(): boolean {
@@ -57,18 +61,13 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   }
 
   get elementSelector(): string {
-    return '.ui-treenode-content';
+    return '.app-treenode-content';
   }
 
   constructor(public elementRef: ElementRef,
               public renderer: Renderer2,
               dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
     this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
-  }
-
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.dragAndDropPlugin.onMouseMove(event);
   }
 
   ngOnInit(): void {
@@ -89,7 +88,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   onNodeClick(event: MouseEvent, node: TreeNode): void {
     const eventTarget = (<Element> event.target);
 
-    if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
+    if (eventTarget.className && eventTarget.className.indexOf('app-tree-toggler') === 0) {
       return;
     } else if (this.selectionMode) {
       if (node.selectable === false) {
@@ -180,30 +179,6 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
 
   onDoubleNodeClick(event: MouseEvent, node: TreeNode): void {
     this.onNodeEdit.emit(node);
-  }
-
-  onNodeRightClick(event: MouseEvent, node: TreeNode): void {
-    if (this.contextMenu) {
-      const eventTarget = (<Element> event.target);
-
-      if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
-        return;
-      } else {
-        const index = this.findIndexInSelection(node);
-        const selected = (index >= 0);
-
-        if (!selected) {
-          if (this.isSingleSelectionMode()) {
-            this.selectionChange.emit(node);
-          } else {
-            this.selectionChange.emit([node]);
-          }
-        }
-
-        this.contextMenu.show(event);
-        this.onNodeContextMenuSelect.emit({originalEvent: event, node: node});
-      }
-    }
   }
 
   findIndexInSelection(node: TreeNode): number {
@@ -297,5 +272,61 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     } else {
       return null;
     }
+  }
+
+  changeLocation(payload: IDragAndDropPayload): void {
+    const targetElement: TreeNode = this.findNodeRecursively(this.value[0], payload.target);
+    const sourceElement: TreeNode = this.findNodeRecursively(this.value[0], payload.source);
+
+    if (this.findNodeRecursively(sourceElement, payload.target)) {
+      // User can not move the node under its child
+      return;
+    }
+
+    const sourceParentElement: TreeNode = sourceElement.parent;
+    sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
+
+    if (!sourceParentElement.children.length) {
+      delete sourceParentElement.children;
+      sourceParentElement.expanded = false;
+    }
+
+    if (payload.swap) {
+      const targetParent: TreeNode = targetElement.parent;
+      targetParent.children = R.insert(
+        R.findIndex((node: TreeNode) => node === targetElement, targetParent.children) + 1,
+        sourceElement,
+        targetParent.children
+      );
+      sourceElement.parent = targetParent;
+    } else {
+      targetElement.children = R.insert(
+        (targetElement.children || []).length, sourceElement, targetElement.children || []
+      );
+      sourceElement.parent = targetElement;
+    }
+
+    const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: TreeNode, index: number) => {
+      return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
+    }, (payload.swap ? targetElement : sourceElement).parent.children);
+
+    this.changeNodesLocation.emit(payloads);
+  }
+
+  findNodeRecursively(node: TreeNode, id: string): TreeNode {
+    if (node.id === parseInt(id, 10)) {
+      return node;
+    }
+    if (node.children) {
+      let result: TreeNode;
+      node.children.forEach((childNode: TreeNode) => {
+        const currentNode: TreeNode = this.findNodeRecursively(childNode, id);
+        if (currentNode) {
+          result = currentNode;
+        }
+      });
+      return result;
+    }
+    return null;
   }
 }

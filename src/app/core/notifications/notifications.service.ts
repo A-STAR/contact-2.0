@@ -3,9 +3,11 @@ import { Action, Store } from '@ngrx/store';
 import { ToasterService } from 'angular2-toaster';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import * as R from 'ramda';
 
 import { IAppState } from '../state/state.interface';
 import {
+  IMessage,
   INotificationActionType,
   NotificationTypeEnum,
   INotificationActionPayload,
@@ -32,30 +34,28 @@ export class NotificationsService {
 
   get state(): Observable<INotificationServiceState> {
     return this.store
-      .select(state => state.notificationService)
+      .select(state => state.notifications)
       // TODO: separate service for persisting global state?
-      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)))
-      // TODO: double check this:
-      .filter(Boolean);
+      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)));
   }
 
-  get notifications(): Observable<INotification[]> {
-    return this.store.select(state => state.notificationService.notifications);
-  }
+  // get notifications(): Observable<INotification[]> {
+  //   return this.store.select(state => state.notifications.notifications);
+  // }
 
-  debug(message: string, showAlert: boolean = true): void {
+  debug(message: string | IMessage, showAlert: boolean = true): void {
     this.push(message, NotificationTypeEnum.DEBUG, showAlert);
   }
 
-  error(message: string, showAlert: boolean = true): void {
+  error(message: string | IMessage, showAlert: boolean = true): void {
     this.push(message, NotificationTypeEnum.ERROR, showAlert);
   }
 
-  warning(message: string, showAlert: boolean = true): void {
+  warning(message: string | IMessage, showAlert: boolean = true): void {
     this.push(message, NotificationTypeEnum.WARNING, showAlert);
   }
 
-  info(message: string, showAlert: boolean = true): void {
+  info(message: string | IMessage, showAlert: boolean = true): void {
     this.push(message, NotificationTypeEnum.INFO, showAlert);
   }
 
@@ -76,15 +76,22 @@ export class NotificationsService {
     this.store.dispatch(this.createAction('NOTIFICATION_DELETE', { index }));
   }
 
-  private push(message: string, type: NotificationTypeEnum, showAlert: boolean): void {
+  private push(notification: string | IMessage, type: NotificationTypeEnum, showAlert: boolean): void {
+    const translate = R.ifElse(
+      R.has('message'),
+      ({ message, param }) => this.translateService.instant(message, param),
+      message => this.translateService.instant(message)
+    );
+    const translatedMessage = translate(notification);
+
     if (showAlert) {
-      // TODO: refactor as side effect?
-      this.toasterService.pop(this.toasterMessageTypes[type], this.translateService.instant(message));
+      // TODO(d.maltsev): refactor as a side effect?
+      this.toasterService.pop(this.toasterMessageTypes[type], translatedMessage);
     }
 
     this.store.dispatch(this.createAction('NOTIFICATION_PUSH', {
       notification: {
-        message,
+        message: translatedMessage,
         type,
         created: new Date()
       }

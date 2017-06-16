@@ -1,21 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IConstant } from '../constants.interface';
+import { IConstant } from '../../../../core/constants/constants.interface';
 
 @Component({
   selector: 'app-constant-edit',
   templateUrl: './constant-edit.component.html'
 })
-export class ConstantEditComponent extends EntityBaseComponent<IConstant> {
-  private localizedOptions;
+export class ConstantEditComponent extends EntityBaseComponent<IConstant> implements OnDestroy{
+  private localizedOptions: any;
+  private langSub: Subscription;
 
   constructor(private translateService: TranslateService) {
     super();
-    this.translateService.get('default.typeCode').subscribe(options => this.localizedOptions = options);
-    this.translateService.onLangChange.subscribe(event => this.localizedOptions = event.translations.default.typeCode);
+    this.localizedOptions = this.translateService.instant('default.typeCode');
+    this.langSub = this.translateService.onLangChange
+      .subscribe(event => this.localizedOptions = event.translations.default.typeCode);
+  }
+
+  ngOnDestroy(): void {
+    this.langSub.unsubscribe();
   }
 
   protected getControls(): Array<IDynamicFormControl> {

@@ -47,7 +47,7 @@ import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
-import { SubmittedPopupModule } from './components/popup/submitted-popup.module';
+import { DialogActionModule } from './components/dialog-action/dialog-action.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { TimeModule } from './components/form/time/time.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
@@ -72,6 +72,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     ActionDialogModule,
     ContentTabstripModule,
     DatePickerModule,
+    DialogActionModule,
     DynamicFormModule,
     FormImageModule,
     GridModule,
@@ -83,7 +84,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     Toolbar2Module,
     TreeModule,
     TimeModule,
-    SubmittedPopupModule,
   ],
   providers: [
     ColorsService,
@@ -131,6 +131,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     ActionDialogModule,
     ContentTabstripModule,
     DatePickerModule,
+    DialogActionModule,
     DynamicFormModule,
     DialogModule,
     FormImageModule,
@@ -148,7 +149,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     Toolbar2Module,
     TreeModule,
     TimeModule,
-    SubmittedPopupModule,
   ]
 })
 

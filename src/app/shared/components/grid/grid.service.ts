@@ -82,10 +82,10 @@ export class GridService {
           : entity[column.prop];
       } else {
 
-        const displayedValue = String((rendererFn as Function)(entity, value));
+        const displayValue = String((rendererFn as Function)(entity, value));
         return column.localized
-          ? this.translateService.instant(displayedValue)
-          : displayedValue;
+          ? this.translateService.instant(displayValue)
+          : displayValue;
       }
     };
     return column;

@@ -1,22 +1,23 @@
 <app-constant-edit
-  *ngIf="isEntityBeingEdited"
-  [editedEntity]="selectedEntity"
-  (submit)="onEditSubmit($event, false)"
-  (cancel)="cancelAction()"
+  *ngIf="display"
+  [editedEntity]="selectedRecord"
+  (submit)="onSubmit($event)"
+  (cancel)="onCancel()"
 >
 </app-constant-edit>
+
+<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   selectionType="single"
   [autoLoad]="false"
   [columns]="columns"
-  [columnTranslationKey]="'constants'"
+  columnTranslationKey="constants"
   [dataSource]="dataSource"
-  [editPermission]="'CONST_VALUE_EDIT'"
+  editPermission="CONST_VALUE_EDIT"
   [parseFn]="parseFn"
-  [toolbarActions]="toolbarActions"
-  (onAction)="onAction($event)"
-  (onEdit)="onEdit()"
-  (onRowSelect)="onSelectedRowChange($event)"
+  [rows]="rows"
+  (onEdit)="onBeforeEdit()"
+  (onRowSelect)="onSelectRecord($event)"
 >
 </app-grid>

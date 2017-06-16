@@ -5,7 +5,6 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { PermissionsComponent } from './permissions.component';
 import { AddPermissionComponent } from './add/add.permission.component';
 import { EditPermissionComponent } from './edit/edit.permission.component';
-import { PermissionsService } from './permissions.service';
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import { PermissionsService } from './permissions.service';
     EditPermissionComponent,
   ],
   providers: [
-    PermissionsService,
     DatePipe,
   ]
 })

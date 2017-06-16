@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { SubmittedPopupComponent } from './submitted-popup.component';
 import { DialogModule } from '../dialog/dialog.module';
+
+import { DialogActionComponent } from './dialog-action.component';
 
 @NgModule({
   imports: [
@@ -12,13 +13,11 @@ import { DialogModule } from '../dialog/dialog.module';
     TranslateModule,
   ],
   exports: [
-    SubmittedPopupComponent,
+    DialogActionComponent,
   ],
   declarations: [
-    SubmittedPopupComponent,
-  ],
-  providers: [
+    DialogActionComponent,
   ],
 })
-export class SubmittedPopupModule {
+export class DialogActionModule {
 }

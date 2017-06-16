@@ -9,7 +9,7 @@ export interface IAppState {
   readonly actionsLog: IActionsLogServiceState;
   readonly dictionaries: IDictionariesState;
   // TODO(d.maltsev): rename notificationService -> notifications
-  readonly notificationService: INotificationServiceState;
+  readonly notifications: INotificationServiceState;
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
   readonly users: IUsersState;

@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+import {
+  NgModule,
+} from '@angular/core';
 
 import { DragulaModule } from 'ng2-dragula';
 

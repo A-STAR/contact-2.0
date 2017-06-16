@@ -1,35 +1,44 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IAppState } from '../../../core/state/state.interface';
-import { IConstant } from './constants.interface';
+import { IConstant } from '../../../core/constants/constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
-import { GridEntityComponent } from '../../../shared/components/entity/grid.entity.component';
+import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-constants',
-  templateUrl: './constants.component.html'
+  templateUrl: './constants.component.html',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConstantsComponent extends GridEntityComponent<IConstant> implements AfterViewInit {
+export class ConstantsComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ConstantsComponent';
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'CONST_VALUE_EDIT' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  ];
+  @ViewChild(GridComponent) grid: GridComponent;
 
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
+  display = false;
+  selectedRecord: IConstant = null;
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      permissions: [ 'CONST_VALUE_EDIT' ],
+      action: () => this.display = true,
+      disabled: () => !this.selectedRecord,
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      permissions: [ 'CONST_VALUE_VIEW' ],
+      action: () => this.refreshGrid(),
+    },
   ];
 
   columns: Array<IGridColumn> = [
@@ -49,43 +58,44 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
     dataKey: 'constants',
   };
 
-  // rows: Observable<IConstant[]>;
+  permissionSub: Subscription;
+  rows: IConstant[];
 
   constructor(
-    private store: Store<IAppState>,
-    private datePipe: DatePipe,
     private gridService: GridService,
-    private translateService: TranslateService,
-    private notifications: NotificationsService,
+    private constantsService: ConstantsService,
+    private notificationsService: NotificationsService,
     private valueConverterService: ValueConverterService,
-    private permissions: PermissionsService,
+    private permissionService: PermissionsService,
   ) {
-    super();
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    // this.rows = store.select('constants');
   }
 
   ngAfterViewInit(): void {
     const permission = 'CONST_VALUE_VIEW';
-    this.permissions.hasPermission(permission)
+
+    this.permissionSub = this.permissionService.hasPermission(permission)
+      .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          this.notifications.error(`No user permissions for '${permission}'`);
+          this.selectedRecord = null;
+          this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
+          this.grid.clear();
         } else {
-          this.grid.load()
-            .take(1)
-            .subscribe();
+          this.refreshGrid();
         }
       });
   }
 
+  ngOnDestroy(): void {
+    this.permissionSub.unsubscribe();
+  }
+
   parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
 
-  onEditSubmit(data: any): void {
-    // TODO: move logic to constants service
-    const id = data.id;
-    const typeCode = data.typeCode;
-    const value = data.value;
+  onSubmit(constant: IConstant): void {
+    // TODO: move the logic to constants service
+    const { id, typeCode, value } = constant;
     const fieldMap: object = {
       1: 'valueN',
       2: 'valueD',
@@ -100,36 +110,46 @@ export class ConstantsComponent extends GridEntityComponent<IConstant> implement
       body[field] = Number(value);
     } else if (typeCode === 2) {
       // convert the date back to ISO8601
-      body[field] = this.valueToIsoDate(value);
+      body[field] = this.valueConverterService.valueToIsoDate(value);
     }
 
     this.gridService
       .update(this.dataSource.update, { id }, body)
+      .take(1)
       .subscribe(
         () => {
-          this.afterUpdate();
-          this.cancelAction();
+          this.refreshGrid();
+          this.onCancel();
         },
-        error => this.notifications.error('Could not save the changes')
+        error => this.notificationsService.error('constants.api.errors.update')
       );
   }
 
-  valueToIsoDate(value: any): string {
-    // TODO: move to date service
-    const converted = value.split('.').reverse().map(Number);
-    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  onBeforeEdit(): void {
+    this.display = true;
   }
 
-  private handleError(error: XMLHttpRequest, action?: string): void {
-    const { status } = error;
-    switch (status) {
-      case 401:
-        this.notifications.error(`Authentication error. Please try to relogin.`);
-        break;
-      case 403:
-        this.notifications.error(`Insufficient user permissions for '${action}' action`);
-        break;
-      default:
-    }
+  onCancel(): void {
+    this.display = false;
   }
+
+  onSelectRecord(records: Array<IConstant>): void {
+    this.selectedRecord = records[0];
+    this.constantsService.changeSelected(this.selectedRecord);
+  }
+
+  private refreshGrid(): void {
+    if (!this.grid) {
+      return;
+    }
+
+    this.grid.load()
+      .take(1)
+      .subscribe(() => {
+        // to refresh the toolbar
+        this.selectedRecord = null;
+        this.constantsService.changeSelected(null);
+      });
+  }
+
 }

@@ -1,14 +1,16 @@
 import {
+  AfterViewInit,
+  // ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
-  ViewChild,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
   EventEmitter,
   Input,
-  Output } from '@angular/core';
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,10 +25,11 @@ import { SettingsService } from '../../../core/settings/settings.service';
   selector: 'app-grid',
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
-  @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+  // @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
   @Input() footerHeight = 50;
   @Input() columns: Array<any> = [];
@@ -35,6 +38,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() editPermission: string;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
+  @Input() rows: Array<any> = [];
   @Input() selectionType: TSelectionType;
   @Input() styles: { [key: string]: any };
   @Input() toolbarActions: IToolbarAction[];
@@ -44,7 +48,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
 
-  _rows: Array<any> = [];
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -58,8 +61,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   selected: Array<any> = [];
   subscription: EventEmitter<any>;
 
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
+  }
+
   constructor(
-    private cdRef: ChangeDetectorRef,
+    public cdRef: ChangeDetectorRef,
     private gridService: GridService,
     public settings: SettingsService,
     private translate: TranslateService,
@@ -67,17 +74,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
   }
 
-  get rows(): Array<any> {
-    return (this._rows || []).filter(this.filter);
-  }
-
-  @Input()
-  set rows(rows: Array<any>) {
-    this._rows = rows;
-  }
-
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
+  get filteredRows(): Array<any> {
+    return (this.rows || []).filter(this.filter);
   }
 
   get hasToolbar(): boolean {
@@ -119,7 +117,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
         // translate column names
         if (this.columnTranslationKey) {
           // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-          const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
+          const columnTranslations = this.columnTranslationKey
+            .split('.')
+            .reduce((acc, prop) => acc[prop], translations).grid;
           this.translateColumns(columnTranslations);
         }
       });

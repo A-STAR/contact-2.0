@@ -34,7 +34,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     this.agParams.headerColumns.push(this);
   };
 
-  destroy() {
+  destroy(): void {
     this.unlistenClickColumnListener();
     if (this.unlistenFilterClickListener) {
       this.unlistenFilterClickListener();
@@ -61,7 +61,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     });
   }
 
-  onFilterClickListener($event: MouseEvent) {
+  onFilterClickListener($event: MouseEvent): void {
     if (this.statedMovingColumnInProgress) {
       return;
     }

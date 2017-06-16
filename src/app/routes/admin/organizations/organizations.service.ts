@@ -18,6 +18,7 @@ export class OrganizationsService {
   static ORGANIZATIONS_CLEAR               = 'ORGANIZATIONS_CLEAR';
   static ORGANIZATION_CREATE               = 'ORGANIZATION_CREATE';
   static ORGANIZATION_UPDATE               = 'ORGANIZATION_UPDATE';
+  static ORGANIZATION_ORDER_UPDATE         = 'ORGANIZATION_ORDER_UPDATE';
   static ORGANIZATION_DELETE               = 'ORGANIZATION_DELETE';
   static ORGANIZATION_SELECT               = 'ORGANIZATION_SELECT';
   static EMPLOYEES_FETCH                   = 'EMPLOYEES_FETCH';
@@ -61,6 +62,13 @@ export class OrganizationsService {
       payload: {
         organization
       }
+    });
+  }
+
+  updateOrganizations(organizations: IOrganization[]): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATION_ORDER_UPDATE,
+      payload: organizations
     });
   }
 

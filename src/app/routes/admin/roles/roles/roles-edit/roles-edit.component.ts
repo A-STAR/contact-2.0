@@ -1,20 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { Component } from '@angular/core';
+
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { AbstractRolesPopup } from '../roles-abstract-popup';
+import { IPermissionRole } from '../../roles-and-permissions.interface';
+
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 
 @Component({
   selector: 'app-roles-edit',
   templateUrl: './roles-edit.component.html'
 })
-export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
-  constructor(private gridService: GridService) {
-    super();
-  }
-
-  get popupTitle(): string {
-    return this.isUpdating() ? 'roles.roles.edit.title' : 'roles.roles.create.title';
+export class RolesEditComponent extends EntityBaseComponent<IPermissionRole> {
+  get title(): string {
+    return this.editedEntity ? 'roles.roles.edit.title' : 'roles.roles.create.title';
   }
 
   protected getControls(): Array<IDynamicFormControl> {
@@ -34,25 +31,7 @@ export class RolesEditComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected getData(): any {
-    return this.role;
-  }
-
-  protected httpAction(): Observable<any> {
-    return this.isUpdating() ?
-      this.update() :
-      this.create();
-  }
-
-  private isUpdating(): boolean {
-    return !!(this.role && this.role.name);
-  }
-
-  private create(): Observable<any> {
-    return this.gridService.create('/api/roles', {}, this.form.value);
-  }
-
-  private update(): Observable<any> {
-    return this.gridService.update('/api/roles/{id}', this.role, this.form.value);
+  get formData(): any {
+    return this.editedEntity;
   }
 }

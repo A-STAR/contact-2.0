@@ -4,13 +4,14 @@ import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
 import { permissionReducer } from '../permissions/permissions.reducer';
 import { usersReducer } from '../../routes/admin/users/users.reducer';
+import { constantsReducer } from '../constants/constants.reducer';
 
 export const rootReducer = {
   actionsLog: actionsLogReducer,
   dictionaries: dictionariesReducer,
-  // TODO: rename notificationService -> notifications
-  notificationService: notificationReducer,
+  notifications: notificationReducer,
   organizations: organizationsReducer,
   permissions: permissionReducer,
   users: usersReducer,
+  constants: constantsReducer,
 };
