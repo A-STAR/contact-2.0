@@ -1,17 +1,10 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  OnDestroy,
-  SimpleChange,
-  ViewChild,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../../../../core/permissions/permissions.interface';
-import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
+import { IPermissionModel, IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -19,21 +12,12 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PermissionsComponent implements OnChanges, OnDestroy {
-
-  dialog: IPermissionsDialogEnum;
-  private currentPermission: IPermissionModel;
-  private permissionsSub: Subscription;
-
-  @ViewChild(GridComponent) permitsGrid: GridComponent;
-  @Input() currentRole: IPermissionRole;
+export class PermissionsComponent implements OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -51,25 +35,25 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       permissions: [ 'PERMIT_ADD' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.ADD),
-      disabled: () => !this.currentRole,
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
+      disabled: (state: IAppState) => !state.permissions.currentRole,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       permissions: [ 'PERMIT_EDIT' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.EDIT),
-      disabled: () => !this.currentPermission,
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
+      disabled: (state: IAppState) => !state.permissions.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       permissions: [ 'PERMIT_DELETE' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.DELETE),
-      disabled: () => !this.currentPermission,
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
+      disabled: (state: IAppState) => !state.permissions.currentPermission,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       permissions: [ 'PERMIT_VIEW' ],
-      action: () => this.refreshGrid(),
+      action: () => this.permissionsService.fetchPermissions(),
     },
   ];
 
@@ -81,6 +65,12 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
   // data for the grid
   rawPermissions: Array<any> = [];
 
+  dialog: IPermissionsDialogEnum;
+
+  private currentPermission: IPermissionModel;
+  private currentRole: IPermissionRole;
+  private permissionsSub: Subscription;
+
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -91,16 +81,12 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
       this.permissionsSub = this.permissionsService.permissions
         .subscribe(
           (permissions: IPermissionsState) => {
+            this.currentRole = permissions.currentRole;
             this.currentPermission = permissions.currentPermission;
             this.dialog = permissions.dialog;
+            this.rawPermissions = this.valueConverterService.deserializeSet(permissions.rawPermissions);
           }
         );
-  }
-
-  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
-
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}): void {
-    this.refreshGrid();
   }
 
   ngOnDestroy(): void {
@@ -112,12 +98,12 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.dialogAction(IPermissionsDialogEnum.EDIT);
+    this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
   }
 
   onSelectPermissions(records: IPermissionModel[]): void {
     if (records.length) {
-      this.changeSelectedPermission(records[0]);
+      this.permissionsService.changeSelected(records[0]);
     }
   }
 
@@ -146,46 +132,7 @@ export class PermissionsComponent implements OnChanges, OnDestroy {
     return this.dialog === dialog;
   }
 
-  // private loadGrid(currentRole: IPermissionRole): void {
-  //   this.permitsGrid.load(currentRole)
-  //     .take(1)
-  //     .subscribe(
-  //       () => {},
-  //       err => this.notificationsService.error('permissions.api.errors.fetch')
-  //     );
-  // }
-
-  private refreshGrid(): void {
-    if (!this.permitsGrid) {
-      return;
-    }
-
-    if (this.currentRole) {
-      this.gridService
-        .read(this.dataSource.read, this.currentRole)
-        .map(data => this.parseFn(data))
-        .take(1)
-        .subscribe(
-          rawPermissions => {
-            this.rawPermissions = rawPermissions;
-            // this.permitsGrid.cdRef.detectChanges();
-            this.permitsGrid.updateRows(rawPermissions);
-            this.changeSelectedPermission(null);
-          },
-          err => this.notificationsService.error('permissions.api.errors.fetch')
-        );
-    } else {
-      this.rawPermissions = [];
-      this.permitsGrid.clear();
-    }
-  }
-
   private dialogAction(dialog: IPermissionsDialogEnum): void {
     this.permissionsService.permissionDialog(dialog);
   }
-
-  private changeSelectedPermission(currentPermission: IPermissionModel): void {
-    this.permissionsService.changeSelected(currentPermission);
-  }
-
 }

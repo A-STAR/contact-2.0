@@ -1,19 +1,15 @@
-<app-dialog [display]="role" (displayChange)="onDisplayChange($event)">
+<app-dialog (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ popupTitle | translate: role }}</h3>
+    <h3>{{ title | translate:editedEntity }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
-
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error | translate }}
-  </div>
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-success" (click)="onActionClick()" [disabled]="!form.canSubmit">
+    <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
-    <button class="btn btn-default" (click)="onCancelClick()">
+    <button class="btn btn-default" (click)="onCancel()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>

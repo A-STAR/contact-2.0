@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { RolesComponent } from './roles/roles.component';
-import { IRole } from './roles/roles.interface';
-import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
+import { Component } from '@angular/core';
+// import { RolesComponent } from './roles/roles.component';
+// import { IRole } from './roles/roles.interface';
+// import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolbar.interface';
 
 @Component({
   selector: 'app-roles-and-permissions',
@@ -10,14 +10,14 @@ import { ToolbarActionTypeEnum } from '../../../shared/components/toolbar/toolba
 export class RolesAndPermissionsComponent {
   static COMPONENT_NAME = 'RolesAndPermissionsComponent';
 
-  @ViewChild(RolesComponent) rolesComponent: RolesComponent;
-  currentRole: IRole;
+  // @ViewChild(RolesComponent) rolesComponent: RolesComponent;
+  // currentRole: IRole;
 
-  onSelect(role: IRole): void {
-    this.currentRole = role;
-  }
+  // onSelect(role: IRole): void {
+  //   this.currentRole = role;
+  // }
 
-  onRoleClone(): void {
-    this.rolesComponent.callActionByType(ToolbarActionTypeEnum.CLONE);
-  }
+  // onRoleClone(): void {
+  //   this.rolesComponent.callActionByType(ToolbarActionTypeEnum.CLONE);
+  // }
 }

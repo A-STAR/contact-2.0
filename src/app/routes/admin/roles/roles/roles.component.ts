@@ -1,33 +1,54 @@
-import {AfterViewInit, Component, EventEmitter, Output, ViewChild} from '@angular/core';
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { IRole } from './roles.interface';
+import { Component } from '@angular/core';
+
+import { IAppState } from '../../../../core/state/state.interface';
+import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
+import { IPermissionRole } from '../roles-and-permissions.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponent implements AfterViewInit {
-  @Output() onSelect: EventEmitter<IRole> = new EventEmitter();
-  @ViewChild(GridComponent) grid: GridComponent;
+export class RolesComponent {
+  editedEntity: IPermissionRole = null;
 
-  currentRole: IRole = null;
-  selectedRole: IRole = null;
-  action: ToolbarActionTypeEnum = null;
+  dialog: IPermissionsDialogEnum = null;
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ROLE_ADD' },
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ROLE_EDIT' },
-    { text: 'toolbar.action.copy', type: ToolbarActionTypeEnum.CLONE, visible: false, permission: 'ROLE_COPY' },
-    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ROLE_DELETE' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  ];
+  rows: Array<IPermissionRole>;
 
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.CLONE,
-    ToolbarActionTypeEnum.REMOVE,
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      permissions: [ 'ROLE_ADD' ],
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON,
+      icon: 'fa fa-clone',
+      label: 'toolbar.action.copy',
+      permissions: [ 'ROLE_COPY' ],
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
+      disabled: (state: IAppState) => !state.permissions.currentRole
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      permissions: [ 'ROLE_EDIT' ],
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
+      disabled: (state: IAppState) => !state.permissions.currentRole
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      permissions: [ 'ROLE_DELETE' ],
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
+      disabled: (state: IAppState) => !state.permissions.currentRole
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      permissions: [ 'PERMIT_VIEW' ],
+      action: () => this.permissionsService.fetchRoles()
+    },
   ];
 
   columns: Array<any> = [
@@ -36,103 +57,67 @@ export class RolesComponent implements AfterViewInit {
     { prop: 'comment', width: 200 },
   ];
 
-  dataSource: IDataSource = {
-    read: '/api/roles',
-    update: '/api/roles',
-    dataKey: 'roles',
-  };
+  constructor(
+    private permissionsService: PermissionsService,
+  ) {
+    this.permissionsService.fetchRoles();
 
-  ngAfterViewInit(): void {
-    this.grid.onRowsChange.subscribe(() => this.refreshToolbar());
+    this.permissionsService.permissions.subscribe(state => {
+      this.rows = state.roles;
+      this.dialog = state.dialog;
+      this.editedEntity = state.currentRole;
+    });
   }
 
-  get isRoleBeingCreatedOrEdited(): boolean {
-    return this.currentRole && (this.action === ToolbarActionTypeEnum.ADD || this.action === ToolbarActionTypeEnum.EDIT);
+  get isRoleBeingCreated(): boolean {
+    return this.dialog === IPermissionsDialogEnum.ROLE_ADD;
+  }
+
+  get isRoleBeingEdited(): boolean {
+    return this.dialog === IPermissionsDialogEnum.ROLE_EDIT;
   }
 
   get isRoleBeingCopied(): boolean {
-    return this.currentRole && this.action === ToolbarActionTypeEnum.CLONE;
+    return this.dialog === IPermissionsDialogEnum.ROLE_COPY;
   }
 
   get isRoleBeingRemoved(): boolean {
-    return this.currentRole && this.action === ToolbarActionTypeEnum.REMOVE;
+    return this.dialog === IPermissionsDialogEnum.ROLE_DELETE;
   }
 
-  parseFn(data: any): Array<IRole> {
-    const { dataKey } = this.dataSource;
-    return data[dataKey] || [];
+  onEdit(): void {
+    this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
   }
 
-  onSelectedRowChange(roles: Array<IRole>): void {
+  onSelectedRowChange(roles: Array<IPermissionRole>): void {
     const role = roles[0];
-    if (role && role.id && (this.selectedRole && this.selectedRole.id !== role.id || !this.selectedRole)) {
-      this.selectRole(role);
+    if (role) {
+      this.permissionsService.selectRole(role);
     }
   }
 
-  onEdit(role: IRole): void {
-    this.action = ToolbarActionTypeEnum.EDIT;
-    this.currentRole = this.selectedRole;
+  onAddSubmit(data: any): void {
+    this.permissionsService.createRole(data);
   }
 
-  onAction(action: IToolbarAction): void {
-    this.action = action.type;
-    switch (action.type) {
-      case ToolbarActionTypeEnum.REFRESH:
-        this.onUpdate();
-        break;
-      case ToolbarActionTypeEnum.EDIT:
-        this.currentRole = this.selectedRole;
-        break;
-      case ToolbarActionTypeEnum.REMOVE:
-        this.currentRole = this.selectedRole;
-        break;
-      case ToolbarActionTypeEnum.ADD:
-      case ToolbarActionTypeEnum.CLONE:
-        this.currentRole = this.createEmptyRole();
-        break;
-    }
+  onEditSubmit(data: any): void {
+    this.permissionsService.updateRole(data);
   }
 
-  onUpdate(): void {
-    this.onSelect.emit(this.selectedRole = null);
-
-    this.grid.load().
-      subscribe(
-        () => {},
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+  onCopySubmit(data: any): void {
+    const { originalRoleId, ...role } = data;
+    this.permissionsService.copyRole(originalRoleId[0].value, role);
   }
 
-  callActionByType(type: ToolbarActionTypeEnum): void {
-    this.onAction(this.toolbarActions.find((action: IToolbarAction) => type === action.type));
+  onRemoveSubmit(): void {
+    this.permissionsService.removeRole();
   }
 
-  private selectRole(role: IRole = null): void {
-    this.selectedRole = role;
-    this.onSelect.emit(role);
-    this.refreshToolbar();
+  cancelAction(): void {
+    this.permissionsService.permissionDialog(IPermissionsDialogEnum.NONE);
   }
 
-  private createEmptyRole(): IRole {
-    return {
-      id: null,
-      name: '',
-      comment: ''
-    };
-  }
-
-  private refreshToolbar(): void {
-    this.setActionsVisibility(this.toolbarActionsGroup, !!this.selectedRole);
-  }
-
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-    });
-
-    this.toolbarActions.find((action: IToolbarAction) => action.type === ToolbarActionTypeEnum.REFRESH)
-      .visible = this.grid.rows.length > 0;
+  private dialogAction(dialog: IPermissionsDialogEnum): void {
+    this.permissionsService.permissionDialog(dialog);
   }
 }
