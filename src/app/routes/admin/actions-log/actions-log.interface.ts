@@ -1,4 +1,5 @@
-import { IGrid2State } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2PaginationInfo, IGrid2State } from '../../../shared/components/grid2/grid2.interface';
+import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 
 export interface IEmployee {
   id: number;
@@ -30,7 +31,7 @@ export interface IActionLog {
 }
 
 export interface IActionsLogServiceState {
-  actionsLog: IActionLog[];
+  actionsLog: IActionsLogData;
   employees: IEmployee[];
   actionTypes: IActionType[];
   actionsLogGrid?: IGrid2State;
@@ -38,7 +39,17 @@ export interface IActionsLogServiceState {
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IActionLog[]|IEmployee[]|IActionType[];
+  payload?: IActionsLogData|IEmployee[]|IActionType[];
+}
+
+export interface IActionsLogData {
+  total: number;
+  data: IActionLog[];
+}
+
+export interface IActionsLogFilterRequestPayload {
+  request: IActionsLogFilterRequest;
+  pageInfo: IGrid2PaginationInfo;
 }
 
 export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {

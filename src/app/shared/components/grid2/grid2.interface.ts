@@ -7,7 +7,7 @@ export interface IGrid2ColumnState {
 }
 
 export interface IGrid2ColumnsState {
-  [columnId: string]: IGrid2ColumnState
+  [columnId: string]: IGrid2ColumnState;
 }
 
 export interface IGrid2State {
@@ -29,11 +29,11 @@ export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortin
 }
 
 export interface IGrid2ColumnsPositionsChangePayload {
-  columnsPositions: string[]
+  columnsPositions: string[];
 }
 
 export interface IGrid2GroupingColumnsChangePayload {
-  groupingColumns: string[]
+  groupingColumns: string[];
 }
 
 export interface IGrid2SelectedRowChangePayload {
@@ -78,4 +78,9 @@ export interface IGrid2HeaderParams {
   headerColumns: GridHeaderComponent[];
   column?: Column;
   renderer2: Renderer2;
+}
+
+export interface IGrid2PaginationInfo {
+  currentPage: number;
+  pageSize: number;
 }

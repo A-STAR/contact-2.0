@@ -5,9 +5,17 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 
-import { IActionLog, IActionsLogPayload, IActionType, IEmployee } from './actions-log.interface';
+import {
+  IActionLog,
+  IActionsLogData,
+  IActionsLogFilterRequestPayload,
+  IActionsLogPayload,
+  IActionType,
+  IEmployee
+} from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
+import { IGrid2PaginationInfo } from '../../../shared/components/grid2/grid2.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -28,7 +36,7 @@ export class ActionsLogService {
   ) {
   }
 
-  get actionsLogRows(): Observable<IActionLog[]> {
+  get actionsLogRows(): Observable<IActionsLogData> {
     return this.store
       .select((state: IAppState) => state.actionsLog.actionsLog);
   }
@@ -63,12 +71,20 @@ export class ActionsLogService {
   @Effect() onSearchEffect = this.effectActions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
     .switchMap(
-      (action: { payload: IActionsLogFilterRequest }): Observable<IActionsLogPayload> => {
-        return this.gridService.read('/actions')
-          .map((data: { actions: IActionLog[] }): IActionsLogPayload => {
+      (action: { payload: IActionsLogFilterRequestPayload }): Observable<IActionsLogPayload> => {
+        return this.gridService.create('/actions/grid', {}, {
+          paging: {
+            pageNumber: action.payload.pageInfo.currentPage,
+            resultsPerPage: action.payload.pageInfo.pageSize
+          }
+        })
+          .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
             return {
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
-              payload: data.actions
+              payload: {
+                data: data.data,
+                total: data.total
+              }
             };
           });
       }
@@ -77,10 +93,13 @@ export class ActionsLogService {
       return null;
     });
 
-  search(payload: IActionsLogFilterRequest): void {
+  search(payload: IActionsLogFilterRequest, pageInfo: IGrid2PaginationInfo): void {
     this.store.dispatch({
       type: ActionsLogService.ACTIONS_LOG_FETCH,
-      payload
+      payload: {
+        payload: payload,
+        pageInfo: pageInfo
+      }
     });
   }
 
