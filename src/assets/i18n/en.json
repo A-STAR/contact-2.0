@@ -128,6 +128,12 @@
       "name": "Name",
       "value": "Value",
       "dsc": "Comments"
+    },
+    "api": {
+      "errors": {
+        "fetch": "Could not fetch the constants",
+        "update": "Could not update the constant"
+      }
     }
   },
   "actionsLog": {
@@ -333,6 +339,15 @@
         "id": "Id",
         "name": "Name",
         "comment": "Comments"
+      },
+      "api": {
+        "errors": {
+          "fetch": "Could not fetch roles",
+          "add": "Could not add role",
+          "copy": "Could not copy role",
+          "update": "Could not update role",
+          "delete": "Could not delete role"
+        }
       }
     },
     "permissions": {
@@ -436,10 +451,10 @@
       },
       "messages": {
         "errors": {
-          "fetch": "Could not load employees list",
-          "create": "Could not add employee",
-          "update": "Could not update employee",
-          "delete": "Could not delete employee"
+          "fetch": "Could not load the list of employees",
+          "create": "Could not add the employee",
+          "update": "Could not update the employee",
+          "delete": "Could not delete the employee"
         }
       }
     }
@@ -486,7 +501,7 @@
       "empty": "No data to display"
     },
     "grid": {
-      "groupColumn": "Группировка",
+      "groupColumn": "Row groups",
       "groupDndTitle": "Drag here for row groups",
       "filter": {
         "title": "Filter",

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, Chang
 
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
-import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../permissions.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../../roles-and-permissions.interface';
 import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';

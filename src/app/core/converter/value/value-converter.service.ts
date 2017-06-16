@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 
 import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
@@ -6,8 +7,9 @@ import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interf
 @Injectable()
 export class ValueConverterService {
 
-  constructor() {
-  }
+  constructor(
+    private datePipe: DatePipe
+  ) { }
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
@@ -54,6 +56,7 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
+      // TODO(a.tymchuk): use dictionaries here
       return this.toBooleanNumber(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
@@ -74,7 +77,7 @@ export class ValueConverterService {
   firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
     const v: number|any[] = this.toLabeledValues(data);
     if (Array.isArray(v)) {
-      return v && v.length ? v[0] : data;
+      return v.length ? v[0] : data;
     }
     return v;
   }
@@ -90,7 +93,7 @@ export class ValueConverterService {
     return value;
   }
 
-  formatDate(dateAsString: string, useTime: boolean = false) {
+  formatDate(dateAsString: string, useTime: boolean = false): string {
     const momentDate = moment(dateAsString);
     if (momentDate.isValid()) {
       return useTime
@@ -99,5 +102,10 @@ export class ValueConverterService {
     } else {
       return dateAsString;
     }
+  }
+
+  valueToIsoDate(value: any): string {
+    const converted = value.split('.').reverse().map(Number);
+    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
 }

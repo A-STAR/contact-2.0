@@ -1,18 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component } from '@angular/core';
+
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IPermissionRole } from '../../roles-and-permissions.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { IRole } from '../roles.interface';
-import { AbstractRolesPopup } from '../roles-abstract-popup';
+
 import { RolesService } from '../roles.service';
+
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 
 @Component({
   selector: 'app-roles-copy',
   templateUrl: './roles-copy.component.html'
 })
-export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
-  @Input() originalRole: IRole = null;
-
+export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> {
   constructor(private rolesService: RolesService) {
     super();
   }
@@ -46,18 +46,9 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected getData(): any {
+  get formData(): any {
     return {
-      ...this.role,
-      originalRoleId: [{ value: this.originalRole.id, label: this.originalRole.name }]
+      originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
     };
-  }
-
-  protected httpAction(): Observable<any> {
-    // TODO replace with the event based approach
-    return this.rolesService.copyRole({
-      ...this.form.value,
-      originalRoleId: this.form.value.originalRoleId[0].value
-    });
   }
 }
