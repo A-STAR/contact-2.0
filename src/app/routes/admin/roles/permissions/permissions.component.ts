@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../core/state/state.interface';
@@ -12,21 +12,12 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PermissionsComponent implements OnDestroy {
-
-  dialog: IPermissionsDialogEnum;
-  private currentPermission: IPermissionModel;
-  private currentRole: IPermissionRole;
-  private permissionsSub: Subscription;
-
-  @ViewChild(GridComponent) permitsGrid: GridComponent;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -74,6 +65,12 @@ export class PermissionsComponent implements OnDestroy {
   // data for the grid
   rawPermissions: Array<any> = [];
 
+  dialog: IPermissionsDialogEnum;
+
+  private currentPermission: IPermissionModel;
+  private currentRole: IPermissionRole;
+  private permissionsSub: Subscription;
+
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -106,7 +103,7 @@ export class PermissionsComponent implements OnDestroy {
 
   onSelectPermissions(records: IPermissionModel[]): void {
     if (records.length) {
-      this.changeSelectedPermission(records[0]);
+      this.permissionsService.changeSelected(records[0]);
     }
   }
 
@@ -135,37 +132,7 @@ export class PermissionsComponent implements OnDestroy {
     return this.dialog === dialog;
   }
 
-  // private refreshGrid(): void {
-  //   if (!this.permitsGrid) {
-  //     return;
-  //   }
-
-  //   if (this.currentRole) {
-  //     this.gridService
-  //       .read(this.dataSource.read, this.currentRole)
-  //       .map(data => this.parseFn(data))
-  //       .take(1)
-  //       .subscribe(
-  //         rawPermissions => {
-  //           this.rawPermissions = rawPermissions;
-  //           // this.permitsGrid.cdRef.detectChanges();
-  //           this.permitsGrid.updateRows(rawPermissions);
-  //           this.changeSelectedPermission(null);
-  //         },
-  //         err => this.notificationsService.error('permissions.api.errors.fetch')
-  //       );
-  //   } else {
-  //     this.rawPermissions = [];
-  //     this.permitsGrid.clear();
-  //   }
-  // }
-
   private dialogAction(dialog: IPermissionsDialogEnum): void {
     this.permissionsService.permissionDialog(dialog);
-  }
-
-  // TODO(d.maltsev): what is this?
-  private changeSelectedPermission(currentPermission: IPermissionModel): void {
-    this.permissionsService.changeSelected(currentPermission);
   }
 }
