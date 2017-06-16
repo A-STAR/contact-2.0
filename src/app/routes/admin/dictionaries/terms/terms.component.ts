@@ -20,10 +20,8 @@ export class TermsComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddTermAction(),
-      icon: 'fa fa-plus',
-      label: 'toolbar.action.add',
       disabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_ADD'),
         this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
@@ -31,10 +29,8 @@ export class TermsComponent implements OnDestroy {
       ).map(data => !data[0] || !data[1])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditTermAction(),
-      icon: 'fa fa-pencil',
-      label: 'toolbar.action.edit',
       disabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_EDIT'),
         this.dictionariesService.state.map(state => state.selectedTermId)
@@ -42,10 +38,8 @@ export class TermsComponent implements OnDestroy {
       ).map(data => !data[0] || !data[1])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
-      icon: 'fa fa-trash',
-      label: 'toolbar.action.remove',
       disabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_DELETE'),
         this.dictionariesService.state.map(state => state.selectedTermId)

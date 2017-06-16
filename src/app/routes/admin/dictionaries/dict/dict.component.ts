@@ -25,17 +25,13 @@ export class DictComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
-      icon: 'fa fa-plus',
-      label: 'toolbar.action.add',
       disabled: this.permissionsService.hasPermission('DICT_ADD').map(hasPermission => !hasPermission)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
-      icon: 'fa fa-pencil',
-      label: 'toolbar.action.edit',
       disabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_EDIT'),
         this.dictionariesService.state.map(state => state.selectedDictionaryCode)
@@ -43,10 +39,8 @@ export class DictComponent implements OnDestroy {
       ).map(data => !data[0] || !data[1])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
-      icon: 'fa fa-trash',
-      label: 'toolbar.action.remove',
       disabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_DELETE'),
         this.dictionariesService.state.map(state => state.selectedDictionaryCode)
