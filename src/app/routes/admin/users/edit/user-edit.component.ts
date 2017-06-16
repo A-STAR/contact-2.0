@@ -109,7 +109,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             label: 'users.edit.photo',
             controlName: 'image',
             type: 'image',
-            url: userId ? `/api/users/${userId}/photo` : null,
+            url: userId ? `/users/${userId}/photo` : null,
             action: (file: File) => this.usersService.changePhoto(file),
             width: 4,
           }
