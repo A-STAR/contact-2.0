@@ -52,11 +52,14 @@ export class FormImageComponent implements OnInit, OnDestroy {
     this.previewSubscription.unsubscribe();
   }
 
-  onFileChange(event: any): void {
-    this.preview$.next(event.target.files[0]);
+  upload(): void {
+    const files = this.fileInput.nativeElement.files;
+    if (files.length === 0) {
+      return ;
+    }
 
     const data = new FormData();
-    data.append('file', event.target.files[0]);
+    data.append('file', files[0]);
 
     this.gridService
       .create(this.url, {}, data)
@@ -69,6 +72,11 @@ export class FormImageComponent implements OnInit, OnDestroy {
         },
         () => this.notificationsService.error('Could not upload photo')
       );
+  }
+
+  onFileChange(event: any): void {
+    this.preview$.next(event.target.files[0]);
+    this.upload();
   }
 
   onFileRemove(): void {
