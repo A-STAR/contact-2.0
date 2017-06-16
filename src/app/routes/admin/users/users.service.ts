@@ -15,9 +15,11 @@ export class UsersService {
   static USERS_CLEAR         = 'USERS_CLEAR';
   static USER_CREATE         = 'USER_CREATE';
   static USER_UPDATE         = 'USER_UPDATE';
+  static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
   static USER_SELECT         = 'USER_SELECT';
   static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
+  static USER_PHOTO_PREVIEW  = 'USER_PHOTO_PREVIEW';
 
   constructor(
     private gridService: GridService,
@@ -50,6 +52,15 @@ export class UsersService {
       type: UsersService.USER_UPDATE,
       payload: {
         user
+      }
+    });
+  }
+
+  changePhoto(photo: File | false): void {
+    return this.store.dispatch({
+      type: UsersService.USER_PHOTO_PREVIEW,
+      payload: {
+        photo
       }
     });
   }

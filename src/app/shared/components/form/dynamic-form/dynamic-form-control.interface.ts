@@ -7,6 +7,14 @@ export interface IValidationMessages {
   [key: string]: string;
 }
 
+export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
+
+export interface IDynamicFormGroup {
+  children: Array<IDynamicFormItem>;
+  collapsible?: boolean;
+  width?: number;
+}
+
 export interface IDynamicFormControl {
   label: string;
   controlName: string;
@@ -28,6 +36,7 @@ export interface IDynamicFormControl {
   rows?: number;
   validators?: Array<ValidatorFn>;
   validationMessages?: IValidationMessages;
+  width?: number;
 }
 
 export type ControlTypes = 'number'
@@ -39,7 +48,8 @@ export type ControlTypes = 'number'
   | 'dynamic'
   | 'hidden'
   | 'checkbox'
-  | 'multiselect';
+  | 'multiselect'
+  | 'image';
 
 export interface ISelectOptions {
   label: string;

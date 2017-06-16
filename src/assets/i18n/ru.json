@@ -189,6 +189,7 @@
       "lastName": "Фамилия",
       "firstName": "Имя",
       "middleName": "Отчество",
+      "photo": "Фото",
       "blocked": "Блокирован",
       "login": "Логин",
       "password": "Пароль",
@@ -495,7 +496,9 @@
       "remove": "Удалить",
       "close": "Закрыть",
       "clear": "Очистить",
-      "search": "Искать"
+      "search": "Искать",
+      "add": "Добавить",
+      "change": "Изменить"
     },
     "dateTimeRage": {
       "from": "Начало",

@@ -2,7 +2,7 @@ import { AfterViewInit, EventEmitter, Input, OnInit, Output, ViewChild } from '@
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
-import { IDynamicFormControl, ISelectedControlItemsPayload } from '../../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl, IDynamicFormItem, ISelectedControlItemsPayload } from '../../form/dynamic-form/dynamic-form-control.interface';
 
 import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
 
@@ -16,7 +16,7 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
   @ViewChild(DynamicFormComponent) dynamicForm: DynamicFormComponent;
 
   extensions: IEntityBaseComponentExtension<T>[] = [];
-  controls: Array<IDynamicFormControl>;
+  controls: Array<IDynamicFormItem>;
 
   ngOnInit(): void {
     this.controls = this.getControls();
@@ -66,7 +66,7 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
     return 'update' === this.mode;
   }
 
-  protected abstract getControls(): Array<IDynamicFormControl>;
+  protected abstract getControls(): Array<IDynamicFormItem>;
 }
 
 export interface IEntityBaseComponentExtension<T> {
@@ -88,7 +88,7 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
   }
 
   onInit(): void {
-    const dynamicDisplayControl: IDynamicFormControl = this.entityBaseComponent.controls
+    const dynamicDisplayControl: IDynamicFormControl = this.flattenFormControls(this.entityBaseComponent.controls)
       .find((control: IDynamicFormControl) => this.displayControlName === control.controlName);
 
     // Form does not exist yet => resort to source entity
@@ -96,6 +96,18 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     if (!Array.isArray(entityTranslatedControlValue) || !entityTranslatedControlValue.length) {
       dynamicDisplayControl.disabled = true;
     }
+  }
+
+  // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
+  private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
+    // TODO: item type
+    return formControls.reduce((acc, control: any) => {
+      const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
+      return [
+        ...acc,
+        ...controls
+      ];
+    }, [] as Array<IDynamicFormControl>);
   }
 
   onAfterInit(): void {

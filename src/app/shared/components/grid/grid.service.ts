@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod } from '@angular/http';
+import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,22 +16,12 @@ export class GridService {
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService
+  ) { }
 
   localRequest(): GridService {
     this._localRequest = true;
     return this;
-  }
-
-  read(url: string, routeParams: object = {}): Observable<any> {
-    if (this._localRequest) {
-      // this would not be a default value, so clear the flag for further requests
-      this._localRequest = false;
-      return this.http.get(url)
-        .map(data => data.json());
-    }
-
-    return this.request(url, RequestMethod.Get, routeParams);
   }
 
   /**
@@ -40,16 +30,31 @@ export class GridService {
    *  url = '/api/roles/{id}/permits', params = { id: 5 }
    *  route = '/api/roles/5/permits
    */
+  read(url: string, routeParams: object = {}): Observable<any> {
+    if (this._localRequest) {
+      // this would not be a default value, so clear the flag for further requests
+      this._localRequest = false;
+      return this.http.get(url)
+        .map(data => data.json());
+    }
+
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get });
+  }
+
+  readBlob(url: string, routeParams: object = {}): Observable<Blob> {
+    return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
+  }
+
   create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Post, routeParams, body);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Post, body });
   }
 
   update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Put, routeParams, body);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Put, body });
   }
 
   delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.request(url, RequestMethod.Delete, routeParams);
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Delete } );
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
@@ -86,18 +91,33 @@ export class GridService {
     return column;
   }
 
-  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
+  // Request that expects JSON for *response*.
+  // Request content type can be application/json, multipart/form-data, etc.
+  private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
+    return this.request(url, routeParams, options)
+      .map(data => data.json());
+  }
+
+  // Request that expects binary data for *response*.
+  // Request content type can be application/json, multipart/form-data, etc.
+  private blobRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<Blob> {
+    return this.request(url, routeParams, { ...options, responseType: ResponseContentType.Blob })
+      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
+  }
+
+  private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
+    const headers = new Headers();
+    if (options.body && options.body.constructor === Object) {
+      headers.append('Content-Type', 'application/json');
+    }
+
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
         const prefix = '/api';
         const api = route.startsWith(prefix) ? route : prefix + route;
 
-        return this.http.request(`${rootUrl}${api}`, {
-          method: method,
-          body: body
-        })
-        .map(data => data.json());
+        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
       });
   }
 

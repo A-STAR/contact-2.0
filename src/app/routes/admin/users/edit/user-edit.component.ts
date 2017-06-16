@@ -1,12 +1,15 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser } from '../users.interface';
 
 import { ConstantsService } from '../../../../core/constants/constants.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UsersService } from '../../../../routes/admin/users/users.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
@@ -20,6 +23,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   @Input() roles;
   @Input() languages;
 
+  userPhotoUrl$: Observable<string>;
+
   private canEditUser = false;
   private canEditUserRole = false;
 
@@ -29,8 +34,10 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   private passwordValidators: ValidatorFn = null;
 
   constructor(
+    private constantsService: ConstantsService,
+    private gridService: GridService,
     private permissionsService: PermissionsService,
-    private constantsService: ConstantsService
+    private usersService: UsersService,
   ) {
     super();
   }
@@ -50,6 +57,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       this.constantsService.get('UserPassword.MinLength') as number,
       this.constantsService.get('UserPassword.Complexity.Use') as boolean
     );
+
     super.ngOnInit();
   }
 
@@ -57,13 +65,33 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     return this.canEditUser || this.canEditUserRole;
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
+  protected getControls(): Array<IDynamicFormItem> {
+    const userId = this.editedEntity && this.editedEntity.id;
+
     return [
-      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
-      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
-      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-      // TODO: insert photo upload control here
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+      {
+        children: [
+          {
+            children: [
+              { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+              { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+              { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+              { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+            ],
+            width: 8
+          },
+          // TODO(d.maltsev): fix user create form
+          // TODO(d.maltsev): controlName should be optional
+          {
+            label: 'users.edit.photo',
+            controlName: 'image',
+            type: 'image',
+            url: `/api/users/${userId}/photo`,
+            action: (file: File) => this.usersService.changePhoto(file),
+            width: 4,
+          }
+        ]
+      },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ this.passwordValidators ] },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole,
@@ -79,6 +107,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true,
           options: this.languages },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.canEditUser },
+    // TODO: disable recursively
     ].map((control: IDynamicFormControl) => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : !this.canEditUser

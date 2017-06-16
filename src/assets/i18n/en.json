@@ -189,6 +189,7 @@
       "lastName": "Family name",
       "firstName": "Name",
       "middleName": "Middle name",
+      "photo": "Photo",
       "blocked": "Blocked",
       "login": "Login",
       "password": "Password",
@@ -491,7 +492,9 @@
       "remove": "Remove",
       "close": "Close",
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "add": "Add",
+      "change": "Change"
     },
     "dateTimeRage": {
       "from": "From",
