@@ -24,41 +24,38 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
-      disabled: this.permissionsService.hasPermission('ROLE_ADD').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('ROLE_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-clone',
       label: 'toolbar.action.copy',
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('ROLE_COPY'),
-        this.permissionsService.permissions.map(permissions => permissions.currentRole)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('ROLE_EDIT'),
-        this.permissionsService.permissions.map(permissions => permissions.currentRole)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('ROLE_DELETE'),
-        this.permissionsService.permissions.map(permissions => permissions.currentRole)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchRoles(),
-      disabled: this.permissionsService.hasPermission('PERMIT_VIEW').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
     },
   ];
 

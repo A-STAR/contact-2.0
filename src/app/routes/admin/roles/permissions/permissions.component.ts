@@ -36,34 +36,31 @@ export class PermissionsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('PERMIT_ADD'),
-        this.permissionsService.permissions.map(state => state.currentRole)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('PERMIT_EDIT'),
-        this.permissionsService.permissions.map(state => state.currentPermission)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('PERMIT_DELETE'),
-        this.permissionsService.permissions.map(state => state.currentPermission)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      disabled: this.permissionsService.hasPermission('PERMIT_VIEW').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
     },
   ];
 

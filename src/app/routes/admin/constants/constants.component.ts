@@ -33,17 +33,16 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.display = true,
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionService.hasPermission('CONST_VALUE_EDIT'),
         // TODO(d.maltsev): constants store
-        Observable.of(this.selectedRecord)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        Observable.of(!!this.selectedRecord)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.refreshGrid(),
-      disabled: this.permissionService.hasPermission('CONST_VALUE_VIEW').map(hasPermission => !hasPermission)
+      enabled: this.permissionService.hasPermission('CONST_VALUE_VIEW')
     },
   ];
 

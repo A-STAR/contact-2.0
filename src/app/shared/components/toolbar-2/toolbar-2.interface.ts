@@ -19,7 +19,7 @@ export interface IToolbarDefaultElement {
 
 export interface IToolbarElement {
   action: IToolbarActionCreator | Action;
-  disabled?: Observable<boolean>;
+  enabled?: Observable<boolean>;
   label?: string;
 }
 

@@ -22,36 +22,33 @@ export class TermsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddTermAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_ADD'),
         this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditTermAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_EDIT'),
-        this.dictionariesService.state.map(state => state.selectedTermId)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.dictionariesService.state.map(state => !!state.selectedTermId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_TERM_DELETE'),
-        this.dictionariesService.state.map(state => state.selectedTermId)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.dictionariesService.state.map(state => !!state.selectedTermId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       action: () => this.dictionariesService.fetchTerms(),
       icon: 'fa fa-refresh',
       label: 'toolbar.action.refresh',
-      disabled: this.dictionariesService.state.map(state => !state.selectedDictionaryCode)
+      enabled: this.dictionariesService.state.map(state => !state.selectedDictionaryCode)
     }
   ];
 

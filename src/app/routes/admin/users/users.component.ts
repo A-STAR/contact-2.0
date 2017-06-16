@@ -55,21 +55,20 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.usersService.setDialogAddAction(),
-      disabled: this.permissionsService.hasPermission('USER_ADD').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('USER_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.usersService.setDialogEditAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.usersService.fetch(),
-      disabled: this.permissionsService.hasPermission('USER_VIEW').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('USER_VIEW')
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,

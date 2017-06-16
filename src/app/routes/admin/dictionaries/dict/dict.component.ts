@@ -27,25 +27,23 @@ export class DictComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
-      disabled: this.permissionsService.hasPermission('DICT_ADD').map(hasPermission => !hasPermission)
+      enabled: this.permissionsService.hasPermission('DICT_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_EDIT'),
-        this.dictionariesService.state.map(state => state.selectedDictionaryCode)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
-      disabled: Observable.combineLatest(
+      enabled: Observable.combineLatest(
         this.permissionsService.hasPermission('DICT_DELETE'),
-        this.dictionariesService.state.map(state => state.selectedDictionaryCode)
-      // TODO(d.maltsev): rename
-      ).map(data => !data[0] || !data[1])
+        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
