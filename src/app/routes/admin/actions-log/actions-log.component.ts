@@ -88,7 +88,7 @@ export class ActionsLogComponent implements OnDestroy {
     });
   }
 
-  onChangePage(pageInfo: IGrid2PaginationInfo): void {
+  onPage(pageInfo: IGrid2PaginationInfo): void {
     this.doSearch(pageInfo);
   }
 

@@ -26,6 +26,7 @@ import { Store } from '@ngrx/store';
 
 import {
   IToolbarAction,
+  IToolbarActionSelectPayload,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
@@ -92,6 +93,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
   @Output() nextPage: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
   @Output() previousPage: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
+  @Output() changePageSize: EventEmitter<IGrid2PaginationInfo> = new EventEmitter<IGrid2PaginationInfo>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -104,9 +106,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private langSubscription: EventEmitter<any>;
   private headerColumns: GridHeaderComponent[] = [];
   private rowsCounterElement;
-  private backwardElement;
-  private forwardElement;
-  private pageElement;
+  private backwardElement: IToolbarAction;
+  private forwardElement: IToolbarAction;
+  private pageElement: IToolbarAction;
+  private pagesSizeElement: IToolbarAction;
   private stateSubscription: Subscription;
   private currentPage = 1;
   private currentPageSize: number;
@@ -266,6 +269,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
   }
 
+  onToolbarActionSelect(payload: IToolbarActionSelectPayload): void {
+    this.currentPage = 1;
+    this.currentPageSize = payload.value.value;
+
+    this.changePageSize.emit({
+      currentPage: this.currentPage,
+      pageSize: this.currentPageSize
+    });
+  }
+
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {
     this.store.dispatch({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
   }
@@ -322,14 +335,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private updatePaginationElements(): void {
     const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
+    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.currentPageSize;
+
     if (this.pagination) {
       const pagesCount: number = this.getPagesCount();
-      this.backwardElement.noRender = false;
-      this.forwardElement.noRender = false;
-      this.pageElement.noRender = false;
+      [this.backwardElement, this.forwardElement, this.pageElement]
+        .forEach((action: IToolbarAction) => action.noRender = !isPaginationElementsExist);
+      this.pagesSizeElement.noRender = false;
+
+      this.pagesSizeElement.visible = true;
       this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
       this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
       this.pageElement.visible = true;
+
       this.pageElement.text = `${this.currentPage}/${pagesCount}`;
     }
   }
@@ -384,6 +402,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.gridToolbarActions.push(this.backwardElement = { type: ToolbarActionTypeEnum.BACKWARD, noRender: true });
       this.gridToolbarActions.push(this.pageElement = { control: ToolbarControlEnum.LABEL, noRender: true });
       this.gridToolbarActions.push(this.forwardElement = { type: ToolbarActionTypeEnum.FORWARD, noRender: true });
+      this.gridToolbarActions.push(this.pagesSizeElement = {
+        control: ToolbarControlEnum.SELECT,
+        value: this.pageSizes.map((pageSize: number) => { return { value: pageSize }; }),
+        activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
+        noRender: true,
+        styles: { width: '100px' }
+      });
     }
   }
 

@@ -1,4 +1,14 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, OnDestroy, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+  forwardRef,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
@@ -23,6 +33,8 @@ import { SelectActionHandler } from './select-action';
   ],
 })
 export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+  @Input() autoAlignEnabled: boolean;
+  @Input() styles: CSSStyleDeclaration;
   @Input() allowClear = false;
   @Input() placeholder = '';
   @Input() actions: Array<ISelectionAction> = [];
@@ -32,6 +44,7 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
   @Output() selected: EventEmitter<any> = new EventEmitter();
   @Output() selectedControlItemsChanges: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
+  @ViewChild('input') inputRef: ElementRef;
 
   rawData: Array<ILabeledValue> = [];
   activeOption: ILabeledValue;

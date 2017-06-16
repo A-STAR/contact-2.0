@@ -14,7 +14,8 @@
   [rowsTotalCount]="(actionsLogData | async).total"
   [columns]="columns"
   [pagination]="true"
-  (nextPage)="onChangePage($event)"
-  (previousPage)="onChangePage($event)"
+  (nextPage)="onPage($event)"
+  (previousPage)="onPage($event)"
+  (changePageSize)="onPage($event)"
 >
 </app-grid2>

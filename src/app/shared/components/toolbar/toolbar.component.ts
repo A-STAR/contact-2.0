@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IToolbarAction, ToolbarControlEnum } from './toolbar.interface';
+import {
+  IToolbarAction,
+  IToolbarActionSelectPayload,
+  ToolbarControlEnum
+} from './toolbar.interface';
 
 import { IconsService } from '../../icons/icons.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
@@ -16,6 +20,7 @@ export class ToolbarComponent {
   @Input() actions: IToolbarAction[];
   @Input() actionAlign = 'left';
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
+  @Output() actionSelect: EventEmitter<IToolbarActionSelectPayload> = new EventEmitter<IToolbarActionSelectPayload>();
 
   ToolbarControlEnum = ToolbarControlEnum;
 
@@ -28,6 +33,13 @@ export class ToolbarComponent {
     this.actionClick.emit({
       ...action,
       value: action.control === ToolbarControlEnum.CHECKBOX ? event.target.checked : undefined
+    });
+  }
+
+  onSelect(action: IToolbarAction, event: any): void {
+    this.actionSelect.emit({
+      action: action,
+      value: event
     });
   }
 
