@@ -21,7 +21,7 @@ export interface IToolbarElement {
   action: IToolbarActionCreator | Action;
   disabled?: Observable<boolean>;
   label?: string;
-  permissions?: Array<string>;
+  // permissions?: Array<string>;
 }
 
 export interface IToolbarButton extends IToolbarElement {

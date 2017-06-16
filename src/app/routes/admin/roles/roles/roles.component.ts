@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
 import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
 import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -11,7 +13,7 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponent {
+export class RolesComponen implements OnDestroy {
   editedEntity: IPermissionRole = null;
 
   dialog: IPermissionsDialogEnum = null;
@@ -21,33 +23,42 @@ export class RolesComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      permissions: [ 'ROLE_ADD' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD)
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
+      disabled: this.permissionsService.hasPermission('ROLE_ADD').map(hasPermission => !hasPermission)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-clone',
       label: 'toolbar.action.copy',
-      permissions: [ 'ROLE_COPY' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_COPY'),
+        this.permissionsService.permissions.map(permissions => permissions.currentRole)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      permissions: [ 'ROLE_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_EDIT'),
+        this.permissionsService.permissions.map(permissions => permissions.currentRole)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      permissions: [ 'ROLE_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      disabled: this.permissionsService.permissions.map(permissions => !permissions.currentRole)
+      disabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_DELETE'),
+        this.permissionsService.permissions.map(permissions => permissions.currentRole)
+      // TODO(d.maltsev): rename
+      ).map(data => !data[0] || !data[1])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      permissions: [ 'PERMIT_VIEW' ],
-      action: () => this.permissionsService.fetchRoles()
+      action: () => this.permissionsService.fetchRoles(),
+      disabled: this.permissionsService.hasPermission('PERMIT_VIEW').map(hasPermission => !hasPermission)
     },
   ];
 
@@ -57,16 +68,22 @@ export class RolesComponent {
     { prop: 'comment', width: 200 },
   ];
 
+  private permissionsServiceSub: Subscription;
+
   constructor(
     private permissionsService: PermissionsService,
   ) {
     this.permissionsService.fetchRoles();
 
-    this.permissionsService.permissions.subscribe(state => {
+    this.permissionsServiceSub = this.permissionsService.permissions.subscribe(state => {
       this.rows = state.roles;
       this.dialog = state.dialog;
       this.editedEntity = state.currentRole;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.permissionsServiceSub.unsubscribe();
   }
 
   get isRoleBeingCreated(): boolean {
