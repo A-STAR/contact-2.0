@@ -82,12 +82,6 @@ export function permissionReducer(
         currentPermission: action.payload,
       };
 
-    case PermissionsService.ROLE_SELECTED:
-      return {
-        ...state,
-        currentRole: action.payload,
-      };
-
     default:
       return state;
   }
