@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRole } from '../roles.interface';
+import { IPermissionRole } from '../../roles-and-permissions.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 
@@ -9,7 +9,7 @@ import { EntityBaseComponent } from '../../../../../shared/components/entity/edi
   selector: 'app-roles-edit',
   templateUrl: './roles-edit.component.html'
 })
-export class RolesEditComponent extends EntityBaseComponent<IRole> {
+export class RolesEditComponent extends EntityBaseComponent<IPermissionRole> {
   get title(): string {
     return this.editedEntity ? 'roles.roles.edit.title' : 'roles.roles.create.title';
   }

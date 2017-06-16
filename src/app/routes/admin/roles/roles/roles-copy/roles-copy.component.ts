@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRole } from '../roles.interface';
+import { IPermissionRole } from '../../roles-and-permissions.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 
 import { RolesService } from '../roles.service';
@@ -12,7 +12,7 @@ import { EntityBaseComponent } from '../../../../../shared/components/entity/edi
   selector: 'app-roles-copy',
   templateUrl: './roles-copy.component.html'
 })
-export class RolesCopyComponent extends EntityBaseComponent<IRole> {
+export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> {
   constructor(private rolesService: RolesService) {
     super();
   }

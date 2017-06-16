@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
-import { IRole } from './roles.interface';
+import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
@@ -17,7 +17,7 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
   templateUrl: './roles.component.html'
 })
 export class RolesComponent {
-  editedEntity: IRole = null;
+  editedEntity: IPermissionRole = null;
 
   dialog: IPermissionsDialogEnum = null;
 
@@ -127,7 +127,7 @@ export class RolesComponent {
     this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
   }
 
-  onSelectedRowChange(roles: Array<IRole>): void {
+  onSelectedRowChange(roles: Array<IPermissionRole>): void {
     const role = roles[0];
     if (role) {
       this.permissionsService.selectRole(role);
