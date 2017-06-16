@@ -28,6 +28,8 @@ export class PermissionsEffects {
 
   permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
 
+  rolePermissionFetchAction = { type: PermissionsService.ROLE_PERMISSION_FETCH };
+
   @Effect()
   fetchRoles = this.actions
     .ofType(PermissionsService.ROLE_FETCH)
@@ -162,6 +164,7 @@ export class PermissionsEffects {
         .mergeMap(() => [
           this.hideDialogAction,
           this.permissionFetchAction,
+          this.rolePermissionFetchAction,
         ]);
     });
 
@@ -179,6 +182,7 @@ export class PermissionsEffects {
         .mergeMap(() => [
           this.hideDialogAction,
           this.permissionFetchAction,
+          this.rolePermissionFetchAction,
         ]);
     });
 
@@ -196,6 +200,7 @@ export class PermissionsEffects {
         .mergeMap(() => [
           this.hideDialogAction,
           this.permissionFetchAction,
+          this.rolePermissionFetchAction,
         ]);
     });
 
