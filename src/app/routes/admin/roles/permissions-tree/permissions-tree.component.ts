@@ -1,5 +1,7 @@
-import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilKeyChanged';
 
 import { IPermissionRole } from '../permissions/permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
@@ -12,9 +14,7 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
   selector: 'app-permissions-tree',
   templateUrl: './permissions-tree.component.html',
 })
-export class PermissionsTreeComponent implements OnChanges {
-
-  @Input() currentRole: IPermissionRole;
+export class PermissionsTreeComponent implements OnDestroy {
 
   initialSelection: TreeNode[] = [];
   selection: TreeNode[] = [];
@@ -24,13 +24,23 @@ export class PermissionsTreeComponent implements OnChanges {
     { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE, permission: 'GUI_TREE_EDIT' },
   ];
 
+  private currentRole: IPermissionRole;
+  private permissionsServiceSub: Subscription;
+
   constructor(
     private permissionsTreeService: PermissionsTreeService,
-    private permissionsService: PermissionsService) {
+    private permissionsService: PermissionsService
+  ) {
+    this.permissionsServiceSub = this.permissionsService.permissions
+      .distinctUntilKeyChanged('currentRole')
+      .subscribe(permissions => {
+        this.currentRole = permissions.currentRole;
+        this.refreshTree();
+      });
   }
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
-    this.refreshTree();
+  ngOnDestroy(): void {
+    this.permissionsServiceSub.unsubscribe();
   }
 
   onSaveChanges(): void {
