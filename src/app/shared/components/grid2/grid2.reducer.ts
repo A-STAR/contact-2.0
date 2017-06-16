@@ -19,10 +19,7 @@ const defaultState: IGrid2State = {
 };
 
 export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function): Function {
-  return function (
-    state,
-    action
-  ) {
+  return function (state: any, action: { type: any }): any {
     switch (action.type) {
       case Grid2Component.COLUMNS_POSITIONS:
       case Grid2Component.SORTING_DIRECTION:
@@ -32,6 +29,7 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       case Grid2Component.DESTROY_STATE:
       case Grid2Component.GROUPING_COLUMNS:
       case Grid2Component.SELECTED_ROWS:
+      case Grid2Component.NO_SELECTED_ROWS:
         return {
           ...state,
           [stateKey]: grid2Reducer(state[stateKey], action as IActionGrid2Payload)
@@ -39,7 +37,7 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       default:
         return outerReducer(state, action);
     }
-  }
+  };
 }
 
 export function grid2Reducer(
@@ -63,6 +61,11 @@ export function grid2Reducer(
       return {
         ...state,
         filterColumnName: null
+      };
+    case Grid2Component.NO_SELECTED_ROWS:
+      return {
+        ...state,
+        selectedRows: []
       };
     case Grid2Component.SELECTED_ROWS:
       const selectedRowPayload: IGrid2SelectedRowChangePayload = action.payload as IGrid2SelectedRowChangePayload;

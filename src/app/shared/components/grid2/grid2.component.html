@@ -15,7 +15,7 @@
       [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
       [rowData]="gridRows"
-      [pagination]="pagination"
+      [pagination]="false"
       [enableColResize]="true"
       [enableFilter]="true"
       [enableSorting]="true"
@@ -36,6 +36,7 @@
   *ngIf="gridToolbarActions"
   class="app-toolbar"
   [actions]="gridToolbarActions"
+  (actionClick)="onToolbarActionClick($event)"
 >
 </app-toolbar>
 <app-action-dialog

@@ -21,7 +21,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   @Input() employeesRows;
   @Input() actionTypesRows;
-  @Output() search: EventEmitter<IActionsLogFilterRequest> = new EventEmitter<IActionsLogFilterRequest>();
+  @Output() search: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
@@ -183,9 +183,13 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   }
 
   onSearch(): void {
+    this.search.emit();
+  }
+
+  getFilterValues(): IActionsLogFilterRequest {
     const request: IActionsLogFilterRequest = this.value;
     request.employees = (request.employees as IEmployee[] || []).map((record: IEmployee) => record.id);
     request.actionsTypes = (request.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code);
-    this.search.emit(request);
+    return request;
   }
 }

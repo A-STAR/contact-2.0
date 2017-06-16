@@ -12,6 +12,8 @@ export enum ToolbarActionTypeEnum {
   REFRESH,
   SEARCH,
   SAVE,
+  FORWARD,
+  BACKWARD,
 }
 
 export interface IToolbarAction {
@@ -22,4 +24,5 @@ export interface IToolbarAction {
   permission?: string | Array<string>;
   control?: ToolbarControlEnum;
   value?: any;
+  noRender?: boolean;
 }
