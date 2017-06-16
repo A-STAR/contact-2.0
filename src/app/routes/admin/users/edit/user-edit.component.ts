@@ -9,6 +9,7 @@ import { IUser } from '../users.interface';
 import { ConstantsService } from '../../../../core/constants/constants.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UsersService } from '../../../../routes/admin/users/users.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
@@ -36,6 +37,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private constantsService: ConstantsService,
     private gridService: GridService,
     private permissionsService: PermissionsService,
+    private usersService: UsersService,
   ) {
     super();
   }
@@ -80,7 +82,14 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
           },
           // TODO(d.maltsev): fix user create form
           // TODO(d.maltsev): controlName should be optional
-          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: `/api/users/${userId}/photo`, width: 4 }
+          {
+            label: 'users.edit.photo',
+            controlName: 'image',
+            type: 'image',
+            url: `/api/users/${userId}/photo`,
+            action: (file: File) => this.usersService.changePhoto(file),
+            width: 4,
+          }
         ]
       },
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },

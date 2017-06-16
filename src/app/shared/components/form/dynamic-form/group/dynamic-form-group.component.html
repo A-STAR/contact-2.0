@@ -82,7 +82,9 @@
 
             <ng-container *ngSwitchCase="'image'">
               <label class="mb0">{{control.label | translate}}</label>
-              <app-form-image [url]="control.url">
+              <app-form-image
+                [url]="control.url"
+                [action]="control.action">
               </app-form-image>
             </ng-container>
 

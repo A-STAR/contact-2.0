@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, OnDestroy, ViewChild } from '@ang
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { Action } from '@ngrx/store';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -12,6 +13,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
   styleUrls: [ './image.component.scss' ]
 })
 export class FormImageComponent implements OnInit, OnDestroy {
+  @Input() action: (file: File) => Action;
   @Input() url = null as string;
 
   @ViewChild('file') fileInput: ElementRef;
@@ -52,41 +54,20 @@ export class FormImageComponent implements OnInit, OnDestroy {
     this.previewSubscription.unsubscribe();
   }
 
-  upload(): void {
-    const files = this.fileInput.nativeElement.files;
-    if (files.length === 0) {
-      return ;
-    }
-
-    const data = new FormData();
-    data.append('file', files[0]);
-
-    this.gridService
-      .create(this.url, {}, data)
-      .take(1)
-      .subscribe(
-        // TODO(d.maltsev): i18n
-        () => {
-          this.fileInput.nativeElement.value = '';
-          this.notificationsService.info('Successfully added photo');
-        },
-        () => this.notificationsService.error('Could not upload photo')
-      );
-  }
-
+  // TODO(d.maltsev): clear file input after upload
   onFileChange(event: any): void {
-    this.preview$.next(event.target.files[0]);
-    this.upload();
+    const files = event.target.files;
+    if (files.length) {
+      this.changePreview(files[0]);
+    }
   }
 
   onFileRemove(): void {
-    this.gridService
-      .delete(this.url)
-      .take(1)
-      .subscribe(
-        () => this.preview$.next(null),
-        // TODO(d.maltsev): notification
-        () => this.notificationsService.error('Could not remove photo')
-      );
+    this.changePreview(null);
+  }
+
+  private changePreview(file: File): void {
+    this.preview$.next(file);
+    this.action(file);
   }
 }

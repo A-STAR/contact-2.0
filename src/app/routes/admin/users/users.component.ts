@@ -152,7 +152,7 @@ export class UsersComponent implements OnDestroy {
   }
 
   onEditSubmit(data: any): void {
-    this.usersService.update(data.user, data.photo);
+    this.usersService.update(data);
   }
 
   cancelAction(): void {

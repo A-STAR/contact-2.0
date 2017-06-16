@@ -70,7 +70,7 @@ export class UsersEffects {
       const [action, store]: [Action, IAppState] = data;
       return this.updateUser(store.users.selectedUserId, action.payload.user)
         .mergeMap(() => {
-          console.log(action);
+          console.log(store.users.photo);
           return [
             {
               type: UsersService.USERS_FETCH
