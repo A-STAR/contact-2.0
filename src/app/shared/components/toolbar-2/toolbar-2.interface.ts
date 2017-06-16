@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
-
-import { IAppState } from '../../../core/state/state.interface';
+import { Observable } from 'rxjs/Observable';
 
 export enum ToolbarItemTypeEnum {
   BUTTON,
@@ -20,9 +19,8 @@ export interface IToolbarDefaultElement {
 
 export interface IToolbarElement {
   action: IToolbarActionCreator | Action;
-  disabled?: (state: IAppState) => boolean;
+  enabled?: Observable<boolean>;
   label?: string;
-  permissions?: Array<string>;
 }
 
 export interface IToolbarButton extends IToolbarElement {
@@ -32,7 +30,7 @@ export interface IToolbarButton extends IToolbarElement {
 
 export interface IToolbarCheckbox extends IToolbarElement {
   type: ToolbarItemTypeEnum.CHECKBOX;
-  state: (state: IAppState) => boolean;
+  state: Observable<boolean>;
 }
 
 export type IToolbarItem = IToolbarButton | IToolbarCheckbox;
