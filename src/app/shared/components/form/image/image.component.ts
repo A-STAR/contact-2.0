@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-form-image',
@@ -12,6 +13,8 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 })
 export class FormImageComponent implements OnInit, OnDestroy {
   @Input() url = null as string;
+
+  @ViewChild('file') fileInput: ElementRef;
 
   hasImage = false;
 
@@ -25,6 +28,7 @@ export class FormImageComponent implements OnInit, OnDestroy {
 
   constructor(
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private sanitizer: DomSanitizer,
   ) {}
 
@@ -48,7 +52,6 @@ export class FormImageComponent implements OnInit, OnDestroy {
     this.previewSubscription.unsubscribe();
   }
 
-  // TODO(d.maltsev): somehow clear file input after upload so that it would be possible to upload same file twice
   onFileChange(event: any): void {
     this.preview$.next(event.target.files[0]);
 
@@ -59,7 +62,12 @@ export class FormImageComponent implements OnInit, OnDestroy {
       .create(this.url, {}, data)
       .take(1)
       .subscribe(
-        // TODO(d.maltsev): notification
+        // TODO(d.maltsev): i18n
+        () => {
+          this.fileInput.nativeElement.value = '';
+          this.notificationsService.info('Successfully added photo');
+        },
+        () => this.notificationsService.error('Could not upload photo')
       );
   }
 
@@ -68,8 +76,9 @@ export class FormImageComponent implements OnInit, OnDestroy {
       .delete(this.url)
       .take(1)
       .subscribe(
-        () => this.preview$.next(null)
+        () => this.preview$.next(null),
         // TODO(d.maltsev): notification
+        () => this.notificationsService.error('Could not remove photo')
       );
   }
 }
