@@ -103,8 +103,7 @@ export class RolesComponent implements OnDestroy {
     this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
   }
 
-  onSelectedRowChange(roles: Array<IPermissionRole>): void {
-    const role = roles[0];
+  onSelect(role: IPermissionRole): void {
     if (role) {
       this.permissionsService.selectRole(role);
     }

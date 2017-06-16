@@ -11,7 +11,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -43,10 +45,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() styles: { [key: string]: any };
   @Input() toolbarActions: IToolbarAction[];
   @Output() onAction: EventEmitter<any> = new EventEmitter();
-  @Output() onEdit: EventEmitter<any> = new EventEmitter();
-  @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
-  @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
@@ -56,6 +57,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     pagerPrevious: 'fa fa-angle-double-left',
     pagerNext: 'fa fa-angle-double-right',
   };
+  clickDebouncer: Subject<{ type: string; row: any}>;
+  debouncerSub: Subscription;
   element: HTMLElement;
   messages: object = {};
   selected: Array<any> = [];
@@ -72,6 +75,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     private translate: TranslateService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
+    this.clickDebouncer = new Subject();
+    this.debouncerSub = this.clickDebouncer
+      .debounceTime(150)
+      .subscribe(({ type, row }: {type: string; row: any}) => {
+        if (type === 'click') {
+          this.onSelect.emit(row);
+        } else {
+          this.onDblClick.emit(row);
+        }
+      });
   }
 
   get filteredRows(): Array<any> {
@@ -152,10 +165,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  onSelect(event: any): void {
-    this.onRowSelect.emit(event.selected);
-  }
-
   clear(): void {
     this.updateRows([]);
   }
@@ -170,22 +179,23 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onRowsChange.emit(data);
   }
 
+  onSelectRow(event: any): void {
+    this.clickDebouncer.next({ type: 'click', row: event.row });
+  }
+
   onActivate(event: any): void {
-    if (event.type === 'dblclick') {
-      // if (this.editPermission && !this.permissionsService.hasPermission(this.editPermission)) {
-      //   return;
-      // }
-      const { row } = event;
-      this.onEdit.emit(row);
-      // workaround for rows getting unselected on dblclick
+    const { row, type } = event;
+    if (type === 'dblclick') {
+      // TODO(a.tymchuk): yell if there is no edit permission
+      // NOTE: workaround for rows getting unselected on dblclick
       if (!this.selected.find(selected => selected.$$id === row.$$id)) {
         this.selected = this.selected.concat(row);
       }
-      this.onRowDoubleSelect.emit(this.selected);
     }
+    this.clickDebouncer.next({ type, row });
   }
 
-  // TODO: implement when paging is ready
+  // TODO(a.tymchuk): implement when paging is ready
   onPage(event: UIEvent): void {
     // const { count, pageSize, limit, offset } = event;
   }
@@ -196,6 +206,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.debouncerSub.unsubscribe();
   }
 
   private translateColumns(columnTranslations: object): void {

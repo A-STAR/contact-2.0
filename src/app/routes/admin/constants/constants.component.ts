@@ -138,8 +138,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     this.display = false;
   }
 
-  onSelectRecord(records: Array<IConstant>): void {
-    this.selectedRecord = records[0];
+  onSelect(record: IConstant): void {
+    this.selectedRecord = record;
     this.constantsService.changeSelected(this.selectedRecord);
   }
 

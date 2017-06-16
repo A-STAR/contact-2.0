@@ -181,8 +181,7 @@ export class DictComponent implements OnDestroy {
     this.dictionariesService.deleteDictionary();
   }
 
-  onSelectedRowChange(dictionaries: Array<IDictionary>): void {
-    const dictionary = dictionaries[0];
+  onSelect(dictionary: IDictionary): void {
     const selectedDictionaryId = this.selectedEntity && this.selectedEntity.id;
     if (dictionary && dictionary.id !== selectedDictionaryId) {
       this.dictionariesService.selectDictionary(dictionary.code);

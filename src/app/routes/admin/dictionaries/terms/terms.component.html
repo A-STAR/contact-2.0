@@ -38,6 +38,7 @@
   [columnTranslationKey]="'terms'"
   [editPermission]="'DICT_TERM_EDIT'"
   [rows]="rows"
-  (onRowSelect)="onSelectedRowChange($event)"
-  (onEdit)="onEdit()">
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)"
+>
 </app-grid>

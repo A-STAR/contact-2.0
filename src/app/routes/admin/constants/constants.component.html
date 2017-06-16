@@ -17,7 +17,7 @@
   editPermission="CONST_VALUE_EDIT"
   [parseFn]="parseFn"
   [rows]="rows"
-  (onEdit)="onBeforeEdit()"
-  (onRowSelect)="onSelectRecord($event)"
+  (onDblClick)="onBeforeEdit()"
+  (onSelect)="onSelect($event)"
 >
 </app-grid>

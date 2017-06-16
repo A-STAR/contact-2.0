@@ -38,6 +38,6 @@
   [columnTranslationKey]="'dictionaries'"
   [editPermission]="'DICT_EDIT'"
   [rows]="rows"
-  (onEdit)="onEdit()"
-  (onRowSelect)="onSelectedRowChange($event)">
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)">
 </app-grid>

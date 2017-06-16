@@ -108,9 +108,9 @@ export class PermissionsComponent implements OnDestroy {
     this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
   }
 
-  onSelectPermissions(records: IPermissionModel[]): void {
-    if (records.length) {
-      this.permissionsService.changeSelected(records[0]);
+  onSelectPermissions(record: IPermissionModel): void {
+    if (record) {
+      this.permissionsService.changeSelected(record);
     }
   }
 

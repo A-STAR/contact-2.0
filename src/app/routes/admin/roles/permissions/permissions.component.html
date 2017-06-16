@@ -37,7 +37,7 @@
   [rows]="rawPermissions"
   [selectionType]="'single'"
   [styles]="{height: '200px'}"
-  (onEdit)="onBeforeEditPermission()"
-  (onRowSelect)="onSelectPermissions($event)"
+  (onDblClick)="onBeforeEditPermission()"
+  (onSelect)="onSelectPermissions($event)"
 >
 </app-grid>

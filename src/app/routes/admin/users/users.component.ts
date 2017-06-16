@@ -165,8 +165,7 @@ export class UsersComponent implements OnDestroy {
     this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT);
   }
 
-  onSelectedRowChange(users: Array<IUser>): void {
-    const user = users[0];
+  onSelect(user: IUser): void {
     if (user) {
       this.usersService.select(user.id);
     }

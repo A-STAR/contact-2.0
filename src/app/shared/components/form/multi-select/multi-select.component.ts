@@ -22,7 +22,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
   gridStyles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
 
-  @Input() equalsFn: Function = (o1: any, o2: any) => o1.id === o2.id;
   @Input() height: number;
   @Input() columnsFrom: IGridColumn[];
   @Input() columnsTo: IGridColumn[];
@@ -30,7 +29,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   @Input() columnsTranslationKeyTo: string;
   @Input() rowsFrom: Array<any>;
   @Input() rowsFilterFrom: Function;
-  @Input() syncFormControlChanges: boolean = true;
+  @Input() syncFormControlChanges = true;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
@@ -40,9 +39,14 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private _active: any[] = [];
   private onChange: Function = () => {};
   private onTouched: Function = () => {};
+  @Input() equalsFn: Function = (o1: any, o2: any) => o1.id === o2.id;
 
   constructor() {
     this.rowsFilter = this.rowsFilter.bind(this);
+  }
+
+  get rowsTo(): any[] {
+    return this._active;
   }
 
   ngOnInit(): void {
@@ -50,8 +54,8 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   }
 
   ngAfterViewInit(): void {
-    this._rowDoubleSelectFromSubscription = this.gridFrom.onRowDoubleSelect.subscribe(() => this.onRightAction());
-    this._rowDoubleSelectToSubscription = this.gridTo.onRowDoubleSelect.subscribe(() => this.onLeftAction());
+    this._rowDoubleSelectFromSubscription = this.gridFrom.onDblClick.subscribe(() => this.onRightAction());
+    this._rowDoubleSelectToSubscription = this.gridTo.onDblClick.subscribe(() => this.onLeftAction());
   }
 
   ngOnDestroy(): void {
@@ -78,10 +82,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
         !this._active || !this._active.length ||
         !this._active.find((selectedRecord: any) => this.equalsFn(selectedRecord, record))
       );
-  }
-
-  get rowsTo(): any[] {
-    return this._active;
   }
 
   onRightAction(): void {

@@ -112,8 +112,7 @@ export class EmployeesComponent implements OnDestroy {
     return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
-  onSelectedRowChange(employees: Array<IEmployee>): void {
-    const employee = employees[0];
+  onSelect(employee: IEmployee): void {
     if (employee) {
       this.organizationsService.selectEmployee(employee.userId);
     }

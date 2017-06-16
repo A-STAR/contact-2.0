@@ -23,14 +23,14 @@
 
 <app-grid
   class="flat"
-  selectionType="single"
   [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'organizations.employees'"
-  [rows]="(state | async).employees"
   [editPermission]="'ORGANIZATION_EDIT'"
-  (onRowSelect)="onSelectedRowChange($event)"
-  (onEdit)="onEdit()"
+  [rows]="(state | async).employees"
+  selectionType="single"
   [toolbarActions]="toolbarActions"
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)"
   (onAction)="onAction($event)">
 </app-grid>

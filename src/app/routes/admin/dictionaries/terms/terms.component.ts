@@ -133,8 +133,7 @@ export class TermsComponent implements OnDestroy {
     this.dictionariesService.setDialogEditTermAction();
   }
 
-  onSelectedRowChange(terms: Array<ITerm>): void {
-    const term = terms[0];
+  onSelect(term: ITerm): void {
     const selectedTermId = this.selectedEntity && this.selectedEntity.id;
     if (term && term.id !== selectedTermId) {
       this.dictionariesService.selectTerm(term.id);
