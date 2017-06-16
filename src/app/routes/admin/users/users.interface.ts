@@ -34,5 +34,5 @@ export interface IUsersState {
   selectedUserId: number;
   dialogAction: IUserDialogActionEnum;
   displayBlocked: boolean;
-  photo: File;
+  photo: File | false;
 }

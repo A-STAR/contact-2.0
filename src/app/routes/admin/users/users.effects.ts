@@ -101,7 +101,7 @@ export class UsersEffects {
     .ofType(UsersService.USER_UPDATE_PHOTO)
     .switchMap(data => {
       const { userId, photo } = data.payload;
-      return this.createPhoto(userId, photo)
+      return this.updatePhoto(userId, photo)
         .mergeMap(() => [])
         .catch(() => {
           // TODO(d.maltsev): i18n
@@ -129,13 +129,13 @@ export class UsersEffects {
     return this.gridService.update('/api/users/{userId}', { userId }, user);
   }
 
-  private createPhoto(userId: number, photo: File): Observable<any> {
+  private updatePhoto(userId: number, photo: File | false): Observable<any> {
+    if (!photo) {
+      return this.gridService.delete('/api/users/{userId}/photo', { userId });
+    }
+
     const data = new FormData();
     data.append('file', photo);
     return this.gridService.create('/api/users/{userId}/photo', { userId }, data);
   }
-
-  // private deletePhoto(userId: number): Observable<any> {
-  //   return this.gridService.delete('/api/users/{userId}/photo', { userId });
-  // }
 }

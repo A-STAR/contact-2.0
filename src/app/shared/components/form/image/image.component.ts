@@ -13,7 +13,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
   styleUrls: [ './image.component.scss' ]
 })
 export class FormImageComponent implements OnInit, OnDestroy {
-  @Input() action: (file: File) => Action;
+  @Input() action: (file: File | false) => Action;
   @Input() url = null as string;
 
   @ViewChild('file') fileInput: ElementRef;
@@ -68,6 +68,6 @@ export class FormImageComponent implements OnInit, OnDestroy {
 
   private changePreview(file: File): void {
     this.preview$.next(file);
-    this.action(file);
+    this.action(file || false);
   }
 }

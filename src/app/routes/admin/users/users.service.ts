@@ -56,7 +56,7 @@ export class UsersService {
     });
   }
 
-  changePhoto(photo: File): void {
+  changePhoto(photo: File | false): void {
     return this.store.dispatch({
       type: UsersService.USER_PHOTO_PREVIEW,
       payload: {
