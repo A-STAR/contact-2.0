@@ -45,11 +45,12 @@ export class UsersService {
     });
   }
 
-  update(user: IUser): void {
+  update(user: IUser, photo: File): void {
     return this.store.dispatch({
       type: UsersService.USER_UPDATE,
       payload: {
-        user
+        user,
+        photo
       }
     });
   }
