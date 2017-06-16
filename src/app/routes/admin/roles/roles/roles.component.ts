@@ -13,7 +13,7 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponen implements OnDestroy {
+export class RolesComponent implements OnDestroy {
   editedEntity: IPermissionRole = null;
 
   dialog: IPermissionsDialogEnum = null;
