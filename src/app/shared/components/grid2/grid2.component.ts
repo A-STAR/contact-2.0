@@ -10,7 +10,6 @@ import {
   SimpleChanges,
   Renderer2,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -115,7 +114,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     private renderer2: Renderer2,
     private translate: TranslateService,
     private store: Store<IAppState>,
-    private ref: ChangeDetectorRef,
   ) {
   }
 
@@ -352,8 +350,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.applyClientSorting(state);
     }
     this.setRowsInfo();
-
-    this.ref.detectChanges();
   }
 
   private applyClientSorting(state: IGrid2State): void {
