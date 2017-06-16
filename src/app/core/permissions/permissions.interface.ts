@@ -36,8 +36,7 @@ export interface IPermissionsState {
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
   rawPermissions: IPermissionModel[];
-  // TODO(d.maltsev): role type
-  roles: Array<any>;
+  roles: Array<IPermissionRole>;
 }
 
 export type IPermissionActionType =

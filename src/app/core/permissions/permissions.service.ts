@@ -92,16 +92,14 @@ export class PermissionsService {
     });
   }
 
-  // TODO(d.maltsev): role type
-  selectRole(role: any): void {
+  selectRole(role: IPermissionRole): void {
     this.store.dispatch({
       type: PermissionsService.ROLE_SELECTED,
       payload: { role }
     });
   }
 
-  // TODO(d.maltsev): role type
-  createRole(role: any): void {
+  createRole(role: IPermissionRole): void {
     return this.store.dispatch({
       type: PermissionsService.ROLE_ADD,
       payload: {
@@ -110,8 +108,7 @@ export class PermissionsService {
     });
   }
 
-  // TODO(d.maltsev): role type
-  updateRole(role: any): void {
+  updateRole(role: IPermissionRole): void {
     return this.store.dispatch({
       type: PermissionsService.ROLE_UPDATE,
       payload: {
@@ -120,8 +117,7 @@ export class PermissionsService {
     });
   }
 
-  // TODO(d.maltsev): role type
-  copyRole(originalRoleId: number, role: any): void {
+  copyRole(originalRoleId: number, role: IPermissionRole): void {
     return this.store.dispatch({
       type: PermissionsService.ROLE_COPY,
       payload: {

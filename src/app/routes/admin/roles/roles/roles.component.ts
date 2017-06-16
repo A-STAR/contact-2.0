@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-// import { Observable } from 'rxjs/Observable';
-// import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
@@ -9,8 +6,6 @@ import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
-
-// import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-roles',
@@ -21,8 +16,7 @@ export class RolesComponent {
 
   dialog: IPermissionsDialogEnum = null;
 
-  // TODO(d.maltsev): role row type
-  rows: Array<any>;
+  rows: Array<IPermissionRole>;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -56,38 +50,6 @@ export class RolesComponent {
       action: () => this.permissionsService.fetchRoles()
     },
   ];
-
-  // TODO(d.maltsev): new toolbar config
-  // toolbarItems: Array<IToolbarItem> = [
-  //   {
-  //     type: ToolbarItemTypeEnum.BUTTON_ADD,
-  //     action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
-  //     disabled: this.permissionsService.hasPermission('ROLE_ADD').map(hasPermission => !hasPermission)
-  //   },
-  //   {
-  //     type: ToolbarItemTypeEnum.BUTTON_EDIT,
-  //     action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-  //     disabled: Observable.combineLatest(
-  //       this.permissionsService.hasPermission('ROLE_EDIT'),
-  //       this.permissionsService.permissions.map(state => state.currentRole)
-  //     // TODO(d.maltsev): rename
-  //     ).map(data => !data[0] || !data[1])
-  //   },
-  //   {
-  //     type: ToolbarItemTypeEnum.BUTTON_DELETE,
-  //     action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-  //     disabled: Observable.combineLatest(
-  //       this.permissionsService.hasPermission('ROLE_DELETE'),
-  //       this.permissionsService.permissions.map(state => state.currentRole)
-  //     // TODO(d.maltsev): rename
-  //     ).map(data => !data[0] || !data[1])
-  //   },
-  //   {
-  //     type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-  //     action: () => this.permissionsService.fetchRoles(),
-  //     disabled: this.permissionsService.hasPermission('PERMIT_VIEW').map(hasPermission => !hasPermission)
-  //   },
-  // ];
 
   columns: Array<any> = [
     { prop: 'id', minWidth: 30, maxWidth: 70 },
