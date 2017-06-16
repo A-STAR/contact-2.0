@@ -7,12 +7,14 @@
   </li>
 </ng-template>
 
-<div tabindex="0"
-     [attr.disabled]="disabled"
-     *ngIf="multiple === false"
-     (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
-     class="ui-select-container dropdown open">
+<div
+  class="ui-select-container dropdown open"
+  *ngIf="multiple === false"
+  [ngStyle]="styles"
+  [attr.disabled]="disabled"
+  [offClick]="clickedOutside"
+  (keyup)="mainClick($event)"
+>
   <div class="ui-select-match"
        *ngIf="!inputMode">
       <span tabindex="-1"
@@ -30,7 +32,8 @@
         </a>
       </span>
   </div>
-  <input type="text"
+  <input #input
+         type="text"
          autocomplete="false"
          tabindex="-1"
          [attr.readonly]="readonly"
@@ -41,6 +44,9 @@
          *ngIf="inputMode"
          placeholder="{{active.length <= 0 ? placeholder : ''}}">
   <ul *ngIf="optionsOpened"
+      alignment
+      [alignTarget]="inputRef"
+      [autoAlignEnabled]="autoAlignEnabled"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
     <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
@@ -57,6 +63,7 @@
 </div>
 
 <div tabindex="0"
+     [ngStyle]="styles"
      [attr.disabled]="disabled"
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
@@ -80,20 +87,26 @@
           <i class="dropdown-toggle pull-right"></i>
           <i class="caret pull-right"></i>
     </span>
-  <input type="text"
-         (keydown)="inputEvent($event)"
-         (keyup)="inputEvent($event, true)"
-         (click)="matchClick($event)"
-         [attr.readonly]="readonly"
-         [ngClass]="{ hidden: !isInputVisible()}"
-         autocomplete="false"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"
-         class="form-control ui-select-search"
-         placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
-         role="combobox">
+  <input
+    #input
+    type="text"
+    (keydown)="inputEvent($event)"
+    (keyup)="inputEvent($event, true)"
+    (click)="matchClick($event)"
+    [attr.readonly]="readonly"
+    [ngClass]="{ hidden: !isInputVisible()}"
+    autocomplete="false"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
+    class="form-control ui-select-search"
+    placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
+    role="combobox"
+  >
   <ul *ngIf="optionsOpened"
+      alignment
+      [alignTarget]="inputRef"
+      [autoAlignEnabled]="autoAlignEnabled"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
     <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
