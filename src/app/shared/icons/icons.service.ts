@@ -11,7 +11,9 @@ export class IconsService {
     [ToolbarActionTypeEnum.ADD, 'plus'],
     [ToolbarActionTypeEnum.REFRESH, 'refresh'],
     [ToolbarActionTypeEnum.SEARCH, 'search'],
-    [ToolbarActionTypeEnum.SAVE, 'save']
+    [ToolbarActionTypeEnum.SAVE, 'save'],
+    [ToolbarActionTypeEnum.FORWARD, 'step-forward'],
+    [ToolbarActionTypeEnum.BACKWARD, 'step-backward'],
   ]);
 
   public fromActionType(actionType: ToolbarActionTypeEnum): string {

@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SelectComponent } from './select.component';
 import { HighlightPipe, RawDataFilterPipe } from './select-pipes';
 import { OffClickDirective } from './off-click';
+import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { OffClickDirective } from './off-click';
     TranslateModule
   ],
   declarations: [
+    AlignmentDirective,
     SelectComponent,
     HighlightPipe,
     RawDataFilterPipe,

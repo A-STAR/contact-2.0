@@ -1,14 +1,28 @@
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionLog, IActionType, IEmployee, toFullName } from './actions-log.interface';
+import {
+  IActionLog,
+  IActionsLogData,
+  IActionType,
+  IEmployee,
+  toFullName
+} from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
+import { IGrid2PaginationInfo } from '../../../shared/components/grid2/grid2.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-actions-log',
@@ -42,7 +56,9 @@ export class ActionsLogComponent implements OnDestroy {
 
   employeesRows: Observable<IEmployee[]>;
   actionTypesRows: Observable<IActionType[]>;
-  actionsLogRows: Observable<IActionLog[]>;
+  actionsLogData: Observable<IActionsLogData>;
+
+  @ViewChild('filter') filter: ActionsLogFilterComponent;
 
   private actionTypesRawRows: IActionType[];
   private actionTypesRowsSubscription: Subscription;
@@ -55,7 +71,7 @@ export class ActionsLogComponent implements OnDestroy {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
-    this.actionsLogRows = this.actionsLogService.actionsLogRows;
+    this.actionsLogData = this.actionsLogService.actionsLogRows;
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);
@@ -65,7 +81,21 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionTypesRowsSubscription.unsubscribe();
   }
 
-  onSearch(filterValues: IActionsLogFilterRequest): void {
-    this.actionsLogService.search(filterValues);
+  onSearch(): void {
+    this.doSearch({
+      currentPage: 1,
+      pageSize: Grid2Component.DEFAULT_PAGE_SIZE
+    });
+  }
+
+  onPage(pageInfo: IGrid2PaginationInfo): void {
+    this.doSearch(pageInfo);
+  }
+
+  private doSearch(pageInfo: IGrid2PaginationInfo): void {
+    this.actionsLogService.search(this.filter.getFilterValues(), {
+      currentPage: pageInfo.currentPage,
+      pageSize: pageInfo.pageSize
+    });
   }
 }

@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IConstant } from '../../../core/constants/constants.interface';
@@ -30,14 +32,17 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      permissions: [ 'CONST_VALUE_EDIT' ],
       action: () => this.display = true,
-      disabled: () => !this.selectedRecord,
+      enabled: Observable.combineLatest(
+        this.permissionService.hasPermission('CONST_VALUE_EDIT'),
+        // TODO(d.maltsev): constants store
+        Observable.of(!!this.selectedRecord)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      permissions: [ 'CONST_VALUE_VIEW' ],
       action: () => this.refreshGrid(),
+      enabled: this.permissionService.hasPermission('CONST_VALUE_VIEW')
     },
   ];
 
@@ -133,8 +138,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     this.display = false;
   }
 
-  onSelectRecord(records: Array<IConstant>): void {
-    this.selectedRecord = records[0];
+  onSelect(record: IConstant): void {
+    this.selectedRecord = record;
     this.constantsService.changeSelected(this.selectedRecord);
   }
 

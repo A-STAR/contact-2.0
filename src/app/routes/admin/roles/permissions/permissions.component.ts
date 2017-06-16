@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../../../../core/permissions/permissions.interface';
 import { IPermissionModel, IPermissionRole } from '../roles-and-permissions.interface';
@@ -34,26 +35,32 @@ export class PermissionsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      permissions: [ 'PERMIT_ADD' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
-      disabled: (state: IAppState) => !state.permissions.currentRole,
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_ADD'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      permissions: [ 'PERMIT_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
-      disabled: (state: IAppState) => !state.permissions.currentPermission,
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_EDIT'),
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      permissions: [ 'PERMIT_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
-      disabled: (state: IAppState) => !state.permissions.currentPermission,
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('PERMIT_DELETE'),
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      permissions: [ 'PERMIT_VIEW' ],
       action: () => this.permissionsService.fetchPermissions(),
+      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
     },
   ];
 
@@ -101,9 +108,9 @@ export class PermissionsComponent implements OnDestroy {
     this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
   }
 
-  onSelectPermissions(records: IPermissionModel[]): void {
-    if (records.length) {
-      this.permissionsService.changeSelected(records[0]);
+  onSelectPermissions(record: IPermissionModel): void {
+    if (record) {
+      this.permissionsService.changeSelected(record);
     }
   }
 

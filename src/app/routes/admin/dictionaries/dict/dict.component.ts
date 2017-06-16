@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
@@ -11,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -23,33 +25,29 @@ export class DictComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
-      icon: 'fa fa-plus',
-      label: 'toolbar.action.add',
-      permissions: [ 'DICT_ADD' ]
+      enabled: this.permissionsService.hasPermission('DICT_ADD')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
-      icon: 'fa fa-pencil',
-      label: 'toolbar.action.edit',
-      permissions: [ 'DICT_EDIT' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('DICT_EDIT'),
+        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
-      icon: 'fa fa-trash',
-      label: 'toolbar.action.remove',
-      permissions: [ 'DICT_DELETE' ],
-      disabled: (state: IAppState) => state.dictionaries.selectedDictionaryCode === null
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('DICT_DELETE'),
+        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-      action: () => this.dictionariesService.fetchDictionaries(),
-      icon: 'fa fa-refresh',
-      label: 'toolbar.action.refresh'
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.dictionariesService.fetchDictionaries()
     }
   ];
 
@@ -80,6 +78,7 @@ export class DictComponent implements OnDestroy {
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private valueConverterService: ValueConverterService,
+    private permissionsService: PermissionsService,
     private entityTranslationsService: EntityTranslationsService,
   ) {
     this.dictionariesService.fetchDictionaries();
@@ -182,8 +181,7 @@ export class DictComponent implements OnDestroy {
     this.dictionariesService.deleteDictionary();
   }
 
-  onSelectedRowChange(dictionaries: Array<IDictionary>): void {
-    const dictionary = dictionaries[0];
+  onSelect(dictionary: IDictionary): void {
     const selectedDictionaryId = this.selectedEntity && this.selectedEntity.id;
     if (dictionary && dictionary.id !== selectedDictionaryId) {
       this.dictionariesService.selectDictionary(dictionary.code);

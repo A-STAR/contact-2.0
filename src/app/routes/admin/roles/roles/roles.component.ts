@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
 import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
 import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -11,7 +13,7 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponent {
+export class RolesComponent implements OnDestroy {
   editedEntity: IPermissionRole = null;
 
   dialog: IPermissionsDialogEnum = null;
@@ -21,33 +23,39 @@ export class RolesComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      permissions: [ 'ROLE_ADD' ],
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD)
+      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
+      enabled: this.permissionsService.hasPermission('ROLE_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-clone',
       label: 'toolbar.action.copy',
-      permissions: [ 'ROLE_COPY' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_COPY'),
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      permissions: [ 'ROLE_EDIT' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_EDIT'),
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      permissions: [ 'ROLE_DELETE' ],
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      disabled: (state: IAppState) => !state.permissions.currentRole
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ROLE_DELETE'),
+        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      permissions: [ 'PERMIT_VIEW' ],
-      action: () => this.permissionsService.fetchRoles()
+      action: () => this.permissionsService.fetchRoles(),
+      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
     },
   ];
 
@@ -57,16 +65,22 @@ export class RolesComponent {
     { prop: 'comment', width: 200 },
   ];
 
+  private permissionsServiceSub: Subscription;
+
   constructor(
     private permissionsService: PermissionsService,
   ) {
     this.permissionsService.fetchRoles();
 
-    this.permissionsService.permissions.subscribe(state => {
+    this.permissionsServiceSub = this.permissionsService.permissions.subscribe(state => {
       this.rows = state.roles;
       this.dialog = state.dialog;
       this.editedEntity = state.currentRole;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.permissionsServiceSub.unsubscribe();
   }
 
   get isRoleBeingCreated(): boolean {
@@ -89,8 +103,7 @@ export class RolesComponent {
     this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
   }
 
-  onSelectedRowChange(roles: Array<IPermissionRole>): void {
-    const role = roles[0];
+  onSelect(role: IPermissionRole): void {
     if (role) {
       this.permissionsService.selectRole(role);
     }

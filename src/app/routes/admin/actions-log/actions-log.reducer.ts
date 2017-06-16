@@ -1,10 +1,16 @@
-import { IActionLog, IActionsLogPayload, IActionsLogServiceState, IActionType, IEmployee } from './actions-log.interface';
+import {
+  IActionsLogData,
+  IActionsLogPayload,
+  IActionsLogServiceState,
+  IActionType,
+  IEmployee
+} from './actions-log.interface';
 
 import { combineWithGrid2Reducer } from '../../../shared/components/grid2/grid2.reducer';
 import { ActionsLogService } from './actions-log.service';
 
 const defaultState: IActionsLogServiceState = {
-  actionsLog: [],
+  actionsLog: { data: [], total: 0 },
   employees: [],
   actionTypes: []
 };
@@ -12,28 +18,28 @@ const defaultState: IActionsLogServiceState = {
 export function actionsLogReducer(
   state: IActionsLogServiceState = defaultState,
   action: IActionsLogPayload
-) {
+): IActionsLogServiceState {
   return combineWithGrid2Reducer(
     'actionsLogGrid',
-    function (state: IActionsLogServiceState, action: IActionsLogPayload): IActionsLogServiceState {
-      switch (action.type) {
+    (internalState: IActionsLogServiceState, internalAction: IActionsLogPayload): IActionsLogServiceState => {
+      switch (internalAction.type) {
         case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
           return {
-            ...state,
-            actionTypes: action.payload as Array<IActionType>
+            ...internalState,
+            actionTypes: internalAction.payload as IActionType[]
           };
         case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:
           return {
-            ...state,
-            employees: action.payload as Array<IEmployee>
+            ...internalState,
+            employees: internalAction.payload as IEmployee[]
           };
         case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
           return {
-            ...state,
-            actionsLog: action.payload as Array<IActionLog>
+            ...internalState,
+            actionsLog: internalAction.payload as IActionsLogData
           };
       }
-      return state;
+      return internalState;
     }
   )(state, action);
 }

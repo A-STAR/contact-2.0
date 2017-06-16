@@ -29,6 +29,7 @@
   [dataSource]="dataSource"
   [filter]="filter"
   [rows]="(state | async).users"
-  (onRowSelect)="onSelectedRowChange($event)"
-  (onEdit)="onEdit()">
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)"
+>
 </app-grid>

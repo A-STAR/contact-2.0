@@ -11,7 +11,6 @@ import { OrganizationsService } from '../organizations.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
-// TODO: extend from GridEntityComponent
 // TODO: separate tree rendering from organizations logic
 @Component({
   selector: 'app-organizations-tree',

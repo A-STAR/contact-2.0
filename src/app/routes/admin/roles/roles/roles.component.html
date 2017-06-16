@@ -11,7 +11,7 @@
   (cancel)="cancelAction()">
 </app-roles-edit>
 
-<app-roles-copy 
+<app-roles-copy
   *ngIf="isRoleBeingCopied"
   [editedEntity]="editedEntity"
   (submit)="onCopySubmit($event)"
@@ -39,6 +39,6 @@
   [rows]="rows"
   [selectionType]="'single'"
   [styles]="{height: '200px'}"
-  (onEdit)="onEdit()"
-  (onRowSelect)="onSelectedRowChange($event)">
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)">
 </app-grid>
