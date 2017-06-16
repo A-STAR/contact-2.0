@@ -34,8 +34,7 @@ export class PermissionsEffects {
     .switchMap((action: Action) => {
       return this.readRoles()
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.roles.api.errors.fetch');
           return null;
         })
         .map(response => ({
@@ -54,8 +53,7 @@ export class PermissionsEffects {
           this.hideDialogAction
         ])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.roles.api.errors.add');
           return null;
         });
     });
@@ -70,8 +68,7 @@ export class PermissionsEffects {
           this.hideDialogAction
         ])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.roles.api.errors.copy');
           return null;
         });
     });
@@ -88,8 +85,7 @@ export class PermissionsEffects {
           this.hideDialogAction
         ])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.roles.api.errors.update');
           return null;
         });
     });
@@ -106,8 +102,7 @@ export class PermissionsEffects {
           this.hideDialogAction
         ])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.roles.api.errors.delete');
           return null;
         });
     });
@@ -125,7 +120,7 @@ export class PermissionsEffects {
     .switchMap((action: Action) => {
       return this.read()
         .catch(() => {
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.permissions.api.errors.fetch');
           return null;
         })
         .map(response => ({
@@ -148,7 +143,7 @@ export class PermissionsEffects {
           }
         }))
         .catch(() => {
-          this.notifications.error('permissions.api.errors.fetch');
+          this.notifications.error('roles.permissions.api.errors.fetch');
           return null;
         });
     });
@@ -161,7 +156,7 @@ export class PermissionsEffects {
       const { roleId, permission } = payload;
       return this.update(roleId, permission)
         .catch(() => {
-          this.notifications.error('permissions.api.errors.update');
+          this.notifications.error('roles.permissions.api.errors.update');
           return null;
         })
         .mergeMap(() => [
@@ -178,7 +173,7 @@ export class PermissionsEffects {
       const { role, permissionIds } = payload;
       return this.add(role, permissionIds)
         .catch(() => {
-          this.notifications.error('permissions.api.errors.create');
+          this.notifications.error('roles.permissions.api.errors.create');
           return null;
         })
         .mergeMap(() => [
@@ -195,7 +190,7 @@ export class PermissionsEffects {
       const { role, permissionId } = payload;
       return this.delete(role, permissionId)
         .catch(() => {
-          this.notifications.error('permissions.api.errors.delete');
+          this.notifications.error('roles.permissions.api.errors.delete');
           return null;
         })
         .mergeMap(() => [

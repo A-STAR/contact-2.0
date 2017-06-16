@@ -339,6 +339,15 @@
         "id": "Id",
         "name": "Name",
         "comment": "Comments"
+      },
+      "api": {
+        "errors": {
+          "fetch": "Could not fetch roles",
+          "add": "Could not add role",
+          "copy": "Could not copy role",
+          "update": "Could not update role",
+          "delete": "Could not delete role"
+        }
       }
     },
     "permissions": {
