@@ -129,11 +129,11 @@ export class ValueConverterService {
   }
 
   formatDate(dateAsString: string, useTime: boolean = false): string {
-    const momentDate = moment(dateAsString, 'YYYY-MM-DDThh:mm:ss.sssz');
+    const momentDate = moment(dateAsString);
     if (momentDate.isValid()) {
       return useTime
-        ? momentDate.format('DD.MM.YYYY hh:mm:ss')
-        : momentDate.format('DD.MM.YYYY');
+        ? momentDate.utc().format('DD.MM.YYYY HH:mm:ss')
+        : momentDate.utc().format('DD.MM.YYYY');
     } else {
       return dateAsString;
     }
