@@ -33,9 +33,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
   private passwordValidators: ValidatorFn = null;
 
-  private photo: File | false;
-  private photoSub: Subscription;
-
   constructor(
     private constantsService: ConstantsService,
     private gridService: GridService,
@@ -43,7 +40,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private usersService: UsersService,
   ) {
     super();
-    this.photoSub = this.usersService.state.subscribe(state => this.photo = state.photo);
   }
 
   ngOnInit(): void {
@@ -63,12 +59,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     );
 
     super.ngOnInit();
-  }
-
-  ngOnDestroy(): void {
-    this.editUserSub.unsubscribe();
-    this.editUserRoleSub.unsubscribe();
-    this.photoSub.unsubscribe();
   }
 
   get canEdit(): boolean {
@@ -120,7 +110,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             controlName: 'image',
             type: 'image',
             url: userId ? `/users/${userId}/photo` : null,
-            action: (file: File) => this.usersService.changePhoto(file),
             width: 4,
           }
         ]
@@ -159,8 +148,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     };
   }
 
-  canSubmit(): boolean {
-    return this.dynamicForm.canSubmit || this.photo !== null;
+  ngOnDestroy(): void {
+    this.editUserSub.unsubscribe();
+    this.editUserRoleSub.unsubscribe();
   }
 
   private formatDate(date: string): string {
