@@ -1,9 +1,10 @@
-import { Column, ColumnApi, GridOptions } from 'ag-grid';
+import { Column, GridOptions } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 import { GridHeaderComponent } from './header/grid-header.component';
 
 export interface IGrid2ColumnSettings {
   sortingDirection: Grid2SortingEnum;
+  sortingOrder: number;
 }
 
 export interface IGrid2ColumnsSettings {
@@ -25,7 +26,7 @@ export interface IGrid2State {
 export interface IGrid2ColumnsSortingDirectionInfo {
   columnId: string;
   sortingDirection: Grid2SortingEnum;
-  order: number;
+  sortingOrder: number;
 }
 
 export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
@@ -49,10 +50,6 @@ export interface IGrid2ShowFilterPayload {
   currentFilterColumn: Column;
 }
 
-export interface IGrid2MovedColumnPayload {
-  movingColumnInProgress: boolean;
-}
-
 export enum Grid2SortingEnum {
   ASC,
   DESC
@@ -63,9 +60,9 @@ export interface IActionGrid2Payload {
   payload: IGrid2SortingDirectionSwitchPayload
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ShowFilterPayload
-    |IGrid2MovedColumnPayload
     |IGrid2GroupingColumnsChangePayload
     |IGrid2SelectedRowChangePayload
+    |IGrid2ColumnMovingPayload
     |number;
 }
 
@@ -93,6 +90,7 @@ export interface IGrid2ColumnMovingPayload {
 export interface IGrid2RequestSorting {
   field: string;
   direction: string;
+  order: number;
 }
 
 export interface IGrid2Request {

@@ -67,6 +67,7 @@ export class ActionsLogComponent implements OnDestroy {
   actionsLogCurrentPageSize: Observable<number>;
   actionsLogCurrentFilterColumn: Observable<Column>;
   actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
+  actionsLogColumnMovingInProgress: Observable<boolean>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
@@ -80,13 +81,15 @@ export class ActionsLogComponent implements OnDestroy {
     private actionsLogService: ActionsLogService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.employeesRows = this.actionsLogService.employeesRows.distinctUntilChanged();
-    this.actionTypesRows = this.actionsLogService.actionTypesRows.distinctUntilChanged();
-    this.actionsLogData = this.actionsLogService.actionsLogRows.distinctUntilChanged();
-    this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage.distinctUntilChanged();
-    this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize.distinctUntilChanged();
-    this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn.distinctUntilChanged();
-    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings.distinctUntilChanged();
+    this.employeesRows = this.actionsLogService.employeesRows;
+    this.actionTypesRows = this.actionsLogService.actionTypesRows;
+    this.actionsLogData = this.actionsLogService.actionsLogRows;
+    this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
+    this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
+    this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn;
+    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
+    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
+    this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);
@@ -96,12 +99,7 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionTypesRowsSubscription.unsubscribe();
   }
 
-  onPage(eventPayload: IGrid2EventPayload): void {
-    this.onStoreDispatch(eventPayload);
-    this.doSearch();
-  }
-
-  onSorting(eventPayload: IGrid2EventPayload): void {
+  refreshData(eventPayload: IGrid2EventPayload): void {
     this.onStoreDispatch(eventPayload);
     this.doSearch();
   }

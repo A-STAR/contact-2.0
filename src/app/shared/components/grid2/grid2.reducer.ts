@@ -1,13 +1,15 @@
 import {
   IActionGrid2Payload,
+  IGrid2ColumnMovingPayload,
+  IGrid2ColumnSettings,
   IGrid2ColumnsPositionsChangePayload,
   IGrid2GroupingColumnsChangePayload,
-  IGrid2MovedColumnPayload,
   IGrid2SelectedRowChangePayload,
   IGrid2ShowFilterPayload,
   IGrid2SortingDirectionSwitchPayload,
   IGrid2State
 } from './grid2.interface';
+import * as R from 'ramda';
 
 import { Grid2Component } from './grid2.component';
 
@@ -56,7 +58,7 @@ export function grid2Reducer(
     case Grid2Component.MOVING_COLUMN:
       return {
         ...state,
-        columnMovingInProgress: (action.payload as IGrid2MovedColumnPayload).movingColumnInProgress
+        columnMovingInProgress: (action.payload as IGrid2ColumnMovingPayload).movingColumnInProgress
       };
     case Grid2Component.PAGE_SIZE:
       return {
@@ -105,9 +107,16 @@ export function grid2Reducer(
       };
     case Grid2Component.COLUMNS_POSITIONS:
       const columnsPositionsPayload: IGrid2ColumnsPositionsChangePayload = action.payload as IGrid2ColumnsPositionsChangePayload;
+
       return {
         ...state,
-        columnsPositions: columnsPositionsPayload.columnsPositions
+        columnsPositions: columnsPositionsPayload.columnsPositions,
+        columnsSettings: R.mapObjIndexed((columnSettings: IGrid2ColumnSettings, columnId: string) => {
+          return {
+            ...columnSettings,
+            sortingOrder: columnsPositionsPayload.columnsPositions.findIndex((_columnId: string) => columnId === _columnId)
+          };
+        }, state.columnsSettings)
       };
     case Grid2Component.SORTING_DIRECTION:
       const sortingDirectionPayload: IGrid2SortingDirectionSwitchPayload = action.payload as IGrid2SortingDirectionSwitchPayload;
@@ -118,7 +127,8 @@ export function grid2Reducer(
             ...state.columnsSettings,
             [sortingDirectionPayload.columnId]: {
               ...(state.columnsSettings[sortingDirectionPayload.columnId]),
-              sortingDirection: sortingDirectionPayload.sortingDirection
+              sortingDirection: sortingDirectionPayload.sortingDirection,
+              sortingOrder: sortingDirectionPayload.sortingOrder
             }
           }
         };
@@ -126,10 +136,10 @@ export function grid2Reducer(
         return {
           ...state,
           columnsSettings: {
-            // TODO Copy columns options except sortingDirection
             [sortingDirectionPayload.columnId]: {
               ...(state.columnsSettings[sortingDirectionPayload.columnId]),
-              sortingDirection: sortingDirectionPayload.sortingDirection
+              sortingDirection: sortingDirectionPayload.sortingDirection,
+              sortingOrder: sortingDirectionPayload.sortingOrder
             }
           }
         };

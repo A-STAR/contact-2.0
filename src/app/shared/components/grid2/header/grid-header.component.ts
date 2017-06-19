@@ -17,6 +17,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private eSortUpButton;
   private eSortDownButton;
   private columnsSettings: IGrid2ColumnsSettings;
+  private isFrozen: boolean;
   private unlistenClickColumnListener: Function;
   private unlistenFilterClickListener: Function;
 
@@ -50,25 +51,25 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   onClickColumnListener($event: MouseEvent): void {
-    if (this.statedMovingColumnInProgress) {
+    if (this.isFrozen) {
       return;
     }
 
     const gridService: IGrid2ServiceDispatcher = this.agParams.serviceDispatcher;
 
     gridService.dispatchSortingDirection({
-      order: this.agParams.serviceDispatcher.getGridOptions().columnApi.getAllColumns()
-        .findIndex((column: Column) => column.getColDef().field === this.columnId),
       columnId: this.columnId,
       multiSort: $event.shiftKey,
       sortingDirection: this.sortingDirectionBySettings === Grid2SortingEnum.ASC
         ? Grid2SortingEnum.DESC
-        : Grid2SortingEnum.ASC
+        : Grid2SortingEnum.ASC,
+      sortingOrder: this.agParams.serviceDispatcher.getGridOptions().columnApi.getAllColumns()
+        .findIndex((column: Column) => column.getColDef().field === this.columnId)
     });
   }
 
   onFilterClickListener($event: MouseEvent): void {
-    if (this.statedMovingColumnInProgress) {
+    if (this.isFrozen) {
       return;
     }
     this.stopEvent($event);
@@ -96,12 +97,12 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     this.setStyles();
   }
 
-  getGui(): HTMLElement {
-    return this.eGui;
+  freeze(isFrozen: boolean): void {
+    this.isFrozen = isFrozen;
   }
 
-  get statedMovingColumnInProgress(): boolean {
-    return false; // this.currentState && this.currentState.columnMovingInProgress;
+  getGui(): HTMLElement {
+    return this.eGui;
   }
 
   get sortingDirectionBySettings(): Grid2SortingEnum {

@@ -40,37 +40,50 @@ export class ActionsLogService {
 
   get actionsLogCurrentPage(): Observable<number> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentPage);
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentPage)
+      .distinctUntilChanged();
   }
 
   get actionsLogCurrentPageSize(): Observable<number> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.pageSize);
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.pageSize)
+      .distinctUntilChanged();
   }
 
   get actionsLogCurrentFilterColumn(): Observable<Column> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentFilterColumn);
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentFilterColumn)
+      .distinctUntilChanged();
   }
 
   get actionsLogColumnsSettings(): Observable<IGrid2ColumnsSettings> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnsSettings);
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnsSettings)
+      .distinctUntilChanged();
+  }
+
+  get actionsLogColumnMovingInProgress(): Observable<boolean> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnMovingInProgress)
+      .distinctUntilChanged();
   }
 
   get actionsLogRows(): Observable<IActionsLogData> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLog);
+      .select((state: IAppState) => state.actionsLog.actionsLog)
+      .distinctUntilChanged();
   }
 
   get employeesRows(): Observable<IEmployee[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.employees);
+      .select((state: IAppState) => state.actionsLog.employees)
+      .distinctUntilChanged();
   }
 
   get actionTypesRows(): Observable<IActionType[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionTypes);
+      .select((state: IAppState) => state.actionsLog.actionTypes)
+      .distinctUntilChanged();
   }
 
   getEmployeesAndActionTypes(): Observable<void> {

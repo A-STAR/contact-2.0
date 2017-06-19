@@ -20,8 +20,12 @@ export class ValueConverterService {
 
   toGridRequest(state: IGrid2State): IGrid2Request {
     const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
-      (value: IGrid2ColumnSettings, columnId: string) => {
-        return { field: columnId, direction: value.sortingDirection ? 'desc' : 'asc' };
+      (columnSettings: IGrid2ColumnSettings, columnId: string) => {
+        return {
+          field: columnId,
+          order: columnSettings.sortingOrder,
+          direction: columnSettings.sortingDirection ? 'desc' : 'asc'
+        };
       },
       state.columnsSettings
     ));
@@ -32,7 +36,9 @@ export class ValueConverterService {
       }
     };
     if (sorting.length) {
-      request.sorting = sorting;
+      request.sorting = sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
+        return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
+      });
     }
     return request;
   }

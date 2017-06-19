@@ -86,6 +86,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   // Inputs without presets
   @Input() columnsSettings: IGrid2ColumnsSettings;
   @Input() currentFilterColumn: Column;
+  @Input() columnMovingInProgress: boolean;
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
   @Input() rows: any[];
@@ -103,6 +104,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() pageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() columnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() columnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() columnMoved: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() openFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() groupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
@@ -192,6 +194,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
           gridHeaderComponent.refreshView(this.columnsSettings));
       }
+      if ('columnMovingInProgress' in changes) {
+        this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
+          gridHeaderComponent.freeze(this.columnMovingInProgress));
+      }
     }
   }
 
@@ -232,7 +238,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onDragStopped(): void {
-    this.columnMoving.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
+    this.columnMoved.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
 
     const currentGridColumns: Column[] = this.gridOptions.columnApi.getAllGridColumns();
     this.dispatchColumnsPositions({
