@@ -35,13 +35,11 @@ import {
   Grid2SortingEnum,
   IGrid2EventPayload,
   IGrid2ColumnsSettings,
-} from './grid2.interface';
-import { IGridColumn } from '../grid/grid.interface';
-import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
   IGrid2SortingDirectionSwitchPayload,
 } from './grid2.interface';
+import { IGridColumn } from '../grid/grid.interface';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 

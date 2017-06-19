@@ -1,4 +1,4 @@
-import { Column, GridOptions } from 'ag-grid';
+import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 import { GridHeaderComponent } from './header/grid-header.component';
 
