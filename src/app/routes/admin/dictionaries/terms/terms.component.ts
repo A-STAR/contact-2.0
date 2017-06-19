@@ -112,7 +112,7 @@ export class TermsComponent implements OnDestroy {
   onEditSubmit(data: ITerm, createMode: boolean): void {
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
-    data.isClosed = this.valueConverterService.toBooleanNumber(data.isClosed);
+    data.isClosed = Number(data.isClosed);
 
     if (createMode) {
       this.dictionariesService.createTerm(data);
