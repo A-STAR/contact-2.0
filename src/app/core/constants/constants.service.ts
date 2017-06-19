@@ -52,4 +52,8 @@ export class ConstantsService {
       return constant ? this.valueConverterService.deserialize(constant).value : null;
     });
   }
+
+  has(constantName: string): Observable<boolean> {
+    return this.state.map(state => !!state.constants.find(constant => constant.name === constantName));
+  }
 }

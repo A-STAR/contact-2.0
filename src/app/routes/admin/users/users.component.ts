@@ -58,12 +58,9 @@ export class UsersComponent implements OnDestroy {
       action: () => this.usersService.setDialogAddAction(),
       enabled: Observable.combineLatest(
         this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
-        this.constantsService.get('UserPassword.MinLength'),
-        this.constantsService.get('UserPassword.Complexity.Use')
-      ).map(
-        ([hasPermissions, passwordMinLength, passwordComplexity]) =>
-          hasPermissions && passwordMinLength && passwordComplexity
-      )
+        this.constantsService.has('UserPassword.MinLength'),
+        this.constantsService.has('UserPassword.Complexity.Use')
+      ).map(([hasPermissions, minLength, complexity]) => hasPermissions && minLength && complexity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -71,12 +68,9 @@ export class UsersComponent implements OnDestroy {
       enabled: Observable.combineLatest(
         this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId),
-        this.constantsService.get('UserPassword.MinLength'),
-        this.constantsService.get('UserPassword.Complexity.Use')
-      ).map(
-        ([hasPermissions, hasSelectedEntity, passwordMinLength, passwordComplexity]) =>
-          hasPermissions && hasSelectedEntity && passwordMinLength && passwordComplexity
-      )
+        this.constantsService.has('UserPassword.MinLength'),
+        this.constantsService.has('UserPassword.Complexity.Use')
+      ).map(([hasPermissions, hasSelectedEntity, minLength, complexity]) => hasPermissions && hasSelectedEntity && minLength && complexity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
