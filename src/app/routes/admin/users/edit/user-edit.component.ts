@@ -33,6 +33,9 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
   private passwordValidators: ValidatorFn = null;
 
+  private photo: File | false;
+  private photoSub: Subscription;
+
   constructor(
     private constantsService: ConstantsService,
     private gridService: GridService,
@@ -40,6 +43,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private usersService: UsersService,
   ) {
     super();
+    this.photoSub = this.usersService.state.subscribe(state => this.photo = state.photo);
   }
 
   ngOnInit(): void {
@@ -61,6 +65,12 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     super.ngOnInit();
   }
 
+  ngOnDestroy(): void {
+    this.editUserSub.unsubscribe();
+    this.editUserRoleSub.unsubscribe();
+    this.photoSub.unsubscribe();
+  }
+
   get canEdit(): boolean {
     return this.canEditUser || this.canEditUserRole;
   }
@@ -72,7 +82,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
       { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
       { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
     ] as Array<IDynamicFormControl>).map(control => ({
       ...control,
       disabled: !this.canEditUser
@@ -149,9 +159,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     };
   }
 
-  ngOnDestroy(): void {
-    this.editUserSub.unsubscribe();
-    this.editUserRoleSub.unsubscribe();
+  canSubmit(): boolean {
+    return this.dynamicForm.canSubmit || this.photo !== null;
   }
 
   private formatDate(date: string): string {
