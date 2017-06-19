@@ -82,7 +82,11 @@
 
             <ng-container *ngSwitchCase="'image'">
               <label class="mb0">{{control.label | translate}}</label>
-              <app-image-upload [formControlName]="control.controlName" [url]="control.url"></app-image-upload>
+              <app-image-upload
+                [formControlName]="control.controlName"
+                [height]="control.height"
+                [url]="control.url">
+              </app-image-upload>
             </ng-container>
 
             <input *ngSwitchCase="'hidden'"
