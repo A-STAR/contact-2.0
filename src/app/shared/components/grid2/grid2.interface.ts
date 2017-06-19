@@ -83,7 +83,11 @@ export interface IGrid2HeaderParams {
   renderer2: Renderer2;
 }
 
+export interface IGrid2ColumnMovingPayload {
+  movingColumnInProgress: boolean;
+}
+
 export interface IGrid2EventPayload {
   type: string;
-  payload: number;
+  payload: number|IGrid2ColumnsPositionsChangePayload|IGrid2ColumnMovingPayload;
 }

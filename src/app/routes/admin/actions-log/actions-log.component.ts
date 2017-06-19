@@ -89,8 +89,12 @@ export class ActionsLogComponent implements OnDestroy {
   }
 
   onPage(eventPayload: IGrid2EventPayload): void {
-    this.store.dispatch(eventPayload);
+    this.onStoreDispatch(eventPayload);
     this.doSearch();
+  }
+
+  onStoreDispatch(eventPayload: IGrid2EventPayload): void {
+    this.store.dispatch(eventPayload);
   }
 
   doSearch(): void {

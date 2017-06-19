@@ -95,6 +95,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() nextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() previousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() pageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() columnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() columnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -216,11 +218,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onDragStarted(): void {
-    // this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: true } });
+    this.columnMoving.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: true} });
   }
 
   onDragStopped(): void {
-    // this.store.dispatch({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: false } });
+    this.columnMoving.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
 
     const currentGridColumns: Column[] = this.gridOptions.columnApi.getAllGridColumns();
     this.dispatchColumnsPositions({
@@ -256,7 +258,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void {
-    // this.store.dispatch({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
+    this.columnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
   }
 
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void {
