@@ -15,7 +15,11 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IGrid2ColumnsSettings, IGrid2Request } from '../../../shared/components/grid2/grid2.interface';
+import {
+  IGrid2ColumnsSettings,
+  IGrid2Request,
+  IGrid2State
+} from '../../../shared/components/grid2/grid2.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -115,13 +119,19 @@ export class ActionsLogService {
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
         const [_, store]: [Action, IAppState] = payload;
+        const state: IGrid2State = store.actionsLog.actionsLogGrid;
         const request: IGrid2Request = this.valueConverterService
-          .toGridRequest(store.actionsLog.actionsLogGrid, (fieldName: string) => {
-            switch (fieldName) {
-              case 'fullName':
-                return 'lastName';
-              default:
-                return fieldName;
+          .toGridRequest({
+            currentPage: state.currentPage,
+            pageSize: state.pageSize,
+            columnsSettings: state.columnsSettings,
+            fieldNameConverter: (fieldName: string) => {
+              switch (fieldName) {
+                case 'fullName':
+                  return 'lastName';
+                default:
+                  return fieldName;
+              }
             }
           });
 

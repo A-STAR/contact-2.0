@@ -7,8 +7,8 @@ import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interf
 import {
   IGrid2ColumnSettings,
   IGrid2Request,
+  IGrid2RequestPayload,
   IGrid2RequestSorting,
-  IGrid2State
 } from '../../../shared/components/grid2/grid2.interface';
 
 @Injectable()
@@ -18,32 +18,36 @@ export class ValueConverterService {
     private datePipe: DatePipe
   ) { }
 
-  toGridRequest(state: IGrid2State, fieldNameConverter?: Function): IGrid2Request {
-    const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
-      (columnSettings: IGrid2ColumnSettings, columnId: string) => {
-        return {
-          field: fieldNameConverter ? fieldNameConverter(columnId) : columnId,
-          order: columnSettings.sortingOrder,
-          direction: columnSettings.sortingDirection ? 'desc' : 'asc'
-        };
-      },
-      state.columnsSettings
-    ));
-    const request: IGrid2Request = {
-      paging: {
-        pageNumber: state.currentPage,
-        resultsPerPage: state.pageSize
+  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
+    const request: IGrid2Request = {};
+
+    if (payload.columnsSettings) {
+      const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
+        (columnSettings: IGrid2ColumnSettings, columnId: string) => {
+          return {
+            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
+            order: columnSettings.sortingOrder,
+            direction: columnSettings.sortingDirection ? 'desc' : 'asc'
+          };
+        },
+        payload.columnsSettings
+      ));
+      if (sorting.length) {
+        request.sorting = R.map((v: IGrid2RequestSorting) => {
+          return {
+            field: v.field,
+            direction: v.direction
+          };
+        }, sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
+          return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
+        }));
       }
-    };
-    if (sorting.length) {
-      request.sorting = R.map((v: IGrid2RequestSorting) => {
-        return {
-          field: v.field,
-          direction: v.direction
-        };
-      }, sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
-        return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
-      }));
+    }
+    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
+      request.paging = {
+        pageNumber: payload.currentPage,
+        resultsPerPage: payload.pageSize
+      };
     }
     return request;
   }

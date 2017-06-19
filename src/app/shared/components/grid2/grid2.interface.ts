@@ -11,10 +11,16 @@ export interface IGrid2ColumnsSettings {
   [columnId: string]: IGrid2ColumnSettings;
 }
 
-export interface IGrid2State {
-  currentPage: number;
-  pageSize: number;
-  columnsSettings: IGrid2ColumnsSettings;
+export interface IGrid2ColumnsSettingsInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
+}
+
+export interface IGrid2PaginationInfo {
+  currentPage?: number;
+  pageSize?: number;
+}
+
+export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
@@ -93,12 +99,28 @@ export interface IGrid2RequestSorting {
   order?: number;
 }
 
+export type Grid2RequestFilteringType = 'AND' | 'OR';
+
+export interface IGrid2RequestFiltering {
+  condition?: Grid2RequestFilteringType;
+  filters?: IGrid2RequestFiltering[];
+  name?: string;
+  operator?: string;
+  valueArray?: any[];
+  value?: any;
+}
+
 export interface IGrid2Request {
   paging?: {
     pageNumber: number,
     resultsPerPage: number
   };
   sorting?: IGrid2RequestSorting[];
+  filtering?: IGrid2RequestFiltering;
+}
+
+export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+  fieldNameConverter?: Function;
 }
 
 export interface IGrid2EventPayload {
