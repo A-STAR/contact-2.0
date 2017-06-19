@@ -20,15 +20,19 @@ export function constantsReducer(
     case ConstantsService.CONSTANT_FETCH_SUCCESS:
       return {
         ...state,
-        constants: { ...action.payload }
+        constants: action.payload
       };
-
-    case ConstantsService.CONSTANT_SELECTED_CONSTANT:
+    case ConstantsService.CONSTANT_SELECT:
       return {
         ...state,
         currentConstant: action.payload as IConstant
       };
-
+    case ConstantsService.CONSTANT_CLEAR:
+      return {
+        ...state,
+        constants: [],
+        currentConstant: null
+      };
     default:
       return state;
   }

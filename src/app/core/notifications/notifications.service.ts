@@ -12,7 +12,6 @@ import {
   NotificationTypeEnum,
   INotificationActionPayload,
   INotificationServiceState,
-  INotification,
 } from './notifications.interface';
 
 @Injectable()

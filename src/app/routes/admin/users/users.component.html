@@ -3,6 +3,8 @@
   title="users.create.title"
   [roles]="roles"
   [languages]="languages"
+  [passwordMinLength]="passwordMinLength$ | async"
+  [passwordComplexity]="passwordComplexity$ | async"
   (submit)="onAddSubmit($event)"
   (cancel)="cancelAction()">
 </app-user-edit>
@@ -10,9 +12,11 @@
 <app-user-edit
   *ngIf="isEntityBeingEdited"
   title="users.edit.title"
+  [editedEntity]="editedEntity"
   [roles]="roles"
   [languages]="languages"
-  [editedEntity]="editedEntity"
+  [passwordMinLength]="passwordMinLength$ | async"
+  [passwordComplexity]="passwordComplexity$ | async"
   (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
 </app-user-edit>

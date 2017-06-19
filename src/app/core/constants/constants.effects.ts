@@ -4,8 +4,7 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IConstant } from './constants.interface';
-// import { IAppState } from '../state/state.interface';
+import { IConstantsResponse } from './constants.interface';
 
 import { GridService } from '../../shared/components/grid/grid.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -14,14 +13,17 @@ import { ConstantsService } from './constants.service';
 @Injectable()
 export class ConstantsEffects {
 
-  @Effect() fetchConstants = this.actions
+  @Effect()
+  fetchConstants$ = this.actions
     .ofType(ConstantsService.CONSTANT_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map(constants => ({
-          type: ConstantsService.CONSTANT_FETCH_SUCCESS,
-          payload: constants
-        }))
+        .map((response: IConstantsResponse) => {
+          return {
+            type: ConstantsService.CONSTANT_FETCH_SUCCESS,
+            payload: response.constants
+          };
+        })
         .catch(() => {
           this.notificationService.error('constants.api.errors.fetch');
           return null;
@@ -35,7 +37,7 @@ export class ConstantsEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(): Observable<IConstant[]> {
+  private read(): Observable<IConstantsResponse> {
     return this.gridService.read('/constants');
   }
 }

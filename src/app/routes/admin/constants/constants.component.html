@@ -1,6 +1,6 @@
 <app-constant-edit
   *ngIf="display"
-  [editedEntity]="selectedRecord"
+  [editedEntity]="selectedRecord$ | async"
   (submit)="onSubmit($event)"
   (cancel)="onCancel()"
 >
@@ -13,10 +13,7 @@
   [autoLoad]="false"
   [columns]="columns"
   columnTranslationKey="constants"
-  [dataSource]="dataSource"
-  editPermission="CONST_VALUE_EDIT"
-  [parseFn]="parseFn"
-  [rows]="rows"
+  [rows]="rows$ | async"
   (onDblClick)="onBeforeEdit()"
   (onSelect)="onSelect($event)"
 >

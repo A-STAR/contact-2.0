@@ -8,6 +8,7 @@ import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 
+import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
@@ -55,15 +56,27 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.usersService.setDialogAddAction(),
-      enabled: this.permissionsService.hasPermission('USER_ADD')
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
+        this.constantsService.get('UserPassword.MinLength'),
+        this.constantsService.get('UserPassword.Complexity.Use')
+      ).map(
+        ([hasPermissions, passwordMinLength, passwordComplexity]) =>
+          hasPermissions && passwordMinLength && passwordComplexity
+      )
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.usersService.setDialogEditAction(),
       enabled: Observable.combineLatest(
         this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
-        this.usersService.state.map(state => !!state.selectedUserId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.usersService.state.map(state => !!state.selectedUserId),
+        this.constantsService.get('UserPassword.MinLength'),
+        this.constantsService.get('UserPassword.Complexity.Use')
+      ).map(
+        ([hasPermissions, hasSelectedEntity, passwordMinLength, passwordComplexity]) =>
+          hasPermissions && hasSelectedEntity && passwordMinLength && passwordComplexity
+      )
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -82,6 +95,9 @@ export class UsersComponent implements OnDestroy {
 
   editedEntity: IUser;
 
+  passwordMinLength$: Observable<string>;
+  passwordComplexity$: Observable<string>;
+
   private _roles;
 
   private _languages;
@@ -91,6 +107,7 @@ export class UsersComponent implements OnDestroy {
   private canAddUser$: Observable<boolean>;
 
   constructor(
+    private constantsService: ConstantsService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
@@ -119,6 +136,10 @@ export class UsersComponent implements OnDestroy {
       );
 
     this.canAddUser$ = this.permissionsService.hasPermission('USER_ADD');
+
+    this.constantsService.fetch();
+    this.passwordMinLength$ = this.constantsService.get('UserPassword.MinLength');
+    this.passwordComplexity$ = this.constantsService.get('UserPassword.Complexity.Use');
   }
 
   ngOnDestroy(): void {

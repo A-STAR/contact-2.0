@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
+import { ConstantsEffects } from './constants/constants.effects';
 import { ConstantsService } from './constants/constants.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
@@ -29,6 +30,7 @@ import { rootReducer } from './state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
+    EffectsModule.run(ConstantsEffects),
     EffectsModule.run(DictionariesEffects),
     EffectsModule.run(PermissionsEffects),
     environment.production
