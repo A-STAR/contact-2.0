@@ -14,6 +14,10 @@ import {
 @Injectable()
 export class ValueConverterService {
 
+  static DATE_USER_PATTERN = 'DD.MM.YYYY';
+  static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
+  static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
+
   constructor(
     private datePipe: DatePipe
   ) { }
@@ -133,14 +137,18 @@ export class ValueConverterService {
   }
 
   formatDate(dateAsString: string, useTime: boolean = false): string {
-    const momentDate = moment(dateAsString);
-    if (momentDate.isValid()) {
-      return useTime
-        ? momentDate.utc().format('DD.MM.YYYY HH:mm:ss')
-        : momentDate.utc().format('DD.MM.YYYY');
-    } else {
-      return dateAsString;
-    }
+    return this.parseDate(
+      dateAsString,
+      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
+    );
+  }
+
+  toIsoDateTime(dateAsString: string, useTime: boolean = false): string {
+    return this.parseDate(
+      dateAsString,
+      ValueConverterService.DATE_TIME_ISO_PATTERN,
+      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
+    );
   }
 
   valueToIsoDate(value: any): string {
@@ -149,5 +157,12 @@ export class ValueConverterService {
     }
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  }
+
+  private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
+    const momentDate = moment(dateAsString, fromPattern);
+    if (momentDate.isValid()) {
+      return momentDate.format(toPattern);
+    }
   }
 }

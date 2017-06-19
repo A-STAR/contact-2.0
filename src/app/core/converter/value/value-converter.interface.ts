@@ -75,6 +75,10 @@ export class FilterObject implements IFilteringObject {
     return this.setOperator('IN');
   }
 
+  betweenOperator(): FilterObject {
+    return this.setOperator('BETWEEN');
+  }
+
   setOperator(operator: FilteringOperatorType): FilterObject {
     this.operator = operator;
     return this;

@@ -141,6 +141,15 @@ export class ActionsLogService {
           .and()
           .addFilter(
             FilterObject.create()
+              .setName('createDateTime')
+              .betweenOperator()
+              .setValueArray([
+                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime, true),
+                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime, true),
+              ])
+          )
+          .addFilter(
+            FilterObject.create()
               .setName('typeCode')
               .inOperator()
               .setValueArray(customFilter.actionsTypes)
