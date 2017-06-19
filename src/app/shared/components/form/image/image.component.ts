@@ -22,7 +22,7 @@ export class FormImageComponent implements OnInit, OnDestroy {
 
   src = null as SafeUrl;
 
-  actionButtonTitle = null as string;
+  actionButtonTitle = 'default.buttons.add';
 
   private preview$ = new Subject<File | Blob>();
 
