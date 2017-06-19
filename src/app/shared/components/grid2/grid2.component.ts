@@ -106,11 +106,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
 
-  // Links to the state
-
   private langSubscription: EventEmitter<any>;
   private headerColumns: GridHeaderComponent[] = [];
-  private rowsCounterElement;
+  private rowsCounterElement: IToolbarAction;
   private backwardElement: IToolbarAction;
   private forwardElement: IToolbarAction;
   private pageElement: IToolbarAction;
