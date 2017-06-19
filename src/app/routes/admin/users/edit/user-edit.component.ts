@@ -112,6 +112,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             type: 'image',
             url: userId ? `/users/${userId}/photo` : null,
             width: 4,
+            height: 177
           }
         ]
       },

@@ -19,6 +19,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
   ]
 })
 export class ImageUploadComponent implements ControlValueAccessor, OnInit {
+  @Input() height = null as number;
   @Input() url = null as string;
 
   private image: IImage = null;
@@ -60,6 +61,12 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     return this.image && this.image.size > 0 ?
       'default.buttons.change' :
       'default.buttons.add';
+  }
+
+  get style(): any {
+    return {
+      height: this.height ? `${this.height}px` : 'auto'
+    };
   }
 
   onFileChange(event: any): void {

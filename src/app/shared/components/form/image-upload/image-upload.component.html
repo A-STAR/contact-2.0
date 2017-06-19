@@ -1,5 +1,5 @@
 <div>
-  <div *ngIf="imageSrc" class='image-container'>
+  <div *ngIf="imageSrc" class='image-container' [ngStyle]="style">
     <img class="image" [src]="imageSrc"/>
   </div>
   <div>
