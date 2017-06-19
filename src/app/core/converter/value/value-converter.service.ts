@@ -15,13 +15,13 @@ export class ValueConverterService {
     const result: IValueEntity = Object.assign({}, valueEntity);
     switch (result.typeCode) {
       case 1:
-        result.valueN = this.toBooleanNumber(result.value);
+        result.valueN = Number(result.value);
         break;
       case 3:
         result.valueS = String(result.value);
         break;
       case 4:
-        result.valueB = this.toBooleanNumber(result.value);
+        result.valueB = Number(result.value);
         break;
     }
     delete result.value;
@@ -55,7 +55,7 @@ export class ValueConverterService {
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
       // TODO(a.tymchuk): use dictionary service
-      return this.toBooleanNumber(valueEntity.value) === 1
+      return Number(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
     }
@@ -78,17 +78,6 @@ export class ValueConverterService {
       return v.length ? v[0] : data;
     }
     return v;
-  }
-
-  toBooleanNumber(value: ValueType): number {
-    if (typeof value === 'number') {
-      return value;
-    } else if (typeof value === 'boolean') {
-      return value ? 1 : 0;
-    } else if (typeof value === 'string') {
-      return parseInt(value as string, 10) ? 1 : 0;
-    }
-    return value;
   }
 
   formatDate(dateAsString: string, useTime: boolean = false): string {
