@@ -27,7 +27,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
   display = false;
-  selectedRecord: IConstant = null;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -35,13 +34,12 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       action: () => this.display = true,
       enabled: Observable.combineLatest(
         this.permissionService.hasPermission('CONST_VALUE_EDIT'),
-        // TODO(d.maltsev): constants store
-        Observable.of(!!this.selectedRecord)
+        this.constantsService.state.map(state => !!state.currentConstant)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.refreshGrid(),
+      action: () => this.constantsService.fetch(),
       enabled: this.permissionService.hasPermission('CONST_VALUE_VIEW')
     },
   ];
@@ -64,7 +62,10 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   };
 
   permissionSub: Subscription;
-  rows: IConstant[];
+
+  rows$: Observable<Array<IConstant>>;
+
+  selectedRecord$: Observable<IConstant>;
 
   constructor(
     private gridService: GridService,
@@ -73,7 +74,11 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private valueConverterService: ValueConverterService,
     private permissionService: PermissionsService,
   ) {
+    this.constantsService.fetch();
+
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
+    this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
   ngAfterViewInit(): void {
@@ -83,11 +88,10 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          this.selectedRecord = null;
+          this.constantsService.clear();
           this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
-          this.grid.clear();
         } else {
-          this.refreshGrid();
+          this.constantsService.fetch();
         }
       });
   }
@@ -95,8 +99,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.permissionSub.unsubscribe();
   }
-
-  parseFn = (data) => this.valueConverterService.deserializeSet(data.constants) as Array<IConstant>;
 
   onSubmit(constant: IConstant): void {
     // TODO: move the logic to constants service
@@ -123,7 +125,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .take(1)
       .subscribe(
         () => {
-          this.refreshGrid();
+          this.constantsService.fetch();
           this.onCancel();
         },
         error => this.notificationsService.error('constants.api.errors.update')
@@ -131,7 +133,16 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   }
 
   onBeforeEdit(): void {
-    this.display = true;
+    const permission = 'CONST_VALUE_EDIT';
+    this.permissionService.hasPermission('CONST_VALUE_EDIT')
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.display = true;
+        } else {
+          this.notificationsService.error({ message: 'roles.permissions.messages.no_edit', param: { permission } });
+        }
+      });
   }
 
   onCancel(): void {
@@ -139,22 +150,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   }
 
   onSelect(record: IConstant): void {
-    this.selectedRecord = record;
-    this.constantsService.changeSelected(this.selectedRecord);
+    this.constantsService.changeSelected(record);
   }
-
-  private refreshGrid(): void {
-    if (!this.grid) {
-      return;
-    }
-
-    this.grid.load()
-      .take(1)
-      .subscribe(() => {
-        // to refresh the toolbar
-        this.selectedRecord = null;
-        this.constantsService.changeSelected(null);
-      });
-  }
-
 }
