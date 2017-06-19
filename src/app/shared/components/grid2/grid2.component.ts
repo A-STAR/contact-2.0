@@ -68,8 +68,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   // Inputs with presets
   @Input() columns: IGridColumn[] = [];
   @Input() selectedRows: any[] = [];
-  @Input() currentPage = 1;
-  @Input() currentPageSize = Grid2Component.DEFAULT_PAGE_SIZE;
+  @Input() page = 1;
+  @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
   @Input() groupColumnMinWidth = 120;
@@ -82,7 +82,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Inputs without presets
   @Input() columnsSettings: IGrid2ColumnsSettings;
-  @Input() currentFilterColumn: Column;
+  @Input() filterColumn: Column;
   @Input() columnMovingInProgress: boolean;
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
@@ -136,7 +136,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   get filterColumnName(): string {
-    return this.currentFilterColumn && this.currentFilterColumn.getColDef().headerName;
+    return this.filterColumn && this.filterColumn.getColDef().headerName;
   }
 
   get allGridColumns(): Column[] {
@@ -239,7 +239,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private refreshPaginationElements(): void {
     const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
-    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.currentPageSize;
+    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.pageSize;
 
     if (this.pagination) {
       const pagesCount: number = this.getPagesCount();
@@ -248,11 +248,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.pagesSizeElement.noRender = false;
 
       this.pagesSizeElement.visible = true;
-      this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
-      this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
+      this.backwardElement.visible = this.page > 1 && paginationElementsVisible;
+      this.forwardElement.visible = this.page < pagesCount && paginationElementsVisible;
       this.pageElement.visible = true;
 
-      this.pageElement.text = `${this.currentPage}/${pagesCount}`;
+      this.pageElement.text = `${this.page}/${pagesCount}`;
     }
   }
 
@@ -292,10 +292,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   onToolbarActionClick(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.BACKWARD:
-        this.onPreviousPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.currentPage });
+        this.onPreviousPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
       case ToolbarActionTypeEnum.FORWARD:
-        this.onNextPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.currentPage });
+        this.onNextPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
         break;
     }
   }
@@ -340,7 +340,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private getPagesCount(): number {
-    return Math.ceil(this.getRowsTotalCount() / this.currentPageSize);
+    return Math.ceil(this.getRowsTotalCount() / this.pageSize);
   }
 
   private applyClientSorting(): void {
