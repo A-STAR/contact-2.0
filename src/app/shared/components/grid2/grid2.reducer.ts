@@ -14,7 +14,7 @@ import { Grid2Component } from './grid2.component';
 export const GRID2_DEFAULT_STATE: IGrid2State = {
   currentPage: 1,
   pageSize: Grid2Component.DEFAULT_PAGE_SIZE,
-  columns: {},
+  columnsSettings: {},
   columnsPositions: [],
   groupingColumns: [],
   selectedRows: [],
@@ -114,10 +114,10 @@ export function grid2Reducer(
       if (sortingDirectionPayload.multiSort) {
         return {
           ...state,
-          columns: {
-            ...state.columns,
+          columnsSettings: {
+            ...state.columnsSettings,
             [sortingDirectionPayload.columnId]: {
-              ...(state.columns[sortingDirectionPayload.columnId]),
+              ...(state.columnsSettings[sortingDirectionPayload.columnId]),
               sortingDirection: sortingDirectionPayload.sortingDirection
             }
           }
@@ -125,10 +125,10 @@ export function grid2Reducer(
       } else {
         return {
           ...state,
-          columns: {
+          columnsSettings: {
             // TODO Copy columns options except sortingDirection
             [sortingDirectionPayload.columnId]: {
-              ...(state.columns[sortingDirectionPayload.columnId]),
+              ...(state.columnsSettings[sortingDirectionPayload.columnId]),
               sortingDirection: sortingDirectionPayload.sortingDirection
             }
           }

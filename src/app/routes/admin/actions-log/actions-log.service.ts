@@ -15,7 +15,7 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IGrid2State } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnsSettings, IGrid2State } from '../../../shared/components/grid2/grid2.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -49,6 +49,11 @@ export class ActionsLogService {
   get actionsLogCurrentFilterColumn(): Observable<Column> {
     return this.store
       .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentFilterColumn);
+  }
+
+  get actionsLogColumnsSettings(): Observable<IGrid2ColumnsSettings> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnsSettings);
   }
 
   get actionsLogRows(): Observable<IActionsLogData> {

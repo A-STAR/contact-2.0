@@ -18,7 +18,10 @@ import {
   toFullName
 } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import {
+  IGrid2ColumnsSettings,
+  IGrid2EventPayload
+} from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -63,6 +66,7 @@ export class ActionsLogComponent implements OnDestroy {
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
   actionsLogCurrentFilterColumn: Observable<Column>;
+  actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
@@ -82,6 +86,7 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage.distinctUntilChanged();
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize.distinctUntilChanged();
     this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn.distinctUntilChanged();
+    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings.distinctUntilChanged();
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);
@@ -92,6 +97,11 @@ export class ActionsLogComponent implements OnDestroy {
   }
 
   onPage(eventPayload: IGrid2EventPayload): void {
+    this.onStoreDispatch(eventPayload);
+    this.doSearch();
+  }
+
+  onSorting(eventPayload: IGrid2EventPayload): void {
     this.onStoreDispatch(eventPayload);
     this.doSearch();
   }

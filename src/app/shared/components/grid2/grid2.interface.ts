@@ -2,18 +2,18 @@ import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 import { GridHeaderComponent } from './header/grid-header.component';
 
-export interface IGrid2ColumnState {
+export interface IGrid2ColumnSettings {
   sortingDirection: Grid2SortingEnum;
 }
 
-export interface IGrid2ColumnsState {
-  [columnId: string]: IGrid2ColumnState;
+export interface IGrid2ColumnsSettings {
+  [columnId: string]: IGrid2ColumnSettings;
 }
 
 export interface IGrid2State {
   currentPage: number;
   pageSize: number;
-  columns: IGrid2ColumnsState;
+  columnsSettings: IGrid2ColumnsSettings;
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
@@ -94,5 +94,6 @@ export interface IGrid2EventPayload {
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ColumnMovingPayload
     |IGrid2ShowFilterPayload
-    |IGrid2GroupingColumnsChangePayload;
+    |IGrid2GroupingColumnsChangePayload
+    |IGrid2SortingDirectionSwitchPayload;
 }

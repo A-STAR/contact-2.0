@@ -33,7 +33,8 @@ import {
   IGrid2ColumnsPositionsChangePayload,
   IGrid2ShowFilterPayload,
   Grid2SortingEnum,
-  IGrid2EventPayload
+  IGrid2EventPayload,
+  IGrid2ColumnsSettings
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import {
@@ -69,6 +70,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
+  @Input() columns: IGridColumn[] = [];
   @Input() currentPage = 1;
   @Input() currentPageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() headerHeight = 30;
@@ -81,7 +83,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
 
   // Inputs without presets
-  @Input() columns: IGridColumn[] = [];
+  @Input() columnsSettings: IGrid2ColumnsSettings;
   @Input() currentFilterColumn: Column;
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
@@ -89,6 +91,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() rowsTotalCount: number;
   @Input() styles: CSSStyleDeclaration;
   @Input() toolbarActions: IToolbarAction[];
+
+  // Outputs
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onEdit: EventEmitter<any> = new EventEmitter();
   @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
@@ -101,6 +105,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() openFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() groupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() sortingDirection: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -182,6 +187,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         this.setRowsInfo();
         this.updatePaginationElements();
       }
+      if ('columnsSettings' in changes) {
+        this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
+          gridHeaderComponent.refreshView(this.columnsSettings));
+      }
     }
   }
 
@@ -254,7 +263,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {
-    // this.store.dispatch({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
+    this.sortingDirection.emit({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
   }
 
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void {
@@ -331,7 +340,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
     this.selected = state.selectedRows;
     this.statedFilterColumn = state.filterColumnName ? this.getColumnByName(state.filterColumnName) : null;
-    this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) => gridHeaderComponent.refreshState(state));
+
 
     if (!this.remoteSorting) {
       this.applyClientSorting(state);
@@ -340,15 +349,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }*/
 
   private applyClientSorting(state: IGrid2State): void {
-    if (!state.columns || !Object.keys(state.columns).length) {
+    if (!state.columnsSettings || !Object.keys(state.columnsSettings).length) {
       return;
     }
     const sortModel = this.allGridColumns.map((column: Column) => {
       const columnId: string = column.getColDef().field;
-      return state.columns[columnId]
+      return state.columnsSettings[columnId]
         ? {
           colId: columnId,
-          sort: state.columns[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
+          sort: state.columnsSettings[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
         } : null;
     }).filter(item => !!item);
 
@@ -403,7 +412,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
-        headerValueGetter: () => this.translate.instant('default.grid.groupColumn'),
+        headerName: this.translate.instant('default.grid.groupColumn'),
         minWidth: this.groupColumnMinWidth,
         suppressMenu: true,
         suppressMovable: true,
