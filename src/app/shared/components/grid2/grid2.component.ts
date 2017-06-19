@@ -78,7 +78,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() footerPresent = true;
   @Input() pagination = false;
   @Input() rowSelection = 'multiple';
-  @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
+  @Input() pageSizes =  Array.from(new Set([Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000]));
 
   // Inputs without presets
   @Input() columnsSettings: IGrid2ColumnsSettings;
