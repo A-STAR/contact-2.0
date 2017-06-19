@@ -115,7 +115,15 @@ export class ActionsLogService {
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
         const [_, store]: [Action, IAppState] = payload;
-        const request: IGrid2Request = this.valueConverterService.toGridRequest(store.actionsLog.actionsLogGrid);
+        const request: IGrid2Request = this.valueConverterService
+          .toGridRequest(store.actionsLog.actionsLogGrid, (fieldName: string) => {
+            switch (fieldName) {
+              case 'fullName':
+                return 'lastName';
+              default:
+                return fieldName;
+            }
+          });
 
         return this.gridService.create('/actions/grid', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {

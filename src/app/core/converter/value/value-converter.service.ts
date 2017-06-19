@@ -18,11 +18,11 @@ export class ValueConverterService {
     private datePipe: DatePipe
   ) { }
 
-  toGridRequest(state: IGrid2State): IGrid2Request {
+  toGridRequest(state: IGrid2State, fieldNameConverter?: Function): IGrid2Request {
     const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
       (columnSettings: IGrid2ColumnSettings, columnId: string) => {
         return {
-          field: columnId,
+          field: fieldNameConverter ? fieldNameConverter(columnId) : columnId,
           order: columnSettings.sortingOrder,
           direction: columnSettings.sortingDirection ? 'desc' : 'asc'
         };
