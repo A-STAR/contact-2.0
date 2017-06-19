@@ -93,5 +93,6 @@ export interface IGrid2EventPayload {
   payload?: number
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ColumnMovingPayload
-    |IGrid2ShowFilterPayload;
+    |IGrid2ShowFilterPayload
+    |IGrid2GroupingColumnsChangePayload;
 }

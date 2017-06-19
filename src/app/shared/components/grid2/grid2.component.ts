@@ -100,6 +100,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() columnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() openFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() groupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -454,10 +455,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
     this.fitGridSize();
 
-    /* this.store.dispatch({
+    this.groupingColumns.emit({
       type: Grid2Component.GROUPING_COLUMNS, payload: {
         groupingColumns: event.getColumns().map((column: Column) => column.getColId())
       }
-    }); */
+    });
   }
 }
