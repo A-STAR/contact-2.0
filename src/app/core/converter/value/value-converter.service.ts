@@ -36,9 +36,14 @@ export class ValueConverterService {
       }
     };
     if (sorting.length) {
-      request.sorting = sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
+      request.sorting = R.map((v: IGrid2RequestSorting) => {
+        return {
+          field: v.field,
+          direction: v.direction
+        };
+      }, sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
         return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
-      });
+      }));
     }
     return request;
   }

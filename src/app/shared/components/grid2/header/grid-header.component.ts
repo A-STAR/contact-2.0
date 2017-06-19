@@ -63,7 +63,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
       sortingDirection: this.sortingDirectionBySettings === Grid2SortingEnum.ASC
         ? Grid2SortingEnum.DESC
         : Grid2SortingEnum.ASC,
-      sortingOrder: this.agParams.serviceDispatcher.getGridOptions().columnApi.getAllColumns()
+      sortingOrder: this.agParams.serviceDispatcher.allGridColumns
         .findIndex((column: Column) => column.getColDef().field === this.columnId)
     });
   }

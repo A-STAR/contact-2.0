@@ -67,11 +67,11 @@ export interface IActionGrid2Payload {
 }
 
 export interface IGrid2ServiceDispatcher {
+  allGridColumns: Column[];
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void;
   dispatchCloseFilter(): void;
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void;
-  getGridOptions(): GridOptions;
 }
 
 export interface IGrid2HeaderParams {
@@ -90,7 +90,7 @@ export interface IGrid2ColumnMovingPayload {
 export interface IGrid2RequestSorting {
   field: string;
   direction: string;
-  order: number;
+  order?: number;
 }
 
 export interface IGrid2Request {

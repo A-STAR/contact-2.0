@@ -240,9 +240,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   onDragStopped(): void {
     this.columnMoved.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
 
-    const currentGridColumns: Column[] = this.gridOptions.columnApi.getAllGridColumns();
     this.dispatchColumnsPositions({
-      columnsPositions: currentGridColumns.map((column: Column) => column.getColDef().field)
+      columnsPositions: this.allGridColumns.map((column: Column) => column.getColDef().field)
     });
   }
 
@@ -283,10 +282,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   dispatchCloseFilter(): void {
     this.closeFilter.emit({type: Grid2Component.CLOSE_FILTER});
-  }
-
-  getGridOptions(): GridOptions {
-    return this.gridOptions;
   }
 
   private getColumnByName(field: string): Column {
