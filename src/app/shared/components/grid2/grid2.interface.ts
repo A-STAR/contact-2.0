@@ -1,5 +1,8 @@
 import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
+
+import { FilterObject } from '../../../core/converter/value/value-converter.interface';
+
 import { GridHeaderComponent } from './header/grid-header.component';
 
 export interface IGrid2ColumnSettings {
@@ -99,24 +102,13 @@ export interface IGrid2RequestSorting {
   order?: number;
 }
 
-export type Grid2RequestFilteringType = 'AND' | 'OR';
-
-export interface IGrid2RequestFiltering {
-  condition?: Grid2RequestFilteringType;
-  filters?: IGrid2RequestFiltering[];
-  name?: string;
-  operator?: string;
-  valueArray?: any[];
-  value?: any;
-}
-
 export interface IGrid2Request {
   paging?: {
     pageNumber: number,
     resultsPerPage: number
   };
   sorting?: IGrid2RequestSorting[];
-  filtering?: IGrid2RequestFiltering;
+  filtering?: FilterObject;
 }
 
 export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {

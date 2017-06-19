@@ -24,6 +24,7 @@ import {
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { FilterObject } from "../../../core/converter/value/value-converter.interface";
 
 @Injectable()
 export class ActionsLogService {
@@ -118,7 +119,8 @@ export class ActionsLogService {
     .withLatestFrom(this.store)
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
-        const [_, store]: [Action, IAppState] = payload;
+        const [action, store]: [Action, IAppState] = payload;
+        const customFilter: IActionsLogFilterRequest = action.payload;
         const state: IGrid2State = store.actionsLog.actionsLogGrid;
         const request: IGrid2Request = this.valueConverterService
           .toGridRequest({
@@ -134,6 +136,30 @@ export class ActionsLogService {
               }
             }
           });
+
+        request.filtering = FilterObject.create()
+          .and()
+          .addFilter(
+            FilterObject.create()
+              .setName('createDateTime')
+              .betweenOperator()
+              .setValueArray([
+                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime, true),
+                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime, true),
+              ])
+          )
+          .addFilter(
+            FilterObject.create()
+              .setName('typeCode')
+              .inOperator()
+              .setValueArray(customFilter.actionsTypes)
+          )
+          .addFilter(
+            FilterObject.create()
+              .setName('userId')
+              .inOperator()
+              .setValueArray(customFilter.employees)
+          );
 
         return this.gridService.create('/actions/grid', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {

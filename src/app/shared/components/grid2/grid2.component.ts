@@ -68,8 +68,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   // Inputs with presets
   @Input() columns: IGridColumn[] = [];
   @Input() selectedRows: any[] = [];
-  @Input() currentPage = 1;
-  @Input() currentPageSize = Grid2Component.DEFAULT_PAGE_SIZE;
+  @Input() page = 1;
+  @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() headerHeight = 30;
   @Input() rowHeight = 25;
   @Input() groupColumnMinWidth = 120;
@@ -78,11 +78,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() footerPresent = true;
   @Input() pagination = false;
   @Input() rowSelection = 'multiple';
-  @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
+  @Input() pageSizes =  Array.from(new Set([Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000]));
 
   // Inputs without presets
   @Input() columnsSettings: IGrid2ColumnsSettings;
-  @Input() currentFilterColumn: Column;
+  @Input() filterColumn: Column;
   @Input() columnMovingInProgress: boolean;
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
@@ -93,18 +93,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Outputs
   @Output() onAction: EventEmitter<any> = new EventEmitter();
-  @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
-  @Output() nextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() previousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() pageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() columnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() columnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() columnMoved: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() openFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() groupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() sortingDirection: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() rowsSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onDblClick: EventEmitter<any> = new EventEmitter();
+  @Output() onNextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onPreviousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onPageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onColumnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onColumnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onColumnMoved: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onOpenFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onCloseFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onGroupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onSortingDirection: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onRowsSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   gridToolbarActions: IToolbarAction[];
   columnDefs: ColDef[] = [];
@@ -136,7 +136,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   get filterColumnName(): string {
-    return this.currentFilterColumn && this.currentFilterColumn.getColDef().headerName;
+    return this.filterColumn && this.filterColumn.getColDef().headerName;
   }
 
   get allGridColumns(): Column[] {
@@ -205,7 +205,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   onSelect(event: any): void {
     const rowNode: RowNode = event.node;
-    this.rowsSelect.emit({
+    this.onRowsSelect.emit({
       type: Grid2Component.SELECTED_ROWS, payload: { rowData: rowNode.data, selected: rowNode.isSelected() }
     });
   }
@@ -239,7 +239,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private refreshPaginationElements(): void {
     const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
-    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.currentPageSize;
+    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.pageSize;
 
     if (this.pagination) {
       const pagesCount: number = this.getPagesCount();
@@ -248,11 +248,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.pagesSizeElement.noRender = false;
 
       this.pagesSizeElement.visible = true;
-      this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
-      this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
+      this.backwardElement.visible = this.page > 1 && paginationElementsVisible;
+      this.forwardElement.visible = this.page < pagesCount && paginationElementsVisible;
       this.pageElement.visible = true;
 
-      this.pageElement.text = `${this.currentPage}/${pagesCount}`;
+      this.pageElement.text = `${this.page}/${pagesCount}`;
     }
   }
 
@@ -266,15 +266,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onRowDoubleClicked(): void {
-    this.onRowDoubleSelect.emit(this.selectedRows.map(rowNode => rowNode.data));
+    this.onDblClick.emit(this.selectedRows.map(rowNode => rowNode.data));
   }
 
   onDragStarted(): void {
-    this.columnMoving.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: true} });
+    this.onColumnMoving.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: true} });
   }
 
   onDragStopped(): void {
-    this.columnMoved.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
+    this.onColumnMoved.emit({ type: Grid2Component.MOVING_COLUMN, payload: {movingColumnInProgress: false} });
 
     this.dispatchColumnsPositions({
       columnsPositions: this.allGridColumns.map((column: Column) => column.getColDef().field)
@@ -292,32 +292,32 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   onToolbarActionClick(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.BACKWARD:
-        this.previousPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.currentPage });
+        this.onPreviousPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
       case ToolbarActionTypeEnum.FORWARD:
-        this.nextPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.currentPage });
+        this.onNextPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
         break;
     }
   }
 
   onToolbarActionSelect(payload: IToolbarActionSelectPayload): void {
-    this.pageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value.value });
+    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value.value });
   }
 
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {
-    this.sortingDirection.emit({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
+    this.onSortingDirection.emit({ type: Grid2Component.SORTING_DIRECTION, payload: payload });
   }
 
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void {
-    this.columnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
+    this.onColumnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
   }
 
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void {
-    this.openFilter.emit({ type: Grid2Component.OPEN_FILTER, payload: payload });
+    this.onOpenFilter.emit({ type: Grid2Component.OPEN_FILTER, payload: payload });
   }
 
   dispatchCloseFilter(): void {
-    this.closeFilter.emit({type: Grid2Component.CLOSE_FILTER});
+    this.onCloseFilter.emit({type: Grid2Component.CLOSE_FILTER});
   }
 
   private getSimpleColumnByName(field: string): IGridColumn {
@@ -340,7 +340,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private getPagesCount(): number {
-    return Math.ceil(this.getRowsTotalCount() / this.currentPageSize);
+    return Math.ceil(this.getRowsTotalCount() / this.pageSize);
   }
 
   private applyClientSorting(): void {
@@ -459,7 +459,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
     this.fitGridSize();
 
-    this.groupingColumns.emit({
+    this.onGroupingColumns.emit({
       type: Grid2Component.GROUPING_COLUMNS, payload: {
         groupingColumns: event.getColumns().map((column: Column) => column.getColId())
       }

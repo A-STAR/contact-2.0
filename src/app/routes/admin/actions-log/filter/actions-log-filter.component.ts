@@ -33,8 +33,6 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   startTimeControl: IDynamicFormControl;
   endTimeControl: IDynamicFormControl;
 
-  actionTypesEqualsFn = (o1: IActionType, o2: IActionType) => o1.code === o2.code;
-
   employeesColumnsFrom: IGridColumn[] = [
     { prop: 'id', width: 50 },
     { prop: 'fullName', width: 150 },
@@ -63,12 +61,14 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
+  private _action: string;
+
+  actionTypesEqualsFn = (o1: IActionType, o2: IActionType) => o1.code === o2.code;
+
   employeesRowsFilter: Function = (record: IEmployee) => {
     const blockingEmployees: boolean = this.value[this.blockingEmployeesControl.controlName];
     return blockingEmployees || !record.isBlocked;
-  };
-
-  private _action: string;
+  }
 
   constructor(
     formBuilder: FormBuilder,
@@ -156,17 +156,17 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return this._action === 'actionTypes';
   }
 
-  onSaveEmployeesChanges() {
+  onSaveEmployeesChanges(): void {
     this.employeesComponent.syncChanges();
     this.onCloseActionDialog();
   }
 
-  onSaveActionTypesChanges() {
+  onSaveActionTypesChanges(): void {
     this.actionTypesComponent.syncChanges();
     this.onCloseActionDialog();
   }
 
-  onCloseActionDialog() {
+  onCloseActionDialog(): void {
     this._action = null;
   }
 
