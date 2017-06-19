@@ -131,8 +131,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     return {
       ...this.editedEntity,
       roleId: this.editedEntity.roleId,
-      startWorkDate: this.valueConverterService.isoDateToValue(this.editedEntity.startWorkDate),
-      endWorkDate: this.valueConverterService.isoDateToValue(this.editedEntity.endWorkDate),
+      startWorkDate: this.valueConverterService.formatDate(this.editedEntity.startWorkDate),
+      endWorkDate: this.valueConverterService.formatDate(this.editedEntity.endWorkDate),
       languageId: this.editedEntity.languageId,
     };
   }

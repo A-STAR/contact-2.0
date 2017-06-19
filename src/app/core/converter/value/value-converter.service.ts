@@ -102,17 +102,6 @@ export class ValueConverterService {
     }
   }
 
-  isoDateToValue(date: string): string {
-    if (!date) {
-      return null;
-    }
-    const dateObject = new Date(date);
-    const d = dateObject.getDate();
-    const m = dateObject.getMonth() + 1;
-    const y = dateObject.getFullYear();
-    return `${d < 10 ? '0' + d : d}.${m < 10 ? '0' + m : m}.${y}`;
-  }
-
   valueToIsoDate(value: any): string {
     if (!value) {
       return null;
