@@ -103,6 +103,9 @@ export class ValueConverterService {
   }
 
   valueToIsoDate(value: any): string {
+    if (!value) {
+      return null;
+    }
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
   }
