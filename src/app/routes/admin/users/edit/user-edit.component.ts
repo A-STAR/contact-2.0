@@ -10,6 +10,7 @@ import { ConstantsService } from '../../../../core/constants/constants.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { UsersService } from '../../../../routes/admin/users/users.service';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
@@ -38,6 +39,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     private gridService: GridService,
     private permissionsService: PermissionsService,
     private usersService: UsersService,
+    private valueConverterService: ValueConverterService,
   ) {
     super();
   }
@@ -129,8 +131,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     return {
       ...this.editedEntity,
       roleId: this.editedEntity.roleId,
-      startWorkDate: this.formatDate(this.editedEntity.startWorkDate),
-      endWorkDate: this.formatDate(this.editedEntity.endWorkDate),
+      startWorkDate: this.valueConverterService.isoDateToValue(this.editedEntity.startWorkDate),
+      endWorkDate: this.valueConverterService.isoDateToValue(this.editedEntity.endWorkDate),
       languageId: this.editedEntity.languageId,
     };
   }
@@ -142,8 +144,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       password: value.password || undefined,
       // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
-      startWorkDate: this.toIsoDate(value.startWorkDate),
-      endWorkDate: this.toIsoDate(value.endWorkDate),
+      startWorkDate: this.valueConverterService.valueToIsoDate(value.startWorkDate),
+      endWorkDate: this.valueConverterService.valueToIsoDate(value.endWorkDate),
       // TODO(a.poterenko): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
@@ -152,19 +154,5 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   ngOnDestroy(): void {
     this.editUserSub.unsubscribe();
     this.editUserRoleSub.unsubscribe();
-  }
-
-  private formatDate(date: string): string {
-    // TODO(d.maltsev): move to the value-converter service, format properly
-    return date ? (new Date(date)).toLocaleDateString() : '';
-  }
-
-  private toIsoDate(date: string): string {
-    // TODO: move to a service, use moment.js
-    if (!date) {
-      return null;
-    }
-    const ymd = date.split('.');
-    return (new Date(parseInt(ymd[2], 10), parseInt(ymd[1], 10) - 1, parseInt(ymd[0], 10))).toISOString();
   }
 }
