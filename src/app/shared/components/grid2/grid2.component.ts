@@ -93,7 +93,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Outputs
   @Output() onAction: EventEmitter<any> = new EventEmitter();
-  @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onNextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onPreviousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onPageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
@@ -266,7 +266,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onRowDoubleClicked(): void {
-    this.onRowDoubleSelect.emit(this.selectedRows.map(rowNode => rowNode.data));
+    this.onDblClick.emit(this.selectedRows.map(rowNode => rowNode.data));
   }
 
   onDragStarted(): void {
