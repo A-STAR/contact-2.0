@@ -17,7 +17,8 @@ export const GRID2_DEFAULT_STATE: IGrid2State = {
   columns: {},
   columnsPositions: [],
   groupingColumns: [],
-  selectedRows: []
+  selectedRows: [],
+  columnMovingInProgress: false
 };
 
 export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function): Function {
@@ -55,7 +56,7 @@ export function grid2Reducer(
     case Grid2Component.MOVING_COLUMN:
       return {
         ...state,
-        movingColumnInProgress: (action.payload as IGrid2MovedColumnPayload).movingColumnInProgress
+        columnMovingInProgress: (action.payload as IGrid2MovedColumnPayload).movingColumnInProgress
       };
     case Grid2Component.PAGE_SIZE:
       return {
@@ -76,12 +77,12 @@ export function grid2Reducer(
     case Grid2Component.OPEN_FILTER:
       return {
         ...state,
-        filterColumnName: (action.payload as IGrid2ShowFilterPayload).filterColumnName
+        currentFilterColumn: (action.payload as IGrid2ShowFilterPayload).currentFilterColumn
       };
     case Grid2Component.CLOSE_FILTER:
       return {
         ...state,
-        filterColumnName: null
+        currentFilterColumn: null
       };
     case Grid2Component.NO_SELECTED_ROWS:
       return {

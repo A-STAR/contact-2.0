@@ -4,6 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
+import { Column } from 'ag-grid';
 
 import {
   IActionLog,
@@ -45,6 +46,10 @@ export class ActionsLogService {
       .select((state: IAppState) => state.actionsLog.actionsLogGrid.pageSize);
   }
 
+  get actionsLogCurrentFilterColumn(): Observable<Column> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentFilterColumn);
+  }
 
   get actionsLogRows(): Observable<IActionsLogData> {
     return this.store

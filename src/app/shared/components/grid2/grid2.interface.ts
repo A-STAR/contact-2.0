@@ -17,8 +17,9 @@ export interface IGrid2State {
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
+  columnMovingInProgress: boolean;
+  currentFilterColumn?: Column;
   filterColumnName?: string;
-  movingColumnInProgress?: boolean;
 }
 
 export interface IGrid2ColumnsSortingDirectionInfo {
@@ -44,7 +45,7 @@ export interface IGrid2SelectedRowChangePayload {
 }
 
 export interface IGrid2ShowFilterPayload {
-  filterColumnName: string;
+  currentFilterColumn: Column;
 }
 
 export interface IGrid2MovedColumnPayload {
@@ -89,5 +90,8 @@ export interface IGrid2ColumnMovingPayload {
 
 export interface IGrid2EventPayload {
   type: string;
-  payload: number|IGrid2ColumnsPositionsChangePayload|IGrid2ColumnMovingPayload;
+  payload?: number
+    |IGrid2ColumnsPositionsChangePayload
+    |IGrid2ColumnMovingPayload
+    |IGrid2ShowFilterPayload;
 }

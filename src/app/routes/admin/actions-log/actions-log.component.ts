@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { Column } from 'ag-grid';
 
 import {
   IActionLog,
@@ -61,6 +62,7 @@ export class ActionsLogComponent implements OnDestroy {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
+  actionsLogCurrentFilterColumn: Observable<Column>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
@@ -79,6 +81,7 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionsLogData = this.actionsLogService.actionsLogRows.distinctUntilChanged();
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage.distinctUntilChanged();
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize.distinctUntilChanged();
+    this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn.distinctUntilChanged();
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);

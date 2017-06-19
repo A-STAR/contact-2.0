@@ -82,6 +82,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Inputs without presets
   @Input() columns: IGridColumn[] = [];
+  @Input() currentFilterColumn: Column;
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
   @Input() rows: any[];
@@ -97,6 +98,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() pageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() columnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() columnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() openFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
@@ -104,7 +107,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   gridOptions: GridOptions = {};
 
   // Links to the state
-  private statedFilterColumn: Column;
 
   private langSubscription: EventEmitter<any>;
   private headerColumns: GridHeaderComponent[] = [];
@@ -132,7 +134,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   get filterColumnName(): string {
-    return this.statedFilterColumn && this.statedFilterColumn.getColDef().headerName;
+    return this.currentFilterColumn && this.currentFilterColumn.getColDef().headerName;
   }
 
   get allGridColumns(): Column[] {
@@ -143,7 +145,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.setRowsOptions();
     this.createColumnDefs();
     this.defineGridToolbarActions();
-    this.subscribeStateChanges();
 
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
@@ -262,11 +263,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void {
-    // this.store.dispatch({ type: Grid2Component.OPEN_FILTER, payload: payload });
+    this.openFilter.emit({ type: Grid2Component.OPEN_FILTER, payload: payload });
   }
 
   dispatchCloseFilter(): void {
-    // this.store.dispatch({ type: Grid2Component.CLOSE_FILTER });
+    this.closeFilter.emit({ type: Grid2Component.CLOSE_FILTER });
   }
 
   private getColumnByName(field: string): Column {
@@ -323,10 +324,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
       this.pageElement.text = `${this.currentPage}/${pagesCount}`;
     }
-  }
-
-  private subscribeStateChanges(): void {
-   // this.stateSubscription = this.state.subscribe(this.onStateChange.bind(this));
   }
 
   /*private onStateChange(state: IGrid2State): void {

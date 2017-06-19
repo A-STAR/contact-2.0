@@ -66,7 +66,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
       return;
     }
     this.stopEvent($event);
-    this.agParams.serviceDispatcher.dispatchShowFilter({ filterColumnName: this.columnId });
+    this.agParams.serviceDispatcher.dispatchShowFilter({ currentFilterColumn: this.agParams.column });
   }
 
   get renderer(): Renderer2 {
@@ -95,7 +95,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   get statedMovingColumnInProgress(): boolean {
-    return this.currentState && this.currentState.movingColumnInProgress;
+    return this.currentState && this.currentState.columnMovingInProgress;
   }
 
   get statedSortingDirection(): Grid2SortingEnum {
