@@ -1,0 +1,14 @@
+<div>
+  <div *ngIf="imageSrc" class='image-container'>
+    <img class="image" [src]="imageSrc"/>
+  </div>
+  <div>
+    <button class="btn btn-sm btn-default" (click)="file.click()">
+      <i class="fa fa-edit"></i> Add / Change
+    </button>
+    <button class="btn btn-sm btn-danger" (click)="onFileRemove()">
+      <i class="fa fa-remove"></i> Remove
+    </button>
+  </div>
+  <input #file type="file" accept="image/*" style="display: none" (change)="onFileChange($event)">
+</div>
