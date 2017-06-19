@@ -43,19 +43,31 @@ export class UsersEffects {
   @Effect()
   createUser$ = this.actions
     .ofType(UsersService.USER_CREATE)
-    .switchMap((action: Action) => {
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
       return this.createUser(action.payload.user)
-        .mergeMap(data => [
-          {
-            type: UsersService.USERS_FETCH
-          },
-          {
-            type: UsersService.USER_DIALOG_ACTION,
-            payload: {
-              dialogAction: null
+        .mergeMap(response => {
+          return [
+            // TODO(d.maltsev): uncomment this when API is ready
+            // {
+            //   type: UsersService.USER_UPDATE_PHOTO,
+            //   payload: {
+            //     userId: response.message.payload,
+            //     photo: store.users.photo
+            //   }
+            // },
+            {
+              type: UsersService.USERS_FETCH
+            },
+            {
+              type: UsersService.USER_DIALOG_ACTION,
+              payload: {
+                dialogAction: null
+              }
             }
-          }
-        ])
+          ];
+        })
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;

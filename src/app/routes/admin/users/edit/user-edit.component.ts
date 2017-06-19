@@ -82,7 +82,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
       { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
       { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox', required: true },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
     ] as Array<IDynamicFormControl>).map(control => ({
       ...control,
       disabled: !this.canEditUser
