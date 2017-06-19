@@ -193,6 +193,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       if ('columnsSettings' in changes) {
         this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
           gridHeaderComponent.refreshView(this.columnsSettings));
+
+        if (!this.remoteSorting) {
+          this.applyClientSorting();
+        }
       }
       if ('columnMovingInProgress' in changes) {
         this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
@@ -340,30 +344,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
   }
 
-  /*private onStateChange(state: IGrid2State): void {
-    if (!state) {
-      return;
-    }
-    this.selected = state.selectedRows;
-    this.statedFilterColumn = state.filterColumnName ? this.getColumnByName(state.filterColumnName) : null;
-
-
-    if (!this.remoteSorting) {
-      this.applyClientSorting(state);
-    }
-    this.setRowsInfo();
-  }*/
-
-  private applyClientSorting(state: IGrid2State): void {
-    if (!state.columnsSettings || !Object.keys(state.columnsSettings).length) {
-      return;
-    }
+  private applyClientSorting(): void {
     const sortModel = this.allGridColumns.map((column: Column) => {
       const columnId: string = column.getColDef().field;
-      return state.columnsSettings[columnId]
+      return this.columnsSettings[columnId]
         ? {
           colId: columnId,
-          sort: state.columnsSettings[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
+          sort: this.columnsSettings[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
         } : null;
     }).filter(item => !!item);
 
