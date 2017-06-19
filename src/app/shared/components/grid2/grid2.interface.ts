@@ -1,4 +1,4 @@
-import { Column } from 'ag-grid';
+import { Column, ColumnApi, GridOptions } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 import { GridHeaderComponent } from './header/grid-header.component';
 
@@ -25,6 +25,7 @@ export interface IGrid2State {
 export interface IGrid2ColumnsSortingDirectionInfo {
   columnId: string;
   sortingDirection: Grid2SortingEnum;
+  order: number;
 }
 
 export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
@@ -73,6 +74,7 @@ export interface IGrid2ServiceDispatcher {
   dispatchCloseFilter(): void;
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void;
+  getGridOptions(): GridOptions;
 }
 
 export interface IGrid2HeaderParams {
@@ -86,6 +88,19 @@ export interface IGrid2HeaderParams {
 
 export interface IGrid2ColumnMovingPayload {
   movingColumnInProgress: boolean;
+}
+
+export interface IGrid2RequestSorting {
+  field: string;
+  direction: string;
+}
+
+export interface IGrid2Request {
+  paging?: {
+    pageNumber: number,
+    resultsPerPage: number
+  };
+  sorting?: IGrid2RequestSorting[];
 }
 
 export interface IGrid2EventPayload {

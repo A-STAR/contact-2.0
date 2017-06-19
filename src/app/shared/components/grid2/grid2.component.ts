@@ -19,7 +19,8 @@ import {
   GridOptions,
   RowNode,
   Column,
-  ColumnChangeEvent
+  ColumnChangeEvent,
+  ColumnApi
 } from 'ag-grid';
 
 import {
@@ -275,7 +276,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   dispatchCloseFilter(): void {
-    this.closeFilter.emit({ type: Grid2Component.CLOSE_FILTER });
+    this.closeFilter.emit({type: Grid2Component.CLOSE_FILTER});
+  }
+
+  getGridOptions(): GridOptions {
+    return this.gridOptions;
   }
 
   private getColumnByName(field: string): Column {

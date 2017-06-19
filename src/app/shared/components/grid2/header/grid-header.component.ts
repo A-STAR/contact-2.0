@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { ColDef, IComponent } from 'ag-grid';
+import { ColDef, Column, IComponent } from 'ag-grid';
 
 import {
   Grid2SortingEnum,
@@ -57,6 +57,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     const gridService: IGrid2ServiceDispatcher = this.agParams.serviceDispatcher;
 
     gridService.dispatchSortingDirection({
+      order: this.agParams.serviceDispatcher.getGridOptions().columnApi.getAllColumns()
+        .findIndex((column: Column) => column.getColDef().field === this.columnId),
       columnId: this.columnId,
       multiSort: $event.shiftKey,
       sortingDirection: this.sortingDirectionBySettings === Grid2SortingEnum.ASC
