@@ -112,8 +112,7 @@ export class UsersEffects {
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notificationsService.error('Could not save photo');
+          this.notificationsService.error(photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto');
           return null;
         });
     });
