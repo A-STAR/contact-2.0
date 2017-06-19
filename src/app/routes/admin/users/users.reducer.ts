@@ -8,8 +8,7 @@ const defaultState: IUsersState = {
   users: [],
   selectedUserId: null,
   dialogAction: null,
-  displayBlocked: false,
-  photo: null
+  displayBlocked: false
 };
 
 export function usersReducer(state: IUsersState = defaultState, action: Action): IUsersState {
@@ -39,11 +38,6 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
       return {
         ...state,
         displayBlocked: !state.displayBlocked
-      };
-    case UsersService.USER_PHOTO_PREVIEW:
-      return {
-        ...state,
-        photo: action.payload.photo
       };
     default:
       return state;

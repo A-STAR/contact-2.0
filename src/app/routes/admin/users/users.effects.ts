@@ -44,8 +44,16 @@ export class UsersEffects {
   createUser$ = this.actions
     .ofType(UsersService.USER_CREATE)
     .switchMap((action: Action) => {
-      return this.createUser(action.payload.user)
-        .mergeMap(data => [
+      const { user, photo } = action.payload;
+      return this.createUser(user)
+        .mergeMap(response => [
+          {
+            type: UsersService.USER_UPDATE_PHOTO,
+            payload: {
+              userId: response.id,
+              photo
+            }
+          },
           {
             type: UsersService.USERS_FETCH
           },
@@ -67,15 +75,15 @@ export class UsersEffects {
     .ofType(UsersService.USER_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
-      const { selectedUserId, photo } = store.users;
-      return this.updateUser(selectedUserId, action.payload.user)
+      const [ action, store ]: [Action, IAppState] = data;
+      const { user, photo } = action.payload;
+      return this.updateUser(store.users.selectedUserId, user)
         .mergeMap(() => {
           return [
             {
               type: UsersService.USER_UPDATE_PHOTO,
               payload: {
-                userId: selectedUserId,
+                userId: store.users.selectedUserId,
                 photo
               }
             },

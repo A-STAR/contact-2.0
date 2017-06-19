@@ -4,10 +4,10 @@
   </div>
   <div>
     <button class="btn btn-sm btn-default" (click)="file.click()">
-      <i class="fa fa-edit"></i> Add / Change
+      <i class="fa fa-edit"></i> {{ actionButtonTitle | translate }}
     </button>
-    <button class="btn btn-sm btn-danger" (click)="onFileRemove()">
-      <i class="fa fa-remove"></i> Remove
+    <button *ngIf="imageSrc" class="btn btn-sm btn-danger" (click)="onFileRemove()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>
   <input #file type="file" accept="image/*" style="display: none" (change)="onFileChange($event)">

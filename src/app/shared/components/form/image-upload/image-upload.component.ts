@@ -1,15 +1,15 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
+
+import { IImage } from './image-upload.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
-
-type IImage = File | Blob | false;
 
 @Component({
   selector: 'app-image-upload',
   templateUrl: './image-upload.component.html',
+  styleUrls: [ './image-upload.component.scss' ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -21,10 +21,9 @@ type IImage = File | Blob | false;
 export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   @Input() url = null as string;
 
-  private _image: IImage = null;
+  private image: IImage = null;
 
   private propagateChange: Function = () => {};
-  private propagateTouched: Function = () => {};
 
   constructor(
     private gridService: GridService,
@@ -33,8 +32,10 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {
     if (this.url) {
-      this.downloadImage(this.url)
-        .subscribe(image => this.image = image);
+      this.gridService
+      .readBlob(this.url)
+      .take(1)
+      .subscribe(image => this.image = image);
     }
   }
 
@@ -47,7 +48,6 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   }
 
   registerOnTouched(fn: Function): void {
-    this.propagateTouched = fn;
   }
 
   get imageSrc(): SafeUrl {
@@ -56,30 +56,22 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
       null;
   }
 
+  get actionButtonTitle(): string {
+    return this.image && this.image.size > 0 ?
+      'default.buttons.change' :
+      'default.buttons.add';
+  }
+
   onFileChange(event: any): void {
     const files = event.target.files;
     if (files.length) {
       this.image = files[0];
+      this.propagateChange(this.image);
     }
   }
 
   onFileRemove(): void {
     this.image = false;
     this.propagateChange(this.image);
-  }
-
-  private get image(): IImage {
-    return this._image;
-  }
-
-  private set image(image: IImage) {
-    this._image = image;
-    this.propagateChange(this.image);
-  }
-
-  private downloadImage(url: string): Observable<Blob> {
-    return this.gridService
-      .readBlob(url)
-      .take(1);
   }
 }

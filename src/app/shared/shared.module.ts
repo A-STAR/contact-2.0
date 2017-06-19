@@ -34,7 +34,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 // App directives
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
-import { FormImageModule } from './components/form/image/image.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
@@ -75,7 +74,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     DatePickerModule,
     DialogActionModule,
     DynamicFormModule,
-    FormImageModule,
     ImageUploadModule,
     GridModule,
     Grid2Module,
@@ -136,7 +134,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     DialogActionModule,
     DynamicFormModule,
     DialogModule,
-    FormImageModule,
     ImageUploadModule,
     GridModule,
     Grid2Module,

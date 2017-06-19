@@ -110,7 +110,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             controlName: 'image',
             type: 'image',
             url: userId ? `/users/${userId}/photo` : null,
-            action: (file: File) => this.usersService.changePhoto(file),
             width: 4,
           }
         ]
