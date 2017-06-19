@@ -11,7 +11,7 @@ import {
   Renderer2,
   ChangeDetectionStrategy,
 } from '@angular/core';
-
+import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
   ColDef,
@@ -185,26 +185,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      if ('rows' in changes || 'currentPage' in changes || 'currentPageSize' in changes) {
-        this.setRowsInfo();
-        this.updatePaginationElements();
+      if (R.prop('rows', changes) || R.prop('currentPage', changes) || R.prop('currentPageSize', changes)) {
+        this.refreshRowsInfo();
+        this.refreshPaginationElements();
       }
-      if ('selectedRows' in changes) {
-        this.setRowsInfo();
-        this.clearAllSelections();
-        this.selectedRows.forEach((record: any) => this.gridOptions.api.selectNode(record, this.isMultipleRowSelection));
+      if (R.prop('selectedRows', changes)) {
+        this.refreshSelectedRows();
       }
-      if ('columnsSettings' in changes) {
-        this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
-          gridHeaderComponent.refreshView(this.columnsSettings));
-
-        if (!this.remoteSorting) {
-          this.applyClientSorting();
-        }
-      }
-      if ('columnMovingInProgress' in changes) {
-        this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
-          gridHeaderComponent.freeze(this.columnMovingInProgress));
+      if (R.prop('columnsSettings', changes) || R.prop('columnMovingInProgress', changes)) {
+        this.refreshHeaderColumns();
       }
     }
   }
@@ -216,13 +205,55 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   onSelect(event: any): void {
     const rowNode: RowNode = event.node;
-    this.changeRowSelection(rowNode.data, rowNode.isSelected());
+    this.rowsSelect.emit({
+      type: Grid2Component.SELECTED_ROWS, payload: { rowData: rowNode.data, selected: rowNode.isSelected() }
+    });
   }
 
-  private changeRowSelection(data: any, selected: boolean): void {
-    this.rowsSelect.emit({
-      type: Grid2Component.SELECTED_ROWS, payload: { rowData: data, selected: selected }
+  private refreshSelectedRows(): void {
+    this.refreshRowsInfo();
+    this.clearAllSelections();
+    this.selectedRows.forEach((record: any) => this.gridOptions.api.selectNode(record, this.isMultipleRowSelection));
+  }
+
+  private refreshHeaderColumns(): void {
+    this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) => {
+      gridHeaderComponent.refreshView(this.columnsSettings);
+      gridHeaderComponent.freeze(this.columnMovingInProgress);
     });
+
+    if (!this.remoteSorting) {
+      this.applyClientSorting();
+    }
+  }
+
+  private refreshRowsInfo(): void {
+    if (!this.rowsCounterElement) {
+      return;
+    }
+    this.rowsCounterElement.text = this.translate.instant('default.grid.selectedCounts', {
+      length: this.getRowsTotalCount(),
+      selected: this.selectedRows.length
+    });
+  }
+
+  private refreshPaginationElements(): void {
+    const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
+    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.currentPageSize;
+
+    if (this.pagination) {
+      const pagesCount: number = this.getPagesCount();
+      [this.backwardElement, this.forwardElement, this.pageElement]
+        .forEach((action: IToolbarAction) => action.noRender = !isPaginationElementsExist);
+      this.pagesSizeElement.noRender = false;
+
+      this.pagesSizeElement.visible = true;
+      this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
+      this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
+      this.pageElement.visible = true;
+
+      this.pageElement.text = `${this.currentPage}/${pagesCount}`;
+    }
   }
 
   private clearAllSelections(): void {
@@ -304,41 +335,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  private setRowsInfo(): void {
-    if (!this.rowsCounterElement) {
-      return;
-    }
-    this.rowsCounterElement.text = this.translate.instant('default.grid.selectedCounts', {
-      length: this.getRowsTotalCount(),
-      selected: this.selectedRows.length
-    });
-  }
-
   private getRowsTotalCount(): number {
     return Math.max(this.rows.length, this.rowsTotalCount || 0);
   }
 
   private getPagesCount(): number {
     return Math.ceil(this.getRowsTotalCount() / this.currentPageSize);
-  }
-
-  private updatePaginationElements(): void {
-    const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
-    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.currentPageSize;
-
-    if (this.pagination) {
-      const pagesCount: number = this.getPagesCount();
-      [this.backwardElement, this.forwardElement, this.pageElement]
-        .forEach((action: IToolbarAction) => action.noRender = !isPaginationElementsExist);
-      this.pagesSizeElement.noRender = false;
-
-      this.pagesSizeElement.visible = true;
-      this.backwardElement.visible = this.currentPage > 1 && paginationElementsVisible;
-      this.forwardElement.visible = this.currentPage < pagesCount && paginationElementsVisible;
-      this.pageElement.visible = true;
-
-      this.pageElement.text = `${this.currentPage}/${pagesCount}`;
-    }
   }
 
   private applyClientSorting(): void {
@@ -435,7 +437,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
-      onGridReady: (params) => this.fitGridSize(),
+      onGridReady: (params) => {
+        this.fitGridSize();
+        this.refreshHeaderColumns();
+      },
       onGridSizeChanged: (params) => this.fitGridSize(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
