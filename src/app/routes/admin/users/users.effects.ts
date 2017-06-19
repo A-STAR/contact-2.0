@@ -43,16 +43,15 @@ export class UsersEffects {
   @Effect()
   createUser$ = this.actions
     .ofType(UsersService.USER_CREATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
-      return this.createUser(action.payload.user)
+    .switchMap((action: Action) => {
+      const { user, photo } = action.payload;
+      return this.createUser(user)
         .mergeMap(response => [
           {
             type: UsersService.USER_UPDATE_PHOTO,
             payload: {
               userId: response.id,
-              photo: store.users.photo
+              photo
             }
           },
           {
@@ -76,15 +75,15 @@ export class UsersEffects {
     .ofType(UsersService.USER_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
-      const { selectedUserId, photo } = store.users;
-      return this.updateUser(selectedUserId, action.payload.user)
+      const [ action, store ]: [Action, IAppState] = data;
+      const { user, photo } = action.payload;
+      return this.updateUser(store.users.selectedUserId, user)
         .mergeMap(() => {
           return [
             {
               type: UsersService.USER_UPDATE_PHOTO,
               payload: {
-                userId: selectedUserId,
+                userId: store.users.selectedUserId,
                 photo
               }
             },
@@ -113,8 +112,7 @@ export class UsersEffects {
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [])
         .catch(() => {
-          // TODO(d.maltsev): i18n
-          this.notificationsService.error('Could not save photo');
+          this.notificationsService.error(photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto');
           return null;
         });
     });

@@ -227,6 +227,15 @@
       "intPhone": "Extension",
       "email": "Email",
       "languageId": "Language"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch users",
+        "create": "Could not create user",
+        "update": "Could not update user",
+        "updatePhoto": "Could not update user photo",
+        "deletePhoto": "Could not delete user photo"
+      }
     }
   },
   "dictionaries": {

@@ -1,12 +1,12 @@
 <div>
-  <div *ngIf="hasImage" class='image-container'>
-    <img class="image" [src]="src"/>
+  <div *ngIf="imageSrc" class='image-container'>
+    <img class="image" [src]="imageSrc"/>
   </div>
   <div>
     <button class="btn btn-sm btn-default" (click)="file.click()">
       <i class="fa fa-edit"></i> {{ actionButtonTitle | translate }}
     </button>
-    <button *ngIf="hasImage" class="btn btn-sm btn-danger" (click)="onFileRemove()">
+    <button *ngIf="imageSrc" class="btn btn-sm btn-danger" (click)="onFileRemove()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.remove' | translate }}
     </button>
   </div>

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { FormImageComponent } from './image.component';
+import { ImageUploadComponent } from './image-upload.component';
 
 @NgModule({
   imports: [
@@ -12,11 +12,11 @@ import { FormImageComponent } from './image.component';
     TranslateModule,
   ],
   exports: [
-    FormImageComponent,
+    ImageUploadComponent,
   ],
   declarations: [
-    FormImageComponent,
+    ImageUploadComponent,
   ],
   providers: [],
 })
-export class FormImageModule { }
+export class ImageUploadModule { }
