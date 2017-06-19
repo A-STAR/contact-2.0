@@ -14,6 +14,7 @@ import {
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
