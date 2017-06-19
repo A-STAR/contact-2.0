@@ -44,7 +44,7 @@ export class ContentTabComponent implements AfterViewInit, OnChanges, OnDestroy 
     const { factory, injector } = this.tab;
 
     // console.log('target length before', this.target.length);
-    this.compRef = this.target.createComponent(factory, this.target.length, injector, []);
+    this.compRef = this.target.createComponent(factory, this.target.length, injector);
     // console.log('target length after', this.target.length);
     // this.compRef.instance.title = this.title;
     // this.compRef.instance.someOutput.subscribe(val => console.log(val));

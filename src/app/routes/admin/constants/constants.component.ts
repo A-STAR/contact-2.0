@@ -48,9 +48,9 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { prop: 'name', maxWidth: 350 },
-    { prop: 'value', minWidth: 70, maxWidth: 150, localized: true },
-    { prop: 'dsc', width: 200, minWidth: 400 },
+    { prop: 'name', minWidth: 150, maxWidth: 350 },
+    { prop: 'value', minWidth: 100, maxWidth: 150, localized: true },
+    { prop: 'dsc', minWidth: 200 },
   ];
 
   renderers = {
@@ -58,8 +58,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   };
 
   dataSource: IDataSource = {
-    read: '/api/constants',
-    update: '/api/constants/{id}',
+    read: '/constants',
+    update: '/constants/{id}',
     dataKey: 'constants',
   };
 
