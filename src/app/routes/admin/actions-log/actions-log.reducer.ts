@@ -6,23 +6,26 @@ import {
   IEmployee
 } from './actions-log.interface';
 
-import { combineWithGrid2Reducer } from '../../../shared/components/grid2/grid2.reducer';
+import { combineWithGrid2Reducer, GRID2_DEFAULT_STATE } from '../../../shared/components/grid2/grid2.reducer';
 import { ActionsLogService } from './actions-log.service';
 
-const defaultState: IActionsLogServiceState = {
+const ACTIONS_LOG_DEFAULT_STATE: IActionsLogServiceState = {
   actionsLog: { data: [], total: 0 },
   employees: [],
-  actionTypes: []
+  actionTypes: [],
+  actionsLogGrid: GRID2_DEFAULT_STATE
 };
 
 export function actionsLogReducer(
-  state: IActionsLogServiceState = defaultState,
+  state: IActionsLogServiceState = ACTIONS_LOG_DEFAULT_STATE,
   action: IActionsLogPayload
 ): IActionsLogServiceState {
   return combineWithGrid2Reducer(
     'actionsLogGrid',
     (internalState: IActionsLogServiceState, internalAction: IActionsLogPayload): IActionsLogServiceState => {
       switch (internalAction.type) {
+        case ActionsLogService.ACTIONS_LOG_DESTROY:
+          return { ...ACTIONS_LOG_DEFAULT_STATE };
         case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
           return {
             ...internalState,

@@ -2,26 +2,37 @@ import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 import { GridHeaderComponent } from './header/grid-header.component';
 
-export interface IGrid2ColumnState {
+export interface IGrid2ColumnSettings {
   sortingDirection: Grid2SortingEnum;
+  sortingOrder: number;
 }
 
-export interface IGrid2ColumnsState {
-  [columnId: string]: IGrid2ColumnState;
+export interface IGrid2ColumnsSettings {
+  [columnId: string]: IGrid2ColumnSettings;
 }
 
-export interface IGrid2State {
-  columns: IGrid2ColumnsState;
+export interface IGrid2ColumnsSettingsInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
+}
+
+export interface IGrid2PaginationInfo {
+  currentPage?: number;
+  pageSize?: number;
+}
+
+export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
+  columnMovingInProgress: boolean;
+  currentFilterColumn?: Column;
   filterColumnName?: string;
-  movingColumnInProgress?: boolean;
 }
 
 export interface IGrid2ColumnsSortingDirectionInfo {
   columnId: string;
   sortingDirection: Grid2SortingEnum;
+  sortingOrder: number;
 }
 
 export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
@@ -42,11 +53,7 @@ export interface IGrid2SelectedRowChangePayload {
 }
 
 export interface IGrid2ShowFilterPayload {
-  filterColumnName: string;
-}
-
-export interface IGrid2MovedColumnPayload {
-  movingColumnInProgress: boolean;
+  currentFilterColumn: Column;
 }
 
 export enum Grid2SortingEnum {
@@ -59,12 +66,14 @@ export interface IActionGrid2Payload {
   payload: IGrid2SortingDirectionSwitchPayload
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ShowFilterPayload
-    |IGrid2MovedColumnPayload
     |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload;
+    |IGrid2SelectedRowChangePayload
+    |IGrid2ColumnMovingPayload
+    |number;
 }
 
 export interface IGrid2ServiceDispatcher {
+  allGridColumns: Column[];
   dispatchShowFilter(payload: IGrid2ShowFilterPayload): void;
   dispatchCloseFilter(): void;
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
@@ -80,7 +89,47 @@ export interface IGrid2HeaderParams {
   renderer2: Renderer2;
 }
 
-export interface IGrid2PaginationInfo {
-  currentPage: number;
-  pageSize: number;
+export interface IGrid2ColumnMovingPayload {
+  movingColumnInProgress: boolean;
+}
+
+export interface IGrid2RequestSorting {
+  field: string;
+  direction: string;
+  order?: number;
+}
+
+export type Grid2RequestFilteringType = 'AND' | 'OR';
+
+export interface IGrid2RequestFiltering {
+  condition?: Grid2RequestFilteringType;
+  filters?: IGrid2RequestFiltering[];
+  name?: string;
+  operator?: string;
+  valueArray?: any[];
+  value?: any;
+}
+
+export interface IGrid2Request {
+  paging?: {
+    pageNumber: number,
+    resultsPerPage: number
+  };
+  sorting?: IGrid2RequestSorting[];
+  filtering?: IGrid2RequestFiltering;
+}
+
+export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+  fieldNameConverter?: Function;
+}
+
+export interface IGrid2EventPayload {
+  type: string;
+  payload?: number
+    |IGrid2ColumnsPositionsChangePayload
+    |IGrid2ColumnMovingPayload
+    |IGrid2ShowFilterPayload
+    |IGrid2GroupingColumnsChangePayload
+    |IGrid2SelectedRowChangePayload
+    |IGrid2SortingDirectionSwitchPayload;
 }

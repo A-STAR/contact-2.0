@@ -1,8 +1,12 @@
 import { Renderer2 } from '@angular/core';
-import { ColDef, IComponent } from 'ag-grid';
+import { ColDef, Column, IComponent } from 'ag-grid';
 
 import {
-  Grid2SortingEnum, IGrid2ColumnState, IGrid2HeaderParams, IGrid2ServiceDispatcher, IGrid2State
+  Grid2SortingEnum,
+  IGrid2ColumnSettings,
+  IGrid2ColumnsSettings,
+  IGrid2HeaderParams,
+  IGrid2ServiceDispatcher,
 } from '../grid2.interface';
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
@@ -12,7 +16,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private eFilterIcon;
   private eSortUpButton;
   private eSortDownButton;
-  private currentState: IGrid2State;
+  private columnsSettings: IGrid2ColumnsSettings;
+  private isFrozen: boolean;
   private unlistenClickColumnListener: Function;
   private unlistenFilterClickListener: Function;
 
@@ -46,7 +51,7 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   onClickColumnListener($event: MouseEvent): void {
-    if (this.statedMovingColumnInProgress) {
+    if (this.isFrozen) {
       return;
     }
 
@@ -55,18 +60,20 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     gridService.dispatchSortingDirection({
       columnId: this.columnId,
       multiSort: $event.shiftKey,
-      sortingDirection: this.statedSortingDirection === Grid2SortingEnum.ASC
+      sortingDirection: this.sortingDirectionBySettings === Grid2SortingEnum.ASC
         ? Grid2SortingEnum.DESC
-        : Grid2SortingEnum.ASC
+        : Grid2SortingEnum.ASC,
+      sortingOrder: this.agParams.serviceDispatcher.allGridColumns
+        .findIndex((column: Column) => column.getColDef().field === this.columnId)
     });
   }
 
   onFilterClickListener($event: MouseEvent): void {
-    if (this.statedMovingColumnInProgress) {
+    if (this.isFrozen) {
       return;
     }
     this.stopEvent($event);
-    this.agParams.serviceDispatcher.dispatchShowFilter({ filterColumnName: this.columnId });
+    this.agParams.serviceDispatcher.dispatchShowFilter({ currentFilterColumn: this.agParams.column });
   }
 
   get renderer(): Renderer2 {
@@ -85,21 +92,21 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     return this.agParams.column.getColDef();
   }
 
-  refreshState(state: IGrid2State): void {
-    this.currentState = state;
+  refreshView(columnsSettings: IGrid2ColumnsSettings): void {
+    this.columnsSettings = columnsSettings;
     this.setStyles();
+  }
+
+  freeze(isFrozen: boolean): void {
+    this.isFrozen = isFrozen;
   }
 
   getGui(): HTMLElement {
     return this.eGui;
   }
 
-  get statedMovingColumnInProgress(): boolean {
-    return this.currentState && this.currentState.movingColumnInProgress;
-  }
-
-  get statedSortingDirection(): Grid2SortingEnum {
-    const columnState: IGrid2ColumnState = this.currentState && this.currentState.columns[this.columnId];
+  get sortingDirectionBySettings(): Grid2SortingEnum {
+    const columnState: IGrid2ColumnSettings = this.columnsSettings && this.columnsSettings[this.columnId];
     return columnState ? columnState.sortingDirection : null;
   }
 
@@ -130,8 +137,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private setStyles(): void {
     this.setDefaultStyles();
 
-    if (this.statedSortingDirection !== null) {
-      switch (this.statedSortingDirection) {
+    if (this.sortingDirectionBySettings !== null) {
+      switch (this.sortingDirectionBySettings) {
         case Grid2SortingEnum.DESC:
           this.eSortDownButton.style.display = '';
           break;
