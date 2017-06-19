@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
+import * as R from 'ramda';
 
 import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
+import {
+  IGrid2ColumnSettings,
+  IGrid2Request,
+  IGrid2RequestSorting,
+  IGrid2State
+} from '../../../shared/components/grid2/grid2.interface';
 
 @Injectable()
 export class ValueConverterService {
@@ -10,6 +17,25 @@ export class ValueConverterService {
   constructor(
     private datePipe: DatePipe
   ) { }
+
+  toGridRequest(state: IGrid2State): IGrid2Request {
+    const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
+      (value: IGrid2ColumnSettings, columnId: string) => {
+        return { field: columnId, direction: value.sortingDirection ? 'desc' : 'asc' };
+      },
+      state.columnsSettings
+    ));
+    const request: IGrid2Request = {
+      paging: {
+        pageNumber: state.currentPage,
+        resultsPerPage: state.pageSize
+      }
+    };
+    if (sorting.length) {
+      request.sorting = sorting;
+    }
+    return request;
+  }
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);

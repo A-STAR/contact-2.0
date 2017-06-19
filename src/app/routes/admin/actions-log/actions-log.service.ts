@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import { Column } from 'ag-grid';
-import * as R from 'ramda';
 
 import {
   IActionLog,
@@ -16,16 +15,11 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import {
-  IGrid2ColumnSettings,
-  IGrid2ColumnsSettings,
-  IGrid2Request,
-  IGrid2RequestSorting,
-  IGrid2State
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnsSettings, IGrid2Request } from '../../../shared/components/grid2/grid2.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class ActionsLogService {
@@ -40,6 +34,7 @@ export class ActionsLogService {
     private store: Store<IAppState>,
     private effectActions: Actions,
     private notifications: NotificationsService,
+    private valueConverterService: ValueConverterService
   ) {
   }
 
@@ -101,22 +96,7 @@ export class ActionsLogService {
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
         const [_, store]: [Action, IAppState] = payload;
-        const gridState: IGrid2State = store.actionsLog.actionsLogGrid;
-        const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
-          (value: IGrid2ColumnSettings, columnId: string) => {
-            return { field: columnId, direction: value.sortingDirection ? 'desc' : 'asc' };
-          },
-          gridState.columnsSettings
-        ));
-        const request: IGrid2Request = {
-          paging: {
-            pageNumber: gridState.currentPage,
-            resultsPerPage: gridState.pageSize
-          }
-        };
-        if (sorting.length) {
-          request.sorting = sorting;
-        }
+        const request: IGrid2Request = this.valueConverterService.toGridRequest(store.actionsLog.actionsLogGrid);
 
         return this.gridService.create('/actions/grid', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
