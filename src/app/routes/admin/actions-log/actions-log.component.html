@@ -19,6 +19,7 @@
   [currentFilterColumn]="actionsLogCurrentFilterColumn | async"
   [columnsSettings]="actionsLogColumnsSettings | async"
   [columnMovingInProgress]="actionsLogColumnMovingInProgress | async"
+  [selectedRows]="actionsLogSelectedRows | async"
   (nextPage)="refreshData($event)"
   (previousPage)="refreshData($event)"
   (pageSize)="refreshData($event)"
@@ -28,6 +29,7 @@
   (columnsPositions)="refreshData($event)"
   (closeFilter)="onStoreDispatch($event)"
   (openFilter)="onStoreDispatch($event)"
+  (rowsSelect)="onStoreDispatch($event)"
   (groupingColumns)="onStoreDispatch($event)"
 >
 </app-grid2>

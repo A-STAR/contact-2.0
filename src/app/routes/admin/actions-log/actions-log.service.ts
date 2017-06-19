@@ -23,11 +23,11 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 
 @Injectable()
 export class ActionsLogService {
-
-  public static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
-  public static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
-  public static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
-  public static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
+  static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
+  static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
+  static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
+  static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
+  static ACTIONS_LOG_DESTROY = 'ACTIONS_LOG_DESTROY';
 
   constructor(
     private gridService: GridService,
@@ -65,6 +65,12 @@ export class ActionsLogService {
   get actionsLogColumnMovingInProgress(): Observable<boolean> {
     return this.store
       .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnMovingInProgress)
+      .distinctUntilChanged();
+  }
+
+  get actionsLogSelectedRows(): Observable<IActionType[]> {
+    return this.store
+      .select((state: IAppState) => state.actionsLog.actionsLogGrid.selectedRows)
       .distinctUntilChanged();
   }
 
@@ -132,6 +138,10 @@ export class ActionsLogService {
       type: ActionsLogService.ACTIONS_LOG_FETCH,
       payload: payload
     });
+  }
+
+  destroy(): void {
+    this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
 
   getActionTypes(): Observable<IActionType[]> {

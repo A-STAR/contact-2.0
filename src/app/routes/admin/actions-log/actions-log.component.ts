@@ -68,6 +68,7 @@ export class ActionsLogComponent implements OnDestroy {
   actionsLogCurrentFilterColumn: Observable<Column>;
   actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
   actionsLogColumnMovingInProgress: Observable<boolean>;
+  actionsLogSelectedRows: Observable<IActionType[]>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
@@ -90,6 +91,7 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
+    this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
 
     this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
       this.actionTypesRawRows = actionTypesRawRows);

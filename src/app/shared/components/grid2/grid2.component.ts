@@ -20,7 +20,6 @@ import {
   RowNode,
   Column,
   ColumnChangeEvent,
-  ColumnApi
 } from 'ag-grid';
 
 import {
@@ -35,14 +34,13 @@ import {
   IGrid2ShowFilterPayload,
   Grid2SortingEnum,
   IGrid2EventPayload,
-  IGrid2ColumnsSettings
+  IGrid2ColumnsSettings,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
   IGrid2SortingDirectionSwitchPayload,
-  IGrid2State,
 } from './grid2.interface';
 
 import { GridHeaderComponent } from './header/grid-header.component';
@@ -64,7 +62,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
   static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
   static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
-  static NO_SELECTED_ROWS = 'GRID2_NO_SELECTED_ROWS';
   static OPEN_FILTER = 'GRID2_OPEN_FILTER';
   static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
   static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
@@ -72,6 +69,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Inputs with presets
   @Input() columns: IGridColumn[] = [];
+  @Input() selectedRows: any[] = [];
   @Input() currentPage = 1;
   @Input() currentPageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() headerHeight = 30;
@@ -81,6 +79,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() remoteSorting = false;
   @Input() footerPresent = true;
   @Input() pagination = false;
+  @Input() rowSelection = 'multiple';
   @Input() pageSizes = [Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000];
 
   // Inputs without presets
@@ -96,8 +95,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   // Outputs
   @Output() onAction: EventEmitter<any> = new EventEmitter();
-  @Output() onEdit: EventEmitter<any> = new EventEmitter();
-  @Output() onRowSelect: EventEmitter<any> = new EventEmitter();
   @Output() onRowDoubleSelect: EventEmitter<any> = new EventEmitter();
   @Output() nextPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() previousPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
@@ -109,8 +106,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() closeFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() groupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() sortingDirection: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() rowsSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
-  selected: any[] = [];
   gridToolbarActions: IToolbarAction[];
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
@@ -146,6 +143,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   get allGridColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
+  }
+
+  get isMultipleRowSelection(): boolean {
+    return this.rowSelection === 'multiple';
   }
 
   ngOnInit(): void {
@@ -190,6 +191,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         this.setRowsInfo();
         this.updatePaginationElements();
       }
+      if ('selectedRows' in changes) {
+        this.setRowsInfo();
+        this.clearAllSelections();
+        this.selectedRows.forEach((record: any) => this.gridOptions.api.selectNode(record, this.isMultipleRowSelection));
+      }
       if ('columnsSettings' in changes) {
         this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) =>
           gridHeaderComponent.refreshView(this.columnsSettings));
@@ -216,25 +222,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private changeRowSelection(data: any, selected: boolean): void {
-    /* this.store.dispatch({
-      type: Grid2Component.SELECTED_ROWS, payload: {
-        rowData: data,
-        selected: selected
-      } as IGrid2SelectedRowChangePayload
-    });*/
+    this.rowsSelect.emit({
+      type: Grid2Component.SELECTED_ROWS, payload: { rowData: data, selected: selected }
+    });
   }
 
- /* private clearAllSelections(): void {
-    this.store.dispatch({ type: Grid2Component.NO_SELECTED_ROWS });
+  private clearAllSelections(): void {
+    this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
-  }*/
+  }
 
   onActionClick(event: any): void {
     this.onAction.emit(event);
   }
 
   onRowDoubleClicked(): void {
-    this.onRowDoubleSelect.emit(this.selected.map(rowNode => rowNode.data));
+    this.onRowDoubleSelect.emit(this.selectedRows.map(rowNode => rowNode.data));
   }
 
   onDragStarted(): void {
@@ -288,10 +291,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.closeFilter.emit({type: Grid2Component.CLOSE_FILTER});
   }
 
-  private getColumnByName(field: string): Column {
-    return this.allGridColumns.find((column: Column) => column.getColDef().field === field);
-  }
-
   private getSimpleColumnByName(field: string): IGridColumn {
     return this.columns.find((column: IGridColumn) => column.prop === field);
   }
@@ -313,7 +312,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
     this.rowsCounterElement.text = this.translate.instant('default.grid.selectedCounts', {
       length: this.getRowsTotalCount(),
-      selected: this.selected.length
+      selected: this.selectedRows.length
     });
   }
 

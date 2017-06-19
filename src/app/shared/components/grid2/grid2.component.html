@@ -23,7 +23,7 @@
       [paginationAutoPageSize]="true"
       [overlayNoRowsTemplate]="'default.data.empty' | translate"
       [overlayLoadingTemplate]="'default.data.empty' | translate"
-      rowSelection="multiple"
+      [rowSelection]="rowSelection"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
       (rowSelected)="onSelect($event)"

@@ -34,7 +34,6 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       case Grid2Component.DESTROY_STATE:
       case Grid2Component.GROUPING_COLUMNS:
       case Grid2Component.SELECTED_ROWS:
-      case Grid2Component.NO_SELECTED_ROWS:
       case Grid2Component.PAGE_SIZE:
       case Grid2Component.NEXT_PAGE:
       case Grid2Component.PREVIOUS_PAGE:
@@ -63,17 +62,20 @@ export function grid2Reducer(
     case Grid2Component.PAGE_SIZE:
       return {
         ...state,
+        selectedRows: [],
         currentPage: GRID2_DEFAULT_STATE.currentPage,
         pageSize: (action.payload as number)
       };
     case Grid2Component.PREVIOUS_PAGE:
       return {
         ...state,
+        selectedRows: [],
         currentPage: (action.payload as number) - 1
       };
     case Grid2Component.NEXT_PAGE:
       return {
         ...state,
+        selectedRows: [],
         currentPage: (action.payload as number) + 1
       };
     case Grid2Component.OPEN_FILTER:
@@ -85,11 +87,6 @@ export function grid2Reducer(
       return {
         ...state,
         currentFilterColumn: null
-      };
-    case Grid2Component.NO_SELECTED_ROWS:
-      return {
-        ...state,
-        selectedRows: []
       };
     case Grid2Component.SELECTED_ROWS:
       const selectedRowPayload: IGrid2SelectedRowChangePayload = action.payload as IGrid2SelectedRowChangePayload;
@@ -103,6 +100,7 @@ export function grid2Reducer(
       const groupingColumnsPayload: IGrid2GroupingColumnsChangePayload = action.payload as IGrid2GroupingColumnsChangePayload;
       return {
         ...state,
+        selectedRows: [],
         groupingColumns: groupingColumnsPayload.groupingColumns
       };
     case Grid2Component.COLUMNS_POSITIONS:
@@ -110,6 +108,7 @@ export function grid2Reducer(
 
       return {
         ...state,
+        selectedRows: [],
         columnsPositions: columnsPositionsPayload.columnsPositions,
         columnsSettings: R.mapObjIndexed((columnSettings: IGrid2ColumnSettings, columnId: string) => {
           return {
@@ -123,6 +122,7 @@ export function grid2Reducer(
       if (sortingDirectionPayload.multiSort) {
         return {
           ...state,
+          selectedRows: [],
           columnsSettings: {
             ...state.columnsSettings,
             [sortingDirectionPayload.columnId]: {
@@ -135,6 +135,7 @@ export function grid2Reducer(
       } else {
         return {
           ...state,
+          selectedRows: [],
           columnsSettings: {
             [sortingDirectionPayload.columnId]: {
               ...(state.columnsSettings[sortingDirectionPayload.columnId]),

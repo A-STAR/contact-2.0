@@ -108,5 +108,6 @@ export interface IGrid2EventPayload {
     |IGrid2ColumnMovingPayload
     |IGrid2ShowFilterPayload
     |IGrid2GroupingColumnsChangePayload
+    |IGrid2SelectedRowChangePayload
     |IGrid2SortingDirectionSwitchPayload;
 }
