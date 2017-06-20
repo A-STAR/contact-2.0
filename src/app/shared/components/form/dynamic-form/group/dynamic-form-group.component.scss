@@ -1,8 +1,10 @@
 @import "../../../../styles/app/variables.scss";
 
+$form-group-bottom-margin: 12px;
+
 .form-group {
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: $form-group-bottom-margin;
 
   .error-messages {
     position: absolute;
@@ -19,4 +21,21 @@
   &:hover > .error-messages {
     display: block;
   }
+}
+
+label {
+  margin: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.form-column:last-child > .form-group {
+  margin-bottom: 0;
+}
+
+.form-column .form-column:last-child > .form-group {
+  margin-bottom: $form-group-bottom-margin;
 }

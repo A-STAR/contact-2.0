@@ -1,31 +1,39 @@
 <div class="row" [formGroup]="form">
     <ng-container *ngFor="let control of items" >
 
-      <div [ngClass]="'col-xs-' + (control.width || 12)">
+      <div [ngClass]="'form-column col-xs-' + (control.width || 12)">
 
         <div *ngIf="!control.children" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
           <ng-container [ngSwitch]="control.type">
 
             <ng-container *ngSwitchCase="'number'">
-              <label>{{control.label | translate}}
+              <label>
+                <span class="form-label">
+                  {{ control.label | translate }}
+                </span>
                 <input type="number"
-                      class="form-control"
-                      [attr.placeholder]="(control.placeholder || '') | translate"
-                      [formControlName]="control.controlName">
+                       class="form-control"
+                       [attr.placeholder]="(control.placeholder || '') | translate"
+                       [formControlName]="control.controlName">
               </label>
             </ng-container>
 
             <ng-container *ngSwitchCase="'text'">
-              <label>{{control.label | translate}}
+              <label>
+                <span class="form-label">
+                  {{ control.label | translate }}
+                </span>
                 <input type="text"
-                      class="form-control"
+                       class="form-control"
                       [attr.placeholder]="(control.placeholder || '') | translate"
                       [formControlName]="control.controlName">
               </label>
             </ng-container>
 
             <ng-container *ngSwitchCase="'boolean'">
-              {{control.label | translate}}<br>
+              <span class="form-label">
+                {{ control.label | translate }}
+              </span>
               <label class="radio-inline">
                 <input type="radio" [formControlName]="control.controlName" value="1">
                 {{'default.boolean.TRUE' | translate}}
@@ -46,7 +54,10 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'select'">
-              <label>{{control.label | translate}}
+              <label>
+                <span class="form-label">
+                  {{ control.label | translate }}
+                </span>
                 <app-select [formControlName]="control.controlName"
                             [allowClear]="true"
                             [items]="control.options"
@@ -65,23 +76,30 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'textarea'">
-              <label>{{control.label | translate}}
+              <label>
+                <span class="form-label">
+                  {{ control.label | translate }}
+                </span>
                 <textarea
                   [attr.placeholder]="(control.placeholder || '') | translate"
                   [formControlName]="control.controlName"
                   class="form-control"
-                  rows="control.rows || 2"
-                ></textarea>
+                  rows="control.rows || 2">
+                </textarea>
               </label>
             </ng-container>
 
             <ng-container *ngSwitchCase="'datepicker'">
-              <label class="mb0">{{control.label | translate}}</label>
+              <label class="form-label">
+                {{control.label | translate}}
+              </label>
               <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
             </ng-container>
 
             <ng-container *ngSwitchCase="'image'">
-              <label class="mb0">{{control.label | translate}}</label>
+              <label class="form-label">
+                {{control.label | translate}}
+              </label>
               <app-image-upload
                 [formControlName]="control.controlName"
                 [height]="control.height"
@@ -99,7 +117,10 @@
               <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
 
                   <ng-container *ngSwitchCase="1">
-                    <label>{{control.label | translate}}
+                    <label>
+                      <span class="form-label">
+                        {{ control.label | translate }}
+                      </span>
                       <input type="number"
                             class="form-control"
                             [attr.placeholder]="(control.placeholder || '') | translate"
@@ -108,24 +129,31 @@
                   </ng-container>
 
                   <ng-container *ngSwitchCase="2">
-                    <label>{{control.label | translate}}</label>
+                    <label class="form-label">
+                      {{ control.label | translate }}
+                    </label>
                     <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
                   </ng-container>
 
                   <ng-container *ngSwitchCase="4">
-                    <label>{{control.label | translate}}</label>
+                    <span class="form-label">
+                      {{ control.label | translate }}
+                    </span>
                     <label class="radio-inline">
-                        <input type="radio" [formControlName]="control.controlName" value="1">
-                        {{'default.boolean.TRUE' | translate}}
+                      <input type="radio" [formControlName]="control.controlName" value="1">
+                      {{'default.boolean.TRUE' | translate}}
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" [formControlName]="control.controlName" value="0">
-                        {{'default.boolean.FALSE' | translate}}
+                      <input type="radio" [formControlName]="control.controlName" value="0">
+                      {{'default.boolean.FALSE' | translate}}
                     </label>
                   </ng-container>
 
                   <ng-container *ngSwitchDefault>
-                    <label>{{control.label | translate}}
+                    <label>
+                      <span class="form-label">
+                        {{ control.label | translate }}
+                      </span>
                       <input type="text"
                             class="form-control"
                             [attr.placeholder]="(control.placeholder || '') | translate"
