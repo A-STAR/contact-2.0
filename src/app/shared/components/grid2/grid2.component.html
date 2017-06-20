@@ -40,50 +40,12 @@
   (actionSelect)="onToolbarActionSelect($event)"
 >
 </app-toolbar>
-<app-action-dialog
-  *ngIf="filterColumnName"
-  [titleTranslationKey]="'default.grid.filter.title'"
-  (action)="onSaveFilterChanges()"
-  (cancel)="onCloseFilterDialog()"
+<app-grid2-column-filter
+  *ngIf="filterField"
+  [fieldName]="filterField"
+  [columnName]="filterColumnName"
+  [filterControlType]="filterControlType"
+  (action)="saveFilterChanges($event)"
+  (cancel)="closeFilter()"
 >
-  {{ 'default.grid.filter.showOnlyLines' | translate }}
-  <br>
-  <strong>{{ filterColumnName }}</strong>:<br>
-  <table>
-    <tbody>
-    <tr>
-      <td>
-        <div class="form-group" style="width: 200px;">
-          <app-select [allowClear]="true"
-                      [items]="[{ label: 'Равно', value: 0}, { label: 'Неравно', value: 1}, { label: 'Пусто', value: 2}]"
-                      [readonly]="true">
-          </app-select>
-        </div>
-      </td>
-      <td>
-        <input type="text">
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <input type="radio">{{ 'default.grid.filter.and' | translate }}&nbsp;&nbsp;<input type="radio">{{ 'default.grid.filter.or' | translate }}
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="form-group" style="width: 200px;">
-          <app-select [allowClear]="true"
-                      [items]="[{ label: 'Равно', value: 0}, { label: 'Неравно', value: 1}, { label: 'Пусто', value: 2}]"
-                      [readonly]="true">
-          </app-select>
-        </div>
-      </td>
-      <td>
-        <input type="text">
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</app-action-dialog>
+</app-grid2-column-filter>

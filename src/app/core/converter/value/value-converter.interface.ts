@@ -20,13 +20,19 @@ export interface ILabeledValue {
   context?: any;
 }
 
-export type FilteringType = 'AND' | 'OR';
+export type FilteringConditionType = 'AND' | 'OR';
+
+export class FilteringOperators {
+  static EQUALLY: FilteringOperatorType = '==';
+  static NOT_EQUALLY: FilteringOperatorType = '!=';
+  static EMPTY: FilteringOperatorType = 'EMPTY';
+}
 
 export type FilteringOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<' | 'EMPTY' | 'NOT EMPTY' | 'IN' | 'NOT IN'
   | 'BETWEEN' | 'NOT BETWEEN' | 'LIKE' | 'NOT LIKE';
 
 export interface IFilteringObject {
-  condition?: FilteringType;
+  condition?: FilteringConditionType;
   filters?: IFilteringObject[];
   name?: string;
   operator?: FilteringOperatorType;
@@ -37,7 +43,7 @@ export interface IFilteringObject {
 export class FilterObject implements IFilteringObject {
 
   name: string;
-  condition: FilteringType;
+  condition: FilteringConditionType;
   filters: IFilteringObject[];
   operator: FilteringOperatorType;
   value?: any;
@@ -51,7 +57,7 @@ export class FilterObject implements IFilteringObject {
   }
 
   addFilter(filter: FilterObject): FilterObject {
-    if (filter.hasValue()) {
+    if (filter && (filter.hasValue() || filter.hasFilter())) {
       this.filters = (this.filters || []).concat(filter);
     }
     return this;
@@ -61,7 +67,7 @@ export class FilterObject implements IFilteringObject {
     return this.setCondition('AND');
   }
 
-  setCondition(condition: FilteringType): FilterObject {
+  setCondition(condition: FilteringConditionType): FilterObject {
     this.condition = condition;
     return this;
   }
@@ -96,5 +102,9 @@ export class FilterObject implements IFilteringObject {
 
   hasValue(): boolean {
     return !R.isNil(this.value) || (!R.isNil(this.valueArray) && this.valueArray.length > 0);
+  }
+
+  hasFilter(): boolean {
+    return Array.isArray(this.filters) && this.filters.length > 0;
   }
 }

@@ -9,6 +9,7 @@ import { SelectModule } from '../select/select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormGroupComponent } from './group/dynamic-form-group.component';
+import { DynamicFormFieldComponent } from './field/dynamic-form-field.component';
 
 
 @NgModule({
@@ -23,10 +24,12 @@ import { DynamicFormGroupComponent } from './group/dynamic-form-group.component'
   exports: [
     DynamicFormComponent,
     DynamicFormGroupComponent,
+    DynamicFormFieldComponent,
   ],
   declarations: [
     DynamicFormComponent,
     DynamicFormGroupComponent,
+    DynamicFormFieldComponent,
   ],
   providers: [],
 })

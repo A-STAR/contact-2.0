@@ -1,5 +1,6 @@
 import {
   IActionGrid2Payload,
+  IGrid2ColumnFilterPayload,
   IGrid2ColumnMovingPayload,
   IGrid2ColumnSettings,
   IGrid2ColumnsPositionsChangePayload,
@@ -35,6 +36,7 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       case Grid2Component.GROUPING_COLUMNS:
       case Grid2Component.SELECTED_ROWS:
       case Grid2Component.PAGE_SIZE:
+      case Grid2Component.APPLY_FILTER:
       case Grid2Component.NEXT_PAGE:
       case Grid2Component.PREVIOUS_PAGE:
         return {
@@ -145,6 +147,18 @@ export function grid2Reducer(
           }
         };
       }
+    case Grid2Component.APPLY_FILTER:
+      const columnFilterPayload: IGrid2ColumnFilterPayload = action.payload as IGrid2ColumnFilterPayload;
+      return {
+        ...state,
+        selectedRows: [],
+        columnsSettings: {
+          [columnFilterPayload.columnId]: {
+            ...(state.columnsSettings[columnFilterPayload.columnId]),
+            filter: columnFilterPayload.filter
+          }
+        }
+      };
     default:
       return state;
   }

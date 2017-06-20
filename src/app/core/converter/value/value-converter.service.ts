@@ -3,7 +3,12 @@ import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 import * as R from 'ramda';
 
-import { ILabeledValue, IValueEntity, ValueType } from './value-converter.interface';
+import {
+  FilterObject,
+  ILabeledValue,
+  IValueEntity,
+  ValueType
+} from './value-converter.interface';
 import {
   IGrid2ColumnSettings,
   IGrid2Request,
@@ -24,8 +29,14 @@ export class ValueConverterService {
 
   toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
     const request: IGrid2Request = {};
+    const filter: FilterObject = FilterObject.create().and();
 
     if (payload.columnsSettings) {
+      R.forEach((columnSettings: IGrid2ColumnSettings) => {
+        filter.addFilter(columnSettings.filter);
+      }, R.values(payload.columnsSettings));
+      request.filtering = filter;
+
       const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
         (columnSettings: IGrid2ColumnSettings, columnId: string) => {
           return {

@@ -28,7 +28,6 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
-
 import {
   IGrid2ColumnsPositionsChangePayload,
   IGrid2ShowFilterPayload,
@@ -40,6 +39,8 @@ import {
   IGrid2SortingDirectionSwitchPayload,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
+import { FilterObject } from '../../../core/converter/value/value-converter.interface';
+import { ControlTypes } from '../form/dynamic-form/dynamic-form-control.interface';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 
@@ -62,6 +63,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
   static OPEN_FILTER = 'GRID2_OPEN_FILTER';
   static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
+  static APPLY_FILTER = 'GRID2_APPLY_FILTER';
   static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
   static DESTROY_STATE = 'GRID2_DESTROY_STATE';
 
@@ -101,6 +103,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onColumnMoving: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onColumnMoved: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onOpenFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onApplyFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onCloseFilter: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onGroupingColumns: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onSortingDirection: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
@@ -135,8 +138,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return !!this.toolbarActions;
   }
 
+  get filterField(): string {
+    return this.filterColumn && this.filterColumn.getColDef().field;
+  }
+
   get filterColumnName(): string {
-    return this.filterColumn && this.filterColumn.getColDef().headerName;
+    return this.filterColumn.getColDef().headerName;
+  }
+
+  get filterControlType(): ControlTypes {
+    return this.getSimpleColumnByName(this.filterField).filterControlType;
   }
 
   get allGridColumns(): Column[] {
@@ -281,11 +292,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  onSaveFilterChanges(): void {
+  saveFilterChanges(filter: FilterObject): void {
+    this.onApplyFilter.emit({ type: Grid2Component.APPLY_FILTER, payload: {
+      columnId: this.filterField,
+      filter: filter
+    }});
+
     this.dispatchCloseFilter();
   }
 
-  onCloseFilterDialog(): void {
+  closeFilter(): void {
     this.dispatchCloseFilter();
   }
 

@@ -1,0 +1,134 @@
+<ng-container [ngSwitch]="control.type" [formGroup]="form">
+
+  <ng-container *ngSwitchCase="'number'">
+    <label>{{control.label | translate}}
+      <input type="number"
+             class="form-control"
+             [attr.placeholder]="(control.placeholder || '') | translate"
+             [formControlName]="control.controlName">
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'text'">
+    <label>{{control.label | translate}}
+      <input type="text"
+             class="form-control"
+             [attr.placeholder]="(control.placeholder || '') | translate"
+             [formControlName]="control.controlName">
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'boolean'">
+    {{control.label | translate}}<br>
+    <label class="radio-inline">
+      <input type="radio" [formControlName]="control.controlName" value="1">
+      {{'default.boolean.TRUE' | translate}}
+    </label>
+    <label class="radio-inline">
+      <input type="radio" [formControlName]="control.controlName" value="0">
+      {{'default.boolean.FALSE' | translate}}
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'checkbox'">
+    <div class="checkbox mt0 mb0">
+      <label>
+        <input type="checkbox" [formControlName]="control.controlName"/>
+        {{ control.label | translate}}
+      </label>
+    </div>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'select'">
+    <label>{{control.label | translate}}
+      <app-select [formControlName]="control.controlName"
+                  [allowClear]="true"
+                  [items]="control.options"
+                  [lazyItems]="control.lazyOptions"
+                  [cachingItems]="control.cachingOptions"
+                  [actions]="control.optionsActions"
+                  [loadLazyItemsOnInit]="control.loadLazyItemsOnInit"
+                  [multiple]="control.multiple"
+                  [closableSelectedItem]="control.closableSelectedItem"
+                  [controlDisabled]="control.disabled"
+                  [readonly]="control.readonly"
+                  [placeholder]="control.placeholder"
+                  (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
+      </app-select>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'textarea'">
+    <label>{{control.label | translate}}
+      <textarea
+        [attr.placeholder]="(control.placeholder || '') | translate"
+        [formControlName]="control.controlName"
+        class="form-control"
+        rows="control.rows || 2"
+      ></textarea>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'datepicker'">
+    <label class="mb0">{{control.label | translate}}</label>
+    <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'image'">
+    <label class="mb0">{{control.label | translate}}</label>
+    <app-image-upload
+      [formControlName]="control.controlName"
+      [height]="control.height"
+      [url]="control.url">
+    </app-image-upload>
+  </ng-container>
+
+  <input *ngSwitchCase="'hidden'"
+         type="hidden"
+         class="form-control"
+         [formControlName]="control.controlName">
+
+  <ng-container *ngSwitchCase="'dynamic'">
+
+    <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
+
+      <ng-container *ngSwitchCase="1">
+        <label>{{control.label | translate}}
+          <input type="number"
+                 class="form-control"
+                 [attr.placeholder]="(control.placeholder || '') | translate"
+                 [formControlName]="control.controlName">
+        </label>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="2">
+        <label>{{control.label | translate}}</label>
+        <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="4">
+        <label>{{control.label | translate}}</label>
+        <label class="radio-inline">
+          <input type="radio" [formControlName]="control.controlName" value="1">
+          {{'default.boolean.TRUE' | translate}}
+        </label>
+        <label class="radio-inline">
+          <input type="radio" [formControlName]="control.controlName" value="0">
+          {{'default.boolean.FALSE' | translate}}
+        </label>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <label>{{control.label | translate}}
+          <input type="text"
+                 class="form-control"
+                 [attr.placeholder]="(control.placeholder || '') | translate"
+                 [formControlName]="control.controlName">
+        </label>
+      </ng-container>
+
+    </ng-container> <!-- control.dependsOn -->
+
+  </ng-container> <!-- control.type:'dynamic' -->
+
+</ng-container> <!-- ngSwitch:control.type -->

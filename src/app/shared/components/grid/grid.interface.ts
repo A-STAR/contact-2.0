@@ -1,3 +1,5 @@
+import { ControlTypes } from '../form/dynamic-form/dynamic-form-control.interface';
+
 export interface IDataSource {
   create?: string;
   read?: string;
@@ -22,6 +24,7 @@ export interface IGridColumn {
   maxWidth?: number;
   disabled?: boolean;
   $$valueGetter?: Function;
+  filterControlType?: ControlTypes;
 }
 
 export interface IRenderer {

@@ -42,7 +42,7 @@ export class ActionsLogComponent implements OnDestroy {
   columns: IGridColumn[] = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position', minWidth: 100 },
-    { prop: 'createDateTime', minWidth: 150, suppressSizeToFit: true },
+    { prop: 'createDateTime', minWidth: 150, suppressSizeToFit: true, filterControlType: 'datepicker' },
     { prop: 'module', minWidth: 150 },
     { prop: 'typeCode', minWidth: 150 },
     { prop: 'dsc', minWidth: 200 },
