@@ -1,3 +1,7 @@
 .log-filter-form {
   padding: 20px;
 }
+
+:host /deep/ ul.app-toolbar {
+  padding-right: 10px;
+}
