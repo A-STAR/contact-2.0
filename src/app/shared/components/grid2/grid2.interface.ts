@@ -1,7 +1,7 @@
 import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 
-import { FilterObject } from '../../../core/converter/value/value-converter.interface';
+import { FilterObject } from './filter/grid2-filter';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 

@@ -40,8 +40,8 @@ import {
   IGrid2ColumnSettings,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
-import { FilterObject } from '../../../core/converter/value/value-converter.interface';
 import { ControlTypes } from '../form/dynamic-form/dynamic-form-control.interface';
+import { FilterObject } from './filter/grid2-filter';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 

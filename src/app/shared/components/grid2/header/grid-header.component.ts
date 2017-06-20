@@ -9,7 +9,8 @@ import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
 } from '../grid2.interface';
-import { FilterObject } from '../../../../core/converter/value/value-converter.interface';
+
+import { FilterObject } from '../filter/grid2-filter';
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;

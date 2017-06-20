@@ -46,6 +46,6 @@ export interface IActionsLogData {
   data: IActionLog[];
 }
 
-export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
-  return [ entity.lastName, entity.firstName, entity.middleName ].filter((part: string) => !!part).join(' ');
+export const toFullName = (entity: { userId?: number, lastName: string, firstName: string, middleName: string }) => {
+  return [ entity.userId || '', entity.lastName, entity.firstName, entity.middleName ].filter((part: string) => !!part).join(' ');
 };
