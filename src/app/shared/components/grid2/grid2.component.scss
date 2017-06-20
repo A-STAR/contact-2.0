@@ -52,6 +52,13 @@ app-grid2 {
     .fa:hover {
       color: #23b7e5;
     }
+    &.active-filter {
+      visibility: visible;
+      color: #0198c4;
+      .fa:hover {
+        color: #007a9d;
+      }
+    }
   }
 
   .header-sort-item {
