@@ -44,6 +44,7 @@
   *ngIf="filterField"
   [fieldName]="filterField"
   [columnName]="filterColumnName"
+  [filter]="filterObject"
   [filterControlType]="filterControlType"
   (action)="saveFilterChanges($event)"
   (cancel)="closeFilter()"

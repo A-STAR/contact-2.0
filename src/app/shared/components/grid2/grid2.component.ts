@@ -37,6 +37,7 @@ import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
   IGrid2SortingDirectionSwitchPayload,
+  IGrid2ColumnSettings,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { FilterObject } from '../../../core/converter/value/value-converter.interface';
@@ -144,6 +145,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   get filterColumnName(): string {
     return this.filterColumn.getColDef().headerName;
+  }
+
+  get filterObject(): FilterObject {
+    const columnSettings: IGrid2ColumnSettings = this.columnsSettings[this.filterField];
+    return columnSettings ? columnSettings.filter : null;
   }
 
   get filterControlType(): ControlTypes {
