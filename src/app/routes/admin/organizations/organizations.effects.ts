@@ -39,6 +39,16 @@ export class OrganizationsEffects {
     });
 
   @Effect()
+  fetchOrganizationsSuccess$ = this.actions
+    .ofType(OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS)
+    .map(() => ({
+      type: OrganizationsService.ORGANIZATION_SELECT,
+      payload: {
+        organizationId: null
+      }
+    }));
+
+  @Effect()
   createOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_CREATE)
     .switchMap((action: Action) => {
@@ -167,6 +177,16 @@ export class OrganizationsEffects {
           return null;
         });
     });
+
+  @Effect()
+  fetchEmployeesSuccess$ = this.actions
+    .ofType(OrganizationsService.EMPLOYEES_FETCH_SUCCESS)
+    .map(() => ({
+      type: OrganizationsService.EMPLOYEE_SELECT,
+      payload: {
+        employeeUserId: null
+      }
+    }));
 
   @Effect()
   fetchNotAddedEmployees$ = this.actions

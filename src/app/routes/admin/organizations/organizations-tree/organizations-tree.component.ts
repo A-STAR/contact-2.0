@@ -1,13 +1,16 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
+import 'rxjs/add/observable/combineLatest';
 
 import { ITreeNodeInfo } from '../../../../shared/components/flowtree/tree.interface';
 import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { TreeNode } from '../../../../shared/components/flowtree/common/api';
 
 import { OrganizationsService } from '../organizations.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -27,16 +30,33 @@ export class OrganizationsTreeComponent implements OnDestroy {
   selection: TreeNode;
   value: TreeNode[];
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: true, permission: 'ORGANIZATION_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_DELETE' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH, visible: true },
-  ];
-
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE,
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD),
+      enabled: this.permissionsService.hasPermission('ORGANIZATION_ADD')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_DELETE'),
+        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.organizationsService.fetchOrganizations(),
+      enabled: this.permissionsService.hasPermission('ORGANIZATION_VIEW')
+    },
   ];
 
   action: IOrganizationDialogActionEnum;
@@ -48,6 +68,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   constructor(
     private organizationsService: OrganizationsService,
+    private permissionsService: PermissionsService,
   ) {
     this.organizationsService.fetchOrganizations();
 
@@ -72,9 +93,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
         state => {
           this.action = state.dialogAction;
           this.editedEntity = state.organizations.find(organization => organization.id === state.selectedOrganizationId);
-
-          // FIXME
-          this.refreshToolbar();
         },
         // TODO: notifications
         error => console.error(error)
@@ -139,26 +157,26 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.onSelect.emit(node.data);
   }
 
-  onToolbarAction(action: IToolbarAction): void {
-    switch (action.type) {
-      case ToolbarActionTypeEnum.REFRESH:
-        // FIXME
-        this.selection = [];
-        this.organizationsService.fetchOrganizations();
-        break;
-      case ToolbarActionTypeEnum.ADD:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD);
-        break;
-      case ToolbarActionTypeEnum.EDIT:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
-        break;
-      case ToolbarActionTypeEnum.REMOVE:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
-        break;
-      default:
-        this.organizationsService.setDialogAction(null);
-    }
-  }
+  // onToolbarAction(action: IToolbarAction): void {
+  //   switch (action.type) {
+  //     case ToolbarActionTypeEnum.REFRESH:
+  //       // FIXME
+  //       this.selection = [];
+  //       this.organizationsService.fetchOrganizations();
+  //       break;
+  //     case ToolbarActionTypeEnum.ADD:
+  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD);
+  //       break;
+  //     case ToolbarActionTypeEnum.EDIT:
+  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+  //       break;
+  //     case ToolbarActionTypeEnum.REMOVE:
+  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
+  //       break;
+  //     default:
+  //       this.organizationsService.setDialogAction(null);
+  //   }
+  // }
 
   cancelAction(): void {
     this.organizationsService.setDialogAction(null);
@@ -230,13 +248,13 @@ export class OrganizationsTreeComponent implements OnDestroy {
     }
   }
 
-  private refreshToolbar(): void {
-    this.setActionsVisibility(this.toolbarActionsGroup, !!this.selection);
-  }
+  // private refreshToolbar(): void {
+  //   this.setActionsVisibility(this.toolbarActionsGroup, !!this.selection);
+  // }
 
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-    });
-  }
+  // private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
+  //   actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
+  //     this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
+  //   });
+  // }
 }
