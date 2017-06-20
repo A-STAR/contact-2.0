@@ -12,7 +12,7 @@ export interface IGrid2ColumnSettings {
 }
 
 export interface IGrid2ColumnsSettings {
-  [columnId: string]: IGrid2ColumnSettings;
+  [key: string]: IGrid2ColumnSettings;
 }
 
 export interface IGrid2ColumnsSettingsInfo {

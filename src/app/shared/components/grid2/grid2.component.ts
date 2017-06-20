@@ -83,7 +83,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() pageSizes =  Array.from(new Set([Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000]));
 
   // Inputs without presets
-  @Input() columnsSettings: IGrid2ColumnsSettings;
+  @Input() columnsSettings = null as IGrid2ColumnsSettings;
   @Input() filterColumn: Column;
   @Input() columnMovingInProgress: boolean;
   @Input() columnTranslationKey: string;
