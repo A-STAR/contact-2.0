@@ -191,6 +191,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         }
       });
 
+    this.refreshRowsInfo();
+
     this.initialized = true;
   }
 
