@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import 'rxjs/add/operator/debounceTime';
 
-import { IClickableComponent, IClickableComponentPlugin } from './tree.interface';
+import { IClickableComponent, IClickableComponentPlugin } from '../tree.interface';
 
 export class ClickComponentPlugin implements IClickableComponentPlugin {
 

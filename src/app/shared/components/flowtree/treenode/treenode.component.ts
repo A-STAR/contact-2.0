@@ -5,17 +5,12 @@ import {
   Inject,
   forwardRef,
 } from '@angular/core';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/merge';
-import 'rxjs/add/operator/combineLatest';
 
-import { TreeNode } from './common/api';
-import { TreeComponent } from './tree.component';
+import { TreeComponent } from '../tree.component';
 import { ClickComponentPlugin } from './click.component.plugin';
-import {
-  IClickableComponent,
-  IClickableComponentPlugin
-} from './tree.interface';
+
+import { ITreeNode } from './treenode.interface';
+import { IClickableComponent, IClickableComponentPlugin } from '../tree.interface';
 
 @Component({
   selector: 'app-tree-node',
@@ -26,8 +21,8 @@ export class TreeNodeComponent implements OnInit, IClickableComponent {
   static DEFAULT_BG_COLOR = '#fff';
   static DEFAULT_SELECTED_BG_COLOR = '#def';
 
-  @Input() node: TreeNode;
-  @Input() parentNode: TreeNode;
+  @Input() node: ITreeNode;
+  @Input() parentNode: ITreeNode;
   @Input() root: boolean;
   @Input() index: number;
   @Input() firstChild: boolean;

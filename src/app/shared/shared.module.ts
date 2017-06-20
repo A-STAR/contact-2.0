@@ -6,8 +6,6 @@ import { RouterModule } from '@angular/router';
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
-// import { AccordionModule } from 'ngx-bootstrap/accordion';
-// import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
@@ -23,7 +21,7 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
-import { CalendarModule } from 'primeng/primeng';
+// import { CalendarModule } from 'primeng/primeng';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 // TODO: consider to dump in favour of angular2-text-mask
@@ -59,9 +57,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     FormsModule,
     ReactiveFormsModule,
     // Angle modules
-    // AccordionModule.forRoot(),
-    // AlertModule.forRoot(),
-    CalendarModule,
+    // CalendarModule,
     CurrencyMaskModule,
     DropdownModule.forRoot(),
     TranslateModule,
@@ -113,10 +109,8 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     RouterModule,
     // Angle exports
     CurrencyMaskModule,
-    // AccordionModule,
-    // AlertModule,
     DropdownModule,
-    CalendarModule,
+    // CalendarModule,
     TextMaskModule,
     ProgressbarModule,
     CheckallDirective,

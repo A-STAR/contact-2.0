@@ -1,26 +1,21 @@
 import {
-  Component,
-  Input,
-  AfterContentInit,
-  Output,
-  EventEmitter,
-  ContentChildren,
-  QueryList,
-  TemplateRef,
-  ViewEncapsulation,
-  ElementRef,
-  OnInit,
-  OnDestroy,
-  Renderer2,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewEncapsulation,
 } from '@angular/core';
 import * as R from 'ramda';
 
-import { TreeNode } from './common/api';
-import { PrimeTemplate } from './common/shared';
 import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
+
 import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.interface';
-import { ITreeNodeInfo } from './tree.interface';
+import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
 
 @Component({
   selector: 'app-tree',
@@ -29,9 +24,9 @@ import { ITreeNodeInfo } from './tree.interface';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, AfterContentInit {
+export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
 
-  @Input() value: TreeNode[];
+  @Input() value: ITreeNode[];
   @Input() selectionMode: string;
   @Input() selection: any;
   @Output() selectionChange: EventEmitter<any> = new EventEmitter();
@@ -47,9 +42,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
   @Input() metaKeySelection = true;
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
-  @ContentChildren(PrimeTemplate) templates: QueryList<any>;
 
-  templateMap: any;
   dragulaOptions: any = {
     // prevent any drags by default
     invalid: () => true
@@ -64,9 +57,11 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     return '.app-treenode-content';
   }
 
-  constructor(public elementRef: ElementRef,
-              public renderer: Renderer2,
-              dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory) {
+  constructor(
+    public elementRef: ElementRef,
+    public renderer: Renderer2,
+    dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
+  ) {
     this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
   }
 
@@ -78,14 +73,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     this.dragAndDropPlugin.ngOnDestroy();
   }
 
-  ngAfterContentInit(): void {
-    if (this.templates.length) {
-      this.templateMap = {};
-    }
-    this.templates.forEach((item) => this.templateMap[item.getType()] = item.template);
-  }
-
-  onNodeClick(event: MouseEvent, node: TreeNode): void {
+  onNodeClick(event: MouseEvent, node: ITreeNode): void {
     const eventTarget = (<Element> event.target);
 
     if (eventTarget.className && eventTarget.className.indexOf('app-tree-toggler') === 0) {
@@ -177,11 +165,11 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     }
   }
 
-  onDoubleNodeClick(event: MouseEvent, node: TreeNode): void {
+  onDoubleNodeClick(event: MouseEvent, node: ITreeNode): void {
     this.onNodeEdit.emit(node);
   }
 
-  findIndexInSelection(node: TreeNode): number {
+  findIndexInSelection(node: ITreeNode): number {
     let index: number = -1;
     if (this.selectionMode && this.selection) {
       if (this.isSingleSelectionMode()) {
@@ -198,7 +186,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     return index;
   }
 
-  propagateUp(node: TreeNode, select: boolean): void {
+  propagateUp(node: ITreeNode, select: boolean): void {
     if (node.children && node.children.length) {
       let selectedCount = 0;
       let childPartialSelected = false;
@@ -235,7 +223,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     }
   }
 
-  propagateDown(node: TreeNode, select: boolean): void {
+  propagateDown(node: ITreeNode, select: boolean): void {
     const index = this.findIndexInSelection(node);
     if (select && index === -1) {
       this.selection = [...this.selection || [], node];
@@ -250,7 +238,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     }
   }
 
-  isSelected(node: TreeNode): boolean {
+  isSelected(node: ITreeNode): boolean {
     return this.findIndexInSelection(node) !== -1;
   }
 
@@ -266,25 +254,17 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     return this.selectionMode && this.selectionMode === 'checkbox';
   }
 
-  getTemplateForNode(node: TreeNode): TemplateRef<any> {
-    if (this.templateMap) {
-      return node.type ? this.templateMap[node.type] : this.templateMap['default'];
-    } else {
-      return null;
-    }
-  }
-
   changeLocation(payload: IDragAndDropPayload): void {
-    const targetElement: TreeNode = this.findNodeRecursively(this.value[0], payload.target);
-    const sourceElement: TreeNode = this.findNodeRecursively(this.value[0], payload.source);
+    const targetElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.target);
+    const sourceElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.source);
 
     if (this.findNodeRecursively(sourceElement, payload.target)) {
       // User can not move the node under its child
       return;
     }
 
-    const sourceParentElement: TreeNode = sourceElement.parent;
-    sourceParentElement.children = sourceParentElement.children.filter((node: TreeNode) => node !== sourceElement);
+    const sourceParentElement: ITreeNode = sourceElement.parent;
+    sourceParentElement.children = sourceParentElement.children.filter((node: ITreeNode) => node !== sourceElement);
 
     if (!sourceParentElement.children.length) {
       delete sourceParentElement.children;
@@ -292,9 +272,9 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
     }
 
     if (payload.swap) {
-      const targetParent: TreeNode = targetElement.parent;
+      const targetParent: ITreeNode = targetElement.parent;
       targetParent.children = R.insert(
-        R.findIndex((node: TreeNode) => node === targetElement, targetParent.children) + 1,
+        R.findIndex((node: ITreeNode) => node === targetElement, targetParent.children) + 1,
         sourceElement,
         targetParent.children
       );
@@ -306,21 +286,21 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy, Afte
       sourceElement.parent = targetElement;
     }
 
-    const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: TreeNode, index: number) => {
+    const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: ITreeNode, index: number) => {
       return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
     }, (payload.swap ? targetElement : sourceElement).parent.children);
 
     this.changeNodesLocation.emit(payloads);
   }
 
-  findNodeRecursively(node: TreeNode, id: string): TreeNode {
+  findNodeRecursively(node: ITreeNode, id: string): ITreeNode {
     if (node.id === parseInt(id, 10)) {
       return node;
     }
     if (node.children) {
-      let result: TreeNode;
-      node.children.forEach((childNode: TreeNode) => {
-        const currentNode: TreeNode = this.findNodeRecursively(childNode, id);
+      let result: ITreeNode;
+      node.children.forEach((childNode: ITreeNode) => {
+        const currentNode: ITreeNode = this.findNodeRecursively(childNode, id);
         if (currentNode) {
           result = currentNode;
         }

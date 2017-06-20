@@ -14,11 +14,12 @@ import { IDraggedComponent, IIntersectedNodeInfo, INodeOffset } from './drag-and
 @Injectable()
 export class DragAndDropComponentPluginFactory {
 
-  constructor(private dragulaService: DragulaService,
-              private domHelper: DragAndDropDomHelper) {
-  }
+  constructor(
+    private dragulaService: DragulaService,
+    private domHelper: DragAndDropDomHelper
+  ) { }
 
-  public createAndAttachTo(component: IDraggedComponent): DragAndDropComponentPlugin {
+  createAndAttachTo(component: IDraggedComponent): DragAndDropComponentPlugin {
     return new DragAndDropComponentPlugin(
       component,
       this.dragulaService,

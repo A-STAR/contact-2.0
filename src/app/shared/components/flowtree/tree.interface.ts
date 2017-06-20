@@ -1,9 +1,3 @@
-export interface ITreeNodeInfo {
-  id: number;
-  parentId: number;
-  sortOrder: number;
-}
-
 export interface IClickableComponentPlugin {
   delegateClick(event: MouseEvent): void;
   stopEvent(event: MouseEvent): void;
