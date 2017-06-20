@@ -140,7 +140,7 @@
     "title": "Operator log",
     "filter": {
       "employees": {
-        "title": "Oprators",
+        "title": "Operators",
         "placeholder": "Select operator(s)",
         "blocking": "Show blocked operators",
         "grid": {
@@ -172,7 +172,7 @@
     "actionsLog": {
       "messages": {
         "errors": {
-          "fetch": "Error when loading the oprator logs"
+          "fetch": "Error when loading the operator logs"
         }
       }
     }
@@ -524,10 +524,10 @@
       "selectedCounts": "{{ selected }} selected / {{ length }} total"
     },
     "filter": {
-      "value": "Значение",
-      "equal": "равно",
-      "notEqual": "не равно",
-      "empty": "пусто"
+      "value": "Value",
+      "equal": "equal",
+      "notEqual": "not equal",
+      "empty": "empty"
     }
   }
 }

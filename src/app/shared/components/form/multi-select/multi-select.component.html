@@ -1,5 +1,5 @@
-<div [ngStyle]="styles">
-  <div class="multiselect-container col-md-8">
+<div [ngStyle]="styles" class="row">
+  <div class="multiselect-container col-md-8 pr0">
     <app-grid
       #gridFrom
       [styles]="gridStyles"
@@ -13,7 +13,7 @@
   </div>
   <div class="multiselect-control-bar col-md-1">
       <div class="row container-align">
-        <div class="child-align-middle">
+        <div class="vertical-align-middle">
           <div class="btn" (click)="onRightAction()">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
           </div>
@@ -29,7 +29,7 @@
         </div>
       </div>
   </div>
-  <div class="multiselect-container col-md-3">
+  <div class="multiselect-container col-md-3 pl0">
     <app-grid
       #gridTo
       [styles]="gridStyles"

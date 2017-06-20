@@ -2,6 +2,11 @@
   height: 100%;
 }
 
-.multiselect-control-bar {
-  max-width: 40px;
+.multiselect-control-bar .container-align {
+  text-align: center;
+  display: table;
+  & .vertical-align-middle {
+    display: table-cell;
+    vertical-align: middle;
+  }
 }
