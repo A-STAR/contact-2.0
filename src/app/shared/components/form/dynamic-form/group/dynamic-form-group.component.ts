@@ -42,12 +42,7 @@ export class DynamicFormGroupComponent {
   }
 
   // TODO: duplication
-  onSelectedControlItemsChanges(control: IDynamicFormControl, items: ILabeledValue[]): void {
-    this.selectedControlItemsChanges.emit({ control, items });
-  }
-
-  // TODO: duplication
-  onSelectedControlItemsChanges2(event: ISelectedControlItemsPayload): void {
+  onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
     this.selectedControlItemsChanges.emit(event);
   }
 }

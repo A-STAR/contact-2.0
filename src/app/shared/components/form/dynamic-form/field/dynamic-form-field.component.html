@@ -64,7 +64,7 @@
                   [controlDisabled]="control.disabled"
                   [readonly]="control.readonly"
                   [placeholder]="control.placeholder"
-                  (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
+                  (selectedControlItemsChanges)="onSelectedControlItemsChanges({ control: control, items: $event})">
       </app-select>
     </label>
   </ng-container>
