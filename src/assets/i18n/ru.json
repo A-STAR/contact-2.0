@@ -163,7 +163,7 @@
       "fullName": "ФИО",
       "position": "Должность",
       "createDateTime": "Дата",
-      "module": "Модуль",
+      "guiObject": "Модуль",
       "typeCode": "Тип действия",
       "dsc": "Описание",
       "machine": "Компьютер",

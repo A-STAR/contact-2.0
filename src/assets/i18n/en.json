@@ -163,7 +163,7 @@
       "fullName": "Full name",
       "position": "Position",
       "createDateTime": "Date",
-      "module": "Module",
+      "guiObject": "Module",
       "typeCode": "Action type",
       "dsc": "Description",
       "machine": "Machine",
