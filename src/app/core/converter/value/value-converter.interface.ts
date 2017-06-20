@@ -23,7 +23,7 @@ export interface ILabeledValue {
 export type FilteringConditionType = 'AND' | 'OR';
 
 export class FilteringOperators {
-  static EQUALLY: FilteringOperatorType = '==';
+  static EQUAL: FilteringOperatorType = '==';
   static NOT_EQUAL: FilteringOperatorType = '!=';
   static EMPTY: FilteringOperatorType = 'EMPTY';
 }

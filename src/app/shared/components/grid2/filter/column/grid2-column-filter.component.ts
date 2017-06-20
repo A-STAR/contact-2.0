@@ -33,7 +33,7 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
   @Input() columnName: string;
   @Input() filterControlType: ControlTypes;
   @Input() condition: FilteringConditionType = 'AND';
-  @Input() firstOperator: FilteringOperatorType = FilteringOperators.EQUALLY;
+  @Input() firstOperator: FilteringOperatorType = FilteringOperators.EQUAL;
   @Input() secondOperator: FilteringOperatorType;
   @Input() firstValue: any;
   @Input() secondValue: any;
