@@ -10,6 +10,6 @@ describe('Index Page', () => {
 
   it('should display login form for unauthorized users', () => {
     const loginElement = page.getLoginElement();
-    expect(loginElement).toBeTruthy();
+    expect(loginElement.getText()).toBeTruthy();
   });
 });
