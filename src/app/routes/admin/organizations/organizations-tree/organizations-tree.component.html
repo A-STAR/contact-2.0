@@ -21,12 +21,7 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<!-- TODO: fix border styles -->
-<app-toolbar
-  class="toolbar-border"
-  [actions]="toolbarActions"
-  (actionClick)="onToolbarAction($event)">
-</app-toolbar>
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-tree
   #tree

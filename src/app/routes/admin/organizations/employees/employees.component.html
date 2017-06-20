@@ -21,6 +21,8 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
 <app-grid
   class="flat"
   [autoLoad]="false"
@@ -29,8 +31,6 @@
   [editPermission]="'ORGANIZATION_EDIT'"
   [rows]="(state | async).employees"
   selectionType="single"
-  [toolbarActions]="toolbarActions"
   (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)"
-  (onAction)="onAction($event)">
+  (onSelect)="onSelect($event)">
 </app-grid>

@@ -6,11 +6,12 @@ import 'rxjs/add/operator/catch';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IEmployeeUser, IEmployee, IOrganizationDialogActionEnum, IOrganizationsState } from '../organizations.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
+import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
@@ -22,20 +23,39 @@ export class EmployeesComponent implements OnDestroy {
   @Input() employees: Array<IEmployee>;
   @ViewChild(GridComponent) grid: GridComponent;
 
-  toolbarActions: Array<IToolbarAction> = [
-    { text: 'toolbar.action.add', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'ORGANIZATION_EDIT' },
-    { text: 'toolbar.action.edit', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'ORGANIZATION_EDIT' },
-    { text: 'toolbar.action.remove', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'ORGANIZATION_EDIT' },
-    { text: 'toolbar.action.refresh', type: ToolbarActionTypeEnum.REFRESH },
-  ];
-
-  toolbarActionsMasterGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD,
-  ];
-
-  toolbarActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE,
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_REMOVE),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.organizationsService.fetchEmployees(),
+      enabled: Observable.combineLatest(
+        this.permissionsService.hasPermission('ORGANIZATION_VIEW'),
+        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
   ];
 
   columns: Array<IGridColumn> = [
@@ -72,6 +92,7 @@ export class EmployeesComponent implements OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
+    private permissionsService: PermissionsService,
     private translateService: TranslateService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -81,7 +102,6 @@ export class EmployeesComponent implements OnDestroy {
         state => {
           this.action = state.dialogAction;
           this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
-          this.refreshToolbar(!!state.selectedOrganizationId, !!state.selectedEmployeeUserId, state.employees.length > 0);
         },
         // TODO: notifications
         error => console.error(error)
@@ -118,25 +138,6 @@ export class EmployeesComponent implements OnDestroy {
     }
   }
 
-  onAction(action: IToolbarAction): void {
-    switch (action.type) {
-      case ToolbarActionTypeEnum.REFRESH:
-        this.organizationsService.fetchEmployees();
-        break;
-      case ToolbarActionTypeEnum.ADD:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD);
-        break;
-      case ToolbarActionTypeEnum.EDIT:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
-        break;
-      case ToolbarActionTypeEnum.REMOVE:
-        this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_REMOVE);
-        break;
-      default:
-        this.organizationsService.setDialogAction(null);
-    }
-  }
-
   onEdit(): void {
     this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
   }
@@ -158,26 +159,5 @@ export class EmployeesComponent implements OnDestroy {
 
   cancelAction(): void {
     this.organizationsService.setDialogAction(null);
-  }
-
-  private refreshToolbar(isOrganizationSelected: boolean, isEmployeeSelected: boolean, hasData: boolean): void {
-    this.setActionsVisibility(this.toolbarActionsGroup, isEmployeeSelected);
-    if (Array.isArray(this.toolbarActionsMasterGroup)) {
-      this.setActionsVisibility(this.toolbarActionsMasterGroup, isOrganizationSelected);
-    }
-
-    const refreshAction: IToolbarAction = this.findToolbarActionByType(ToolbarActionTypeEnum.REFRESH);
-    if (refreshAction) {
-      refreshAction.visible = hasData;
-    }
-  }
-
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) =>
-      this.findToolbarActionByType(actionType).visible = visible);
-  }
-
-  private findToolbarActionByType(actionType: ToolbarActionTypeEnum): IToolbarAction {
-    return this.toolbarActions.find((action: IToolbarAction) => actionType === action.type);
   }
 }
