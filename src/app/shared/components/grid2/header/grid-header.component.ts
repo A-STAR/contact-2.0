@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { ColDef, Column, IComponent } from 'ag-grid';
+import * as R from 'ramda';
 
 import {
   Grid2SortingEnum,
@@ -8,6 +9,7 @@ import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
 } from '../grid2.interface';
+import { FilterObject } from '../../../../core/converter/value/value-converter.interface';
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;
@@ -137,15 +139,18 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private setStyles(): void {
     this.setDefaultStyles();
 
-    if (this.sortingDirectionBySettings !== null) {
+    if (!R.isNil(this.sortingDirectionBySettings)) {
       switch (this.sortingDirectionBySettings) {
         case Grid2SortingEnum.DESC:
-          this.eSortDownButton.style.display = '';
+          this.renderer.setStyle(this.eSortDownButton, 'display', '');
           break;
         case Grid2SortingEnum.ASC:
-          this.eSortUpButton.style.display = '';
+          this.renderer.setStyle(this.eSortUpButton, 'display', '');
           break;
       }
+    }
+    if (!R.isNil(this.filterBySettings)) {
+      this.renderer.addClass(this.eFilterButton, 'active-filter');
     }
   }
 
