@@ -33,8 +33,12 @@ export class ValueConverterService {
 
     if (payload.columnsSettings) {
       R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        filter.addFilter(columnSettings.filter);
+        const originalFilter: FilterObject = columnSettings.filter;
+        filter.addFilter(
+          FilterObject.create(originalFilter, { name:  payload.fieldNameConverter })
+        );
       }, R.values(payload.columnsSettings));
+
       request.filtering = filter;
 
       const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(

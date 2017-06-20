@@ -31,26 +31,40 @@ export class FilteringOperators {
 export type FilteringOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<' | 'EMPTY' | 'NOT EMPTY' | 'IN' | 'NOT IN'
   | 'BETWEEN' | 'NOT BETWEEN' | 'LIKE' | 'NOT LIKE';
 
-export interface IFilteringObject {
+export interface IFilterBaseObject {
   condition?: FilteringConditionType;
-  filters?: IFilteringObject[];
+  filters?: IFilterBaseObject[];
   name?: string;
   operator?: FilteringOperatorType;
   valueArray?: any[];
   value?: any;
 }
 
-export class FilterObject implements IFilteringObject {
+export class FilterObject implements IFilterBaseObject {
 
   name: string;
   condition: FilteringConditionType;
-  filters: IFilteringObject[];
+  filters: IFilterBaseObject[];
   operator: FilteringOperatorType;
   value?: any;
   valueArray?: any[];
 
-  static create(): FilterObject {
-    return new FilterObject();
+  static create(source?: FilterObject, decorators?: { name: Function }): FilterObject {
+    let filter: FilterObject = new FilterObject();
+    if (!R.isNil(source)) {
+      filter = filter
+        .setName(decorators.name ? decorators.name(source.name) : source.name)
+        .setValue(source.value)
+        .setValueArray(source.valueArray)
+        .setCondition(source.condition)
+        .setOperator(source.operator);
+      if (Array.isArray(source.filters) && source.filters.length) {
+        filter.setFilters(
+          source.filters.map((_filter: FilterObject) => FilterObject.create(_filter, decorators))
+        );
+      }
+    }
+    return filter;
   }
 
   constructor() {
@@ -87,6 +101,11 @@ export class FilterObject implements IFilteringObject {
 
   setOperator(operator: FilteringOperatorType): FilterObject {
     this.operator = operator;
+    return this;
+  }
+
+  setFilters(filters: IFilterBaseObject[]): FilterObject {
+    this.filters = filters;
     return this;
   }
 
