@@ -15,6 +15,17 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 @Injectable()
 export class UsersEffects {
 
+  private fetchAction = {
+    type: UsersService.USERS_FETCH
+  };
+
+  private closeDialogAction = {
+    type: UsersService.USER_DIALOG_ACTION,
+    payload: {
+      dialogAction: null
+    }
+  };
+
   @Effect()
   fetchUsers$ = this.actions
     .ofType(UsersService.USERS_FETCH)
@@ -46,24 +57,19 @@ export class UsersEffects {
     .switchMap((action: Action) => {
       const { user, photo } = action.payload;
       return this.createUser(user)
-        .mergeMap(response => [
-          {
+        .mergeMap(response => {
+          const actions = [
+            this.fetchAction,
+            this.closeDialogAction
+          ];
+          return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
             payload: {
               userId: response.id,
               photo
             }
-          },
-          {
-            type: UsersService.USERS_FETCH
-          },
-          {
-            type: UsersService.USER_DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ])
+          }, ...actions];
+        })
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
           return null;
@@ -79,24 +85,17 @@ export class UsersEffects {
       const { user, photo } = action.payload;
       return this.updateUser(store.users.selectedUserId, user)
         .mergeMap(() => {
-          return [
-            {
-              type: UsersService.USER_UPDATE_PHOTO,
-              payload: {
-                userId: store.users.selectedUserId,
-                photo
-              }
-            },
-            {
-              type: UsersService.USERS_FETCH
-            },
-            {
-              type: UsersService.USER_DIALOG_ACTION,
-              payload: {
-                dialogAction: null
-              }
-            }
+          const actions = [
+            this.fetchAction,
+            this.closeDialogAction
           ];
+          return !photo && photo !== false ? actions : [{
+            type: UsersService.USER_UPDATE_PHOTO,
+            payload: {
+              userId: store.users.selectedUserId,
+              photo
+            }
+          }, ...actions];
         })
         .catch(() => {
           this.notificationsService.error('users.messages.errors.fetch');
@@ -137,7 +136,7 @@ export class UsersEffects {
   }
 
   private updatePhoto(userId: number, photo: File | false): Observable<any> {
-    if (!photo) {
+    if (photo === false) {
       return this.gridService.delete('/users/{userId}/photo', { userId });
     }
 
