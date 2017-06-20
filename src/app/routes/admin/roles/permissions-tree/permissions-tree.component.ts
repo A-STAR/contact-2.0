@@ -6,7 +6,7 @@ import 'rxjs/add/operator/distinctUntilKeyChanged';
 import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
-import { TreeNode } from '../../../../shared/components/flowtree/common/api';
+import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 import { PermissionsTreeService } from './permissions-tree.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
 
@@ -16,9 +16,9 @@ import { PermissionsService } from '../../../../core/permissions/permissions.ser
 })
 export class PermissionsTreeComponent implements OnDestroy {
 
-  initialSelection: TreeNode[] = [];
-  selection: TreeNode[] = [];
-  value: TreeNode[];
+  initialSelection: ITreeNode[] = [];
+  selection: ITreeNode[] = [];
+  value: ITreeNode[];
 
   toolbarActions: IToolbarAction[] = [
     { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE, permission: 'GUI_TREE_EDIT' },
@@ -51,7 +51,7 @@ export class PermissionsTreeComponent implements OnDestroy {
       });
   }
 
-  onSelectionChange(selection: TreeNode[]): void {
+  onSelectionChange(selection: ITreeNode[]): void {
     this.selection = selection;
     this.refreshToolbar();
   }
@@ -69,7 +69,7 @@ export class PermissionsTreeComponent implements OnDestroy {
       return;
     }
     this.permissionsTreeService.load(this.currentRole, this.selection)
-      .subscribe((data: TreeNode[]) => {
+      .subscribe((data: ITreeNode[]) => {
         this.value = data;
         this.initSelectionCopy();
       });
@@ -79,11 +79,11 @@ export class PermissionsTreeComponent implements OnDestroy {
     this.initialSelection = [].concat(this.selection);
   }
 
-  private get getRemovedItems(): TreeNode[] {
+  private get getRemovedItems(): ITreeNode[] {
     return this.permissionsTreeService.getDiff(this.initialSelection, this.selection);
   }
 
-  private get getAddedItems(): TreeNode[] {
+  private get getAddedItems(): ITreeNode[] {
     return this.permissionsTreeService.getDiff(this.selection, this.initialSelection);
   }
 

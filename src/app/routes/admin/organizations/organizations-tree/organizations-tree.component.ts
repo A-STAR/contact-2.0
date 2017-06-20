@@ -4,10 +4,9 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 import 'rxjs/add/observable/combineLatest';
 
-import { ITreeNodeInfo } from '../../../../shared/components/flowtree/tree.interface';
 import { IOrganization, IOrganizationDialogActionEnum } from '../organizations.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { TreeNode } from '../../../../shared/components/flowtree/common/api';
+import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
@@ -25,10 +24,10 @@ export class OrganizationsTreeComponent implements OnDestroy {
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
-  // TODO: TreeNode<IOrganization> { ..., data: IOrganization }
+  // TODO: ITreeNode<IOrganization> { ..., data: IOrganization }
 
-  selection: TreeNode;
-  value: TreeNode[];
+  selection: ITreeNode;
+  value: ITreeNode[];
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -116,13 +115,13 @@ export class OrganizationsTreeComponent implements OnDestroy {
     return this.action === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE;
   }
 
-  private convertToTreeNodes(organizations: Array<IOrganization>): Array<TreeNode> {
+  private convertToTreeNodes(organizations: Array<IOrganization>): Array<ITreeNode> {
     return organizations
       .sort((a: IOrganization, b: IOrganization) => a.sortOrder > b.sortOrder ? 1 : -1)
       .map(organization => this.convertToTreeNode(organization));
   }
 
-  private convertToTreeNode(organization: IOrganization): TreeNode {
+  private convertToTreeNode(organization: IOrganization): ITreeNode {
     const hasChildren = organization.children && organization.children.length;
     return {
       id: organization.id,
@@ -137,7 +136,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.organizationsService.updateOrganizations(payload);
   }
 
-  onNodeSelect({ node }: { node: TreeNode }): void {
+  onNodeSelect({ node }: { node: ITreeNode }): void {
     this.onNodeSelectOrExpand(node);
     const isExpanded = node.expanded;
     if (node.children) {
@@ -145,11 +144,11 @@ export class OrganizationsTreeComponent implements OnDestroy {
     }
   }
 
-  onNodeExpand({ node }: { node: TreeNode }): void {
+  onNodeExpand({ node }: { node: ITreeNode }): void {
     this.onNodeSelectOrExpand(node);
   }
 
-  onNodeSelectOrExpand(node: TreeNode): void {
+  onNodeSelectOrExpand(node: ITreeNode): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
@@ -177,7 +176,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.organizationsService.deleteOrganization();
   }
 
-  private findParentRecursive(node: TreeNode, parent: TreeNode[] = null): any {
+  private findParentRecursive(node: ITreeNode, parent: ITreeNode[] = null): any {
     if (!parent) {
       return this.findParentRecursive(node, this.tree.value);
     }
@@ -197,7 +196,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     }, null);
   }
 
-  private collapseSiblings(nodes: TreeNode[]): void {
+  private collapseSiblings(nodes: ITreeNode[]): void {
     if (!nodes || !nodes.length) {
       return;
     }
@@ -207,7 +206,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     });
   }
 
-  private collapseChildrenRecursive(node: TreeNode): void {
+  private collapseChildrenRecursive(node: ITreeNode): void {
     if (!node || !node.children) {
       return;
     }
@@ -217,7 +216,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     });
   }
 
-  private prepareTree(node: TreeNode, parent: TreeNode = null): void {
+  private prepareTree(node: ITreeNode, parent: ITreeNode = null): void {
     node.expanded = false;
     node.parent = parent;
     if (node.children) {
