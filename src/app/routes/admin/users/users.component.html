@@ -1,7 +1,7 @@
 <app-user-edit
   *ngIf="isEntityBeingCreated"
   title="users.create.title"
-  [roles]="roles"
+  [roles]="roleOptions$ | async"
   [languages]="languages"
   [passwordMinLength]="passwordMinLength$ | async"
   [passwordComplexity]="passwordComplexity$ | async"
@@ -13,7 +13,7 @@
   *ngIf="isEntityBeingEdited"
   title="users.edit.title"
   [editedEntity]="editedEntity"
-  [roles]="roles"
+  [roles]="roleOptions$ | async"
   [languages]="languages"
   [passwordMinLength]="passwordMinLength$ | async"
   [passwordComplexity]="passwordComplexity$ | async"
