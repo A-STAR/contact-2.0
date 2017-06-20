@@ -157,27 +157,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.onSelect.emit(node.data);
   }
 
-  // onToolbarAction(action: IToolbarAction): void {
-  //   switch (action.type) {
-  //     case ToolbarActionTypeEnum.REFRESH:
-  //       // FIXME
-  //       this.selection = [];
-  //       this.organizationsService.fetchOrganizations();
-  //       break;
-  //     case ToolbarActionTypeEnum.ADD:
-  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD);
-  //       break;
-  //     case ToolbarActionTypeEnum.EDIT:
-  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
-  //       break;
-  //     case ToolbarActionTypeEnum.REMOVE:
-  //       this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
-  //       break;
-  //     default:
-  //       this.organizationsService.setDialogAction(null);
-  //   }
-  // }
-
   cancelAction(): void {
     this.organizationsService.setDialogAction(null);
   }
@@ -247,14 +226,4 @@ export class OrganizationsTreeComponent implements OnDestroy {
       });
     }
   }
-
-  // private refreshToolbar(): void {
-  //   this.setActionsVisibility(this.toolbarActionsGroup, !!this.selection);
-  // }
-
-  // private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-  //   actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-  //     this.toolbarActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-  //   });
-  // }
 }
