@@ -112,6 +112,11 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     return columnState ? columnState.sortingDirection : null;
   }
 
+  get filterBySettings(): FilterObject {
+    const columnState: IGrid2ColumnSettings = this.columnsSettings && this.columnsSettings[this.columnId];
+    return columnState ? columnState.filter : null;
+  }
+
   private bindSubElements(): void {
     this.eFilterButton = this.eGui.querySelector('.header-filter-item');
     this.eSortUpButton = this.eGui.querySelector('.sort-up');
@@ -155,7 +160,8 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   }
 
   private setDefaultStyles(): void {
-    this.eSortUpButton.style.display = 'none';
-    this.eSortDownButton.style.display = 'none';
+    this.renderer.setStyle(this.eSortUpButton, 'display', 'none');
+    this.renderer.setStyle(this.eSortDownButton, 'display', 'none');
+    this.renderer.removeClass(this.eFilterButton, 'active-filter');
   }
 }
