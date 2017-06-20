@@ -92,13 +92,14 @@ export class UsersComponent implements OnDestroy {
   passwordMinLength$: Observable<string>;
   passwordComplexity$: Observable<string>;
 
-  private _roles;
-
   private _languages;
 
   private users$: Subscription;
 
   private canAddUser$: Observable<boolean>;
+
+  // TODO(d.maltsev): role options type
+  roleOptions$: Observable<any>;
 
   constructor(
     private constantsService: ConstantsService,
@@ -108,12 +109,26 @@ export class UsersComponent implements OnDestroy {
     private permissionsService: PermissionsService,
     private usersService: UsersService,
   ) {
-    const { roles, languages } = this.route.snapshot.data.users;
-    this._roles = roles;
+    // TODO(d.maltsev): remove languages from resolver
+    const { languages } = this.route.snapshot.data.users;
     this._languages = languages;
-    this.renderers.roleId = [].concat(roles);
-    this.renderers.languageId = [].concat(languages);
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    // TODO(d.maltsev):
+    // preload roles in resolver or create PermissionsService.refreshRoles method
+    // that only loads roles if they are not already loaded
+    this.permissionsService.fetchRoles();
+
+    this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
+      label: role.name,
+      value: role.id
+    })));
+
+    this.roleOptions$.subscribe(options => {
+      this.renderers.roleId = [].concat(options);
+      this.renderers.languageId = [].concat(languages);
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    });
+
     this.filter = this.filter.bind(this);
 
     this.usersService.fetch();
@@ -131,6 +146,9 @@ export class UsersComponent implements OnDestroy {
 
     this.canAddUser$ = this.permissionsService.hasPermission('USER_ADD');
 
+    // TODO(d.maltsev):
+    // preload constants in resolver or create ConstantsService.refresh method
+    // that only loads constants if they are not already loaded
     this.constantsService.fetch();
     this.passwordMinLength$ = this.constantsService.get('UserPassword.MinLength');
     this.passwordComplexity$ = this.constantsService.get('UserPassword.Complexity.Use');
@@ -150,10 +168,6 @@ export class UsersComponent implements OnDestroy {
 
   get state(): Observable<IUsersState> {
     return this.usersService.state;
-  }
-
-  get roles(): Array<any> {
-    return this._roles;
   }
 
   get languages(): Array<any> {
