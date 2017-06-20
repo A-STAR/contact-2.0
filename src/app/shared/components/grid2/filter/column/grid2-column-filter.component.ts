@@ -44,8 +44,8 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
   secondSelectionControl: IDynamicFormControl;
 
   conditionItems = [
-    { label: 'default.filter.equally', value: FilteringOperators.EQUAL },
-    { label: 'default.filter.notEqually', value: FilteringOperators.NOT_EQUALLY },
+    { label: 'default.filter.equal', value: FilteringOperators.EQUAL },
+    { label: 'default.filter.notEqual', value: FilteringOperators.NOT_EQUAL },
     { label: 'default.filter.empty', value: FilteringOperators.EMPTY }
   ];
 
