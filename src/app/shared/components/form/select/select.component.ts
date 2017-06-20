@@ -126,7 +126,7 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   @Input()
   set active(selectedItems: Array<ILabeledValue>) {
     let currentSelectedItems: number|Array<any> = selectedItems;
-    if (typeof currentSelectedItems === 'number') {
+    if (typeof currentSelectedItems === 'number' || typeof currentSelectedItems === 'string') {
       const selectedRawItem: ILabeledValue = this.rawData
         .find((item: ILabeledValue) => String(item.value) === String(currentSelectedItems));
 
