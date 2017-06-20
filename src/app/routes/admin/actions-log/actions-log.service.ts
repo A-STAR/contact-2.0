@@ -24,7 +24,7 @@ import {
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { FilterObject } from "../../../core/converter/value/value-converter.interface";
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ActionsLogService {

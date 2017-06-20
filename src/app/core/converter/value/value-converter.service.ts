@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import * as R from 'ramda';
 
 import {
-  FilterObject,
   ILabeledValue,
   IValueEntity,
   ValueType
@@ -15,6 +14,8 @@ import {
   IGrid2RequestPayload,
   IGrid2RequestSorting,
 } from '../../../shared/components/grid2/grid2.interface';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ValueConverterService {
