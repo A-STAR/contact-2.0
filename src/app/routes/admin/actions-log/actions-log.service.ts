@@ -139,6 +139,7 @@ export class ActionsLogService {
 
         request.filtering = FilterObject.create()
           .and()
+          .addFilter(request.filtering)
           .addFilter(
             FilterObject.create()
               .setName('createDateTime')

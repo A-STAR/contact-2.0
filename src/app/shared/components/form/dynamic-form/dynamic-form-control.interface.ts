@@ -27,8 +27,8 @@ export interface IDynamicFormControl {
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;
-  options?: Array<ISelectOptions>;
-  lazyOptions?: Observable<Array<ISelectOptions>>;
+  options?: ILabeledValue[];
+  lazyOptions?: Observable<ILabeledValue[]>;
   cachingOptions?: boolean;
   loadLazyItemsOnInit?: boolean;
   optionsActions?: Array<ISelectionAction>;
@@ -52,12 +52,6 @@ export type ControlTypes = 'number'
   | 'checkbox'
   | 'multiselect'
   | 'image';
-
-export interface ISelectOptions {
-  label: string;
-  value: any;
-  selected?: boolean;
-}
 
 export interface IValue {
   [key: string]: any;

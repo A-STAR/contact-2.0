@@ -8,6 +8,7 @@ import { GridHeaderComponent } from './header/grid-header.component';
 export interface IGrid2ColumnSettings {
   sortingDirection: Grid2SortingEnum;
   sortingOrder: number;
+  filter: FilterObject;
 }
 
 export interface IGrid2ColumnsSettings {
@@ -36,6 +37,11 @@ export interface IGrid2ColumnsSortingDirectionInfo {
   columnId: string;
   sortingDirection: Grid2SortingEnum;
   sortingOrder: number;
+}
+
+export interface IGrid2ColumnFilterPayload {
+  columnId: string;
+  filter: FilterObject;
 }
 
 export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
@@ -72,6 +78,7 @@ export interface IActionGrid2Payload {
     |IGrid2GroupingColumnsChangePayload
     |IGrid2SelectedRowChangePayload
     |IGrid2ColumnMovingPayload
+    |IGrid2ColumnFilterPayload
     |number;
 }
 
@@ -123,5 +130,6 @@ export interface IGrid2EventPayload {
     |IGrid2ShowFilterPayload
     |IGrid2GroupingColumnsChangePayload
     |IGrid2SelectedRowChangePayload
-    |IGrid2SortingDirectionSwitchPayload;
+    |IGrid2SortingDirectionSwitchPayload
+    |IGrid2ColumnFilterPayload;
 }
