@@ -9,14 +9,14 @@ import {
 import { FormBuilder } from '@angular/forms';
 import * as R from 'ramda';
 
+import { ControlTypes, IDynamicFormControl } from '../../../form/dynamic-form/dynamic-form-control.interface';
+import { IGrid2ColumnFilterData } from './grid2-column-filter.interface';
 import {
   FilteringConditionType,
   FilteringOperators,
   FilteringOperatorType,
-  FilterObject,
-} from '../../../../../core/converter/value/value-converter.interface';
-import { ControlTypes, IDynamicFormControl } from '../../../form/dynamic-form/dynamic-form-control.interface';
-import { IGrid2ColumnFilterData } from './grid2-column-filter.interface';
+  FilterObject
+} from '../grid2-filter';
 
 import { DynamicFormComponent } from '../../../form/dynamic-form/dynamic-form.component';
 
