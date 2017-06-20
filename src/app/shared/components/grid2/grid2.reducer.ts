@@ -158,6 +158,7 @@ export function grid2Reducer(
         ...state,
         selectedRows: [],
         columnsSettings: {
+          ...state.columnsSettings,
           [columnFilterPayload.columnId]: {
             ...(state.columnsSettings[columnFilterPayload.columnId]),
             filter: columnFilterPayload.filter
