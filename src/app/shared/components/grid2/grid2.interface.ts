@@ -1,14 +1,14 @@
 import { Column } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 
-import { FilterObject } from '../../../core/converter/value/value-converter.interface';
+import { FilterObject } from './filter/grid2-filter';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 
 export interface IGrid2ColumnSettings {
-  sortingDirection: Grid2SortingEnum;
-  sortingOrder: number;
-  filter: FilterObject;
+  sortingDirection?: Grid2SortingEnum;
+  sortingOrder?: number;
+  filter?: FilterObject;
 }
 
 export interface IGrid2ColumnsSettings {

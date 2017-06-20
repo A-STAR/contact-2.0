@@ -37,10 +37,11 @@ import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
   IGrid2SortingDirectionSwitchPayload,
+  IGrid2ColumnSettings,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
-import { FilterObject } from '../../../core/converter/value/value-converter.interface';
 import { ControlTypes } from '../form/dynamic-form/dynamic-form-control.interface';
+import { FilterObject } from './filter/grid2-filter';
 
 import { GridHeaderComponent } from './header/grid-header.component';
 
@@ -146,6 +147,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return this.filterColumn.getColDef().headerName;
   }
 
+  get filterObject(): FilterObject {
+    const columnSettings: IGrid2ColumnSettings = this.columnsSettings[this.filterField];
+    return columnSettings ? columnSettings.filter : null;
+  }
+
   get filterControlType(): ControlTypes {
     return this.getSimpleColumnByName(this.filterField).filterControlType;
   }
@@ -190,6 +196,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           this.translateColumns(columnTranslations);
         }
       });
+
+    this.refreshRowsInfo();
 
     this.initialized = true;
   }

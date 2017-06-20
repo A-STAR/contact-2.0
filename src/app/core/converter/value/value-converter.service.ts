@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import * as R from 'ramda';
 
 import {
-  FilterObject,
   ILabeledValue,
   IValueEntity,
   ValueType
@@ -15,6 +14,8 @@ import {
   IGrid2RequestPayload,
   IGrid2RequestSorting,
 } from '../../../shared/components/grid2/grid2.interface';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ValueConverterService {
@@ -33,8 +34,12 @@ export class ValueConverterService {
 
     if (payload.columnsSettings) {
       R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        filter.addFilter(columnSettings.filter);
+        const originalFilter: FilterObject = columnSettings.filter;
+        filter.addFilter(
+          FilterObject.create(originalFilter, { name:  payload.fieldNameConverter })
+        );
       }, R.values(payload.columnsSettings));
+
       request.filtering = filter;
 
       const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(

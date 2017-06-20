@@ -9,14 +9,14 @@ import {
 import { FormBuilder } from '@angular/forms';
 import * as R from 'ramda';
 
+import { ControlTypes, IDynamicFormControl } from '../../../form/dynamic-form/dynamic-form-control.interface';
+import { IGrid2ColumnFilterData } from './grid2-column-filter.interface';
 import {
   FilteringConditionType,
   FilteringOperators,
   FilteringOperatorType,
-  FilterObject,
-} from '../../../../../core/converter/value/value-converter.interface';
-import { ControlTypes, IDynamicFormControl } from '../../../form/dynamic-form/dynamic-form-control.interface';
-import { IGrid2ColumnFilterData } from './grid2-column-filter.interface';
+  FilterObject
+} from '../grid2-filter';
 
 import { DynamicFormComponent } from '../../../form/dynamic-form/dynamic-form.component';
 
@@ -32,23 +32,20 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
   @Input() fieldName: string;
   @Input() columnName: string;
   @Input() filterControlType: ControlTypes;
-  @Input() condition: FilteringConditionType = 'AND';
-  @Input() firstOperator: FilteringOperatorType = FilteringOperators.EQUALLY;
-  @Input() secondOperator: FilteringOperatorType;
-  @Input() firstValue: any;
-  @Input() secondValue: any;
+  @Input() filter: FilterObject;
 
   @Output() action: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
+  condition: FilteringConditionType = 'AND';
   firstValueControl: IDynamicFormControl;
   secondValueControl: IDynamicFormControl;
   firstSelectionControl: IDynamicFormControl;
   secondSelectionControl: IDynamicFormControl;
 
   conditionItems = [
-    { label: 'default.filter.equally', value: FilteringOperators.EQUALLY },
-    { label: 'default.filter.notEqually', value: FilteringOperators.NOT_EQUALLY },
+    { label: 'default.filter.equal', value: FilteringOperators.EQUAL },
+    { label: 'default.filter.notEqual', value: FilteringOperators.NOT_EQUAL },
     { label: 'default.filter.empty', value: FilteringOperators.EMPTY }
   ];
 
@@ -84,12 +81,27 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
       }
     ];
 
-    this.data = {
-      firstValue: this.firstValue,
-      secondValue: this.secondValue,
-      firstSelectionValue: this.firstOperator,
-      secondSelectionValue: this.secondOperator
-    };
+    const data: IGrid2ColumnFilterData = (this.data = (this.data || {})) as IGrid2ColumnFilterData;
+
+    if (this.filter) {
+      this.condition = this.filter.condition;
+
+      if (this.filter.hasFilter()) {
+        const firstFilter: FilterObject = this.filter.filters[0] as FilterObject;
+        const secondFilter: FilterObject = this.filter.filters[1] as FilterObject;
+        if (firstFilter) {
+          data.firstValue = firstFilter.value;
+          data.firstSelectionValue = firstFilter.operator;
+        }
+        if (secondFilter) {
+          data.secondValue = secondFilter.value;
+          data.secondSelectionValue = secondFilter.operator;
+        }
+      }
+    }
+    if (R.isNil(data.firstSelectionValue)) {
+      data.firstSelectionValue = FilteringOperators.EQUAL;
+    }
 
     super.ngOnInit();
   }

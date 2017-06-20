@@ -163,7 +163,7 @@
       "fullName": "ФИО",
       "position": "Должность",
       "createDateTime": "Дата",
-      "module": "Модуль",
+      "guiObject": "Модуль",
       "typeCode": "Тип действия",
       "dsc": "Описание",
       "machine": "Компьютер",
@@ -529,8 +529,8 @@
     },
     "filter": {
       "value": "Значение",
-      "equally": "равно",
-      "notEqually": "не равно",
+      "equal": "равно",
+      "notEqual": "не равно",
       "empty": "пусто"
     }
   }

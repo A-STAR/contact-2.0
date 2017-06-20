@@ -1,7 +1,5 @@
-import {
-  FilteringOperatorType,
-  ILabeledValue
-} from '../../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
+import { FilteringOperatorType } from '../grid2-filter';
 
 export interface IGrid2ColumnFilterData {
   firstValue: number|string|Date;

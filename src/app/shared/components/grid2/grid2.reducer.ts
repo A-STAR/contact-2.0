@@ -139,6 +139,11 @@ export function grid2Reducer(
           ...state,
           selectedRows: [],
           columnsSettings: {
+            ...R.mapObjIndexed((columnSettings: IGrid2ColumnSettings) => {
+              return {
+                filter: columnSettings.filter
+              };
+            }, state.columnsSettings),
             [sortingDirectionPayload.columnId]: {
               ...(state.columnsSettings[sortingDirectionPayload.columnId]),
               sortingDirection: sortingDirectionPayload.sortingDirection,
@@ -153,6 +158,7 @@ export function grid2Reducer(
         ...state,
         selectedRows: [],
         columnsSettings: {
+          ...state.columnsSettings,
           [columnFilterPayload.columnId]: {
             ...(state.columnsSettings[columnFilterPayload.columnId]),
             filter: columnFilterPayload.filter

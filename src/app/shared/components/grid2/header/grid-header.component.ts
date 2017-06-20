@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { ColDef, Column, IComponent } from 'ag-grid';
+import * as R from 'ramda';
 
 import {
   Grid2SortingEnum,
@@ -8,6 +9,8 @@ import {
   IGrid2HeaderParams,
   IGrid2ServiceDispatcher,
 } from '../grid2.interface';
+
+import { FilterObject } from '../filter/grid2-filter';
 
 export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private agParams: IGrid2HeaderParams;
@@ -110,6 +113,11 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
     return columnState ? columnState.sortingDirection : null;
   }
 
+  get filterBySettings(): FilterObject {
+    const columnState: IGrid2ColumnSettings = this.columnsSettings && this.columnsSettings[this.columnId];
+    return columnState ? columnState.filter : null;
+  }
+
   private bindSubElements(): void {
     this.eFilterButton = this.eGui.querySelector('.header-filter-item');
     this.eSortUpButton = this.eGui.querySelector('.sort-up');
@@ -137,20 +145,24 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private setStyles(): void {
     this.setDefaultStyles();
 
-    if (this.sortingDirectionBySettings !== null) {
+    if (!R.isNil(this.sortingDirectionBySettings)) {
       switch (this.sortingDirectionBySettings) {
         case Grid2SortingEnum.DESC:
-          this.eSortDownButton.style.display = '';
+          this.renderer.setStyle(this.eSortDownButton, 'display', '');
           break;
         case Grid2SortingEnum.ASC:
-          this.eSortUpButton.style.display = '';
+          this.renderer.setStyle(this.eSortUpButton, 'display', '');
           break;
       }
+    }
+    if (!R.isNil(this.filterBySettings)) {
+      this.renderer.addClass(this.eFilterButton, 'active-filter');
     }
   }
 
   private setDefaultStyles(): void {
-    this.eSortUpButton.style.display = 'none';
-    this.eSortDownButton.style.display = 'none';
+    this.renderer.setStyle(this.eSortUpButton, 'display', 'none');
+    this.renderer.setStyle(this.eSortDownButton, 'display', 'none');
+    this.renderer.removeClass(this.eFilterButton, 'active-filter');
   }
 }
