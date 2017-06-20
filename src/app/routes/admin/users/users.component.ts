@@ -192,8 +192,8 @@ export class UsersComponent implements OnDestroy {
     this.usersService.setDialogAction(null);
   }
 
-  onEdit(): void {
-    this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT);
+  onEdit(user: IUser): void {
+    this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT, user.id);
   }
 
   onSelect(user: IUser): void {
