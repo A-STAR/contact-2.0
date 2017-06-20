@@ -66,11 +66,12 @@ export class UsersService {
     });
   }
 
-  setDialogAction(dialogAction: IUserDialogActionEnum): void {
+  setDialogAction(dialogAction: IUserDialogActionEnum, userId?: number): void {
     return this.store.dispatch({
       type: UsersService.USER_DIALOG_ACTION,
       payload: {
-        dialogAction
+        dialogAction,
+        userId
       }
     });
   }
