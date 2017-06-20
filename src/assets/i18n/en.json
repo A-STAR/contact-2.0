@@ -522,6 +522,12 @@
         "or": "Or"
       },
       "selectedCounts": "{{ selected }} selected / {{ length }} total"
+    },
+    "filter": {
+      "value": "Значение",
+      "equally": "равно",
+      "notEqually": "не равно",
+      "empty": "пусто"
     }
   }
 }
