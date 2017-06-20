@@ -24,7 +24,7 @@ export type FilteringConditionType = 'AND' | 'OR';
 
 export class FilteringOperators {
   static EQUALLY: FilteringOperatorType = '==';
-  static NOT_EQUALLY: FilteringOperatorType = '!=';
+  static NOT_EQUAL: FilteringOperatorType = '!=';
   static EMPTY: FilteringOperatorType = 'EMPTY';
 }
 
