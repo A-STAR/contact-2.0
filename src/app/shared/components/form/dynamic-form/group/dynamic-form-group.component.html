@@ -1,7 +1,7 @@
 <div class="row" [formGroup]="form">
     <ng-container *ngFor="let control of items" >
 
-      <div [ngClass]="'col-xs-' + (control.width || 12)">
+      <div [ngClass]="'form-column col-xs-' + (control.width || 12)">
 
         <div *ngIf="!control.children" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
 
