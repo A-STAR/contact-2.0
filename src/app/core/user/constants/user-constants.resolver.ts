@@ -10,9 +10,6 @@ export class UserConstantsResolver implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     this.userConstantsService.refresh();
-
-    // TODO(d.maltsev)
-    // return this.userConstantsService.isResolved.do(console.log);
-    return Observable.of(true);
+    return this.userConstantsService.isResolved.take(1);
   }
 }
