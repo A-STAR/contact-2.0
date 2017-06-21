@@ -12,8 +12,6 @@ import { NotificationsService } from '../../notifications/notifications.service'
 
 @Injectable()
 export class UserConstantsService {
-  static STORE_KEY = 'userConstants';
-
   static USER_CONSTANTS_FETCH         = 'USER_CONSTANTS_FETCH';
   static USER_CONSTANTS_FETCH_SUCCESS = 'USER_CONSTANTS_FETCH_SUCCESS';
 
@@ -57,7 +55,7 @@ export class UserConstantsService {
   }
 
   private get state(): Observable<IUserConstantsState> {
-    return this.store.select(UserConstantsService.STORE_KEY);
+    return this.store.select('userConstants');
   }
 
   private read(): Observable<IUserConstantsResponse> {
