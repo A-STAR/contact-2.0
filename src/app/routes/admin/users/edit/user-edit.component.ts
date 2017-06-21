@@ -137,7 +137,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   }
 
   toSubmittedValues(value: IUser): any {
-    return {
+    const submittedValue = {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
@@ -147,6 +147,13 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       endWorkDate: this.valueConverterService.valueToIsoDate(value.endWorkDate),
       // TODO(a.poterenko): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
+    };
+
+    const { roleId, ...user } = submittedValue;
+
+    return {
+      ...(this.canEditUser ? user : {}),
+      ...(this.canEditUserRole ? { roleId } : {})
     };
   }
 
