@@ -207,9 +207,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       if (R.prop('rows', changes) || R.prop('currentPage', changes) || R.prop('currentPageSize', changes)) {
         this.refreshRowsInfo();
         this.refreshPaginationElements();
+        this.clearAllSelections();
       }
       if (R.prop('selectedRows', changes)) {
-        this.refreshSelectedRows();
+        this.refreshRowsInfo();
       }
       if (R.prop('columnsSettings', changes) || R.prop('columnMovingInProgress', changes)) {
         this.refreshHeaderColumns();
@@ -227,12 +228,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.onRowsSelect.emit({
       type: Grid2Component.SELECTED_ROWS, payload: { rowData: rowNode.data, selected: rowNode.isSelected() }
     });
-  }
-
-  private refreshSelectedRows(): void {
-    this.refreshRowsInfo();
-    this.clearAllSelections();
-    this.selectedRows.forEach((record: any) => this.gridOptions.api.selectNode(record, this.isMultipleRowSelection));
   }
 
   private refreshHeaderColumns(): void {
