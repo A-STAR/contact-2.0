@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { IAppState } from '../state/state.interface';
@@ -14,7 +15,7 @@ import {
 } from './notifications.interface';
 
 @Injectable()
-export class NotificationsService {
+export class NotificationsService implements OnDestroy {
   static NOTIFICATION_PUSH:   INotificationActionType = 'NOTIFICATION_PUSH';
   static NOTIFICATION_RESET:  INotificationActionType = 'NOTIFICATION_RESET';
   static NOTIFICATION_FILTER: INotificationActionType = 'NOTIFICATION_FILTER';
@@ -22,15 +23,23 @@ export class NotificationsService {
 
   static STORAGE_KEY = 'state/notifications';
 
+  private notificationsStateSubscription: Subscription;
+
   constructor(
     private store: Store<IAppState>,
     private translateService: TranslateService,
-  ) {}
+  ) {
+    this.notificationsStateSubscription = this.state.subscribe(state => {
+      localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.notificationsStateSubscription.unsubscribe();
+  }
 
   get state(): Observable<INotificationServiceState> {
-    return this.store
-      .select(state => state.notifications)
-      .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)));
+    return this.store.select(state => state.notifications);
   }
 
   createDebugAction(message: string | IMessage, showAlert: boolean = true): Action {
