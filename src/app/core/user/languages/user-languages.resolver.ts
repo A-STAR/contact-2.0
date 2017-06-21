@@ -9,9 +9,6 @@ export class UserLanguagesResolver implements Resolve<any> {
   constructor(private userLanguagesService: UserLanguagesService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    this.userLanguagesService.refresh();
-    return this.userLanguagesService.isResolved
-      .filter(isResolved => isResolved)
-      .take(1);
+    return this.userLanguagesService.preload();
   }
 }

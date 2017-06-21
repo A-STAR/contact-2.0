@@ -26,7 +26,6 @@ import { PermissionsEffects } from './permissions/permissions.effects';
 import { PermissionsService } from './permissions/permissions.service';
 import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
-import { UserLanguagesEffects } from './user/languages/user-languages.effects';
 import { UserLanguagesService } from './user/languages/user-languages.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
@@ -40,7 +39,7 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(PermissionsEffects),
     EffectsModule.run(UserConstantsEffects),
-    EffectsModule.run(UserLanguagesEffects),
+    EffectsModule.run(UserLanguagesService),
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
