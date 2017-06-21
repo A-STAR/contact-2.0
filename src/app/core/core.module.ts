@@ -24,6 +24,7 @@ import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { PermissionsEffects } from './permissions/permissions.effects';
 import { PermissionsService } from './permissions/permissions.service';
+import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
@@ -36,7 +37,7 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(DictionariesEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(PermissionsEffects),
-    EffectsModule.run(UserConstantsService),
+    EffectsModule.run(UserConstantsEffects),
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
@@ -57,6 +58,7 @@ import { rootReducer } from './state/root.reducer';
     SettingsService,
     ThemesService,
     TranslateService,
+    UserConstantsService,
     ValueConverterService,
   ],
   exports: [
