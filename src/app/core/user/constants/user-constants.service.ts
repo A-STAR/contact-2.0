@@ -23,7 +23,9 @@ export class UserConstantsService {
         .map((response: IUserConstantsResponse) => {
           return {
             type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
-            payload: response.data
+            payload: {
+              data: response.data
+            }
           };
         })
         .catch(() => {
@@ -40,6 +42,10 @@ export class UserConstantsService {
     private store: Store<IAppState>,
   ) {}
 
+  get isResolved(): Observable<boolean> {
+    return this.state.map(state => state.constants.length > 0);
+  }
+
   refresh(): void {
     this.store.dispatch({
       type: UserConstantsService.USER_CONSTANTS_FETCH
@@ -54,11 +60,11 @@ export class UserConstantsService {
     return this.state.map(state => !!state.constants.find(constant => constant.name === constantName));
   }
 
-  private get state(): Observable<IUserConstantsState> {
-    return this.store.select('userConstants');
-  }
-
   private read(): Observable<IUserConstantsResponse> {
     return this.gridService.read('/constants/values');
+  }
+
+  private get state(): Observable<IUserConstantsState> {
+    return this.store.select('userConstants');
   }
 }
