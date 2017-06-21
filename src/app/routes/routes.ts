@@ -4,6 +4,7 @@ import { AuthService } from '../core/auth/auth.service';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
+import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -30,7 +31,8 @@ export const routes: Route[] = [
     resolve: {
       app: PermissionsResolver,
       menu: MenuResolver,
-      userConstantsResolved: UserConstantsResolver
+      userConstantsResolved: UserConstantsResolver,
+      userLanguagesResolved: UserLanguagesResolver
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [

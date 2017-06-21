@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { UserConstantsService } from './user-constants.service';
+import { UserLanguagesService } from './user-languages.service';
 
 @Injectable()
-export class UserConstantsResolver implements Resolve<any> {
-  constructor(private userConstantsService: UserConstantsService) {}
+export class UserLanguagesResolver implements Resolve<any> {
+  constructor(private userLanguagesService: UserLanguagesService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    this.userConstantsService.refresh();
-    return this.userConstantsService.isResolved
+    this.userLanguagesService.refresh();
+    return this.userLanguagesService.isResolved
       .filter(isResolved => isResolved)
       .take(1);
   }
