@@ -196,6 +196,12 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     this.clickAction.emit(action);
   }
 
+  toTranslatedLabel(item: ILabeledValue): SafeHtml {
+    return item.label
+      ? this.translateService.instant(item.label)
+      : item.value;
+  }
+
   toCleanedAndTranslatedLabel(item: ILabeledValue): SafeHtml {
     return item.label
       ? this.sanitizer.bypassSecurityTrustHtml(this.translateService.instant(item.label))
@@ -362,8 +368,8 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     this.activeOption = value;
   }
 
-  protected isActive(value: ILabeledValue): boolean {
-    return this.activeOption.value === value.value;
+  protected isActive(labeledValue: ILabeledValue): boolean {
+    return !!this.active.find((v: ILabeledValue) => v.value === labeledValue.value);
   }
 
   private toPropertyValue(value: boolean, defaultValue: boolean): boolean {

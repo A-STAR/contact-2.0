@@ -42,16 +42,16 @@
          (keyup)="inputEvent($event, true)"
          class="form-control ui-select-search"
          *ngIf="inputMode"
-         placeholder="{{active.length <= 0 ? placeholder : ''}}">
+         [placeholder]="!!active.length ?  toTranslatedLabel(active[0]) : (placeholder || '')">
   <ul *ngIf="optionsOpened"
       alignment
       [alignTarget]="inputRef"
       [autoAlignEnabled]="autoAlignEnabled"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{sortType: sortType}" role="menuitem">
       <div class="ui-select-choices-row"
-           [class.active]="isActive(rawItem)"
+           [ngClass]="{active: isActive(rawItem)}"
            (mouseenter)="selectActive(rawItem)"
            (click)="selectMatch(rawItem, $event)">
         <div class="dropdown-item"
@@ -100,7 +100,7 @@
     autocapitalize="off"
     spellcheck="false"
     class="form-control ui-select-search"
-    placeholder="{{ (active.length <= 0 ? placeholder : '') | translate }}"
+    [placeholder]="!!active.length ?  toTranslatedLabel(active[0]) : (placeholder || '')"
     role="combobox"
   >
   <ul *ngIf="optionsOpened"
@@ -109,9 +109,9 @@
       [autoAlignEnabled]="autoAlignEnabled"
       class="ui-select-choices dropdown-menu" role="menu">
     <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
-    <li *ngFor="let rawItem of rawData | rawDataFilter:{active: active, sortType: sortType}" role="menuitem">
+    <li *ngFor="let rawItem of rawData | rawDataFilter:{sortType: sortType}" role="menuitem">
       <div class="ui-select-choices-row"
-           [class.active]="isActive(rawItem)"
+           [ngClass]="{active: isActive(rawItem)}"
            (mouseenter)="selectActive(rawItem)"
            (click)="selectMatch(rawItem, $event)">
         <div class="dropdown-item"
