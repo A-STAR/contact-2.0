@@ -6,6 +6,7 @@ import { PagesModule } from './pages/pages.module';
 
 import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
+import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
 
 import { routes } from './routes';
 
@@ -18,6 +19,7 @@ import { routes } from './routes';
   providers: [
     MenuResolver,
     PermissionsResolver,
+    UserConstantsResolver,
   ],
   exports: [
     RouterModule

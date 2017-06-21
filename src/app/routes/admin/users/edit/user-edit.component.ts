@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser } from '../users.interface';
+import { IUserConstant } from '../../../../core/user/constants/user-constants.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
@@ -22,8 +23,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   @Input() roles;
   @Input() languages;
 
-  @Input() passwordMinLength: number;
-  @Input() passwordComplexity: boolean;
+  @Input() passwordMinLength: IUserConstant;
+  @Input() passwordComplexity: IUserConstant;
 
   userPhotoUrl$: Observable<string>;
 
@@ -55,8 +56,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
     this.passwordValidators = password(
       !this.editedEntity,
-      this.passwordMinLength,
-      this.passwordComplexity
+      this.passwordMinLength.valueN,
+      this.passwordComplexity.valueB
     );
 
     super.ngOnInit();

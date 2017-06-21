@@ -12,6 +12,7 @@ import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
@@ -71,8 +72,9 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private gridService: GridService,
     private constantsService: ConstantsService,
     private notificationsService: NotificationsService,
-    private valueConverterService: ValueConverterService,
     private permissionService: PermissionsService,
+    private userConstantsService: UserConstantsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.constantsService.fetch();
 
@@ -126,6 +128,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .subscribe(
         () => {
           this.constantsService.fetch();
+          this.userConstantsService.refresh();
           this.onCancel();
         },
         error => this.notificationsService.error('constants.api.errors.update')

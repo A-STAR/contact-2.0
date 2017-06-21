@@ -45,15 +45,4 @@ export class ConstantsService {
       payload
     });
   }
-
-  get(constantName: string): Observable<TConstantValue> {
-    return this.state.map(state => {
-      const constant = state.constants.find(c => c.name === constantName);
-      return constant ? this.valueConverterService.deserialize(constant).value : null;
-    });
-  }
-
-  has(constantName: string): Observable<boolean> {
-    return this.state.map(state => !!state.constants.find(constant => constant.name === constantName));
-  }
 }
