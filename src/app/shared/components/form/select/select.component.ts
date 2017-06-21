@@ -7,7 +7,9 @@ import {
   OnInit,
   OnDestroy,
   forwardRef,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -31,6 +33,7 @@ import { SelectActionHandler } from './select-action';
       multi: true
     }
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() autoAlignEnabled: boolean;
@@ -147,12 +150,15 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     if (this.canSelectMultipleItem && this.multiple === true && this._active.length) {
       this._active[0].selected = true;
     }
+
+    this.changeRef.detectChanges();
   }
 
   constructor(
     public element: ElementRef,
     private sanitizer: DomSanitizer,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeRef: ChangeDetectorRef,
   ) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
@@ -194,6 +200,12 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
 
     this._selectActionHandler.handle(action);
     this.clickAction.emit(action);
+  }
+
+  toTranslatedLabel(item: ILabeledValue): SafeHtml {
+    return item.label
+      ? this.translateService.instant(item.label)
+      : item.value;
   }
 
   toCleanedAndTranslatedLabel(item: ILabeledValue): SafeHtml {
@@ -362,8 +374,8 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     this.activeOption = value;
   }
 
-  protected isActive(value: ILabeledValue): boolean {
-    return this.activeOption.value === value.value;
+  protected isActive(labeledValue: ILabeledValue): boolean {
+    return !!this.active.find((v: ILabeledValue) => v.value === labeledValue.value);
   }
 
   private toPropertyValue(value: boolean, defaultValue: boolean): boolean {

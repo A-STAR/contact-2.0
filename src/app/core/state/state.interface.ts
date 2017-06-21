@@ -3,6 +3,8 @@ import { IDictionariesState } from '../dictionaries/dictionaries.interface';
 import { INotificationServiceState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
 import { IPermissionsState } from '../permissions/permissions.interface';
+import { IUserConstantsState } from '../user/constants/user-constants.interface';
+import { IUserLanguagesState } from '../user/languages/user-languages.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 
 export interface IAppState {
@@ -12,5 +14,7 @@ export interface IAppState {
   readonly notifications: INotificationServiceState;
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
+  readonly userConstants: IUserConstantsState;
+  readonly userLanguages: IUserLanguagesState;
   readonly users: IUsersState;
 }
