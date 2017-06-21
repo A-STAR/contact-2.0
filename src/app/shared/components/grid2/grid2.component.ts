@@ -165,7 +165,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   ngOnInit(): void {
-    this.setRowsOptions();
+    this.setGridOptions();
     this.createColumnDefs();
     this.defineGridToolbarActions();
 
@@ -176,6 +176,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       translationKeys.push(this.columnTranslationKey);
     }
     this.translate.get(translationKeys)
+      .take(1)
       .subscribe(
         (translation) => {
           if (this.columnTranslationKey) {
@@ -424,7 +425,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  private setRowsOptions(): void {
+  private setGridOptions(): void {
     this.gridOptions = {
       localeText: {
         rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
@@ -477,7 +478,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private fitGridSize(): void {
-    const gridPanel = this.gridOptions.api['gridPanel']; // private property
+    const gridPanel = this.gridOptions.api['gridPanel'];
     const availableWidth: number = gridPanel.getWidthForSizeColsToFit();
     if (availableWidth > 0) {
       // Prevent horizontal scrollbar

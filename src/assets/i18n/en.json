@@ -518,7 +518,7 @@
     },
     "grid": {
       "groupColumn": "Row groups",
-      "groupDndTitle": "Drag here for row groups",
+      "groupDndTitle": "Drag here to set row groups",
       "filter": {
         "title": "Filter",
         "showOnlyLines": "Show only records, where:",
