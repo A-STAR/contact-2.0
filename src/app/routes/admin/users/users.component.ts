@@ -4,14 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
+import { IUserConstant } from '../../../core/user/constants/user-constants.interface';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UsersService } from './users.service';
 
 @Component({
@@ -56,21 +57,15 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.usersService.setDialogAddAction(),
-      enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
-        this.constantsService.has('UserPassword.MinLength'),
-        this.constantsService.has('UserPassword.Complexity.Use')
-      ).map(([hasPermissions, minLength, complexity]) => hasPermissions && minLength && complexity)
+      enabled: this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.usersService.setDialogEditAction(),
       enabled: Observable.combineLatest(
         this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
-        this.usersService.state.map(state => !!state.selectedUserId),
-        this.constantsService.has('UserPassword.MinLength'),
-        this.constantsService.has('UserPassword.Complexity.Use')
-      ).map(([hasPermissions, hasSelectedEntity, minLength, complexity]) => hasPermissions && hasSelectedEntity && minLength && complexity)
+        this.usersService.state.map(state => !!state.selectedUserId)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -89,8 +84,8 @@ export class UsersComponent implements OnDestroy {
 
   editedEntity: IUser;
 
-  passwordMinLength$: Observable<string>;
-  passwordComplexity$: Observable<string>;
+  passwordMinLength$: Observable<IUserConstant>;
+  passwordComplexity$: Observable<IUserConstant>;
 
   private _languages;
 
@@ -102,11 +97,11 @@ export class UsersComponent implements OnDestroy {
   roleOptions$: Observable<any>;
 
   constructor(
-    private constantsService: ConstantsService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private permissionsService: PermissionsService,
+    private userConstantsService: UserConstantsService,
     private usersService: UsersService,
   ) {
     // TODO(d.maltsev): remove languages from resolver
@@ -149,9 +144,9 @@ export class UsersComponent implements OnDestroy {
     // TODO(d.maltsev):
     // preload constants in resolver or create ConstantsService.refresh method
     // that only loads constants if they are not already loaded
-    this.constantsService.fetch();
-    this.passwordMinLength$ = this.constantsService.get('UserPassword.MinLength');
-    this.passwordComplexity$ = this.constantsService.get('UserPassword.Complexity.Use');
+    // this.constantsService.fetch();
+    this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
+    this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
   }
 
   ngOnDestroy(): void {
