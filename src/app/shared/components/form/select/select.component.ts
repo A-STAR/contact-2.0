@@ -7,7 +7,9 @@ import {
   OnInit,
   OnDestroy,
   forwardRef,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -31,6 +33,7 @@ import { SelectActionHandler } from './select-action';
       multi: true
     }
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() autoAlignEnabled: boolean;
@@ -147,12 +150,15 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     if (this.canSelectMultipleItem && this.multiple === true && this._active.length) {
       this._active[0].selected = true;
     }
+
+    this.changeRef.detectChanges();
   }
 
   constructor(
     public element: ElementRef,
     private sanitizer: DomSanitizer,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeRef: ChangeDetectorRef,
   ) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
