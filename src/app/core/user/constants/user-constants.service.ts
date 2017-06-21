@@ -32,10 +32,6 @@ export class UserConstantsService {
     return this.state.map(state => state.constants.find(constant => constant.name === constantName));
   }
 
-  has(constantName: string): Observable<boolean> {
-    return this.state.map(state => !!state.constants.find(constant => constant.name === constantName));
-  }
-
   private get state(): Observable<IUserConstantsState> {
     return this.store.select('userConstants');
   }
