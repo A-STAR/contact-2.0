@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { ToasterService } from 'angular2-toaster';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
@@ -9,92 +8,100 @@ import { IAppState } from '../state/state.interface';
 import {
   IMessage,
   INotificationActionType,
-  NotificationTypeEnum,
   INotificationActionPayload,
   INotificationServiceState,
+  NotificationTypeEnum,
 } from './notifications.interface';
 
 @Injectable()
 export class NotificationsService {
-  static STORAGE_KEY = 'state/notifications';
+  static NOTIFICATION_PUSH:   INotificationActionType = 'NOTIFICATION_PUSH';
+  static NOTIFICATION_RESET:  INotificationActionType = 'NOTIFICATION_RESET';
+  static NOTIFICATION_FILTER: INotificationActionType = 'NOTIFICATION_FILTER';
+  static NOTIFICATION_DELETE: INotificationActionType = 'NOTIFICATION_DELETE';
 
-  private toasterMessageTypes = {
-    [NotificationTypeEnum.INFO]: 'info',
-    [NotificationTypeEnum.WARNING]: 'warning',
-    [NotificationTypeEnum.ERROR]: 'error',
-    [NotificationTypeEnum.DEBUG]: 'error',
-  };
+  static STORAGE_KEY = 'state/notifications';
 
   constructor(
     private store: Store<IAppState>,
-    private toasterService: ToasterService,
     private translateService: TranslateService,
   ) {}
 
   get state(): Observable<INotificationServiceState> {
     return this.store
       .select(state => state.notifications)
-      // TODO: separate service for persisting global state?
       .do(state => localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state)));
   }
 
-  // get notifications(): Observable<INotification[]> {
-  //   return this.store.select(state => state.notifications.notifications);
-  // }
+  createDebugAction(message: string | IMessage, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.DEBUG, message, showAlert);
+  }
+
+  createErrorAction(message: string | IMessage, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.ERROR, message, showAlert);
+  }
+
+  createWarningAction(message: string | IMessage, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.WARNING, message, showAlert);
+  }
+
+  createInfoAction(message: string | IMessage, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.INFO, message, showAlert);
+  }
 
   debug(message: string | IMessage, showAlert: boolean = true): void {
-    this.push(message, NotificationTypeEnum.DEBUG, showAlert);
+    const action = this.createDebugAction(message, showAlert);
+    this.store.dispatch(action);
   }
 
   error(message: string | IMessage, showAlert: boolean = true): void {
-    this.push(message, NotificationTypeEnum.ERROR, showAlert);
+    const action = this.createErrorAction(message, showAlert);
+    this.store.dispatch(action);
   }
 
   warning(message: string | IMessage, showAlert: boolean = true): void {
-    this.push(message, NotificationTypeEnum.WARNING, showAlert);
+    const action = this.createWarningAction(message, showAlert);
+    this.store.dispatch(action);
   }
 
   info(message: string | IMessage, showAlert: boolean = true): void {
-    this.push(message, NotificationTypeEnum.INFO, showAlert);
+    const action = this.createInfoAction(message, showAlert);
+    this.store.dispatch(action);
   }
 
   reset(): void {
-    this.store.dispatch(this.createAction('NOTIFICATION_RESET'));
+    const action = this.createAction(NotificationsService.NOTIFICATION_RESET);
+    this.store.dispatch(action);
   }
 
   filter(type: NotificationTypeEnum, value: boolean): void {
-    this.store.dispatch(this.createAction('NOTIFICATION_FILTER', {
-      filter: {
-        type,
-        value
-      }
-    }));
+    const action = this.createAction(NotificationsService.NOTIFICATION_FILTER, {
+      filter: { type, value }
+    });
+    this.store.dispatch(action);
   }
 
   remove(index: number): void {
-    this.store.dispatch(this.createAction('NOTIFICATION_DELETE', { index }));
+    const action = this.createAction(NotificationsService.NOTIFICATION_DELETE, { index });
+    this.store.dispatch(action);
   }
 
-  private push(notification: string | IMessage, type: NotificationTypeEnum, showAlert: boolean): void {
+  private createPushAction(type: NotificationTypeEnum, message: string | IMessage, showAlert: boolean = true): Action {
     const translate = R.ifElse(
       R.has('message'),
-      ({ message, param }) => this.translateService.instant(message, param),
-      message => this.translateService.instant(message)
+      ({ text, param }) => this.translateService.instant(text, param),
+      text => this.translateService.instant(text)
     );
-    const translatedMessage = translate(notification);
+    const translatedMessage = translate(message);
 
-    if (showAlert) {
-      // TODO(d.maltsev): refactor as a side effect?
-      this.toasterService.pop(this.toasterMessageTypes[type], translatedMessage);
-    }
-
-    this.store.dispatch(this.createAction('NOTIFICATION_PUSH', {
+    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
       notification: {
-        message: translatedMessage,
         type,
-        created: new Date()
+        message: translatedMessage,
+        created: new Date(),
+        showAlert
       }
-    }));
+    });
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {

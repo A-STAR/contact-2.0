@@ -17,6 +17,7 @@ import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
+import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
@@ -32,6 +33,7 @@ import { rootReducer } from './state/root.reducer';
     StoreModule.provideStore(rootReducer),
     EffectsModule.run(ConstantsEffects),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(NotificationsEffects),
     EffectsModule.run(PermissionsEffects),
     environment.production
       ? []
