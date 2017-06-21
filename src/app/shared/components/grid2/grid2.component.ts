@@ -187,15 +187,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       );
 
     this.langSubscription = this.translate.onLangChange
-      .subscribe(event => {
-        const { translations } = event;
-        // translate column names
-        if (this.columnTranslationKey) {
-          // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-          const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
-          this.translateColumns(columnTranslations);
-        }
-      });
+      .subscribe((translations: { translations: { [index: string]: string } }) =>
+        this.refreshTranslations(translations.translations));
 
     this.refreshRowsInfo();
 
@@ -211,6 +204,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       }
       if (R.prop('selectedRows', changes)) {
         this.refreshRowsInfo();
+      }
+      if (R.prop('columnsSettings', changes)) {
+        if (!this.remoteSorting) {
+          this.applyClientSorting();
+        }
       }
       if (R.prop('columnsSettings', changes) || R.prop('columnMovingInProgress', changes)) {
         this.refreshHeaderColumns();
@@ -235,10 +233,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       gridHeaderComponent.refreshView(this.columnsSettings);
       gridHeaderComponent.freeze(this.columnMovingInProgress);
     });
-
-    if (!this.remoteSorting) {
-      this.applyClientSorting();
-    }
   }
 
   private refreshRowsInfo(): void {
@@ -268,6 +262,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
       this.pageElement.text = `${this.page}/${pagesCount}`;
     }
+  }
+
+  private refreshTranslations(translations: { [index: string]: any }): void {
+    this.refreshRowsInfo();
+
+    this.gridOptions.localeText.rowGroupColumnsEmptyMessage = this.translate.instant('default.grid.groupDndTitle');
+    this.gridOptions.groupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
+
+    // translate column names
+    if (this.columnTranslationKey) {
+      // IMPORTANT: the key 'grid' should be present in translation files for every grid component
+      const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
+      this.translateColumns(columnTranslations);
+    }
+
+    // TODO Works only next tick
+    setTimeout(() => {
+      this.fitGridSize();
+    });
   }
 
   private clearAllSelections(): void {

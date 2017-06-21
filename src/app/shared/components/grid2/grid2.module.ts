@@ -4,6 +4,8 @@ import { AgGridModule } from 'ag-grid-angular/main';
 import { LicenseManager } from 'ag-grid-enterprise/main';
 import { TranslateModule } from '@ngx-translate/core';
 
+import './grid2.patch';
+
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
