@@ -464,14 +464,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
-      onGridReady: () => {
-        this.fitGridSize();
-        this.refreshHeaderColumns();
-      },
+      onGridReady: () => this.onColumnEverythingChanged(),
       onGridSizeChanged: (params) => this.fitGridSize(),
-      onColumnEverythingChanged: () => this.fitGridSize(),
+      onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
+  }
+
+  private onColumnEverythingChanged(): void {
+    this.refreshHeaderColumns();
+    this.fitGridSize();
   }
 
   private fitGridSize(): void {
