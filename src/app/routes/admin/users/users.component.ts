@@ -89,11 +89,12 @@ export class UsersComponent implements OnDestroy {
   passwordMinLength$: Observable<IUserConstant>;
   passwordComplexity$: Observable<IUserConstant>;
 
-  private users$: Subscription;
-
   // TODO(d.maltsev): role options type
   roleOptions$: Observable<any>;
   languageOptions$: Observable<Array<IUserLanguageOption>>;
+
+  private usersSubscription: Subscription;
+  private optionsSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -116,7 +117,7 @@ export class UsersComponent implements OnDestroy {
     // that only loads roles if they are not already loaded
     this.permissionsService.fetchRoles();
 
-    Observable.combineLatest(this.roleOptions$, this.languageOptions$)
+    this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
       .subscribe(([ roleOptions, languageOptions ]) => {
         this.renderers.roleId = [].concat(roleOptions);
         this.renderers.languageId = [].concat(languageOptions);
@@ -126,7 +127,7 @@ export class UsersComponent implements OnDestroy {
     this.filter = this.filter.bind(this);
 
     this.usersService.fetch();
-    this.users$ = this.usersService.state
+    this.usersSubscription = this.usersService.state
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;
@@ -142,7 +143,8 @@ export class UsersComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.users$.unsubscribe();
+    this.usersSubscription.unsubscribe();
+    this.optionsSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
