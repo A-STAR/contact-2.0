@@ -2,6 +2,10 @@
   "header": {
     "search": {
       "PLACEHOLDER": "Type and hit enter..."
+    },
+    "license": {
+      "title": "License",
+      "info": "Your license number is"
     }
   },
   "offsidebar": {

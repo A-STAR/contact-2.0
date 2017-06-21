@@ -12,14 +12,15 @@ export class DialogComponent implements OnDestroy, OnInit {
 
   @Input() autoWidth: boolean;
   @Input() display = true;
+  @Input() styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
   @Output() displayChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
-  styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
 
-  constructor(private element: ElementRef,
-              private renderer2: Renderer2,
-              @Inject(ENVIRONMENT_CONTAINER) private environmentContainer: any) {
-  }
+  constructor(
+    private element: ElementRef,
+    private renderer2: Renderer2,
+    @Inject(ENVIRONMENT_CONTAINER) private environmentContainer: any
+  ) { }
 
   onVisibleChange(value: boolean): void {
     this.display = value;

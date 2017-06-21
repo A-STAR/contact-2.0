@@ -2,12 +2,12 @@
 <nav class="navbar topnavbar" role="navigation">
     <!-- START navbar header-->
     <div class="navbar-header">
-        <a class="navbar-brand" href="#/">
+        <a class="navbar-brand" (click)="showLicenseInfo()">
             <div class="brand-logo">
-                <img class="img-responsive" src="assets/img/logo.png" alt="App Logo" />
+                <div>Contact <span class="brand-logo-version">2.0</span></div>
             </div>
             <div class="brand-logo-collapsed">
-                <img class="img-responsive" src="assets/img/logo-single.png" alt="App Logo" />
+                <div>C <span class="brand-logo-version">2.0</span></div>
             </div>
         </a>
     </div>
@@ -91,3 +91,11 @@
 
 </nav>
 <!-- END Top Navbar-->
+
+<app-info-dialog
+  *ngIf="isLicenseVisible"
+  titleTranslationKey="header.license.title"
+  (onClose)="closeLicenseInfo()"
+>
+  <section class="pv-xl">{{ 'header.license.info' | translate }} <em>CRIF-CO-9821-9873-4259-5601</em>.</section>
+</app-info-dialog>

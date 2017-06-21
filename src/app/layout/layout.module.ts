@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../shared/shared.module';
+import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
 import { ContentTabstripModule } from '../shared/components/content-tabstrip/content-tabstrip.module';
+import { SharedModule } from '../shared/shared.module';
 
 import { LayoutComponent } from './layout.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -12,21 +13,22 @@ import { NotificationsComponent } from './header/notifications/notifications.com
 @NgModule({
   imports: [
     ContentTabstripModule,
+    InfoDialogModule,
     SharedModule,
   ],
   declarations: [
-    LayoutComponent,
-    SidebarComponent,
     HeaderComponent,
+    LayoutComponent,
     NavsearchComponent,
     NotificationsComponent,
+    SidebarComponent,
   ],
   exports: [
-    LayoutComponent,
-    SidebarComponent,
     HeaderComponent,
+    LayoutComponent,
     NavsearchComponent,
     NotificationsComponent,
+    SidebarComponent,
   ]
 })
 export class LayoutModule { }

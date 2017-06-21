@@ -15,10 +15,11 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  // TODO: what if there are several dropdowns?
   @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
   isNavSearchVisible: boolean;
+
+  isLicenseVisible = false;
 
   notifications: Array<INotification> = [];
 
@@ -82,6 +83,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isCollapsedText(): void {
     return this.settings.layout.isCollapsedText;
+  }
+
+  showLicenseInfo(): void {
+    this.isLicenseVisible = true;
+  }
+
+  closeLicenseInfo(): void {
+    this.isLicenseVisible = false;
   }
 
   toggleLanguage(): void {

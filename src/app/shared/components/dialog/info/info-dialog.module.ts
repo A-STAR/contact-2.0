@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../dialog.module';
 
-import { ActionDialogComponent } from './action-dialog.component';
+import { InfoDialogComponent } from './info-dialog.component';
 
 @NgModule({
   imports: [
@@ -13,11 +13,11 @@ import { ActionDialogComponent } from './action-dialog.component';
     TranslateModule,
   ],
   exports: [
-    ActionDialogComponent,
+    InfoDialogComponent,
   ],
   declarations: [
-    ActionDialogComponent,
+    InfoDialogComponent,
   ],
 })
-export class ActionDialogModule {
+export class InfoDialogModule {
 }

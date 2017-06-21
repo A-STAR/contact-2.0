@@ -25,10 +25,10 @@
   // @include animation(fadeInLeft .5s);
 }
 
-.sidebar > .nav > .nav-heading,
-.sidebar > .nav > li > a > span,
+// .sidebar > .nav > .nav-heading,
+// .sidebar > .nav > li > a > span,
 .navbar-brand .brand-logo {
-  // @include animation(fadeIn 1s);
+  @include animation(fadeIn 1s);
 }
 
 .aside-collapsed,
