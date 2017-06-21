@@ -280,7 +280,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
 
     // See ag-grid's BorderLayout
-    Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-loading-wrapper'))
+    Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
       .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
   }
 
