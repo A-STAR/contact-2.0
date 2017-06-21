@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserConstant, IUserConstantAction, IUserConstantsResponse, IUserConstantsState } from './user-constants.interface';
+import { IUserConstant, IUserConstantsResponse, IUserConstantsState } from './user-constants.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -18,7 +18,7 @@ export class UserConstantsService {
   @Effect()
   fetchConstants$ = this.actions
     .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
-    .switchMap((action: IUserConstantAction) => {
+    .switchMap((action: Action) => {
       return this.read()
         .map((response: IUserConstantsResponse) => {
           return {
@@ -46,10 +46,15 @@ export class UserConstantsService {
     return this.state.map(state => state.constants.length > 0);
   }
 
-  refresh(): void {
-    this.store.dispatch({
+  createRefreshAction(): Action {
+    return {
       type: UserConstantsService.USER_CONSTANTS_FETCH
-    });
+    };
+  }
+
+  refresh(): void {
+    const action = this.createRefreshAction();
+    this.store.dispatch(action);
   }
 
   get(constantName: string): Observable<IUserConstant> {
