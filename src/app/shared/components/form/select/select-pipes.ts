@@ -6,23 +6,21 @@ import { escapeRegexp } from './common';
 @Pipe({name: 'rawDataFilter'})
 export class RawDataFilterPipe implements PipeTransform {
 
-  public transform(value: ILabeledValue[], params: any): ILabeledValue[] { // TODO any
-    const filteredValue: ILabeledValue[] = value.filter((item: ILabeledValue) =>
-      !params.active.find((activeItem: ILabeledValue) => activeItem.value === item.value));
-
+  public transform(value: ILabeledValue[], params: { sortType: string }): ILabeledValue[] {
+    const transformedList: ILabeledValue[] = value.slice();
     if (params.sortType) {
       switch (params.sortType) {
         case 'up':
-          filteredValue.sort((item1: ILabeledValue, item2: ILabeledValue) =>
+          transformedList.sort((item1: ILabeledValue, item2: ILabeledValue) =>
             (item1.label || String(item1.value)).localeCompare((item2.label || String(item2.value))));
           break;
         case 'down':
-          filteredValue.sort((item1: ILabeledValue, item2: ILabeledValue) =>
+          transformedList.sort((item1: ILabeledValue, item2: ILabeledValue) =>
             (item2.label || String(item2.value)).localeCompare(item1.label || String(item1.value)));
           break;
       }
     }
-    return filteredValue;
+    return transformedList;
   }
 }
 
