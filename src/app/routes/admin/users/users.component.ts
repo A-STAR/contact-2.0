@@ -141,10 +141,6 @@ export class UsersComponent implements OnDestroy {
 
     this.canAddUser$ = this.permissionsService.hasPermission('USER_ADD');
 
-    // TODO(d.maltsev):
-    // preload constants in resolver or create ConstantsService.refresh method
-    // that only loads constants if they are not already loaded
-    // this.constantsService.fetch();
     this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
     this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
   }
