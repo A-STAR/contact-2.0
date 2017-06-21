@@ -7,12 +7,11 @@ import { UserEditModule } from './edit/user-edit.module';
 
 import { UsersEffects } from './users.effects';
 import { UsersService } from './users.service';
-import { UsersResolver } from './users-resolver.service';
 
 import { UsersComponent } from './users.component';
 
 const routes: Routes = [
-  { path: '', component: UsersComponent, resolve: { users: UsersResolver } },
+  { path: '', component: UsersComponent },
 ];
 
 @NgModule({
@@ -23,14 +22,13 @@ const routes: Routes = [
     EffectsModule.run(UsersEffects),
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ],
   declarations: [
     UsersComponent,
   ],
   providers: [
     UsersService,
-    UsersResolver,
   ]
 })
 export class UsersModule { }

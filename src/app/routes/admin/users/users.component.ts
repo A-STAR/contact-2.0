@@ -8,11 +8,13 @@ import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
 import { IUserConstant } from '../../../core/user/constants/user-constants.interface';
+import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../../../core/permissions/permissions.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
+import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UsersService } from './users.service';
 
 @Component({
@@ -87,14 +89,12 @@ export class UsersComponent implements OnDestroy {
   passwordMinLength$: Observable<IUserConstant>;
   passwordComplexity$: Observable<IUserConstant>;
 
-  private _languages;
-
-  private users$: Subscription;
-
-  private canAddUser$: Observable<boolean>;
-
   // TODO(d.maltsev): role options type
   roleOptions$: Observable<any>;
+  languageOptions$: Observable<Array<IUserLanguageOption>>;
+
+  private usersSubscription: Subscription;
+  private optionsSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -102,33 +102,32 @@ export class UsersComponent implements OnDestroy {
     private route: ActivatedRoute,
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
+    private userLanguagesService: UserLanguagesService,
     private usersService: UsersService,
   ) {
-    // TODO(d.maltsev): remove languages from resolver
-    const { languages } = this.route.snapshot.data.users;
-    this._languages = languages;
+    this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
+      label: role.name,
+      value: role.id
+    })));
+
+    this.languageOptions$ = this.userLanguagesService.getLanguageOptions();
 
     // TODO(d.maltsev):
     // preload roles in resolver or create PermissionsService.refreshRoles method
     // that only loads roles if they are not already loaded
     this.permissionsService.fetchRoles();
 
-    this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    })));
-
-    this.roleOptions$.subscribe(options => {
-      this.renderers.roleId = [].concat(options);
-      this.renderers.languageId = [].concat(languages);
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    });
+    this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
+      .subscribe(([ roleOptions, languageOptions ]) => {
+        this.renderers.roleId = [].concat(roleOptions);
+        this.renderers.languageId = [].concat(languageOptions);
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      });
 
     this.filter = this.filter.bind(this);
 
     this.usersService.fetch();
-
-    this.users$ = this.usersService.state
+    this.usersSubscription = this.usersService.state
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;
@@ -139,14 +138,13 @@ export class UsersComponent implements OnDestroy {
         error => console.error(error)
       );
 
-    this.canAddUser$ = this.permissionsService.hasPermission('USER_ADD');
-
     this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
     this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
   }
 
   ngOnDestroy(): void {
-    this.users$.unsubscribe();
+    this.usersSubscription.unsubscribe();
+    this.optionsSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
@@ -159,10 +157,6 @@ export class UsersComponent implements OnDestroy {
 
   get state(): Observable<IUsersState> {
     return this.usersService.state;
-  }
-
-  get languages(): Array<any> {
-    return this._languages;
   }
 
   filter(user: IUser): boolean {
