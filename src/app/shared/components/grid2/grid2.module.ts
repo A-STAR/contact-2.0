@@ -3,7 +3,7 @@ import { CommonModule} from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { LicenseManager } from 'ag-grid-enterprise/main';
 import { TranslateModule } from '@ngx-translate/core';
-import { Component } from 'ag-grid';
+import { BorderLayout, Component, GridPanel } from 'ag-grid';
 import { RowGroupCompFactory } from 'ag-grid-enterprise/main';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
@@ -52,3 +52,25 @@ RowGroupCompFactory.prototype.create = function (): Component {
   return component;
 };
 
+const overlaysMap = {
+  loading: 'loadingOoo',
+  noRows: 'noRowsToShow'
+};
+
+const showOverlayFn: Function = BorderLayout.prototype.showOverlay;
+BorderLayout.prototype.showOverlay = function (key: string): void {
+  showOverlayFn.apply(this, arguments);
+
+  const overlay: Element = this.overlays[key];
+  if (overlay && this.gridOptionsWrapper) {
+    Array.from(overlay.querySelectorAll('.ag-overlay-wrapper')).forEach((el: Element) => {
+      el.innerHTML = this.gridOptionsWrapper.gridOptions.localeText[overlaysMap[key]];
+    });
+  }
+};
+
+const initFn: Function = Reflect.get(GridPanel.prototype, 'init');
+Reflect.set(GridPanel.prototype, 'init', function (): void {
+  initFn.apply(this, arguments);
+  this.layout.gridOptionsWrapper = this.gridOptionsWrapper;
+});

@@ -10,6 +10,7 @@ import {
   SimpleChanges,
   Renderer2,
   ChangeDetectionStrategy,
+  ElementRef,
 } from '@angular/core';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
@@ -127,6 +128,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   constructor(
     private renderer2: Renderer2,
     private translate: TranslateService,
+    private elRef: ElementRef,
   ) {
   }
 
@@ -267,7 +269,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowsInfo();
 
-    this.gridOptions.localeText.rowGroupColumnsEmptyMessage = this.translate.instant('default.grid.groupDndTitle');
+    this.translateGridOptionsMessages();
     this.gridOptions.groupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
     // translate column names
@@ -276,6 +278,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
       this.translateColumns(columnTranslations);
     }
+
+    // See ag-grid's BorderLayout
+    Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
+      .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
+  }
+
+  private translateGridOptionsMessages(): void {
+    Object.assign(this.gridOptions.localeText = this.gridOptions.localeText || {}, {
+      noRowsToShow: this.translate.instant('default.data.empty'),
+      rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle')
+    });
   }
 
   private clearAllSelections(): void {
@@ -426,9 +439,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private setRowsOptions(): void {
     this.gridOptions = {
-      localeText: {
-        rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
-      },
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
         headerName: this.translate.instant('default.grid.groupColumn'),
@@ -469,6 +479,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
+
+    this.translateGridOptionsMessages();
   }
 
   private onColumnEverythingChanged(): void {
