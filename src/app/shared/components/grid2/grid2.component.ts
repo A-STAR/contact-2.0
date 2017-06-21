@@ -276,11 +276,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
       this.translateColumns(columnTranslations);
     }
-
-    // TODO Works only next tick
-    setTimeout(() => {
-      this.fitGridSize();
-    });
   }
 
   private clearAllSelections(): void {
@@ -469,11 +464,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
-      onGridReady: (params) => {
+      onGridReady: () => {
         this.fitGridSize();
         this.refreshHeaderColumns();
       },
       onGridSizeChanged: (params) => this.fitGridSize(),
+      onColumnEverythingChanged: () => this.fitGridSize(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event)
     };
   }
