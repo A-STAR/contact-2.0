@@ -46,8 +46,9 @@ export class UsersEffects {
           }
         ])
         .catch(() => {
-          this.notificationsService.error('users.messages.errors.fetch');
-          return null;
+          return [
+            this.notificationsService.createErrorAction('users.messages.errors.fetch')
+          ];
         });
     });
 
@@ -71,8 +72,9 @@ export class UsersEffects {
           }, ...actions];
         })
         .catch(() => {
-          this.notificationsService.error('users.messages.errors.fetch');
-          return null;
+          return [
+            this.notificationsService.createErrorAction('users.messages.errors.create')
+          ];
         });
     });
 
@@ -98,8 +100,9 @@ export class UsersEffects {
           }, ...actions];
         })
         .catch(() => {
-          this.notificationsService.error('users.messages.errors.fetch');
-          return null;
+          return [
+            this.notificationsService.createErrorAction('users.messages.errors.update')
+          ];
         });
     });
 
@@ -111,8 +114,10 @@ export class UsersEffects {
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [])
         .catch(() => {
-          this.notificationsService.error(photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto');
-          return null;
+          const message = photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto';
+          return [
+            this.notificationsService.createErrorAction(message)
+          ];
         });
     });
 

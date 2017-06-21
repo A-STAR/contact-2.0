@@ -9,6 +9,7 @@ export interface INotification {
   message: string;
   type: NotificationTypeEnum;
   created: Date;
+  showAlert: boolean;
 }
 
 export interface IFilters {

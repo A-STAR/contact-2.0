@@ -25,8 +25,9 @@ export class ConstantsEffects {
           };
         })
         .catch(() => {
-          this.notificationService.error('constants.api.errors.fetch');
-          return null;
+          return [
+            this.notificationService.createErrorAction('constants.api.errors.fetch')
+          ];
         });
     });
 
