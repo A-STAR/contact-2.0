@@ -6,6 +6,7 @@ import { permissionReducer } from '../permissions/permissions.reducer';
 import { usersReducer } from '../../routes/admin/users/users.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userLanguagesReducer } from '../user/languages/user-languages.reducer';
+import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
 import { constantsReducer } from '../constants/constants.reducer';
 
 export const rootReducer = {
@@ -17,5 +18,6 @@ export const rootReducer = {
   users: usersReducer,
   userConstants: userConstantsReducer,
   userLanguages: userLanguagesReducer,
+  userPermissions: userPermissionsReducer,
   constants: constantsReducer,
 };

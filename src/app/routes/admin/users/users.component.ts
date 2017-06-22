@@ -15,6 +15,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 import { PermissionsService } from '../../../core/permissions/permissions.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
 @Component({
@@ -59,20 +60,20 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.usersService.setDialogAddAction(),
-      enabled: this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
+      enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.usersService.setDialogEditAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
+        this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.usersService.fetch(),
-      enabled: this.permissionsService.hasPermission('USER_VIEW')
+      enabled: this.userPermissionsService.has('USER_VIEW')
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
@@ -103,6 +104,7 @@ export class UsersComponent implements OnDestroy {
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
+    private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
   ) {
     this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
