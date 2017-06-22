@@ -8,6 +8,7 @@ import { IPermissionRole } from '../roles-and-permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-roles',
@@ -24,7 +25,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
-      enabled: this.permissionsService.hasPermission('ROLE_ADD')
+      enabled: this.userPermissionsService.has('ROLE_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
@@ -32,7 +33,7 @@ export class RolesComponent implements OnDestroy {
       label: 'toolbar.action.copy',
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ROLE_COPY'),
+        this.userPermissionsService.has('ROLE_COPY'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -40,7 +41,7 @@ export class RolesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ROLE_EDIT'),
+        this.userPermissionsService.has('ROLE_EDIT'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -48,14 +49,14 @@ export class RolesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ROLE_DELETE'),
+        this.userPermissionsService.has('ROLE_DELETE'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchRoles(),
-      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
+      enabled: this.userPermissionsService.has('PERMIT_VIEW')
     },
   ];
 
@@ -69,6 +70,7 @@ export class RolesComponent implements OnDestroy {
 
   constructor(
     private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     this.permissionsService.fetchRoles();
 
