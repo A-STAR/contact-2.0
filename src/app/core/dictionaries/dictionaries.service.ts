@@ -28,7 +28,7 @@ export class DictionariesService {
 
   get state(): Observable<IDictionariesState> {
     return this.store
-      .select((state: IAppState) => state.dictionaries)
+      .select(state => state.dictionaries)
       .distinctUntilChanged();
   }
 
@@ -40,7 +40,7 @@ export class DictionariesService {
 
   get terms(): Observable<ITerm[]> {
     return this.store
-      .select((state: IAppState) => state.dictionaries.terms)
+      .select(state => state.dictionaries.terms)
       .distinctUntilChanged();
   }
 
