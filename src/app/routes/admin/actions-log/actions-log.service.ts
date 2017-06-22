@@ -4,6 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { Column } from 'ag-grid';
 
 import {

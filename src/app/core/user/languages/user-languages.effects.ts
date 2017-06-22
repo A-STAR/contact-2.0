@@ -4,33 +4,33 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IUserConstantsResponse } from './user-constants.interface';
+import { IUserLanguagesResponse } from './user-languages.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../notifications/notifications.service';
-import { UserConstantsService } from './user-constants.service';
+import { UserLanguagesService } from './user-languages.service';
 
 @Injectable()
-export class UserConstantsEffects {
+export class UserLanguagesEffects {
   @Effect()
   fetchConstants$ = this.actions
-    .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
+    .ofType(UserLanguagesService.USER_LANGUAGES_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map((response: IUserConstantsResponse) => {
+        .map((response: IUserLanguagesResponse) => {
           return {
-            type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
+            type: UserLanguagesService.USER_LANGUAGES_FETCH_SUCCESS,
             payload: {
-              data: response.data
+              data: response.languages
             }
           };
         })
         .catch(() => {
           return [
             {
-              type: UserConstantsService.USER_CONSTANTS_FETCH_FAILURE
+              type: UserLanguagesService.USER_LANGUAGES_FETCH_FAILURE
             },
-            this.notificationService.createErrorAction('user.constants.errors.fetch')
+            this.notificationService.createErrorAction('user.languages.errors.fetch')
           ];
         });
     });
@@ -41,7 +41,7 @@ export class UserConstantsEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(): Observable<IUserConstantsResponse> {
-    return this.gridService.read('/constants/values');
+  private read(): Observable<IUserLanguagesResponse> {
+    return this.gridService.read('/userlanguages');
   }
 }

@@ -7,7 +7,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { Column } from 'ag-grid';
 
 import {

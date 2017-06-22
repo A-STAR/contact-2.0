@@ -110,7 +110,7 @@ export class UsersComponent implements OnDestroy {
       value: role.id
     })));
 
-    this.languageOptions$ = this.userLanguagesService.getLanguageOptions();
+    this.languageOptions$ = this.userLanguagesService.languageOptions;
 
     // TODO(d.maltsev):
     // preload roles in resolver or create PermissionsService.refreshRoles method

@@ -7,7 +7,7 @@ import { escapeRegexp } from './common';
 export class RawDataFilterPipe implements PipeTransform {
 
   public transform(value: ILabeledValue[], params: { sortType: string }): ILabeledValue[] {
-    const transformedList: ILabeledValue[] = value.slice();
+    const transformedList: ILabeledValue[] = (value || []).slice();
     if (params.sortType) {
       switch (params.sortType) {
         case 'up':

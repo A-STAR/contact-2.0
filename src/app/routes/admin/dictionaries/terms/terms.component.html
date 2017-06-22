@@ -1,7 +1,6 @@
 <app-term-edit
   *ngIf="isEntityBeingCreated"
   [title]="'terms.create.title'"
-  [masterEntity]="masterEntity"
   (submit)="onEditSubmit($event, true)"
   (cancel)="cancelAction()">
 </app-term-edit>
@@ -9,7 +8,6 @@
 <app-term-edit
   *ngIf="isEntityBeingEdited"
   [title]="'terms.edit.title'"
-  [masterEntity]="masterEntity"
   [editedEntity]="selectedEntity"
   (submit)="onEditSubmit($event, false)"
   (cancel)="cancelAction()">
