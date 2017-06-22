@@ -30,7 +30,7 @@ export class UserLanguagesEffects {
             {
               type: UserLanguagesService.USER_LANGUAGES_FETCH_FAILURE
             },
-            this.notificationService.createErrorAction('user.languages.api.errors.fetch')
+            this.notificationService.createErrorAction('user.languages.errors.fetch')
           ];
         });
     });
