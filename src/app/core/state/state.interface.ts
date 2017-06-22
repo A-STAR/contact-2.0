@@ -5,6 +5,7 @@ import { IOrganizationsState } from '../../routes/admin/organizations/organizati
 import { IPermissionsState } from '../permissions/permissions.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserLanguagesState } from '../user/languages/user-languages.interface';
+import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 
 export interface IAppState {
@@ -16,5 +17,6 @@ export interface IAppState {
   readonly permissions: IPermissionsState;
   readonly userConstants: IUserConstantsState;
   readonly userLanguages: IUserLanguagesState;
+  readonly userPermissions: IUserPermissionsState;
   readonly users: IUsersState;
 }

@@ -5,6 +5,7 @@ import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { PermissionsResolver } from '../core/permissions/permissions.resolver';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
 import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
+import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -29,10 +30,12 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
+      // TODO(d.maltsev): remove when user permissions service is finished
       app: PermissionsResolver,
       menu: MenuResolver,
       userConstantsResolved: UserConstantsResolver,
-      userLanguagesResolved: UserLanguagesResolver
+      userLanguagesResolved: UserLanguagesResolver,
+      userPermissionsResolved: UserPermissionsResolver
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [
