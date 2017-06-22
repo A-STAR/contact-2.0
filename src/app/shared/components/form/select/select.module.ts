@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SelectComponent } from './select.component';
-import { HighlightPipe, RawDataFilterPipe } from './select-pipes';
+import { RawDataFilterPipe } from './select-pipes';
 import { OffClickDirective } from './off-click';
 import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
 
@@ -15,13 +15,11 @@ import { AlignmentDirective } from '../../../directives/alignment/alignment.dire
   declarations: [
     AlignmentDirective,
     SelectComponent,
-    HighlightPipe,
     RawDataFilterPipe,
     OffClickDirective
   ],
   exports: [
     SelectComponent,
-    HighlightPipe,
     OffClickDirective
   ]
 })
