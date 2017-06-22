@@ -4,6 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/zip';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../state/state.interface';
@@ -131,17 +132,23 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readTerms(store.dictionaries.selectedDictionaryCode)
-        .map(response => ({
+      return Observable.zip(
+        this.readTerms(store.dictionaries.selectedDictionaryCode),
+        this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
+      )
+      .map((response: any[]) => {
+        return {
           type: DictionariesService.TERMS_FETCH_SUCCESS,
           payload: {
-            terms: response.terms
+            terms: response[0].terms,
+            dictionaryTermTypes: response[1].terms
           }
-        }))
-        .catch(() => {
-          this.notificationsService.error('terms.messages.errors.fetch');
-          return null;
-        });
+        };
+      })
+      .catch(() => {
+        this.notificationsService.error('terms.messages.errors.fetch');
+        return null;
+      });
     });
 
   @Effect()
@@ -264,7 +271,7 @@ export class DictionariesEffects {
     return this.gridService.delete('/api/dictionaries/{dictionaryCode}', { dictionaryCode });
   }
 
-  private readTerms(dictionaryCode: string): Observable<any> {
+  private readTerms(dictionaryCode: string|number): Observable<any> {
     return this.gridService.read('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode });
   }
 
