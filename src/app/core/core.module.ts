@@ -28,6 +28,8 @@ import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
 import { UserLanguagesEffects } from './user/languages/user-languages.effects';
 import { UserLanguagesService } from './user/languages/user-languages.service';
+import { UserPermissionsEffects } from './user/permissions/user-permissions.effects';
+import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ValueConverterService } from './converter/value/value-converter.service';
 
 import { rootReducer } from './state/root.reducer';
@@ -41,6 +43,7 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(PermissionsEffects),
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserLanguagesEffects),
+    EffectsModule.run(UserPermissionsEffects),
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
@@ -63,6 +66,7 @@ import { rootReducer } from './state/root.reducer';
     TranslateService,
     UserConstantsService,
     UserLanguagesService,
+    UserPermissionsService,
     ValueConverterService,
   ],
   exports: [

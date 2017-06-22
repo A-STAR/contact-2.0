@@ -492,6 +492,11 @@
       "errors": {
         "fetch": "Could not load user languages"
       }
+    },
+    "permissions": {
+      "errors": {
+        "fetch": "Could not load user permissions"
+      }
     }
   },
   "default": {
