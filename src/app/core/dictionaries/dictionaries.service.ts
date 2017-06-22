@@ -44,6 +44,12 @@ export class DictionariesService {
       .distinctUntilChanged();
   }
 
+  get terms5(): Observable<ITerm[]> {
+    return this.store
+      .select((state: IAppState) => state.dictionaries.terms5)
+      .distinctUntilChanged();
+  }
+
   fetchDictionaries(): void {
     this.store.dispatch({
       type: DictionariesService.DICTIONARIES_FETCH

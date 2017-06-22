@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
 import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
 
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserLanguagesService } from '../../../../../core/user/languages/user-languages.service';
 import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
 
@@ -26,23 +25,27 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
   private dictionariesSubscription;
   private languages: ILabeledValue[];
   private dictionaries: ILabeledValue[];
+  private terms5Subscription;
+  private terms5: ILabeledValue[];
 
   constructor(
-    private gridService: GridService,
     private userLanguagesService: UserLanguagesService,
     private dictionariesService: DictionariesService
   ) {
     super();
 
     this.languagesSubscription = userLanguagesService.userLanguages.subscribe((terms: IUserLanguage[]) => {
-      this.languages = terms.map((userLanguage: IUserLanguage) => {
-        return { label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain };
-      });
+      this.languages = terms.map((userLanguage: IUserLanguage) =>
+        ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
+      );
     });
     this.dictionariesSubscription = dictionariesService.dictionaries.subscribe((dictionaries: IDictionary[]) => {
-      this.dictionaries = dictionaries.map((dictionary: IDictionary) => {
-        return { label: dictionary.name, value: dictionary.code };
-      });
+      this.dictionaries = dictionaries.map((dictionary: IDictionary) =>
+        ({ label: dictionary.name, value: dictionary.code }));
+    });
+    this.terms5Subscription = dictionariesService.terms5.subscribe((terms: ITerm[]) => {
+      this.terms5 = terms.map((term: ITerm) =>
+        ({ label: term.name, value: term.code }));
     });
   }
 
@@ -107,11 +110,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: 'termTypeCode',
         type: 'select',
         required: true,
-        loadLazyItemsOnInit: true,
-        lazyOptions: this.gridService.read('/api/dictionaries')
-          .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.code})))
-          // TODO Dictionary service, code = 5 - term types code
-          .map((data) => data.filter((v) => v.value === 5)),
+        options: this.terms5,
         optionsActions: [
           { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ]
@@ -129,5 +128,6 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
   ngOnDestroy(): void {
     this.languagesSubscription.unsubscribe();
     this.dictionariesSubscription.unsubscribe();
+    this.terms5Subscription.unsubscribe();
   }
 }
