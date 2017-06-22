@@ -74,7 +74,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
       { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
       { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
     ] as Array<IDynamicFormControl>).map(control => ({
       ...control,
       disabled: !this.canEditUser
@@ -83,6 +82,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ this.passwordValidators ] },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole,
           options: this.roles },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
@@ -115,9 +115,15 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             width: 4,
             height: 178
           }
-        ]
+        ],
+        collapsible: true,
+        title: 'users.edit.personalData'
       },
-      ...detailsBlock
+      {
+        children: detailsBlock,
+        collapsible: true,
+        title: 'users.edit.details'
+      }
     ] as Array<IDynamicFormItem>;
   }
 

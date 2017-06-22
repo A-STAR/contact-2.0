@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } from '../dynamic-form-control.interface';
-import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -18,18 +17,26 @@ export class DynamicFormGroupComponent {
     hasuppercasechars: 'validation.fieldUpperCase',
   };
 
-  // TODO: collapse button
   @Input() collapsible = false;
   @Input() form: FormGroup;
   @Input() items = [] as Array<IDynamicFormItem>;
+  @Input() title = null;
   @Input() width: number;
 
   @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
 
+  _isCollapsed = false;
+
+  get isCollapsed(): boolean {
+    return this._isCollapsed;
+  }
+
+  toggle(): void {
+    this._isCollapsed = !this._isCollapsed;
+  }
+
   displayControlErrors(control: IDynamicFormControl): boolean {
     const formControl = this.form.controls[control.controlName];
-
-    // TODO: double check this
     return formControl.errors && (formControl.dirty || formControl.touched);
   }
 
@@ -41,7 +48,6 @@ export class DynamicFormGroupComponent {
     }));
   }
 
-  // TODO: duplication
   onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
     this.selectedControlItemsChanges.emit(event);
   }
