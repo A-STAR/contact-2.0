@@ -10,6 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class TermsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddTermAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('DICT_TERM_ADD'),
+        this.userPermissionsService.has('DICT_TERM_ADD'),
         this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -31,7 +32,7 @@ export class TermsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditTermAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('DICT_TERM_EDIT'),
+        this.userPermissionsService.has('DICT_TERM_EDIT'),
         this.dictionariesService.state.map(state => !!state.selectedTermId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -39,7 +40,7 @@ export class TermsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('DICT_TERM_DELETE'),
+        this.userPermissionsService.has('DICT_TERM_DELETE'),
         this.dictionariesService.state.map(state => !!state.selectedTermId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -80,7 +81,7 @@ export class TermsComponent implements OnDestroy {
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
-    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
     this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {

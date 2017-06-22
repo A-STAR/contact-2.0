@@ -12,7 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -27,13 +27,13 @@ export class DictComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddDictionaryAction(),
-      enabled: this.permissionsService.hasPermission('DICT_ADD')
+      enabled: this.userPermissionsService.has('DICT_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('DICT_EDIT'),
+        this.userPermissionsService.has('DICT_EDIT'),
         this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -41,7 +41,7 @@ export class DictComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('DICT_DELETE'),
+        this.userPermissionsService.has('DICT_DELETE'),
         this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -77,8 +77,8 @@ export class DictComponent implements OnDestroy {
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private permissionsService: PermissionsService,
     private entityTranslationsService: EntityTranslationsService,
   ) {
     this.dictionariesService.fetchDictionaries();
