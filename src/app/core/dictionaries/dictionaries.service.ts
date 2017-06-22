@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
 import { IDictionary, IDictionariesState, DictionariesDialogActionEnum, ITerm } from './dictionaries.interface';
@@ -29,6 +30,12 @@ export class DictionariesService {
     return this.store
       .select(state => state.dictionaries)
       .filter(Boolean);
+  }
+
+  get terms(): Observable<ITerm[]> {
+    return this.store
+      .select(state => state.dictionaries.terms)
+      .distinctUntilChanged();
   }
 
   fetchDictionaries(): void {
