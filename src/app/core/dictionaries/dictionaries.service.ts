@@ -28,13 +28,19 @@ export class DictionariesService {
 
   get state(): Observable<IDictionariesState> {
     return this.store
-      .select(state => state.dictionaries)
-      .filter(Boolean);
+      .select((state: IAppState) => state.dictionaries)
+      .distinctUntilChanged();
+  }
+
+  get dictionaries(): Observable<IDictionary[]> {
+    return this.store
+      .select((state: IAppState) => state.dictionaries.dictionaries)
+      .distinctUntilChanged();
   }
 
   get terms(): Observable<ITerm[]> {
     return this.store
-      .select(state => state.dictionaries.terms)
+      .select((state: IAppState) => state.dictionaries.terms)
       .distinctUntilChanged();
   }
 
