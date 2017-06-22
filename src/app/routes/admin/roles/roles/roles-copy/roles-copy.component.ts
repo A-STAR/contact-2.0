@@ -1,20 +1,35 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IPermissionRole } from '../../roles-and-permissions.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-
-import { RolesService } from '../roles.service';
+import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { PermissionsService } from '../../../../../core/permissions/permissions.service';
 
 @Component({
   selector: 'app-roles-copy',
   templateUrl: './roles-copy.component.html'
 })
-export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> {
-  constructor(private rolesService: RolesService) {
+export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> implements OnDestroy {
+
+  roles: ILabeledValue[];
+  private rolesSubscription: Subscription;
+
+  constructor(permissionsService: PermissionsService) {
     super();
+    this.rolesSubscription = permissionsService.roles.subscribe((rolesList: IPermissionRole[]) => {
+      this.roles = rolesList
+        .map(
+          (role: IPermissionRole) => ({label: role.name, value: role.id})
+        );
+    });
   }
 
   protected getControls(): Array<IDynamicFormControl> {
@@ -24,9 +39,7 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> {
         controlName: 'originalRoleId',
         type: 'select',
         required: true,
-        cachingOptions: true,
-        loadLazyItemsOnInit: true,
-        lazyOptions: this.rolesService.getRolesList(),
+        options: this.roles,
         optionsActions: [
           {text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT}
         ]
@@ -50,5 +63,9 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> {
     return {
       originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
     };
+  }
+
+  ngOnDestroy(): void {
+    this.rolesSubscription.unsubscribe();
   }
 }
