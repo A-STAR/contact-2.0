@@ -7,6 +7,15 @@
     [alignTarget]="inputRef"
     [autoAlignEnabled]="autoAlignEnabled"
   >
+    <li *ngIf="filterEnabled"
+        class="app-select-search-wrapper">
+      <input
+        focus
+        type="text"
+        class="form-control app-select-search"
+        [(ngModel)]="filterValue"
+      >
+    </li>
     <li
       *ngFor="let action of actions"
       role="menuitem"
@@ -35,7 +44,7 @@
       >
         <div
           class="dropdown-item"
-          [innerHtml]="toCleanedAndTranslatedLabel(rawItem)">
+          [innerHtml]="toDisplayValue(rawItem)">
         </div>
       </div>
     </li>
@@ -57,7 +66,7 @@
             (click)="matchClick($event)">
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
         <span *ngIf="active.length" class="ui-select-match-text pull-left"
-              [innerHTML]="toCleanedAndTranslatedLabel(active[0])"></span>
+              [innerHTML]="toDisplayValue(active[0])"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
       </span>
@@ -68,11 +77,9 @@
          tabindex="-1"
          [attr.readonly]="readonly"
          [ngClass]="{ hidden: !isInputVisible()}"
-         (keydown)="inputEvent($event)"
-         (keyup)="inputEvent($event, true)"
          class="form-control ui-select-search"
          *ngIf="inputMode"
-         [placeholder]="!!active.length ?  toTranslatedLabel(active[0]) : (placeholder || '')">
+         [placeholder]="displayPlaceholder">
   <ng-container *ngTemplateOutlet="optionsTemplate">
   </ng-container>
 </div>
@@ -82,7 +89,6 @@
      [attr.disabled]="disabled"
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
-     (focus)="focusToInput('')"
      [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open">
       <span class="ui-select-match">
@@ -97,7 +103,7 @@
                 style="margin-left: 5px; padding: 0;"
                 (click)="removeClick(activeItem, $event)">&times;
              </a>
-             <span [innerHtml]="toCleanedAndTranslatedLabel(activeItem)"></span>
+             <span [innerHtml]="toDisplayValue(activeItem)"></span>
           </span>
           <i class="dropdown-toggle pull-right"></i>
           <i class="caret pull-right"></i>
@@ -105,8 +111,6 @@
   <input
     #input
     type="text"
-    (keydown)="inputEvent($event)"
-    (keyup)="inputEvent($event, true)"
     (click)="matchClick($event)"
     [attr.readonly]="readonly"
     [ngClass]="{ hidden: !isInputVisible()}"
@@ -115,7 +119,7 @@
     autocapitalize="off"
     spellcheck="false"
     class="form-control ui-select-search"
-    [placeholder]="!!active.length ?  toTranslatedLabel(active[0]) : (placeholder || '')"
+    [placeholder]="displayPlaceholder"
     role="combobox"
   >
   <ng-container *ngTemplateOutlet="optionsTemplate">

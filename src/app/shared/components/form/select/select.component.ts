@@ -36,6 +36,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   // Inputs with presets
   @Input() placeholder = '';
+  @Input() filterEnabled = false;
 
   @Input() autoAlignEnabled: boolean;
   @Input() styles: CSSStyleDeclaration;
@@ -61,7 +62,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private _multiple = false;
   private _active: ILabeledValue[] = [];
   private behavior: OptionsBehavior;
-  private inputValue = '';
 
   // Private fields
   private selectionToolsPlugin: SelectionToolsPlugin;
@@ -194,13 +194,17 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.clickAction.emit(action);
   }
 
-  toTranslatedLabel(item: ILabeledValue): SafeHtml {
+  get displayPlaceholder(): string|number {
+    return !!this.active.length ?  this.extractDisplayValue(this.active[0]) : (this.placeholder || '');
+  }
+
+  extractDisplayValue(item: ILabeledValue): string|number {
     return item.label
       ? this.translateService.instant(item.label)
       : item.value;
   }
 
-  toCleanedAndTranslatedLabel(item: ILabeledValue): SafeHtml {
+  toDisplayValue(item: ILabeledValue): SafeHtml {
     let displayValue: string;
 
     if (item.label) {
@@ -211,72 +215,16 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         displayValue = itemAtRawData.label;
       }
     }
-    return displayValue
-      ? this.sanitizer.bypassSecurityTrustHtml(this.translateService.instant(displayValue))
-      : item.value;
+    return this.sanitizer.bypassSecurityTrustHtml(
+      displayValue
+        ? this.translateService.instant(displayValue)
+        : item.value
+    );
   }
 
   private lookupAtRawData(value: number|string): ILabeledValue {
     return this.rawData
       .find((item: ILabeledValue) => String(item.value) === String(value));
-  }
-
-  inputEvent(e: any, isUpMode: boolean = false): void {
-    // tab
-    if (e.keyCode === 9) {
-      return;
-    }
-    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13)) {
-      e.preventDefault();
-      return;
-    }
-    // esc
-    if (!isUpMode && e.keyCode === 27) {
-      this.hideOptions();
-      this.element.nativeElement.children[0].focus();
-      e.preventDefault();
-      return;
-    }
-    // left
-    if (!isUpMode && e.keyCode === 37 && this.rawData.length > 0) {
-      this.behavior.first();
-      e.preventDefault();
-      return;
-    }
-    // right
-    if (!isUpMode && e.keyCode === 39 && this.rawData.length > 0) {
-      this.behavior.last();
-      e.preventDefault();
-      return;
-    }
-    // up
-    if (!isUpMode && e.keyCode === 38) {
-      this.behavior.prev();
-      e.preventDefault();
-      return;
-    }
-    // down
-    if (!isUpMode && e.keyCode === 40) {
-      this.behavior.next();
-      e.preventDefault();
-      return;
-    }
-    // enter
-    if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
-      }
-      e.preventDefault();
-      return;
-    }
-    const target = e.target || e.srcElement;
-    if (target && target.value) {
-      this.inputValue = target.value;
-    }else {
-      this.open();
-    }
   }
 
   remove(item: ILabeledValue): void {
@@ -347,12 +295,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     if (event.keyCode === 46) {
       event.preventDefault();
-      this.inputEvent(event);
       return;
     }
     if (event.keyCode === 8) {
       event.preventDefault();
-      this.inputEvent(event, true);
       return;
     }
     if (event.keyCode === 9 || event.keyCode === 13 ||
@@ -368,7 +314,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.open();
     const target = event.target || event.srcElement;
     target.value = value;
-    this.inputEvent(event);
   }
 
   protected selectActive(value: ILabeledValue): void {
@@ -387,7 +332,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     setTimeout(() => {
       const el = this.getInputElement();
       if (el) {
-        el.focus();
         el.value = value;
       }
     }, 0);
@@ -435,7 +379,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       this.focusToInput('');
     } else {
       this.focusToInput(value.label);
-      this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
     this.selectedControlItemsChanges.emit(this.rawData);
   }
