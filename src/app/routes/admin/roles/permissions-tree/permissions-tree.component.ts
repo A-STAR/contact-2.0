@@ -9,6 +9,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 import { PermissionsTreeService } from './permissions-tree.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-permissions-tree',
@@ -29,7 +30,8 @@ export class PermissionsTreeComponent implements OnDestroy {
 
   constructor(
     private permissionsTreeService: PermissionsTreeService,
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     this.permissionsServiceSub = this.permissionsService.permissions
       .distinctUntilKeyChanged('currentRole')
@@ -88,10 +90,10 @@ export class PermissionsTreeComponent implements OnDestroy {
   }
 
   get hasViewPermission(): Observable<boolean> {
-    return this.permissionsService.hasPermission('GUI_TREE_VIEW');
+    return this.userPermissionsService.has('GUI_TREE_VIEW');
   }
 
   get hasEditPermission(): Observable<boolean> {
-    return this.permissionsService.hasPermission('GUI_TREE_EDIT');
+    return this.userPermissionsService.has('GUI_TREE_EDIT');
   }
 }
