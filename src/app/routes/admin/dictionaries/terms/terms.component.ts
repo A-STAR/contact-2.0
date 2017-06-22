@@ -9,7 +9,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
