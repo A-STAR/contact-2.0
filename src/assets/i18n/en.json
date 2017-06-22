@@ -482,6 +482,18 @@
       "info": "Info"
     }
   },
+  "user": {
+    "constants": {
+      "errors": {
+        "fetch": "Could not load user constants"
+      }
+    },
+    "languages": {
+      "errors": {
+        "fetch": "Could not load user languages"
+      }
+    }
+  },
   "default": {
     "yesNo": {
       "Yes": "Yes",

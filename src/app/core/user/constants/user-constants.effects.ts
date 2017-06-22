@@ -30,7 +30,7 @@ export class UserConstantsEffects {
             {
               type: UserConstantsService.USER_CONSTANTS_FETCH_FAILURE
             },
-            this.notificationService.createErrorAction('constants.api.errors.fetch')
+            this.notificationService.createErrorAction('user.constants.errors.fetch')
           ];
         });
     });
