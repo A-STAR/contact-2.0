@@ -34,6 +34,6 @@ export class UserConstantsService {
   }
 
   private get state(): Observable<IUserConstantsState> {
-    return this.store.select('userConstants');
+    return this.store.select(state => state.userConstants);
   }
 }
