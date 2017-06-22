@@ -1,28 +1,34 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
-import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
+import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 
-import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { ILabeledValue } from "../../../../../core/converter/value/value-converter.interface";
 
 @Component({
   selector: 'app-term-edit',
   templateUrl: './term-edit.component.html'
 })
-export class TermEditComponent extends EntityBaseComponent<ITerm> {
+export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnDestroy {
 
-  @Input() masterEntity = null as IDictionary;
+  private termsSubscription;
+  private terms: ILabeledValue[];
 
-  constructor(private gridService: GridService) {
+  constructor(dictionariesService: DictionariesService) {
     super();
+
+    this.termsSubscription = dictionariesService.terms.subscribe((terms: ITerm[]) => {
+      this.terms = terms.map((term: ITerm) => {
+        return { label: term.name, value: term.id };
+      });
+    });
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    // const dictCode: number = this.masterEntity.code;
-    const dictCode = 1;
     return [
       {
         label: 'terms.edit.code',
@@ -51,11 +57,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         label: 'terms.edit.parent',
         controlName: 'parentCode',
         type: 'select',
-        loadLazyItemsOnInit: true,
-        lazyOptions: this.gridService.read(`/api/dictionaries/${dictCode}/terms`)
-          .map(
-            (data: { terms: Array<ITerm> }) => data.terms.map(dict => ({ label: dict.name, value: dict.id }))
-          ),
+        options: this.terms,
         optionsActions: [
           { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
@@ -66,5 +68,9 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> {
         type: 'checkbox'
       },
     ];
+  }
+
+  ngOnDestroy(): void {
+    this.termsSubscription.unsubscribe();
   }
 }

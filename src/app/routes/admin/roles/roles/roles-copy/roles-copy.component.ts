@@ -2,7 +2,6 @@ import {
   Component,
   OnDestroy
 } from '@angular/core';
-
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -19,7 +18,7 @@ import { PermissionsService } from '../../../../../core/permissions/permissions.
 })
 export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> implements OnDestroy {
 
-  roles: ILabeledValue[];
+  private roles: ILabeledValue[];
   private rolesSubscription: Subscription;
 
   constructor(permissionsService: PermissionsService) {
