@@ -9,7 +9,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { TreeComponent } from '../../../../shared/components/flowtree/tree.component';
 
@@ -33,13 +33,13 @@ export class OrganizationsTreeComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD),
-      enabled: this.permissionsService.hasPermission('ORGANIZATION_ADD')
+      enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedOrganizationId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -47,14 +47,14 @@ export class OrganizationsTreeComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_DELETE'),
+        this.userPermissionsService.has('ORGANIZATION_DELETE'),
         this.organizationsService.state.map(state => !!state.selectedOrganizationId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.organizationsService.fetchOrganizations(),
-      enabled: this.permissionsService.hasPermission('ORGANIZATION_VIEW')
+      enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
     },
   ];
 
@@ -67,7 +67,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   constructor(
     private organizationsService: OrganizationsService,
-    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     this.organizationsService.fetchOrganizations();
 

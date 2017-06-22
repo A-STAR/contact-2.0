@@ -11,7 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
@@ -28,7 +28,7 @@ export class EmployeesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedOrganizationId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -36,7 +36,7 @@ export class EmployeesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -44,7 +44,7 @@ export class EmployeesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_REMOVE),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_EDIT'),
+        this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -52,7 +52,7 @@ export class EmployeesComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.organizationsService.fetchEmployees(),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('ORGANIZATION_VIEW'),
+        this.userPermissionsService.has('ORGANIZATION_VIEW'),
         this.organizationsService.state.map(state => !!state.selectedOrganizationId)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -92,7 +92,7 @@ export class EmployeesComponent implements OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
-    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
     private translateService: TranslateService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
