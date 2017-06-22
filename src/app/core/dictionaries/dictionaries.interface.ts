@@ -36,6 +36,7 @@ export interface IDictionariesState {
   dictionaries: Array<IDictionary>;
   selectedDictionaryCode: string;
   terms: Array<ITerm>;
+  dictionaryTermTypes: Array<ITerm>;
   selectedTermId: number;
   dialogAction: DictionariesDialogActionEnum;
 }
