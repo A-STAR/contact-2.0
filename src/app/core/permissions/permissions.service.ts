@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IAppState } from '../../core/state/state.interface';
+import { IAppState } from '../state/state.interface';
 import {
   IPermission,
   IPermissionModel,
@@ -45,6 +46,12 @@ export class PermissionsService {
 
   get permissions(): Observable<IPermissionsState> {
     return this.store.select('permissions');
+  }
+
+  get roles(): Observable<IPermissionRole[]> {
+    return this.store
+      .select((state: IAppState) => state.permissions.roles)
+      .distinctUntilChanged();
   }
 
   resolvePermissions(): Observable<IPermission> {
