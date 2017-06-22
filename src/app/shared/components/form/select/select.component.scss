@@ -49,6 +49,10 @@
   box-shadow: none;
 }
 
+.ui-select-container {
+  font-weight: normal;
+}
+
 .ui-select-container[disabled] * {
   background-color: #edf1f2;
   cursor: not-allowed;

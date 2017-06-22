@@ -1,16 +1,9 @@
-import {
-  Directive,
-  Input,
-  ElementRef,
-  OnChanges,
-  SimpleChanges,
-  Renderer2
-} from '@angular/core';
+import { Directive, Input, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 
 @Directive({
   selector: '[alignment]'
 })
-export class AlignmentDirective implements OnChanges {
+export class AlignmentDirective implements AfterViewInit {
 
   @Input() alignTarget: Element;
   @Input() autoAlignEnabled: boolean;
@@ -19,13 +12,12 @@ export class AlignmentDirective implements OnChanges {
               private renderer2: Renderer2) {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('alignTarget' in changes && this.alignTarget && this.autoAlignEnabled) {
-      this.updateElementStyles();
-    }
+  ngAfterViewInit(): void {
+    this.updateElementStyles();
   }
 
   private updateElementStyles(): void {
+
     const height: number = this.getElementHeight(this.element.nativeElement) + 12; // TODO(a.poterenko): 12 height?
     this.renderer2.setStyle(this.element.nativeElement, 'position', 'absolute');
     this.renderer2.setStyle(this.element.nativeElement, 'top', `-${height}px`);
