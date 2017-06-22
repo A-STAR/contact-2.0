@@ -88,6 +88,9 @@ export class GridService {
           : displayValue;
       }
     };
+    // NOTE: for compatibility between grid & grid2
+    // TODO(a.tymchuk): see if @swimlane has a better option
+    column.renderer = column.$$valueGetter;
     return column;
   }
 

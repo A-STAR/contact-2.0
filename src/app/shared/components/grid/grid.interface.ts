@@ -15,16 +15,21 @@ export interface IParameters {
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
-  localized?: boolean;
-  suppressSizeToFit?: boolean;
-  prop: string;
-  name?: string;
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
   disabled?: boolean;
-  $$valueGetter?: Function;
   filterControlType?: ControlTypes;
+  localized?: boolean;
+  maxWidth?: number;
+  minWidth?: number;
+  name?: string;
+  prop: string;
+  renderer?: Function;
+  /*
+  ** For compatibility with @swimlane/ngx-datatable
+  ** Do NOT use, prefer renderer
+  */
+  suppressSizeToFit?: boolean;
+  $$valueGetter?: Function;
+  width?: number;
 }
 
 export interface IRenderer {

@@ -51,7 +51,11 @@ import { GridHeaderComponent } from './header/grid-header.component';
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./grid2.component.scss', './grid2.component.ag-base.css', './grid2.component.theme-contact2.css'],
+  styleUrls: [
+    './grid2.component.scss',
+    './grid2.component.ag-base.scss',
+    './grid2.component.theme.scss',
+  ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2ServiceDispatcher {
   static DEFAULT_PAGE_SIZE = 50;
@@ -283,10 +287,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     // See ag-grid's BorderLayout
     Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
       .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
+    // this.gridOptions.api.doLayout();
   }
 
-  private translateGridOptionsMessages(): void {
-    Object.assign(this.gridOptions.localeText = this.gridOptions.localeText || {}, {
+  private translateGridOptionsMessages(): any {
+    return Object.assign(this.gridOptions.localeText || {}, {
       noRowsToShow: this.translate.instant('default.data.empty'),
       rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle')
     });
@@ -365,8 +370,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return this.columns.find((column: IGridColumn) => column.prop === field);
   }
 
-  private getValueGetterByName(field: string): Function {
-    return this.getSimpleColumnByName(field).$$valueGetter;
+  private getRendererByName(field: string): Function {
+    return this.getSimpleColumnByName(field).renderer;
   }
 
   private translateColumns(columnTranslations: object): void {
@@ -431,8 +436,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         minWidth: column.minWidth,
         width: column.width || column.minWidth
       };
-      if (column.$$valueGetter) {
-        colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.$$valueGetter(params.data);
+      if (column.renderer) {
+        colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.renderer(params.data);
       }
       return colDef;
     });
@@ -440,6 +445,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private setGridOptions(): void {
     this.gridOptions = {
+      localeText: {
+        noRowsToShow : this.translate.instant('default.data.empty'),
+        rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
+      },
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       groupColumnDef: {
         headerName: this.translate.instant('default.grid.groupColumn'),
@@ -453,10 +462,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
             const rowNode: RowNode = params.node;
             const groupField: string = rowNode.field;
             if (rowNode.group && rowNode.allLeafChildren.length) {
-              const $$valueGetter: Function = this.getValueGetterByName(rowNode.field);
+              const renderer: Function = this.getRendererByName(rowNode.field);
               const recordData = rowNode.allLeafChildren[0].data;
-              return $$valueGetter
-                ? $$valueGetter(recordData)
+              return renderer
+                ? renderer(recordData)
                 : (recordData[groupField] || rowNode.rowGroupColumn.getColDef().headerName);
             }
             return '';
@@ -473,6 +482,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           renderer2: this.renderer2
         } as IGrid2HeaderParams
       },
+      // enableStatusBar: true,
+      suppressRowHoverClass: true,
+      toolPanelSuppressRowGroups: true,
+      toolPanelSuppressValues: true,
+      toolPanelSuppressPivots: true,
+      toolPanelSuppressPivotMode: true,
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
       onGridReady: () => this.onColumnEverythingChanged(),

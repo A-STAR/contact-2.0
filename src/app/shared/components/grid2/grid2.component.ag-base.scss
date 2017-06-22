@@ -1,9 +1,6 @@
 ag-grid-angular {
   display: inline-block;
 }
-ag-grid-ng2 {
-  display: inline-block;
-}
 .ag-rtl {
   direction: rtl;
 }
@@ -22,9 +19,6 @@ ag-grid-ng2 {
 .ag-root {
   /* set to relative, so absolute popups appear relative to this */
   position: relative;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   /* was getting some 'should be there' scrolls, this sorts it out */
   overflow: hidden;
 }
@@ -55,34 +49,23 @@ ag-grid-ng2 {
   top: 0px;
   left: 0px;
   white-space: nowrap;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
   width: 100%;
 }
 .ag-pinned-left-header {
   float: left;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
 }
 .ag-pinned-right-header {
   float: right;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
 }
 .ag-header-viewport {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+
   overflow: hidden;
   height: 100%;
 }
@@ -90,9 +73,6 @@ ag-grid-ng2 {
   position: absolute;
 }
 .ag-scrolls .ag-header-container {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   position: relative;
   white-space: nowrap;
   height: 100%;
@@ -105,9 +85,6 @@ ag-grid-ng2 {
   position: absolute;
 }
 .ag-header-cell {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   vertical-align: bottom;
   text-align: center;
   display: inline-block;
@@ -115,9 +92,6 @@ ag-grid-ng2 {
   position: absolute;
 }
 .ag-floating-filter {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   position: absolute;
   display: inline-block;
 }
@@ -155,7 +129,6 @@ ag-grid-ng2 {
 }
 .ag-dnd-ghost {
   font-size: 14px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: absolute;
   background: #e5e5e5;
   border: 1px solid #000;
@@ -164,9 +137,6 @@ ag-grid-ng2 {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
@@ -175,7 +145,7 @@ ag-grid-ng2 {
 }
 .ag-dnd-ghost-icon {
   display: inline-block;
-  float: left;
+  /*float: left;*/
   padding-left: 2px;
   padding-right: 2px;
 }
@@ -185,9 +155,6 @@ ag-grid-ng2 {
 .ag-header-group-cell {
   height: 100%;
   display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -292,9 +259,6 @@ ag-grid-ng2 {
 .ag-body {
   height: 100%;
   width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   position: absolute;
 }
 .ag-floating-top {
@@ -302,16 +266,10 @@ ag-grid-ng2 {
   left: 0px;
   width: 100%;
   white-space: nowrap;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
 }
 .ag-pinned-left-floating-top {
   float: left;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
@@ -319,25 +277,16 @@ ag-grid-ng2 {
 }
 .ag-pinned-right-floating-top {
   float: right;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
   position: relative;
 }
 .ag-floating-top-viewport {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
   height: 100%;
 }
 .ag-floating-top-container {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   position: relative;
   white-space: nowrap;
 }
@@ -346,16 +295,10 @@ ag-grid-ng2 {
   left: 0px;
   width: 100%;
   white-space: nowrap;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
 }
 .ag-pinned-left-floating-bottom {
   float: left;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
@@ -363,25 +306,16 @@ ag-grid-ng2 {
 }
 .ag-pinned-right-floating-bottom {
   float: right;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   display: inline-block;
   overflow: hidden;
   height: 100%;
   position: relative;
 }
 .ag-floating-bottom-viewport {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
   height: 100%;
 }
 .ag-floating-bottom-container {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   position: relative;
   white-space: nowrap;
 }
@@ -429,9 +363,6 @@ ag-grid-ng2 {
   left: 0px;
   display: inline;
   pointer-events: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: hidden;
 }
 .ag-full-width-container {
@@ -482,9 +413,6 @@ ag-grid-ng2 {
   transition: background-color 0.1s;
 }
 .ag-row {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 .ag-scrolls .ag-row {
   white-space: nowrap;
@@ -517,9 +445,6 @@ ag-grid-ng2 {
 }
 .ag-column-drop {
   width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 .ag-column-drop-vertical .ag-column-drop-cell {
   display: block;
@@ -549,9 +474,6 @@ ag-grid-ng2 {
   display: inline-block;
   white-space: nowrap;
   height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -593,9 +515,6 @@ ag-grid-ng2 {
   display: inline-block;
   white-space: nowrap;
   height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -605,9 +524,6 @@ ag-grid-ng2 {
   display: inline-block;
   white-space: nowrap;
   height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -737,9 +653,6 @@ ag-grid-ng2 {
   user-select: none;
   cursor: default;
   height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   overflow: auto;
 }
 .ag-column-select-indent {
@@ -775,22 +688,18 @@ ag-grid-ng2 {
 .ag-shake-left-to-right {
   -webkit-animation-name: ag-shake-left-to-right;
   -moz-animation-name: ag-shake-left-to-right;
-  -o-animation-name: ag-shake-left-to-right;
   -ms-animation-name: ag-shake-left-to-right;
   animation-name: ag-shake-left-to-right;
   -webkit-animation-duration: 0.2s;
   -moz-animation-duration: 0.2s;
-  -o-animation-duration: 0.2s;
   -ms-animation-duration: 0.2s;
   animation-duration: 0.2s;
   -webkit-animation-iteration-count: infinite;
   -moz-animation-iteration-count: infinite;
-  -o-animation-iteration-count: infinite;
   -ms-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
   -webkit-animation-direction: alternate;
   -moz-animation-direction: alternate;
-  -o-animation-direction: alternate;
   -ms-animation-direction: alternate;
   animation-direction: alternate;
 }
@@ -814,16 +723,7 @@ ag-grid-ng2 {
     padding-right: 6px;
   }
 }
-@-o-keyframes ag-shake-left-to-right {
-  from {
-    padding-left: 6px;
-    padding-right: 2px;
-  }
-  to {
-    padding-left: 2px;
-    padding-right: 6px;
-  }
-}
+
 @keyframes ag-shake-left-to-right {
   from {
     padding-left: 6px;

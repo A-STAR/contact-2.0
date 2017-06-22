@@ -14,7 +14,6 @@ import {
   IActionsLogData,
   IActionType,
   IEmployee,
-  toFullName
 } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import {
@@ -28,6 +27,11 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+
+export const toFullName = (entity: { userId?: number, lastName: string, firstName: string, middleName: string }) => {
+  return [ entity.userId || '', entity.lastName, entity.firstName, entity.middleName ]
+    .filter(Boolean).join(' ');
+};
 
 @Component({
   selector: 'app-actions-log',

@@ -4,11 +4,12 @@ import { FormBuilder } from '@angular/forms';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IActionsLogFilterRequest } from './actions-log-filter.interface';
-import { IEmployee, IActionType, toFullName } from '../actions-log.interface';
+import { IEmployee, IActionType } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
+import { toFullName } from '../actions-log.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 

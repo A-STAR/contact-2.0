@@ -7,7 +7,6 @@ import {
   IGrid2ColumnSettings,
   IGrid2ColumnsSettings,
   IGrid2HeaderParams,
-  IGrid2ServiceDispatcher,
 } from '../grid2.interface';
 
 import { FilterObject } from '../filter/grid2-filter';
@@ -58,9 +57,9 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
       return;
     }
 
-    const gridService: IGrid2ServiceDispatcher = this.agParams.serviceDispatcher;
+    const { serviceDispatcher }  = this.agParams;
 
-    gridService.dispatchSortingDirection({
+    serviceDispatcher.dispatchSortingDirection({
       columnId: this.columnId,
       multiSort: $event.shiftKey,
       sortingDirection: this.sortingDirectionBySettings === Grid2SortingEnum.ASC
