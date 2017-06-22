@@ -13,7 +13,7 @@ import { UserLanguagesService } from './user-languages.service';
 @Injectable()
 export class UserLanguagesEffects {
   @Effect()
-  fetchConstants$ = this.actions
+  fetchLanguages$ = this.actions
     .ofType(UserLanguagesService.USER_LANGUAGES_FETCH)
     .switchMap((action: Action) => {
       return this.read()

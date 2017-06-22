@@ -13,7 +13,7 @@ import { UserPermissionsService } from './user-permissions.service';
 @Injectable()
 export class UserPermissionsEffects {
   @Effect()
-  fetchConstants$ = this.actions
+  fetchUserPermissions$ = this.actions
     .ofType(UserPermissionsService.USER_PERMISSIONS_FETCH)
     .switchMap((action: Action) => {
       return this.read()
