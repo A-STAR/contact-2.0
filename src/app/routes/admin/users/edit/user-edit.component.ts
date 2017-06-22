@@ -117,12 +117,12 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
           }
         ],
         collapsible: true,
-        title: 'Персональные данные'
+        title: 'users.edit.personalData'
       },
       {
         children: detailsBlock,
         collapsible: true,
-        title: 'Подробная информация'
+        title: 'users.edit.details'
       }
     ] as Array<IDynamicFormItem>;
   }

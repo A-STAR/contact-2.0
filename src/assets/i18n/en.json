@@ -189,6 +189,8 @@
       }
     },
     "edit": {
+      "personalData": "Personal Data",
+      "details": "Details",
       "title": "User: {{ id }}",
       "lastName": "Family name",
       "firstName": "Name",
