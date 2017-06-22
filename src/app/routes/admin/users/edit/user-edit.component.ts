@@ -112,6 +112,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
             controlName: 'image',
             type: 'image',
             url: userId ? `/users/${userId}/photo` : null,
+            disabled: !this.canEditUser,
             width: 4,
             height: 178
           }

@@ -24,6 +24,8 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
 
   private image: IImage = null;
 
+  private isDisabled = false;
+
   private propagateChange: Function = () => {};
 
   constructor(
@@ -51,10 +53,18 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(fn: Function): void {
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
   get imageSrc(): SafeUrl {
     return this.image && this.image.size > 0 ?
       this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.image)) :
       null;
+  }
+
+  get displayButtons(): boolean {
+    return !this.isDisabled;
   }
 
   get actionButtonTitle(): string {
