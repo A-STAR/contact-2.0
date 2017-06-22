@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserPermission, IUserPermissionsState } from './user-permissions.interface';
+import { IUserPermissionsState } from './user-permissions.interface';
 
 @Injectable()
 export class UserPermissionsService {
@@ -29,7 +29,26 @@ export class UserPermissionsService {
     this.store.dispatch(action);
   }
 
-  // TODO(d.maltsev) methods to check if user has permissions
+  has(permissionName: string): Observable<boolean> {
+    return this.state.map(state => this.userHasPermission(state, permissionName));
+  }
+
+  hasOne(permissionNames: Array<string>): Observable<boolean> {
+    return this.state.map(state =>
+      permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(state, permissionName), false)
+    );
+  }
+
+  hasAll(permissionNames: Array<string>): Observable<boolean> {
+    return this.state.map(state =>
+      permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(state, permissionName), true)
+    );
+  }
+
+  private userHasPermission(state: IUserPermissionsState, permissionName: string): boolean {
+    const permission = state.permissions[permissionName];
+    return permission && permission.valueB === true;
+  }
 
   private get state(): Observable<IUserPermissionsState> {
     return this.store.select(state => state.userPermissions);

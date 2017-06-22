@@ -21,7 +21,10 @@ export class UserPermissionsEffects {
           return {
             type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,
             payload: {
-              data: response.userPermits
+              data: response.userPermits.reduce((acc, permission) => {
+                acc[permission.name] = permission;
+                return acc;
+              }, {})
             }
           };
         })

@@ -11,6 +11,8 @@ export interface IUserPermissionsResponse {
 }
 
 export interface IUserPermissionsState {
-  languages: Array<IUserPermission>;
+  permissions: {
+    [key: string]: IUserPermission;
+  };
   isResolved: boolean;
 }

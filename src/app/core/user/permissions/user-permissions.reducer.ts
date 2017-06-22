@@ -5,7 +5,7 @@ import { IUserPermissionsState } from './user-permissions.interface';
 import { UserPermissionsService } from './user-permissions.service';
 
 const defaultState: IUserPermissionsState = {
-  languages: [],
+  permissions: {},
   isResolved: null
 };
 
