@@ -1,10 +1,14 @@
-<div class="row" [formGroup]="form">
+<fieldset [formGroup]="form">
+  <h4 *ngIf="title" class="title" (click)="toggle()">
+    {{ title | translate }}
+    <span *ngIf="collapsible" [ngClass]="{'collapse-button': true, collapsed: isCollapsed}">
+      <i class="fa fa-angle-down"></i>
+    </span>
+  </h4>
+  <div class="row" *ngIf="!isCollapsed">
     <ng-container *ngFor="let control of items" >
-
       <div [ngClass]="'form-column col-xs-' + (control.width || 12)">
-
         <div *ngIf="!control.children" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
-
           <app-dynamic-form-field
             [control]="control"
             [form]="form"
@@ -19,19 +23,19 @@
               </li>
             </ul>
           </div>
-        </div> <!-- ngIf:control.children -->
+        </div>
 
         <ng-container *ngIf="control.children">
           <app-dynamic-form-group
             [form]="form"
             [items]="control.children"
             [collapsible]="control.collapsible"
+            [title]="control.title"
             [width]="control.width"
             (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
           </app-dynamic-form-group>
         </ng-container>
-
       </div>
-
-    </ng-container> <!-- ngFor:controls -->
-</div>
+    </ng-container>
+  </div>
+</fieldset>

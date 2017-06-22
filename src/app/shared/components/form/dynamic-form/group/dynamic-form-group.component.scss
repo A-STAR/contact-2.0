@@ -2,6 +2,11 @@
 
 $form-group-bottom-margin: 12px;
 
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
 .form-group {
   position: relative;
   margin-bottom: $form-group-bottom-margin;
@@ -29,4 +34,18 @@ $form-group-bottom-margin: 12px;
 
 .form-column .form-column:last-child > .form-group {
   margin-bottom: $form-group-bottom-margin;
+}
+
+.title {
+  cursor: pointer;
+
+  .collapse-button {
+    display: inline-block;
+    margin-left: 4px;
+    transform: translateY(1px) rotate(0deg);
+    transition: transform 0.1s ease;
+    &.collapsed {
+      transform: translateY(0) rotate(-90deg);
+    }
+  }
 }

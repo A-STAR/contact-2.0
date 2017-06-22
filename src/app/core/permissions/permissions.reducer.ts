@@ -27,7 +27,9 @@ export function permissionReducer(
       return {
         ...state,
         roles: action.payload,
-        currentRole: null
+        currentRole: null,
+        rawPermissions: [],
+        currentPermission: null
       };
     case PermissionsService.ROLE_SELECTED:
       return {

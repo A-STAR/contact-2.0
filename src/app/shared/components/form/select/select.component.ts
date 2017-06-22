@@ -5,7 +5,6 @@ import {
   EventEmitter,
   ElementRef,
   OnInit,
-  OnDestroy,
   forwardRef,
   ViewChild,
   ChangeDetectionStrategy,
@@ -13,14 +12,12 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ISelectionAction, OptionsBehavior, IdType } from './select-interfaces';
 
-import { SelectActionHandler } from './select-action';
+import { SelectionToolsPlugin } from './selection-tools.plugin';
 
 @Component({
   selector: 'app-select',
@@ -35,18 +32,21 @@ import { SelectActionHandler } from './select-action';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class SelectComponent implements OnInit, ControlValueAccessor {
+
+  // Inputs with presets
+  @Input() placeholder = '';
+  @Input() filterEnabled = false;
+
   @Input() autoAlignEnabled: boolean;
   @Input() styles: CSSStyleDeclaration;
-  @Input() allowClear = false;
-  @Input() placeholder = '';
   @Input() actions: Array<ISelectionAction> = [];
-  @Input() lazyItems: Observable<Array<any>>;
-  @Input() loadLazyItemsOnInit = false;
-  @Input() cachingItems = false;
-  @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter();
+
+  // Outputs
+  @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter<ISelectionAction>();
   @Output() selected: EventEmitter<any> = new EventEmitter();
   @Output() selectedControlItemsChanges: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
+
   @ViewChild('input') inputRef: ElementRef;
 
   rawData: Array<ILabeledValue> = [];
@@ -61,10 +61,10 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   private _readonly = true;
   private _multiple = false;
   private _active: ILabeledValue[] = [];
-  private _lazyItemsSubscription: Subscription;
-  private _selectActionHandler: SelectActionHandler;
   private behavior: OptionsBehavior;
-  private inputValue = '';
+
+  // Private fields
+  private selectionToolsPlugin: SelectionToolsPlugin;
 
   private onChange: Function = () => {};
   private onTouched: Function = () => {};
@@ -155,15 +155,11 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   ) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
-    this._selectActionHandler = new SelectActionHandler(this);
+    this.selectionToolsPlugin = new SelectionToolsPlugin(this);
   }
 
   ngOnInit(): void {
     this.behavior = new GenericBehavior(this);
-
-    if (this.loadLazyItemsOnInit) {
-      this.initLazyItems();
-    }
   }
 
   writeValue(value: any): void {
@@ -194,17 +190,21 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   actionClick(action: ISelectionAction, $event: Event): void {
     $event.stopPropagation();
 
-    this._selectActionHandler.handle(action);
+    this.selectionToolsPlugin.handle(action);
     this.clickAction.emit(action);
   }
 
-  toTranslatedLabel(item: ILabeledValue): SafeHtml {
+  get displayPlaceholder(): string|number {
+    return !!this.active.length ?  this.extractDisplayValue(this.active[0]) : (this.placeholder || '');
+  }
+
+  extractDisplayValue(item: ILabeledValue): string|number {
     return item.label
       ? this.translateService.instant(item.label)
       : item.value;
   }
 
-  toCleanedAndTranslatedLabel(item: ILabeledValue): SafeHtml {
+  toDisplayValue(item: ILabeledValue): SafeHtml {
     let displayValue: string;
 
     if (item.label) {
@@ -215,72 +215,16 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
         displayValue = itemAtRawData.label;
       }
     }
-    return displayValue
-      ? this.sanitizer.bypassSecurityTrustHtml(this.translateService.instant(displayValue))
-      : item.value;
+    return this.sanitizer.bypassSecurityTrustHtml(
+      displayValue
+        ? this.translateService.instant(displayValue)
+        : item.value
+    );
   }
 
   private lookupAtRawData(value: number|string): ILabeledValue {
     return this.rawData
       .find((item: ILabeledValue) => String(item.value) === String(value));
-  }
-
-  inputEvent(e: any, isUpMode: boolean = false): void {
-    // tab
-    if (e.keyCode === 9) {
-      return;
-    }
-    if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-      e.keyCode === 40 || e.keyCode === 13)) {
-      e.preventDefault();
-      return;
-    }
-    // esc
-    if (!isUpMode && e.keyCode === 27) {
-      this.hideOptions();
-      this.element.nativeElement.children[0].focus();
-      e.preventDefault();
-      return;
-    }
-    // left
-    if (!isUpMode && e.keyCode === 37 && this.rawData.length > 0) {
-      this.behavior.first();
-      e.preventDefault();
-      return;
-    }
-    // right
-    if (!isUpMode && e.keyCode === 39 && this.rawData.length > 0) {
-      this.behavior.last();
-      e.preventDefault();
-      return;
-    }
-    // up
-    if (!isUpMode && e.keyCode === 38) {
-      this.behavior.prev();
-      e.preventDefault();
-      return;
-    }
-    // down
-    if (!isUpMode && e.keyCode === 40) {
-      this.behavior.next();
-      e.preventDefault();
-      return;
-    }
-    // enter
-    if (!isUpMode && e.keyCode === 13) {
-      if (this.active.indexOf(this.activeOption) === -1) {
-        this.selectActiveMatch();
-        this.behavior.next();
-      }
-      e.preventDefault();
-      return;
-    }
-    const target = e.target || e.srcElement;
-    if (target && target.value) {
-      this.inputValue = target.value;
-    }else {
-      this.open();
-    }
   }
 
   remove(item: ILabeledValue): void {
@@ -334,12 +278,6 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     this.selectedControlItemsChanges.emit(this.rawData);
   }
 
-  ngOnDestroy(): void {
-    if (this._lazyItemsSubscription) {
-      this._lazyItemsSubscription.unsubscribe();
-    }
-  }
-
   protected matchClick(e: any): void {
     if (this._disabled === true || !this.canSelectMultiItem()) {
       return;
@@ -357,12 +295,10 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     }
     if (event.keyCode === 46) {
       event.preventDefault();
-      this.inputEvent(event);
       return;
     }
     if (event.keyCode === 8) {
       event.preventDefault();
-      this.inputEvent(event, true);
       return;
     }
     if (event.keyCode === 9 || event.keyCode === 13 ||
@@ -378,7 +314,6 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     this.open();
     const target = event.target || event.srcElement;
     target.value = value;
-    this.inputEvent(event);
   }
 
   protected selectActive(value: ILabeledValue): void {
@@ -393,29 +328,10 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
     return typeof value === 'undefined' ? defaultValue : (value || undefined);
   }
 
-  private initLazyItems(): void {
-    if (this.cachingItems && this._lazyItemsSubscription) {
-      this.afterInitItems();
-      return;
-    }
-    this._lazyItemsSubscription = this.lazyItems.subscribe((loadedItems: Array<ILabeledValue>) => {
-      this.rawData = loadedItems.map((item: ILabeledValue) => {
-        const activatedItem: ILabeledValue = this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value);
-        return activatedItem ? Object.assign(activatedItem, item) : item;
-      });
-
-      this.active = this.rawData.filter((item: ILabeledValue) =>
-        this.active.find((activeItem: ILabeledValue) => item.value === activeItem.value));
-
-      this.afterInitItems();
-    });
-  }
-
   private focusToInput(value: string = ''): void {
     setTimeout(() => {
       const el = this.getInputElement();
       if (el) {
-        el.focus();
         el.value = value;
       }
     }, 0);
@@ -426,18 +342,10 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   }
 
   private open(): void {
-    if (this.lazyItems) {
-      this.initLazyItems();
-    } else {
-      this.afterInitItems();
-    }
-    this.optionsOpened = true;
-  }
-
-  private afterInitItems(): void {
     if (this.rawData.length > 0) {
       this.behavior.first();
     }
+    this.optionsOpened = true;
   }
 
   private hideOptions(): void {
@@ -471,7 +379,6 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
       this.focusToInput('');
     } else {
       this.focusToInput(value.label);
-      this.element.nativeElement.querySelector('.ui-select-container').focus();
     }
     this.selectedControlItemsChanges.emit(this.rawData);
   }

@@ -17,3 +17,8 @@ export interface ISelectionAction {
   state?: any;
   actionIconCls?: string;
 }
+
+export interface IRawDataFilterPipeParams {
+  sortType: string;
+  filterValue: string;
+}

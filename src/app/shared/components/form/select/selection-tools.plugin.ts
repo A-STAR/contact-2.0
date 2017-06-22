@@ -1,7 +1,7 @@
 import { ISelectionAction, SelectionActionTypeEnum } from './select-interfaces';
 import { SelectComponent } from './select.component';
 
-export class SelectActionHandler {
+export class SelectionToolsPlugin {
 
   constructor(private selectComponent: SelectComponent) {
   }
@@ -11,11 +11,11 @@ export class SelectActionHandler {
       case SelectionActionTypeEnum.SORT:
         if (action.state === 'down') {
           action.state = 'up';
-          action.actionIconCls = 'fa fa-arrow-up';
+          action.actionIconCls = 'fa fa-long-arrow-up';
           this.selectComponent.sortType = 'up';
         } else {
           action.state = 'down';
-          action.actionIconCls = 'fa fa-arrow-down';
+          action.actionIconCls = 'fa fa-long-arrow-down';
           this.selectComponent.sortType = 'down';
         }
         break;
