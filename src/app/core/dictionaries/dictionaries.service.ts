@@ -34,7 +34,7 @@ export class DictionariesService {
 
   get dictionaries(): Observable<IDictionary[]> {
     return this.store
-      .select((state: IAppState) => state.dictionaries.dictionaries)
+      .select(state => state.dictionaries.dictionaries)
       .distinctUntilChanged();
   }
 
