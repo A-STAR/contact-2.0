@@ -43,9 +43,9 @@ fieldset {
     display: inline-block;
     margin-left: 4px;
     transform: translateY(1px) rotate(0deg);
-    transition: transform 0.2s ease;
+    transition: transform 0.1s ease;
     &.collapsed {
-      transform: translateY(0) rotate(-180deg);
+      transform: translateY(0) rotate(-90deg);
     }
   }
 }
