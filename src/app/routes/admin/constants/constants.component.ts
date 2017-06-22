@@ -11,8 +11,8 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/to
 import { ConstantsService } from '../../../core/constants/constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { PermissionsService } from '../../../core/permissions/permissions.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
@@ -34,14 +34,14 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.display = true,
       enabled: Observable.combineLatest(
-        this.permissionService.hasPermission('CONST_VALUE_EDIT'),
+        this.userPermissionsService.has('CONST_VALUE_EDIT'),
         this.constantsService.state.map(state => !!state.currentConstant)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.constantsService.fetch(),
-      enabled: this.permissionService.hasPermission('CONST_VALUE_VIEW')
+      enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
     },
   ];
 
@@ -72,8 +72,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private gridService: GridService,
     private constantsService: ConstantsService,
     private notificationsService: NotificationsService,
-    private permissionService: PermissionsService,
     private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
     this.constantsService.fetch();
@@ -86,7 +86,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     const permission = 'CONST_VALUE_VIEW';
 
-    this.permissionSub = this.permissionService.hasPermission(permission)
+    this.permissionSub = this.userPermissionsService.has(permission)
       .distinctUntilChanged()
       .subscribe(hasPermission => {
         if (!hasPermission) {
@@ -137,7 +137,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   onBeforeEdit(): void {
     const permission = 'CONST_VALUE_EDIT';
-    this.permissionService.hasPermission('CONST_VALUE_EDIT')
+    this.userPermissionsService.has('CONST_VALUE_EDIT')
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
