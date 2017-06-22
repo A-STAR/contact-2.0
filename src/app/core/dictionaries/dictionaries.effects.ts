@@ -134,14 +134,14 @@ export class DictionariesEffects {
       const [_, store]: [Action, IAppState] = data;
       return Observable.zip(
         this.readTerms(store.dictionaries.selectedDictionaryCode),
-        this.readTerms(5)
+        this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
       )
       .map((response: any[]) => {
         return {
           type: DictionariesService.TERMS_FETCH_SUCCESS,
           payload: {
             terms: response[0].terms,
-            terms5: response[1].terms
+            dictionaryTermTypes: response[1].terms
           }
         };
       })

@@ -8,7 +8,7 @@ const defaultState: IDictionariesState = {
   dictionaries: [],
   selectedDictionaryCode: null,
   terms: [],
-  terms5: [],
+  dictionaryTermTypes: [],
   selectedTermId: null,
   dialogAction: null
 };
@@ -35,7 +35,7 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
       return {
         ...state,
         terms: action.payload.terms,
-        terms5: action.payload.terms5
+        dictionaryTermTypes: action.payload.dictionaryTermTypes
       };
     case DictionariesService.TERM_SELECT:
       return {

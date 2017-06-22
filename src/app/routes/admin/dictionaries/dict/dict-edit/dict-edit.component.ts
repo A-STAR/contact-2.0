@@ -25,8 +25,8 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
   private dictionariesSubscription;
   private languages: ILabeledValue[];
   private dictionaries: ILabeledValue[];
-  private terms5Subscription;
-  private terms5: ILabeledValue[];
+  private dictionaryTermTypesSubscription;
+  private dictionaryTermTypes: ILabeledValue[];
 
   constructor(
     private userLanguagesService: UserLanguagesService,
@@ -43,8 +43,8 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
       this.dictionaries = dictionaries.map((dictionary: IDictionary) =>
         ({ label: dictionary.name, value: dictionary.code }));
     });
-    this.terms5Subscription = dictionariesService.terms5.subscribe((terms: ITerm[]) => {
-      this.terms5 = terms.map((term: ITerm) =>
+    this.dictionaryTermTypesSubscription = dictionariesService.dictionaryTermTypes.subscribe((terms: ITerm[]) => {
+      this.dictionaryTermTypes = terms.map((term: ITerm) =>
         ({ label: term.name, value: term.code }));
     });
   }
@@ -110,7 +110,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: 'termTypeCode',
         type: 'select',
         required: true,
-        options: this.terms5,
+        options: this.dictionaryTermTypes,
         optionsActions: [
           { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ]
@@ -128,6 +128,6 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
   ngOnDestroy(): void {
     this.languagesSubscription.unsubscribe();
     this.dictionariesSubscription.unsubscribe();
-    this.terms5Subscription.unsubscribe();
+    this.dictionaryTermTypesSubscription.unsubscribe();
   }
 }

@@ -8,6 +8,9 @@ import { IDictionary, IDictionariesState, DictionariesDialogActionEnum, ITerm } 
 
 @Injectable()
 export class DictionariesService {
+  static DICTIONARY_CODES = {
+    DICTIONARY_TERM_TYPES: 5
+  };
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
   static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
   static DICTIONARIES_CLEAR         = 'DICTIONARIES_CLEAR';
@@ -44,9 +47,9 @@ export class DictionariesService {
       .distinctUntilChanged();
   }
 
-  get terms5(): Observable<ITerm[]> {
+  get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.store
-      .select((state: IAppState) => state.dictionaries.terms5)
+      .select((state: IAppState) => state.dictionaries.dictionaryTermTypes)
       .distinctUntilChanged();
   }
 
