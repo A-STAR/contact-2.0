@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { UserConstantsService } from './user-constants.service';
 
 @Injectable()
-export class UserConstantsResolver implements Resolve<any> {
+export class UserConstantsResolver implements Resolve<boolean> {
   constructor(
     private router: Router,
     private userConstantsService: UserConstantsService
