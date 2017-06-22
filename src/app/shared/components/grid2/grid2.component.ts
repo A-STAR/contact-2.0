@@ -83,7 +83,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() groupColumnMinWidth = 120;
   @Input() showDndGroupPanel = true;
   @Input() remoteSorting = false;
-  @Input() footerPresent = true;
+  @Input() showFooter = true;
   @Input() pagination = false;
   @Input() rowSelection = 'multiple';
   @Input() pageSizes =  Array.from(new Set([Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000]));
@@ -236,7 +236,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private refreshHeaderColumns(): void {
-    this.headerColumns.forEach((gridHeaderComponent: GridHeaderComponent) => {
+    this.headerColumns.forEach(gridHeaderComponent => {
       gridHeaderComponent.refreshView(this.columnsSettings);
       gridHeaderComponent.freeze(this.columnMovingInProgress);
     });
@@ -254,20 +254,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private refreshPaginationElements(): void {
     const paginationElementsVisible: boolean = this.rows.length < this.rowsTotalCount;
-    const isPaginationElementsExist: boolean = this.getRowsTotalCount() > this.pageSize;
+    const shouldPaginate: boolean = this.getRowsTotalCount() > this.pageSize;
 
     if (this.pagination) {
-      const pagesCount: number = this.getPagesCount();
+      const pageCount = this.getPageCount();
       [this.backwardElement, this.forwardElement, this.pageElement]
-        .forEach((action: IToolbarAction) => action.noRender = !isPaginationElementsExist);
+        .forEach((action: IToolbarAction) => action.noRender = !shouldPaginate);
       this.pagesSizeElement.noRender = false;
 
       this.pagesSizeElement.visible = true;
       this.backwardElement.visible = this.page > 1 && paginationElementsVisible;
-      this.forwardElement.visible = this.page < pagesCount && paginationElementsVisible;
+      this.forwardElement.visible = this.page < pageCount && paginationElementsVisible;
       this.pageElement.visible = true;
 
-      this.pageElement.text = `${this.page}/${pagesCount}`;
+      this.pageElement.text = `${this.page}/${pageCount}`;
     }
   }
 
@@ -366,8 +366,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.onCloseFilter.emit({type: Grid2Component.CLOSE_FILTER});
   }
 
+  private changeSortingDirection(direction: Grid2SortingEnum): Grid2SortingEnum {
+    const nextDirection = direction + 1;
+    return nextDirection > 2 ? 0 : nextDirection;
+  }
+
   private getSimpleColumnByName(field: string): IGridColumn {
-    return this.columns.find((column: IGridColumn) => column.prop === field);
+    return this.columns.find(column => column.prop === field);
   }
 
   private getRendererByName(field: string): Function {
@@ -375,7 +380,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private translateColumns(columnTranslations: object): void {
-    this.columnDefs = this.columnDefs.map((col: ColDef) => {
+    this.columnDefs = this.columnDefs.map(col => {
       col.headerName = columnTranslations[col.field];
       return col;
     });
@@ -385,17 +390,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return Math.max(this.rows.length, this.rowsTotalCount || 0);
   }
 
-  private getPagesCount(): number {
+  private getPageCount(): number {
     return Math.ceil(this.getRowsTotalCount() / this.pageSize);
   }
 
   private applyClientSorting(): void {
-    const sortModel = this.allGridColumns.map((column: Column) => {
+    const sortModel = this.allGridColumns.map(column => {
       const columnId: string = column.getColDef().field;
       return this.columnsSettings[columnId]
         ? {
           colId: columnId,
-          sort: this.columnsSettings[columnId].sortingDirection === Grid2SortingEnum.ASC ? Column.SORT_ASC : Column.SORT_DESC
+          sort: this.columnsSettings[columnId].sortingDirection,
         } : null;
     }).filter(item => !!item);
 
@@ -405,7 +410,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private defineGridToolbarActions(): void {
-    if (!this.footerPresent) {
+    if (!this.showFooter) {
       return;
     }
     this.gridToolbarActions = [
@@ -417,7 +422,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       this.gridToolbarActions.push(this.forwardElement = { type: ToolbarActionTypeEnum.FORWARD, noRender: true });
       this.gridToolbarActions.push(this.pagesSizeElement = {
         control: ToolbarControlEnum.SELECT,
-        value: this.pageSizes.map((pageSize: number) => { return { value: pageSize }; }),
+        value: this.pageSizes.map(pageSize => ({ value: pageSize })),
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         noRender: true,
         styles: { width: '100px' }
@@ -426,7 +431,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   private createColumnDefs(): void {
-    this.columnDefs = this.columns.map<ColDef>((column: IGridColumn) => {
+    this.columnDefs = this.columns.map(column => {
       const colDef: ColDef = {
         field: column.prop,
         headerName: column.prop,
@@ -519,7 +524,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
     this.onGroupingColumns.emit({
       type: Grid2Component.GROUPING_COLUMNS, payload: {
-        groupingColumns: event.getColumns().map((column: Column) => column.getColId())
+        groupingColumns: event.getColumns().map(column => column.getColId())
       }
     });
   }

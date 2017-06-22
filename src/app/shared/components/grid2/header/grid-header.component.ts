@@ -20,31 +20,31 @@ export class GridHeaderComponent implements IComponent<IGrid2HeaderParams> {
   private eSortDownButton;
   private columnsSettings: IGrid2ColumnsSettings;
   private isFrozen: boolean;
-  private unlistenClickColumnListener: Function;
-  private unlistenFilterClickListener: Function;
+  private removeColumnClickListener: Function;
+  private removeFilterClickListener: Function;
 
   init(agParams: IGrid2HeaderParams): void {
     this.agParams = agParams;
     this.buildHeaderColumn();
     this.bindSubElements();
 
-    this.unlistenClickColumnListener =
+    this.removeColumnClickListener =
       this.renderer.listen(this.eGui, 'click', this.onClickColumnListener.bind(this));
 
     if (this.agParams.enableMenu) {
-      this.unlistenFilterClickListener =
+      this.removeFilterClickListener =
         this.eFilterButton.addEventListener('click', this.onFilterClickListener.bind(this));
     } else {
       this.eGui.removeChild(this.eFilterButton);
     }
     this.setDefaultStyles();
     this.agParams.headerColumns.push(this);
-  };
+  }
 
   destroy(): void {
-    this.unlistenClickColumnListener();
-    if (this.unlistenFilterClickListener) {
-      this.unlistenFilterClickListener();
+    this.removeColumnClickListener();
+    if (this.removeFilterClickListener) {
+      this.removeFilterClickListener();
     }
     this.agParams.headerColumns = this.agParams.headerColumns
       .filter((gridHeaderComponent: GridHeaderComponent) => this !== gridHeaderComponent);

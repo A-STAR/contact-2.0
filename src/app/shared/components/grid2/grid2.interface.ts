@@ -66,6 +66,7 @@ export interface IGrid2ShowFilterPayload {
 }
 
 export enum Grid2SortingEnum {
+  NONE,
   ASC,
   DESC
 }

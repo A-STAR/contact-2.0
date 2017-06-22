@@ -1,4 +1,5 @@
-import { ILabeledValue } from "../../../core/converter/value/value-converter.interface";
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+
 export enum ToolbarControlEnum {
   BUTTON,
   CHECKBOX,
@@ -30,6 +31,7 @@ export interface IToolbarAction {
   noRender?: boolean;
   styles?: { width?: string };
 }
+
 export interface IToolbarActionSelectPayload {
   action: IToolbarAction;
   value: ILabeledValue;
