@@ -1,12 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { IRawDataFilterPipeParams } from './select-interfaces';
 
 @Pipe({name: 'rawDataFilter'})
 export class RawDataFilterPipe implements PipeTransform {
 
-  public transform(value: ILabeledValue[], params: { sortType: string }): ILabeledValue[] {
-    const transformedList: ILabeledValue[] = (value || []).slice();
+  public transform(value: ILabeledValue[], params: IRawDataFilterPipeParams): ILabeledValue[] {
+    const transformedList: ILabeledValue[] = (value || [])
+      .filter(item => {
+        return !params.filterValue || !item.label || item.label.toLocaleLowerCase()
+            .indexOf(params.filterValue.toLowerCase()) > -1;
+      });
+
     if (params.sortType) {
       switch (params.sortType) {
         case 'up':
