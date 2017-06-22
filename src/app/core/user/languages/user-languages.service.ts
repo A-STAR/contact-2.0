@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
 import { IUserLanguage, IUserLanguageOption, IUserLanguagesState } from './user-languages.interface';
@@ -39,6 +40,12 @@ export class UserLanguagesService {
         label: language.name,
         value: language.id
       })));
+  }
+
+  get userLanguages(): Observable<IUserLanguage[]> {
+    return this.store
+      .select((state: IAppState) => state.userLanguages.languages)
+      .distinctUntilChanged();
   }
 
   private get state(): Observable<IUserLanguagesState> {
