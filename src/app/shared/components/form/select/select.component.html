@@ -79,6 +79,7 @@
          [ngClass]="{ hidden: !isInputVisible()}"
          class="form-control ui-select-search"
          *ngIf="inputMode"
+         (click)="onInputClick($event)"
          [placeholder]="displayPlaceholder">
   <ng-container *ngTemplateOutlet="optionsTemplate">
   </ng-container>

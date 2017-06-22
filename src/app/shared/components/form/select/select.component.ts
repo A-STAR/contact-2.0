@@ -188,7 +188,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
-    $event.stopPropagation();
+    this.stopEvent($event);
 
     this.selectionToolsPlugin.handle(action);
     this.clickAction.emit(action);
@@ -278,14 +278,24 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.selectedControlItemsChanges.emit(this.rawData);
   }
 
-  protected matchClick(e: any): void {
+  onInputClick($event: Event): void {
+    this.stopEvent($event);
+    this.hideOptions();
+  }
+
+  matchClick($event: Event): void {
+    this.stopEvent($event);
+
     if (this._disabled === true || !this.canSelectMultiItem()) {
       return;
     }
+
     this._inputMode = !this._inputMode;
-    if (this._inputMode === true && ((this.multiple === true && e) || this.multiple === false)) {
+    if (this._inputMode === true && ((this.multiple === true && $event) || this.multiple === false)) {
       this.focusToInput();
       this.open();
+    } else {
+      this.hideOptions();
     }
   }
 
