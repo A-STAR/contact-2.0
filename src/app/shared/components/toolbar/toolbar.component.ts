@@ -8,7 +8,7 @@ import {
 } from './toolbar.interface';
 
 import { IconsService } from '../../icons/icons.service';
-import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -26,7 +26,7 @@ export class ToolbarComponent {
 
   constructor(
     private iconsService: IconsService,
-    private permissionsService: PermissionsService
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   onActionClick(action: IToolbarAction, event: any): void {
@@ -44,7 +44,8 @@ export class ToolbarComponent {
   }
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
-    return this.permissionsService.hasPermission(action.permission)
+    const permissions = Array.isArray(action.permission) ? action.permission : [ action.permission ];
+    return this.userPermissionsService.hasAll(permissions)
       .map(permission => !action.visible || !(!action.permission || permission));
   }
 
