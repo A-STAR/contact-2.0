@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class PermissionsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('PERMIT_ADD'),
+        this.userPermissionsService.has('PERMIT_ADD'),
         this.permissionsService.permissions.map(state => !!state.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -45,7 +46,7 @@ export class PermissionsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('PERMIT_EDIT'),
+        this.userPermissionsService.has('PERMIT_EDIT'),
         this.permissionsService.permissions.map(state => !!state.currentPermission)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
@@ -53,14 +54,14 @@ export class PermissionsComponent implements OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
       enabled: Observable.combineLatest(
-        this.permissionsService.hasPermission('PERMIT_DELETE'),
+        this.userPermissionsService.has('PERMIT_DELETE'),
         this.permissionsService.permissions.map(state => !!state.currentPermission)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      enabled: this.permissionsService.hasPermission('PERMIT_VIEW')
+      enabled: this.userPermissionsService.has('PERMIT_VIEW')
     },
   ];
 
@@ -82,6 +83,7 @@ export class PermissionsComponent implements OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);

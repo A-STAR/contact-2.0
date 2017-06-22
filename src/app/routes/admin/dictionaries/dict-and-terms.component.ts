@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-dict-and-terms',
@@ -10,9 +10,9 @@ import { PermissionsService } from '../../../core/permissions/permissions.servic
 export class DictAndTermsComponent {
   static COMPONENT_NAME = 'DictAndTermsComponent';
 
-  constructor(private permissionsService: PermissionsService) {}
+  constructor(private userPermissionsService: UserPermissionsService) {}
 
   get canDictionariesShow(): Observable<boolean> {
-    return this.permissionsService.hasPermission('DICT_VIEW');
+    return this.userPermissionsService.has('DICT_VIEW');
   }
 }
