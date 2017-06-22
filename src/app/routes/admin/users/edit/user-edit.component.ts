@@ -8,7 +8,7 @@ import { IUser } from '../users.interface';
 import { IUserConstant } from '../../../../core/user/constants/user-constants.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
@@ -38,18 +38,18 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
   constructor(
     private gridService: GridService,
-    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.editUserSub = this.permissionsService.hasPermission('USER_EDIT')
+    this.editUserSub = this.userPermissionsService.has('USER_EDIT')
       .subscribe(permission => {
         this.canEditUser = permission;
       });
-    this.editUserRoleSub = this.permissionsService.hasPermission('USER_ROLE_EDIT')
+    this.editUserRoleSub = this.userPermissionsService.has('USER_ROLE_EDIT')
       .subscribe(permission => {
         this.canEditUserRole = permission;
       });

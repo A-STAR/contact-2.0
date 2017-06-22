@@ -47,6 +47,10 @@ export class PermissionsService {
     return this.store.select('permissions');
   }
 
+  /**
+   * TODO(d.maltsev): switch to UserPermissionsService
+   * @deprecated
+   */
   resolvePermissions(): Observable<IPermission> {
     return this.gridService.read('/api/userpermits')
       .map((response: IPermissionsResponse) => {
@@ -57,6 +61,10 @@ export class PermissionsService {
       );
   }
 
+  /**
+   * TODO(d.maltsev): switch to UserPermissionsService
+   * @deprecated
+   */
   hasPermission(permissionName: string | Array<string>): Observable<boolean> {
     const state = this.permissions
       .map(permissions => permissions.permissions);
@@ -72,6 +80,10 @@ export class PermissionsService {
     return state.map(permissions => !!permissions[permissionName]);
   }
 
+  /**
+   * TODO(d.maltsev): switch to UserPermissionsService
+   * @deprecated
+   */
   hasAllPermissions(permissionNames: Array<string>): Observable<boolean> {
     return this.permissions
       .map(slice => slice.permissions)
@@ -82,6 +94,10 @@ export class PermissionsService {
       });
   }
 
+  /**
+   * TODO(d.maltsev): switch to UserPermissionsService
+   * @deprecated
+   */
   valueToBoolean(rawPermission: IRawPermission): boolean {
     return (rawPermission.valueB !== null) ? !!rawPermission.valueB : false;
   }
@@ -168,6 +184,10 @@ export class PermissionsService {
     this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED, payload });
   }
 
+  /**
+   * TODO(d.maltsev): switch to UserPermissionsService
+   * @deprecated
+   */
   normalizePermissions(response: IPermissionsResponse): IPermission {
     return response.userPermits.reduce((acc, rawPermission: IRawPermission) => {
       acc[rawPermission.name] = this.valueToBoolean(rawPermission);
