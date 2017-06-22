@@ -53,12 +53,8 @@
         {{ control.label | translate }}
       </span>
       <app-select [formControlName]="control.controlName"
-                  [allowClear]="true"
                   [items]="control.options"
-                  [lazyItems]="control.lazyOptions"
-                  [cachingItems]="control.cachingOptions"
                   [actions]="control.optionsActions"
-                  [loadLazyItemsOnInit]="control.loadLazyItemsOnInit"
                   [multiple]="control.multiple"
                   [closableSelectedItem]="control.closableSelectedItem"
                   [controlDisabled]="control.disabled"
