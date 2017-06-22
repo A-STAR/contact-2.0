@@ -129,19 +129,12 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   @Input()
   set active(selectedItems: Array<ILabeledValue>) {
     let currentSelectedItems: number|Array<any> = selectedItems;
-    if (typeof currentSelectedItems === 'number' || typeof currentSelectedItems === 'string') {
-      const selectedRawItem: ILabeledValue = this.rawData
-        .find((item: ILabeledValue) => String(item.value) === String(currentSelectedItems));
 
+    if (typeof currentSelectedItems === 'number' || typeof currentSelectedItems === 'string') {
+      const selectedRawItem: ILabeledValue = this.lookupAtRawData(currentSelectedItems);
       if (selectedRawItem) {
         currentSelectedItems = [selectedRawItem];
       } else {
-        /**
-         * loadLazyItemsOnInit: true +
-         * lazyOptions: Observable +
-         * edit mode + set initial form values +
-         * number input item
-         */
         currentSelectedItems = [ { value: currentSelectedItems } ];
       }
     }
@@ -190,9 +183,12 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   }
 
   canCloseSelectedItem(item: ILabeledValue): boolean {
+    const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
+
     return this.closableSelectedItem
       && this.active.length > 1
-      && item.canRemove !== false;
+      && item.canRemove !== false
+      && (!itemAtRawData || itemAtRawData.canRemove !== false);
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
@@ -209,9 +205,24 @@ export class SelectComponent implements OnInit, OnDestroy, ControlValueAccessor 
   }
 
   toCleanedAndTranslatedLabel(item: ILabeledValue): SafeHtml {
-    return item.label
-      ? this.sanitizer.bypassSecurityTrustHtml(this.translateService.instant(item.label))
+    let displayValue: string;
+
+    if (item.label) {
+      displayValue = item.label;
+    } else {
+      const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
+      if (itemAtRawData) {
+        displayValue = itemAtRawData.label;
+      }
+    }
+    return displayValue
+      ? this.sanitizer.bypassSecurityTrustHtml(this.translateService.instant(displayValue))
       : item.value;
+  }
+
+  private lookupAtRawData(value: number|string): ILabeledValue {
+    return this.rawData
+      .find((item: ILabeledValue) => String(item.value) === String(value));
   }
 
   inputEvent(e: any, isUpMode: boolean = false): void {

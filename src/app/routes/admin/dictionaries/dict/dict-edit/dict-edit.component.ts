@@ -1,10 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 
 import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { ILabeledValue } from "../../../../../core/converter/value/value-converter.interface";
+import { IUserLanguage } from "../../../../../core/user/languages/user-languages.interface";
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { UserLanguagesService } from '../../../../../core/user/languages/user-languages.service';
 
 import {
   EntityBaseComponent,
@@ -19,10 +26,22 @@ const NAME_CONTROL_NAME = 'name';
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html'
 })
-export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit {
+export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit, OnDestroy {
 
-  constructor(private gridService: GridService) {
+  private languagesSubscription;
+  private languages: ILabeledValue[];
+
+  constructor(
+    private gridService: GridService,
+    private userLanguagesService: UserLanguagesService
+  ) {
     super();
+
+    this.languagesSubscription = userLanguagesService.userLanguages.subscribe((terms: IUserLanguage[]) => {
+      this.languages = terms.map((userLanguage: IUserLanguage) => {
+        return { label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain };
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -48,9 +67,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         type: 'select',
         multiple: true,
         placeholder: 'dictionaries.placeholder.select.translation',
-        loadLazyItemsOnInit: true,
-        lazyOptions: this.gridService.read('/api/userlanguages')
-          .map(data => data.languages.map(lang => ({ label: lang.name, value: lang.id, canRemove: !lang.isMain })))
+        options: this.languages
       },
       {
         label: 'dictionaries.edit.name',
@@ -107,5 +124,9 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
       });
 
     return filteredControls as Array<IDynamicFormControl>;
+  }
+
+  ngOnDestroy(): void {
+    this.languagesSubscription.unsubscribe();
   }
 }
