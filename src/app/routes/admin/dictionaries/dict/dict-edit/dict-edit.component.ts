@@ -1,22 +1,16 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { ILabeledValue } from "../../../../../core/converter/value/value-converter.interface";
-import { IUserLanguage } from "../../../../../core/user/languages/user-languages.interface";
+import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
+import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserLanguagesService } from '../../../../../core/user/languages/user-languages.service';
+import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
 
-import {
-  EntityBaseComponent,
-  TranslationFieldsExtension
-} from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent, TranslationFieldsExtension } from '../../../../../shared/components/entity/edit/entity.base.component';
 
 const NAME_TRANSLATIONS_CONTROL_NAME = 'nameTranslations';
 const TRANSLATED_NAME_CONTROL_NAME = 'translatedName';
@@ -29,17 +23,25 @@ const NAME_CONTROL_NAME = 'name';
 export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit, OnDestroy {
 
   private languagesSubscription;
+  private dictionariesSubscription;
   private languages: ILabeledValue[];
+  private dictionaries: ILabeledValue[];
 
   constructor(
     private gridService: GridService,
-    private userLanguagesService: UserLanguagesService
+    private userLanguagesService: UserLanguagesService,
+    private dictionariesService: DictionariesService
   ) {
     super();
 
     this.languagesSubscription = userLanguagesService.userLanguages.subscribe((terms: IUserLanguage[]) => {
       this.languages = terms.map((userLanguage: IUserLanguage) => {
         return { label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain };
+      });
+    });
+    this.dictionariesSubscription = dictionariesService.dictionaries.subscribe((dictionaries: IDictionary[]) => {
+      this.dictionaries = dictionaries.map((dictionary: IDictionary) => {
+        return { label: dictionary.name, value: dictionary.code };
       });
     });
   }
@@ -95,9 +97,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         label: 'dictionaries.edit.parent',
         controlName: 'parentCode',
         type: 'select',
-        loadLazyItemsOnInit: true,
-        lazyOptions: this.gridService.read('/api/dictionaries')
-          .map(data => data.dictNames.map(dict => ({label: dict.name, value: dict.id}))),
+        options: this.dictionaries,
         optionsActions: [
           { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
         ]
@@ -128,5 +128,6 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
 
   ngOnDestroy(): void {
     this.languagesSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
   }
 }
