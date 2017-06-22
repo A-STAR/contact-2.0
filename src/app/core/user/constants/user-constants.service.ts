@@ -10,11 +10,12 @@ import { IUserConstant, IUserConstantsState } from './user-constants.interface';
 export class UserConstantsService {
   static USER_CONSTANTS_FETCH         = 'USER_CONSTANTS_FETCH';
   static USER_CONSTANTS_FETCH_SUCCESS = 'USER_CONSTANTS_FETCH_SUCCESS';
+  static USER_CONSTANTS_FETCH_FAILURE = 'USER_CONSTANTS_FETCH_FAILURE';
 
   constructor(private store: Store<IAppState>) {}
 
   get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.constants.length > 0);
+    return this.state.map(state => state.isResolved);
   }
 
   createRefreshAction(): Action {

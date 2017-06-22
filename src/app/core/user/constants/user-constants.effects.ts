@@ -27,6 +27,9 @@ export class UserConstantsEffects {
         })
         .catch(() => {
           return [
+            {
+              type: UserConstantsService.USER_CONSTANTS_FETCH_FAILURE
+            },
             this.notificationService.createErrorAction('constants.api.errors.fetch')
           ];
         });
