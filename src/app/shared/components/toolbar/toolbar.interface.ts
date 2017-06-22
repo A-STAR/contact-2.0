@@ -1,4 +1,4 @@
-import { ILabeledValue } from "../../../core/converter/value/value-converter.interface";
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 export enum ToolbarControlEnum {
   BUTTON,
   CHECKBOX,
