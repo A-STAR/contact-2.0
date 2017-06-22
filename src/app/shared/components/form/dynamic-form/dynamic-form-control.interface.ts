@@ -12,6 +12,7 @@ export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 export interface IDynamicFormGroup {
   children: Array<IDynamicFormItem>;
   collapsible?: boolean;
+  title?: string;
   width?: number;
 }
 
