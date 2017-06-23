@@ -13,7 +13,9 @@ export class AlignmentDirective implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.updateElementStyles();
+    if (this.autoAlignEnabled) {
+      this.updateElementStyles();
+    }
   }
 
   private updateElementStyles(): void {

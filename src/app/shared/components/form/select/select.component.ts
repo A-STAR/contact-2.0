@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { ISelectionAction, OptionsBehavior, IdType } from './select-interfaces';
@@ -38,7 +39,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = '';
   @Input() filterEnabled = false;
 
-  @Input() autoAlignEnabled: boolean;
   @Input() styles: CSSStyleDeclaration;
   @Input() actions: Array<ISelectionAction> = [];
 
@@ -66,6 +66,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private behavior: OptionsBehavior;
 
   // Private fields
+  private _autoAlignEnabled = false;
   private selectionToolsPlugin: SelectionToolsPlugin;
 
   private onChange: Function = () => {};
@@ -87,6 +88,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   @Input()
+  set autoAlignEnabled(autoAlignEnabled: boolean) {
+    this._autoAlignEnabled = this.toPropertyValue(autoAlignEnabled, this._autoAlignEnabled);
+  }
+
+  @Input()
   set multiple(value: boolean) {
     this._multiple = this.toPropertyValue(value, this._multiple);
   }
@@ -98,6 +104,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this._disabled) {
       this.hideOptions();
     }
+  }
+
+  get autoAlignEnabled(): boolean {
+    return this._autoAlignEnabled;
   }
 
   get canSelectMultipleItem(): boolean {
@@ -325,10 +335,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return !!this.active.find((v: ILabeledValue) => v.value === labeledValue.value);
   }
 
-  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
-    return typeof value === 'undefined' ? defaultValue : (value || undefined);
-  }
-
   private focusToInput(value: string = ''): void {
     setTimeout(() => {
       const el = this.getInputElement();
@@ -389,6 +395,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private stopEvent($event: Event): void {
     $event.stopPropagation();
     $event.preventDefault();
+  }
+
+  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
+    return R.isNil(value) ? defaultValue : value;
   }
 }
 
