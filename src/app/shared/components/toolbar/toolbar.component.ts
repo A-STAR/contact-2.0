@@ -6,6 +6,7 @@ import {
   IToolbarActionSelectPayload,
   ToolbarControlEnum
 } from './toolbar.interface';
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 
 import { IconsService } from '../../icons/icons.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -36,10 +37,10 @@ export class ToolbarComponent {
     });
   }
 
-  onSelect(action: IToolbarAction, event: any): void {
+  onSelect(action: IToolbarAction, activeValues: ILabeledValue[]): void {
     this.actionSelect.emit({
       action: action,
-      value: event
+      value: activeValues
     });
   }
 
