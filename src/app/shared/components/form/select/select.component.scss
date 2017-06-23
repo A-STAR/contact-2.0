@@ -32,7 +32,8 @@
   cursor: pointer;
 }
 .app-select-tool .fa {
-  float: right;
+  position: absolute;
+  right: 10px;
 }
 
 .app-select-match-item {
