@@ -19,16 +19,16 @@
     <li
       *ngFor="let action of actions"
       role="menuitem"
-      class="ui-select-unselectable"
+      class="app-select-unselectable"
     >
       <div
-        class="ui-select-action"
+        class="app-select-tool"
         (click)="actionClick(action, $event)"
       >
         {{ action.text | translate }}
         <span
           *ngIf="action.actionIconCls"
-          class="ui-select-action-btn {{action.actionIconCls}}">
+          class="{{action.actionIconCls}}">
         </span>
       </div>
     </li>
@@ -59,28 +59,35 @@
   [offClick]="clickedOutside"
   (keyup)="mainClick($event)"
 >
-  <div class="ui-select-match"
-       *ngIf="!inputMode">
-      <span tabindex="-1"
-            class="form-control"
-            (click)="matchClick($event)">
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{ placeholder | translate }}</span>
-        <span *ngIf="active.length" class="ui-select-match-text pull-left"
-              [innerHTML]="toDisplayValue(active[0])"></span>
-        <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
+  <div
+    *ngIf="!inputMode"
+    class="ui-select-match"
+  >
+    <span
+      tabindex="-1"
+      class="form-control app-select-unselectable"
+      (click)="matchClick($event)"
+    >
+      <span
+        *ngIf="active.length"
+        [innerHTML]="toDisplayValue(active[0])"
+      >
       </span>
+      <i class="caret app-select-caret"></i>
+    </span>
   </div>
-  <input #input
-         type="text"
-         autocomplete="false"
-         tabindex="-1"
-         [attr.readonly]="readonly"
-         [ngClass]="{ hidden: !isInputVisible()}"
-         class="form-control ui-select-search"
-         *ngIf="inputMode"
-         (click)="onInputClick($event)"
-         [placeholder]="displayPlaceholder">
+  <input
+    #input
+    *ngIf="inputMode"
+    tabindex="-1"
+    type="text"
+    autocomplete="false"
+    [attr.readonly]="readonly"
+    [ngClass]="{ hidden: !isInputVisible()}"
+    class="form-control app-select-search app-select-unselectable"
+    (click)="onInputClick($event)"
+    [placeholder]="displayPlaceholder"
+  >
   <ng-container *ngTemplateOutlet="optionsTemplate">
   </ng-container>
 </div>
@@ -99,15 +106,14 @@
                 type="button"
                 (click)="activeItemClick(activeItem, $event)"
                 [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'context-exist': isItemContextExist(activeItem)}">
-             <a *ngIf="canCloseSelectedItem(activeItem)"
-                class="close"
-                style="margin-left: 5px; padding: 0;"
-                (click)="removeClick(activeItem, $event)">&times;
-             </a>
+             <span
+               *ngIf="canCloseSelectedItem(activeItem)"
+               class="app-select-close-action"
+               (click)="removeClick(activeItem, $event)">&times;
+             </span>
              <span [innerHtml]="toDisplayValue(activeItem)"></span>
           </span>
-          <i class="dropdown-toggle pull-right"></i>
-          <i class="caret pull-right"></i>
+          <i class="caret app-select-caret"></i>
     </span>
   <input
     #input
@@ -116,10 +122,7 @@
     [attr.readonly]="readonly"
     [ngClass]="{ hidden: !isInputVisible()}"
     autocomplete="false"
-    autocorrect="off"
-    autocapitalize="off"
-    spellcheck="false"
-    class="form-control ui-select-search"
+    class="form-control app-select-search app-select-unselectable"
     [placeholder]="displayPlaceholder"
     role="combobox"
   >

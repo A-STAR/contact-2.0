@@ -1,41 +1,40 @@
-.ui-select-toggle {
-  position: relative;
+@import "../../../styles/bootstrap/bootstrap/_mixins";
+
+.app-select-unselectable {
+  @include user-select(none);
 }
 
-/* Fix caret going into new line in Firefox */
-.ui-select-placeholder {
-  float: left;
+.app-select-search-wrapper {
+  padding: 0 4px;
 }
 
-/* Fix Bootstrap dropdown position when inside a input-group */
-.input-group > .dropdown {
-  /* Instead of relative */
-  position: static;
+.app-select-search {
+  width: 100%;
 }
 
-.ui-select-match > .btn {
-  /* Instead of center because of .btn */
-  text-align: left !important;
-  font-size: 14px;
-  &.btn-default {
-    border-color: #dde6e9;
-  }
+.app-select-close-action {
+  float: right;
+  margin-left: 5px;
+  font-size: 18px;
+  line-height: 12px;
 }
 
-.ui-select-match > .caret {
+.app-select-caret {
   position: absolute;
   top: 45%;
   right: 15px;
+  cursor: pointer;
 }
 
-.ui-select-unselectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.app-select-tool {
+  padding: 3px 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
+.app-select-tool .fa {
+  float: right;
+}
+
 
 .ui-select-choices {
   width: 100%;
@@ -68,16 +67,6 @@
   font-weight: normal;
   cursor: pointer;
 }
-.ui-select-action {
-  padding: 3px 20px;
-  font-weight: bold;
-}
-.ui-select-action .fa {
-  float: right;
-}
-.ui-select-action-btn {
-  cursor: pointer;
-}
 
 .ui-select-choices-row.active {
   .dropdown-item {
@@ -92,21 +81,13 @@
   min-height: 35px;
 }
 
-.ui-select-multiple input.ui-select-search {
+.ui-select-multiple input.app-select-search {
   background-color: transparent !important; /* To prevent double background when disabled */
-  border: none;
-  outline: none;
-  box-shadow: none;
-  height: 1.6666em;
   margin-bottom: 3px;
 
   &.hidden {
    display: none;
   }
-}
-.ui-select-match .close {
-  font-size: 1.6em;
-  line-height: 0.75;
 }
 
 .ui-select-multiple .ui-select-match-item {
@@ -125,19 +106,4 @@
   &.context-exist {
     background-color: #d8ffe1;
   }
-}
-.ui-select-toggle > .caret {
-  position: absolute;
-  height: 10px;
-  top: 50%;
-  right: 10px;
-  margin-top: -2px;
-}
-
-.app-select-search-wrapper {
-  padding: 0 4px;
-}
-
-.app-select-search {
-  width: 100%;
 }
