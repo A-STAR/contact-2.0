@@ -54,61 +54,6 @@ export class PermissionsService {
       .distinctUntilChanged();
   }
 
-  /**
-   * TODO(d.maltsev): switch to UserPermissionsService
-   * @deprecated
-   */
-  resolvePermissions(): Observable<IPermission> {
-    return this.gridService.read('/api/userpermits')
-      .map((response: IPermissionsResponse) => {
-        return this.normalizePermissions(response);
-      })
-      .do((payload: IPermission) =>
-        this.store.dispatch({ type: PermissionsService.PERMISSION_FETCH_SUCCESS, payload })
-      );
-  }
-
-  /**
-   * TODO(d.maltsev): switch to UserPermissionsService
-   * @deprecated
-   */
-  hasPermission(permissionName: string | Array<string>): Observable<boolean> {
-    const state = this.permissions
-      .map(permissions => permissions.permissions);
-
-    if (Array.isArray(permissionName)) {
-      return state
-        .map(permissions => {
-          return permissionName.reduce((acc, permission) => {
-            return acc && permissions[permission];
-          }, true);
-        });
-    }
-    return state.map(permissions => !!permissions[permissionName]);
-  }
-
-  /**
-   * TODO(d.maltsev): switch to UserPermissionsService
-   * @deprecated
-   */
-  hasAllPermissions(permissionNames: Array<string>): Observable<boolean> {
-    return this.permissions
-      .map(slice => slice.permissions)
-      .map(permissions => {
-        return permissionNames.reduce((acc, permission) => {
-          return acc && permissions[permission];
-        }, true);
-      });
-  }
-
-  /**
-   * TODO(d.maltsev): switch to UserPermissionsService
-   * @deprecated
-   */
-  valueToBoolean(rawPermission: IRawPermission): boolean {
-    return (rawPermission.valueB !== null) ? !!rawPermission.valueB : false;
-  }
-
   fetchRoles(): void {
     this.store.dispatch({
       type: PermissionsService.ROLE_FETCH
@@ -191,10 +136,6 @@ export class PermissionsService {
     this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED, payload });
   }
 
-  /**
-   * TODO(d.maltsev): switch to UserPermissionsService
-   * @deprecated
-   */
   normalizePermissions(response: IPermissionsResponse): IPermission {
     return response.userPermits.reduce((acc, rawPermission: IRawPermission) => {
       acc[rawPermission.name] = this.valueToBoolean(rawPermission);
@@ -202,4 +143,7 @@ export class PermissionsService {
     }, {});
   }
 
+  private valueToBoolean(rawPermission: IRawPermission): boolean {
+    return (rawPermission.valueB !== null) ? !!rawPermission.valueB : false;
+  }
 }
