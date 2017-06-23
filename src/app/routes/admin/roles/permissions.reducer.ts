@@ -7,7 +7,6 @@ import { PermissionsService } from './permissions.service';
 const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
 const defaultState: IPermissionsState = {
-  permissions: {},
   dialog: IPermissionsDialogEnum.NONE,
   currentPermission: null,
   currentRole: null,

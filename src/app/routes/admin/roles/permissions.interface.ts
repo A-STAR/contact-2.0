@@ -52,15 +52,11 @@ export enum IPermissionsDialogEnum {
   ROLE_COPY
 }
 
-export interface IPermission {
-  [key: string]: boolean;
-}
-
 export interface IPermissionsState {
-  permissions: IPermission;
   dialog: IPermissionsDialogEnum;
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
+  // TODO(d.maltsev): rename to 'permissions'
   rawPermissions: IPermissionModel[];
   roles: Array<IPermissionRole>;
 }

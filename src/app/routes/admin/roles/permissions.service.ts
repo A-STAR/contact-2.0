@@ -4,16 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
-import {
-  IPermission,
-  IPermissionModel,
-  IPermissionRole,
-  IPermissionsDialogEnum,
-  IPermissionsState,
-  IValueEntity,
-  IRawPermission,
-  IPermissionsResponse,
-} from './permissions.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsDialogEnum, IPermissionsState, IValueEntity } from './permissions.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 
@@ -133,16 +124,5 @@ export class PermissionsService {
 
   changeSelected(payload: IPermissionModel): void {
     this.store.dispatch({ type: PermissionsService.PERMISSION_SELECTED, payload });
-  }
-
-  normalizePermissions(response: IPermissionsResponse): IPermission {
-    return response.userPermits.reduce((acc, rawPermission: IRawPermission) => {
-      acc[rawPermission.name] = this.valueToBoolean(rawPermission);
-      return acc;
-    }, {});
-  }
-
-  private valueToBoolean(rawPermission: IRawPermission): boolean {
-    return (rawPermission.valueB !== null) ? !!rawPermission.valueB : false;
   }
 }
