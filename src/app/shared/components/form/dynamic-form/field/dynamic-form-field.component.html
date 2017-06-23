@@ -53,14 +53,14 @@
         {{ control.label | translate }}
       </span>
       <app-select [formControlName]="control.controlName"
-                  [items]="control.options"
+                  [options]="control.options"
                   [actions]="control.optionsActions"
                   [multiple]="control.multiple"
                   [closableSelectedItem]="control.closableSelectedItem"
                   [controlDisabled]="control.disabled"
                   [readonly]="control.readonly"
                   [placeholder]="control.placeholder"
-                  (selectedControlItemsChanges)="onSelectedControlItemsChanges({ control: control, items: $event})">
+                  (onSelectedItems)="onSelectedControlItemsChanges({ control: control, items: $event})">
       </app-select>
     </label>
   </ng-container>
