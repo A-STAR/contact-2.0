@@ -280,38 +280,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     this._inputMode = !this._inputMode;
     if (this._inputMode === true && ((this.multiple === true && $event) || this.multiple === false)) {
-      this.focusToInput();
       this.open();
     } else {
       this.hideOptions();
     }
-  }
-
-  protected mainClick(event: any): void {
-    if (this._inputMode === true || this._disabled === true || !this.canSelectMultiItem()) {
-      return;
-    }
-    if (event.keyCode === 46) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 8) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 9 || event.keyCode === 13 ||
-      event.keyCode === 27 || (event.keyCode >= 37 && event.keyCode <= 40)) {
-      event.preventDefault();
-      return;
-    }
-    this._inputMode = true;
-    const value = String
-      .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
-      .toLowerCase();
-    this.focusToInput(value);
-    this.open();
-    const target = event.target || event.srcElement;
-    target.value = value;
   }
 
   protected selectActive(value: ILabeledValue): void {
@@ -320,19 +292,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   protected isActive(labeledValue: ILabeledValue): boolean {
     return !!this._active.find((v: ILabeledValue) => v.value === labeledValue.value);
-  }
-
-  private focusToInput(value: string = ''): void {
-    setTimeout(() => {
-      const el = this.getInputElement();
-      if (el) {
-        el.value = value;
-      }
-    }, 0);
-  }
-
-  private getInputElement(): any {
-    return this.element.nativeElement.querySelector('div.ui-select-container > input');
   }
 
   private open(): void {
@@ -367,11 +326,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.onChange(this._active);
 
     this.hideOptions();
-    if (this.multiple === true) {
-      this.focusToInput('');
-    } else {
-      this.focusToInput(value.label);
-    }
     this.onSelectedItems.emit(this.rawData);
   }
 
