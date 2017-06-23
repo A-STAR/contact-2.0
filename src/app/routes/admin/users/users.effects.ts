@@ -89,7 +89,7 @@ export class UsersEffects {
         .mergeMap(() => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction
+            this.closeDialogAction,
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
@@ -112,10 +112,17 @@ export class UsersEffects {
     .switchMap(data => {
       const { userId, photo } = data.payload;
       return this.updatePhoto(userId, photo)
-        .mergeMap(() => [])
-        .catch(() => {
-          const message = photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto';
+        .mergeMap(() => [
+          this.closeDialogAction
+        ])
+        .catch(error => {
+          console.log(error);
+          console.log(error.code);
+          const message = photo ?
+            error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
+            'users.messages.errors.deletePhoto';
           return [
+            this.closeDialogAction,
             this.notificationsService.createErrorAction(message)
           ];
         });
