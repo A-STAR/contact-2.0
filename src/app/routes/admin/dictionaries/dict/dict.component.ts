@@ -6,22 +6,22 @@ import 'rxjs/add/observable/combineLatest';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
-import { IDictionary, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 
 @Component({
   selector: 'app-dict',
   templateUrl: './dict.component.html'
 })
 export class DictComponent implements OnDestroy {
-
-  private dictReady = false;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -67,12 +67,13 @@ export class DictComponent implements OnDestroy {
   };
 
   action: DictionariesDialogActionEnum;
-
   selectedEntity: IDictionary;
-
   rows: Array<IDictionary>;
+  languages: IUserLanguage[];
+  dictionaryTermTypes: ITerm[];
 
   private dictionariesService$: Subscription;
+  private dictionariesRelations$: Subscription;
 
   constructor(
     private dictionariesService: DictionariesService,
@@ -80,6 +81,7 @@ export class DictComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
     private entityTranslationsService: EntityTranslationsService,
+    private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesService.fetchDictionaries();
 
@@ -91,10 +93,19 @@ export class DictComponent implements OnDestroy {
       this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
+
+    this.dictionariesRelations$ = Observable.combineLatest(
+      this.userLanguagesService.userLanguages,
+      this.dictionariesService.state,
+    ).subscribe(([languages, dictionaries]) => {
+      this.languages = languages;
+      this.dictionaryTermTypes = dictionaries.dictionaryTermTypes;
+    });
   }
 
   ngOnDestroy(): void {
     this.dictionariesService$.unsubscribe();
+    this.dictionariesRelations$.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
@@ -102,7 +113,7 @@ export class DictComponent implements OnDestroy {
   }
 
   get isEntityBeingEdited(): boolean {
-    return this.action === DictionariesDialogActionEnum.DICTIONARY_EDIT;
+    return this.action === DictionariesDialogActionEnum.DICTIONARY_EDIT && this.isReadyForEditing;
   }
 
   get isEntityBeingRemoved(): boolean {
@@ -110,12 +121,16 @@ export class DictComponent implements OnDestroy {
   }
 
   get isReadyForEditing(): boolean {
-    // TODO replace dictReady with router resolve
-    return this.selectedEntity && this.dictReady;
+    return this.selectedEntity
+      && this.selectedEntity.nameTranslations
+      && !!this.dictionaryTermTypes
+      && !!this.languages;
   }
 
   onEdit(): void {
-    this.dictReady = false;
+    this.languages = null;
+    this.dictionaryTermTypes = null;
+    this.selectedEntity.nameTranslations = null;
 
     this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
 
@@ -129,8 +144,6 @@ export class DictComponent implements OnDestroy {
   }
 
   loadNameTranslations(currentTranslations: IEntityTranslation[]): void {
-    this.dictReady = true;
-
     this.selectedEntity.nameTranslations = currentTranslations
       .map((entityTranslation: IEntityTranslation) => {
         return {

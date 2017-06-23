@@ -2,15 +2,21 @@
   *ngIf="isEntityBeingCreated"
   [mode]="'create'"
   [title]="'dictionaries.create.title'"
+  [languages]="languages"
+  [dictionaries]="rows"
+  [dictionaryTermTypes]="dictionaryTermTypes"
   (submit)="onCreateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dict-edit
-  *ngIf="isEntityBeingEdited && isReadyForEditing"
+  *ngIf="isEntityBeingEdited"
   [mode]="'update'"
   [title]="'dictionaries.edit.title'"
   [editedEntity]="selectedEntity"
+  [languages]="languages"
+  [dictionaries]="rows"
+  [dictionaryTermTypes]="dictionaryTermTypes"
   (submit)="onUpdateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
