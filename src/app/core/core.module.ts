@@ -69,8 +69,6 @@ import { rootReducer } from './state/root.reducer';
     UserPermissionsService,
     ValueConverterService,
   ],
-  exports: [
-  ]
 })
 export class CoreModule {
   constructor( @Optional() @SkipSelf() parentModule: CoreModule) {

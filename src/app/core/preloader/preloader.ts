@@ -1,4 +1,4 @@
-(function(global) {
+(function(global: any): void {
 
     let counter = 0, timeout;
     const preloader = <HTMLElement>document.querySelector('.preloader');
@@ -15,7 +15,7 @@
         setTimeout(endCounter, 1000);
     };
 
-    function startCounter() {
+    function startCounter(): void {
         const remaining = 100 - counter;
         counter = counter + (0.015 * Math.pow(1 - Math.sqrt(remaining), 2));
 
@@ -24,7 +24,7 @@
         timeout = setTimeout(startCounter, 20);
     }
 
-    function endCounter() {
+    function endCounter(): void {
 
         clearTimeout(timeout);
 
@@ -38,7 +38,7 @@
         }, 300);
     }
 
-    function removePreloader() {
+    function removePreloader(): void {
         preloader.addEventListener('transitionend', () => {
             preloader.className = 'preloader-hidden';
         });

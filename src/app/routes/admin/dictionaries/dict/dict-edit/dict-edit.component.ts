@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
 import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
-import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
 
 import { UserLanguagesService } from '../../../../../core/user/languages/user-languages.service';
 import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
@@ -34,17 +33,17 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
   ) {
     super();
 
-    this.languagesSubscription = userLanguagesService.userLanguages.subscribe((terms: IUserLanguage[]) => {
-      this.languages = terms.map((userLanguage: IUserLanguage) =>
+    this.languagesSubscription = userLanguagesService.userLanguages.subscribe(terms => {
+      this.languages = terms.map(userLanguage =>
         ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
       );
     });
-    this.dictionariesSubscription = dictionariesService.dictionaries.subscribe((dictionaries: IDictionary[]) => {
-      this.dictionaries = dictionaries.map((dictionary: IDictionary) =>
+    this.dictionariesSubscription = dictionariesService.dictionaries.subscribe(dictionaries => {
+      this.dictionaries = dictionaries.map(dictionary =>
         ({ label: dictionary.name, value: dictionary.code }));
     });
-    this.dictionaryTermTypesSubscription = dictionariesService.dictionaryTermTypes.subscribe((terms: ITerm[]) => {
-      this.dictionaryTermTypes = terms.map((term: ITerm) =>
+    this.dictionaryTermTypesSubscription = dictionariesService.dictionaryTermTypes.subscribe(terms => {
+      this.dictionaryTermTypes = terms.map(term =>
         ({ label: term.name, value: term.code }));
     });
   }
