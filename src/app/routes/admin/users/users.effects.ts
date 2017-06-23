@@ -116,8 +116,10 @@ export class UsersEffects {
           this.closeDialogAction
         ])
         .catch(error => {
+          console.log(error);
+          console.log(error.code);
           const message = photo ?
-            error.code === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
+            error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
             'users.messages.errors.deletePhoto';
           return [
             this.closeDialogAction,
