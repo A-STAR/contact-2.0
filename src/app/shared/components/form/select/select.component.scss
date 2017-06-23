@@ -60,18 +60,20 @@
 .ui-select-multiple .ui-select-choices {
   margin-top: 1px;
 }
-.ui-select-choices-row .dropdown-item {
-  padding: 3px 20px;
-  line-height: 1.42857143;
-  color: #333;
-  font-weight: normal;
-  cursor: pointer;
-}
 
-.ui-select-choices-row.active {
+.ui-select-choices-row {
+  &.active {
+    .dropdown-item {
+      color: #fff;
+      background-color: #428bca;
+    }
+  }
   .dropdown-item {
-    color: #fff;
-    background-color: #428bca;
+    padding: 3px 16px;
+    line-height: 1.42857143;
+    color: #333;
+    font-weight: normal;
+    cursor: pointer;
   }
 }
 
