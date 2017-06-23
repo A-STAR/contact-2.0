@@ -15,9 +15,11 @@ import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
-import { ISelectionAction, OptionsBehavior, SelectInputValueType } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior } from './select-interfaces';
 
 import { SelectionToolsPlugin } from './selection-tools.plugin';
+
+export type SelectInputValueType = number|string|ILabeledValue[];
 
 @Component({
   selector: 'app-select',
