@@ -107,7 +107,7 @@
                 (click)="activeItemClick(activeItem, $event)"
                 [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'context-exist': isItemContextExist(activeItem)}">
              <span
-               *ngIf="canCloseSelectedItem(activeItem)"
+               *ngIf="canCloseItem(activeItem)"
                class="app-select-close-action"
                (click)="removeClick(activeItem, $event)">&times;
              </span>

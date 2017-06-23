@@ -180,11 +180,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return item.context && !!Object.keys(item.context).length;
   }
 
-  canCloseSelectedItem(item: ILabeledValue): boolean {
-    const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
+  canCloseItem(item: ILabeledValue): boolean {
+    const itemAtRawData = this.lookupAtRawData(item.value);
 
     return this.closableSelectedItem
-      && this._active.length > 1
+      && !!this._active.length
       && item.canRemove !== false
       && (!itemAtRawData || itemAtRawData.canRemove !== false);
   }
