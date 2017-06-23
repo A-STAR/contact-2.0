@@ -2,7 +2,7 @@ import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.re
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
-import { permissionReducer } from '../permissions/permissions.reducer';
+import { permissionReducer } from '../../routes/admin/roles/permissions.reducer';
 import { usersReducer } from '../../routes/admin/users/users.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userLanguagesReducer } from '../user/languages/user-languages.reducer';

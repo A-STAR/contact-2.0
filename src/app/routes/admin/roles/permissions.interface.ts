@@ -1,7 +1,33 @@
-import { IPermissionModel, IPermissionRole } from '../../routes/admin/roles/roles-and-permissions.interface';
-import { IValueEntity } from '../converter/value/value-converter.interface';
+import { IValueEntity } from '../../../core/converter/value/value-converter.interface';
 
-export { IPermissionModel, IPermissionRole, IValueEntity };
+export { IValueEntity };
+
+export interface IPermissionRole {
+  id: number;
+  name: string;
+  comment: string;
+}
+
+export interface IPermissionRolesResponse {
+  success: boolean;
+  roles: Array<IPermissionRole>;
+}
+
+export interface IPermissionsRequest {
+  permitIds: number[];
+}
+
+export interface IPermissionModel extends IValueEntity {
+  id: number;
+  altDsc: string;
+  dsc: string;
+  name: string;
+  comment?: string;
+}
+
+export interface IPermissionsResponse {
+  permits: IPermissionModel[];
+}
 
 export interface IPermissionsResponse {
   success: boolean;
@@ -26,15 +52,11 @@ export enum IPermissionsDialogEnum {
   ROLE_COPY
 }
 
-export interface IPermission {
-  [key: string]: boolean;
-}
-
 export interface IPermissionsState {
-  permissions: IPermission;
   dialog: IPermissionsDialogEnum;
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
+  // TODO(d.maltsev): rename to 'permissions'
   rawPermissions: IPermissionModel[];
   roles: Array<IPermissionRole>;
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IPermissionRole } from '../../roles-and-permissions.interface';
+import { IPermissionRole } from '../../permissions.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 

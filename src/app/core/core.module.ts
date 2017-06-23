@@ -22,8 +22,6 @@ import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { PermissionsEffects } from './permissions/permissions.effects';
-import { PermissionsService } from './permissions/permissions.service';
 import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
 import { UserLanguagesEffects } from './user/languages/user-languages.effects';
@@ -40,7 +38,6 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(ConstantsEffects),
     EffectsModule.run(DictionariesEffects),
     EffectsModule.run(NotificationsEffects),
-    EffectsModule.run(PermissionsEffects),
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserLanguagesEffects),
     EffectsModule.run(UserPermissionsEffects),
@@ -60,7 +57,6 @@ import { rootReducer } from './state/root.reducer';
     JwtHelper,
     MenuService,
     NotificationsService,
-    PermissionsService,
     SettingsService,
     ThemesService,
     TranslateService,

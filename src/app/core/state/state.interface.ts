@@ -2,7 +2,7 @@ import { IActionsLogServiceState } from '../../routes/admin/actions-log/actions-
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
 import { INotificationServiceState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
-import { IPermissionsState } from '../permissions/permissions.interface';
+import { IPermissionsState } from '../../routes/admin/roles/permissions.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserLanguagesState } from '../user/languages/user-languages.interface';
 import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';

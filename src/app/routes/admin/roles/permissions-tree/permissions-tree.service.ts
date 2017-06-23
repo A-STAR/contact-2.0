@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IPermissionRole } from '../roles-and-permissions.interface';
+import { IPermissionRole } from '../permissions.interface';
 import { IPermissionsTreeNode } from './permissions-tree.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 

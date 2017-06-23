@@ -21,7 +21,7 @@ const routes: Routes = [
     PermissionsTreeModule,
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ],
   declarations: [
     RolesAndPermissionsComponent,

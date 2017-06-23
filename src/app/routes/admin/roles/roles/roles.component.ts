@@ -3,11 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IPermissionsDialogEnum } from '../../../../core/permissions/permissions.interface';
-import { IPermissionRole } from '../roles-and-permissions.interface';
+import { IPermissionsDialogEnum } from '../permissions.interface';
+import { IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
