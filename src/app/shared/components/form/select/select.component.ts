@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
-import { ISelectionAction, OptionsBehavior, IdType, SelectInputValueType } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, SelectInputValueType } from './select-interfaces';
 
 import { SelectionToolsPlugin } from './selection-tools.plugin';
 
@@ -280,38 +280,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     this._inputMode = !this._inputMode;
     if (this._inputMode === true && ((this.multiple === true && $event) || this.multiple === false)) {
-      this.focusToInput();
       this.open();
     } else {
       this.hideOptions();
     }
-  }
-
-  protected mainClick(event: any): void {
-    if (this._inputMode === true || this._disabled === true || !this.canSelectMultiItem()) {
-      return;
-    }
-    if (event.keyCode === 46) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 8) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 9 || event.keyCode === 13 ||
-      event.keyCode === 27 || (event.keyCode >= 37 && event.keyCode <= 40)) {
-      event.preventDefault();
-      return;
-    }
-    this._inputMode = true;
-    const value = String
-      .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
-      .toLowerCase();
-    this.focusToInput(value);
-    this.open();
-    const target = event.target || event.srcElement;
-    target.value = value;
   }
 
   protected selectActive(value: ILabeledValue): void {
@@ -320,19 +292,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   protected isActive(labeledValue: ILabeledValue): boolean {
     return !!this._active.find((v: ILabeledValue) => v.value === labeledValue.value);
-  }
-
-  private focusToInput(value: string = ''): void {
-    setTimeout(() => {
-      const el = this.getInputElement();
-      if (el) {
-        el.value = value;
-      }
-    }, 0);
-  }
-
-  private getInputElement(): any {
-    return this.element.nativeElement.querySelector('div.ui-select-container > input');
   }
 
   private open(): void {
@@ -367,11 +326,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.onChange(this._active);
 
     this.hideOptions();
-    if (this.multiple === true) {
-      this.focusToInput('');
-    } else {
-      this.focusToInput(value.label);
-    }
     this.onSelectedItems.emit(this.rawData);
   }
 
@@ -390,46 +344,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 }
 
 export class Behavior {
-  optionsMap: Map<string, number> = new Map<string, number>();
-
   actor: SelectComponent;
 
   constructor(actor: SelectComponent) {
     this.actor = actor;
-  }
-
-  ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
-    const container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
-    if (!container) {
-      return;
-    }
-    const choices = container.querySelectorAll('.ui-select-choices-row');
-    if (choices.length < 1) {
-      return;
-    }
-    const activeIndex = this.getActiveIndex(optionsMap);
-    if (activeIndex < 0) {
-      return;
-    }
-    const highlighted: any = choices[activeIndex];
-    if (!highlighted) {
-      return;
-    }
-    const posY: number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
-    const height: number = container.offsetHeight;
-    if (posY > height) {
-      container.scrollTop += posY - height;
-    } else if (posY < highlighted.clientHeight) {
-      container.scrollTop -= highlighted.clientHeight - posY;
-    }
-  }
-
-  private getActiveIndex(optionsMap: Map<IdType, number> = void 0): number {
-    let ai = this.actor.rawData.indexOf(this.actor.activeOption);
-    if (ai < 0 && optionsMap !== void 0) {
-      ai = optionsMap.get(this.actor.activeOption.value);
-    }
-    return ai;
   }
 }
 
@@ -440,25 +358,21 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
 
   first(): void {
     this.actor.activeOption = this.actor.rawData[0];
-    super.ensureHighlightVisible();
   }
 
   last(): void {
     this.actor.activeOption = this.actor.rawData[this.actor.rawData.length - 1];
-    super.ensureHighlightVisible();
   }
 
   prev(): void {
     const index = this.actor.rawData.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .rawData[index - 1 < 0 ? this.actor.rawData.length - 1 : index - 1];
-    super.ensureHighlightVisible();
   }
 
   next(): void {
     const index = this.actor.rawData.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .rawData[index + 1 > this.actor.rawData.length - 1 ? 0 : index + 1];
-    super.ensureHighlightVisible();
   }
 }

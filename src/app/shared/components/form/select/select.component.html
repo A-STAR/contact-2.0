@@ -52,7 +52,6 @@
   [ngStyle]="styles"
   [attr.disabled]="disabled"
   [offClick]="clickedOutside"
-  (keyup)="mainClick($event)"
 >
   <div
     *ngIf="!inputMode"
@@ -89,7 +88,6 @@
      [ngStyle]="styles"
      [attr.disabled]="disabled"
      *ngIf="multiple === true"
-     (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open"
 >
