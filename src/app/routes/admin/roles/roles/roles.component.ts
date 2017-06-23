@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IPermissionsDialogEnum } from '../permissions.interface';
-import { IPermissionRole } from '../roles-and-permissions.interface';
+import { IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PermissionsService } from '../permissions.service';

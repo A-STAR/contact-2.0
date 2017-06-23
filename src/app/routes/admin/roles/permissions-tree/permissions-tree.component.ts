@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 
-import { IPermissionRole } from '../roles-and-permissions.interface';
+import { IPermissionRole } from '../permissions.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';

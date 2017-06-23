@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, Chang
 
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
-import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../../roles-and-permissions.interface';
+import { IPermissionModel, IPermissionRole, IPermissionsResponse } from '../../permissions.interface';
 import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
@@ -16,7 +16,7 @@ import { GridComponent } from '../../../../../shared/components/grid/grid.compon
 export class AddPermissionComponent implements AfterViewInit {
 
   @ViewChild(GridComponent) addPermitGrid: GridComponent;
-  @Input() currentRole: IPermissionRole;
+  @Input() currentRole = null as IPermissionRole;
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @Output() add: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
 

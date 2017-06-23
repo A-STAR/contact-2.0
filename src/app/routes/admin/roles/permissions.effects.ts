@@ -6,7 +6,6 @@ import 'rxjs/add/operator/switchMap';
 
 import {
   IPermissionsDialogEnum,
-  IPermissionsResponse,
   IPermissionRole,
   IPermissionModel,
 } from './permissions.interface';
@@ -27,9 +26,7 @@ export class PermissionsEffects {
 
   rolesFetchAction = { type: PermissionsService.ROLE_FETCH };
 
-  permissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
-
-  rolePermissionFetchAction = { type: PermissionsService.ROLE_PERMISSION_FETCH };
+  rolePermissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
 
   @Effect()
   fetchRoles = this.actions
@@ -111,32 +108,18 @@ export class PermissionsEffects {
   selectRole$ = this.actions
     .ofType(PermissionsService.ROLE_SELECTED)
     .map(action => ({
-      type: action.payload.role ? PermissionsService.ROLE_PERMISSION_FETCH : PermissionsService.PERMISSION_CLEAR
+      type: action.payload.role ? PermissionsService.PERMISSION_FETCH : PermissionsService.PERMISSION_CLEAR
     }));
 
   @Effect()
-  fetchPermissions = this.actions
-    .ofType(PermissionsService.PERMISSION_FETCH)
-    .switchMap((action: Action) => {
-      return this.read()
-        .map(response => ({
-          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: this.permissionsService.normalizePermissions(response as IPermissionsResponse)
-        }))
-        .catch(() => [
-          this.notifications.createErrorAction('roles.permissions.api.errors.fetch')
-        ]);
-    });
-
-  @Effect()
   fetchRolePermissions$ = this.actions
-    .ofType(PermissionsService.ROLE_PERMISSION_FETCH)
+    .ofType(PermissionsService.PERMISSION_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readPermissions(store.permissions.currentRole.id)
         .map(response => ({
-          type: PermissionsService.ROLE_PERMISSION_FETCH_SUCCESS,
+          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
           payload: {
             permissions: response.permits
           }
@@ -155,7 +138,6 @@ export class PermissionsEffects {
       return this.update(roleId, permission)
         .mergeMap(() => [
           this.hideDialogAction,
-          this.permissionFetchAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
@@ -173,7 +155,6 @@ export class PermissionsEffects {
       return this.add(role, permissionIds)
         .mergeMap(() => [
           this.hideDialogAction,
-          this.permissionFetchAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
@@ -191,7 +172,6 @@ export class PermissionsEffects {
       return this.delete(role, permissionId)
         .mergeMap(() => [
           this.hideDialogAction,
-          this.permissionFetchAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
@@ -208,10 +188,6 @@ export class PermissionsEffects {
     private notifications: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
-
-  private read(): Observable<IPermissionsResponse> {
-    return this.gridService.read('/userpermits');
-  }
 
   private readPermissions(roleId: number): Observable<any> {
     return this.gridService.read('/roles/{roleId}/permits', { roleId });
