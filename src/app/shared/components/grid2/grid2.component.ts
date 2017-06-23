@@ -347,7 +347,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   onToolbarActionSelect(payload: IToolbarActionSelectPayload): void {
-    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value.value });
+    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
   }
 
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {

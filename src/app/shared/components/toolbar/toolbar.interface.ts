@@ -34,5 +34,5 @@ export interface IToolbarAction {
 
 export interface IToolbarActionSelectPayload {
   action: IToolbarAction;
-  value: ILabeledValue;
+  value: ILabeledValue[];
 }
