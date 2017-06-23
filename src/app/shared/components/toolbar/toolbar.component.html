@@ -30,12 +30,12 @@
       </span>
       <span *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
-          [items]="action.value"
+          [options]="action.value"
           [active]="action.activeValue"
           [styles]="action.styles"
           [readonly]="true"
           [autoAlignEnabled]="true"
-          (selected)="onSelect(action, $event)"
+          (onSelect)="onSelect(action, $event)"
         >
         </app-select>
       </span>

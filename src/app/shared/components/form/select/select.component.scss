@@ -49,6 +49,10 @@
   box-shadow: none;
 }
 
+.ui-select-container {
+  font-weight: normal;
+}
+
 .ui-select-container[disabled] * {
   background-color: #edf1f2;
   cursor: not-allowed;
@@ -66,6 +70,7 @@
 }
 .ui-select-action {
   padding: 3px 20px;
+  font-weight: bold;
 }
 .ui-select-action .fa {
   float: right;
