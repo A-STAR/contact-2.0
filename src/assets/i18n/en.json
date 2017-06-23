@@ -280,6 +280,7 @@
       "client": "Client"
     },
     "placeholder": {
+      "translatedName": "Введите название словаря на выбраном языке",
       "select": {
         "translation": "Select language"
       }
@@ -369,6 +370,9 @@
     "permissions": {
       "tab": {
         "title": "Permits"
+      },
+      "tab2": {
+        "title": "Текущие настройки доступов"
       },
       "add": {
         "title": "Choose a permission",
