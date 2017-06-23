@@ -1,12 +1,23 @@
-.multiselect-container, .multiselect-control-bar, .multiselect-control-bar > .row {
+.multiselect-container,
+.multiselect-control-bar {
   height: 100%;
 }
 
-.multiselect-control-bar .container-align {
-  text-align: center;
-  display: table;
-  & .vertical-align-middle {
-    display: table-cell;
-    vertical-align: middle;
+.multiselect-control-bar {
+  padding: 0;
+
+  .container-align {
+    height: 100%;
+    width: 100%;
+    display: table;
+
+    .vertical-align-middle {
+      display: table-cell;
+      vertical-align: middle;
+
+      & > div {
+        display:block;
+      }
+    }
   }
 }
