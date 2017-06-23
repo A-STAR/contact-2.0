@@ -8,7 +8,6 @@ import {
   forwardRef,
   ViewChild,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -140,7 +139,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   @Input()
   set active(activeValue: SelectInputValueType) {
-    this._active = activeValue as ILabeledValue[];
+    this._active = activeValue as ILabeledValue[] || [];
 
     if (['string', 'number'].includes(typeof this._active)) {
       const selectedRawItem: ILabeledValue = this.lookupAtRawData(activeValue as string | number);
@@ -149,14 +148,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this.canSelectMultipleItem && this.multiple && this._active.length) {
       this._active[0].selected = true;
     }
-    this.changeRef.detectChanges();
   }
 
   constructor(
     public element: ElementRef,
     private sanitizer: DomSanitizer,
     private translateService: TranslateService,
-    private changeRef: ChangeDetectorRef,
   ) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
