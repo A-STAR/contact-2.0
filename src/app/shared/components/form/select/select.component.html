@@ -2,7 +2,6 @@
   <ul
     *ngIf="optionsOpened"
     alignment
-    role="menu"
     class="ui-select-choices dropdown-menu"
     [alignTarget]="inputRef"
     [autoAlignEnabled]="autoAlignEnabled"
@@ -18,7 +17,6 @@
     </li>
     <li
       *ngFor="let action of actions"
-      role="menuitem"
       class="app-select-unselectable"
     >
       <div
@@ -32,10 +30,7 @@
         </span>
       </div>
     </li>
-    <li
-      *ngFor="let rawItem of rawData | rawDataFilter: { sortType: sortType }"
-      role="menuitem"
-    >
+    <li *ngFor="let rawItem of rawData | rawDataFilter: { sortType: sortType }">
       <div
         class="ui-select-choices-row"
         [ngClass]="{ active: isActive(rawItem) }"
@@ -64,7 +59,6 @@
     class="ui-select-match"
   >
     <span
-      tabindex="-1"
       class="form-control app-select-unselectable"
       (click)="matchClick($event)"
     >
@@ -78,9 +72,8 @@
   </div>
   <input
     #input
-    *ngIf="inputMode"
-    tabindex="-1"
     type="text"
+    *ngIf="inputMode"
     autocomplete="false"
     [attr.readonly]="readonly"
     [ngClass]="{ hidden: !isInputVisible()}"
@@ -98,33 +91,35 @@
      *ngIf="multiple === true"
      (keyup)="mainClick($event)"
      [offClick]="clickedOutside"
-     class="ui-select-container ui-select-multiple dropdown form-control open">
-      <span class="ui-select-match">
-          <span *ngFor="let activeItem of active"
-                class="ui-select-match-item btn btn-default btn-secondary btn-xs"
-                tabindex="-1"
-                type="button"
-                (click)="activeItemClick(activeItem, $event)"
-                [ngClass]="{'btn-default': true, 'selected': activeItem.selected, 'context-exist': isItemContextExist(activeItem)}">
-             <span
-               *ngIf="canCloseItem(activeItem)"
-               class="app-select-close-action"
-               (click)="removeClick(activeItem, $event)">&times;
-             </span>
-             <span [innerHtml]="toDisplayValue(activeItem)"></span>
-          </span>
-          <i class="caret app-select-caret"></i>
+     class="ui-select-container ui-select-multiple dropdown form-control open"
+>
+  <span class="ui-select-match">
+    <span
+      *ngFor="let item of active"
+      class="app-select-match-item"
+      (click)="activeItemClick(item, $event)"
+      [ngClass]="{ 'selected': item.selected, 'context-exist': isItemContextExist(item) }"
+    >
+      <span
+         *ngIf="canCloseItem(item)"
+         (click)="onRemoveItem(item, $event)"
+         class="app-select-close-action"
+      >
+        &times;
+      </span>
+      <span [innerHtml]="toDisplayValue(item)"></span>
     </span>
+    <i class="app-select-caret caret"></i>
+  </span>
   <input
     #input
     type="text"
     (click)="matchClick($event)"
     [attr.readonly]="readonly"
-    [ngClass]="{ hidden: !isInputVisible()}"
+    [ngClass]="{ hidden: !isInputVisible() }"
     autocomplete="false"
-    class="form-control app-select-search app-select-unselectable"
     [placeholder]="displayPlaceholder"
-    role="combobox"
+    class="form-control app-select-search app-select-unselectable"
   >
   <ng-container *ngTemplateOutlet="optionsTemplate">
   </ng-container>

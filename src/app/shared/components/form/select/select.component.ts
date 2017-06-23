@@ -181,12 +181,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   canCloseItem(item: ILabeledValue): boolean {
-    const itemAtRawData = this.lookupAtRawData(item.value);
-
     return this.closableSelectedItem
       && !!this._active.length
-      && item.canRemove !== false
-      && (!itemAtRawData || itemAtRawData.canRemove !== false);
+      && this.lookupAtRawData(item.value).canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
@@ -263,7 +260,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return !this.multiple || !this._active.length;
   }
 
-  removeClick(item: ILabeledValue, $event: Event): void {
+  onRemoveItem(item: ILabeledValue, $event: Event): void {
     this.stopEvent($event);
     this.remove(item);
     this.onSelectedItems.emit(this.rawData);

@@ -35,6 +35,27 @@
   float: right;
 }
 
+.app-select-match-item {
+  display: inline-block;
+  border: 1px solid #dde6e9;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 3px;
+  margin: 1px 3px 3px 3px;
+
+  &.selected {
+    background-color: #99e5a9;
+    border-color: #b6b6b6;
+
+    &.context-exist {
+      background-color: #99e5a9;
+    }
+  }
+
+  &.context-exist {
+    background-color: #d8ffe1;
+  }
+}
 
 .ui-select-choices {
   width: 100%;
@@ -89,23 +110,5 @@
 
   &.hidden {
    display: none;
-  }
-}
-
-.ui-select-multiple .ui-select-match-item {
-  font-size: 14px;
-  margin: 1px 3px 3px 3px;
-
-  &.selected {
-    background-color: #99e5a9;
-    border-color: #b6b6b6;
-
-    &.context-exist {
-      background-color: #99e5a9;
-    }
-  }
-
-  &.context-exist {
-    background-color: #d8ffe1;
   }
 }
