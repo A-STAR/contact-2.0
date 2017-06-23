@@ -240,12 +240,13 @@
         "create": "Could not create user",
         "update": "Could not update user",
         "updatePhoto": "Could not update user photo",
+        "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
         "deletePhoto": "Could not delete user photo"
       }
     }
   },
   "dictionaries": {
-    "access_denied": "You have no acces to the dictionaries. Please contact the administrator.",
+    "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
     "TITLE": "Dictionaries",
     "edit": {
       "title": "Dictionary: {{ code }}",
