@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { JwtHelper } from 'angular2-jwt';
@@ -16,6 +16,7 @@ import { ConstantsService } from './constants/constants.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
+import { ErrorHandlerService } from './error/error-handler.service';
 import { MenuService } from './menu/menu.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
@@ -64,10 +65,14 @@ import { rootReducer } from './state/root.reducer';
     UserLanguagesService,
     UserPermissionsService,
     ValueConverterService,
+    {
+      provide: ErrorHandler,
+      useClass: ErrorHandlerService
+    }
   ],
 })
 export class CoreModule {
-  constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     throwIfAlreadyLoaded(parentModule, 'CoreModule');
   }
 }
