@@ -12,7 +12,7 @@ import { IUserLanguageOption } from '../../../core/user/languages/user-languages
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { PermissionsService } from '../../../core/permissions/permissions.service';
+import { PermissionsService } from '../roles/permissions.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';

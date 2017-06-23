@@ -1,5 +1,5 @@
-import { IPermissionModel, IPermissionRole } from '../../routes/admin/roles/roles-and-permissions.interface';
-import { IValueEntity } from '../converter/value/value-converter.interface';
+import { IPermissionModel, IPermissionRole } from './roles-and-permissions.interface';
+import { IValueEntity } from '../../../core/converter/value/value-converter.interface';
 
 export { IPermissionModel, IPermissionRole, IValueEntity };
 

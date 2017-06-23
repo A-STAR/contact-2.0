@@ -10,7 +10,7 @@ import { SelectionActionTypeEnum } from '../../../../../shared/components/form/s
 import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { PermissionsService } from '../../../../../core/permissions/permissions.service';
+import { PermissionsService } from '../../permissions.service';
 
 @Component({
   selector: 'app-roles-copy',
@@ -40,7 +40,7 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> imp
         required: true,
         options: this.roles,
         optionsActions: [
-          {text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT}
+          { text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT }
         ]
       },
       {

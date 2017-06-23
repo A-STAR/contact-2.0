@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IAppState } from '../state/state.interface';
+import { IAppState } from '../../../core/state/state.interface';
 import {
   IPermission,
   IPermissionModel,
@@ -15,7 +15,7 @@ import {
   IPermissionsResponse,
 } from './permissions.interface';
 
-import { GridService } from '../../shared/components/grid/grid.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Injectable()
 export class PermissionsService {

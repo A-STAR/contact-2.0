@@ -8,7 +8,7 @@ import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/compon
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 import { PermissionsTreeService } from './permissions-tree.service';
-import { PermissionsService } from '../../../../core/permissions/permissions.service';
+import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
