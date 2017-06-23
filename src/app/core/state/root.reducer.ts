@@ -1,5 +1,6 @@
 import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
+import { debtorsReducer } from '../../routes/workplace/debtors/debtors.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
 import { permissionReducer } from '../../routes/admin/roles/permissions.reducer';
@@ -12,6 +13,7 @@ import { constantsReducer } from '../../routes/admin/constants/constants.reducer
 
 export const rootReducer = {
   actionsLog: actionsLogReducer,
+  debtors: debtorsReducer,
   dictionaries: dictionariesReducer,
   notifications: notificationReducer,
   organizations: organizationsReducer,
