@@ -4,11 +4,11 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IConstant } from '../../../core/constants/constants.interface';
+import { IConstant } from './constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
+import { ConstantsService } from './constants.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';

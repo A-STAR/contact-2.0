@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IConstant } from '../../../../core/constants/constants.interface';
+import { IConstant } from '../constants.interface';
 
 @Component({
   selector: 'app-constant-edit',

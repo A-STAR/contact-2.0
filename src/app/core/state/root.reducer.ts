@@ -7,7 +7,7 @@ import { usersReducer } from '../../routes/admin/users/users.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userLanguagesReducer } from '../user/languages/user-languages.reducer';
 import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
-import { constantsReducer } from '../constants/constants.reducer';
+import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
 
 export const rootReducer = {
   actionsLog: actionsLogReducer,

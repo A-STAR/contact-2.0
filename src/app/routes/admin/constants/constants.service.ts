@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-import { IAppState } from '../state/state.interface';
-import { IConstant, TConstantValue, IConstantsState } from './constants.interface';
+import { IAppState } from '../../../core/state/state.interface';
+import { IConstant, IConstantsState } from './constants.interface';
 
-import { GridService } from '../../shared/components/grid/grid.service';
-import { ValueConverterService } from '../converter/value/value-converter.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class ConstantsService {
