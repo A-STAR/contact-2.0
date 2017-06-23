@@ -8,7 +8,6 @@ import {
   forwardRef,
   ViewChild,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -140,7 +139,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   @Input()
   set active(activeValue: SelectInputValueType) {
-    this._active = activeValue as ILabeledValue[];
+    this._active = activeValue as ILabeledValue[] || [];
 
     if (['string', 'number'].includes(typeof this._active)) {
       const selectedRawItem: ILabeledValue = this.lookupAtRawData(activeValue as string | number);
@@ -149,14 +148,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (this.canSelectMultipleItem && this.multiple && this._active.length) {
       this._active[0].selected = true;
     }
-    this.changeRef.detectChanges();
   }
 
   constructor(
     public element: ElementRef,
     private sanitizer: DomSanitizer,
     private translateService: TranslateService,
-    private changeRef: ChangeDetectorRef,
   ) {
     this.element = element;
     this.clickedOutside = this.clickedOutside.bind(this);
@@ -183,13 +180,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return item.context && !!Object.keys(item.context).length;
   }
 
-  canCloseSelectedItem(item: ILabeledValue): boolean {
-    const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
-
+  canCloseItem(item: ILabeledValue): boolean {
     return this.closableSelectedItem
-      && this._active.length > 1
-      && item.canRemove !== false
-      && (!itemAtRawData || itemAtRawData.canRemove !== false);
+      && !!this._active.length
+      && this.lookupAtRawData(item.value).canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
@@ -266,7 +260,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return !this.multiple || !this._active.length;
   }
 
-  removeClick(item: ILabeledValue, $event: Event): void {
+  onRemoveItem(item: ILabeledValue, $event: Event): void {
     this.stopEvent($event);
     this.remove(item);
     this.onSelectedItems.emit(this.rawData);
