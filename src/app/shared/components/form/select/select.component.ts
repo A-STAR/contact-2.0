@@ -16,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
-import { ISelectionAction, OptionsBehavior, IdType } from './select-interfaces';
+import { ISelectionAction, OptionsBehavior, IdType, SelectInputValueType } from './select-interfaces';
 
 import { SelectionToolsPlugin } from './selection-tools.plugin';
 
@@ -62,10 +62,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private _closableSelectedItem = true;
   private _readonly = true;
   private _multiple = false;
-  private _active: ILabeledValue[] = [];
   private behavior: OptionsBehavior;
 
   // Private fields
+  private _active: ILabeledValue[];
   private _autoAlignEnabled = false;
   private selectionToolsPlugin: SelectionToolsPlugin;
 
@@ -134,28 +134,21 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return this._inputMode;
   }
 
-  get active(): ILabeledValue[] {
+  get active(): SelectInputValueType {
     return this._active;
   }
 
   @Input()
-  set active(activeValue: Array<ILabeledValue>) {
-    let currentActiveValue: number|Array<any> = activeValue;
+  set active(activeValue: SelectInputValueType) {
+    this._active = activeValue as ILabeledValue[];
 
-    if (typeof currentActiveValue === 'number' || typeof currentActiveValue === 'string') {
-      const selectedRawItem: ILabeledValue = this.lookupAtRawData(currentActiveValue);
-      if (selectedRawItem) {
-        currentActiveValue = [selectedRawItem];
-      } else {
-        currentActiveValue = [ { value: currentActiveValue } ];
-      }
+    if (['string', 'number'].includes(typeof this._active)) {
+      const selectedRawItem: ILabeledValue = this.lookupAtRawData(activeValue as string | number);
+      this._active = selectedRawItem ? [selectedRawItem] : [ { value: this._active } ];
     }
-    this._active = currentActiveValue || [];
-
-    if (this.canSelectMultipleItem && this.multiple === true && this._active.length) {
+    if (this.canSelectMultipleItem && this.multiple && this._active.length) {
       this._active[0].selected = true;
     }
-
     this.changeRef.detectChanges();
   }
 
@@ -194,7 +187,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
 
     return this.closableSelectedItem
-      && this.active.length > 1
+      && this._active.length > 1
       && item.canRemove !== false
       && (!itemAtRawData || itemAtRawData.canRemove !== false);
   }
@@ -207,7 +200,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   get displayPlaceholder(): string|number {
-    return !!this.active.length ?  this.extractDisplayValue(this.active[0]) : (this.placeholder || '');
+    return !!this._active.length ?  this.extractDisplayValue(this._active[0]) : (this.placeholder || '');
   }
 
   extractDisplayValue(item: ILabeledValue): string|number {
@@ -245,8 +238,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     item.removed = true;
 
-    if (this.multiple === true && this.active) {
-      this.active = this.active.filter((i: ILabeledValue) => i !== item);
+    if (this.multiple === true && this._active) {
+      this.active = this._active.filter((i: ILabeledValue) => i !== item);
     } else if (this.multiple === false) {
       this.active = [];
     }
@@ -261,7 +254,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.stopEvent($event);
 
     if (this.canSelectMultipleItem) {
-      this.active.forEach((i: ILabeledValue) => i.selected = false);
+      this._active.forEach((i: ILabeledValue) => i.selected = false);
       if (!item.selected) {
         item.selected = true;
       }
@@ -270,7 +263,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   isInputVisible(): boolean {
-    return !this.multiple || !this.active.length;
+    return !this.multiple || !this._active.length;
   }
 
   removeClick(item: ILabeledValue, $event: Event): void {
@@ -332,7 +325,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   protected isActive(labeledValue: ILabeledValue): boolean {
-    return !!this.active.find((v: ILabeledValue) => v.value === labeledValue.value);
+    return !!this._active.find((v: ILabeledValue) => v.value === labeledValue.value);
   }
 
   private focusToInput(value: string = ''): void {
@@ -367,17 +360,17 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
       return;
     }
     if (this.multiple === true) {
-      this.active.push(value);
-      if (!this.active.find((item: ILabeledValue) => item.selected)) {
+      this._active.push(value);
+      if (!this._active.find((item: ILabeledValue) => item.selected)) {
         // If no one has been selected yet
         value.selected = true;
       }
     } else if (this.multiple === false) {
       this.active = [value];
     }
-    this.onSelect.emit(this.active);
+    this.onSelect.emit(this._active);
     this.onTouched();
-    this.onChange(this.active);
+    this.onChange(this._active);
 
     this.hideOptions();
     if (this.multiple === true) {
@@ -389,7 +382,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private canSelectMultiItem(): boolean {
-    return this.rawData.length > this.active.length;
+    return this.rawData.length > this._active.length;
   }
 
   private stopEvent($event: Event): void {
