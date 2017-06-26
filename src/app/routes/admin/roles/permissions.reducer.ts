@@ -40,6 +40,12 @@ export function permissionReducer(
         ...state,
         rawPermissions: action.payload.permissions,
       };
+    case PermissionsService.PERMISSION_CLEAR:
+      return {
+        ...state,
+        rawPermissions: [],
+        currentPermission: null
+      };
 
     /*
      ** Intentionally left for communication via sockets

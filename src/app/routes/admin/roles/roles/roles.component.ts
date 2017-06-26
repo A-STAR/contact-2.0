@@ -56,7 +56,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchRoles(),
-      enabled: this.userPermissionsService.has('PERMIT_VIEW')
+      enabled: this.userPermissionsService.has('ROLE_VIEW')
     },
   ];
 

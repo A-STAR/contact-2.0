@@ -104,6 +104,13 @@ export class PermissionsService {
     });
   }
 
+  updatePermission(roleId: number, permission: IValueEntity): void {
+    this.store.dispatch({
+      type: PermissionsService.PERMISSION_UPDATE,
+      payload: { roleId, permission },
+    });
+  }
+
   removePermission(role: IPermissionRole, permissionId: number): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_DELETE,
@@ -111,10 +118,9 @@ export class PermissionsService {
     });
   }
 
-  updatePermission(roleId: number, permission: IValueEntity): void {
+  clearPremissions(): void {
     this.store.dispatch({
-      type: PermissionsService.PERMISSION_UPDATE,
-      payload: { roleId, permission },
+      type: PermissionsService.PERMISSION_CLEAR
     });
   }
 
