@@ -86,16 +86,16 @@ export class PermissionsComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.permissionsSub = this.permissionsService.permissions
-        .subscribe(
-          (permissions: IPermissionsState) => {
-            this.currentRole = permissions.currentRole;
-            this.currentPermission = permissions.currentPermission;
-            this.dialog = permissions.dialog;
-            this.rawPermissions = this.valueConverterService.deserializeSet(permissions.rawPermissions);
-          }
-        );
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.permissionsSub = this.permissionsService.permissions
+      .subscribe(
+        (permissions: IPermissionsState) => {
+          this.currentRole = permissions.currentRole;
+          this.currentPermission = permissions.currentPermission;
+          this.dialog = permissions.dialog;
+          this.rawPermissions = this.valueConverterService.deserializeSet(permissions.rawPermissions);
+        }
+      );
   }
 
   ngOnDestroy(): void {
