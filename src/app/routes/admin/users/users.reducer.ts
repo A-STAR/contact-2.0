@@ -32,7 +32,7 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
     case UsersService.USER_DIALOG_ACTION:
       return {
         ...state,
-        selectedUserId: action.payload.userId,
+        selectedUserId: action.payload.userId || state.selectedUserId,
         dialogAction: action.payload.dialogAction
       };
     case UsersService.USER_TOGGLE_BLOCKED:
