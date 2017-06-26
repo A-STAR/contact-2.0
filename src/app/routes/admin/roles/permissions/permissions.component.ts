@@ -75,7 +75,8 @@ export class PermissionsComponent implements OnDestroy {
 
   private currentPermission: IPermissionModel;
   private currentRole: IPermissionRole;
-  private permissionsSub: Subscription;
+  private permissionsSubscription: Subscription;
+  private viewPermissionsSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -85,7 +86,7 @@ export class PermissionsComponent implements OnDestroy {
     private valueConverterService: ValueConverterService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.permissionsSub = this.permissionsService.permissions
+    this.permissionsSubscription = this.permissionsService.permissions
       .subscribe(
         (permissions: IPermissionsState) => {
           this.currentRole = permissions.currentRole;
@@ -99,11 +100,14 @@ export class PermissionsComponent implements OnDestroy {
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 
-    Observable.combineLatest(
-      this.userPermissionsService.has('PERMIT_VIEW').distinctUntilChanged(),
-      this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
-    ).subscribe(([ hasViewPermission, currentRole ]) => {
-      if (hasViewPermission && !!currentRole) {
+    this.viewPermissionsSubscription = Observable.combineLatest(
+      this.userPermissionsService.has('PERMIT_VIEW'),
+      this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+    )
+    .map(([ hasViewPermission, hasCurrentRole ]) => hasViewPermission && hasCurrentRole)
+    .distinctUntilChanged()
+    .subscribe(canViewPermissions => {
+      if (canViewPermissions) {
         this.permissionsService.fetchPermissions();
       } else {
         this.permissionsService.clearPremissions();
@@ -115,7 +119,8 @@ export class PermissionsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.permissionsSub.unsubscribe();
+    this.permissionsSubscription.unsubscribe();
+    this.viewPermissionsSubscription.unsubscribe();
   }
 
   onBeforeEditPermission(): void {
