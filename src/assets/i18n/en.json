@@ -436,7 +436,7 @@
       "company": "Компания",
       "position": "Должность",
       "income": "Доход",
-      "nationality": "Гражданство",
+      "citizenship": "Гражданство",
       "sex": "Пол",
       "workplaceChecked": "Место работы проверено",
       "importance": "Важность",
@@ -659,6 +659,10 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "sex": {
+      "m": "m",
+      "w": "w"
     }
   }
 }

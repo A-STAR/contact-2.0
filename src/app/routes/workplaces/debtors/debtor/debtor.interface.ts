@@ -41,7 +41,7 @@ export interface IDebtorGeneralInformation {
   company: string;
   position?: string;
   income?: number;
-  nationality?: string;
+  citizenship?: string;
   sex: number;
   workplaceChecked: number;
   importance: number;

@@ -47,13 +47,13 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> {
             required: true
           },
           {
-            width: 1,
+            width: 2,
             label: 'debtor.lastName',
             controlName: 'lastName',
             type: 'text',
           },
           {
-            width: 1,
+            width: 2,
             label: 'debtor.firstName',
             controlName: 'firstName',
             type: 'text',
@@ -65,10 +65,15 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> {
             type: 'text',
           },
           {
-            width: 1,
+            width: 2,
             label: 'debtor.type',
             controlName: 'type',
             type: 'select',
+            options: [
+              // TODO(a.poterenko) STUB
+              { value: 1, label: 'Physical person' },
+              { value: 2, label: 'Juridical person' },
+            ]
           },
           {
             width: 1,
