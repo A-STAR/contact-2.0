@@ -133,9 +133,27 @@ export class DebtorCardEffects {
               id: id,
               data: [
                 {
+                  type: 1,
+                  number: '8-495-000-342',
+                  status: 1,
+                  comment: 'Has been imported by data loader',
+                  active: 1,
+                  numberExists: 1,
+                  verified: 1
+                },
+                {
+                  type: 2,
+                  number: '8-495-889-165',
+                  status: 1,
+                  comment: 'Has been imported by data loader',
+                  active: 1,
+                  numberExists: 1,
+                  verified: 1
+                },
+                {
                   type: 3,
-                  number: '8-964-5638890',
-                  status: 2,
+                  number: '8-964-5638-890',
+                  status: 1,
                   comment: 'Has been imported by data loader',
                   active: 1,
                   numberExists: 1,

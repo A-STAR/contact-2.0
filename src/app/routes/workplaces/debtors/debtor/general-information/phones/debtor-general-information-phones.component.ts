@@ -3,7 +3,9 @@ import {
   Input
 } from '@angular/core';
 
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
+
+import { GridService } from '../../../../../../shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-debtor-general-information-phones',
@@ -28,4 +30,28 @@ export class DebtorGeneralInformationPhonesComponent {
     { prop: 'blockingDate' },
     { prop: 'blockingReason' },
   ];
+
+  renderers: IRenderer = {
+    type: [
+      { label: 'Home phone', value: 1 },
+      { label: 'Work phone', value: 2 },
+      { label: 'Mobile phone', value: 3 },
+    ],
+    status: [
+      { label: 'Did not call at all', value: 1 },
+    ],
+    active: [
+      { label: 'TRUE', value: 1 },
+    ],
+    numberExists: [
+      { label: 'TRUE', value: 1 },
+    ],
+    verified: [
+      { label: 'TRUE', value: 1 },
+    ],
+  };
+
+  constructor(private gridService: GridService) {
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
 }
