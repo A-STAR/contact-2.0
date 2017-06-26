@@ -47,7 +47,7 @@ export class UserPermissionsService {
 
   private userHasPermission(state: IUserPermissionsState, permissionName: string): boolean {
     const permission = state.permissions[permissionName];
-    return permission && permission.valueB === true;
+    return !!(permission && permission.valueB === true);
   }
 
   private get state(): Observable<IUserPermissionsState> {

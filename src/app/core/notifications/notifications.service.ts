@@ -98,7 +98,7 @@ export class NotificationsService implements OnDestroy {
   private createPushAction(type: NotificationTypeEnum, message: string | IMessage, showAlert: boolean = true): Action {
     const translate = R.ifElse(
       R.has('message'),
-      ({ text, param }) => this.translateService.instant(text, param),
+      ({ message: text, param }) => this.translateService.instant(text, param),
       text => this.translateService.instant(text)
     );
     const translatedMessage = translate(message);

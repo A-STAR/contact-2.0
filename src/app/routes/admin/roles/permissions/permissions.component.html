@@ -28,16 +28,20 @@
 
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
-<app-grid
-  [autoLoad]="false"
-  [columns]="columns"
-  [columnTranslationKey]="'roles.permissions'"
-  [dataSource]="dataSource"
-  [editPermission]="'PERMIT_EDIT'"
-  [rows]="rawPermissions"
-  [selectionType]="'single'"
-  [styles]="{height: '200px'}"
-  (onDblClick)="onBeforeEditPermission()"
-  (onSelect)="onSelectPermissions($event)"
->
-</app-grid>
+<ng-container *ngIf="canViewPermissions$ | async">
+  <app-grid
+    [autoLoad]="false"
+    [columns]="columns"
+    [columnTranslationKey]="'roles.permissions'"
+    [rows]="permissions$ | async"
+    [selectionType]="'single'"
+    [styles]="{height: '200px'}"
+    (onDblClick)="onBeforeEditPermission()"
+    (onSelect)="onSelectPermissions($event)"
+  >
+  </app-grid>
+</ng-container>
+
+<ng-container *ngIf="!(canViewPermissions$ | async)">
+  {{ 'roles.permissions.messages.no_view' | translate:{ permission: 'PERMIT_VIEW' } }}
+</ng-container>

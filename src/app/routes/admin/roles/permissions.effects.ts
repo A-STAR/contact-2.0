@@ -105,13 +105,6 @@ export class PermissionsEffects {
     });
 
   @Effect()
-  selectRole$ = this.actions
-    .ofType(PermissionsService.ROLE_SELECTED)
-    .map(action => ({
-      type: action.payload.role ? PermissionsService.PERMISSION_FETCH : PermissionsService.PERMISSION_CLEAR
-    }));
-
-  @Effect()
   fetchRolePermissions$ = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .withLatestFrom(this.store)
