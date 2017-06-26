@@ -20,6 +20,7 @@ export class PermissionsService {
   static ROLE_COPY                = 'ROLE_COPY';
   static ROLE_DELETE              = 'ROLE_DELETE';
   static ROLE_SELECTED            = 'ROLE_SELECTED';
+  static ROLE_CLEAR               = 'ROLE_CLEAR';
   static PERMISSION_FETCH         = 'PERMISSION_FETCH';
   static PERMISSION_FETCH_SUCCESS = 'PERMISSION_FETCH_SUCCESS';
   static PERMISSION_CLEAR         = 'PERMISSION_CLEAR';
@@ -88,6 +89,12 @@ export class PermissionsService {
   removeRole(): void {
     return this.store.dispatch({
       type: PermissionsService.ROLE_DELETE
+    });
+  }
+
+  clearRoles(): void {
+    return this.store.dispatch({
+      type: PermissionsService.ROLE_CLEAR
     });
   }
 
