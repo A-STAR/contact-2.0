@@ -103,22 +103,19 @@ export class PermissionsComponent implements OnDestroy {
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 
+    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW').distinctUntilChanged();
+
     this.viewPermissionsSubscription = Observable.combineLatest(
-      this.userPermissionsService.has('PERMIT_VIEW'),
-      this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      this.canViewPermissions$,
+      this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
     )
-    .map(([ hasViewPermission, hasCurrentRole ]) => hasViewPermission && hasCurrentRole)
-    .distinctUntilChanged()
-    .subscribe(canViewPermissions => {
-      if (canViewPermissions) {
-        this.permissionsService.fetchPermissions();
-      } else {
+    .subscribe(([ hasViewPermission, currentRole ]) => {
+      if (!hasViewPermission) {
         this.permissionsService.clearPremissions();
-        this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission: 'PERMIT_VIEW' } }, false);
+      } else if (currentRole) {
+        this.permissionsService.fetchPermissions();
       }
     });
-
-    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
   }
 
   ngOnDestroy(): void {

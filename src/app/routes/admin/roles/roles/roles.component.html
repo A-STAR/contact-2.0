@@ -32,7 +32,6 @@
 <app-data-view
   message="roles.roles.errors.view"
   [canView]="hasRoleViewPermission$"
-  (onChange)="onRoleViewPermissionChange($event)"
 >
   <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
   <app-grid

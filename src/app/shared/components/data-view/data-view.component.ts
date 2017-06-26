@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -13,8 +13,6 @@ export class DataViewComponent implements OnInit, OnDestroy {
   @Input() canView: Observable<boolean>;
   @Input() message: string;
 
-  @Output() onChange = new EventEmitter<boolean>();
-
   private subscription: Subscription;
 
   constructor(private notificationsService: NotificationsService) {}
@@ -23,7 +21,6 @@ export class DataViewComponent implements OnInit, OnDestroy {
     this.subscription = this.canView
       .distinctUntilChanged()
       .subscribe(canView => {
-        this.onChange.emit(canView);
         if (canView === false) {
           this.notificationsService.error(this.message, true);
         }
