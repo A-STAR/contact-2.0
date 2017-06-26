@@ -29,9 +29,12 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-
-<ng-container *ngIf="hasRoleViewPermission$ | async">
+<app-data-view
+  permission="ROLE_VIEW"
+  [canView]="hasRoleViewPermission$"
+  (onChange)="onRoleViewPermissionChange($event)"
+>
+  <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
   <app-grid
     [autoLoad]="false"
     [columns]="columns"
@@ -42,8 +45,4 @@
     (onDblClick)="onEdit()"
     (onSelect)="onSelect($event)">
   </app-grid>
-</ng-container>
-
-<ng-container *ngIf="!(hasRoleViewPermission$ | async)">
-  {{ 'roles.permissions.messages.no_view' | translate:{ permission: 'ROLE_VIEW' } }}
-</ng-container>
+</app-data-view>

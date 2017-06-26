@@ -31,6 +31,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 // App directives
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
+import { DataViewModule } from './components/data-view/data-view.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
@@ -68,6 +69,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     // app modules
     ActionDialogModule,
     ContentTabstripModule,
+    DataViewModule,
     DatePickerModule,
     DialogActionModule,
     DynamicFormModule,
@@ -126,6 +128,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     // App exports
     ActionDialogModule,
     ContentTabstripModule,
+    DataViewModule,
     DatePickerModule,
     DialogActionModule,
     DynamicFormModule,

@@ -71,8 +71,6 @@ export class RolesComponent implements OnDestroy {
 
   private permissionsServiceSubscription: Subscription;
 
-  private viewRolesSubscription: Subscription;
-
   constructor(
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
@@ -86,22 +84,18 @@ export class RolesComponent implements OnDestroy {
     this.roles$ = this.permissionsService.permissions.map(state => state.roles);
 
     this.hasRoleViewPermission$ = this.userPermissionsService.has('ROLE_VIEW');
+  }
 
-    this.viewRolesSubscription = this.hasRoleViewPermission$
-      .distinctUntilChanged()
-      .subscribe(hasViewPermission => {
-        if (hasViewPermission) {
-          this.permissionsService.fetchRoles();
-        } else {
-          this.permissionsService.clearRoles();
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission: 'ROLE_VIEW' } }, false);
-        }
-      });
+  onRoleViewPermissionChange(hasPermission: boolean): void {
+    if (hasPermission) {
+      this.permissionsService.fetchRoles();
+    } else {
+      this.permissionsService.clearRoles();
+    }
   }
 
   ngOnDestroy(): void {
     this.permissionsServiceSubscription.unsubscribe();
-    this.viewRolesSubscription.unsubscribe();
   }
 
   get isRoleBeingCreated(): boolean {

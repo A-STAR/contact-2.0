@@ -62,7 +62,10 @@ export class PermissionsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      enabled: this.userPermissionsService.has('PERMIT_VIEW')
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_VIEW'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
   ];
 
