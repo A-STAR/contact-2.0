@@ -52,8 +52,8 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
                 type: 'number'
               },
               {
-                label: 'debtor.generalInformationTab.nationality',
-                controlName: 'nationality',
+                label: 'debtor.generalInformationTab.citizenship',
+                controlName: 'citizenship',
                 type: 'text'
               }
             ]
@@ -64,7 +64,8 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
               {
                 label: 'debtor.generalInformationTab.sex',
                 controlName: 'sex',
-                type: 'select'
+                type: 'select',
+                options: [ { value: 1, label: 'default.sex.m' }, { value: 2, label: 'default.sex.w' } ]
               },
               {
                 label: 'debtor.generalInformationTab.importance',
@@ -74,12 +75,24 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
               {
                 label: 'debtor.generalInformationTab.maritalStatus',
                 controlName: 'maritalStatus',
-                type: 'select'
+                type: 'select',
+                options: [
+                  // TODO(a.poterenko) STUB
+                  { value: 1, label: 'Single' },
+                  { value: 2, label: 'Divorced' },
+                  { value: 3, label: 'Civil marriage' },
+                ]
               },
               {
                 label: 'debtor.generalInformationTab.education',
                 controlName: 'education',
-                type: 'select'
+                type: 'select',
+                options: [
+                  // TODO(a.poterenko) STUB
+                  { value: 1, label: 'Elementary' },
+                  { value: 2, label: 'Secondary' },
+                  { value: 3, label: 'Higher' },
+                ]
               },
               {
                 label: 'debtor.generalInformationTab.email',
@@ -94,7 +107,12 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
               {
                 label: 'debtor.generalInformationTab.stage',
                 controlName: 'stage',
-                type: 'number'
+                type: 'select',
+                disabled: true,
+                options: [
+                  // TODO(a.poterenko) STUB
+                  { value: 1, label: 'Soft' },
+                ]
               },
               {
                 label: 'debtor.generalInformationTab.decency',

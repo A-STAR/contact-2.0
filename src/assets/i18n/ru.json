@@ -98,7 +98,8 @@
       "copy": "Копировать",
       "refresh": "Обновить",
       "search": "Искать",
-      "save": "Сохранить"
+      "save": "Сохранить",
+      "sms": "Отправить SMS"
     }
   },
   "queryBuilder": {
@@ -437,7 +438,7 @@
       "company": "Компания",
       "position": "Должность",
       "income": "Доход",
-      "nationality": "Гражданство",
+      "citizenship": "Гражданство",
       "sex": "Пол",
       "workplaceChecked": "Место работы проверено",
       "importance": "Важность",
@@ -454,6 +455,7 @@
       "birthPlace": "Место рождения",
       "phonesTab": {
         "title": "Телефоны",
+        "contactsVerification": "Верификация контактных данных",
         "grid": {
           "type": "Тип",
           "number": "Номер",
@@ -660,6 +662,10 @@
       "equal": "равно",
       "notEqual": "не равно",
       "empty": "пусто"
+    },
+    "sex": {
+      "m": "м",
+      "w": "ж"
     }
   }
 }

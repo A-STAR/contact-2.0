@@ -50,6 +50,10 @@ export const routes: Route[] = [
     path: 'workplaces',
     component: LayoutComponent,
     canActivate: [ AuthService ],
+    resolve: {
+      menu: MenuResolver,
+      userPermissionsResolved: UserPermissionsResolver
+    },
     runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: 'debt-list', loadChildren: './workplaces/debtors/debtor/debtor.module#DebtorModule' },

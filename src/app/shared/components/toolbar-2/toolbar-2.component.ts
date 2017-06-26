@@ -31,6 +31,10 @@ export class Toolbar2Component {
       label: 'toolbar.action.refresh',
       icon: 'fa fa-refresh',
     },
+    [ToolbarItemTypeEnum.BUTTON_SMS]: {
+      label: 'toolbar.action.sms',
+      icon: 'fa fa-envelope',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -39,6 +43,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_EDIT,
     ToolbarItemTypeEnum.BUTTON_DELETE,
     ToolbarItemTypeEnum.BUTTON_REFRESH,
+    ToolbarItemTypeEnum.BUTTON_SMS,
   ];
 
   constructor(

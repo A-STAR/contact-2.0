@@ -78,7 +78,10 @@ export class DebtorCardEffects {
               id: id,
               firstName: 'Pavel',
               middleName: 'Sergeevich',
-              lastName: 'Smirnov'
+              lastName: 'Smirnov',
+              type: 1,
+              responsible: 'System administrator',
+              reward: '3180.78'
             }
           }
         );
@@ -96,17 +99,22 @@ export class DebtorCardEffects {
             data: {
               id: id,
               birthDate: '01/01/1980',
-              company: 'ЗАО "Финансово-ивестиционная группа"',
+              company: 'Financial and Investment Group',
               sex: 1,
               workplaceChecked: 1,
               importance: 4,
-              stage: 5,
+              stage: 1,
               decency: 10,
               maritalStatus: 2,
+              education: 3,
               series: '45 06',
               number: '280499',
               issueDate: '01/01/2000',
-              issuedBy: 'Паспортный стол №1'
+              position: 'Senior Consultant',
+              issuedBy: 'Passport office No 122',
+              email: 'p.smirnov@gmail.com',
+              citizenship: 'Russia',
+              income: 23000.11
             }
           }
         );
@@ -125,9 +133,27 @@ export class DebtorCardEffects {
               id: id,
               data: [
                 {
+                  type: 1,
+                  number: '8-495-000-342',
+                  status: 1,
+                  comment: 'Has been imported by data loader',
+                  active: 1,
+                  numberExists: 1,
+                  verified: 1
+                },
+                {
+                  type: 2,
+                  number: '8-495-889-165',
+                  status: 1,
+                  comment: 'Has been imported by data loader',
+                  active: 1,
+                  numberExists: 1,
+                  verified: 1
+                },
+                {
                   type: 3,
-                  number: '8-964-5638890',
-                  status: 2,
+                  number: '8-964-5638-890',
+                  status: 1,
                   comment: 'Has been imported by data loader',
                   active: 1,
                   numberExists: 1,
