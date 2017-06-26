@@ -24,7 +24,7 @@ export class DataViewComponent implements OnInit, OnDestroy {
       .distinctUntilChanged()
       .subscribe(canView => {
         this.onChange.emit(canView);
-        if (!canView) {
+        if (canView === false) {
           this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission: this.permission } }, true);
         }
       });
