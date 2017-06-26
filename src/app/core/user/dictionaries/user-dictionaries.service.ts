@@ -13,18 +13,25 @@ export class UserDictionariesService {
 
   constructor(private store: Store<IAppState>) {}
 
-  get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved);
-  }
-
-  createRefreshAction(): Action {
+  createRefreshAction(dictionaryId: number): Action {
     return {
-      type: UserDictionariesService.USER_DICTIONARY_FETCH
+      type: UserDictionariesService.USER_DICTIONARY_FETCH,
+      payload: { dictionaryId }
     };
   }
 
-  refresh(): void {
-    const action = this.createRefreshAction();
+  preload(dictionaryId: number): void {
+    this.state
+      .take(1)
+      .subscribe(state => {
+        if (!state.dictionaries[dictionaryId].isResolved) {
+          this.refresh(dictionaryId);
+        }
+      });
+  }
+
+  refresh(dictionaryId: number): void {
+    const action = this.createRefreshAction(dictionaryId);
     this.store.dispatch(action);
   }
 

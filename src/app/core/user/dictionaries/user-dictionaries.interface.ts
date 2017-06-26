@@ -10,12 +10,14 @@ export interface IUserTermsResponse {
 }
 
 export interface IDictionary {
-  [key: number]: IUserTerm;
+  terms: {
+    [key: number]: IUserTerm;
+  };
+  isResolved: boolean;
 }
 
 export interface IUserDictionariesState {
   dictionaries: {
     [key: number]: IDictionary;
   };
-  isResolved: boolean;
 }

@@ -33,7 +33,10 @@ export class UserDictionariesEffects {
         .catch(() => {
           return [
             {
-              type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE
+              type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE,
+              payload: {
+                dictionaryId
+              }
             },
             this.notificationService.createErrorAction('user.dictionaries.errors.fetch')
           ];
