@@ -79,7 +79,7 @@ export class DebtorCardEffects {
               firstName: 'Pavel',
               middleName: 'Sergeevich',
               lastName: 'Smirnov',
-              type: 2,
+              type: 1,
               responsible: 'System administrator',
               reward: '3180.78'
             }

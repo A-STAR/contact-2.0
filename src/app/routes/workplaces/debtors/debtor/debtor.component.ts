@@ -47,7 +47,8 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> {
             label: 'debtor.id',
             controlName: 'id',
             type: 'number',
-            required: true
+            required: true,
+            disabled: true
           },
           {
             width: 2,
