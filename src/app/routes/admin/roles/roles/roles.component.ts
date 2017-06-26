@@ -94,14 +94,6 @@ export class RolesComponent implements OnDestroy {
     });
   }
 
-  onRoleViewPermissionChange(hasPermission: boolean): void {
-    if (hasPermission) {
-      this.permissionsService.fetchRoles();
-    } else {
-      this.permissionsService.clearRoles();
-    }
-  }
-
   ngOnDestroy(): void {
     this.permissionsServiceSubscription.unsubscribe();
   }
