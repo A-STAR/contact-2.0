@@ -40,8 +40,8 @@ export class AddPermissionComponent implements AfterViewInit {
     this.addPermitGrid.load(this.currentRole).take(1).subscribe();
   }
 
-  onSelectPermissions(permissions: IPermissionModel[]): void {
-    this.selectedPermissions = permissions;
+  onSelectPermissions(): void {
+    this.selectedPermissions = this.addPermitGrid.selected;
   }
 
   onCancel(): void {
