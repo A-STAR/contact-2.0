@@ -366,6 +366,9 @@
           "update": "Could not update role",
           "delete": "Could not delete role"
         }
+      },
+      "errors": {
+        "view": "Access to roles list denied"
       }
     },
     "permissions": {

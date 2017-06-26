@@ -11,7 +11,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 })
 export class DataViewComponent implements OnInit, OnDestroy {
   @Input() canView: Observable<boolean>;
-  @Input() permission: string;
+  @Input() message: string;
 
   @Output() onChange = new EventEmitter<boolean>();
 
@@ -25,7 +25,7 @@ export class DataViewComponent implements OnInit, OnDestroy {
       .subscribe(canView => {
         this.onChange.emit(canView);
         if (canView === false) {
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission: this.permission } }, true);
+          this.notificationsService.error(this.message, true);
         }
       });
   }
