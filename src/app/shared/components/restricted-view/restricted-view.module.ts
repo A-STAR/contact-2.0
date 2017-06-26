@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DataViewComponent } from './data-view.component';
+import { RestrictedViewComponent } from './restricted-view.component';
 
 @NgModule({
   imports: [
@@ -11,11 +11,11 @@ import { DataViewComponent } from './data-view.component';
     TranslateModule,
   ],
   exports: [
-    DataViewComponent,
+    RestrictedViewComponent,
   ],
   declarations: [
-    DataViewComponent,
+    RestrictedViewComponent,
   ],
   providers: [],
 })
-export class DataViewModule { }
+export class RestrictedViewModule { }

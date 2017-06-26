@@ -26,7 +26,7 @@
 >
 </app-dialog-action>
 
-<app-data-view
+<app-restricted-view
   message="roles.permissions.errors.view"
   [canView]="canViewPermissions$"
 >
@@ -42,4 +42,4 @@
     (onSelect)="onSelectPermissions($event)"
   >
   </app-grid>
-</app-data-view>
+</app-restricted-view>

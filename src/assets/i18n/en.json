@@ -420,6 +420,9 @@
         "no_add": "You do not have the rights '{{ permission }}' for adding records",
         "no_edit": "You do not have the rights '{{ permission }}' for editing records",
         "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
+      },
+      "errors": {
+        "view": "Access to permissions list denied"
       }
     }
   },

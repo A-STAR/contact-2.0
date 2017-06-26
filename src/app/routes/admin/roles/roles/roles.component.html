@@ -29,7 +29,7 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-data-view
+<app-restricted-view
   message="roles.roles.errors.view"
   [canView]="hasRoleViewPermission$"
 >
@@ -44,4 +44,4 @@
     (onDblClick)="onEdit()"
     (onSelect)="onSelect($event)">
   </app-grid>
-</app-data-view>
+</app-restricted-view>

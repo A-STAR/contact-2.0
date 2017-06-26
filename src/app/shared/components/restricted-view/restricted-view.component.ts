@@ -5,11 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
-  selector: 'app-data-view',
-  templateUrl: './data-view.component.html',
-  styleUrls: [ './data-view.component.scss' ]
+  selector: 'app-restricted-view',
+  templateUrl: './restricted-view.component.html',
+  styleUrls: [ './restricted-view.component.scss' ]
 })
-export class DataViewComponent implements OnInit, OnDestroy {
+export class RestrictedViewComponent implements OnInit, OnDestroy {
   @Input() canView: Observable<boolean>;
   @Input() message: string;
 
