@@ -3,33 +3,56 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserDictionariesState, IDictionary } from './user-dictionaries.interface';
+import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.interface';
 
 @Injectable()
 export class UserDictionariesService {
+  static DICTIONARY_VARIABLE_TYPE = 1;
+  static DICTIONARY_EMPLOYEE_ROLE = 8;
+
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
 
   constructor(private store: Store<IAppState>) {}
 
-  get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved);
-  }
-
-  createRefreshAction(): Action {
+  createRefreshAction(dictionaryId: number): Action {
     return {
-      type: UserDictionariesService.USER_DICTIONARY_FETCH
+      type: UserDictionariesService.USER_DICTIONARY_FETCH,
+      payload: { dictionaryId }
     };
   }
 
-  refresh(): void {
-    const action = this.createRefreshAction();
+  preload(dictionaryIds: Array<number>): void {
+    this.state
+      .take(1)
+      .subscribe(state => {
+        dictionaryIds.forEach(dictionaryId => {
+          if (!state.dictionaries[dictionaryId]) {
+            this.refresh(dictionaryId);
+          }
+        });
+      });
+  }
+
+  refresh(dictionaryId: number): void {
+    const action = this.createRefreshAction(dictionaryId);
     this.store.dispatch(action);
   }
 
-  getDictionary(dictionaryId: number): Observable<IDictionary> {
-    return this.state.map(state => state.dictionaries[dictionaryId]);
+  getDictionary(dictionaryId: number): Observable<IUserDictionary> {
+    return this.state
+      .map(state => state.dictionaries[dictionaryId] || [])
+      .map(terms => terms.reduce((acc, term) => {
+          acc[term.code] = term;
+        return acc;
+      }, {}));
+  }
+
+  getDictionaryOptions(dictionaryId: number): Observable<any> {
+    return this.state
+      .map(state => state.dictionaries[dictionaryId] || [])
+      .map(terms => terms.map(term => ({ value: term.code, label: term.name })));
   }
 
   private get state(): Observable<IUserDictionariesState> {

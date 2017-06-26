@@ -23,17 +23,17 @@ export class UserDictionariesEffects {
             type: UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS,
             payload: {
               dictionaryId,
-              terms: response.userTerms.reduce((acc, term) => {
-                acc[term.code] = term;
-                return acc;
-              }, {})
+              terms: response.userTerms
             }
           };
         })
         .catch(() => {
           return [
             {
-              type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE
+              type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE,
+              payload: {
+                dictionaryId
+              }
             },
             this.notificationService.createErrorAction('user.dictionaries.errors.fetch')
           ];
