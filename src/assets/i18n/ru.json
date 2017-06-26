@@ -455,6 +455,7 @@
       "birthPlace": "Место рождения",
       "phonesTab": {
         "title": "Телефоны",
+        "contactsVerification": "Верификация контактных данных",
         "grid": {
           "type": "Тип",
           "number": "Номер",

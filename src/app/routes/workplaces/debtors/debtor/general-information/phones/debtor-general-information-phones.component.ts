@@ -81,6 +81,12 @@ export class DebtorGeneralInformationPhonesComponent {
       type: ToolbarItemTypeEnum.BUTTON_SMS,
       enabled: Observable.of(true),
       action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.CHECKBOX,
+      label: 'debtor.generalInformationTab.phonesTab.contactsVerification',
+      enabled: Observable.of(true),
+      action: () => {}
     }
   ];
 
