@@ -9,15 +9,12 @@ export interface IUserTermsResponse {
   userTerms: Array<IUserTerm>;
 }
 
-export interface IDictionary {
-  terms: {
-    [key: number]: IUserTerm;
-  };
-  isResolved: boolean;
+export interface IUserDictionary {
+  [key: number]: IUserTerm;
 }
 
 export interface IUserDictionariesState {
   dictionaries: {
-    [key: number]: IDictionary;
+    [key: number]: Array<IUserTerm>;
   };
 }

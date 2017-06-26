@@ -16,10 +16,7 @@ export function userDictionariesReducer(state: IUserDictionariesState = defaultS
         ...state,
         dictionaries: {
           ...state.dictionaries,
-          [dictionaryId]: {
-            terms,
-            isResolved: true
-          }
+          [dictionaryId]: terms
         }
       };
     case UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE:
@@ -27,10 +24,7 @@ export function userDictionariesReducer(state: IUserDictionariesState = defaultS
         ...state,
         dictionaries: {
           ...state.dictionaries,
-          [dictionaryId]: {
-            terms: [],
-            isResolved: false
-          }
+          [dictionaryId]: null
         }
       };
     default:

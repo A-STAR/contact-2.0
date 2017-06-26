@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Input, Component } from '@angular/core';
 
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
@@ -11,15 +11,9 @@ import { IEmployeeUser } from '../../organizations.interface';
   templateUrl: './employee-edit.component.html'
 })
 export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
-  private canEdit = false;
+  @Input() employeeRoleOptions: Array<any> = [];
 
-  // TODO(a.poterenko): use dictionary service
-  private options = [
-    { value: 1, label: 'Сотрудник' },
-    { value: 2, label: 'Руководитель' },
-    { value: 3, label: 'Заместитель' },
-    { value: 4, label: 'Куратор' },
-  ];
+  private canEdit = false;
 
   constructor(private gridService: GridService, private userPermissionsService: UserPermissionsService) {
     super();
@@ -33,7 +27,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
   get formData(): any {
     return {
       ...this.editedEntity,
-      roleCode: [ this.options.find(roleOption => roleOption.value === this.editedEntity.roleCode) ],
+      roleCode: [ this.employeeRoleOptions.find(roleOption => roleOption.value === this.editedEntity.roleCode) ],
       fullName: `${this.editedEntity.lastName || ''} ${this.editedEntity.firstName || ''} ${this.editedEntity.middleName || ''}`
     };
   }
@@ -46,7 +40,8 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
       { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
       { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
-      { label: 'users.edit.role', controlName: 'roleCode', type: 'select', required: true, disabled: !this.canEdit, options: this.options },
+      { label: 'users.edit.role', controlName: 'roleCode', type: 'select', required: true, disabled: !this.canEdit,
+          options: this.employeeRoleOptions },
       { label: 'users.edit.comment', controlName: 'comment', type: 'text', disabled: !this.canEdit }
     ] as Array<IDynamicFormControl>).map((control: IDynamicFormControl) => ({
       ...control,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,26 +11,17 @@ import { OrganizationsService } from '../../organizations.service';
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-employee-add',
   templateUrl: './employee-add.component.html'
 })
 export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
+  @Input() employeeRoleOptions: Array<any> = [];
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
-  @ViewChild('addEmplpoyeeGrid') addEmplpoyeeGrid: GridComponent;
 
   private selectedEmployees: Array<IEmployeeUser>;
-
-  // TODO: dictionary service
-  private options = [
-    { value: 1, label: 'Сотрудник' },
-    { value: 2, label: 'Руководитель' },
-    { value: 3, label: 'Заместитель' },
-    { value: 4, label: 'Куратор' },
-  ];
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 200 },
@@ -49,10 +40,12 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     dataKey: 'users'
   };
 
-  formData = {
-    roleCode: [
-      this.options[0]
-    ]
+  get formData(): any {
+    return {
+      roleCode: [
+        this.employeeRoleOptions[0]
+      ]
+    };
   };
 
   constructor(
@@ -92,7 +85,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
         controlName: 'roleCode',
         type: 'select',
         required: true,
-        options: this.options
+        options: this.employeeRoleOptions
       },
     ];
   }

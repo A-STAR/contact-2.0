@@ -3,10 +3,13 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserDictionariesState, IDictionary } from './user-dictionaries.interface';
+import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.interface';
 
 @Injectable()
 export class UserDictionariesService {
+  static DICTIONARY_VARIABLE_TYPE = 1;
+  static DICTIONARY_EMPLOYEE_ROLE = 8;
+
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
@@ -20,13 +23,15 @@ export class UserDictionariesService {
     };
   }
 
-  preload(dictionaryId: number): void {
+  preload(dictionaryIds: Array<number>): void {
     this.state
       .take(1)
       .subscribe(state => {
-        if (!state.dictionaries[dictionaryId].isResolved) {
-          this.refresh(dictionaryId);
-        }
+        dictionaryIds.forEach(dictionaryId => {
+          if (!state.dictionaries[dictionaryId]) {
+            this.refresh(dictionaryId);
+          }
+        });
       });
   }
 
@@ -35,8 +40,19 @@ export class UserDictionariesService {
     this.store.dispatch(action);
   }
 
-  getDictionary(dictionaryId: number): Observable<IDictionary> {
-    return this.state.map(state => state.dictionaries[dictionaryId]);
+  getDictionary(dictionaryId: number): Observable<IUserDictionary> {
+    return this.state
+      .map(state => state.dictionaries[dictionaryId] || [])
+      .map(terms => terms.reduce((acc, term) => {
+          acc[term.code] = term;
+        return acc;
+      }, {}));
+  }
+
+  getDictionaryOptions(dictionaryId: number): Observable<any> {
+    return this.state
+      .map(state => state.dictionaries[dictionaryId] || [])
+      .map(terms => terms.map(term => ({ value: term.code, label: term.name })));
   }
 
   private get state(): Observable<IUserDictionariesState> {

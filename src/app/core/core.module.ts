@@ -22,6 +22,8 @@ import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
+import { UserDictionariesEffects } from './user/dictionaries/user-dictionaries.effects';
+import { UserDictionariesService } from './user/dictionaries/user-dictionaries.service';
 import { UserLanguagesEffects } from './user/languages/user-languages.effects';
 import { UserLanguagesService } from './user/languages/user-languages.service';
 import { UserPermissionsEffects } from './user/permissions/user-permissions.effects';
@@ -36,6 +38,7 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(DictionariesEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(UserConstantsEffects),
+    EffectsModule.run(UserDictionariesEffects),
     EffectsModule.run(UserLanguagesEffects),
     EffectsModule.run(UserPermissionsEffects),
     environment.production
@@ -57,6 +60,7 @@ import { rootReducer } from './state/root.reducer';
     ThemesService,
     TranslateService,
     UserConstantsService,
+    UserDictionariesService,
     UserLanguagesService,
     UserPermissionsService,
     ValueConverterService,

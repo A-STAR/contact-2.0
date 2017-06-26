@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
@@ -86,14 +87,18 @@ export class EmployeesComponent implements OnDestroy {
 
   editedEntity: IEmployee;
 
+  // TODO(d.maltsev): type
+  employeeRoleOptions$: Observable<Array<any>>;
+
   private state$: Subscription;
 
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
+    private translateService: TranslateService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private translateService: TranslateService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
@@ -106,6 +111,9 @@ export class EmployeesComponent implements OnDestroy {
         // TODO: notifications
         error => console.error(error)
       );
+
+    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
+    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
   }
 
   ngOnDestroy(): void {
