@@ -1,0 +1,52 @@
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+
+import { IUserTermsResponse } from './user-dictionaries.interface';
+
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../notifications/notifications.service';
+import { UserDictionariesService } from './user-dictionaries.service';
+
+@Injectable()
+export class UserDictionariesEffects {
+  @Effect()
+  fetchDictionary$ = this.actions
+    .ofType(UserDictionariesService.USER_DICTIONARY_FETCH)
+    .switchMap((action: Action) => {
+      const { dictionaryId } = action.payload;
+      return this.read(dictionaryId)
+        .map((response: IUserTermsResponse) => {
+          return {
+            type: UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS,
+            payload: {
+              dictionaryId,
+              terms: response.userTerms.reduce((acc, term) => {
+                acc[term.code] = term;
+                return acc;
+              }, {})
+            }
+          };
+        })
+        .catch(() => {
+          return [
+            {
+              type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE
+            },
+            this.notificationService.createErrorAction('user.dictionaries.errors.fetch')
+          ];
+        });
+    });
+
+  constructor(
+    private actions: Actions,
+    private gridService: GridService,
+    private notificationService: NotificationsService,
+  ) {}
+
+  private read(dictionaryId: number): Observable<IUserTermsResponse> {
+    return this.gridService.read('/dictionaries/{dictionaryId}/userterms', { dictionaryId });
+  }
+}
