@@ -7,6 +7,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_DELETE,
   BUTTON_EDIT,
   BUTTON_REFRESH,
+  BUTTON_SMS,
   CHECKBOX,
 }
 

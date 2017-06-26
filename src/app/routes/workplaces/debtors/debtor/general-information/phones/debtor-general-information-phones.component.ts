@@ -2,8 +2,13 @@ import {
   Component,
   Input
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
+import {
+  IToolbarItem,
+  ToolbarItemTypeEnum
+} from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 
@@ -50,6 +55,34 @@ export class DebtorGeneralInformationPhonesComponent {
       { label: 'TRUE', value: 1 },
     ],
   };
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: Observable.of(true),
+      action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: Observable.of(true),
+      action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: Observable.of(true),
+      action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      enabled: Observable.of(true),
+      action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      enabled: Observable.of(true),
+      action: () => {}
+    }
+  ];
 
   constructor(private gridService: GridService) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);

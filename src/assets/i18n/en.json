@@ -97,7 +97,8 @@
       "copy": "Copy",
       "refresh": "Refresh",
       "search": "Search",
-      "save": "Save"
+      "save": "Save",
+      "sms": "Send SMS"
     }
   },
   "queryBuilder": {
