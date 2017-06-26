@@ -46,6 +46,15 @@ export const routes: Route[] = [
       { path: 'qbuilder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },
+  {
+    path: 'workplaces',
+    component: LayoutComponent,
+    canActivate: [ AuthService ],
+    runGuardsAndResolvers: 'paramsChange',
+    children: [
+      { path: 'debt-list', loadChildren: './workplaces/debtors/debtor/debtor.module#DebtorModule' },
+    ]
+  },
 
   // Eagerly-loaded routes
   { path: 'login', component: LoginComponent },

@@ -44,6 +44,7 @@
         "COURTS": "Суды и ФССП",
         "WORKPLACES": "Рабочие места",
         "DEBT_LIST": "Список долгов",
+        "DEBTOR_CARD": "Карточка должника",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -418,6 +419,109 @@
         "no_edit": "У вас недостаточно прав  '{{ permission }}' для редактирования записей",
         "no_delete": "У вас недостаточно прав  '{{ permission }}' для удаления записей"
       }
+    }
+  },
+  "debtor": {
+    "title": "Карточка должника",
+    "id": "Ид",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "middleName": "Отчество",
+    "type": "Тип",
+    "responsible": "Ответственный",
+    "reward": "Размер вознаграждения",
+    "generalInformationTab": {
+      "title": "Общая",
+      "generalInformation": "Общая информация",
+      "birthDate": "Дата рождения",
+      "company": "Компания",
+      "position": "Должность",
+      "income": "Доход",
+      "nationality": "Гражданство",
+      "sex": "Пол",
+      "workplaceChecked": "Место работы проверено",
+      "importance": "Важность",
+      "stage": "Стадия",
+      "decency": "Порядочность",
+      "maritalStatus": "Семейное положение",
+      "education": "Образование",
+      "email": "Эл. почта",
+      "passport": "Паспорт",
+      "series": "Серия",
+      "number": "№",
+      "issueDate": "Дата выдачи",
+      "issuedBy": "Кем выдан",
+      "birthPlace": "Место рождения",
+      "phonesTab": {
+        "title": "Телефоны",
+        "grid": {
+          "type": "Тип",
+          "number": "Номер",
+          "status": "Статус",
+          "lastCall": "Посл. звонок",
+          "contactPerson": "Контактное лицо",
+          "comment": "Комментарий",
+          "region": "Регион",
+          "active": "Активен",
+          "qualityCode": "Код качества",
+          "numberExists": "Номер существует",
+          "qualityCodeByDataQ": "Код качества по DataQ",
+          "verified": "Верифицирован",
+          "blockingDate": "Дата блокировки",
+          "blockingReason": "Причина блокировки"
+        }
+      },
+      "addressesTab": {
+        "title": "Адреса"
+      },
+      "emailTab": {
+        "title": "Эл. почта"
+      }
+    },
+    "debtsTab": {
+      "title": "Долги"
+    },
+    "propertyTab": {
+      "title": "Имущество"
+    },
+    "guarantorsTab": {
+      "title": "Поручители"
+    },
+    "contactsTab": {
+      "title": "Контакты"
+    },
+    "planningTab": {
+      "title": "Планирование"
+    },
+    "documentationTab": {
+      "title": "Документы"
+    },
+    "accountsTab": {
+      "title": "Счета"
+    },
+    "tasksTab": {
+      "title": "Задачи"
+    },
+    "workHistoryTab": {
+      "title": "История работы (полная)"
+    },
+    "actionLogTab": {
+      "title": "Лог действий"
+    },
+    "arbitraryAttributesTab": {
+      "title": "Произвольные атрибуты"
+    },
+    "commentTab": {
+      "title": "Комментарий"
+    },
+    "promotionsTab": {
+      "title": "Акции"
+    },
+    "socialNetworksTab": {
+      "title": "Социальные сети"
+    },
+    "extrasDebtInfoTab": {
+      "title": "Доп. инфо о долге"
     }
   },
   "organizations": {
