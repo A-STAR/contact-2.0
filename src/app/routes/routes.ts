@@ -52,7 +52,7 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     runGuardsAndResolvers: 'paramsChange',
     children: [
-      { path: 'debt-list/:id', loadChildren: './workplaces/debtors/debtor/debtor.module#DebtorModule' },
+      { path: 'debt-list', loadChildren: './workplaces/debtors/debtor/debtor.module#DebtorModule' },
     ]
   },
 

@@ -1,6 +1,6 @@
 import { IActionsLogServiceState } from '../../routes/admin/actions-log/actions-log.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
-import { IDebtorsState } from '../../routes/workplace/debtors/debtors.interface';
+import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
 import { INotificationServiceState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';

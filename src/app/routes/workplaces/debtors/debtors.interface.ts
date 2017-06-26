@@ -1,9 +1,4 @@
-export interface IDebtor {
-  id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
+import { IDebtor } from './debtor/debtor.interface';
 
 export interface ISelectedDebtors {
   [index: number]: IDebtor;
@@ -12,4 +7,5 @@ export interface ISelectedDebtors {
 export interface IDebtorsState {
   debtors: IDebtor[];
   selectedDebtors: ISelectedDebtors;
+  currentDebtor?: number;
 }

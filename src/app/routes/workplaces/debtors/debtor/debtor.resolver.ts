@@ -11,15 +11,15 @@ export class DebtorResolver implements Resolve<boolean> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const id = 23; // TODO
-    this.debtorService.fetch(id);
-    return this.debtorService.isFetched(id)
+    const debtorId = parseInt(route.params.id, 10);
+    this.debtorService.fetch(debtorId);
+
+    return this.debtorService.isFetched(debtorId)
       .map(isResolved => {
         if (isResolved === false) {
           // TODO handle error
         }
         return isResolved;
-      })
-      .take(1);
+      }).take(1);
   }
 }

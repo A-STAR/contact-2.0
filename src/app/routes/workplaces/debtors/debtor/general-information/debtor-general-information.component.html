@@ -1,0 +1,26 @@
+<app-dynamic-form
+  [controls]="controls"
+  [data]="data">
+</app-dynamic-form>
+
+<app-tabstrip>
+  <app-tab
+    title="debtor.generalInformationTab.phonesTab.title"
+    [closable]="false"
+  >
+    <app-debtor-general-information-phones
+      [rows]="phones"
+    >
+    </app-debtor-general-information-phones>
+  </app-tab>
+  <app-tab
+    title="debtor.generalInformationTab.addressesTab.title"
+    [closable]="false"
+  >
+  </app-tab>
+  <app-tab
+    title="debtor.generalInformationTab.emailTab.title"
+    [closable]="false"
+  >
+  </app-tab>
+</app-tabstrip>

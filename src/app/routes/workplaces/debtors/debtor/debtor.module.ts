@@ -4,13 +4,15 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../../../shared/shared.module';
 import { DebtorCardEffects } from './debtor.effects';
-
-import { DebtorComponent } from './debtor.component';
 import { DebtorResolver } from './debtor.resolver';
 import { DebtorService } from './debtor.service';
 
+import { DebtorComponent } from './debtor.component';
+import { DebtorGeneralInformationComponent } from './general-information/debtor-general-information.component';
+import { DebtorGeneralInformationPhonesComponent } from "./general-information/phones/debtor-general-information-phones.component";
+
 const routes: Routes = [
-  { path: '', component: DebtorComponent, resolve: { debtor: DebtorResolver } },
+  { path: ':id', component: DebtorComponent, resolve: { debtor: DebtorResolver } },
 ];
 
 @NgModule({
@@ -21,6 +23,8 @@ const routes: Routes = [
   ],
   declarations: [
     DebtorComponent,
+    DebtorGeneralInformationComponent,
+    DebtorGeneralInformationPhonesComponent,
   ],
   providers: [
     DebtorResolver,
