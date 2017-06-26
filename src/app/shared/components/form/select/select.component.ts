@@ -128,7 +128,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   get disabled(): boolean {
-    return this._disabled;
+    return this._disabled || undefined;
   }
 
   get inputMode(): boolean {
