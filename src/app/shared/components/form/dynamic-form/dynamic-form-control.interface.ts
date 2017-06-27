@@ -1,5 +1,4 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { ISelectionAction } from '../select/select-interfaces';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 

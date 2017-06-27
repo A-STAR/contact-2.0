@@ -12,7 +12,7 @@ import {
   IGrid2ColumnSettings,
   IGrid2Request,
   IGrid2RequestPayload,
-  IGrid2RequestSorting,
+  Grid2SortingEnum,
 } from '../../../shared/components/grid2/grid2.interface';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
@@ -30,39 +30,34 @@ export class ValueConverterService {
 
   toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
     const request: IGrid2Request = {};
-    const filter: FilterObject = FilterObject.create().and();
+    const filters: FilterObject = FilterObject.create().and();
 
     if (payload.columnsSettings) {
       R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        const originalFilter: FilterObject = columnSettings.filter;
+        const { filter } = columnSettings;
         filter.addFilter(
-          FilterObject.create(originalFilter, { name:  payload.fieldNameConverter })
+          FilterObject.create(filter, { name:  payload.fieldNameConverter })
         );
       }, R.values(payload.columnsSettings));
 
-      request.filtering = filter;
+      request.filtering = filters;
 
-      const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSettings, columnId: string) => {
-          return {
+      request.sorting = R.values(R.mapObjIndexed(
+        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
+            direction: columnSettings.sortingDirection,
             field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
             order: columnSettings.sortingOrder,
-            direction: columnSettings.sortingDirection ? 'desc' : 'asc'
-          };
-        },
+        }),
         payload.columnsSettings
-      ));
-      if (sorting.length) {
-        request.sorting = R.map((v: IGrid2RequestSorting) => {
-          return {
-            field: v.field,
-            direction: v.direction
-          };
-        }, sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
-          return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
-        }));
-      }
+      ))
+      .filter(s => s.direction !== Grid2SortingEnum.NONE)
+      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
+      .map(v => ({
+        field: v.field,
+        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc'
+      }));
     }
+
     if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
       request.paging = {
         pageNumber: payload.currentPage,

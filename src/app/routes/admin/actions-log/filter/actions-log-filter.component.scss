@@ -2,6 +2,10 @@
   padding: 20px;
 }
 
+:host {
+  background-color: #fff;
+}
+
 :host /deep/ ul.app-toolbar {
   padding-right: 10px;
 }

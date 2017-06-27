@@ -12,7 +12,7 @@
 
 <ul class="app-toolbar">
   <ng-container *ngFor="let action of actions">
-   <li *ngIf="!action.noRender"
+   <li *ngIf="action.visible"
        class="app-control app-control-align-{{ actionAlign }}">
     <ng-container [ngSwitch]="action.control">
       <span
@@ -39,9 +39,7 @@
         >
         </app-select>
       </span>
-      <span
-        *ngSwitchCase="ToolbarControlEnum.LABEL"
-      >
+      <span *ngSwitchCase="ToolbarControlEnum.LABEL">
         <span class="app-label">{{ action.text }}</span>
       </span>
       <button

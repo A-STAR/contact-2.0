@@ -20,16 +20,16 @@ export enum ToolbarActionTypeEnum {
 }
 
 export interface IToolbarAction {
-  text?: string;
-  hasLabel?: boolean;
-  type?: ToolbarActionTypeEnum;
-  visible?: boolean;
-  permission?: string | Array<string>;
-  control?: ToolbarControlEnum;
-  value?: any;
   activeValue?: any;
-  noRender?: boolean;
+  control?: ToolbarControlEnum;
+  disabled?: boolean;
+  hasLabel?: boolean;
+  permission?: string | Array<string>;
   styles?: { width?: string };
+  text?: string;
+  type?: ToolbarActionTypeEnum;
+  value?: any;
+  visible?: boolean;
 }
 
 export interface IToolbarActionSelectPayload {

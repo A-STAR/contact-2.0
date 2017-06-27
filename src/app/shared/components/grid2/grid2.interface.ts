@@ -93,9 +93,9 @@ export interface IGrid2ServiceDispatcher {
 
 export interface IGrid2HeaderParams {
   headerHeight: number;
-  enableMenu: boolean;
+  enableMenu?: boolean;
   serviceDispatcher: IGrid2ServiceDispatcher;
-  headerColumns: GridHeaderComponent[];
+  headerColumns?: GridHeaderComponent[];
   column?: Column;
   renderer2: Renderer2;
 }
