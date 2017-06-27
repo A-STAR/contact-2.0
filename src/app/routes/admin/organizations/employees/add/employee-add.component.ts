@@ -11,6 +11,7 @@ import { OrganizationsService } from '../../organizations.service';
 import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-employee-add',
@@ -20,6 +21,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
   @Input() employeeRoleOptions: Array<any> = [];
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
+  @ViewChild(GridComponent) addEmployeeGrid: GridComponent;
 
   private selectedEmployees: Array<IEmployeeUser>;
 
@@ -70,8 +72,8 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     };
   }
 
-  onSelectEmployees(employees: Array<IEmployeeUser>): void {
-    this.selectedEmployees = employees;
+  onSelectEmployees(): void {
+    this.selectedEmployees = this.addEmployeeGrid.selected;
   }
 
   canSubmit(): boolean {
