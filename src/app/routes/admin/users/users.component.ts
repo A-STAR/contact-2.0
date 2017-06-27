@@ -18,6 +18,8 @@ import { UserLanguagesService } from '../../../core/user/languages/user-language
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
+import { namedValuesToSelectOptions } from '../../../core/utils';
+
 @Component({
   selector: 'app-users',
   templateUrl: 'users.component.html'
@@ -107,10 +109,7 @@ export class UsersComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
   ) {
-    this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    })));
+    this.roleOptions$ = this.permissionsService.roles.map(namedValuesToSelectOptions);
 
     this.languageOptions$ = this.userLanguagesService.languageOptions;
 
