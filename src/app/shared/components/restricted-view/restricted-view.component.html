@@ -1,5 +1,7 @@
-<ng-content *ngIf="canView | async"></ng-content>
+<ng-content *ngIf="canView | async; else error"></ng-content>
 
-<div *ngIf="!(canView | async)" class="message">
-  <em>{{ message | translate }}</em>
-</div>
+<template #error>
+  <div class="message">
+    <em>{{ message | translate }}</em>
+  </div>
+</template>
