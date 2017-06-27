@@ -26,9 +26,11 @@
 >
 </app-dialog-action>
 
-<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-
-<ng-container *ngIf="canViewPermissions$ | async">
+<app-restricted-view
+  message="roles.permissions.errors.view"
+  [canView]="canViewPermissions$"
+>
+  <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
   <app-grid
     [autoLoad]="false"
     [columns]="columns"
@@ -40,8 +42,4 @@
     (onSelect)="onSelectPermissions($event)"
   >
   </app-grid>
-</ng-container>
-
-<ng-container *ngIf="!(canViewPermissions$ | async)">
-  {{ 'roles.permissions.messages.no_view' | translate:{ permission: 'PERMIT_VIEW' } }}
-</ng-container>
+</app-restricted-view>

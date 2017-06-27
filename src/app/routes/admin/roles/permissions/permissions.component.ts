@@ -62,7 +62,10 @@ export class PermissionsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      enabled: this.userPermissionsService.has('PERMIT_VIEW')
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_VIEW'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
   ];
 
@@ -100,22 +103,19 @@ export class PermissionsComponent implements OnDestroy {
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 
+    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW').distinctUntilChanged();
+
     this.viewPermissionsSubscription = Observable.combineLatest(
-      this.userPermissionsService.has('PERMIT_VIEW'),
-      this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
+      this.canViewPermissions$,
+      this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
     )
-    .map(([ hasViewPermission, hasCurrentRole ]) => hasViewPermission && hasCurrentRole)
-    .distinctUntilChanged()
-    .subscribe(canViewPermissions => {
-      if (canViewPermissions) {
-        this.permissionsService.fetchPermissions();
-      } else {
+    .subscribe(([ hasViewPermission, currentRole ]) => {
+      if (!hasViewPermission) {
         this.permissionsService.clearPremissions();
-        this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission: 'PERMIT_VIEW' } }, false);
+      } else if (currentRole) {
+        this.permissionsService.fetchPermissions();
       }
     });
-
-    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
   }
 
   ngOnDestroy(): void {
