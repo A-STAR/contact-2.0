@@ -56,6 +56,12 @@ export class UsersService {
     });
   }
 
+  clear(): void {
+    return this.store.dispatch({
+      type: UsersService.USERS_CLEAR
+    });
+  }
+
   select(userId: number): void {
     return this.store.dispatch({
       type: UsersService.USER_SELECT,
