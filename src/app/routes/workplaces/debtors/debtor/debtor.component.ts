@@ -1,12 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtor, IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from './debtor.interface';
 import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRenderer } from '../../../../shared/components/grid/grid.interface';
 
+import { ObservableHelper } from '../../../../core/observable/ObservableHelper';
 import { DebtorService } from './debtor.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
 
@@ -23,19 +21,17 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> {
   generalInformation: IDebtorGeneralInformation;
   generalInformationPhones: IDebtorGeneralInformationPhone [];
 
-  private debtorService$: Subscription;
-
-  constructor(
-    private debtorService: DebtorService,
-    private gridService: GridService,
-  ) {
+  constructor(private debtorService: DebtorService) {
     super();
 
-    this.debtorService$ = debtorService.selectedDebtor.subscribe(state => {
-      this.debtor = state;
-      this.generalInformation = state.generalInformation;
-      this.generalInformationPhones = this.generalInformation.phones;
-    });
+    ObservableHelper.subscribe(
+      debtorService.selectedDebtor.subscribe(debtor => {
+        this.debtor = debtor;
+        this.generalInformation = debtor ? debtor.generalInformation : null;
+        this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
+      }),
+      this
+    );
   }
 
   protected getControls(): IDynamicFormGroup[] {
