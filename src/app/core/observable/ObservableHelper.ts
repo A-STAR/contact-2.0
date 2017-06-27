@@ -8,7 +8,7 @@ export class ObservableHelper {
     Reflect.set(component, 'ngOnDestroy', function(): void {
       subscription.unsubscribe();
       if (ngOnDestroyFn) {
-        ngOnDestroyFn.apply(this, arguments);
+        ngOnDestroyFn.apply(component, arguments);
       }
     });
   }
