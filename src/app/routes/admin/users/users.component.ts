@@ -100,6 +100,7 @@ export class UsersComponent implements OnDestroy {
 
   private usersSubscription: Subscription;
   private optionsSubscription: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -119,8 +120,7 @@ export class UsersComponent implements OnDestroy {
     this.languageOptions$ = this.userLanguagesService.languageOptions;
 
     // TODO(d.maltsev):
-    // preload roles in resolver or create PermissionsService.refreshRoles method
-    // that only loads roles if they are not already loaded
+    // Remove when UserRolesService is ready (currently waiting for spec & API)
     this.permissionsService.fetchRoles();
 
     this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
@@ -132,7 +132,6 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    // this.usersService.fetch();
     this.usersSubscription = this.usersService.state
       .subscribe(
         state => {
@@ -147,15 +146,10 @@ export class UsersComponent implements OnDestroy {
     this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
     this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
 
-    // TODO(d.maltsev): unsubscribe
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
-    this.hasViewPermission$.subscribe(hasViewPermission => {
-      if (!hasViewPermission) {
-        this.usersService.clear();
-      } else {
-        this.usersService.fetch();
-      }
-    });
+    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
+      hasViewPermission ? this.usersService.fetch() : this.usersService.clear()
+    );
 
     this.users$ = this.usersService.state.map(state => state.users);
   }
@@ -163,6 +157,7 @@ export class UsersComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.usersSubscription.unsubscribe();
     this.optionsSubscription.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
