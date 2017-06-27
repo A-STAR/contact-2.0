@@ -83,8 +83,8 @@ export class RolesComponent implements OnDestroy {
 
     this.roles$ = this.permissionsService.permissions.map(state => state.roles);
 
+    // TODO(d.maltsev): unsubscribe
     this.hasRoleViewPermission$ = this.userPermissionsService.has('ROLE_VIEW');
-
     this.hasRoleViewPermission$.subscribe(hasViewPermission => {
       if (!hasViewPermission) {
         this.permissionsService.clearRoles();
