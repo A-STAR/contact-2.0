@@ -9,17 +9,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
 
-import {
-  IActionLog,
-  IActionsLogData,
-  IActionType,
-  IEmployee,
-} from './actions-log.interface';
+import { IActionLog, IActionsLogData, IActionType, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import {
-  IGrid2ColumnsSettings,
-  IGrid2EventPayload
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';

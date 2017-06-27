@@ -1,5 +1,4 @@
-import { IFilterInitParams } from './filter.interface';
-import { IFilter, IDoesFilterPassParams } from 'ag-grid';
+import { IFilter, IFilterParams, IDoesFilterPassParams } from 'ag-grid';
 
 export class GridTextFilter implements IFilter {
   valueGetter: Function;
@@ -7,7 +6,7 @@ export class GridTextFilter implements IFilter {
   elFilterText: Element;
   gui: HTMLElement;
 
-  init(params: IFilterInitParams): void {
+  init(params: IFilterParams): void {
     this.valueGetter = params.valueGetter;
     this.filterText = null;
     this.setupGui(params);
@@ -18,7 +17,7 @@ export class GridTextFilter implements IFilter {
   }
 
   // not called by ag-Grid, just for us to help setup
-  private setupGui(params: IFilterInitParams): void {
+  private setupGui(params: IFilterParams): void {
     const that = this;
     function listener(event: Event): void {
       const { target } = event;
@@ -30,7 +29,7 @@ export class GridTextFilter implements IFilter {
     this.gui.innerHTML = `
       <div style="padding: 4px 6px; width: 200px;">
         <div>
-          <input style="margin: 4px 0px 4px 0px; width: 100%;" type="text" class="filterText" placeholder="Full name..."/>
+          <input style="margin: 4px 0px 4px 0px; width: 100%;" type="text" class="filterText" placeholder="filter..."/>
         </div>
       </div>
     `;
