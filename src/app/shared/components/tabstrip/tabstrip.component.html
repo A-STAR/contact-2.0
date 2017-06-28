@@ -1,6 +1,36 @@
-<ul class="nav nav-tabs">
-  <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active">
-    <a>{{ tab.title | translate }}<i *ngIf="tab.closable && i > 0" (click)="closeTab(tab)" class="fa fa-close"></i></a>
-  </li>
-</ul>
+<table cellpadding="0" cellspacing="0" class="app-tabstrip-container">
+  <tr>
+    <td *ngIf="isToolsVisible"
+        class="app-tabstrip-btn-wrapper"
+    >
+      <button
+        class="btn btn-default app-tabstrip-btn app-tabstrip-backward-btn"
+        type="button"
+        (click)="onLeft()"
+      >
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      </button>
+    </td>
+    <td style="width: 100%;">
+      <perfect-scrollbar #ps>
+        <ul class="nav nav-tabs">
+          <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active">
+            <a>{{ tab.title | translate }}<i *ngIf="tab.closable && i > 0" (click)="closeTab(tab)" class="fa fa-close"></i></a>
+          </li>
+        </ul>
+      </perfect-scrollbar>
+    </td>
+    <td *ngIf="isToolsVisible"
+        class="app-tabstrip-btn-wrapper"
+    >
+      <button
+        class="btn btn-default app-tabstrip-btn app-tabstrip-forward-btn"
+        type="button"
+        (click)="onRight()"
+      >
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </td>
+  </tr>
+</table>
 <ng-content></ng-content>

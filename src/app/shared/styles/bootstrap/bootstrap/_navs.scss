@@ -74,9 +74,10 @@
 
 // Give the tabs something to sit on
 .nav-tabs {
+  white-space: nowrap;
   border-bottom: 1px solid $nav-tabs-border-color;
   > li {
-    float: left;
+    display: inline-block;
     // Make the list-items overlay the bottom border
     margin-bottom: -1px;
 

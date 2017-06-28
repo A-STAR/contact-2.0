@@ -8,3 +8,17 @@
   right: 5px;
   cursor: pointer;
 }
+
+.app-tabstrip-btn-wrapper {
+  width: 36px;
+
+  .btn {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+}
+
+.app-tabstrip-container {
+  width: 100%;
+  table-layout: fixed;
+}

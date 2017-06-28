@@ -8,7 +8,7 @@
     </ng-container>
   </div>
 
-  <scrollable height="320">
+  <perfect-scrollbar style="height: 320px;">
     <ul class="list-group">
       <ng-container *ngFor="let notification of notifications; let i = index;">
         <li *ngIf="filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
@@ -24,7 +24,7 @@
         </li>
       </ng-container>
     </ul>
-  </scrollable>
+  </perfect-scrollbar>
 
   <div class="panel-footer text-right">
     <button class="btn btn-default" (click)="onClearClick()">{{ 'default.buttons.clear' | translate }}</button>
