@@ -62,32 +62,31 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   editedEntity: IOrganization;
 
-  private state$: Subscription;
-  private stateOrganizations$: Subscription;
+  hasViewPermission$: Observable<boolean>;
+
+  organizations$: Observable<any>;
+
+  private stateSubscription: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private organizationsService: OrganizationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.organizationsService.fetchOrganizations();
-
-    this.stateOrganizations$ = this.organizationsService.state
+    this.organizations$ = this.organizationsService.state
       .distinctUntilKeyChanged('organizations')
-      .subscribe(
-        state => {
-          const nodes = this.convertToTreeNodes(state.organizations);
-          const files = {
-              id: 0,
-              label: 'Home',
-              children: [].concat(nodes),
-            };
-            this.value = [files];
-            this.prepareTree(this.value[0]);
-        },
-        error => console.error(error)
-      );
+      .map(state => {
+        const nodes = this.convertToTreeNodes(state.organizations);
+        const files = {
+          id: 0,
+          label: 'Home',
+          children: [].concat(nodes),
+        };
+        this.prepareTree(files);
+        return [ files ];
+      });
 
-    this.state$ = this.organizationsService.state
+    this.stateSubscription = this.organizationsService.state
       .subscribe(
         state => {
           this.action = state.dialogAction;
@@ -96,11 +95,16 @@ export class OrganizationsTreeComponent implements OnDestroy {
         // TODO: notifications
         error => console.error(error)
       );
+
+    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
+    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
+      hasViewPermission ? this.organizationsService.fetchOrganizations() : this.organizationsService.clearOrganizations()
+    );
   }
 
   ngOnDestroy(): void {
-    this.state$.unsubscribe();
-    this.stateOrganizations$.unsubscribe();
+    this.stateSubscription.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
@@ -161,7 +165,13 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   onNodeEdit(data: any): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+    this.userPermissionsService.has('ORGANIZATION_EDIT')
+      .take(1)
+      .subscribe(hasEditPermission => {
+        if (hasEditPermission) {
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+        }
+      });
   }
 
   onEditSubmit(data: any, create: boolean): void {

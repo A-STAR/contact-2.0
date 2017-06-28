@@ -558,6 +558,9 @@
           "update": "Could not update organization",
           "delete": "Could not delete organization"
         }
+      },
+      "errors": {
+        "view": "Access to organizations list denied"
       }
     },
     "employees": {

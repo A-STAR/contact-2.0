@@ -21,16 +21,24 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+<app-restricted-view
+  message="organizations.organizations.errors.view"
+  [canView]="hasViewPermission$"
+>
+  <app-toolbar-2
+    class="bordered"
+    [items]="toolbarItems">
+  </app-toolbar-2>
 
-<app-tree
-  #tree
-  layout="horizontal"
-  selectionMode="single"
-  [value]="value"
-  (changeNodesLocation)="onChangeNodesLocation($event)"
-  (onNodeSelect)="onNodeSelect($event)"
-  (onNodeEdit)="onNodeEdit($event)"
-  (onNodeExpand)="onNodeExpand($event)"
-  [(selection)]="selection">
-</app-tree>
+  <app-tree
+    #tree
+    layout="horizontal"
+    selectionMode="single"
+    [value]="organizations$ | async"
+    (changeNodesLocation)="onChangeNodesLocation($event)"
+    (onNodeSelect)="onNodeSelect($event)"
+    (onNodeEdit)="onNodeEdit($event)"
+    (onNodeExpand)="onNodeExpand($event)"
+    [(selection)]="selection">
+  </app-tree>
+</app-restricted-view>
