@@ -123,6 +123,12 @@ export class OrganizationsService {
     });
   }
 
+  clearEmployees(): void {
+    return this.store.dispatch({
+      type: OrganizationsService.EMPLOYEES_CLEAR,
+    });
+  }
+
   selectEmployee(employeeUserId: number): void {
     return this.store.dispatch({
       type: OrganizationsService.EMPLOYEE_SELECT,

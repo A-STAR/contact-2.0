@@ -591,6 +591,9 @@
           "update": "Could not update the employee",
           "delete": "Could not delete the employee"
         }
+      },
+      "errors": {
+        "view": "Access to employees list denied"
       }
     }
   },
