@@ -5,6 +5,8 @@ import * as R from 'ramda';
 
 import {
   ILabeledValue,
+  INamedValue,
+  IOption,
   IValueEntity,
   ValueType
 } from './value-converter.interface';
@@ -157,6 +159,13 @@ export class ValueConverterService {
     }
     const converted = value.split('.').reverse().map(Number);
     return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  }
+
+  valuesToOptions(values: Array<INamedValue>): Array<IOption> {
+    return values.map(value => ({
+      label: value.name,
+      value: value.id
+    }));
   }
 
   private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
