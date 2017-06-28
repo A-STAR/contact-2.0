@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
@@ -66,6 +67,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     ProgressbarModule.forRoot(),
     TextMaskModule,
     MultiSelectModule,
+    PerfectScrollbarModule,
     // app modules
     ActionDialogModule,
     ContentTabstripModule,
@@ -121,6 +123,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     EasypiechartDirective,
     FlotDirective,
     NowDirective,
+    PerfectScrollbarModule,
     ScrollableDirective,
     SparklineDirective,
     ToasterModule,
