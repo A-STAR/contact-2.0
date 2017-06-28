@@ -140,6 +140,7 @@ export class EmployeesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.organizationsStateSubscription.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get state(): Observable<IOrganizationsState> {
