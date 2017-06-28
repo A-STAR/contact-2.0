@@ -90,7 +90,13 @@ export class EmployeesComponent implements OnDestroy {
   // TODO(d.maltsev): type
   employeeRoleOptions$: Observable<Array<any>>;
 
-  private state$: Subscription;
+  hasViewPermission$: Observable<boolean>;
+
+  employees$: Observable<Array<IEmployee>>;
+
+  private organizationsStateSubscription: Subscription;
+
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -102,7 +108,7 @@ export class EmployeesComponent implements OnDestroy {
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
-    this.state$ = this.organizationsService.state
+    this.organizationsStateSubscription = this.organizationsService.state
       .subscribe(
         state => {
           this.action = state.dialogAction;
@@ -114,10 +120,26 @@ export class EmployeesComponent implements OnDestroy {
 
     this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
     this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
+
+    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_EDIT');
+
+    this.viewPermissionSubscription = Observable.combineLatest(
+      this.hasViewPermission$,
+      this.organizationsService.state.map(state => state.selectedOrganizationId).distinctUntilChanged()
+    )
+    .subscribe(([ hasViewPermission, currentOrganizationId ]) => {
+      if (!hasViewPermission) {
+        this.organizationsService.clearEmployees();
+      } else if (currentOrganizationId) {
+        this.organizationsService.fetchEmployees();
+      }
+    });
+
+    this.employees$ = this.organizationsService.state.map(state => state.employees);
   }
 
   ngOnDestroy(): void {
-    this.state$.unsubscribe();
+    this.organizationsStateSubscription.unsubscribe();
   }
 
   get state(): Observable<IOrganizationsState> {
@@ -147,7 +169,13 @@ export class EmployeesComponent implements OnDestroy {
   }
 
   onEdit(): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+    this.userPermissionsService.has('ORGANIZATION_EDIT')
+      .take(1)
+      .subscribe(hasEditPermission => {
+        if (hasEditPermission) {
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+        }
+      });
   }
 
   onAddSubmit(data: any): void {
