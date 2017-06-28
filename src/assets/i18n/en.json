@@ -332,6 +332,9 @@
         "update": "Could not update dictionary term",
         "delete": "Could not remove dictionary term"
       }
+    },
+    "errors": {
+      "view": "Access to dictionary terms list denied"
     }
   },
   "roles": {

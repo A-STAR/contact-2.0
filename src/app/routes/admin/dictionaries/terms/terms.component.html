@@ -24,19 +24,22 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2
-  [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
-  selectionType="single"
-  [styles]="{height: '200px'}"
-  [columns]="columns"
-  [autoLoad]="false"
-  [columnTranslationKey]="'terms'"
-  [editPermission]="'DICT_TERM_EDIT'"
-  [rows]="rows"
-  (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)"
+<app-restricted-view
+  message="terms.errors.view"
+  [canView]="hasViewPermission$"
 >
-</app-grid>
+  <app-toolbar-2
+    [items]="toolbarItems">
+  </app-toolbar-2>
+  <app-grid
+    selectionType="single"
+    [styles]="{height: '200px'}"
+    [columns]="columns"
+    [autoLoad]="false"
+    [columnTranslationKey]="'terms'"
+    [rows]="rows"
+    (onDblClick)="onEdit()"
+    (onSelect)="onSelect($event)"
+  >
+  </app-grid>
+</app-restricted-view>
