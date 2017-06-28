@@ -59,34 +59,24 @@ export class MenuService {
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {
-    // const delay = Date.now() - this.lastNavigationStartTimestamp;
+    const delay = Date.now() - this.lastNavigationStartTimestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
     if (name) {
-      // this.logAction(name, delay);
+      this.logAction(name, delay);
     }
   }
 
-  // tslint:disable-next-line
   private logAction(name: string, delay: number): void {
-    // TODO: add headers options to GridService
-    this.authService
-      .getRootUrl()
-      .flatMap(root => {
-        return this.http
-          .post(
-            `${root}/api/actions`,
-            {
-              typeCode: 1,
-              duration: delay
-            },
-            {
-              headers: new Headers({
-                'X-Gui-Object': this.guiObjectIds[name]
-              })
-            }
-          )
-          .map(resp => resp.json());
-      })
+    const data = {
+      typeCode: 1,
+      duration: delay
+    };
+    const headers = new Headers({
+      'X-Gui-Object': this.guiObjectIds[name]
+    });
+
+    this.gridService
+      .create('/actions', {}, data, { headers })
       .take(1)
       .subscribe();
   }
