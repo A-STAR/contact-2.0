@@ -8,7 +8,7 @@
     </ng-container>
   </div>
 
-  <perfect-scrollbar style="height: 320px;">
+  <perfect-scrollbar class="notifications_list_wrapper">
     <ul class="list-group">
       <ng-container *ngFor="let notification of notifications; let i = index;">
         <li *ngIf="filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
