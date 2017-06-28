@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
 
-import { AuthService } from '../auth/auth.service';
 import { GridService } from '../../shared/components/grid/grid.service';
 
 import { menuConfig } from '../../routes/menu-config';
@@ -25,20 +24,13 @@ export class MenuService {
 
   constructor(
     private http: AuthHttp,
-    private authService: AuthService,
     private gridService: GridService,
     private router: Router
   ) {
-    this.guiObjects$ = this.authService
-      .getRootUrl()
-      .flatMap(root => {
-        return this.http
-          .get(`${root}/api/guiconfigurations`)
-          .map(resp => resp.json())
-          .map(resp => resp.appGuiObjects)
-          .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
-          .map(data => this.prepareMenu(data));
-      });
+    this.guiObjects$ = this.gridService.read('/guiconfigurations')
+      .map(response => response.appGuiObjects)
+      .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
+      .map(data => this.prepareMenu(data));
 
     this.onSectionLoadStart();
     this.router.events.subscribe(event => {
