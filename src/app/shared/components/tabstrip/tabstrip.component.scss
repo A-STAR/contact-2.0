@@ -9,13 +9,22 @@
   cursor: pointer;
 }
 
+.nav-tabs > li {
+  display: inline-block;
+  float: none;
+}
+
+.nav-tabs {
+  white-space: nowrap;
+}
+
+.btn {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
 .app-tabstrip-btn-wrapper {
   width: 36px;
-
-  .btn {
-    padding-top: 11px;
-    padding-bottom: 11px;
-  }
 }
 
 .app-tabstrip-container {
