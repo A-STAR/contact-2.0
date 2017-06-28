@@ -12,8 +12,8 @@ import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } f
       'isCollapsed', [
         state('void', style({ height: '0', overflow: 'hidden' })),
         state('*', style({ height: '*', overflow: 'hidden' })),
-        transition(':enter', animate('150ms ease')),
-        transition(':leave', animate('150ms ease')),
+        transition(':enter', animate('150ms ease-out')),
+        transition(':leave', animate('150ms ease-in')),
       ]
     )
   ]
