@@ -32,7 +32,9 @@ export class DynamicFormGroupComponent {
   }
 
   toggle(): void {
-    this._isCollapsed = !this._isCollapsed;
+    if (this.collapsible) {
+      this._isCollapsed = !this._isCollapsed;
+    }
   }
 
   displayControlErrors(control: IDynamicFormControl): boolean {

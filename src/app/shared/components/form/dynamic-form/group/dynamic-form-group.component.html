@@ -1,5 +1,5 @@
 <fieldset [formGroup]="form">
-  <h4 *ngIf="title" class="title" (click)="toggle()">
+  <h4 *ngIf="title" [ngClass]="{title: true, collapsible: collapsible}" (click)="toggle()">
     {{ title | translate }}
     <span *ngIf="collapsible" [ngClass]="{'collapse-button': true, collapsed: isCollapsed}">
       <i class="fa fa-angle-down"></i>
