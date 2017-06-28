@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, animate, state, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } from '../dynamic-form-control.interface';
@@ -6,7 +6,17 @@ import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } f
 @Component({
   selector: 'app-dynamic-form-group',
   templateUrl: './dynamic-form-group.component.html',
-  styleUrls: [ './dynamic-form-group.component.scss' ]
+  styleUrls: [ './dynamic-form-group.component.scss' ],
+  animations: [
+    trigger(
+      'isCollapsed', [
+        state('void', style({ height: '0', overflow: 'hidden' })),
+        state('*', style({ height: '*', overflow: 'hidden' })),
+        transition(':enter', animate('150ms ease')),
+        transition(':leave', animate('150ms ease')),
+      ]
+    )
+  ]
 })
 export class DynamicFormGroupComponent {
   static DEFAULT_MESSAGES = {
