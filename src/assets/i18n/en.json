@@ -651,18 +651,17 @@
       "from": "From",
       "to": "To"
     },
-    "data": {
-      "empty": "No data to display"
-    },
     "grid": {
-      "groupColumn": "Row groups",
-      "groupDndTitle": "Drag here to set row groups",
+      "empty": "No data to display",
       "filter": {
         "title": "Filter",
         "showOnlyLines": "Show only records, where:",
         "and": "And",
         "or": "Or"
       },
+      "groupColumn": "Row groups",
+      "groupDndTitle": "Drag here to set row groups",
+      "loading": "Loading data...",
       "selectedCounts": "{{ selected }} selected / {{ length }} total"
     },
     "filter": {

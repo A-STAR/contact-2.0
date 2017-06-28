@@ -30,11 +30,11 @@ export class GridService {
    *  url = '/api/roles/{id}/permits', params = { id: 5 }
    *  route = '/api/roles/5/permits
    */
-  read(url: string, routeParams: object = {}): Observable<any> {
+  read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     if (this._localRequest) {
       // this would not be a default value, so clear the flag for further requests
       this._localRequest = false;
-      return this.http.get(url)
+      return this.http.get(url, options)
         .map(data => data.json());
     }
 
@@ -45,16 +45,16 @@ export class GridService {
     return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
   }
 
-  create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Post, body });
+  create(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
   }
 
-  update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Put, body });
+  update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
   }
 
-  delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Delete } );
+  delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
@@ -109,7 +109,7 @@ export class GridService {
   }
 
   private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    const headers = new Headers();
+    const headers = options.headers || new Headers();
     if (options.body && options.body.constructor === Object) {
       headers.append('Content-Type', 'application/json');
     }

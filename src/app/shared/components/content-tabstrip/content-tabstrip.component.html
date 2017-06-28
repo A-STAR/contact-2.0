@@ -8,7 +8,6 @@
 </ul>
 
 <div class="tabstrip-content">
-  <div *ngFor="let tab of tabs" [hidden]="!tab.active">
-    <app-content-tab [tab]="tab"></app-content-tab>
-  </div>
+  <app-content-tab *ngFor="let tab of tabs" [tab]="tab" [hidden]="!tab.active">
+  </app-content-tab>
 </div>

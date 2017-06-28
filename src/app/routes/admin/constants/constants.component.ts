@@ -87,6 +87,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     const permission = 'CONST_VALUE_VIEW';
 
     this.permissionSub = this.userPermissionsService.has(permission)
+      .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();

@@ -11,7 +11,6 @@ import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormGroupComponent } from './group/dynamic-form-group.component';
 import { DynamicFormFieldComponent } from './field/dynamic-form-field.component';
 
-
 @NgModule({
   imports: [
     CommonModule,

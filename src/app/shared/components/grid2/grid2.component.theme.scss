@@ -233,14 +233,14 @@
   .ag-overlay-loading-center {
     background-color: #fff;
     border: 1px solid #fff;
-    border-radius: 10px;
+    border-radius: 2px;
     padding: 10px;
     color: #000;
   }
   .ag-overlay-no-rows-center {
     background-color: #fff;
     border: 1px solid #fff;
-    border-radius: 10px;
+    border-radius: 2px;
     padding: 10px;
   }
   .ag-group-cell-entire-row {
@@ -294,7 +294,6 @@
     border: 1px solid #d6d6d6;
     background-color: #fff;
     cursor: default;
-    font-family: "Fira Sans Extra Condensed", sans-serif;
     font-size: 14px;
   }
   .ag-menu .ag-tab-header {
@@ -480,4 +479,14 @@
     background-color: #bde2e5;
   }
 
+  .ag-custom-filter {
+    padding: 4px 6px;
+    width: 200px;
+  }
+
+  .ag-custom-filter-text {
+     margin: 4px 0px;
+     padding: 0 3px;
+     width: 100%;
+  }
 }

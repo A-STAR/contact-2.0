@@ -652,18 +652,17 @@
       "from": "Начало",
       "to": "Окончание"
     },
-    "data": {
-      "empty": "Нет данных"
-    },
     "grid": {
-      "groupColumn": "Группировка",
-      "groupDndTitle": "Группировка",
+      "empty": "Нет данных",
       "filter": {
         "title": "Фильтр",
         "showOnlyLines": "Показать только те строки, значения которых:",
         "and": "И",
         "or": "Или"
       },
+      "groupDndTitle": "Группировка",
+      "groupColumn": "Группировка",
+      "loading": "Загрузка данных...",
       "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
     },
     "filter": {

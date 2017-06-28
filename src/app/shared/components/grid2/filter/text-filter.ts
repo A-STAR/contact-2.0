@@ -1,6 +1,11 @@
 import { IFilter, IFilterParams, IDoesFilterPassParams } from 'ag-grid';
 
 export class GridTextFilter implements IFilter {
+  template = `
+    <div class="ag-custom-filter">
+      <input type="text" class="ag-custom-filter-text" placeholder="filter..."/>
+    </div>
+  `;
   valueGetter: Function;
   filterText: string;
   elFilterText: Element;
@@ -16,7 +21,7 @@ export class GridTextFilter implements IFilter {
     return this.gui;
   }
 
-  // not called by ag-Grid, just for us to help setup
+  // TODO(a.tymchuk): how do we remove the listener, if `destroy` doesn't get called ?
   private setupGui(params: IFilterParams): void {
     const that = this;
     function listener(event: Event): void {
@@ -26,15 +31,9 @@ export class GridTextFilter implements IFilter {
     }
 
     this.gui = document.createElement('div');
-    this.gui.innerHTML = `
-      <div style="padding: 4px 6px; width: 200px;">
-        <div>
-          <input style="margin: 4px 0px 4px 0px; width: 100%;" type="text" class="filterText" placeholder="filter..."/>
-        </div>
-      </div>
-    `;
+    this.gui.innerHTML = this.template;
 
-    this.elFilterText = this.gui.querySelector('.filterText');
+    this.elFilterText = this.gui.querySelector('.ag-custom-filter-text');
     // this.elFilterText.addEventListener('change', listener);
     // this.elFilterText.addEventListener('paste', listener);
     this.elFilterText.addEventListener('input', listener);
@@ -45,7 +44,8 @@ export class GridTextFilter implements IFilter {
   }
 
   doesFilterPass(params: IDoesFilterPassParams): boolean {
-    // make sure each word passes separately, ie search for firstname, lastname
+    // make sure each separate word passes separately
+    // p.e. `Rebecca Show` could be filtered as `re sh`
     console.log(`filter text: ${this.filterText}, params: ${this.valueGetter(params)}`);
     return this.filterText
       .toLowerCase()

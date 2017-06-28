@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
 
-import { AuthService } from '../auth/auth.service';
 import { GridService } from '../../shared/components/grid/grid.service';
 
 import { menuConfig } from '../../routes/menu-config';
@@ -25,20 +24,13 @@ export class MenuService {
 
   constructor(
     private http: AuthHttp,
-    private authService: AuthService,
     private gridService: GridService,
     private router: Router
   ) {
-    this.guiObjects$ = this.authService
-      .getRootUrl()
-      .flatMap(root => {
-        return this.http
-          .get(`${root}/api/guiconfigurations`)
-          .map(resp => resp.json())
-          .map(resp => resp.appGuiObjects)
-          .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
-          .map(data => this.prepareMenu(data));
-      });
+    this.guiObjects$ = this.gridService.read('/guiconfigurations')
+      .map(response => response.appGuiObjects)
+      .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
+      .map(data => this.prepareMenu(data));
 
     this.onSectionLoadStart();
     this.router.events.subscribe(event => {
@@ -59,34 +51,24 @@ export class MenuService {
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {
-    // const delay = Date.now() - this.lastNavigationStartTimestamp;
+    const delay = Date.now() - this.lastNavigationStartTimestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
     if (name) {
-      // this.logAction(name, delay);
+      this.logAction(name, delay);
     }
   }
 
-  // tslint:disable-next-line
   private logAction(name: string, delay: number): void {
-    // TODO: add headers options to GridService
-    this.authService
-      .getRootUrl()
-      .flatMap(root => {
-        return this.http
-          .post(
-            `${root}/api/actions`,
-            {
-              typeCode: 1,
-              duration: delay
-            },
-            {
-              headers: new Headers({
-                'X-Gui-Object': this.guiObjectIds[name]
-              })
-            }
-          )
-          .map(resp => resp.json());
-      })
+    const data = {
+      typeCode: 1,
+      duration: delay
+    };
+    const headers = new Headers({
+      'X-Gui-Object': this.guiObjectIds[name]
+    });
+
+    this.gridService
+      .create('/actions', {}, data, { headers })
       .take(1)
       .subscribe();
   }

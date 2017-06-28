@@ -273,14 +273,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
 
     // See ag-grid's BorderLayout
-    Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
-      .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
+    // Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
+    //   .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
     // this.gridOptions.api.doLayout();
   }
 
   private translateGridOptionsMessages(): any {
     return Object.assign(this.gridOptions.localeText || {}, {
-      noRowsToShow: this.translate.instant('default.data.empty'),
+      noRowsToShow: this.translate.instant('default.grid.empty'),
       rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle')
     });
   }
@@ -421,6 +421,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         field: column.prop,
         filter: this.getCustomFilter(column.filter),
         headerName: column.prop,
+        /* to set the menu tabs for a column */
+        // menuTabs:['filterMenuTab','generalMenuTab','columnsMenuTab'],
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,
         suppressSizeToFit: column.suppressSizeToFit,
@@ -461,31 +463,32 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         minWidth: this.groupColumnMinWidth,
         suppressMenu: true,
         suppressMovable: true,
-        suppressFilter: false,
+        suppressFilter: true,
         cellRenderer: 'group',
         cellRendererParams: {
           innerRenderer: (params) => {
             const rowNode: RowNode = params.node;
-            const groupField = rowNode.field;
+            const { field } = rowNode;
             if (rowNode.group && rowNode.allLeafChildren.length) {
-              const renderer = this.getRendererByName(rowNode.field);
-              const recordData = rowNode.allLeafChildren[0].data;
+              const renderer = this.getRendererByName(field);
+              const data = rowNode.allLeafChildren[0].data;
               return renderer
-                ? renderer(recordData)
-                : (recordData[groupField] || rowNode.rowGroupColumn.getColDef().headerName);
+                ? renderer(data)
+                : (data[field] || rowNode.rowGroupColumn.getColDef().headerName);
             }
             return '';
           },
         }
       },
       localeText: {
-        noRowsToShow : this.translate.instant('default.data.empty'),
+        noRowsToShow : this.translate.instant('default.grid.empty'),
         rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
       },
+      overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       // https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
       postProcessPopup: (params) => {
         if (params.type !== 'columnMenu') {
-            return;
+          return;
         }
         // We can get the column id, which is a prop
         // const columnId = params.column.getId();

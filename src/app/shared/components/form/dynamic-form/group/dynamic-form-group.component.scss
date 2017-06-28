@@ -37,7 +37,9 @@ fieldset {
 }
 
 .title {
-  cursor: pointer;
+  &.collapsible {
+    cursor: pointer;
+  }
 
   .collapse-button {
     display: inline-block;
