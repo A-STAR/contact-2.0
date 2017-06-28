@@ -9,17 +9,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
 
-import {
-  IActionLog,
-  IActionsLogData,
-  IActionType,
-  IEmployee,
-} from './actions-log.interface';
+import { IActionLog, IActionsLogData, IActionType, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import {
-  IGrid2ColumnsSettings,
-  IGrid2EventPayload
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -29,7 +21,7 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
 export const toFullName = (entity: { userId?: number, lastName: string, firstName: string, middleName: string }) => {
-  return [ entity.userId || '', entity.lastName, entity.firstName, entity.middleName ]
+  return [ entity.lastName, entity.firstName, entity.middleName ]
     .filter(Boolean).join(' ');
 };
 
@@ -43,14 +35,14 @@ export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 200 },
-    { prop: 'position', minWidth: 100 },
-    { prop: 'createDateTime', minWidth: 150, suppressSizeToFit: true, filterControlType: 'datepicker' },
-    { prop: 'guiObject', minWidth: 150 },
-    { prop: 'typeCode', minWidth: 150 },
-    { prop: 'dsc', minWidth: 200 },
-    { prop: 'machine', minWidth: 100 },
-    { prop: 'duration', minWidth: 100 }
+    { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
+    { prop: 'position', minWidth: 100, filter: 'textFilter' },
+    { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
+    { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
+    { prop: 'typeCode', minWidth: 150, filter: 'text' },
+    { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
+    { prop: 'machine', minWidth: 120, filter: 'textFilter' },
+    { prop: 'duration', minWidth: 120, filter: 'text' }
   ];
 
   renderers: IRenderer = {
@@ -92,12 +84,13 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
     this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn;
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
-    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
 
-    this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
-      this.actionTypesRawRows = actionTypesRawRows);
+    this.actionTypesRowsSubscription = this.actionTypesRows.subscribe(
+      (actionTypesRawRows: IActionType[]) =>
+        this.actionTypesRawRows = actionTypesRawRows
+      );
   }
 
   ngOnDestroy(): void {

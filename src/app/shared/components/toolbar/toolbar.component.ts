@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import * as R from 'ramda';
 
 import {
   IToolbarAction,
@@ -16,7 +17,7 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
   templateUrl: 'toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
 
   @Input() actions: IToolbarAction[];
   @Input() actionAlign = 'left';
@@ -28,7 +29,12 @@ export class ToolbarComponent {
   constructor(
     private iconsService: IconsService,
     private userPermissionsService: UserPermissionsService
-  ) {}
+  ) { }
+
+  ngOnInit(): void {
+    const prop = 'visible';
+    this.actions = this.actions.map(R.over(R.lensProp(prop), R.propOr(true, prop)));
+  }
 
   onActionClick(action: IToolbarAction, event: any): void {
     this.actionClick.emit({
@@ -47,7 +53,7 @@ export class ToolbarComponent {
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
     const permissions = Array.isArray(action.permission) ? action.permission : [ action.permission ];
     return this.userPermissionsService.hasAll(permissions)
-      .map(permission => !action.visible || !(!action.permission || permission));
+      .map(permission => !!action.disabled || !(!action.permission || permission));
   }
 
   toIconCls(action: IToolbarAction): string {

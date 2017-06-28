@@ -244,6 +244,9 @@
         "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
         "deletePhoto": "Could not delete user photo"
       }
+    },
+    "errors": {
+      "view": "Access to users list denied"
     }
   },
   "dictionaries": {

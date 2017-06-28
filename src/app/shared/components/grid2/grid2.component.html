@@ -1,36 +1,34 @@
 <div class="grid grid-default">
-  <div class="grid-body">
-    <app-toolbar
+    <!--<app-toolbar
       *ngIf="hasToolbar"
       class="app-toolbar"
       [actions]="toolbarActions"
       (actionClick)="onActionClick($event)"
     >
-    </app-toolbar>
+    </app-toolbar>-->
     <ag-grid-angular
       class="app-grid2 ag-contact2"
-      [ngStyle]="styles"
-      [rowHeight]="rowHeight"
-      [headerHeight]="headerHeight"
-      [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
-      [rowData]="gridRows"
-      [pagination]="false"
       [enableColResize]="true"
       [enableFilter]="true"
       [enableSorting]="true"
-      [showToolPanel]="false"
-      [paginationAutoPageSize]="true"
+      [headerHeight]="headerHeight"
+      [gridOptions]="gridOptions"
+      [ngStyle]="styles"
       [overlayNoRowsTemplate]="'default.data.empty' | translate"
       [overlayLoadingTemplate]="'default.data.empty' | translate"
+      [pagination]="false"
+      [paginationAutoPageSize]="true"
+      [rowData]="gridRows"
+      [rowHeight]="rowHeight"
       [rowSelection]="rowSelection"
+      [showToolPanel]="false"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
       (rowSelected)="onSelect($event)"
       (rowDoubleClicked)="onRowDoubleClicked()"
     >
     </ag-grid-angular>
-  </div>
 </div>
 <app-toolbar
   *ngIf="gridToolbarActions"
@@ -40,7 +38,7 @@
   (actionSelect)="onToolbarActionSelect($event)"
 >
 </app-toolbar>
-<app-grid2-column-filter
+<!--<app-grid2-column-filter
   *ngIf="filterField"
   [fieldName]="filterField"
   [columnName]="filterColumnName"
@@ -49,4 +47,4 @@
   (action)="saveFilterChanges($event)"
   (cancel)="closeFilter()"
 >
-</app-grid2-column-filter>
+</app-grid2-column-filter>-->

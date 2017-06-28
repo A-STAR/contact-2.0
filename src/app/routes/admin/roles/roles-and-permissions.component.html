@@ -3,10 +3,10 @@
 <br>
 
 <app-tabstrip>
-  <app-tab title="roles.permissions.tab.title">
+  <app-tab [title]="'roles.permissions.tab.title'">
     <app-permissions></app-permissions>
   </app-tab>
-  <app-tab title="roles.permissions.tab2.title" [closable]="false">
+  <app-tab [title]="'roles.permissions.tab2.title'" [closable]="false">
     <app-permissions-tree></app-permissions-tree>
   </app-tab>
 </app-tabstrip>

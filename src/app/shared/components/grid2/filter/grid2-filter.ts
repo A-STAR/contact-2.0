@@ -31,7 +31,7 @@ export class FilterObject implements IFilterBaseObject {
 
   static create(source?: FilterObject, decorators?: { name: Function }): FilterObject {
     let filter: FilterObject = new FilterObject();
-    if (!R.isNil(source)) {
+    if (source) {
       filter = filter
         .setName(decorators.name ? decorators.name(source.name) : source.name)
         .setValue(source.value)
@@ -45,9 +45,6 @@ export class FilterObject implements IFilterBaseObject {
       }
     }
     return filter;
-  }
-
-  constructor() {
   }
 
   addFilter(filter: FilterObject): FilterObject {

@@ -69,8 +69,13 @@ ag-grid-angular {
   overflow: hidden;
   height: 100%;
 }
-.ag-scrolls .ag-header-row {
-  position: absolute;
+.ag-header-row {
+  .ag-scrolls & {
+    position: absolute;
+  }
+  &:last-child {
+    font-weight: normal;
+  }
 }
 .ag-scrolls .ag-header-container {
   position: relative;

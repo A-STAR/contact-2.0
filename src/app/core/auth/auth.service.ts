@@ -125,7 +125,7 @@ export class AuthService implements CanActivate, OnInit {
   }
 
   private getErrorMessage(message: any = null): string {
-    switch (message) {
+    switch (message.code) {
       case 'login.invalidCredentials':
         return 'validation.login.INVALID_CREDENTIALS';
       default:

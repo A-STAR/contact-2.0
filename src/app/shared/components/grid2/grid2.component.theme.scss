@@ -184,9 +184,6 @@
     margin-right: 1px;
     border: 1px solid transparent;
     border-radius: 3px;
-    -webkit-box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
-    -moz-box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
-    box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
     line-height: 0px /* normal line height, a space was appearing below the menu button */;
   }
   .ag-ltr .ag-pinned-right-header {
@@ -197,6 +194,14 @@
   }
   .ag-header-cell-menu-button:hover {
     border: 1px solid #fff;
+  }
+  .ag-floating-filter-body input {
+    border: 1px solid lightgrey;
+    border-right: 0;
+  }
+  .ag-floating-filter-button button {
+    border: 1px solid lightgrey;
+    background-color: #edf1f2;
   }
   .ag-body {
     background-color: #fff;

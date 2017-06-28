@@ -9,7 +9,7 @@ import { RowGroupCompFactory } from 'ag-grid-enterprise/main';
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
-import { Grid2ColumnFilterModule } from './filter/column/grid2-column-filter.module';
+// import { Grid2ColumnFilterModule } from './filter/column/grid2-column-filter.module';
 
 import { GridService } from '../grid/grid.service';
 
@@ -23,7 +23,7 @@ import { Grid2Component } from './grid2.component';
     ActionDialogModule,
     AgGridModule.withComponents([]),
     SelectModule,
-    Grid2ColumnFilterModule,
+    // Grid2ColumnFilterModule,
   ],
   exports: [
     Grid2Component,

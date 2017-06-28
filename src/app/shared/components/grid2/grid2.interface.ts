@@ -85,17 +85,15 @@ export interface IActionGrid2Payload {
 
 export interface IGrid2ServiceDispatcher {
   allGridColumns: Column[];
-  dispatchShowFilter(payload: IGrid2ShowFilterPayload): void;
-  dispatchCloseFilter(): void;
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
   dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void;
 }
 
 export interface IGrid2HeaderParams {
   headerHeight: number;
-  enableMenu: boolean;
+  enableMenu?: boolean;
   serviceDispatcher: IGrid2ServiceDispatcher;
-  headerColumns: GridHeaderComponent[];
+  headerColumns?: GridHeaderComponent[];
   column?: Column;
   renderer2: Renderer2;
 }
