@@ -1,11 +1,7 @@
 .ag-contact2 {
   line-height: 1.4;
-  font-family: "Fira Sans Extra Condensed", sans-serif;
   font-size: 14px;
   color: #222;
-  /* WTFIT ? */
-  /* this is for the rowGroupPanel, that appears along the top of the grid */
-  /* this is for the column drops that appear in the toolPanel */
 
   img {
     vertical-align: middle;
@@ -194,14 +190,6 @@
   }
   .ag-header-cell-menu-button:hover {
     border: 1px solid #fff;
-  }
-  .ag-floating-filter-body input {
-    border: 1px solid lightgrey;
-    border-right: 0;
-  }
-  .ag-floating-filter-button button {
-    border: 1px solid lightgrey;
-    background-color: #edf1f2;
   }
   .ag-body {
     background-color: #fff;

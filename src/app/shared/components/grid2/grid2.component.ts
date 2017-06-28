@@ -78,7 +78,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() page = 1;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
-  @Input() pageSizes =  Array.from(new Set([Grid2Component.DEFAULT_PAGE_SIZE, 100, 250, 500, 1000]))
+  @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
     .sort((x, y) => x > y ? 1 : -1);
   // NOTE: need this to override the default functionality
   @Input() remoteSorting = true;

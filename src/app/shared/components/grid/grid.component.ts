@@ -142,15 +142,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     // Define a possible height of the datatable
     // 43px - tab height,
-    // 2x15px - top & bottom padding around the grid
+    // 2x12px - top & bottom padding around the grid
     // 50px - toolbar height
     // 8px => - ?, to be identified
     if (this.styles) {
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    const toolbarHeight = this.hasToolbar ? 50 : 0;
-    const offset = 43 + 15 + 15 + toolbarHeight + 8;
+    // const toolbarHeight = this.hasToolbar ? 50 : 0;
+    const offset = 43 + 12 * 2 + 50;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }

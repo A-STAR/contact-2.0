@@ -25,7 +25,7 @@ import { TabComponent } from './tab.component';
 export class TabstripComponent implements AfterContentInit, AfterViewInit, DoCheck {
 
   @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
-  @ViewChild('ps') ps: PerfectScrollbarComponent;
+  @ViewChild(PerfectScrollbarComponent) ps: PerfectScrollbarComponent;
   isToolsVisible: boolean;
 
   constructor(

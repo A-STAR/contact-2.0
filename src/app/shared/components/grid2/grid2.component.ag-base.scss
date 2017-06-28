@@ -1,3 +1,5 @@
+@import '../../styles/app/variables.scss';
+
 ag-grid-angular {
   display: inline-block;
 }
@@ -118,6 +120,8 @@ ag-grid-angular {
   width: 25px;
   height: 19px;
   padding: 0;
+  border: 1px solid lightgrey;
+  background-color: $gray-lighter;
 }
 .ag-floating-filter-input {
   width: 100%;
@@ -621,6 +625,9 @@ ag-grid-angular {
   width: 100%;
   margin: 0;
   height: 19px;
+  border: 1px solid lightgrey;
+  border-right: 0;
+  padding: 0 4px;
 }
 .ag-floating-filter-full-body input {
   width: 100%;
