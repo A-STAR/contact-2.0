@@ -103,7 +103,7 @@ export class PermissionsComponent implements OnDestroy {
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 
-    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW').distinctUntilChanged();
+    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
 
     this.viewPermissionsSubscription = Observable.combineLatest(
       this.canViewPermissions$,

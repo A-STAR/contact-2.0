@@ -30,19 +30,19 @@ export class UserPermissionsService {
   }
 
   has(permissionName: string): Observable<boolean> {
-    return this.state.map(state => this.userHasPermission(state, permissionName));
+    return this.state.map(state => this.userHasPermission(state, permissionName)).distinctUntilChanged();
   }
 
   hasOne(permissionNames: Array<string>): Observable<boolean> {
     return this.state.map(state =>
       permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(state, permissionName), false)
-    );
+    ).distinctUntilChanged();
   }
 
   hasAll(permissionNames: Array<string>): Observable<boolean> {
     return this.state.map(state =>
       permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(state, permissionName), true)
-    );
+    ).distinctUntilChanged();
   }
 
   private userHasPermission(state: IUserPermissionsState, permissionName: string): boolean {
