@@ -97,7 +97,8 @@ export class DictComponent implements OnDestroy {
     this.dictionariesRelations$ = Observable.combineLatest(
       this.userLanguagesService.userLanguages,
       this.dictionariesService.state,
-    ).subscribe(([languages, dictionaries]) => {
+    )
+    .subscribe(([languages, dictionaries]) => {
       this.languages = languages;
       this.dictionaryTermTypes = dictionaries.dictionaryTermTypes;
     });
