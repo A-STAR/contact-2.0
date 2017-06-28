@@ -78,6 +78,12 @@ export class OrganizationsService {
     });
   }
 
+  clearOrganizations(): void {
+    return this.store.dispatch({
+      type: OrganizationsService.ORGANIZATIONS_CLEAR
+    });
+  }
+
   selectOrganization(organizationId: number): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_SELECT,
