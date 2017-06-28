@@ -75,7 +75,10 @@ export class TermsComponent implements OnDestroy {
 
   selectedEntity: ITerm;
 
-  private dictionariesService$: Subscription;
+  hasViewPermission$: Observable<boolean>;
+
+  private dictionariesServiceSubscription: Subscription;
+  private viewPermissionsSubscription: Subscription;
 
   constructor(
     private dictionariesService: DictionariesService,
@@ -83,7 +86,7 @@ export class TermsComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
+    this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.terms;
       this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
@@ -91,10 +94,25 @@ export class TermsComponent implements OnDestroy {
     });
 
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
+
+    this.viewPermissionsSubscription = Observable.combineLatest(
+      this.hasViewPermission$,
+      this.dictionariesService.state.map(state => state.selectedDictionaryCode).distinctUntilChanged()
+    )
+    .subscribe(([ hasViewPermission, currentDictionaryCode ]) => {
+      if (!hasViewPermission) {
+        this.dictionariesService.clearTerms();
+      } else if (currentDictionaryCode) {
+        this.dictionariesService.fetchTerms();
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    this.dictionariesService$.unsubscribe();
+    this.dictionariesServiceSubscription.unsubscribe();
+    this.viewPermissionsSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
@@ -130,7 +148,13 @@ export class TermsComponent implements OnDestroy {
   }
 
   onEdit(): void {
-    this.dictionariesService.setDialogEditTermAction();
+    this.userPermissionsService.has('DICT_TERM_EDIT')
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.dictionariesService.setDialogEditTermAction();
+        }
+      });
   }
 
   onSelect(term: ITerm): void {

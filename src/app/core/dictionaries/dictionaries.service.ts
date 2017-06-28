@@ -130,6 +130,12 @@ export class DictionariesService {
     });
   }
 
+  clearTerms(): void {
+    return this.store.dispatch({
+      type: DictionariesService.TERMS_CLEAR
+    });
+  }
+
   selectTerm(termId: number): void {
     return this.store.dispatch({
       type: DictionariesService.TERM_SELECT,
