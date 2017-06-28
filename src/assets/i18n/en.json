@@ -297,6 +297,9 @@
         "update": "Could not update dictionary",
         "delete": "Could not remove dictionary"
       }
+    },
+    "errors": {
+      "view": "Access to dictionaries list denied"
     }
   },
   "terms": {
