@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -17,8 +16,7 @@ import { UserConstantsService } from '../../../core/user/constants/user-constant
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
-
-import { namedValuesToSelectOptions } from '../../../core/utils';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-users',
@@ -107,14 +105,14 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
+    private valueConverterService: ValueConverterService,
   ) {
-    this.roleOptions$ = this.permissionsService.roles.map(namedValuesToSelectOptions);
+    this.roleOptions$ = this.permissionsService.roles.map(valueConverterService.valuesToOptions);
 
     this.languageOptions$ = this.userLanguagesService.languageOptions;
 

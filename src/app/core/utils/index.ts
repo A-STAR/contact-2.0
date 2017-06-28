@@ -1,5 +1,1 @@
-import { namedValuesToSelectOptions } from './select-options-converter';
-
-export {
-  namedValuesToSelectOptions
-};
+export const dummyFn = () => {};
