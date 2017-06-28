@@ -72,8 +72,11 @@ export class DictComponent implements OnDestroy {
   languages: IUserLanguage[];
   dictionaryTermTypes: ITerm[];
 
+  hasViewPermission$: Observable<boolean>;
+
   private dictionariesService$: Subscription;
   private dictionariesRelations$: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private dictionariesService: DictionariesService,
@@ -83,8 +86,6 @@ export class DictComponent implements OnDestroy {
     private entityTranslationsService: EntityTranslationsService,
     private userLanguagesService: UserLanguagesService,
   ) {
-    this.dictionariesService.fetchDictionaries();
-
     this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.dictionaries;
@@ -101,6 +102,11 @@ export class DictComponent implements OnDestroy {
       this.languages = languages;
       this.dictionaryTermTypes = dictionaries.dictionaryTermTypes;
     });
+
+    this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
+    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
+      hasViewPermission ? this.dictionariesService.fetchDictionaries() : this.dictionariesService.clearDictionaries()
+    );
   }
 
   ngOnDestroy(): void {
@@ -128,6 +134,16 @@ export class DictComponent implements OnDestroy {
   }
 
   onEdit(): void {
+    this.userPermissionsService.has('DICT_EDIT')
+      .take(1)
+      .subscribe(hasEditPermission => {
+        if (hasEditPermission) {
+          this.editHandler();
+        }
+      });
+  }
+
+  private editHandler(): void {
     this.languages = null;
     this.dictionaryTermTypes = null;
     this.selectedEntity.nameTranslations = null;
