@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
@@ -33,6 +33,8 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     keepCharPositions: true
   };
 
+  private wheelListener: Function;
+
   private locales = {
     ru: {
       // 0 = Sunday, 1 = Monday, etc.
@@ -55,7 +57,10 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     }
   };
 
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private renderer: Renderer2
+  ) {
     if (this.controlName && this.name) {
       throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
     }
@@ -67,12 +72,6 @@ export class DatePickerComponent implements OnInit, OnDestroy {
       this.toggleCalendar(false);
     }
   };
-
-  // TODO: is it possible to listen to input container scroll?
-  @HostListener('document:wheel')
-  onDocumentWheel(): void {
-    this.toggleCalendar(false);
-  }
 
   ngOnInit(): void {
     if (this.controlName && this.form.get(this.controlName).value) {
@@ -121,6 +120,10 @@ export class DatePickerComponent implements OnInit, OnDestroy {
       // TODO: is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);
     }
+
+    if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
+      this.removeWheelListener();
+    }
   }
 
   private positionDropdown(): void {
@@ -135,5 +138,19 @@ export class DatePickerComponent implements OnInit, OnDestroy {
       top: `${top}px`,
       left: `${left}px`
     };
+
+    this.addWheelListener();
+  }
+
+  private addWheelListener(): void {
+    this.wheelListener = this.renderer.listen(document, 'wheel', () => {
+      this.toggleCalendar(false);
+    });
+  }
+
+  private removeWheelListener(): void {
+    if (this.wheelListener) {
+      this.wheelListener();
+    }
   }
 }
