@@ -28,6 +28,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
   userPhotoUrl$: Observable<string>;
 
+  formData: any;
+
   private canEditUser = false;
   private canEditUserRole = false;
 
@@ -59,6 +61,19 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       this.passwordMinLength.valueN,
       this.passwordComplexity.valueB
     );
+
+    this.formData = !this.editedEntity ?
+      {
+        roleId: 1,
+        languageId: 1,
+      } :
+      {
+        ...this.editedEntity,
+        roleId: this.editedEntity.roleId,
+        startWorkDate: this.valueConverterService.formatDate(this.editedEntity.startWorkDate),
+        endWorkDate: this.valueConverterService.formatDate(this.editedEntity.endWorkDate),
+        languageId: this.editedEntity.languageId,
+      };
 
     super.ngOnInit();
   }
@@ -126,22 +141,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
         title: 'users.edit.details'
       }
     ] as Array<IDynamicFormItem>;
-  }
-
-  get formData(): any {
-    if (!this.editedEntity) {
-      return {
-        roleId: 1,
-        languageId: 1,
-      };
-    }
-    return {
-      ...this.editedEntity,
-      roleId: this.editedEntity.roleId,
-      startWorkDate: this.valueConverterService.formatDate(this.editedEntity.startWorkDate),
-      endWorkDate: this.valueConverterService.formatDate(this.editedEntity.endWorkDate),
-      languageId: this.editedEntity.languageId,
-    };
   }
 
   toSubmittedValues(value: IUser): any {
