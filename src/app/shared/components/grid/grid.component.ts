@@ -142,11 +142,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   ngOnChanges(changes: any): void {
     if (changes.emptyMessage) {
-      const gridMessagesKey = 'grid.messages';
-      const translationKeys = [gridMessagesKey];
       if (changes.emptyMessage.currentValue) {
         this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
       } else {
+        // TODO(d.maltsev): code duplication
+        const gridMessagesKey = 'grid.messages';
+        const translationKeys = [gridMessagesKey];
         this.translate.get(translationKeys)
           .take(1)
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
