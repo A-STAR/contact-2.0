@@ -2,6 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/debounceTime';
 
 import { GridService } from './shared/components/grid/grid.service';
 import { SettingsService } from './core/settings/settings.service';
@@ -14,6 +15,8 @@ import { SettingsService } from './core/settings/settings.service';
 export class AppComponent {
   static USER_LANGUAGE = 'user/language';
 
+  static LOADER_DEBOUNCE_INTERVAL = 250;
+
   toasterConfig = new ToasterConfig({
     animationClass: 'flyLeft',
     limit: 10,
@@ -21,12 +24,14 @@ export class AppComponent {
     positionClass: 'toast-bottom-right',
   });
 
+  private _isLoading$: Observable<boolean>;
+
   @HostBinding('class.aside-collapsed') get isCollapsed(): boolean {
     return this.settings.layout.isCollapsed as boolean;
   };
 
-  get isLoading$(): Observable<boolean> {
-    return this.gridService.isLoading$;
+  get isLoading$(): any {
+    return this._isLoading$;
   }
 
   constructor(
@@ -40,5 +45,7 @@ export class AppComponent {
     // and reset after successful authentication
     translateService.setDefaultLang(language);
     translateService.use(language).subscribe();
+
+    this._isLoading$ = this.gridService.isLoading$.debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL);
   }
 }
