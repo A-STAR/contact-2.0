@@ -1,0 +1,68 @@
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+
+import { IDebtorsFetchResponse } from './debtors.interface';
+
+import { DebtorsService } from './debtors.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+
+@Injectable()
+export class DebtorsEffects {
+
+  @Effect()
+  fetchDebtor$ = this.actions
+    .ofType(DebtorsService.DEBTORS_FETCH)
+    .switchMap((action: Action) => {
+      return this.readDebtors()
+        .map(response => ({
+          type: DebtorsService.DEBTORS_FETCH_SUCCESS,
+          payload: response.debtors
+        }))
+        .catch(() => {
+          this.notificationsService.error('debtors.messages.errors.fetch');
+          return null;
+        });
+    });
+
+  constructor(
+    private actions: Actions,
+    private notificationsService: NotificationsService,
+    private gridService: GridService,
+  ) {}
+
+  private readDebtors(): Observable<IDebtorsFetchResponse> {
+    // TODO(a.poterenko) STUB
+    return new Observable(observer => {
+      setTimeout(() => {
+        observer.next(
+          {
+            success: true,
+            debtors: [
+              {
+                id: 23,
+                firstName: 'Pavel',
+                middleName: 'Sergeevich',
+                lastName: 'Smirnov',
+                type: 1,
+                responsible: 'System administrator',
+                reward: '3180.78'
+              },
+              {
+                id: 24,
+                firstName: 'Alexey',
+                middleName: 'Pavlovich',
+                lastName: 'Mironov',
+                type: 1,
+                responsible: 'System administrator',
+                reward: '4994.11'
+              }
+            ]
+          }
+        );
+      }, 1000);
+    });
+  }
+}

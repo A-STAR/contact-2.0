@@ -540,6 +540,12 @@
       "title": "Доп. инфо о долге"
     }
   },
+  "debtors": {
+    "grid": {
+      "id": "Ид",
+      "fullName": "ФИО"
+    }
+  },
   "organizations": {
     "title": "Структура предприятия",
     "organizations": {
