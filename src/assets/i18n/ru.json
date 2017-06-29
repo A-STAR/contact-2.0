@@ -543,7 +543,11 @@
   "debtors": {
     "grid": {
       "id": "Ид",
-      "fullName": "ФИО"
+      "fullName": "ФИО",
+      "debtId": "Ид долга",
+      "type": "Тип должника",
+      "product": "Продукт",
+      "city": "Город"
     }
   },
   "organizations": {

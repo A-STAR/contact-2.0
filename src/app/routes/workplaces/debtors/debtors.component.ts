@@ -28,11 +28,20 @@ export class DebtorsComponent {
 
   columns: Array<IGridColumn> = [
     { prop: 'id', maxWidth: 80 },
+    { prop: 'debtId', maxWidth: 130 },
     { prop: 'fullName' },
+    { prop: 'type', maxWidth: 180},
+    { prop: 'product' },
+    { prop: 'city', maxWidth: 140 }
   ];
 
   renderers: IRenderer = {
     fullName: toFullName,
+    type: [
+      // TODO(a.poterenko) STUB
+      { value: 1, label: 'Physical person' },
+      { value: 2, label: 'Juridical person' },
+    ]
   };
 
   toolbarItems: Array<IToolbarItem> = [

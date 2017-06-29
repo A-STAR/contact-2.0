@@ -543,7 +543,11 @@
   "debtors": {
     "grid": {
       "id": "Id",
-      "fullName": "Full name"
+      "fullName": "Full name",
+      "debtId": "Debt id",
+      "type": "Debtor type",
+      "product": "Product",
+      "city": "City"
     }
   },
   "organizations": {
