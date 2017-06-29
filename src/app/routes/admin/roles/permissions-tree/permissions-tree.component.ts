@@ -1,12 +1,19 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
+import 'rxjs/add/operator/merge';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPermissionRole } from '../permissions.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-
+import {
+  IToolbarItem,
+  ToolbarItemTypeEnum
+} from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
+
 import { PermissionsTreeService } from './permissions-tree.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -21,8 +28,17 @@ export class PermissionsTreeComponent implements OnDestroy {
   selection: ITreeNode[] = [];
   value: ITreeNode[];
 
-  toolbarActions: IToolbarAction[] = [
-    { text: 'toolbar.action.save', type: ToolbarActionTypeEnum.SAVE, permission: 'GUI_TREE_EDIT' },
+  private changes: Subject<boolean> = new BehaviorSubject(false);
+
+  toolbarActions: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.onSaveChanges(),
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('GUI_TREE_EDIT'),
+        this.changes
+      ).map(([rights, changes]) => rights && changes)
+    },
   ];
 
   private currentRole: IPermissionRole;
@@ -49,17 +65,12 @@ export class PermissionsTreeComponent implements OnDestroy {
     this.permissionsTreeService.save(this.currentRole, this.getRemovedItems, this.getAddedItems)
       .subscribe(() => {
         this.initSelectionCopy();
-        this.refreshToolbar();
       });
   }
 
   onSelectionChange(selection: ITreeNode[]): void {
     this.selection = selection;
-    this.refreshToolbar();
-  }
-
-  private refreshToolbar(): void {
-    this.toolbarActions[0].visible = !!this.getRemovedItems.length || !!this.getAddedItems.length;
+    this.changes.next(!!this.getRemovedItems.length || !!this.getAddedItems.length);
   }
 
   private refreshTree(): void {
@@ -67,7 +78,6 @@ export class PermissionsTreeComponent implements OnDestroy {
       this.value = null;
       this.selection = [];
       this.initialSelection = [];
-      this.refreshToolbar();
       return;
     }
     this.permissionsTreeService.load(this.currentRole, this.selection)
