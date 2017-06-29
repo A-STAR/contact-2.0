@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, animate, state, style, transition, trigger } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { Observable } from 'rxjs/Observable';
@@ -10,12 +10,22 @@ import { SettingsService } from './core/settings/settings.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    trigger(
+      'isLoading', [
+        state('void', style({ opacity: 0 })),
+        state('*', style({ opacity: 1 })),
+        transition(':enter', animate('100ms ease')),
+        transition(':leave', animate('100ms ease')),
+      ]
+    )
+  ]
 })
 export class AppComponent {
   static USER_LANGUAGE = 'user/language';
 
-  static LOADER_DEBOUNCE_INTERVAL = 250;
+  static LOADER_DEBOUNCE_INTERVAL = 200;
 
   toasterConfig = new ToasterConfig({
     animationClass: 'flyLeft',
