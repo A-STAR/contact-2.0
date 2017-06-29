@@ -37,3 +37,7 @@ export interface IGridColumn {
 export interface IRenderer {
   [key: string]: Function | Array<any>;
 }
+
+export interface IMessages {
+  [key: string]: string;
+}

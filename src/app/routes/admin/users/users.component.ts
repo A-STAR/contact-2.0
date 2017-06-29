@@ -98,6 +98,8 @@ export class UsersComponent implements OnDestroy {
 
   users$: Observable<Array<IUser>>;
 
+  emptyMessage$: Observable<string>;
+
   private usersSubscription: Subscription;
   private optionsSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
@@ -149,6 +151,8 @@ export class UsersComponent implements OnDestroy {
     );
 
     this.users$ = this.usersService.state.map(state => state.users);
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
   }
 
   ngOnDestroy(): void {

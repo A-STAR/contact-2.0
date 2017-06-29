@@ -21,24 +21,20 @@
   (cancel)="cancelAction()">
 </app-user-edit>
 
-<app-restricted-view
-  message="users.errors.view"
-  [canView]="hasViewPermission$"
->
-  <app-toolbar-2
-    [items]="toolbarItems">
-  </app-toolbar-2>
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
 
-  <app-grid
-    selectionType="single"
-    [autoLoad]="false"
-    [columns]="columns"
-    [columnTranslationKey]="'users'"
-    [dataSource]="dataSource"
-    [filter]="filter"
-    [rows]="users$ | async"
-    (onDblClick)="onEdit($event)"
-    (onSelect)="onSelect($event)"
-  >
-  </app-grid>
-</app-restricted-view>
+<app-grid
+  selectionType="single"
+  [autoLoad]="false"
+  [columns]="columns"
+  [columnTranslationKey]="'users'"
+  [dataSource]="dataSource"
+  [emptyMessage]="emptyMessage$ | async"
+  [filter]="filter"
+  [rows]="users$ | async"
+  (onDblClick)="onEdit($event)"
+  (onSelect)="onSelect($event)"
+>
+</app-grid>

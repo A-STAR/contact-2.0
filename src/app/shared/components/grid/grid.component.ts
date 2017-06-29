@@ -6,6 +6,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -18,7 +19,7 @@ import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDataSource, IParameters, TSelectionType } from './grid.interface';
+import { IDataSource, IMessages, IParameters, TSelectionType } from './grid.interface';
 import { IToolbarAction } from '../toolbar/toolbar.interface';
 
 import { GridService } from './grid.service';
@@ -30,7 +31,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
   styleUrls: ['./grid.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   // @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
@@ -39,6 +40,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() columnTranslationKey: string;
   @Input() dataSource: IDataSource;
   @Input() editPermission: string;
+  @Input() emptyMessage: string;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
@@ -61,7 +63,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
   clickDebouncer: Subject<{ type: string; row: any}>;
   debouncerSub: Subscription;
   element: HTMLElement;
-  messages: object = {};
+  messages: IMessages = {};
   selected: Array<any> = [];
   subscription: EventEmitter<any>;
 
@@ -109,11 +111,18 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       translationKeys.push(this.columnTranslationKey);
     }
 
+    if (this.emptyMessage) {
+      translationKeys.push(this.emptyMessage);
+    }
+
     this.translate.get(translationKeys)
       .take(1)
       .subscribe(
         (translation) => {
           this.messages = translation[gridMessagesKey];
+          if (this.emptyMessage) {
+            this.messages.emptyMessage = translation[this.emptyMessage];
+          }
           if (this.columnTranslationKey) {
             this.translateColumns(translation[this.columnTranslationKey].grid);
           }
@@ -128,6 +137,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(event => {
         const { translations } = event;
         this.messages = translations.grid.messages;
+        if (this.emptyMessage) {
+          this.messages.emptyMessage = this.translate.instant(this.emptyMessage);
+        }
+
         // translate column names
         if (this.columnTranslationKey) {
           // IMPORTANT: the key 'grid' should be present in translation files for every grid component
@@ -137,6 +150,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnDestroy {
           this.translateColumns(columnTranslations);
         }
       });
+  }
+
+  ngOnChanges(changes: any): void {
+    if (changes.emptyMessage && changes.emptyMessage.currentValue) {
+      this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+    }
   }
 
   ngAfterViewInit(): void {
