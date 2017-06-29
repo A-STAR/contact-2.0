@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 import { Headers } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
 import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
@@ -23,7 +22,6 @@ export class MenuService {
   private guiObjectIds: { [key: string]: number };
 
   constructor(
-    private http: AuthHttp,
     private gridService: GridService,
     private router: Router
   ) {

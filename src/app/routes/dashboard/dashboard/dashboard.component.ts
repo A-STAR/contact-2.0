@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
+import { HttpService } from '../../../core/http/http.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private colors: ColorsService,
-    private http: AuthHttp,
+    private http: HttpService,
     private notificationsService: NotificationsService,
   ) { }
 
