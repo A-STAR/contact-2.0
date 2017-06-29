@@ -1,7 +1,9 @@
 import { Component, HostBinding } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
+import { Observable } from 'rxjs/Observable';
 
+import { GridService } from './shared/components/grid/grid.service';
 import { SettingsService } from './core/settings/settings.service';
 
 @Component({
@@ -23,9 +25,15 @@ export class AppComponent {
     return this.settings.layout.isCollapsed as boolean;
   };
 
+  get isLoading$(): Observable<boolean> {
+    return this.gridService.isLoading$;
+  }
+
   constructor(
+    private gridService: GridService,
     public settings: SettingsService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService
+  ) {
     // set default to 'en' if no language is found
     const language = localStorage.getItem(AppComponent.USER_LANGUAGE) || 'en';
     // NOTE: the default language is then taken from the user profile
