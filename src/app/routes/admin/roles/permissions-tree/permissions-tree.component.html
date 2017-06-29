@@ -1,10 +1,10 @@
 <ng-container *ngIf="hasViewPermission | async">
-  <app-toolbar
+  <app-toolbar-2
     class="app-toolbar"
-    [actions]="toolbarActions"
+    [items]="toolbarActions"
     (actionClick)="onSaveChanges()"
   >
-  </app-toolbar>
+  </app-toolbar-2>
   <app-tree
     *ngIf="value"
     [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
