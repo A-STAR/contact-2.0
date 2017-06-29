@@ -21,6 +21,11 @@ export function debtorsReducer(state: IDebtorsState = DEFAULT_STATE, action: Act
         ...state,
         selectedDebtor: action.payload
       };
+    case DebtorsService.DEBTORS_FETCH:
+      return {
+        ...state,
+        selectedDebtor: null
+      };
     case DebtorsService.DEBTORS_FETCH_SUCCESS:
       return {
         ...state,
