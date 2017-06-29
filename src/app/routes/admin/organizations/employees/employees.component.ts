@@ -94,6 +94,8 @@ export class EmployeesComponent implements OnDestroy {
 
   employees$: Observable<Array<IEmployee>>;
 
+  emptyMessage$: Observable<string>;
+
   private organizationsStateSubscription: Subscription;
 
   private viewPermissionSubscription: Subscription;
@@ -136,6 +138,8 @@ export class EmployeesComponent implements OnDestroy {
     });
 
     this.employees$ = this.organizationsService.state.map(state => state.employees);
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {

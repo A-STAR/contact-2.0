@@ -15,6 +15,7 @@ import {
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,7 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() columnTranslationKey: string;
   @Input() dataSource: IDataSource;
   @Input() editPermission: string;
-  @Input() emptyMessage: string;
+  @Input() emptyMessage: string = null;
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
@@ -65,7 +66,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   element: HTMLElement;
   messages: IMessages = {};
   selected: Array<any> = [];
-  subscription: EventEmitter<any>;
+  subscription: Subscription;
 
   @Input() filter(data: Array<any>): Array<any> {
     return data;
@@ -111,50 +112,45 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       translationKeys.push(this.columnTranslationKey);
     }
 
-    if (this.emptyMessage) {
+    if (this.emptyMessage !== null) {
       translationKeys.push(this.emptyMessage);
     }
 
-    this.translate.get(translationKeys)
-      .take(1)
-      .subscribe(
-        (translation) => {
-          this.messages = translation[gridMessagesKey];
-          if (this.emptyMessage) {
-            this.messages.emptyMessage = translation[this.emptyMessage];
-          }
-          if (this.columnTranslationKey) {
-            this.translateColumns(translation[this.columnTranslationKey].grid);
-          }
-        },
-        // TODO: log out the error
-        error => console.error(error)
-      );
+    this.subscription = Observable.merge(
+      this.translate.get(translationKeys)
+        .take(1),
+      this.translate.onLangChange
+        .map(data => data.translations)
+        .map(translations => translationKeys.reduce((acc, key) => {
+          acc[key] = key.split('.').reduce((a, prop) => a[prop], translations);
+          return acc;
+        }, {}))
+    ).subscribe(translations => {
+      // TODO(d.maltsev):
+      // Why `this.messages = translations[gridMessagesKey]` doesn't work?
+      this.messages = { ...translations[gridMessagesKey] };
+      if (this.columnTranslationKey) {
+        this.translateColumns(translations[this.columnTranslationKey].grid);
+      }
+      if (this.emptyMessage) {
+        this.messages.emptyMessage = translations[this.emptyMessage];
+      }
+    });
 
     this.selectionType = this.selectionType || 'multi';
-
-    this.subscription = this.translate.onLangChange
-      .subscribe(event => {
-        const { translations } = event;
-        this.messages = translations.grid.messages;
-        if (this.emptyMessage) {
-          this.messages.emptyMessage = this.translate.instant(this.emptyMessage);
-        }
-
-        // translate column names
-        if (this.columnTranslationKey) {
-          // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-          const columnTranslations = this.columnTranslationKey
-            .split('.')
-            .reduce((acc, prop) => acc[prop], translations).grid;
-          this.translateColumns(columnTranslations);
-        }
-      });
   }
 
   ngOnChanges(changes: any): void {
-    if (changes.emptyMessage && changes.emptyMessage.currentValue) {
-      this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+    if (changes.emptyMessage) {
+      const gridMessagesKey = 'grid.messages';
+      const translationKeys = [gridMessagesKey];
+      if (changes.emptyMessage.currentValue) {
+        this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+      } else {
+        this.translate.get(translationKeys)
+          .take(1)
+          .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
+      }
     }
   }
 
