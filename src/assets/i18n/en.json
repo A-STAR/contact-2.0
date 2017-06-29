@@ -139,6 +139,9 @@
         "fetch": "Could not fetch the constants",
         "update": "Could not update the constant"
       }
+    },
+    "errors": {
+      "view": "Access to constants list denied"
     }
   },
   "actionsLog": {
