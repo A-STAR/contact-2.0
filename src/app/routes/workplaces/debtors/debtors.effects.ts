@@ -48,7 +48,10 @@ export class DebtorsEffects {
                 lastName: 'Smirnov',
                 type: 1,
                 responsible: 'System administrator',
-                reward: '3180.78'
+                reward: '3180.78',
+                debtId: 19,
+                product: 'Autoexpress',
+                city: 'London'
               },
               {
                 id: 24,
@@ -57,7 +60,10 @@ export class DebtorsEffects {
                 lastName: 'Mironov',
                 type: 1,
                 responsible: 'System administrator',
-                reward: '4994.11'
+                reward: '4994.11',
+                debtId: 20,
+                product: 'Autoexpress',
+                city: 'London'
               }
             ]
           }

@@ -66,5 +66,6 @@ export interface IDebtor {
   type: number;
   responsible: string;
   reward: number;
+  product: string;
   generalInformation: IDebtorGeneralInformation;
 }

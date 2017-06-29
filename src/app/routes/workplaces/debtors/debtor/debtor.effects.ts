@@ -74,8 +74,8 @@ export class DebtorCardEffects {
         observer.next(
           {
             success: true,
-            debtor: {
-              id: id,
+            debtor: id === 23 ? {
+              id: 23,
               firstName: 'Pavel',
               middleName: 'Sergeevich',
               lastName: 'Smirnov',
@@ -83,6 +83,15 @@ export class DebtorCardEffects {
               responsible: 'System administrator',
               reward: '3180.78'
             }
+              : {
+                id: 24,
+                firstName: 'Alexey',
+                middleName: 'Pavlovich',
+                lastName: 'Mironov',
+                type: 1,
+                responsible: 'System administrator',
+                reward: '4994.11'
+              }
           }
         );
       }, 1000);
