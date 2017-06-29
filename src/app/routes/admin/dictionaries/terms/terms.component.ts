@@ -77,6 +77,8 @@ export class TermsComponent implements OnDestroy {
 
   hasViewPermission$: Observable<boolean>;
 
+  emptyMessage$: Observable<string>;
+
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
 
@@ -108,6 +110,8 @@ export class TermsComponent implements OnDestroy {
         this.dictionariesService.fetchTerms();
       }
     });
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'terms.errors.view');
   }
 
   ngOnDestroy(): void {

@@ -31,11 +31,12 @@
 
 <app-grid
   selectionType="single"
-  [styles]="{height: '200px'}"
-  [columns]="columns"
   [autoLoad]="false"
+  [columns]="columns"
   [columnTranslationKey]="'terms'"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="rows"
+  [styles]="{height: '200px'}"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

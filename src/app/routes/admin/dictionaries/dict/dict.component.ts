@@ -74,6 +74,8 @@ export class DictComponent implements OnDestroy {
 
   hasViewPermission$: Observable<boolean>;
 
+  emptyMessage$: Observable<string>;
+
   private dictionariesService$: Subscription;
   private dictionariesRelations$: Subscription;
   private viewPermissionSubscription: Subscription;
@@ -108,6 +110,8 @@ export class DictComponent implements OnDestroy {
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
       hasViewPermission ? this.dictionariesService.fetchDictionaries() : this.dictionariesService.clearDictionaries()
     );
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'dictionaries.errors.view');
   }
 
   ngOnDestroy(): void {
