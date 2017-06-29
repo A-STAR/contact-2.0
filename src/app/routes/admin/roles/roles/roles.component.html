@@ -29,19 +29,18 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-restricted-view
-  message="roles.roles.errors.view"
-  [canView]="hasRoleViewPermission$"
->
-  <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
-  <app-grid
-    [autoLoad]="false"
-    [columns]="columns"
-    [columnTranslationKey]="'roles.permissions'"
-    [rows]="roles$ | async"
-    [selectionType]="'single'"
-    [styles]="{height: '200px'}"
-    (onDblClick)="onEdit()"
-    (onSelect)="onSelect($event)">
-  </app-grid>
-</app-restricted-view>
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  [autoLoad]="false"
+  [columns]="columns"
+  [columnTranslationKey]="'roles.permissions'"
+  [rows]="roles$ | async"
+  [selectionType]="'single'"
+  [styles]="{height: '200px'}"
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)">
+</app-grid>

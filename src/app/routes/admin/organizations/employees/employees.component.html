@@ -23,23 +23,18 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-restricted-view
-  message="organizations.employees.errors.view"
-  [canView]="hasViewPermission$"
->
-  <app-toolbar-2
-    class="bordered"
-    [items]="toolbarItems">
-  </app-toolbar-2>
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
 
-  <app-grid
-    class="flat"
-    [autoLoad]="false"
-    [columns]="columns"
-    [columnTranslationKey]="'organizations.employees'"
-    [rows]="employees$ | async"
-    selectionType="single"
-    (onDblClick)="onEdit()"
-    (onSelect)="onSelect($event)">
-  </app-grid>
-</app-restricted-view>
+<app-grid
+  class="flat"
+  [autoLoad]="false"
+  [columns]="columns"
+  [columnTranslationKey]="'organizations.employees'"
+  [rows]="employees$ | async"
+  selectionType="single"
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)">
+</app-grid>
