@@ -90,14 +90,13 @@ export class EmployeesComponent implements OnDestroy {
   // TODO(d.maltsev): type
   employeeRoleOptions$: Observable<Array<any>>;
 
-  hasViewPermission$: Observable<boolean>;
-
   employees$: Observable<Array<IEmployee>>;
 
   emptyMessage$: Observable<string>;
 
-  private organizationsStateSubscription: Subscription;
+  private hasViewPermission$: Observable<boolean>;
 
+  private organizationsStateSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(

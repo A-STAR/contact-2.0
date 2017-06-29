@@ -94,11 +94,11 @@ export class UsersComponent implements OnDestroy {
   roleOptions$: Observable<any>;
   languageOptions$: Observable<Array<IUserLanguageOption>>;
 
-  hasViewPermission$: Observable<boolean>;
-
   users$: Observable<Array<IUser>>;
 
   emptyMessage$: Observable<string>;
+
+  private hasViewPermission$: Observable<boolean>;
 
   private usersSubscription: Subscription;
   private optionsSubscription: Subscription;
