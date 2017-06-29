@@ -488,56 +488,56 @@
         }
       },
       "addressesTab": {
-        "title": "Адреса"
+        "title": "Addresses"
       },
       "emailTab": {
-        "title": "Эл. почта"
+        "title": "Email"
       }
     },
     "debtsTab": {
-      "title": "Долги"
+      "title": "Debts"
     },
     "propertyTab": {
-      "title": "Имущество"
+      "title": "Property"
     },
     "guarantorsTab": {
-      "title": "Поручители"
+      "title": "Guarantors"
     },
     "contactsTab": {
-      "title": "Контакты"
+      "title": "Contacts"
     },
     "planningTab": {
-      "title": "Планирование"
+      "title": "Planning"
     },
     "documentationTab": {
-      "title": "Документы"
+      "title": "Documents"
     },
     "accountsTab": {
-      "title": "Счета"
+      "title": "Accounts"
     },
     "tasksTab": {
-      "title": "Задачи"
+      "title": "Tasks"
     },
     "workHistoryTab": {
-      "title": "История работы (полная)"
+      "title": "Work history (full)"
     },
     "actionLogTab": {
-      "title": "Лог действий"
+      "title": "Actions log"
     },
     "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
+      "title": "Arbitrary attributes"
     },
     "commentTab": {
-      "title": "Комментарий"
+      "title": "Comments"
     },
     "promotionsTab": {
-      "title": "Акции"
+      "title": "Promotions"
     },
     "socialNetworksTab": {
-      "title": "Социальные сети"
+      "title": "Social networks"
     },
     "extrasDebtInfoTab": {
-      "title": "Доп. инфо о долге"
+      "title": "Debt info"
     }
   },
   "debtors": {
