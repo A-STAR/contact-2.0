@@ -297,6 +297,9 @@
         "update": "Could not update dictionary",
         "delete": "Could not remove dictionary"
       }
+    },
+    "errors": {
+      "view": "Access to dictionaries list denied"
     }
   },
   "terms": {
@@ -332,6 +335,9 @@
         "update": "Could not update dictionary term",
         "delete": "Could not remove dictionary term"
       }
+    },
+    "errors": {
+      "view": "Access to dictionary terms list denied"
     }
   },
   "roles": {
@@ -558,6 +564,9 @@
           "update": "Could not update organization",
           "delete": "Could not delete organization"
         }
+      },
+      "errors": {
+        "view": "Access to organizations list denied"
       }
     },
     "employees": {
@@ -591,6 +600,9 @@
           "update": "Could not update the employee",
           "delete": "Could not delete the employee"
         }
+      },
+      "errors": {
+        "view": "Access to employees list denied"
       }
     }
   },

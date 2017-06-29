@@ -147,19 +147,6 @@ export class OrganizationsEffects {
     });
 
   @Effect()
-  selectOrganization$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_SELECT)
-    .switchMap(action => {
-      return action.payload.organizationId ?
-        Observable.of({
-          type: OrganizationsService.EMPLOYEES_FETCH
-        }) :
-        Observable.of({
-          type: OrganizationsService.EMPLOYEES_CLEAR
-        });
-    });
-
-  @Effect()
   fetchEmployees$ = this.actions
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)

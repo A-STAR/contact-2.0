@@ -32,18 +32,24 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2
-  [items]="toolbarItems">
-</app-toolbar-2>
+<app-restricted-view
+  message="dictionaries.errors.view"
+  [canView]="hasViewPermission$"
+>
 
-<app-grid
-  selectionType="single"
-  [autoLoad]="false"
-  [styles]="{height: '200px'}"
-  [columns]="columns"
-  [columnTranslationKey]="'dictionaries'"
-  [editPermission]="'DICT_EDIT'"
-  [rows]="rows"
-  (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  <app-toolbar-2 class="bordered"
+    [items]="toolbarItems">
+  </app-toolbar-2>
+
+  <app-grid
+    selectionType="single"
+    [autoLoad]="false"
+    [styles]="{height: '200px'}"
+    [columns]="columns"
+    [columnTranslationKey]="'dictionaries'"
+    [editPermission]="'DICT_EDIT'"
+    [rows]="rows"
+    (onDblClick)="onEdit()"
+    (onSelect)="onSelect($event)">
+  </app-grid>
+</app-restricted-view>

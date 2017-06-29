@@ -1,9 +1,3 @@
-<ng-container *ngIf="canDictionariesShow | async">
-  <app-dict></app-dict>
-  <br>
-  <app-terms></app-terms>
-</ng-container>
-
-<div class="access-denied-offset" *ngIf="!canDictionariesShow | async">
-  {{ 'dictionaries.access_denied' | translate }}
-</div>
+<app-dict></app-dict>
+<br>
+<app-terms></app-terms>

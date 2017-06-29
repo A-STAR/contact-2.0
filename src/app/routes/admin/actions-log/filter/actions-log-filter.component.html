@@ -71,7 +71,7 @@
           </app-action-dialog>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-5">
         <div class="row">
           <label class="col-md-12">
             {{ actionTypesControl.label | translate }}
@@ -105,11 +105,24 @@
           </app-action-dialog>
         </div>
       </div>
+      <div class="col-md-1">
+        <div class="row">
+          <label class="col-md-12">
+            &nbsp;
+          </label>
+          <button class="btn btn-default search-button" (click)="onSearch()">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <span>
+              Search
+            </span>
+          </button>
+        </div>
+        <!--<app-toolbar
+          [actions]="toolbarActions"
+          [actionAlign]="'right'"
+          (actionClick)="onSearch()">
+        </app-toolbar>-->
+      </div>
     </div>
   </form>
-  <app-toolbar
-    [actions]="toolbarActions"
-    [actionAlign]="'right'"
-    (actionClick)="onSearch()">
-  </app-toolbar>
 </div>

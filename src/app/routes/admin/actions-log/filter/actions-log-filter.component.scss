@@ -1,5 +1,5 @@
 .log-filter-form {
-  padding: 20px;
+  padding: 0;
 }
 
 :host {
@@ -8,4 +8,11 @@
 
 :host /deep/ ul.app-toolbar {
   padding-right: 10px;
+  border: 0;
+  background-color: inherit;
+}
+
+.search-button {
+  font-size: 14px;
+  border-color: #dde6e9;
 }
