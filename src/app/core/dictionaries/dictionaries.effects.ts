@@ -30,10 +30,9 @@ export class DictionariesEffects {
             dictionaries: response.dictNames
           }
         }))
-        .catch(() => {
-          this.notificationsService.error('dictionaries.messages.errors.fetch');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('dictionaries.messages.errors.fetch')
+        ]));
     });
 
   @Effect()
@@ -62,10 +61,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('dictionaries.messages.errors.fetch');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('dictionaries.messages.errors.create')
+        ]));
     });
 
   @Effect()
@@ -89,10 +87,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('dictionaries.messages.errors.fetch');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('dictionaries.messages.errors.update')
+        ]));
     });
 
   @Effect()
@@ -113,10 +110,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('dictionaries.messages.errors.fetch');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('dictionaries.messages.errors.delete')
+        ]));
     });
 
   @Effect()
@@ -145,10 +141,9 @@ export class DictionariesEffects {
           }
         };
       })
-      .catch(() => {
-        this.notificationsService.error('terms.messages.errors.fetch');
-        return null;
-      });
+      .catch(() => ([
+        this.notificationsService.createErrorAction('terms.messages.errors.fetch')
+      ]));
     });
 
   @Effect()
@@ -179,10 +174,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('terms.messages.errors.create');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('terms.messages.errors.create')
+        ]));
     });
 
   @Effect()
@@ -207,10 +201,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('terms.messages.errors.update');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('terms.messages.errors.update')
+        ]));
     });
 
   @Effect()
@@ -231,10 +224,9 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('terms.messages.errors.delete');
-          return null;
-        });
+        .catch(() => ([
+          this.notificationsService.createErrorAction('terms.messages.errors.delete')
+        ]));
     });
 
   constructor(
