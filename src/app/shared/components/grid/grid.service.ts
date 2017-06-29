@@ -24,7 +24,9 @@ export class GridService {
   ) {}
 
   get isLoading$(): Observable<boolean> {
-    return this.nRequests$.map(n => n > 0);
+    return this.nRequests$
+      .map(n => n > 0)
+      .distinctUntilChanged();
   }
 
   localRequest(): GridService {
