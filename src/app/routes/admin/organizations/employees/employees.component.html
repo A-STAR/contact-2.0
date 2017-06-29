@@ -33,6 +33,7 @@
   [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'organizations.employees'"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="employees$ | async"
   selectionType="single"
   (onDblClick)="onEdit()"
