@@ -1,12 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import { IDebtorsState } from './debtors.interface';
-
-import { DebtorService } from './debtor/debtor.service';
 import {
   IDebtorGeneralInformation,
   IDebtorGeneralInformationPhonesPayload
 } from './debtor/debtor.interface';
+
+import { DebtorsService } from './debtors.service';
+import { DebtorService } from './debtor/debtor.service';
 
 const DEFAULT_STATE: IDebtorsState = {
   debtors: [],
@@ -15,6 +16,16 @@ const DEFAULT_STATE: IDebtorsState = {
 
 export function debtorsReducer(state: IDebtorsState = DEFAULT_STATE, action: Action): IDebtorsState {
   switch (action.type) {
+    case DebtorsService.DEBTOR_SELECT:
+      return {
+        ...state,
+        selectedDebtor: action.payload
+      };
+    case DebtorsService.DEBTORS_FETCH_SUCCESS:
+      return {
+        ...state,
+        debtors: action.payload
+      };
     case DebtorService.DEBTOR_FETCH:
       return {
         ...state,

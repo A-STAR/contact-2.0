@@ -7,5 +7,11 @@ export interface ISelectedDebtors {
 export interface IDebtorsState {
   debtors: IDebtor[];
   selectedDebtors: ISelectedDebtors;
+  selectedDebtor?: IDebtor;
   currentDebtor?: number;
+}
+
+export interface IDebtorsFetchResponse {
+  success: boolean;
+  debtors: IDebtor[];
 }

@@ -9,16 +9,11 @@ import { DebtorService } from './debtor.service';
 
 import { DebtorComponent } from './debtor.component';
 import { DebtorGeneralInformationComponent } from './general-information/debtor-general-information.component';
-import { DebtorGeneralInformationPhonesComponent } from "./general-information/phones/debtor-general-information-phones.component";
-
-const routes: Routes = [
-  { path: ':id', component: DebtorComponent, resolve: { debtor: DebtorResolver } },
-];
+import { DebtorGeneralInformationPhonesComponent } from './general-information/phones/debtor-general-information-phones.component';
 
 @NgModule({
   imports: [
     EffectsModule.run(DebtorCardEffects),
-    RouterModule.forChild(routes),
     SharedModule,
   ],
   declarations: [
