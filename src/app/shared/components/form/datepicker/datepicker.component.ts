@@ -1,18 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  HostListener,
-  Input,
-  Output,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  Renderer2
-} from '@angular/core';
+import { Component, ElementRef, forwardRef, HostListener, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -29,55 +19,46 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   ]
 })
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() language = 'en';
-
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
-  isExpanded = false;
-
-  dropdownStyle = {};
-
   dateFormat = 'dd.mm.yy';
-
-  locale = {};
-
+  isDisabled = false;
+  isExpanded = false;
+  dropdownStyle = {};
   value: Date = null;
 
-  isDisabled = false;
+  private locale = {};
+  private subscription: Subscription;
 
   private wheelListener: Function;
-
-  private locales = {
-    ru: {
-      // 0 = Sunday, 1 = Monday, etc.
-      firstDayOfWeek: 1,
-      dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-      dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-      monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
-    },
-    en: {
-      firstDayOfWeek: 1,
-      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-      monthNames: [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-      ],
-      monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    }
-  };
 
   private propagateChange: Function = () => {};
 
   constructor(
-    private translateService: TranslateService,
     private renderer: Renderer2,
-    private ValueConverterService: ValueConverterService,
-  ) {}
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService,
+  ) {
+    this.subscription = Observable.merge(
+      this.translateService.get('default.date')
+        .take(1),
+      this.translateService.onLangChange
+        .distinctUntilChanged()
+        .map(data => data.translations.default.date)
+    ).subscribe(translations => {
+      const { days, months } = translations;
+      this.locale = {
+        firstDayOfWeek: 1,
+        dayNames: days.full,
+        dayNamesShort: days.short,
+        dayNamesMin: days.short,
+        monthNames: months.full,
+        monthNamesShort: months.short
+      };
+    });
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -87,14 +68,12 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   };
 
   ngOnInit(): void {
-    this.language = this.translateService.currentLang;
-    this.locale = this.locales[this.language];
-
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
   ngOnDestroy(): void {
     document.body.removeChild(this.dropdown.nativeElement);
+    this.subscription.unsubscribe();
   }
 
   writeValue(value: Date): void {
@@ -120,7 +99,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     if (newValue instanceof Date) {
       this.value = newValue;
     } else {
-      this.ValueConverterService.formatDate(newValue);
+      this.valueConverterService.formatDate(newValue);
     }
 
     this.propagateChange(this.value);

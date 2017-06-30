@@ -701,54 +701,12 @@
     },
     "date": {
       "days": {
-        "full": {
-          "mon": "Monday",
-          "tue": "Tuesday",
-          "wen": "Wednesday",
-          "thu": "Thursday",
-          "fri": "Friday",
-          "sat": "Saturday",
-          "sun": "Sunday"
-        },
-        "short": {
-          "mon": "Mon",
-          "tue": "Tue",
-          "wen": "Wed",
-          "thu": "Thu",
-          "fri": "Fri",
-          "sat": "Sat",
-          "sun": "Sun"
-        }
+        "full": [ "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота" ],
+        "short": [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ]
       },
       "months": {
-        "full": {
-          "jan": "January",
-          "feb": "February",
-          "mar": "March",
-          "apr": "April",
-          "may": "May",
-          "jun": "June",
-          "jul": "July",
-          "aug": "August",
-          "sep": "September",
-          "oct": "October",
-          "nov": "November",
-          "dec": "December"
-        },
-        "short": {
-          "jan": "Jan",
-          "feb": "Feb",
-          "mar": "Mar",
-          "apr": "Apr",
-          "may": "May",
-          "jun": "Jun",
-          "jul": "Jul",
-          "aug": "Aug",
-          "sep": "Sep",
-          "oct": "Oct",
-          "nov": "Nov",
-          "dec": "Dec"
-        }
+        "full": [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ],
+        "short": [ "Янв", "Фев", "Мар", "апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек" ]
       }
     }
   }
