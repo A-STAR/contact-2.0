@@ -139,6 +139,9 @@
         "fetch": "Could not fetch the constants",
         "update": "Could not update the constant"
       }
+    },
+    "errors": {
+      "view": "Access to constants list denied"
     }
   },
   "actionsLog": {
@@ -404,7 +407,7 @@
         "comment": "Comments"
       },
       "tree": {
-        "access_denied": "The current role does not have a permission to access data. Please contact the administrator"
+        "access_denied": "Access to GUI objects permission tree denied"
       },
       "remove": {
         "title": "Remove role permission",

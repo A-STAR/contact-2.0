@@ -13,8 +13,8 @@
   [autoLoad]="false"
   [columns]="columns"
   columnTranslationKey="constants"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="rows$ | async"
   (onDblClick)="onBeforeEdit()"
-  (onSelect)="onSelect($event)"
->
+  (onSelect)="onSelect($event)">
 </app-grid>

@@ -68,6 +68,10 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   selectedRecord$: Observable<IConstant>;
 
+  hasViewPermission$: Observable<boolean>;
+
+  emptyMessage$: Observable<string>;
+
   constructor(
     private gridService: GridService,
     private constantsService: ConstantsService,
@@ -84,18 +88,20 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const permission = 'CONST_VALUE_VIEW';
+    this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
-    this.permissionSub = this.userPermissionsService.has(permission)
+    this.permissionSub = this.hasViewPermission$
       .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
+          this.notificationsService.error('constants.errors.view');
         } else {
           this.constantsService.fetch();
         }
       });
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
   }
 
   ngOnDestroy(): void {
