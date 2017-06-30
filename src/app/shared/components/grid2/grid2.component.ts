@@ -45,6 +45,8 @@ import {
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 
+import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
+
 // ag-grid doesn't expot this
 export interface IViewportDatasourceParams {
     /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
@@ -142,7 +144,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     private renderer2: Renderer2,
     private translate: TranslateService,
     private elRef: ElementRef,
-  ) { }
+  ) {}
 
   get gridRows(): any[] {
     // TODO https://github.com/ceolter/ag-grid/issues/524
@@ -455,6 +457,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private setGridOptions(): void {
     this.gridOptions = {
+      dateComponentFramework: GridDatePickerComponent,
       defaultColDef: {
         enableRowGroup: true,
         filterParams: {

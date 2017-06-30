@@ -99,13 +99,14 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
       this.toggleCalendar(false);
     }
 
-    if (newValue instanceof Date) {
-      this.value = newValue;
-    } else {
-      this.value = this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
-    }
+    const newDate = newValue instanceof Date ?
+      newValue :
+      this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
 
-    this.propagateChange(this.value);
+    if (Number(newDate) !== Number(this.value)) {
+      this.value = newDate;
+      this.propagateChange(newDate);
+    }
   }
 
   toggleCalendar(isExpanded?: boolean): void {

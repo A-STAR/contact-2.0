@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule} from '@angular/common';
+// TODO(d.maltsev): do we need this???
+import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { LicenseManager } from 'ag-grid-enterprise/main';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,6 +9,7 @@ import { BorderLayout, Component, GridPanel } from 'ag-grid';
 import { RowGroupCompFactory } from 'ag-grid-enterprise/main';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
+import { DatePickerModule } from '../form/datepicker/datepicker.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
 // import { Grid2ColumnFilterModule } from './filter/column/grid2-column-filter.module';
@@ -14,14 +17,19 @@ import { SelectModule } from '../form/select/select.module';
 import { GridService } from '../grid/grid.service';
 
 import { Grid2Component } from './grid2.component';
+import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    DatePickerModule,
+    FormsModule,
     ToolbarModule,
     TranslateModule,
     ActionDialogModule,
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([
+      GridDatePickerComponent
+    ]),
     SelectModule,
     // Grid2ColumnFilterModule,
   ],
@@ -30,6 +38,7 @@ import { Grid2Component } from './grid2.component';
   ],
   declarations: [
     Grid2Component,
+    GridDatePickerComponent,
   ],
   providers: [
     GridService,
