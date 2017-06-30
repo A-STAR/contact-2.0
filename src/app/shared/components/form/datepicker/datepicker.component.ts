@@ -1,20 +1,36 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  HostListener,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  Renderer2
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-input-datepicker',
   templateUrl: './datepicker.component.html',
-  styleUrls: ['./datepicker.component.scss']
+  styleUrls: ['./datepicker.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true
+    }
+  ]
 })
-export class DatePickerComponent implements OnInit, OnDestroy {
-  @Input() controlName: string;
-  @Input() form: FormGroup;
+export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() language = 'en';
-  @Input() name: string;
-  @Input() value: string;
-  @Output() valueChange = new EventEmitter<string>();
+
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
@@ -27,11 +43,9 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
   locale = {};
 
-  mask = {
-    mask: [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/],
-    pipe: createAutoCorrectedDatePipe('dd.mm.yyyy'),
-    keepCharPositions: true
-  };
+  value: Date = null;
+
+  isDisabled = false;
 
   private wheelListener: Function;
 
@@ -57,14 +71,13 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     }
   };
 
+  private propagateChange: Function = () => {};
+
   constructor(
     private translateService: TranslateService,
-    private renderer: Renderer2
-  ) {
-    if (this.controlName && this.name) {
-      throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
-    }
-  }
+    private renderer: Renderer2,
+    private ValueConverterService: ValueConverterService,
+  ) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -74,10 +87,6 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    if (this.controlName && this.form.get(this.controlName).value) {
-      this.value = this.form.get(this.controlName).value;
-    }
-
     this.language = this.translateService.currentLang;
     this.locale = this.locales[this.language];
 
@@ -88,30 +97,33 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     document.body.removeChild(this.dropdown.nativeElement);
   }
 
-  onValueChange(newValue: string): void {
-    this.value = newValue;
-    this.valueChange.emit(newValue);
+  writeValue(value: Date): void {
+    this.value = value;
   }
 
-  onDateChange(newValue: Date): void {
-    const d = newValue.getDate();
-    const m = newValue.getMonth() + 1;
-    const y = newValue.getFullYear();
-    const date = `${d > 9 ? d : '0' + d}.${m > 9 ? m : '0' + m}.${y}`;
+  registerOnChange(fn: Function): void {
+    this.propagateChange = fn;
+  }
 
-    if (this.form) {
-      if (this.controlName) {
-        this.form.patchValue({ [this.controlName]: date });
-      }
-      this.form.markAsDirty();
+  registerOnTouched(fn: Function): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  onValueChange(newValue: Date): void {
+    if (this.isExpanded) {
+      this.toggleCalendar(false);
     }
 
-    this.onValueChange(date);
-    this.toggleCalendar(false);
-  }
+    if (newValue instanceof Date) {
+      this.value = newValue;
+    } else {
+      this.ValueConverterService.formatDate(newValue);
+    }
 
-  get date(): string {
-    return this.value || null;
+    this.propagateChange(this.value);
   }
 
   toggleCalendar(isExpanded?: boolean): void {

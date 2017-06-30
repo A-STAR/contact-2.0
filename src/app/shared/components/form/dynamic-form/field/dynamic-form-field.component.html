@@ -85,7 +85,7 @@
         {{ control.label | translate }}
       </span>
     </label>
-    <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+    <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">
@@ -126,7 +126,7 @@
         <label class="form-label">
           {{ control.label | translate }}
         </label>
-        <app-input-datepicker [form]="form" [controlName]="control.controlName"></app-input-datepicker>
+        <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
       </ng-container>
 
       <ng-container *ngSwitchCase="4">
