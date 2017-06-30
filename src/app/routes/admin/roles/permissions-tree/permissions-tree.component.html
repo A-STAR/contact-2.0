@@ -1,10 +1,10 @@
-<ng-container *ngIf="hasViewPermission | async">
-  <app-toolbar-2
-    class="app-toolbar bordered"
-    [items]="toolbarActions"
-    (actionClick)="onSaveChanges()"
-  >
-  </app-toolbar-2>
+<app-toolbar-2
+  class="app-toolbar"
+  [items]="toolbarActions"
+  (actionClick)="onSaveChanges()">
+</app-toolbar-2>
+
+<ng-container *ngIf="hasViewPermission | async; else message">
   <app-tree
     *ngIf="value"
     [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
@@ -19,8 +19,9 @@
     {{ 'default.grid.empty' | translate }}
   </div>
 </ng-container>
-<ng-container *ngIf="!(hasViewPermission | async)">
+
+<ng-template #message>
   <div class="message-container">
     {{ 'roles.permissions.tree.access_denied' | translate }}
   </div>
-</ng-container>
+</ng-template>

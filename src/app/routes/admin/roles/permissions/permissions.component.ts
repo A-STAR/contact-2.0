@@ -74,6 +74,8 @@ export class PermissionsComponent implements OnDestroy {
 
   canViewPermissions$: Observable<boolean>;
 
+  emptyMessage$: Observable<string>;
+
   dialog: IPermissionsDialogEnum;
 
   private currentPermission: IPermissionModel;
@@ -116,6 +118,8 @@ export class PermissionsComponent implements OnDestroy {
         this.permissionsService.fetchPermissions();
       }
     });
+
+    this.emptyMessage$ = this.canViewPermissions$.map(hasPermission => hasPermission ? null : 'roles.permissions.errors.view');
   }
 
   ngOnDestroy(): void {

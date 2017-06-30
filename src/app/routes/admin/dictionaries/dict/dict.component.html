@@ -39,10 +39,10 @@
 <app-grid
   selectionType="single"
   [autoLoad]="false"
+  [emptyMessage]="emptyMessage$ | async"
   [styles]="{height: '200px'}"
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
-  [editPermission]="'DICT_EDIT'"
   [rows]="rows"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">

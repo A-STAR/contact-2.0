@@ -38,6 +38,7 @@
   [autoLoad]="false"
   [columns]="columns"
   [columnTranslationKey]="'roles.permissions'"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="roles$ | async"
   [selectionType]="'single'"
   [styles]="{height: '200px'}"

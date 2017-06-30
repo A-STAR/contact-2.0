@@ -26,14 +26,25 @@
   [items]="toolbarItems">
 </app-toolbar-2>
 
-<app-tree
-  #tree
-  layout="horizontal"
-  selectionMode="single"
-  [value]="organizations$ | async"
-  (changeNodesLocation)="onChangeNodesLocation($event)"
-  (onNodeSelect)="onNodeSelect($event)"
-  (onNodeEdit)="onNodeEdit($event)"
-  (onNodeExpand)="onNodeExpand($event)"
-  [(selection)]="selection">
-</app-tree>
+<ng-container *ngIf="hasViewPermission$ | async; else message">
+  <app-tree
+    #tree
+    layout="horizontal"
+    selectionMode="single"
+    [value]="organizations$ | async"
+    (changeNodesLocation)="onChangeNodesLocation($event)"
+    (onNodeSelect)="onNodeSelect($event)"
+    (onNodeEdit)="onNodeEdit($event)"
+    (onNodeExpand)="onNodeExpand($event)"
+    [(selection)]="selection">
+  </app-tree>
+</ng-container>
+
+<ng-template #message>
+  <div class="message-container">
+    {{ 'organizations.organizations.errors.view' | translate }}
+  </div>
+</ng-template>
+
+
+
