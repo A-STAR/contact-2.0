@@ -114,8 +114,9 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     return this.value || null;
   }
 
-  toggleCalendar(isExpanded?: boolean): void {
-    this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
+  toggleCalendar(isExpanded: boolean = false): void {
+    // this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
+    this.isExpanded = isExpanded;
     if (this.isExpanded) {
       // TODO: is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);

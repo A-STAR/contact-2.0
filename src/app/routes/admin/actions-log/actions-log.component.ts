@@ -20,7 +20,7 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
-export const toFullName = (entity: { userId?: number, lastName: string, firstName: string, middleName: string }) => {
+export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
   return [ entity.lastName, entity.firstName, entity.middleName ]
     .filter(Boolean).join(' ');
 };

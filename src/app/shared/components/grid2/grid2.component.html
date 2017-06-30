@@ -9,20 +9,12 @@
     <ag-grid-angular
       class="app-grid2 ag-contact2"
       [columnDefs]="columnDefs"
-      [enableColResize]="true"
-      [enableFilter]="true"
-      [enableSorting]="true"
-      [headerHeight]="headerHeight"
       [gridOptions]="gridOptions"
       [ngStyle]="styles"
       [overlayNoRowsTemplate]="'default.grid.empty' | translate"
       [overlayLoadingTemplate]="'default.grid.empty' | translate"
-      [pagination]="false"
-      [paginationAutoPageSize]="true"
       [rowData]="gridRows"
-      [rowHeight]="rowHeight"
       [rowSelection]="rowSelection"
-      [showToolPanel]="false"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
       (rowSelected)="onSelect($event)"
@@ -38,13 +30,3 @@
   (actionSelect)="onToolbarActionSelect($event)"
 >
 </app-toolbar>
-<!--<app-grid2-column-filter
-  *ngIf="filterField"
-  [fieldName]="filterField"
-  [columnName]="filterColumnName"
-  [filter]="filterObject"
-  [filterControlType]="filterControlType"
-  (action)="saveFilterChanges($event)"
-  (cancel)="closeFilter()"
->
-</app-grid2-column-filter>-->
