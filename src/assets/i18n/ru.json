@@ -698,6 +698,58 @@
     "sex": {
       "m": "м",
       "w": "ж"
+    },
+    "date": {
+      "days": {
+        "full": {
+          "mon": "Monday",
+          "tue": "Tuesday",
+          "wen": "Wednesday",
+          "thu": "Thursday",
+          "fri": "Friday",
+          "sat": "Saturday",
+          "sun": "Sunday"
+        },
+        "short": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wen": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        }
+      },
+      "months": {
+        "full": {
+          "jan": "January",
+          "feb": "February",
+          "mar": "March",
+          "apr": "April",
+          "may": "May",
+          "jun": "June",
+          "jul": "July",
+          "aug": "August",
+          "sep": "September",
+          "oct": "October",
+          "nov": "November",
+          "dec": "December"
+        },
+        "short": {
+          "jan": "Jan",
+          "feb": "Feb",
+          "mar": "Mar",
+          "apr": "Apr",
+          "may": "May",
+          "jun": "Jun",
+          "jul": "Jul",
+          "aug": "Aug",
+          "sep": "Sep",
+          "oct": "Oct",
+          "nov": "Nov",
+          "dec": "Dec"
+        }
+      }
     }
   }
 }
