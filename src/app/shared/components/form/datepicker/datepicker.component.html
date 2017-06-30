@@ -1,43 +1,26 @@
 <div class="datepicker">
-  <span *ngIf="form" class="input-group" [formGroup]="form">
+  <span class="input-group">
     <input
       #input
       class="form-control"
-      [formControlName]="controlName"
-      [name]="controlName"
-      (ngModelChange)="onValueChange($event)"
       placeholder="Select a date"
       style="float:none"
-      [textMask]="mask"
+      [ngModel]="value | date"
+      (change)="onValueChange($event)"
     />
+
     <span class="input-group-btn">
-      <button #trigger class="btn btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
+      <button #trigger class="btn btn-default" type="button" [disabled]="isDisabled" (click)="toggleCalendar()">
         <i class="fa fa-calendar"></i>
       </button>
     </span>
   </span>
-  <span *ngIf="!form" class="input-group">
-    <input
-      #input
-      class="form-control"
-      [name]="name"
-      [ngModel]="date"
-      (ngModelChange)="onValueChange($event)"
-      placeholder="Select a date"
-      style="float:none"
-      [textMask]="mask"
-    />
-    <span class="input-group-btn">
-      <button #trigger class="btn btn-default" type="button" [disabled]="input.disabled" (click)="toggleCalendar()">
-        <i class="fa fa-calendar"></i>
-      </button>
-    </span>
-  </span>
+
   <div #dropdown>
     <div *ngIf="isExpanded" class="dropdown" [ngStyle]="dropdownStyle">
       <p-calendar
-        [ngModel]="date"
-        (ngModelChange)="onDateChange($event)"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
         [inline]="true"
         [monthNavigator]="true"
         [yearNavigator]="true"

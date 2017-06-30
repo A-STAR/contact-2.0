@@ -3,8 +3,8 @@ import { IActionType, IEmployee } from '../actions-log.interface';
 export interface IActionsLogFilterRequest {
   actionsTypes: number[]|IActionType[];
   employees: number[]|IEmployee[];
-  endDate: string;
+  endDate: Date | string;
   endTime: string;
-  startDate: string;
+  startDate: Date | string;
   startTime: string;
 }
