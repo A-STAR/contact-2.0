@@ -56,7 +56,7 @@ export const routes: Route[] = [
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [
-      { path: 'debt-list', loadChildren: './workplaces/debtors/debtor/debtor.module#DebtorModule' },
+      { path: 'debt-list', loadChildren: './workplaces/debtors/debtors.module#DebtorsModule' },
     ]
   },
 

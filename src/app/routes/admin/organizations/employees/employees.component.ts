@@ -90,12 +90,13 @@ export class EmployeesComponent implements OnDestroy {
   // TODO(d.maltsev): type
   employeeRoleOptions$: Observable<Array<any>>;
 
-  hasViewPermission$: Observable<boolean>;
-
   employees$: Observable<Array<IEmployee>>;
 
-  private organizationsStateSubscription: Subscription;
+  emptyMessage$: Observable<string>;
 
+  private hasViewPermission$: Observable<boolean>;
+
+  private organizationsStateSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -136,6 +137,8 @@ export class EmployeesComponent implements OnDestroy {
     });
 
     this.employees$ = this.organizationsService.state.map(state => state.employees);
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {

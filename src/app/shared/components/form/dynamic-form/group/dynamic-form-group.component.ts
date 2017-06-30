@@ -10,10 +10,14 @@ import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } f
   animations: [
     trigger(
       'isCollapsed', [
-        state('void', style({ height: '0', overflow: 'hidden' })),
-        state('*', style({ height: '*', overflow: 'hidden' })),
-        transition(':enter', animate('150ms ease-out')),
-        transition(':leave', animate('150ms ease-in')),
+        transition(':enter', [
+          style({ height: '0', overflow: 'hidden' }),
+          animate('150ms ease', style({ height: '*' }))
+        ]),
+        transition(':leave', [
+          style({ height: '*', overflow: 'hidden' }),
+          animate('150ms ease', style({ height: '0' }))
+        ]),
       ]
     )
   ]

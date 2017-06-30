@@ -22,6 +22,7 @@ export class LayoutComponent {
     HelpComponent: 'HELP',
     ActionsLogComponent: 'ACTIONS_LOG',
     DebtorComponent: 'DEBTOR_CARD',
+    DebtorsComponent: 'DEBT_LIST',
   };
 
   constructor(

@@ -32,6 +32,7 @@
   [columns]="columns"
   [columnTranslationKey]="'users'"
   [dataSource]="dataSource"
+  [emptyMessage]="emptyMessage$ | async"
   [filter]="filter"
   [rows]="users$ | async"
   (onDblClick)="onEdit($event)"

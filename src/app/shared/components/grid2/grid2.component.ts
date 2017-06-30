@@ -21,6 +21,8 @@ import {
   RowNode,
   Column,
   ColumnChangeEvent,
+  IGetRowsParams,
+  IViewportDatasource,
 } from 'ag-grid';
 import { FilterObject } from './filter/grid2-filter';
 import { GridTextFilter } from './filter/text-filter';
@@ -42,6 +44,18 @@ import {
   IGrid2ColumnSettings,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
+
+// ag-grid doesn't expot this
+export interface IViewportDatasourceParams {
+    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
+    setRowCount: (count: number) => void;
+    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
+    setRowData: (rowData: {
+        [key: number]: any;
+    }) => void;
+    /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
+    getRow: (rowIndex: number) => RowNode;
+}
 
 @Component({
   selector: 'app-grid2',
@@ -111,8 +125,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Output() onSort: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onRowsSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
+  columnDefs: ColDef[];
   gridToolbarActions: IToolbarAction[];
-  columnDefs: ColDef[] = [];
   gridOptions: GridOptions = {};
 
   private langSubscription: EventEmitter<any>;
@@ -161,12 +175,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   ngOnInit(): void {
+    this.columnDefs = this.createColumnDefs();
     this.setGridOptions();
-    this.createColumnDefs();
     this.defineGridToolbarActions();
 
-    const gridMessagesKey = 'grid.messages';
-    const translationKeys = [gridMessagesKey];
+    const translationKeys = ['grid.messages'];
 
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
@@ -214,12 +227,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   ngOnDestroy(): void {
     this.langSubscription.unsubscribe();
-    this.columnDefs.forEach(column => {
-      if (column.filter) {
-        // const filter = this.gridOptions.api.getFilterInstance(column.headerName);
-        // filter.destroy();
-      }
-    });
+    // TODO(a.tymchuk): how do we destroy filters?
+    // this.columnDefs.forEach(column => {
+    //   if (column.filter) {
+    //     const filter = this.gridOptions.api.getFilterInstance(column.headerName);
+    //     filter.destroy();
+    //   }
+    // });
   }
 
   onSelect(event: any): void {
@@ -415,8 +429,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return R.propOr('text', name)(filterMap);
   }
 
-  private createColumnDefs(): void {
-    this.columnDefs = this.columns.map(column => {
+  private createColumnDefs(): ColDef[] {
+    return this.columns.map(column => {
       const colDef: ColDef = {
         field: column.prop,
         filter: this.getCustomFilter(column.filter),
@@ -443,6 +457,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.gridOptions = {
       defaultColDef: {
         enableRowGroup: true,
+        filterParams: {
+          // keeps the data filtered when new rows arrive
+          newRowsAction: 'keep'
+        },
         headerComponentParams: {
           headerHeight: this.headerHeight,
           enableMenu: false,
@@ -450,8 +468,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           renderer2: this.renderer2
         } as IGrid2HeaderParams
       },
-      enableFilter: true,
-      enableSorting: true,
+      enableColResize: true,
+      enableServerSideFilter: true,
+      enableServerSideSorting: true,
+      headerHeight: this.headerHeight,
       floatingFilter: true,
       getMainMenuItems: (params) => {
         // hide the tool menu
@@ -484,7 +504,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         noRowsToShow : this.translate.instant('default.grid.empty'),
         rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
       },
-      overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
+      // overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
+      pagination: this.pagination,
+      paginationPageSize: this.pageSize,
+      paginationAutoPageSize: false,
       // https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
       postProcessPopup: (params) => {
         if (params.type !== 'columnMenu') {
@@ -502,13 +525,30 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         ePopup.style.top = newTop + px;
         ePopup.style.left = newLeft + px;
       },
+      rowDeselection: true,
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
+      rowHeight: this.rowHeight,
+      // rowModelType: 'viewport',
+      // Special section dedicated to the infinite model
+      // cacheBlockSize: this.pageSize,
+      // cacheOverflowSize: 2,
+      // infiniteInitialRowCount: 1,
+      // maxBlocksInCache: 2,
+      // maxConcurrentDatasourceRequests: 2,
+      getRowNodeId: (row) => {
+        return row.id;
+      },
+      // END
+      rowSelection: this.rowSelection,
+      showToolPanel: false,
       suppressMenuMainPanel: true,
       suppressRowHoverClass: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
       toolPanelSuppressPivots: true,
       toolPanelSuppressPivotMode: true,
+      viewportRowModelPageSize: 2,
+      viewportRowModelBufferSize: 2,
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
       onGridReady: () => this.onColumnEverythingChanged(),
@@ -544,5 +584,31 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         groupingColumns: event.getColumns().map(column => column.getColId())
       }
     });
+  }
+
+  // setRowData(data: Array<any>): void {
+  //   // you have to make sure every row has an id
+  //   const dataSource: IViewportDatasource = {
+  //     // rowCount: 250,
+  //     getRows: function (params: IGetRowsParams): void {
+  //       console.log('asking for ' + params.startRow + ' to ' + params.endRow);
+  //       // At this point in your code, you would call the server, using $http if in AngularJS 1.x.
+  //       // To make the demo look real, wait for 500ms before returning
+  //       setTimeout(() => {
+  //         // take a slice of the total rows
+  //         const dataAfterSortingAndFiltering = this.sortAndFilter(data, params.sortModel, params.filterModel);
+  //         const rowsThisPage = dataAfterSortingAndFiltering.slice(params.startRow, params.endRow);
+  //         // if on or after the last page, work out the last row.
+  //         const lastRow = dataAfterSortingAndFiltering.length <= params.endRow ? dataAfterSortingAndFiltering.length : -1;
+  //         // call the success callback
+  //         params.successCallback(rowsThisPage, lastRow);
+  //       }, 500);
+  //     }
+  //   };
+  //   this.gridOptions.api.setDatasource(dataSource);
+  // }
+
+  sortAndFilter(data: Array<any>): Array<any> {
+    return data;
   }
 }

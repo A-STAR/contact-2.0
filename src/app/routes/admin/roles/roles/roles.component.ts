@@ -69,6 +69,8 @@ export class RolesComponent implements OnDestroy {
 
   hasRoleViewPermission$: Observable<boolean>;
 
+  emptyMessage$: Observable<string>;
+
   private permissionsServiceSubscription: Subscription;
   private hasViewPermissionSubscription: Subscription;
 
@@ -88,6 +90,8 @@ export class RolesComponent implements OnDestroy {
     this.hasViewPermissionSubscription = this.hasRoleViewPermission$.subscribe(hasViewPermission =>
       hasViewPermission ? this.permissionsService.fetchRoles() : this.permissionsService.clearRoles()
     );
+
+    this.emptyMessage$ = this.hasRoleViewPermission$.map(hasPermission => hasPermission ? null : 'roles.roles.errors.view');
   }
 
   ngOnDestroy(): void {

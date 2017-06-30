@@ -1,16 +1,18 @@
 import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
-  QueryList,
-  AfterContentInit,
-  ElementRef,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  ViewChild,
   DoCheck,
+  ElementRef,
+  Input,
+  QueryList,
+  ViewChild,
 } from '@angular/core';
 
+// https://github.com/zefoy/ngx-perfect-scrollbar
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
 import { TabComponent } from './tab.component';
@@ -23,14 +25,16 @@ import { TabComponent } from './tab.component';
 })
 
 export class TabstripComponent implements AfterContentInit, AfterViewInit, DoCheck {
-
   @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
   @ViewChild(PerfectScrollbarComponent) ps: PerfectScrollbarComponent;
+
+  @Input() inverse = false;
+  @Input() disableScrollbar = false;
   isToolsVisible: boolean;
 
   constructor(
     private elementRef: ElementRef,
-    private detectorRef: ChangeDetectorRef) {
+    private cdRef: ChangeDetectorRef) {
   }
 
   ngDoCheck(): void {
@@ -69,7 +73,7 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
     if (xRail && yRail) {
       // jQuery
       this.isToolsVisible = $(xRail).is(':visible') || $(yRail).is(':visible');
-      this.detectorRef.detectChanges();
+      this.cdRef.detectChanges();
     }
   }
 

@@ -139,6 +139,9 @@
         "fetch": "Could not fetch the constants",
         "update": "Could not update the constant"
       }
+    },
+    "errors": {
+      "view": "Access to constants list denied"
     }
   },
   "actionsLog": {
@@ -285,7 +288,7 @@
       "client": "Client"
     },
     "placeholder": {
-      "translatedName": "Введите название словаря на выбраном языке",
+      "translatedName": "Select a dictionary",
       "select": {
         "translation": "Select language"
       }
@@ -386,7 +389,7 @@
         "title": "Permits"
       },
       "tab2": {
-        "title": "Текущие настройки доступов"
+        "title": "Access settings"
       },
       "add": {
         "title": "Choose a permission",
@@ -404,7 +407,7 @@
         "comment": "Comments"
       },
       "tree": {
-        "access_denied": "The current role does not have a permission to access data. Please contact the administrator"
+        "access_denied": "Access to GUI objects permission tree denied"
       },
       "remove": {
         "title": "Remove role permission",
@@ -437,107 +440,117 @@
     }
   },
   "debtor": {
-    "title": "Карточка должника",
-    "id": "Ид",
-    "firstName": "Имя",
-    "lastName": "Фамилия",
-    "middleName": "Отчество",
-    "type": "Тип",
-    "responsible": "Ответственный",
-    "reward": "Размер вознаграждения",
+    "title": "Debtor",
+    "id": "Id",
+    "firstName": "Name",
+    "lastName": "Family name",
+    "middleName": "Middle name",
+    "type": "Type",
+    "responsible": "Manager",
+    "reward": "Remuneration",
     "generalInformationTab": {
-      "title": "Общая",
-      "generalInformation": "Общая информация",
-      "birthDate": "Дата рождения",
-      "company": "Компания",
-      "position": "Должность",
-      "income": "Доход",
-      "citizenship": "Гражданство",
-      "sex": "Пол",
-      "workplaceChecked": "Место работы проверено",
-      "importance": "Важность",
-      "stage": "Стадия",
-      "decency": "Порядочность",
-      "maritalStatus": "Семейное положение",
-      "education": "Образование",
-      "email": "Эл. почта",
-      "passport": "Паспорт",
-      "series": "Серия",
-      "number": "№",
-      "issueDate": "Дата выдачи",
-      "issuedBy": "Кем выдан",
-      "birthPlace": "Место рождения",
+      "title": "General",
+      "generalInformation": "General information",
+      "birthDate": "Date of birth",
+      "company": "Company",
+      "position": "Position",
+      "income": "Income",
+      "citizenship": "Citizenship",
+      "sex": "Sex",
+      "workplaceChecked": "Employment verified",
+      "importance": "Importance",
+      "stage": "Stage",
+      "decency": "Decency",
+      "maritalStatus": "Marital status",
+      "education": "Education",
+      "email": "Email",
+      "passport": "Passport",
+      "series": "Series",
+      "number": "No",
+      "issueDate": "Issue date",
+      "issuedBy": "Issued by",
+      "birthPlace": "Place of birth",
       "phonesTab": {
-        "title": "Телефоны",
-        "contactsVerification": "Верификация контактных данных",
+        "title": "Phones",
+        "contactsVerification": "Verification of contacts",
         "grid": {
-          "type": "Тип",
-          "number": "Номер",
-          "status": "Статус",
-          "lastCall": "Посл. звонок",
-          "contactPerson": "Контактное лицо",
-          "comment": "Комментарий",
-          "region": "Регион",
-          "active": "Активен",
-          "qualityCode": "Код качества",
-          "numberExists": "Номер существует",
-          "qualityCodeByDataQ": "Код качества по DataQ",
-          "verified": "Верифицирован",
-          "blockingDate": "Дата блокировки",
-          "blockingReason": "Причина блокировки"
+          "type": "Type",
+          "number": "Number",
+          "status": "Status",
+          "lastCall": "Last call",
+          "contactPerson": "Contact person",
+          "comment": "Comments",
+          "region": "Region",
+          "active": "Active",
+          "qualityCode": "Quality code",
+          "numberExists": "Number exists",
+          "qualityCodeByDataQ": "DataQ code quality",
+          "verified": "Verified",
+          "blockingDate": "Blocking date",
+          "blockingReason": "Blocking reason"
         }
       },
       "addressesTab": {
-        "title": "Адреса"
+        "title": "Addresses"
       },
       "emailTab": {
-        "title": "Эл. почта"
+        "title": "Email"
       }
     },
     "debtsTab": {
-      "title": "Долги"
+      "title": "Debts"
     },
     "propertyTab": {
-      "title": "Имущество"
+      "title": "Property"
     },
     "guarantorsTab": {
-      "title": "Поручители"
+      "title": "Guarantors"
     },
     "contactsTab": {
-      "title": "Контакты"
+      "title": "Contacts"
     },
     "planningTab": {
-      "title": "Планирование"
+      "title": "Planning"
     },
     "documentationTab": {
-      "title": "Документы"
+      "title": "Documents"
     },
     "accountsTab": {
-      "title": "Счета"
+      "title": "Accounts"
     },
     "tasksTab": {
-      "title": "Задачи"
+      "title": "Tasks"
     },
     "workHistoryTab": {
-      "title": "История работы (полная)"
+      "title": "Work history (full)"
     },
     "actionLogTab": {
-      "title": "Лог действий"
+      "title": "Actions log"
     },
     "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
+      "title": "Arbitrary attributes"
     },
     "commentTab": {
-      "title": "Комментарий"
+      "title": "Comments"
     },
     "promotionsTab": {
-      "title": "Акции"
+      "title": "Promotions"
     },
     "socialNetworksTab": {
-      "title": "Социальные сети"
+      "title": "Social networks"
     },
     "extrasDebtInfoTab": {
-      "title": "Доп. инфо о долге"
+      "title": "Debt info"
+    }
+  },
+  "debtors": {
+    "grid": {
+      "id": "Id",
+      "fullName": "Full name",
+      "debtId": "Debt id",
+      "type": "Debtor type",
+      "product": "Product",
+      "city": "City"
     }
   },
   "organizations": {
@@ -685,6 +698,16 @@
     "sex": {
       "m": "m",
       "w": "w"
+    },
+    "date": {
+      "days": {
+        "full": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+        "short": [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+      },
+      "months": {
+        "full": [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+        "short": [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+      }
     }
   }
 }
