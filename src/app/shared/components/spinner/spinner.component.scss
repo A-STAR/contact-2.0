@@ -1,3 +1,5 @@
+@import "../../styles/app/variables";
+
 $ball-size: 10px;
 $margin: 2px;
 
@@ -16,13 +18,13 @@ $margin: 2px;
 }
 
 .spinner {
-  width: ($ball-size * 3) + $margin * 6;
+  width: 3 * $ball-size + 6 * $margin;
 
   > div {
     width: $ball-size;
     height: $ball-size;
     margin: $margin;
-    background-color: #fff;
+    background-color: $brand-info;
     border-radius: 100%;
     animation-name: pulse;
     animation-iteration-count: infinite;
