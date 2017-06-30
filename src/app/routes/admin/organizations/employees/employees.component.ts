@@ -30,8 +30,8 @@ export class EmployeesComponent implements OnDestroy {
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -54,8 +54,8 @@ export class EmployeesComponent implements OnDestroy {
       action: () => this.organizationsService.fetchEmployees(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_VIEW'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
   ];
 
@@ -126,12 +126,12 @@ export class EmployeesComponent implements OnDestroy {
 
     this.viewPermissionSubscription = Observable.combineLatest(
       this.hasViewPermission$,
-      this.organizationsService.state.map(state => state.selectedOrganizationId).distinctUntilChanged()
+      this.organizationsService.selectedOrganization
     )
-    .subscribe(([ hasViewPermission, currentOrganizationId ]) => {
+    .subscribe(([ hasViewPermission, currentOrganization ]) => {
       if (!hasViewPermission) {
         this.organizationsService.clearEmployees();
-      } else if (currentOrganizationId) {
+      } else if (currentOrganization) {
         this.organizationsService.fetchEmployees();
       }
     });
