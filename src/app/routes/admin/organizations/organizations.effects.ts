@@ -61,7 +61,8 @@ export class OrganizationsEffects {
           {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
-              dialogAction: null
+              dialogAction: null,
+              selectedOrganization: null
             }
           }
         ])

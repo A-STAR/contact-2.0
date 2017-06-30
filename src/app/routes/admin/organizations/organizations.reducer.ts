@@ -56,7 +56,9 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
       return {
         ...state,
         dialogAction: action.payload.dialogAction,
-        selectedOrganization: action.payload.organization
+        selectedOrganization: action.payload.organization !== null
+          ? state.selectedOrganization
+          : null
       };
     default:
       return state;
