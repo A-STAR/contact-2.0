@@ -1,13 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Headers, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { JwtHelper } from 'angular2-jwt';
+import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
-
-import { HttpService } from '../http/http.service';
 
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
@@ -36,7 +34,7 @@ export class AuthService implements CanActivate, OnInit {
   });
 
   constructor(
-    private http: HttpService,
+    private http: AuthHttp,
     private router: Router,
     private jwtHelper: JwtHelper,
     private translateService: TranslateService,

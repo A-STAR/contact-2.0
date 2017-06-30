@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
+import { AuthHttp } from 'angular2-jwt';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
@@ -9,8 +10,6 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
 
-import { HttpService } from '../../../core/http/http.service';
-
 @Injectable()
 export class GridService {
   // defines whether the request should fetch a resource from the server's root
@@ -19,7 +18,7 @@ export class GridService {
   private nRequests$ = new BehaviorSubject<number>(0);
 
   constructor(
-    private http: HttpService,
+    private http: AuthHttp,
     private authService: AuthService,
     private translateService: TranslateService
   ) {}
