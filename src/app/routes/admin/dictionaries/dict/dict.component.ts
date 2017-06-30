@@ -117,6 +117,7 @@ export class DictComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.dictionariesService$.unsubscribe();
     this.dictionariesRelations$.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get isEntityBeingCreated(): boolean {
