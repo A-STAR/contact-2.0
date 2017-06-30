@@ -21,7 +21,6 @@ import {
   RowNode,
   Column,
   ColumnChangeEvent,
-  IGetRowsParams,
   IViewportDatasource,
 } from 'ag-grid';
 import { FilterObject } from './filter/grid2-filter';
@@ -98,7 +97,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() remoteSorting = true;
   @Input() rowHeight = 25;
   @Input() rowSelection = 'multiple';
-  @Input() showDndGroupPanel = true;
+  @Input() showDndGroupPanel = false;
   @Input() showFooter = true;
 
   // Inputs without presets
@@ -136,6 +135,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private pageElement: IToolbarAction;
   private pagesSizeElement: IToolbarAction;
   private initialized = false;
+  private viewportDatasource: ViewPortDatasource;
   @Input() filter(record: any): boolean { return record; }
 
   constructor(
@@ -145,8 +145,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   ) { }
 
   get gridRows(): any[] {
-    // TODO https://github.com/ceolter/ag-grid/issues/524
-    return this.rows && this.rows.length ? this.rows : null;
+    return this.rows || null;
   }
 
   get hasToolbar(): boolean {
@@ -175,6 +174,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   }
 
   ngOnInit(): void {
+    this.viewportDatasource = new ViewPortDatasource(this.gridRows);
     this.columnDefs = this.createColumnDefs();
     this.setGridOptions();
     this.defineGridToolbarActions();
@@ -207,19 +207,26 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      if (R.prop('rows', changes) || R.prop('currentPage', changes) || R.prop('currentPageSize', changes)) {
-        this.refreshRowsInfo();
-        this.refreshPaginationElements();
+      const { rowsTotalCount: totalCount, rows, currentPage, currentPageSize } = changes;
+      if (rows || currentPage || currentPageSize) {
+        // this.refreshRowsInfo();
+        // this.refreshPaginationElements();
         this.clearAllSelections();
       }
-      if (R.prop('selectedRows', changes)) {
-        this.refreshRowsInfo();
+      if (totalCount) {
+        this.viewportDatasource.params.setRowCount(totalCount.currentValue);
       }
-      if (R.prop('columnsSettings', changes)) {
-        if (this.remoteSorting) {
-          this.applyClientSorting();
-        }
+      if (rows) {
+        this.viewportDatasource.params.setRowData(this.gridRows);
       }
+      // if (R.prop('selectedRows', changes)) {
+      //   this.refreshRowsInfo();
+      // }
+      // if (R.prop('columnsSettings', changes)) {
+      //   if (this.remoteSorting) {
+      //     this.applyClientSorting();
+      //   }
+      // }
       // if (R.prop('columnsSettings', changes) || R.prop('columnMovingInProgress', changes)) {
       // }
     }
@@ -421,6 +428,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private getCustomFilter(name: string): any {
     const filterMap = {
+      number: 'number',
       text: 'text',
       date: 'date',
       'set': 'set',
@@ -432,6 +440,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private createColumnDefs(): ColDef[] {
     return this.columns.map(column => {
       const colDef: ColDef = {
+        colId: 'id',
         field: column.prop,
         filter: this.getCustomFilter(column.filter),
         headerName: column.prop,
@@ -445,6 +454,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         suppressMenu: true,
         width: column.width || column.minWidth,
       };
+      if (column.prop === 'id') {
+        colDef.cellClass = 'cell-number';
+        colDef.floatingFilterComponentParams = { suppressFilterButton: true };
+      }
       if (column.renderer) {
         colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.renderer(params.data);
         colDef.valueGetter = colDef.cellRenderer;
@@ -455,8 +468,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private setGridOptions(): void {
     this.gridOptions = {
+      debug: false,
       defaultColDef: {
-        enableRowGroup: true,
+        enableRowGroup: false,
         filterParams: {
           // keeps the data filtered when new rows arrive
           newRowsAction: 'keep'
@@ -506,8 +520,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       },
       // overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
-      paginationPageSize: this.pageSize,
       paginationAutoPageSize: false,
+      paginationPageSize: this.pageSize,
+      // paginationStartPage: 0,
       // https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
       postProcessPopup: (params) => {
         if (params.type !== 'columnMenu') {
@@ -528,7 +543,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       rowDeselection: true,
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
-      // rowModelType: 'viewport',
+      rowModelType: 'viewport',
+      viewportDatasource: this.viewportDatasource,
       // Special section dedicated to the infinite model
       // cacheBlockSize: this.pageSize,
       // cacheOverflowSize: 2,
@@ -536,6 +552,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       // maxBlocksInCache: 2,
       // maxConcurrentDatasourceRequests: 2,
       getRowNodeId: (row) => {
+        // console.log('get row node id', row.id);
         return row.id;
       },
       // END
@@ -547,8 +564,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       toolPanelSuppressValues: true,
       toolPanelSuppressPivots: true,
       toolPanelSuppressPivotMode: true,
-      viewportRowModelPageSize: 2,
-      viewportRowModelBufferSize: 2,
+      viewportRowModelPageSize: this.pageSize,
+      viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
       onGridReady: () => this.onColumnEverythingChanged(),
@@ -557,6 +574,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       // onFilterChanged: (p) => { console.log('onFilterChanged', p); },
       // onFilterModified: (p) => { console.log('onFilterModified', p); },
+      onPaginationPageRequested: (event) => console.log('page requested', event),
+      onPaginationPageLoaded: (event) => console.log('page loaded', event),
+      // onViewportChanged: (event) => console.log('viewport changed', event),
     };
 
     this.translateGridOptionsMessages();
@@ -586,29 +606,42 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  // setRowData(data: Array<any>): void {
-  //   // you have to make sure every row has an id
-  //   const dataSource: IViewportDatasource = {
-  //     // rowCount: 250,
-  //     getRows: function (params: IGetRowsParams): void {
-  //       console.log('asking for ' + params.startRow + ' to ' + params.endRow);
-  //       // At this point in your code, you would call the server, using $http if in AngularJS 1.x.
-  //       // To make the demo look real, wait for 500ms before returning
-  //       setTimeout(() => {
-  //         // take a slice of the total rows
-  //         const dataAfterSortingAndFiltering = this.sortAndFilter(data, params.sortModel, params.filterModel);
-  //         const rowsThisPage = dataAfterSortingAndFiltering.slice(params.startRow, params.endRow);
-  //         // if on or after the last page, work out the last row.
-  //         const lastRow = dataAfterSortingAndFiltering.length <= params.endRow ? dataAfterSortingAndFiltering.length : -1;
-  //         // call the success callback
-  //         params.successCallback(rowsThisPage, lastRow);
-  //       }, 500);
-  //     }
-  //   };
-  //   this.gridOptions.api.setDatasource(dataSource);
-  // }
+  // this.gridOptions.api.setViewportDatasource(ds);
+}
 
-  sortAndFilter(data: Array<any>): Array<any> {
-    return data;
+class ViewPortDatasource implements IViewportDatasource {
+  firstRow: number;
+  lastRow: number;
+  params: IViewportDatasourceParams;
+  data: Array<any>;
+
+  constructor(data: any) {
+    this.data = data;
+  }
+
+  init(params: IViewportDatasourceParams): void {
+    this.params = params;
+  }
+
+  convertData(data: Array<any>): any {
+    return data.reduce((acc, row) => {
+      acc[row.id] = row;
+      return acc;
+    }, {});
+  }
+
+  setViewportRange(firstRow: number, lastRow: number): void {
+    console.log('setViewportRange: ' + firstRow + ' to ' + lastRow);
+    this.params.setRowData(this.convertData(this.data));
+  }
+
+  setRowData(rowData: any): void {
+    console.log('set row data for viewport');
+    this.params.setRowData(rowData);
+  }
+
+  destroy(): void {
+    // clean up after yourselves
+    console.log('ViewPortDatasource destroyed');
   }
 }

@@ -168,6 +168,7 @@
       }
     },
     "grid": {
+      "id": "Id",
       "fullName": "Full name",
       "position": "Position",
       "createDateTime": "Date",
