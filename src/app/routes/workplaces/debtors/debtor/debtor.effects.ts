@@ -98,7 +98,7 @@ export class DebtorCardEffects {
             success: true,
             data: {
               id: id,
-              birthDate: '01/01/1980',
+              birthDate: new Date('01.01.1980'),
               company: 'Financial and Investment Group',
               sex: 1,
               workplaceChecked: 1,
@@ -109,7 +109,7 @@ export class DebtorCardEffects {
               education: 3,
               series: '45 06',
               number: '280499',
-              issueDate: '01/01/2000',
+              issueDate: new Date('01.01.2000'),
               position: 'Senior Consultant',
               issuedBy: 'Passport office No 122',
               email: 'p.smirnov@gmail.com',
