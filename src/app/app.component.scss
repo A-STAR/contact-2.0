@@ -1,6 +1,8 @@
+@import "./shared/styles/app/variables";
+
 .loader {
   position: fixed;
-  z-index: 10000;
+  z-index: $zindex-app-loader;
   left: 0;
   right: 0;
   top: 0;

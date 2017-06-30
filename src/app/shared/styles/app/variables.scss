@@ -305,17 +305,18 @@ $dropdown-caret-color:           #000;
 //
 // Note: These variables are not generated into the Customizer.
 
-$zindex-navbar:            1000;
-$zindex-dropdown:          1000;
-$zindex-popover:           1060;
-$zindex-tooltip:           1070;
-$zindex-navbar-fixed:      1030;
-$zindex-modal-background:  1040;
-$zindex-modal:             1050;
-$zindex-app-dialog:        10000;
-$zindex-app-datepicker:    10100;
-$zindex-app-validation:     10200;
-$zindex-app-grid2-dnd-ghost:  10300;
+$zindex-navbar:               1000;
+$zindex-dropdown:             1000;
+$zindex-popover:              1060;
+$zindex-tooltip:              1070;
+$zindex-navbar-fixed:         1030;
+$zindex-modal-background:     1040;
+$zindex-modal:                1050;
+$zindex-app-dialog:          10000;
+$zindex-app-datepicker:      10100;
+$zindex-app-validation:      10200;
+$zindex-app-grid2-dnd-ghost: 10300;
+$zindex-app-loader:          20000;
 
 //== Media queries breakpoints
 //
