@@ -108,9 +108,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.propagateChange(this.value);
   }
 
-  toggleCalendar(isExpanded: boolean = false): void {
-    // this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
-    this.isExpanded = isExpanded;
+  toggleCalendar(isExpanded?: boolean): void {
+    this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
       // TODO(d.maltsev): is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);
