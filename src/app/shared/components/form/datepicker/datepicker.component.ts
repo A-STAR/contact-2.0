@@ -23,7 +23,6 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
-  dateFormat = 'dd.mm.yy';
   isDisabled = false;
   isExpanded = false;
   dropdownStyle = {};
@@ -60,6 +59,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     });
   }
 
+  get formattedDate(): string {
+    return this.valueConverterService.dateToString(this.value);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target)) {
@@ -91,7 +94,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.isDisabled = isDisabled;
   }
 
-  onValueChange(newValue: Date): void {
+  onValueChange(newValue: Date | Event): void {
     if (this.isExpanded) {
       this.toggleCalendar(false);
     }
@@ -99,8 +102,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     if (newValue instanceof Date) {
       this.value = newValue;
     } else {
-      // TODO(d.maltsev): convert to Date
-      this.valueConverterService.formatDate(newValue);
+      this.value = this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
     }
 
     this.propagateChange(this.value);
@@ -110,7 +112,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     // this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     this.isExpanded = isExpanded;
     if (this.isExpanded) {
-      // TODO: is there a better way to do this?
+      // TODO(d.maltsev): is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);
     }
 
