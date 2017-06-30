@@ -168,6 +168,14 @@ export class ValueConverterService {
     }));
   }
 
+  dateToIsoString(date: Date): string {
+    return date ? date.toISOString().split('.')[0] + 'Z' : null;
+  }
+
+  isoStringToDate(date: string): Date {
+    return date ? new Date(date) : null;
+  }
+
   private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
     const momentDate = moment(dateAsString, fromPattern);
     if (momentDate.isValid()) {

@@ -47,7 +47,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
       this.translateService.onLangChange
         .distinctUntilChanged()
         .map(data => data.translations.default.date)
-    ).subscribe(translations => {
+    ).subscribe((translations: any) => {
       const { days, months } = translations;
       this.locale = {
         firstDayOfWeek: 1,
@@ -99,6 +99,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     if (newValue instanceof Date) {
       this.value = newValue;
     } else {
+      // TODO(d.maltsev): convert to Date
       this.valueConverterService.formatDate(newValue);
     }
 
