@@ -1,7 +1,9 @@
 import { Component, HostBinding, animate, state, style, transition, trigger } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/debounceTime';
 
 import { GridService } from './shared/components/grid/grid.service';
@@ -46,6 +48,7 @@ export class AppComponent {
 
   constructor(
     private gridService: GridService,
+    private router: Router,
     public settings: SettingsService,
     private translateService: TranslateService
   ) {
@@ -56,6 +59,12 @@ export class AppComponent {
     translateService.setDefaultLang(language);
     translateService.use(language).subscribe();
 
-    this._isLoading$ = this.gridService.isLoading$.debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL);
+    this._isLoading$ = Observable.combineLatest(
+      this.gridService.isLoading$,
+      this.router.events,
+      (isLoading, event) => isLoading || !(event instanceof NavigationEnd)
+    )
+    .distinctUntilChanged()
+    .debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL);
   }
 }
