@@ -4,13 +4,19 @@
       #input
       class="form-control"
       placeholder="Select a date"
-      style="float:none"
-      [ngModel]="value | date"
+      [disabled]="isDisabled"
+      [ngModel]="formattedDate"
       (change)="onValueChange($event)"
     />
 
     <span class="input-group-btn">
-      <button #trigger class="btn btn-default" type="button" [disabled]="isDisabled" (click)="toggleCalendar()">
+      <button
+        #trigger
+        class="btn btn-default"
+        type="button"
+        [disabled]="isDisabled"
+        (click)="toggleCalendar()"
+      >
         <i class="fa fa-calendar"></i>
       </button>
     </span>
@@ -19,14 +25,13 @@
   <div #dropdown>
     <div *ngIf="isExpanded" class="dropdown" [ngStyle]="dropdownStyle">
       <p-calendar
+        [inline]="true"
+        [locale]="locale"
+        [monthNavigator]="true"
         [ngModel]="value"
         (ngModelChange)="onValueChange($event)"
-        [inline]="true"
-        [monthNavigator]="true"
         [yearNavigator]="true"
-        yearRange="1900:2050"
-        [dateFormat]="dateFormat"
-        [locale]="locale">
+        yearRange="1900:2050">
       </p-calendar>
     </div>
   </div>

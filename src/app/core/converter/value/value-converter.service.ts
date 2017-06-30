@@ -176,6 +176,18 @@ export class ValueConverterService {
     return date ? new Date(date) : null;
   }
 
+  stringToDate(date: string): Date {
+    if (!date) {
+      return null;
+    }
+    const momentDate = moment(date, ValueConverterService.DATE_USER_PATTERN);
+    return momentDate.isValid() ? momentDate.toDate() : null;
+  }
+
+  dateToString(date: Date): string {
+    return date ? moment(date).format(ValueConverterService.DATE_USER_PATTERN) : null;
+  }
+
   private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
     const momentDate = moment(dateAsString, fromPattern);
     if (momentDate.isValid()) {
