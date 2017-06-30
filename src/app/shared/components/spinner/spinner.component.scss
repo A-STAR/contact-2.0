@@ -1,0 +1,42 @@
+@import "../../styles/app/variables";
+
+$ball-size: 10px;
+$margin: 2px;
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.spinner {
+  width: 3 * $ball-size + 6 * $margin;
+
+  > div {
+    width: $ball-size;
+    height: $ball-size;
+    margin: $margin;
+    background-color: $brand-info;
+    border-radius: 100%;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+    animation-delay: 0;
+    animation-fill-mode: both;
+    float: left;
+  }
+
+  @for $i from 1 through 9 {
+    > div:nth-child(#{$i}) {
+      animation-delay: ((random(100) / 100) - .2) + s;
+      animation-duration: ((random(100) / 100) + .6) + s;
+    }
+  }
+}

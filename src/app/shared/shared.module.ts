@@ -37,6 +37,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
+import { SpinnerModule } from './components/spinner/spinner.module';
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -77,6 +78,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     InfoDialogModule,
     GridModule,
     Grid2Module,
+    SpinnerModule,
     MomentModule,
     PopupInputModule,
     ToasterModule,
@@ -137,6 +139,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     InfoDialogModule,
     GridModule,
     Grid2Module,
+    SpinnerModule,
     MomentModule,
     MultiSelectModule,
     NumericInputComponent,

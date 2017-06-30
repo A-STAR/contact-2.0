@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '../../../core/auth/auth.service';
@@ -13,11 +15,19 @@ export class GridService {
   // defines whether the request should fetch a resource from the server's root
   private _localRequest = false;
 
+  private nRequests$ = new BehaviorSubject<number>(0);
+
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
     private translateService: TranslateService
-  ) { }
+  ) {}
+
+  get isLoading$(): Observable<boolean> {
+    return this.nRequests$
+      .map(n => n > 0)
+      .distinctUntilChanged();
+  }
 
   localRequest(): GridService {
     this._localRequest = true;
@@ -114,6 +124,8 @@ export class GridService {
       headers.append('Content-Type', 'application/json');
     }
 
+    this.nRequests$.next(this.nRequests$.getValue() + 1);
+
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
@@ -121,6 +133,9 @@ export class GridService {
         const api = route.startsWith(prefix) ? route : prefix + route;
 
         return this.http.request(`${rootUrl}${api}`, { ...options, headers });
+      })
+      .finally(() => {
+        this.nRequests$.next(this.nRequests$.getValue() - 1);
       });
   }
 
