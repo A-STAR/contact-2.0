@@ -40,16 +40,16 @@ export class OrganizationsTreeComponent implements OnDestroy {
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_DELETE'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -58,15 +58,10 @@ export class OrganizationsTreeComponent implements OnDestroy {
     },
   ];
 
-  action: IOrganizationDialogActionEnum;
-
-  editedEntity: IOrganization;
-
   hasViewPermission$: Observable<boolean>;
 
   organizations$: Observable<any>;
 
-  private stateSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -86,16 +81,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
         return [ files ];
       });
 
-    this.stateSubscription = this.organizationsService.state
-      .subscribe(
-        state => {
-          this.action = state.dialogAction;
-          this.editedEntity = state.organizations.find(organization => organization.id === state.selectedOrganizationId);
-        },
-        // TODO: notifications
-        error => console.error(error)
-      );
-
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
       hasViewPermission ? this.organizationsService.fetchOrganizations() : this.organizationsService.clearOrganizations()
@@ -103,20 +88,27 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stateSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_ADD;
+  get action(): Observable<IOrganizationDialogActionEnum> {
+    return this.organizationsService.dialogAction;
   }
 
-  get isEntityBeingEdited(): boolean {
-    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_EDIT;
+  get selectedOrganization(): Observable<IOrganization> {
+    return this.organizationsService.selectedOrganization;
   }
 
-  get isEntityBeingRemoved(): boolean {
-    return this.action === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE;
+  get isEntityBeingCreated(): Observable<boolean> {
+    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_ADD);
+  }
+
+  get isEntityBeingEdited(): Observable<boolean> {
+    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+  }
+
+  get isEntityBeingRemoved(): Observable<boolean> {
+    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
   }
 
   private convertToTreeNodes(organizations: Array<IOrganization>): Array<ITreeNode> {
@@ -156,7 +148,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
     this.selection = node;
-    this.organizationsService.selectOrganization(node.data.id);
+    this.organizationsService.selectOrganization(node.data);
     this.onSelect.emit(node.data);
   }
 
@@ -164,12 +156,12 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.organizationsService.setDialogAction(null);
   }
 
-  onNodeEdit(data: any): void {
+  onNodeEdit(node: { data: IOrganization }): void {
     this.userPermissionsService.has('ORGANIZATION_EDIT')
       .take(1)
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
-          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT, node.data);
         }
       });
   }

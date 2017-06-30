@@ -6,7 +6,7 @@ import { OrganizationsService } from './organizations.service';
 
 const defaultState: IOrganizationsState = {
   organizations: [],
-  selectedOrganizationId: null,
+  selectedOrganization: null,
   employees: [],
   notAddedEmployees: [],
   selectedEmployeeUserId: null,
@@ -23,13 +23,13 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganizationId: action.payload.organizationId
+        selectedOrganization: action.payload.organization
       };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
         organizations: [],
-        selectedOrganizationId: null
+        selectedOrganization: null
       };
     case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
       return {
@@ -55,7 +55,10 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.DIALOG_ACTION:
       return {
         ...state,
-        dialogAction: action.payload.dialogAction
+        dialogAction: action.payload.dialogAction,
+        selectedOrganization: action.payload.organization !== null
+          ? state.selectedOrganization
+          : null
       };
     default:
       return state;

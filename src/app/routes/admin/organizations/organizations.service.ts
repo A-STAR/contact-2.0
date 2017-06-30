@@ -40,6 +40,18 @@ export class OrganizationsService {
       .filter(Boolean);
   }
 
+  get dialogAction(): Observable<IOrganizationDialogActionEnum> {
+    return this.store
+      .select(state => state.organizations.dialogAction)
+      .distinctUntilChanged();
+  }
+
+  get selectedOrganization(): Observable<IOrganization> {
+    return this.store
+      .select(state => state.organizations.selectedOrganization)
+      .distinctUntilChanged();
+  }
+
   fetchOrganizations(): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -84,11 +96,11 @@ export class OrganizationsService {
     });
   }
 
-  selectOrganization(organizationId: number): void {
+  selectOrganization(organization: IOrganization): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_SELECT,
       payload: {
-        organizationId
+        organization
       }
     });
   }
@@ -144,11 +156,12 @@ export class OrganizationsService {
     });
   }
 
-  setDialogAction(dialogAction: IOrganizationDialogActionEnum): void {
+  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: IOrganization): void {
     return this.store.dispatch({
       type: OrganizationsService.DIALOG_ACTION,
       payload: {
-        dialogAction
+        dialogAction,
+        organization
       }
     });
   }

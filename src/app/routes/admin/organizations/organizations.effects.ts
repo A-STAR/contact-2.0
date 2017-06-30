@@ -61,7 +61,8 @@ export class OrganizationsEffects {
           {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
-              dialogAction: null
+              dialogAction: null,
+              selectedOrganization: null
             }
           }
         ])
@@ -77,7 +78,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
+      return this.updateOrganization(store.organizations.selectedOrganization.id, action.payload.organization)
         .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -122,7 +123,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteOrganization(store.organizations.selectedOrganizationId)
+      return this.deleteOrganization(store.organizations.selectedOrganization.id)
         .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -152,7 +153,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readEmployees(store.organizations.selectedOrganizationId)
+      return this.readEmployees(store.organizations.selectedOrganization.id)
         .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
           payload: {
@@ -181,7 +182,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readNotAddedEmployees(store.organizations.selectedOrganizationId)
+      return this.readNotAddedEmployees(store.organizations.selectedOrganization.id)
         .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
           payload: {
@@ -200,7 +201,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.createEmployee(store.organizations.selectedOrganizationId, action.payload.employee)
+      return this.createEmployee(store.organizations.selectedOrganization.id, action.payload.employee)
         .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
@@ -225,7 +226,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateEmployee(
-        store.organizations.selectedOrganizationId,
+        store.organizations.selectedOrganization.id,
         store.organizations.selectedEmployeeUserId,
         action.payload.employee
       )
@@ -252,7 +253,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteEmployee(store.organizations.selectedOrganizationId, store.organizations.selectedEmployeeUserId)
+      return this.deleteEmployee(store.organizations.selectedOrganization.id, store.organizations.selectedEmployeeUserId)
         .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
