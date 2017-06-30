@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, HostListener, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostListener, Input, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -19,6 +19,9 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   ]
 })
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @Input() inputClass = 'form-control';
+  @Input() buttonClass = 'btn btn-default';
+
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;

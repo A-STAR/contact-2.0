@@ -1,10 +1,10 @@
-<div class="datepicker">
+<div>
   <span class="input-group">
     <input
       #input
-      class="form-control"
       placeholder="Select a date"
       [disabled]="isDisabled"
+      [ngClass]="inputClass"
       [ngModel]="formattedDate"
       (change)="onValueChange($event)"
     />
@@ -12,9 +12,9 @@
     <span class="input-group-btn">
       <button
         #trigger
-        class="btn btn-default"
         type="button"
         [disabled]="isDisabled"
+        [ngClass]="buttonClass"
         (click)="toggleCalendar()"
       >
         <i class="fa fa-calendar"></i>
@@ -29,9 +29,9 @@
         [locale]="locale"
         [monthNavigator]="true"
         [ngModel]="value"
-        (ngModelChange)="onValueChange($event)"
         [yearNavigator]="true"
-        yearRange="1900:2050">
+        [yearRange]="'1900:2050'"
+        (ngModelChange)="onValueChange($event)">
       </p-calendar>
     </div>
   </div>
