@@ -13,6 +13,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { toFullName } from '../actions-log.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-actions-log-filter',
@@ -74,7 +75,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   constructor(
     formBuilder: FormBuilder,
-    gridService: GridService
+    gridService: GridService,
+    private valueConverterService: ValueConverterService,
   ) {
     super(formBuilder);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
@@ -129,8 +131,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     this.data = {
       [this.startTimeControl.controlName]: '00:00:00',
       [this.endTimeControl.controlName]: '23:59:59',
-      [this.startDateControl.controlName]: moment(Date.now()).startOf('month').format('DD.MM.YYYY'),
-      [this.endDateControl.controlName]: moment(Date.now()).endOf('month').format('DD.MM.YYYY')
+      [this.startDateControl.controlName]: moment(Date.now()).startOf('month').toDate(),
+      [this.endDateControl.controlName]: moment(Date.now()).endOf('month').toDate()
     };
 
     super.ngOnInit();
@@ -189,9 +191,12 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   }
 
   getFilterValues(): IActionsLogFilterRequest {
-    const request: IActionsLogFilterRequest = this.value;
-    request.employees = (request.employees as IEmployee[] || []).map((record: IEmployee) => record.id);
-    request.actionsTypes = (request.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code);
-    return request;
+    return {
+      ...this.value,
+      employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
+      actionsTypes: (this.value.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code),
+      startDate: moment(this.value.startDate).format('DD.MM.YYYY'),
+      endDate: moment(this.value.endDate).format('DD.MM.YYYY')
+    };
   }
 }

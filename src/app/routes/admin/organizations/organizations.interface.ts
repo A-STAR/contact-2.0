@@ -43,7 +43,7 @@ export enum IOrganizationDialogActionEnum {
 
 export interface IOrganizationsState {
   organizations: Array<IOrganization>;
-  selectedOrganizationId: number;
+  selectedOrganization: IOrganization;
   employees: Array<IEmployee>;
   notAddedEmployees: Array<IEmployee>;
   selectedEmployeeUserId: number;

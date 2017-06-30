@@ -7,8 +7,7 @@
             <label>
               {{ startDateControl.label | translate }}
               <app-input-datepicker
-                [form]="form"
-                [controlName]="startDateControl.controlName">
+                [formControlName]="startDateControl.controlName">
               </app-input-datepicker>
             </label>
           </div>
@@ -19,8 +18,7 @@
             <label>
               {{ endDateControl.label | translate }}
               <app-input-datepicker
-                [form]="form"
-                [controlName]="endDateControl.controlName">
+                [formControlName]="endDateControl.controlName">
               </app-input-datepicker>
             </label>
           </div>

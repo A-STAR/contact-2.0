@@ -1,3 +1,9 @@
 <router-outlet></router-outlet>
 
 <toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<div *ngIf="isLoading$ | async" [@isLoading] class="loader">
+  <div class="loader-content">
+    <app-spinner></app-spinner>
+  </div>
+</div>

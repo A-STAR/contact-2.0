@@ -1,69 +1,66 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, ElementRef, forwardRef, HostListener, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-input-datepicker',
   templateUrl: './datepicker.component.html',
-  styleUrls: ['./datepicker.component.scss']
+  styleUrls: ['./datepicker.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true
+    }
+  ]
 })
-export class DatePickerComponent implements OnInit, OnDestroy {
-  @Input() controlName: string;
-  @Input() form: FormGroup;
-  @Input() language = 'en';
-  @Input() name: string;
-  @Input() value: string;
-  @Output() valueChange = new EventEmitter<string>();
+export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
+  isDisabled = false;
   isExpanded = false;
-
   dropdownStyle = {};
+  value: Date = null;
 
-  dateFormat = 'dd.mm.yy';
-
-  locale = {};
-
-  mask = {
-    mask: [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/],
-    pipe: createAutoCorrectedDatePipe('dd.mm.yyyy'),
-    keepCharPositions: true
-  };
+  private locale = {};
+  private subscription: Subscription;
 
   private wheelListener: Function;
 
-  private locales = {
-    ru: {
-      // 0 = Sunday, 1 = Monday, etc.
-      firstDayOfWeek: 1,
-      dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-      dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-      monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
-    },
-    en: {
-      firstDayOfWeek: 1,
-      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-      monthNames: [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-      ],
-      monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    }
-  };
+  private propagateChange: Function = () => {};
 
   constructor(
+    private renderer: Renderer2,
     private translateService: TranslateService,
-    private renderer: Renderer2
+    private valueConverterService: ValueConverterService,
   ) {
-    if (this.controlName && this.name) {
-      throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
-    }
+    this.subscription = Observable.merge(
+      this.translateService.get('default.date')
+        .take(1),
+      this.translateService.onLangChange
+        .distinctUntilChanged()
+        .map(data => data.translations.default.date)
+    ).subscribe((translations: any) => {
+      const { days, months } = translations;
+      this.locale = {
+        firstDayOfWeek: 1,
+        dayNames: days.full,
+        dayNamesShort: days.short,
+        dayNamesMin: days.short,
+        monthNames: months.full,
+        monthNamesShort: months.short
+      };
+    });
+  }
+
+  get formattedDate(): string {
+    return this.valueConverterService.dateToString(this.value);
   }
 
   @HostListener('document:click', ['$event'])
@@ -74,51 +71,47 @@ export class DatePickerComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    if (this.controlName && this.form.get(this.controlName).value) {
-      this.value = this.form.get(this.controlName).value;
-    }
-
-    this.language = this.translateService.currentLang;
-    this.locale = this.locales[this.language];
-
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
   ngOnDestroy(): void {
     document.body.removeChild(this.dropdown.nativeElement);
+    this.subscription.unsubscribe();
   }
 
-  onValueChange(newValue: string): void {
-    this.value = newValue;
-    this.valueChange.emit(newValue);
+  writeValue(value: Date): void {
+    this.value = value;
   }
 
-  onDateChange(newValue: Date): void {
-    const d = newValue.getDate();
-    const m = newValue.getMonth() + 1;
-    const y = newValue.getFullYear();
-    const date = `${d > 9 ? d : '0' + d}.${m > 9 ? m : '0' + m}.${y}`;
+  registerOnChange(fn: Function): void {
+    this.propagateChange = fn;
+  }
 
-    if (this.form) {
-      if (this.controlName) {
-        this.form.patchValue({ [this.controlName]: date });
-      }
-      this.form.markAsDirty();
+  registerOnTouched(fn: Function): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  onValueChange(newValue: Date | Event): void {
+    if (this.isExpanded) {
+      this.toggleCalendar(false);
     }
 
-    this.onValueChange(date);
-    this.toggleCalendar(false);
+    if (newValue instanceof Date) {
+      this.value = newValue;
+    } else {
+      this.value = this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
+    }
+
+    this.propagateChange(this.value);
   }
 
-  get date(): string {
-    return this.value || null;
-  }
-
-  toggleCalendar(isExpanded: boolean = false): void {
-    // this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
-    this.isExpanded = isExpanded;
+  toggleCalendar(isExpanded?: boolean): void {
+    this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
-      // TODO: is there a better way to do this?
+      // TODO(d.maltsev): is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);
     }
 

@@ -66,18 +66,11 @@ export class DictComponent implements OnDestroy {
     ]
   };
 
-  action: DictionariesDialogActionEnum;
   selectedEntity: IDictionary;
-  rows: Array<IDictionary>;
-  languages: IUserLanguage[];
-  dictionaryTermTypes: ITerm[];
-
   hasViewPermission$: Observable<boolean>;
-
   emptyMessage$: Observable<string>;
 
   private dictionariesService$: Subscription;
-  private dictionariesRelations$: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -89,21 +82,9 @@ export class DictComponent implements OnDestroy {
     private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
-      this.action = state.dialogAction;
-      this.rows = state.dictionaries;
       this.selectedEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
-
       this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    });
-
-    this.dictionariesRelations$ = Observable.combineLatest(
-      this.userLanguagesService.userLanguages,
-      this.dictionariesService.state,
-    )
-    .subscribe(([languages, dictionaries]) => {
-      this.languages = languages;
-      this.dictionaryTermTypes = dictionaries.dictionaryTermTypes;
     });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
@@ -116,26 +97,52 @@ export class DictComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.dictionariesService$.unsubscribe();
-    this.dictionariesRelations$.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.action === DictionariesDialogActionEnum.DICTIONARY_ADD;
+  get dictionaries(): Observable<IDictionary[]> {
+    return this.dictionariesService.dictionaries;
   }
 
-  get isEntityBeingEdited(): boolean {
-    return this.action === DictionariesDialogActionEnum.DICTIONARY_EDIT && this.isReadyForEditing;
+  get languages(): Observable<IUserLanguage[]> {
+    return this.userLanguagesService.userLanguages;
   }
 
-  get isEntityBeingRemoved(): boolean {
-    return this.action === DictionariesDialogActionEnum.DICTIONARY_REMOVE;
+  get dictionaryTermTypes(): Observable<ITerm[]> {
+    return this.dictionariesService.dictionaryTermTypes;
   }
 
-  get isReadyForEditing(): boolean {
-    return this.selectedEntity
-      && this.selectedEntity.nameTranslations
-      && !!this.dictionaryTermTypes
-      && !!this.languages;
+  get isEntityBeingCreated(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.DICTIONARY_ADD);
+  }
+
+  get isEntityBeingEdited(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.DICTIONARY_EDIT);
+  }
+
+  get isEntityBeingRemoved(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.DICTIONARY_REMOVE);
+  }
+
+  get isDictionaryRelationsReady(): Observable<boolean> {
+    return Observable.combineLatest(this.languages, this.dictionaryTermTypes)
+      .map(([languages, dictionaryTermTypes]) => languages && !!dictionaryTermTypes);
+  }
+
+  get isReadyForEditing(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.isEntityBeingEdited,
+      this.isDictionaryRelationsReady,
+      // TODO(a.poterenko) make it as observable
+      Observable.of(
+        this.selectedEntity
+        && !!this.selectedEntity.nameTranslations
+      )
+    ).map(([isEntityBeingEdited, isRelationsReady, isReadyForEditing]) =>
+          isEntityBeingEdited && isRelationsReady && isReadyForEditing);
   }
 
   onEdit(): void {
@@ -149,15 +156,14 @@ export class DictComponent implements OnDestroy {
   }
 
   private editHandler(): void {
-    this.languages = null;
-    this.dictionaryTermTypes = null;
-    this.selectedEntity.nameTranslations = null;
+    if (this.selectedEntity) {
+      this.selectedEntity.nameTranslations = null;
+      this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
+        .take(1)
+        .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
+    }
 
     this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
-
-    this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
-      .take(1)
-      .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
   }
 
   cancelAction(): void {

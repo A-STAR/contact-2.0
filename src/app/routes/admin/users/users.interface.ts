@@ -13,8 +13,8 @@ export interface IUser {
   intPhone: string;
   workAddress: string;
   position: string;
-  startWorkDate: string;
-  endWorkDate: string;
+  startWorkDate: string | Date;
+  endWorkDate: string | Date;
   languageId: number;
   isBlocked: boolean;
 }

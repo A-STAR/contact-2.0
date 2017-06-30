@@ -1,28 +1,28 @@
 <app-dict-edit
-  *ngIf="isEntityBeingCreated"
+  *ngIf="isEntityBeingCreated | async"
   [mode]="'create'"
   [title]="'dictionaries.create.title'"
-  [languages]="languages"
-  [dictionaries]="rows"
-  [dictionaryTermTypes]="dictionaryTermTypes"
+  [languages]="languages | async"
+  [dictionaries]="dictionaries | async"
+  [dictionaryTermTypes]="dictionaryTermTypes | async"
   (submit)="onCreateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dict-edit
-  *ngIf="isEntityBeingEdited"
+  *ngIf="isReadyForEditing | async"
   [mode]="'update'"
   [title]="'dictionaries.edit.title'"
   [editedEntity]="selectedEntity"
-  [languages]="languages"
-  [dictionaries]="rows"
-  [dictionaryTermTypes]="dictionaryTermTypes"
+  [languages]="languages | async"
+  [dictionaries]="dictionaries | async"
+  [dictionaryTermTypes]="dictionaryTermTypes | async"
   (submit)="onUpdateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dialog-action
-  *ngIf="isEntityBeingRemoved"
+  *ngIf="isEntityBeingRemoved | async"
   [titleTranslationKey]="'dictionaries.remove.title'"
   [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
@@ -43,7 +43,7 @@
   [styles]="{height: '200px'}"
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
-  [rows]="rows"
+  [rows]="dictionaries | async"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

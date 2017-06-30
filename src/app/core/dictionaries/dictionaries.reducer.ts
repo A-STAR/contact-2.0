@@ -8,7 +8,7 @@ const defaultState: IDictionariesState = {
   dictionaries: [],
   selectedDictionaryCode: null,
   terms: [],
-  dictionaryTermTypes: [],
+  dictionaryTermTypes: null,
   selectedTermId: null,
   dialogAction: null
 };
