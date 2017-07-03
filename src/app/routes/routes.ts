@@ -5,6 +5,7 @@ import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
 import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
+import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -32,7 +33,8 @@ export const routes: Route[] = [
       menu: MenuResolver,
       userConstantsResolved: UserConstantsResolver,
       userLanguagesResolved: UserLanguagesResolver,
-      userPermissionsResolved: UserPermissionsResolver
+      userPermissionsResolved: UserPermissionsResolver,
+      metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [
@@ -52,7 +54,8 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     resolve: {
       menu: MenuResolver,
-      userPermissionsResolved: UserPermissionsResolver
+      userPermissionsResolved: UserPermissionsResolver,
+      metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [

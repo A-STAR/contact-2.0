@@ -10,6 +10,7 @@ import { userDictionariesReducer } from '../user/dictionaries/user-dictionaries.
 import { userLanguagesReducer } from '../user/languages/user-languages.reducer';
 import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
 import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
+import { metadataReducer } from '../metadata/metadata.reducer';
 
 export const rootReducer = {
   actionsLog: actionsLogReducer,
@@ -23,5 +24,6 @@ export const rootReducer = {
   userDictionaries: userDictionariesReducer,
   userLanguages: userLanguagesReducer,
   userPermissions: userPermissionsReducer,
+  metadata: metadataReducer,
   constants: constantsReducer,
 };

@@ -6,9 +6,13 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthService } from '../../../core/auth/auth.service';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
+import { ITypeCodeItem, IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+
+import { AuthService } from '../../../core/auth/auth.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 @Injectable()
 export class GridService {
@@ -20,7 +24,9 @@ export class GridService {
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private metadataService: MetadataService,
+    private dictionariesService: DictionariesService
   ) {}
 
   get isLoading$(): Observable<boolean> {
@@ -65,6 +71,34 @@ export class GridService {
 
   delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
+  }
+
+  configureColumnsUsingMetadataAndRenderers(
+    metadataKey: string, gridColumns: Observable<IGridColumn[]>, renderers: object
+  ): Observable<IGridColumn[]> {
+    return Observable.combineLatest(
+      gridColumns,
+      this.metadataService.metadata.map(metadata => metadata[metadataKey]),
+      this.dictionariesService.dictionariesByCode
+    ).map(([columns, metadata, dictionariesByCode]) => {
+      return this.setRenderers(columns.filter(column => {
+        return !!metadata.find((metadataColumn => {
+          const result = column.prop === metadataColumn.name || ((column.mappedFrom || []).includes(metadataColumn.name));
+          if (result) {
+            const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
+            if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+              column.renderer = (item: ITypeCodeItem) => {
+                const typeDescription = currentDictTypes.find(
+                  (dictionaryItem: IDictionaryItem) => dictionaryItem.code === item.typeCode
+                );
+                return typeDescription ? typeDescription.name : item.typeCode;
+              };
+            }
+          }
+          return result;
+        }));
+      }), renderers);
+    });
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
