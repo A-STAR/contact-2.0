@@ -15,11 +15,13 @@ import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { MenuService } from './menu/menu.service';
+import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
+import { MetadataEffects } from './metadata/metadata.effects';
 import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
 import { UserDictionariesEffects } from './user/dictionaries/user-dictionaries.effects';
@@ -41,6 +43,7 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(UserDictionariesEffects),
     EffectsModule.run(UserLanguagesEffects),
     EffectsModule.run(UserPermissionsEffects),
+    EffectsModule.run(MetadataEffects),
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
@@ -55,6 +58,7 @@ import { rootReducer } from './state/root.reducer';
     DatePipe,
     JwtHelper,
     MenuService,
+    MetadataService,
     NotificationsService,
     SettingsService,
     ThemesService,

@@ -7,11 +7,11 @@ import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Column } from 'ag-grid';
 
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
   IActionLog,
   IActionsLogData,
   IActionsLogPayload,
-  IActionType,
   IEmployee
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
@@ -26,6 +26,7 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 @Injectable()
 export class ActionsLogService {
@@ -128,7 +129,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionsLogSelectedRows(): Observable<IActionType[]> {
+  get actionsLogSelectedRows(): Observable<IDictionaryItem[]> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.selectedRows)
       .distinctUntilChanged();
@@ -146,7 +147,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionTypesRows(): Observable<IActionType[]> {
+  get actionTypesRows(): Observable<IDictionaryItem[]> {
     return this.store
       .select(state => state.actionsLog.actionTypes)
       .distinctUntilChanged();
@@ -180,9 +181,10 @@ export class ActionsLogService {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
 
-  getActionTypes(): Observable<IActionType[]> {
-    // TODO Move dict type
-    return this.gridService.read('/dictionaries/{code}/terms', { code: 4 }).map(data => data.terms);
+  getActionTypes(): Observable<IDictionaryItem[]> {
+    return this.gridService.read('/dictionaries/{code}/terms', {
+      code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+    }).map(data => data.terms);
   }
 
   getEmployees(): Observable<IEmployee[]> {

@@ -5,8 +5,9 @@ import * as moment from 'moment';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IActionsLogFilterRequest } from './actions-log-filter.interface';
-import { IEmployee, IActionType } from '../actions-log.interface';
+import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
@@ -66,7 +67,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   private _action: string;
 
-  actionTypesEqualsFn = (o1: IActionType, o2: IActionType) => o1.code === o2.code;
+  actionTypesEqualsFn = (o1: IDictionaryItem, o2: IDictionaryItem) => o1.code === o2.code;
 
   employeesRowsFilter: Function = (record: IEmployee) => {
     const blockingEmployees: boolean = this.value[this.blockingEmployeesControl.controlName];
@@ -147,7 +148,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   get selectedActionTypes(): string {
     if (Array.isArray(this.value.actionsTypes)) {
-      return (this.value.actionsTypes as IActionType[] || []).map((record: IActionType) => record.name).join(', ');
+      return (this.value.actionsTypes as IDictionaryItem[] || []).map((record: IDictionaryItem) => record.name).join(', ');
     }
     return '';
   }
@@ -194,7 +195,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return {
       ...this.value,
       employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
-      actionsTypes: (this.value.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code),
+      actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map((record: IDictionaryItem) => record.code),
       startDate: moment(this.value.startDate).format('DD.MM.YYYY'),
       endDate: moment(this.value.endDate).format('DD.MM.YYYY')
     };

@@ -441,13 +441,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return R.propOr('text', name)(filterMap);
   }
 
-  private getCustomFilterParams(name: string): any {
-    if (name === 'date') {
+  private getCustomFilterParams(column: IGridColumn): any {
+    if (column.filter === 'date') {
       return {
         filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
       };
+    } else if (column.filter === 'set') {
+      if (Array.isArray(column.filterOptions)) {
+        return {
+          values: column.filterOptions
+        };
+      }
     }
-
     return {};
   }
 
@@ -457,7 +462,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         colId: 'id',
         field: column.prop,
         filter: this.getCustomFilter(column.filter),
-        filterParams: this.getCustomFilterParams(column.filter),
+        filterParams: this.getCustomFilterParams(column),
         headerName: column.prop,
         /* to set the menu tabs for a column */
         // menuTabs:['filterMenuTab','generalMenuTab','columnsMenuTab'],
@@ -489,7 +494,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         enableRowGroup: false,
         filterParams: {
           // keeps the data filtered when new rows arrive
-          newRowsAction: 'keep'
+          newRowsAction: 'keep',
         },
         headerComponentParams: {
           headerHeight: this.headerHeight,

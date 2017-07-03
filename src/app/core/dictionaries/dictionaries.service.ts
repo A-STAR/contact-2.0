@@ -2,14 +2,22 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
-import { IDictionary, IDictionariesState, DictionariesDialogActionEnum, ITerm } from './dictionaries.interface';
+import {
+  IDictionary,
+  IDictionariesState,
+  DictionariesDialogActionEnum,
+  ITerm,
+  IDictionaryItem
+} from './dictionaries.interface';
 
 @Injectable()
 export class DictionariesService {
   static DICTIONARY_CODES = {
-    DICTIONARY_TERM_TYPES: 5
+    DICTIONARY_TERM_TYPES: 5,
+    USERS_ACTIONS_TYPES: 4
   };
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
   static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
@@ -28,6 +36,19 @@ export class DictionariesService {
   static DICTIONARY_DIALOG_ACTION   = 'DICTIONARY_DIALOG_ACTION';
 
   constructor(private store: Store<IAppState>) {}
+
+  get dictionariesByCode(): Observable<{ [index: number]: IDictionaryItem[] }> {
+    return Observable.combineLatest(
+      this.store.select(state => state.actionsLog.actionTypes),
+      // TODO(a.poterenko) Need to fill
+    ).map(([
+             usersActionsTypes
+    ]) => {
+      return {
+        [DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES]: usersActionsTypes
+      };
+    }).distinctUntilChanged();
+  }
 
   get state(): Observable<IDictionariesState> {
     return this.store

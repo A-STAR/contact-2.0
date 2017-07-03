@@ -1,23 +1,22 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
 
-import { IActionLog, IActionsLogData, IActionType, IEmployee } from './actions-log.interface';
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
@@ -33,53 +32,45 @@ export const toFullName = (entity: { lastName: string, firstName: string, middle
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActionsLogComponent implements OnDestroy {
+export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
-  columns: IGridColumn[] = [
+  columns: Observable<IGridColumn[]> = Observable.of([
     { prop: 'id', minWidth: 60, filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
+    { prop: 'fullName', mappedFrom: ['lastName', 'firstName', 'middleName'], minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
-    { prop: 'typeCode', minWidth: 150, filter: 'text' },
+    { prop: 'typeCode', minWidth: 150, filter: 'set',
+      filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
     { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
     { prop: 'machine', minWidth: 120, filter: 'textFilter' },
     { prop: 'duration', minWidth: 120, filter: 'text' }
-  ];
+  ]);
 
   renderers: IRenderer = {
     fullName: toFullName,
-    typeCode: (actionLog: IActionLog) => {
-      const currentActionType: IActionType =
-        this.actionTypesRawRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
-      return currentActionType ? currentActionType.name : actionLog.typeCode;
-    },
-    createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
   employeesRows: Observable<IEmployee[]>;
-  actionTypesRows: Observable<IActionType[]>;
+  actionTypesRows: Observable<IDictionaryItem[]>;
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
   actionsLogCurrentFilterColumn: Observable<Column>;
   actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
   actionsLogColumnMovingInProgress: Observable<boolean>;
-  actionsLogSelectedRows: Observable<IActionType[]>;
+  actionsLogSelectedRows: Observable<IDictionaryItem[]>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
-
-  private actionTypesRawRows: IActionType[];
-  private actionTypesRowsSubscription: Subscription;
 
   constructor(
     private store: Store<IAppState>,
     private gridService: GridService,
-    private converterService: ValueConverterService,
     private actionsLogService: ActionsLogService,
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.columns = this.gridService.configureColumnsUsingMetadataAndRenderers('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.actionsLogData = this.actionsLogService.actionsLogRows;
@@ -89,15 +80,6 @@ export class ActionsLogComponent implements OnDestroy {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
-
-    this.actionTypesRowsSubscription = this.actionTypesRows.subscribe(
-      (actionTypesRawRows: IActionType[]) =>
-        this.actionTypesRawRows = actionTypesRawRows
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.actionTypesRowsSubscription.unsubscribe();
   }
 
   refreshData(eventPayload: IGrid2EventPayload): void {

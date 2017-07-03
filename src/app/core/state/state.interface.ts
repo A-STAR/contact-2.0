@@ -10,6 +10,7 @@ import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.i
 import { IUserLanguagesState } from '../user/languages/user-languages.interface';
 import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
+import { IMetadataState } from '../metadata/metadata.interface';
 
 export interface IAppState {
   readonly actionsLog: IActionsLogServiceState;
@@ -23,6 +24,7 @@ export interface IAppState {
   readonly userDictionaries: IUserDictionariesState;
   readonly userLanguages: IUserLanguagesState;
   readonly userPermissions: IUserPermissionsState;
+  readonly metadata: IMetadataState;
   readonly users: IUsersState;
   readonly debtors: IDebtorsState;
 }
