@@ -204,6 +204,7 @@
       "blocked": "Блокирован",
       "login": "Логин",
       "password": "Пароль",
+      "ldapLogin": "LDAP-логин",
       "role": "Роль",
       "position": "Должность",
       "startWorkDate": "Дата начала работы",

@@ -204,6 +204,7 @@
       "blocked": "Blocked",
       "login": "Login",
       "password": "Password",
+      "ldapLogin": "LDAP login",
       "role": "Role",
       "position": "Position",
       "startWorkDate": "Start date",

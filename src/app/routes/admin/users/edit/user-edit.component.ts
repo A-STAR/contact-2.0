@@ -32,9 +32,11 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
 
   private canEditUser = false;
   private canEditUserRole = false;
+  private canEditLdap = false;
 
   private editUserSub: Subscription;
   private editUserRoleSub: Subscription;
+  private editLdapSub: Subscription;
 
   private passwordValidators: ValidatorFn = null;
 
@@ -55,6 +57,10 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       .subscribe(permission => {
         this.canEditUserRole = permission;
       });
+    this.editLdapSub = this.userPermissionsService.has('USER_LDAP_LOGIN_EDIT')
+      .subscribe(permission => {
+        this.canEditLdap = permission;
+      })
 
     this.passwordValidators = password(
       !this.editedEntity,
@@ -97,6 +103,7 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ this.passwordValidators ] },
+      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'text', required: true, disabled: !this.canEditLdap },
       { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.canEditUserRole,
           options: this.roles },
@@ -167,5 +174,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   ngOnDestroy(): void {
     this.editUserSub.unsubscribe();
     this.editUserRoleSub.unsubscribe();
+    this.editLdapSub.unsubscribe();
   }
 }
