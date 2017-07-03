@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -20,7 +20,7 @@ import { GridComponent } from '../../../shared/components/grid/grid.component';
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstantsComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ConstantsComponent';
