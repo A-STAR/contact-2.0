@@ -35,6 +35,12 @@ export class DictionariesService {
       .distinctUntilChanged();
   }
 
+  get dialogAction(): Observable<DictionariesDialogActionEnum> {
+    return this.store
+      .select(state => state.dictionaries.dialogAction)
+      .distinctUntilChanged();
+  }
+
   get dictionaries(): Observable<IDictionary[]> {
     return this.store
       .select(state => state.dictionaries.dictionaries)
