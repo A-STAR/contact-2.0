@@ -37,7 +37,7 @@ export class DictionariesService {
 
   constructor(private store: Store<IAppState>) {}
 
-  get dictionariesByCode(): Observable<{ [index: string]: IDictionaryItem[] }> {
+  get dictionariesByCode(): Observable<{ [index: number]: IDictionaryItem[] }> {
     return Observable.combineLatest(
       this.store.select(state => state.actionsLog.actionTypes),
       // TODO(a.poterenko) Need to fill

@@ -85,26 +85,35 @@ export class GridService {
       this.setRenderers(columns.filter(column =>
         !!metadata.find((metadataColumn => {
           const result = column.prop === metadataColumn.name || ((column.mappedFrom || []).includes(metadataColumn.name));
-          if (result && !column.renderer) {
-            const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
-            if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
-              column.renderer = (item: ITypeCodeItem) => {
-                const typeDescription = currentDictTypes.find(
-                  (dictionaryItem: IDictionaryItem) => dictionaryItem.code === item.typeCode
-                );
-                return typeDescription ? typeDescription.name : item.typeCode;
-              };
-            } else {
-              // Data types
-              switch (metadataColumn.dataType) {
-                case 2:
-                  // Date
-                  column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
-                  break;
-                case 7:
-                  // Date time
-                  column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
-                  break;
+          if (result) {
+            if (!column.renderer) {
+              const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
+              if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                column.renderer = (item: ITypeCodeItem) => {
+                  const typeDescription = currentDictTypes.find(
+                    (dictionaryItem: IDictionaryItem) => dictionaryItem.code === item.typeCode
+                  );
+                  return typeDescription ? typeDescription.name : item.typeCode;
+                };
+              } else {
+                // Data types
+                switch (metadataColumn.dataType) {
+                  case 2:
+                    // Date
+                    column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                    break;
+                  case 7:
+                    // Date time
+                    column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                    break;
+                }
+              }
+            }
+            // Filters
+            if (!!column.filterOptionsDictionaryId) {
+              const dictTypes = dictionariesByCode[column.filterOptionsDictionaryId];
+              if (Array.isArray(dictTypes)) {
+                column.filterOptions = dictTypes.map(item => item.name);
               }
             }
           }
