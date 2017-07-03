@@ -103,19 +103,19 @@ export class AuthService implements CanActivate, OnInit {
     return this.getRootUrl()
       .flatMap(root => {
         return this.http.get(`${root}/auth/logout`, { headers: this.defaultHeaders })
-          .do((resp: Response) => {
-            removeToken();
-            this.authenticated = false;
-            this.redirectToLogin();
-          })
+          .do(() => this.logoutHandler())
+          .map(resp => true)
           .catch(error => {
-            console.error(error.statusText || error.status || 'Request error');
-            // FIXME
-            this.authenticated = false;
+            this.logoutHandler();
             throw new Error(error);
-          })
-          .map(resp => true);
+          });
       });
+  }
+
+  private logoutHandler() {
+    removeToken();
+    this.authenticated = false;
+    this.redirectToLogin();
   }
 
   redirectToLogin(url: string = null): void {
