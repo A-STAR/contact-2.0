@@ -21,6 +21,7 @@ export interface IGridColumn {
   prop: string;
   renderer?: Function;
   width?: number;
+  mappedFrom?: string[];
   /*
   ** For compatibility with @swimlane/ngx-datatable
   ** Do NOT use, prefer renderer

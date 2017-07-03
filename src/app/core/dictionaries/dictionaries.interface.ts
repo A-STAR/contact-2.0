@@ -2,6 +2,15 @@ import { ILabeledValue } from '../converter/value/value-converter.interface';
 
 export type IDictionaryValue = number | Array<ILabeledValue>;
 
+export interface IDictionaryItem {
+  code: number;
+  name: string;
+}
+
+export interface ITypeCodeItem {
+  typeCode: number;
+}
+
 export interface IDictionary {
   id: number;
   code: string;
