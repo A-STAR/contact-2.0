@@ -35,6 +35,7 @@ export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
+    { prop: 'id', minWidth: 60, filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },

@@ -13,7 +13,6 @@
       [ngStyle]="styles"
       [overlayNoRowsTemplate]="'default.grid.empty' | translate"
       [overlayLoadingTemplate]="'default.grid.empty' | translate"
-      [rowData]="gridRows"
       [rowSelection]="rowSelection"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
@@ -22,11 +21,11 @@
     >
     </ag-grid-angular>
 </div>
-<app-toolbar
+<!--<app-toolbar
   *ngIf="gridToolbarActions"
   class="app-toolbar"
   [actions]="gridToolbarActions"
   (actionClick)="onToolbarActionClick($event)"
   (actionSelect)="onToolbarActionSelect($event)"
 >
-</app-toolbar>
+</app-toolbar>-->

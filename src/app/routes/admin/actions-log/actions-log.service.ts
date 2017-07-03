@@ -76,7 +76,7 @@ export class ActionsLogService {
               .setValueArray(customFilter.employees)
           );
 
-        return this.gridService.create('/actions/grid', {}, request)
+        return this.gridService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
             return {
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
@@ -88,10 +88,7 @@ export class ActionsLogService {
           });
       }
     )
-    .catch(() => {
-      this.notifications.error('actionsLog.actionsLog.messages.errors.fetch');
-      return null;
-    });
+    .catch(() => [ this.notifications.createErrorAction('actionsLog.actionsLog.messages.errors.fetch') ]);
 
   constructor(
     private gridService: GridService,
