@@ -11,6 +11,7 @@ import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
@@ -33,7 +34,8 @@ export class ActionsLogComponent {
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
-    { prop: 'typeCode', minWidth: 150, filter: 'text' },
+    { prop: 'typeCode', minWidth: 150, filter: 'set',
+      filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
     { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
     { prop: 'machine', minWidth: 120, filter: 'textFilter' },
     { prop: 'duration', minWidth: 120, filter: 'text' }
