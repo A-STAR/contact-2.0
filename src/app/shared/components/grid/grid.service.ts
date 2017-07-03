@@ -13,6 +13,7 @@ import { ITypeCodeItem, IDictionaryItem } from '../../../core/dictionaries/dicti
 import { AuthService } from '../../../core/auth/auth.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class GridService {
@@ -26,7 +27,8 @@ export class GridService {
     private authService: AuthService,
     private translateService: TranslateService,
     private metadataService: MetadataService,
-    private dictionariesService: DictionariesService
+    private dictionariesService: DictionariesService,
+    private converterService: ValueConverterService,
   ) {}
 
   get isLoading$(): Observable<boolean> {
@@ -83,7 +85,7 @@ export class GridService {
       this.setRenderers(columns.filter(column =>
         !!metadata.find((metadataColumn => {
           const result = column.prop === metadataColumn.name || ((column.mappedFrom || []).includes(metadataColumn.name));
-          if (result) {
+          if (result && !column.renderer) {
             const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
             if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
               column.renderer = (item: ITypeCodeItem) => {
@@ -92,6 +94,18 @@ export class GridService {
                 );
                 return typeDescription ? typeDescription.name : item.typeCode;
               };
+            } else {
+              // Data types
+              switch (metadataColumn.dataType) {
+                case 2:
+                  // Date
+                  column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                  break;
+                case 7:
+                  // Date time
+                  column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                  break;
+              }
             }
           }
           return result;

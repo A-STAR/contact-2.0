@@ -4,14 +4,13 @@ import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
-import { IActionLog, IActionsLogData, IEmployee } from './actions-log.interface';
+import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
@@ -42,7 +41,6 @@ export class ActionsLogComponent {
 
   renderers: IRenderer = {
     fullName: toFullName,
-    createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
   employeesRows: Observable<IEmployee[]>;
@@ -60,7 +58,6 @@ export class ActionsLogComponent {
   constructor(
     private store: Store<IAppState>,
     private gridService: GridService,
-    private converterService: ValueConverterService,
     private actionsLogService: ActionsLogService,
   ) {
     this.columns = this.gridService.configureColumnsUsingMetadataAndRenderers('Actions', this.columns, this.renderers);
