@@ -7,7 +7,9 @@ import * as R from 'ramda';
 
 import { IAppState } from '../state/state.interface';
 import {
+  IFilters,
   IMessage,
+  INotification,
   INotificationActionType,
   INotificationActionPayload,
   INotificationServiceState,
@@ -40,6 +42,24 @@ export class NotificationsService implements OnDestroy {
 
   get state(): Observable<INotificationServiceState> {
     return this.store.select(state => state.notifications);
+  }
+
+  get length(): Observable<number> {
+    return this.state
+      .map(state => state.notifications.length)
+      .distinctUntilChanged();
+  }
+
+  get notifications(): Observable<Array<INotification>> {
+    return this.state
+      .map(state => state.notifications)
+      .distinctUntilChanged();
+  }
+
+  get filters(): Observable<IFilters> {
+    return this.state
+      .map(state => state.filters)
+      .distinctUntilChanged();
   }
 
   createDebugAction(message: string | IMessage, showAlert: boolean = true): Action {
