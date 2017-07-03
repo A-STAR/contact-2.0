@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ValidatorFn } from '@angular/forms';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -12,6 +12,7 @@ import { PermissionsService } from '../../roles/permissions.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UsersService } from '../users.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -34,6 +35,7 @@ export class UserEditComponent {
   private userId: number;
 
   constructor(
+    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private gridService: GridService,
@@ -42,8 +44,10 @@ export class UserEditComponent {
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
+    private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
+    // TODO(d.maltsev): stronger typing
     this.userId = Number((this.activatedRoute.params as any).value.id);
 
     // TODO(d.maltsev): we probably have to do something with this monster
@@ -161,16 +165,18 @@ export class UserEditComponent {
       return;
     }
 
-    const data = this.toSubmittedValues(this.form.value);
+    const { photo, ...user } = this.toSubmittedValues(this.form.value);
 
-    const action = this.userId ? this.updateUser(this.userId, data) : this.createUser(data);
+    if (this.userId) {
+      this.usersService.update(user, photo, this.userId);
+    } else {
+      this.usersService.create(user, photo);
+    }
 
-    // TODO(d.maltsev)
-    action
+    this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
       .take(1)
-      .subscribe(response => {
-        console.log(response);
-      });
+      .do(() => this.onClose())
+      .subscribe();
   }
 
   onClose(): void {
@@ -205,15 +211,5 @@ export class UserEditComponent {
   private readUser(userId: number): Observable<any> {
     return this.gridService.read('/api/users')
       .map(response => response.users.find(user => user.id === userId));
-  }
-
-  // TODO(d.maltsev): user service
-  private createUser(user: IUser): Observable<any> {
-    return this.gridService.create('/api/users', {}, user);
-  }
-
-  // TODO(d.maltsev): user service
-  private updateUser(userId: number, user: IUser): Observable<any> {
-    return this.gridService.update('/api/users/{userId}', { userId }, user);
   }
 }

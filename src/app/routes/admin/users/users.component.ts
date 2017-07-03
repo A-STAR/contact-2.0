@@ -174,13 +174,13 @@ export class UsersComponent implements OnDestroy {
   }
 
   onAddSubmit(data: any): void {
-    const { image, ...user } = data;
-    this.usersService.create(user, image);
+    // const { image, ...user } = data;
+    // this.usersService.create(user, image);
   }
 
   onEditSubmit(data: any): void {
-    const { image, ...user } = data;
-    this.usersService.update(user, image);
+    // const { image, ...user } = data;
+    // this.usersService.update(user, image);
   }
 
   cancelAction(): void {

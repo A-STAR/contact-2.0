@@ -15,6 +15,7 @@ export class UsersService {
   static USER_CREATE         = 'USER_CREATE';
   static USER_UPDATE         = 'USER_UPDATE';
   static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
+  static USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
   static USER_SELECT         = 'USER_SELECT';
   static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
@@ -46,12 +47,13 @@ export class UsersService {
     });
   }
 
-  update(user: IUser, photo: File | false): void {
+  update(user: IUser, photo: File | false, userId: number): void {
     return this.store.dispatch({
       type: UsersService.USER_UPDATE,
       payload: {
         user,
-        photo
+        photo,
+        userId,
       }
     });
   }

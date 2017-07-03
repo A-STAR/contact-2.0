@@ -61,7 +61,10 @@ export class UsersEffects {
         .mergeMap(response => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction
+            this.closeDialogAction,
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
@@ -81,20 +84,21 @@ export class UsersEffects {
   @Effect()
   updateUser$ = this.actions
     .ofType(UsersService.USER_UPDATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [ action, store ]: [Action, IAppState] = data;
-      const { user, photo } = action.payload;
-      return this.updateUser(store.users.selectedUserId, user)
+    .switchMap((action: Action) => {
+      const { user, photo, userId } = action.payload;
+      return this.updateUser(userId, user)
         .mergeMap(() => {
           const actions = [
             this.fetchAction,
             this.closeDialogAction,
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
             payload: {
-              userId: store.users.selectedUserId,
+              userId,
               photo
             }
           }, ...actions];
@@ -113,11 +117,12 @@ export class UsersEffects {
       const { userId, photo } = data.payload;
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [
-          this.closeDialogAction
+          this.closeDialogAction,
+          {
+            type: UsersService.USER_UPDATE_SUCCESS
+          }
         ])
         .catch(error => {
-          console.log(error);
-          console.log(error.code);
           const message = photo ?
             error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
             'users.messages.errors.deletePhoto';
