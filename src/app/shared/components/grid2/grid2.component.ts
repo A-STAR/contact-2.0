@@ -431,11 +431,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     return R.propOr('text', name)(filterMap);
   }
 
+  private getCustomFilterParams(name: string): any {
+    if (name === 'date') {
+      return {
+        filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
+      };
+    }
+
+    return {};
+  }
+
   private createColumnDefs(): ColDef[] {
     return this.columns.map(column => {
       const colDef: ColDef = {
         field: column.prop,
         filter: this.getCustomFilter(column.filter),
+        filterParams: this.getCustomFilterParams(column.filter),
         headerName: column.prop,
         /* to set the menu tabs for a column */
         // menuTabs:['filterMenuTab','generalMenuTab','columnsMenuTab'],
