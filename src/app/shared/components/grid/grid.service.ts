@@ -74,15 +74,14 @@ export class GridService {
   }
 
   configureColumnsUsingMetadataAndRenderers(
-    metadataKey: string, gridColumns: Observable<IGridColumn[]>, renderers: object
-  ): Observable<IGridColumn[]> {
+    metadataKey: string, gridColumns: Observable<IGridColumn[]>, renderers: object): Observable<IGridColumn[]> {
     return Observable.combineLatest(
       gridColumns,
       this.metadataService.metadata.map(metadata => metadata[metadataKey]),
       this.dictionariesService.dictionariesByCode
-    ).map(([columns, metadata, dictionariesByCode]) => {
-      return this.setRenderers(columns.filter(column => {
-        return !!metadata.find((metadataColumn => {
+    ).map(([columns, metadata, dictionariesByCode]) =>
+      this.setRenderers(columns.filter(column =>
+        !!metadata.find((metadataColumn => {
           const result = column.prop === metadataColumn.name || ((column.mappedFrom || []).includes(metadataColumn.name));
           if (result) {
             const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
@@ -96,9 +95,9 @@ export class GridService {
             }
           }
           return result;
-        }));
-      }), renderers);
-    });
+        }))
+      ), renderers)
+    );
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
