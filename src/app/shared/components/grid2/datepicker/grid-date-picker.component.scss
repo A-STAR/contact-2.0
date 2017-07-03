@@ -1,0 +1,20 @@
+.datepicker {
+  max-width: 200px;
+  padding: 10px;
+}
+
+.ag-floating-filter-body :host /deep/ {
+  .datepicker {
+    padding: 0;
+  }
+
+  .btn,
+  input {
+    line-height: 17px;
+  }
+
+  .btn {
+    padding: 0 2px;
+    border: 1px solid lightgrey;
+  }
+}
