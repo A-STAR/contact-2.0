@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -6,23 +6,45 @@ import { EntityBaseComponent } from '../../../../shared/components/entity/edit/e
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IConstant } from '../constants.interface';
 
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+
 @Component({
   selector: 'app-constant-edit',
   templateUrl: './constant-edit.component.html'
 })
-export class ConstantEditComponent extends EntityBaseComponent<IConstant> implements OnDestroy{
+export class ConstantEditComponent extends EntityBaseComponent<IConstant> implements OnInit, OnDestroy {
   private localizedOptions: any;
   private langSub: Subscription;
 
-  constructor(private translateService: TranslateService) {
+  formData: IConstant;
+
+  constructor(
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService,
+  ) {
     super();
     this.localizedOptions = this.translateService.instant('default.typeCode');
     this.langSub = this.translateService.onLangChange
       .subscribe(event => this.localizedOptions = event.translations.default.typeCode);
   }
 
+  ngOnInit(): void {
+    this.formData = {
+      ...this.editedEntity,
+      value: this.valueConverterService.isoStringToDate(this.editedEntity.valueD)
+    };
+    super.ngOnInit();
+  }
+
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
+  }
+
+  toSubmittedValues(constant: IConstant): IConstant {
+    return {
+      ...constant,
+      value: this.valueConverterService.dateToIsoString(constant.value)
+    };
   }
 
   protected getControls(): Array<IDynamicFormControl> {
