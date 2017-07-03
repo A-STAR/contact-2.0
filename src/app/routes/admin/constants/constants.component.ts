@@ -123,9 +123,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     if (typeCode === 4) {
       // convert the boolean to a number
       body[field] = Number(value);
-    } else if (typeCode === 2) {
-      // convert the date back to ISO8601
-      body[field] = this.valueConverterService.valueToIsoDate(value);
     }
 
     this.gridService
