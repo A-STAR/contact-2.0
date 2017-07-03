@@ -1,7 +1,8 @@
-import { Component, ElementRef, forwardRef, HostListener, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostListener, Input, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
@@ -19,14 +20,17 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   ]
 })
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @Input() inputClass = 'form-control';
+  @Input() buttonClass = 'btn btn-default';
+
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
   isDisabled = false;
   isExpanded = false;
-  dropdownStyle = {};
   value: Date = null;
+  style$ = new BehaviorSubject<{ top: string; left: string; }>(null);
 
   private locale = {};
   private subscription: Subscription;
@@ -99,13 +103,14 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
       this.toggleCalendar(false);
     }
 
-    if (newValue instanceof Date) {
-      this.value = newValue;
-    } else {
-      this.value = this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
-    }
+    const newDate = newValue instanceof Date ?
+      newValue :
+      this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
 
-    this.propagateChange(this.value);
+    if (Number(newDate) !== Number(this.value)) {
+      this.value = newDate;
+      this.propagateChange(newDate);
+    }
   }
 
   toggleCalendar(isExpanded?: boolean): void {
@@ -128,10 +133,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     const top = inputRect.bottom + contentRect.height > window.innerHeight ? inputRect.top - contentRect.height : inputRect.bottom;
     const left = inputRect.left;
 
-    this.dropdownStyle = {
+    this.style$.next({
       top: `${top}px`,
       left: `${left}px`
-    };
+    });
 
     this.addWheelListener();
   }
