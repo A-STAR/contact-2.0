@@ -34,7 +34,6 @@ import { SettingsService } from '../../../core/settings/settings.service';
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
-  // @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() autoLoad = true;
   @Input() footerHeight = 50;
   @Input() columns: Array<any> = [];
@@ -47,7 +46,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() rows: Array<any> = [];
   @Input() selectionType: TSelectionType;
   @Input() styles: { [key: string]: any };
-  @Input() toolbarActions: IToolbarAction[];
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
@@ -93,10 +91,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   get filteredRows(): Array<any> {
     return (this.rows || []).filter(this.filter);
-  }
-
-  get hasToolbar(): boolean {
-    return !!this.toolbarActions;
   }
 
   ngOnInit(): void {
@@ -165,7 +159,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       // Don't set the full height if the `styles` param is not set
       return;
     }
-    // const toolbarHeight = this.hasToolbar ? 50 : 0;
     const offset = 43 + 12 * 2 + 50;
     const height = this.settings.getContentHeight() - offset;
     this.dataTableRef.nativeElement.style.height = `${height}px`;
@@ -203,18 +196,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   onActivate(event: any): void {
     const { row, type } = event;
     if (type === 'dblclick') {
-      // TODO(a.tymchuk): yell if there is no edit permission
       // NOTE: workaround for rows getting unselected on dblclick
       if (!this.selected.find(selected => selected.$$id === row.$$id)) {
         this.selected = this.selected.concat(row);
       }
     }
     this.clickDebouncer.next({ type, row });
-  }
-
-  // TODO(a.tymchuk): implement when paging is ready
-  onPage(event: UIEvent): void {
-    // const { count, pageSize, limit, offset } = event;
   }
 
   getRowHeight(row: any): number {

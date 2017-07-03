@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnDestroy,
   ViewChild,
@@ -30,6 +31,7 @@ export const toFullName = (entity: { lastName: string, firstName: string, middle
   templateUrl: './actions-log.component.html',
   styleUrls: ['./actions-log.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionsLogComponent implements OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';

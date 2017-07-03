@@ -1,12 +1,5 @@
 <div class="grid grid-default">
   <div class="grid-body">
-    <app-toolbar
-      *ngIf="hasToolbar"
-      class="app-toolbar"
-      [actions]="toolbarActions"
-      (actionClick)="onActionClick($event)"
-    >
-    </app-toolbar>
     <ngx-datatable
       class="material"
       [ngStyle]="styles"
