@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and Permissions",
         "USERS": "Users",
+        "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",

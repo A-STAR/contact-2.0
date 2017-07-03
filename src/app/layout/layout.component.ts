@@ -19,6 +19,7 @@ export class LayoutComponent {
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
+    UserEditComponent: 'USER_EDIT',
     HelpComponent: 'HELP',
     ActionsLogComponent: 'ACTIONS_LOG',
     DebtorComponent: 'DEBTOR_CARD',

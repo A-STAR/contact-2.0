@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
+import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
@@ -50,6 +51,7 @@ import { rootReducer } from './state/root.reducer';
   providers: [
     AuthHttpService,
     AuthService,
+    ContentTabService,
     EntityTranslationsService,
     DictionariesService,
     DatePipe,

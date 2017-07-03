@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",
         "USERS": "Пользователи",
+        "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Словари",

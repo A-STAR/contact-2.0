@@ -8,6 +8,7 @@ export interface IUser {
   comment: string;
   email: string;
   password: string;
+  ldapLogin: string;
   workPhone: string;
   mobPhone: string;
   intPhone: string;

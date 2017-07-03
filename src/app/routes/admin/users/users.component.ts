@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -59,12 +60,12 @@ export class UsersComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.usersService.setDialogAddAction(),
+      action: () => this.onAdd(),
       enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.usersService.setDialogEditAction(),
+      action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId)
@@ -87,9 +88,6 @@ export class UsersComponent implements OnDestroy {
 
   editedEntity: IUser;
 
-  passwordMinLength$: Observable<IUserConstant>;
-  passwordComplexity$: Observable<IUserConstant>;
-
   // TODO(d.maltsev): role options type
   roleOptions$: Observable<any>;
   languageOptions$: Observable<Array<IUserLanguageOption>>;
@@ -108,6 +106,7 @@ export class UsersComponent implements OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
+    private router: Router,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
@@ -141,9 +140,6 @@ export class UsersComponent implements OnDestroy {
         // TODO: notifications
         error => console.error(error)
       );
-
-    this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
-    this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
 
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
@@ -191,8 +187,13 @@ export class UsersComponent implements OnDestroy {
     this.usersService.setDialogAction(null);
   }
 
-  onEdit(user: IUser): void {
-    this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT, user.id);
+  onAdd(): void {
+    this.router.navigate([`/admin/users/create`]);
+  }
+
+  onEdit(user?: IUser): void {
+    const id = user ? user.id : this.editedEntity.id;
+    this.router.navigate([`/admin/users/${id}`]);
   }
 
   onSelect(user: IUser): void {
