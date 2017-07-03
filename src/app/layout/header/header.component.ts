@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
 import { BsDropdownDirective } from 'ngx-bootstrap';
+import { Observable } from 'rxjs/Observable';
 
-import { IFilters, INotification, INotificationServiceState } from '../../core/notifications/notifications.interface';
+import { IFilters, INotification } from '../../core/notifications/notifications.interface';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
@@ -14,41 +14,30 @@ import { SettingsService } from '../../core/settings/settings.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
   isNavSearchVisible: boolean;
 
   isLicenseVisible = false;
 
-  notifications: Array<INotification> = [];
-
-  filters: IFilters = {};
-
-  private notificationSubscription: Subscription;
+  filters$: Observable<IFilters>;
+  notificationsCount$: Observable<number>;
+  notifications$: Observable<Array<INotification>>;
 
   constructor(
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
     private translateService: TranslateService,
-  ) {}
+  ) {
+    this.filters$ = this.notificationsService.filters;
+    this.notificationsCount$ = this.notificationsService.length;
+    this.notifications$ = this.notificationsService.notifications;
+  }
 
   ngOnInit(): void {
     this.isNavSearchVisible = false;
-
-    this.notificationSubscription = this.notificationsService.state
-      .subscribe((state: INotificationServiceState) => {
-        // NOTE: dirty hack, no other solution for the moment
-        setTimeout(() => {
-          this.filters = state.filters;
-          this.notifications = state.notifications;
-        }, 0);
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.notificationSubscription.unsubscribe();
   }
 
   get isAuthenticated(): boolean {
