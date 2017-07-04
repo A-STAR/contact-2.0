@@ -94,52 +94,60 @@ export class GridService {
       });
   }
 
-  configureColumnsUsingMetadataAndRenderers(
-    metadataKey: string, gridColumns: Observable<IGridColumn[]>, renderers: object): Observable<IGridColumn[]> {
-    return Observable.combineLatest(
-      gridColumns,
-      this.metadataService.metadata.map(metadata => metadata[metadataKey]),
-      this.dictionariesService.dictionariesByCode
-    ).map(([columns, metadata, dictionariesByCode]) =>
-      this.setRenderers(columns.filter(column =>
-        !!metadata.find((metadataColumn => {
-          const result = column.prop === metadataColumn.name || ((column.mappedFrom || []).includes(metadataColumn.name));
-          if (result) {
-            if (!column.renderer) {
-              const currentDictTypes = dictionariesByCode[metadataColumn.dictCode];
-              if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
-                column.renderer = (item: ITypeCodeItem) => {
-                  const typeDescription = currentDictTypes.find(
-                    (dictionaryItem: IDictionaryItem) => dictionaryItem.code === item.typeCode
-                  );
-                  return typeDescription ? typeDescription.name : item.typeCode;
-                };
-              } else {
-                // Data types
-                switch (metadataColumn.dataType) {
-                  case 2:
-                    // Date
-                    column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
-                    break;
-                  case 7:
-                    // Date time
-                    column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
-                    break;
+  /**
+   * Builds column defs from server metadata
+   *
+   * @param {string} metadataKey The key
+   * @param {Observable<IGridColumn[]>} gridColumns
+   * @param {object} renderers Colums rendered, esentially getters
+   * @returns {Observable<IGridColumn[]>} Column defininitions
+   */
+  getColumnDefs(
+    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+      const mapColumns = ([metadata, dictionaries]) =>
+        this.setRenderers(columns.filter(column =>
+          !!metadata.find(metadataColumn => {
+            const result = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
+            if (result) {
+              if (!column.renderer) {
+                const currentDictTypes = dictionaries[metadataColumn.dictCode];
+                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                  column.renderer = (item: ITypeCodeItem) => {
+                    const typeDescription = currentDictTypes.find(
+                      dictionaryItem => dictionaryItem.code === item.typeCode
+                    );
+                    return typeDescription ? typeDescription.name : item.typeCode;
+                  };
+                } else {
+                  // Data types
+                  switch (metadataColumn.dataType) {
+                    case 2:
+                      // Date
+                      column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                      break;
+                    case 7:
+                      // Date time
+                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                      break;
+                  }
+                }
+              }
+              // Filters
+              if (!!column.filterOptionsDictionaryId) {
+                const dictTypes = dictionaries[column.filterOptionsDictionaryId];
+                if (Array.isArray(dictTypes)) {
+                  column.filterOptions = dictTypes.map(item => item.name);
                 }
               }
             }
-            // Filters
-            if (!!column.filterOptionsDictionaryId) {
-              const dictTypes = dictionariesByCode[column.filterOptionsDictionaryId];
-              if (Array.isArray(dictTypes)) {
-                column.filterOptions = dictTypes.map(item => item.name);
-              }
-            }
-          }
-          return result;
-        }))
-      ), renderers)
-    );
+            return result;
+          })
+        ), renderers);
+
+      return Observable.combineLatest(
+        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
+        this.dictionariesService.dictionariesByCode
+      ).map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
