@@ -24,7 +24,6 @@ import {
   IViewportDatasource,
 } from 'ag-grid';
 
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
   IToolbarAction,
   IToolbarActionSelectPayload,
