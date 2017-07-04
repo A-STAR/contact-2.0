@@ -127,7 +127,8 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
       this.syncActiveChanges();
     }
 
-    this.changeDetector.detectChanges();  // TODO(a.poterenko) Workaround: GridComponent update issue
+    // TODO(a.poterenko) Workaround: GridComponent update issue
+    this.changeDetector.detectChanges();
   }
 
   private syncActiveChanges(): void {
