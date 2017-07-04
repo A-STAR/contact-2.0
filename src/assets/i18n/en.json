@@ -674,7 +674,8 @@
       "clear": "Clear",
       "search": "Search",
       "add": "Add",
-      "change": "Change"
+      "change": "Change",
+      "back": "Back"
     },
     "dateTimeRage": {
       "from": "From",

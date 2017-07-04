@@ -19,13 +19,6 @@ export class UsersEffects {
     type: UsersService.USERS_FETCH
   };
 
-  private closeDialogAction = {
-    type: UsersService.USER_DIALOG_ACTION,
-    payload: {
-      dialogAction: null
-    }
-  };
-
   @Effect()
   fetchUsers$ = this.actions
     .ofType(UsersService.USERS_FETCH)
@@ -61,7 +54,6 @@ export class UsersEffects {
         .mergeMap(response => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction,
             {
               type: UsersService.USER_UPDATE_SUCCESS
             }
@@ -90,7 +82,6 @@ export class UsersEffects {
         .mergeMap(() => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction,
             {
               type: UsersService.USER_UPDATE_SUCCESS
             }
@@ -117,7 +108,6 @@ export class UsersEffects {
       const { userId, photo } = data.payload;
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [
-          this.closeDialogAction,
           {
             type: UsersService.USER_UPDATE_SUCCESS
           }
@@ -127,7 +117,6 @@ export class UsersEffects {
             error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
             'users.messages.errors.deletePhoto';
           return [
-            this.closeDialogAction,
             this.notificationsService.createErrorAction(message)
           ];
         });

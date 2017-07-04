@@ -7,7 +7,6 @@ import { UsersService } from './users.service';
 const defaultState: IUsersState = {
   users: [],
   selectedUserId: null,
-  dialogAction: null,
   displayBlocked: false
 };
 
@@ -28,12 +27,6 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
         ...state,
         users: [],
         selectedUserId: null
-      };
-    case UsersService.USER_DIALOG_ACTION:
-      return {
-        ...state,
-        selectedUserId: action.payload.userId || state.selectedUserId,
-        dialogAction: action.payload.dialogAction
       };
     case UsersService.USER_TOGGLE_BLOCKED:
       return {

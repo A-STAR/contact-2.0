@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
@@ -40,7 +40,6 @@ export class UserEditComponent {
     private contentTabService: ContentTabService,
     private gridService: GridService,
     private permissionsService: PermissionsService,
-    private router: Router,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
@@ -180,9 +179,7 @@ export class UserEditComponent {
   }
 
   onClose(): void {
-    const i = this.contentTabService.getActiveIndex();
-    this.router.navigate(['/admin/users'])
-      .then(() => this.contentTabService.removeTab(i));
+    this.contentTabService.navigate('/admin/users');
   }
 
   private toSubmittedValues(value: IUser): any {

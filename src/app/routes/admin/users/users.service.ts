@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IUser, IUsersState, IUserDialogActionEnum } from './users.interface';
+import { IUser, IUsersState } from './users.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 
@@ -17,7 +17,6 @@ export class UsersService {
   static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
   static USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
   static USER_SELECT         = 'USER_SELECT';
-  static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
@@ -71,24 +70,6 @@ export class UsersService {
         userId
       }
     });
-  }
-
-  setDialogAction(dialogAction: IUserDialogActionEnum, userId?: number): void {
-    return this.store.dispatch({
-      type: UsersService.USER_DIALOG_ACTION,
-      payload: {
-        dialogAction,
-        userId
-      }
-    });
-  }
-
-  setDialogAddAction(): void {
-    this.setDialogAction(IUserDialogActionEnum.USER_ADD);
-  }
-
-  setDialogEditAction(): void {
-    this.setDialogAction(IUserDialogActionEnum.USER_EDIT);
   }
 
   toggleBlockedFilter(): void {

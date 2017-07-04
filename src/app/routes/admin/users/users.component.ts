@@ -1,15 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
-import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IUserConstant } from '../../../core/user/constants/user-constants.interface';
+import { IUser, IUsersState } from './users.interface';
 import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
 
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../roles/permissions.service';
@@ -84,8 +83,6 @@ export class UsersComponent implements OnDestroy {
     }
   ];
 
-  action: IUserDialogActionEnum;
-
   editedEntity: IUser;
 
   // TODO(d.maltsev): role options type
@@ -103,10 +100,10 @@ export class UsersComponent implements OnDestroy {
   private viewPermissionSubscription: Subscription;
 
   constructor(
+    private contentTabService: ContentTabService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
-    private router: Router,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
@@ -134,7 +131,6 @@ export class UsersComponent implements OnDestroy {
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;
-          this.action = state.dialogAction;
           this.editedEntity = state.users.find(users => users.id === state.selectedUserId);
         },
         // TODO: notifications
@@ -157,14 +153,6 @@ export class UsersComponent implements OnDestroy {
     this.viewPermissionSubscription.unsubscribe();
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.action === IUserDialogActionEnum.USER_ADD;
-  }
-
-  get isEntityBeingEdited(): boolean {
-    return this.action === IUserDialogActionEnum.USER_EDIT;
-  }
-
   get state(): Observable<IUsersState> {
     return this.usersService.state;
   }
@@ -173,27 +161,17 @@ export class UsersComponent implements OnDestroy {
     return !user.isBlocked || this.displayBlockedUsers;
   }
 
-  onAddSubmit(data: any): void {
-    // const { image, ...user } = data;
-    // this.usersService.create(user, image);
-  }
-
-  onEditSubmit(data: any): void {
-    // const { image, ...user } = data;
-    // this.usersService.update(user, image);
-  }
-
   cancelAction(): void {
     this.usersService.setDialogAction(null);
   }
 
   onAdd(): void {
-    this.router.navigate([`/admin/users/create`]);
+    this.contentTabService.navigate('/admin/users/create');
   }
 
   onEdit(user?: IUser): void {
     const id = user ? user.id : this.editedEntity.id;
-    this.router.navigate([`/admin/users/${id}`]);
+    this.contentTabService.navigate(`/admin/users/${id}`);
   }
 
   onSelect(user: IUser): void {
