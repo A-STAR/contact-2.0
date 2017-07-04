@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
@@ -35,7 +30,7 @@ export const toFullName = (entity: { lastName: string, firstName: string, middle
 export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
-  columns: Observable<IGridColumn[]> = Observable.of([
+  columns: IGridColumn[] = [
     { prop: 'id', minWidth: 60, filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
     { prop: 'fullName', mappedFrom: ['lastName', 'firstName', 'middleName'], minWidth: 200, filter: 'textFilter' },
@@ -47,7 +42,9 @@ export class ActionsLogComponent {
     { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
     { prop: 'machine', minWidth: 120, filter: 'textFilter' },
     { prop: 'duration', minWidth: 120, filter: 'text' }
-  ]);
+  ];
+
+  columnDefs: Observable<IGridColumn[]>;
 
   renderers: IRenderer = {
     fullName: toFullName,
@@ -70,7 +67,7 @@ export class ActionsLogComponent {
     private gridService: GridService,
     private actionsLogService: ActionsLogService,
   ) {
-    this.columns = this.gridService.configureColumnsUsingMetadataAndRenderers('Actions', this.columns, this.renderers);
+    this.columnDefs = this.gridService.getColumnDefs('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.actionsLogData = this.actionsLogService.actionsLogRows;
