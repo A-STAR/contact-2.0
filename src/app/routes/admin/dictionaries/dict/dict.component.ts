@@ -141,7 +141,7 @@ export class DictComponent implements OnDestroy {
         isEntityBeingEdited && isRelationsReady && isSelectedDictionaryReady);
   }
 
-  canEdit(): Observable<boolean> {
+  get canEdit(): Observable<boolean> {
     return this.userPermissionsService.has('DICT_EDIT');
   }
 
