@@ -22,11 +22,9 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
-// import { CalendarModule } from 'primeng/primeng';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 // TODO: consider to dump in favour of angular2-text-mask
-import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MomentModule } from 'angular2-moment';
 import { TextMaskModule } from 'angular2-text-mask';
 
@@ -60,8 +58,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     FormsModule,
     ReactiveFormsModule,
     // Angle modules
-    // CalendarModule,
-    CurrencyMaskModule,
     DropdownModule.forRoot(),
     TranslateModule,
     ProgressbarModule.forRoot(),
@@ -114,9 +110,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     TranslateModule,
     RouterModule,
     // Angle exports
-    CurrencyMaskModule,
     DropdownModule,
-    // CalendarModule,
     TextMaskModule,
     ProgressbarModule,
     CheckallDirective,

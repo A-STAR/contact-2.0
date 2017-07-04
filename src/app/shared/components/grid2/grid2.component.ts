@@ -253,14 +253,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     }
     this.paginationPanel = [
       { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.BACKWARD, visible: true },
+      { type: ToolbarActionTypeEnum.BACKWARD, visible: true, disabled: true },
       { control: ToolbarControlEnum.LABEL, visible: true, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.FORWARD, visible: true },
+      { type: ToolbarActionTypeEnum.FORWARD, visible: true, disabled: true },
       {
         control: ToolbarControlEnum.SELECT,
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
-        disabled: false,
+        disabled: true,
         styles: { width: '100px' }
       }
     ];
@@ -286,13 +286,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
     const canPaginate: boolean = this.getRowsTotalCount() > this.pageSize;
     const pageCount = this.getPageCount();
-    // [this.backwardElement, this.forwardElement, this.pageElement]
-    //   .forEach((action: IToolbarAction) => action.disabled = !canPaginate);
-
-    // this.pagesSizeElement.visible = true;
-    // this.backwardElement.visible = this.page > 1 && paginationElementsVisible;
-    // this.forwardElement.visible = this.page < pageCount && paginationElementsVisible;
-    // this.pageElement.visible = true;
+    this.paginationPanel = this.paginationPanel.map((btn, i) => {
+      if ([1, 3, 4].includes(i)) {
+        btn.disabled = !canPaginate;
+      }
+      return btn;
+    });
 
     const pages = `${this.page} / ${pageCount || 0}`;
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
@@ -301,7 +300,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       }
       return btn;
     });
-    console.log(pages);
   }
 
 
@@ -504,6 +502,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         } as IGrid2HeaderParams
       },
       enableColResize: true,
+      enableFilter: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
       headerHeight: this.headerHeight,
@@ -513,7 +512,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         const menuItems = params.defaultItems.slice(0, params.defaultItems.length - 1);
         return menuItems;
       },
-      groupColumnDef: {
+      autoGroupColumnDef: {
         headerName: this.translate.instant('default.grid.groupColumn'),
         minWidth: this.groupColumnMinWidth,
         suppressMenu: true,
@@ -570,10 +569,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         // console.log('get row node id', row.id);
         return row.id;
       },
-      // END
       rowSelection: this.rowSelection,
       showToolPanel: false,
-      suppressMenuMainPanel: true,
+      suppressMenuHide: true,
       suppressPaginationPanel: true,
       suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
@@ -591,9 +589,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       // onFilterChanged: (p) => { console.log('onFilterChanged', p); },
       // onFilterModified: (p) => { console.log('onFilterModified', p); },
-      onPaginationPageRequested: (event) => console.log('page requested', event),
-      onPaginationPageLoaded: (event) => console.log('page loaded', event),
-      // onViewportChanged: (event) => console.log('viewport changed', event),
     };
 
     this.translateGridOptionsMessages();
