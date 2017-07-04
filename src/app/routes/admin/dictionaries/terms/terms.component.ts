@@ -24,8 +24,8 @@ export class TermsComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogAddTermAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_TERM_ADD'),
-        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.dictionariesService.selectedDictionary
+      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -46,7 +46,7 @@ export class TermsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.dictionariesService.fetchTerms(),
-      enabled: this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
+      enabled: this.dictionariesService.selectedDictionary.filter(Boolean)
     }
   ];
 
@@ -92,7 +92,7 @@ export class TermsComponent implements OnDestroy {
       this.action = state.dialogAction;
       this.rows = state.terms;
       this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
-      this.masterEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
+      this.masterEntity = state.selectedDictionary;
     });
 
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -101,7 +101,7 @@ export class TermsComponent implements OnDestroy {
 
     this.viewPermissionsSubscription = Observable.combineLatest(
       this.hasViewPermission$,
-      this.dictionariesService.state.map(state => state.selectedDictionaryCode).distinctUntilChanged()
+      this.dictionariesService.selectedDictionary
     )
     .subscribe(([ hasViewPermission, currentDictionaryCode ]) => {
       if (!hasViewPermission) {

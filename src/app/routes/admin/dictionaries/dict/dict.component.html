@@ -13,7 +13,7 @@
   *ngIf="isReadyForEditing | async"
   [mode]="'update'"
   [title]="'dictionaries.edit.title'"
-  [editedEntity]="selectedEntity"
+  [editedEntity]="selectedDictionary | async"
   [languages]="languages | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
@@ -26,7 +26,7 @@
   [titleTranslationKey]="'dictionaries.remove.title'"
   [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
-  [messageParams]="selectedEntity"
+  [messageParams]="selectedDictionary | async"
   [actionMode]="'danger'"
   (action)="onRemoveSubmit()"
   (cancel)="cancelAction()">
