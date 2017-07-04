@@ -15,8 +15,9 @@ import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/compo
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
@@ -66,9 +67,10 @@ export class ActionsLogComponent {
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
   constructor(
-    private store: Store<IAppState>,
-    private gridService: GridService,
     private actionsLogService: ActionsLogService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
   ) {
     this.columns = this.gridService.configureColumnsUsingMetadataAndRenderers('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
@@ -80,6 +82,17 @@ export class ActionsLogComponent {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
+  }
+
+  export(): void {
+    this.gridService.download('/list/excel?name=actions', {}, {}, 'actions.xlsx')
+      .take(1)
+      .catch(() => {
+        // TODO(d.maltsev): i18n
+        this.notificationsService.error('Could not download file');
+        return Observable.of(null);
+      })
+      .subscribe();
   }
 
   refreshData(eventPayload: IGrid2EventPayload): void {

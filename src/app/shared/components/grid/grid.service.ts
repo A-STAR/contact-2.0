@@ -23,12 +23,12 @@ export class GridService {
   private nRequests$ = new BehaviorSubject<number>(0);
 
   constructor(
-    private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService,
-    private metadataService: MetadataService,
-    private dictionariesService: DictionariesService,
     private converterService: ValueConverterService,
+    private dictionariesService: DictionariesService,
+    private http: AuthHttp,
+    private metadataService: MetadataService,
+    private translateService: TranslateService,
   ) {}
 
   get isLoading$(): Observable<boolean> {
@@ -67,12 +67,31 @@ export class GridService {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
   }
 
+  createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
+    return this.blobRequest(url, routeParams, { method: RequestMethod.Post, body });
+  }
+
   update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
   }
 
   delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
+  }
+
+  download(url: string, routeParams: object = {}, body: object, name: string): Observable<void> {
+    return this.createBlob(url, routeParams, body)
+      .map(blob => {
+        // TODO(d.maltsev): maybe use a separate component with Renderer2 injected?
+        const href = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = href;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
   }
 
   configureColumnsUsingMetadataAndRenderers(
