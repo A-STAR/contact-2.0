@@ -117,7 +117,7 @@ export class GridService {
               if (!!column.filterOptionsDictionaryId) {
                 const dictTypes = dictionaries[column.filterOptionsDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterOptions = dictTypes.map(item => item.name);
+                  column.filterValues = dictTypes;
                 }
               }
             }

@@ -24,6 +24,7 @@ import {
   IViewportDatasource,
 } from 'ag-grid';
 
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
   IToolbarAction,
   IToolbarActionSelectPayload,
@@ -447,9 +448,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
       };
     } else if (column.filter === 'set') {
-      if (Array.isArray(column.filterOptions)) {
+      if (Array.isArray(column.filterValues)) {
+        const valuesHash = R.reduce((acc, item) => {
+          acc[item.code] = item.name;
+          return acc;
+        }, {}, column.filterValues);
         return {
-          values: column.filterOptions
+          values: column.filterValues.map(item => item.code),
+          cellRenderer: (node: { value: string }) => {
+            return valuesHash[parseInt(node.value, 10)];
+          },
         };
       }
     }
