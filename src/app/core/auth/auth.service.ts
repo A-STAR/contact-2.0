@@ -107,7 +107,7 @@ export class AuthService implements CanActivate, OnInit {
           .map(resp => true)
           .catch(error => {
             this.logoutHandler();
-            throw new Error(error);
+            return Observable.of(false);
           });
       });
   }
