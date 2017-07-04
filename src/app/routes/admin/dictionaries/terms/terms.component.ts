@@ -24,8 +24,8 @@ export class TermsComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogAddTermAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_TERM_ADD'),
-        this.dictionariesService.selectedDictionary
-      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
+        this.dictionariesService.isSelectedDictionaryExist
+      ).map(([hasPermissions, isSelectedDictionaryExist]) => hasPermissions && isSelectedDictionaryExist)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -46,7 +46,7 @@ export class TermsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.dictionariesService.fetchTerms(),
-      enabled: this.dictionariesService.selectedDictionary.filter(Boolean)
+      enabled: this.dictionariesService.isSelectedDictionaryExist
     }
   ];
 

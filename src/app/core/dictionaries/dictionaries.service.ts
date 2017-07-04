@@ -65,6 +65,10 @@ export class DictionariesService {
       .distinctUntilChanged();
   }
 
+  get isSelectedDictionaryExist(): Observable<boolean> {
+    return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary);
+  }
+
   get isSelectedDictionaryReady(): Observable<boolean> {
     return this.selectedDictionary.map(selectedDictionary => selectedDictionary && !!selectedDictionary.nameTranslations);
   }
