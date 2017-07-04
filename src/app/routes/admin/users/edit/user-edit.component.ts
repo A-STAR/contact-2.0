@@ -164,12 +164,12 @@ export class UserEditComponent {
       return;
     }
 
-    const { photo, ...user } = this.toSubmittedValues(this.form.value);
+    const { image, ...user } = this.toSubmittedValues(this.form.value);
 
     if (this.userId) {
-      this.usersService.update(user, photo, this.userId);
+      this.usersService.update(user, image, this.userId);
     } else {
-      this.usersService.create(user, photo);
+      this.usersService.create(user, image);
     }
 
     this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)

@@ -161,10 +161,6 @@ export class UsersComponent implements OnDestroy {
     return !user.isBlocked || this.displayBlockedUsers;
   }
 
-  cancelAction(): void {
-    this.usersService.setDialogAction(null);
-  }
-
   onAdd(): void {
     this.contentTabService.navigate('/admin/users/create');
   }
