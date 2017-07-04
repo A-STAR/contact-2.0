@@ -16,6 +16,7 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
   return [ entity.lastName, entity.firstName, entity.middleName ]
@@ -62,6 +63,7 @@ export class ActionsLogComponent {
   actionsLogSelectedRows: Observable<IDictionaryItem[]>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
+  @ViewChild('grid') grid: Grid2Component;
 
   constructor(
     private actionsLogService: ActionsLogService,
@@ -98,10 +100,10 @@ export class ActionsLogComponent {
   }
 
   doExport(): void {
-    const columns = this.columns.map(column => ({
-      field: column.prop,
-      // TODO(d.maltsev): can we get translations from the grid component?
-      name: this.translateService.instant('actionsLog.grid.' + column.prop)
+    // TODO(d.maltsev): move into component/service
+    const columns = this.grid.columnDefs.map(column => ({
+      field: column.field,
+      name: column.headerName
     }));
 
     const body = {
