@@ -444,12 +444,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       return {
         filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
       };
-    } else if (column.filter === 'set') {
-      if (Array.isArray(column.filterOptions)) {
-        return {
-          values: column.filterOptions
-        };
-      }
+    } else if (column.filter === 'set' && column.filterValues) {
+      return {
+        values: Object.keys(column.filterValues),
+        cellRenderer: (node: { value: string }) => column.filterValues[parseInt(node.value, 10)]
+      };
     }
     return {};
   }
