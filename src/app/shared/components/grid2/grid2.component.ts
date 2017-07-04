@@ -129,11 +129,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   gridOptions: GridOptions = {};
 
   private langSubscription: EventEmitter<any>;
-  // private rowsCounterElement: IToolbarAction;
-  // private backwardElement: IToolbarAction;
-  // private forwardElement: IToolbarAction;
-  // private pageElement: IToolbarAction;
-  // private pagesSizeElement: IToolbarAction;
   private initialized = false;
   private viewportDatasource: ViewPortDatasource;
   @Input() filter(record: any): boolean { return record; }
@@ -146,10 +141,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   get gridRows(): any[] {
     return this.rows || null;
-  }
-
-  get hasToolbar(): boolean {
-    return !!this.paginationPanel;
   }
 
   get filterField(): string {
@@ -205,20 +196,21 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      const { rowsTotalCount: totalCount, rows, currentPage, currentPageSize } = changes;
+      const { rowsTotalCount: totalCount, rows, currentPage, currentPageSize, selectedRows } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
         this.clearAllSelections();
       }
       if (totalCount) {
         this.viewportDatasource.params.setRowCount(totalCount.currentValue);
+        this.refreshRowCount();
       }
       if (rows) {
         this.viewportDatasource.params.setRowData(this.gridRows);
       }
-      // if (R.prop('selectedRows', changes)) {
-      //   this.refreshRowsInfo();
-      // }
+      if (selectedRows) {
+        this.refreshRowCount();
+      }
       // if (R.prop('columnsSettings', changes)) {
       //   if (this.remoteSorting) {
       //     this.applyClientSorting();
@@ -251,17 +243,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     if (!this.pagination) {
       return;
     }
+    // const hidden = 'hidden';
+    // const paginationItems = paginationItems.map(R.over(R.lensProp(visible), R.propOr(true, visible)));
+
     this.paginationPanel = [
       { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.BACKWARD, visible: true, disabled: true },
-      { control: ToolbarControlEnum.LABEL, visible: true, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.FORWARD, visible: true, disabled: true },
+      { type: ToolbarActionTypeEnum.BACKWARD, disabled: true },
+      { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
+      { type: ToolbarActionTypeEnum.FORWARD, disabled: true },
       {
-        control: ToolbarControlEnum.SELECT,
-        value: this.pageSizes.map(pageSize => ({ value: pageSize })),
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
+        control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '100px' }
+        styles: { width: '100px' },
+        value: this.pageSizes.map(pageSize => ({ value: pageSize })),
       }
     ];
   }
@@ -286,22 +281,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
     const canPaginate: boolean = this.getRowsTotalCount() > this.pageSize;
     const pageCount = this.getPageCount();
+    const pages = `${this.page} / ${pageCount || 0}`;
+
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
+      // refresh  backBtn, forwardBtn, pageSize
       if ([1, 3, 4].includes(i)) {
         btn.disabled = !canPaginate;
       }
-      return btn;
-    });
-
-    const pages = `${this.page} / ${pageCount || 0}`;
-    this.paginationPanel = this.paginationPanel.map((btn, i) => {
+      // refresh selected count
       if (i === 2) {
         btn.text = pages;
       }
       return btn;
     });
   }
-
 
   onToolbarActionClick(action: IToolbarAction): void {
     switch (action.type) {

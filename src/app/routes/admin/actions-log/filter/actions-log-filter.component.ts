@@ -18,8 +18,8 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 
 @Component({
   selector: 'app-actions-log-filter',
+  styleUrls: ['./actions-log-filter.component.scss'],
   templateUrl: './actions-log-filter.component.html',
-  styleUrls: ['./actions-log-filter.component.scss']
 })
 export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
 
@@ -87,45 +87,45 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   ngOnInit(): void {
     this.controls = [
       this.employeesControl = {
-        label: 'actionsLog.filter.employees.title',
         controlName: 'employees',
-        type: 'multiselect',
+        label: 'actionsLog.filter.employees.title',
+        placeholder: 'actionsLog.filter.employees.placeholder',
         required: true,
-        placeholder: 'actionsLog.filter.employees.placeholder'
+        type: 'multiselect',
       },
       this.blockingEmployeesControl = {
-        label: 'actionsLog.filter.employees.blocking',
         controlName: 'blockingEmployees',
+        label: 'actionsLog.filter.employees.blocking',
         type: 'checkbox',
       },
       this.actionTypesControl = {
-        label: 'actionsLog.filter.actionsTypes.title',
         controlName: 'actionsTypes',
-        type: 'multiselect',
+        label: 'actionsLog.filter.actionsTypes.title',
+        placeholder: 'actionsLog.filter.actionsTypes.placeholder',
         required: true,
-        placeholder: 'actionsLog.filter.actionsTypes.placeholder'
+        type: 'multiselect',
       },
       this.startDateControl = {
-        label: 'default.dateTimeRage.from',
         controlName: 'startDate',
+        label: 'default.dateTimeRage.from',
+        required: true,
         type: 'datepicker',
-        required: true
       },
       this.startTimeControl = {
         controlName: 'startTime',
+        required: true,
         type: 'text',
-        required: true
       } as IDynamicFormControl,
       this.endDateControl = {
-        label: 'default.dateTimeRage.to',
         controlName: 'endDate',
+        label: 'default.dateTimeRage.to',
+        required: true,
         type: 'datepicker',
-        required: true
       },
       this.endTimeControl = {
         controlName: 'endTime',
+        required: true,
         type: 'text',
-        required: true
       } as IDynamicFormControl,
     ];
 
@@ -194,10 +194,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   getFilterValues(): IActionsLogFilterRequest {
     return {
       ...this.value,
-      employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
       actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map((record: IDictionaryItem) => record.code),
+      employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
+      endDate: moment(this.value.endDate).format('DD.MM.YYYY'),
       startDate: moment(this.value.startDate).format('DD.MM.YYYY'),
-      endDate: moment(this.value.endDate).format('DD.MM.YYYY')
     };
   }
 }

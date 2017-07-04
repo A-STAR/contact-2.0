@@ -46,10 +46,10 @@ export class ActionsLogService {
         const state: IGrid2State = store.actionsLog.actionsLogGrid;
         const request: IGrid2Request = this.valueConverterService
           .toGridRequest({
-            currentPage: state.currentPage,
-            pageSize: state.pageSize,
             columnsSettings: state.columnsSettings,
-            fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName
+            currentPage: state.currentPage,
+            fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName,
+            pageSize: state.pageSize,
           });
 
         request.filtering = FilterObject.create()
@@ -60,8 +60,8 @@ export class ActionsLogService {
               .setName('createDateTime')
               .betweenOperator()
               .setValueArray([
-                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime, true),
-                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime, true),
+                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime),
+                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime),
               ])
           )
           .addFilter(
@@ -80,11 +80,11 @@ export class ActionsLogService {
         return this.gridService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
             return {
-              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
               payload: {
                 data: data.data,
                 total: data.total
-              }
+              },
+              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
           });
       }
@@ -97,7 +97,7 @@ export class ActionsLogService {
     private effectActions: Actions,
     private notifications: NotificationsService,
     private valueConverterService: ValueConverterService,
-  ) { }
+  ) {}
 
   get actionsLogCurrentPage(): Observable<number> {
     return this.store
@@ -159,12 +159,12 @@ export class ActionsLogService {
       this.getActionTypes(),
       (employees, actionTypes) => {
         this.store.dispatch({
+          payload: employees,
           type: ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS,
-          payload: employees
         });
         this.store.dispatch({
+          payload: actionTypes,
           type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
-          payload: actionTypes
         });
       }
     );
@@ -172,8 +172,8 @@ export class ActionsLogService {
 
   search(payload: IActionsLogFilterRequest): void {
     this.store.dispatch({
+      payload: payload,
       type: ActionsLogService.ACTIONS_LOG_FETCH,
-      payload: payload
     });
   }
 

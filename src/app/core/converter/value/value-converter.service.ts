@@ -20,7 +20,7 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filt
 
 @Injectable()
 export class ValueConverterService {
-
+  // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
   static DATE_USER_PATTERN = 'DD.MM.YYYY';
   static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
   static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
@@ -50,8 +50,8 @@ export class ValueConverterService {
       .filter(s => s.direction !== Grid2SortingEnum.NONE)
       .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
       .map(v => ({
+        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
         field: v.field,
-        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc'
       }));
     }
 
@@ -133,11 +133,19 @@ export class ValueConverterService {
     return v;
   }
 
-  toIsoDateTime(dateAsString: string, useTime: boolean = false): string {
+  toIsoDate(dateAsString: string): string {
     return this.parseDate(
       dateAsString,
       ValueConverterService.DATE_TIME_ISO_PATTERN,
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
+      ValueConverterService.DATE_USER_PATTERN
+    );
+  }
+
+  toIsoDateTime(dateAsString: string): string {
+    return this.parseDate(
+      dateAsString,
+      ValueConverterService.DATE_TIME_ISO_PATTERN,
+      ValueConverterService.DATE_TIME_USER_PATTERN
     );
   }
 
