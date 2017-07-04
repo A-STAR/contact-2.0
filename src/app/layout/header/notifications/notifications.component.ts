@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
@@ -7,7 +7,8 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.scss']
+  styleUrls: ['./notifications.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationsComponent {
 

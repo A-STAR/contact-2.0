@@ -6,9 +6,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthService } from '../../../core/auth/auth.service';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
+import { ITypeCodeItem, IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+
+import { AuthService } from '../../../core/auth/auth.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class GridService {
@@ -20,7 +25,10 @@ export class GridService {
   constructor(
     private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private metadataService: MetadataService,
+    private dictionariesService: DictionariesService,
+    private converterService: ValueConverterService,
   ) {}
 
   get isLoading$(): Observable<boolean> {
@@ -65,6 +73,62 @@ export class GridService {
 
   delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
+  }
+
+  /**
+   * Builds column defs from server metadata
+   *
+   * @param {string} metadataKey The key used to retreive coldefs the from the metadata service
+   * @param {Observable<IGridColumn[]>} columns Initial column descriptions
+   * @param {object} renderers Colums rendered, esentially getters
+   * @returns {Observable<IGridColumn[]>} Column defininitions
+   */
+  getColumnDefs(
+    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+      const mapColumns = ([metadata, dictionaries]) =>
+        this.setRenderers(columns.filter(column =>
+          !!metadata.find(metadataColumn => {
+            const result = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
+            if (result) {
+              if (!column.renderer) {
+                const currentDictTypes = dictionaries[metadataColumn.dictCode];
+                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                  column.renderer = (item: ITypeCodeItem) => {
+                    const typeDescription = currentDictTypes.find(
+                      dictionaryItem => dictionaryItem.code === item.typeCode
+                    );
+                    return typeDescription ? typeDescription.name : item.typeCode;
+                  };
+                } else {
+                  // Data types
+                  switch (metadataColumn.dataType) {
+                    case 2:
+                      // Date
+                      column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                      break;
+                    case 7:
+                      // Date time
+                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                      break;
+                  }
+                }
+              }
+              // Filters
+              if (!!column.filterOptionsDictionaryId) {
+                const dictTypes = dictionaries[column.filterOptionsDictionaryId];
+                if (Array.isArray(dictTypes)) {
+                  column.filterOptions = dictTypes.map(item => item.name);
+                }
+              }
+            }
+            return result;
+          })
+        ), renderers);
+
+      return Observable.combineLatest(
+        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
+        this.dictionariesService.dictionariesByCode
+      ).map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {

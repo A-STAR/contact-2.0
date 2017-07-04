@@ -6,6 +6,7 @@ import { SharedModule } from '../shared/shared.module';
 import { PagesModule } from './pages/pages.module';
 
 import { MenuResolver } from '../core/menu/menu-resolver.service';
+import { MetadataResolver } from '../core/metadata/metadata.resolver';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
 import { PermissionsService } from './admin/roles/permissions.service';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
@@ -23,6 +24,7 @@ import { routes } from './routes';
   ],
   providers: [
     MenuResolver,
+    MetadataResolver,
     PermissionsService,
     UserConstantsResolver,
     UserLanguagesResolver,

@@ -28,7 +28,7 @@
 }
 
 .app-select-tool {
-  padding: 3px 16px;
+  padding: 3px $padding-base-horizontal;
   font-weight: bold;
   cursor: pointer;
 }
@@ -69,6 +69,7 @@
 
 .ui-select-choices.dropdown-menu {
   box-shadow: none;
+  min-width: unset;
 }
 
 .ui-select-container {
@@ -92,7 +93,7 @@
     }
   }
   .dropdown-item {
-    padding: 3px 16px;
+    padding: 3px $padding-base-horizontal;
     line-height: 1.42857143;
     color: #333;
     font-weight: normal;

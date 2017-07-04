@@ -11,7 +11,7 @@
   [ngClass]="'actions-log-grid'"
   [rows]="(actionsLogData | async).data"
   [rowsTotalCount]="(actionsLogData | async)?.total"
-  [columns]="columns"
+  [columns]="columnDefs | async"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"
   [filterColumn]="actionsLogCurrentFilterColumn | async"

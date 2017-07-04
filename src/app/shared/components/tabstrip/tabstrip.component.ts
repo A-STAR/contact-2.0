@@ -30,6 +30,7 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
 
   @Input() inverse = false;
   @Input() disableScrollbar = false;
+  @Input() scrollerEnabled = false;
   isToolsVisible: boolean;
 
   constructor(
@@ -38,8 +39,10 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
   }
 
   ngDoCheck(): void {
-    this.ps.ngDoCheck(); // TODO Make github issue request
-    this.refreshTools();
+    if (this.scrollerEnabled) {
+      this.ps && this.ps.ngDoCheck(); // TODO Make github issue request
+      this.refreshTools();
+    }
   }
 
   ngAfterContentInit(): void {
@@ -52,7 +55,9 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
   }
 
   ngAfterViewInit(): void {
-    this.refreshTools();
+    if (this.scrollerEnabled) {
+      this.refreshTools();
+    }
   }
 
   selectTab(tab: TabComponent): void {

@@ -355,15 +355,38 @@
     padding-left: 4px;
   }
   .ag-paging-panel {
-    padding: 4px;
+    padding: 10px 12px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    height: 50px;
+    line-height: 30px;
   }
   .ag-paging-button {
     margin-left: 4px;
     margin-right: 4px;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #c0c0c0;
+    transition: all 200ms ease-in-out;
+    &:hover {
+      border-color: #808080;
+      background-color: #c0c0c0;
+    }
   }
   .ag-paging-row-summary-panel {
     display: inline-block;
-    width: 300px;
+    width: 150px;
+    float: left;
+  }
+  .ag-paging-page-summary-panel {
+    display: inline-block;
+    float: right;
+
+    button:last-child {
+      margin-right: 0;
+    }
   }
   .ag-tool-panel {
     background-color: #fff;
