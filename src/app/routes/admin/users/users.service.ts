@@ -30,6 +30,11 @@ export class UsersService {
       .filter(Boolean);
   }
 
+  getUserById(id: number): Observable<IUser> {
+    return this.state.map(state => state.users.find(user => user.id === id))
+      .distinctUntilChanged();
+  }
+
   fetch(): void {
     return this.store.dispatch({
       type: UsersService.USERS_FETCH

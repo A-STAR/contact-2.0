@@ -25,8 +25,15 @@ export interface IUsersResponse {
   users: Array<IUser>;
 }
 
+export interface IUserEditPermissions {
+  canEditUser: boolean;
+  canEditRole: boolean;
+  canEditLdap: boolean;
+}
+
 export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
   displayBlocked: boolean;
 }
+

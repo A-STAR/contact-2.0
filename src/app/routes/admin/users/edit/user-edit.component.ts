@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ValidatorFn } from '@angular/forms';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IUser } from '../users.interface';
+import { IUser, IUserEditPermissions } from '../users.interface';
+import { IOption } from '../../../../core/converter/value/value-converter.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../../roles/permissions.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
@@ -28,17 +29,16 @@ export class UserEditComponent {
 
   @ViewChild('form') form: DynamicFormComponent;
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormItem>;
   formData: any;
 
-  private permissions = null;
+  private permissions: IUserEditPermissions;
   private userId: number;
 
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
-    private gridService: GridService,
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
@@ -49,7 +49,6 @@ export class UserEditComponent {
     // TODO(d.maltsev): stronger typing
     this.userId = Number((this.activatedRoute.params as any).value.id);
 
-    // TODO(d.maltsev): we probably have to do something with this monster
     Observable.combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
       this.userPermissionsService.has('USER_ROLE_EDIT'),
@@ -58,7 +57,8 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.permissionsService.roles.map(this.valueConverterService.valuesToOptions),
-      this.readUser(this.userId),
+      // TODO(d.maltsev): preload user
+      this.usersService.getUserById(this.userId),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, languages, roles, user) => ({
         canEditUser,
         canEditRole,
@@ -84,75 +84,74 @@ export class UserEditComponent {
         data.passwordComplexity.valueB
       );
 
-      const nameBlock = ([
-        { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
-        { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
-        { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
-      ] as Array<IDynamicFormControl>).map(control => ({
-        ...control,
-        disabled: !data.canEditUser
-      }));
-
-      const detailsBlock = ([
-        { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
-        { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ passwordValidators ] },
-        { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'text', required: true, disabled: !data.canEditLdap },
-        { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
-        { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !data.canEditRole,
-            options: data.roles },
-        { label: 'users.edit.position', controlName: 'position', type: 'text' },
-        { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
-        { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
-        { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
-        { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
-        { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
-        { label: 'users.edit.email', controlName: 'email', type: 'text' },
-        { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
-        { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true, options: data.languages },
-        { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !data.canEditUser },
-      ] as Array<IDynamicFormControl>).map(control => ({
-        ...control,
-        disabled: control.hasOwnProperty('disabled') ? control.disabled : !data.canEditUser
-      }));
-
-      this.controls = [
-        {
-          children: [
-            {
-              children: nameBlock,
-              width: 9
-            },
-            {
-              label: 'users.edit.photo',
-              controlName: 'image',
-              type: 'image',
-              url: this.userId ? `/users/${this.userId}/photo` : null,
-              disabled: !data.canEditUser,
-              width: 3,
-              height: 178
-            }
-          ],
-          collapsible: true,
-          title: 'users.edit.personalData'
-        },
-        {
-          children: detailsBlock,
-          collapsible: true,
-          title: 'users.edit.details'
-        }
-      ] as Array<IDynamicFormItem>;
-
-      this.formData = this.userId ? {
-        ...data.user,
-        startWorkDate: this.valueConverterService.isoStringToDate(data.user.startWorkDate as string),
-        endWorkDate: this.valueConverterService.isoStringToDate(data.user.endWorkDate as string),
-        languageId: data.user.languageId,
-        roleId: data.user.roleId,
-      } : {
-        roleId: 1,
-        languageId: 1
-      };
+      this.controls = this.getFormControls(data.languages, data.roles, passwordValidators);
+      this.formData = this.getFormData(data.user);
     });
+  }
+
+  private getFormControls(languages: IOption[], roles: IOption[], passwordValidators: ValidatorFn): Array<IDynamicFormItem> {
+    const photoUrl = this.userId ? `/users/${this.userId}/photo` : null;
+
+    const nameBlock = ([
+      { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
+      { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
+      { label: 'users.edit.middleName', controlName: 'middleName', type: 'text' },
+    ] as Array<IDynamicFormControl>).map(control => ({
+      ...control,
+      disabled: !this.permissions.canEditUser
+    }));
+
+    const detailsBlock = ([
+      { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
+      { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ passwordValidators ] },
+      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'text', required: true, disabled: !this.permissions.canEditLdap },
+      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
+      { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.permissions.canEditRole,
+          options: roles },
+      { label: 'users.edit.position', controlName: 'position', type: 'text' },
+      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
+      { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
+      { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
+      { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
+      { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
+      { label: 'users.edit.email', controlName: 'email', type: 'text' },
+      { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
+      { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true, options: languages },
+      { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !this.permissions.canEditUser },
+    ] as Array<IDynamicFormControl>).map(control => ({
+      ...control,
+      disabled: control.hasOwnProperty('disabled') ? control.disabled : !this.permissions.canEditUser
+    }));
+
+    return [
+      {
+        children: [
+          { children: nameBlock, width: 9 },
+          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: photoUrl, disabled: !this.permissions.canEditUser,
+              width: 3, height: 178 }
+        ],
+        collapsible: true,
+        title: 'users.edit.personalData'
+      },
+      {
+        children: detailsBlock,
+        collapsible: true,
+        title: 'users.edit.details'
+      }
+    ] as Array<IDynamicFormItem>;
+  }
+
+  private getFormData(user: IUser): Partial<IUser> {
+    return this.userId ? {
+      ...user,
+      startWorkDate: this.valueConverterService.isoStringToDate(user.startWorkDate as string),
+      endWorkDate: this.valueConverterService.isoStringToDate(user.endWorkDate as string),
+      languageId: user.languageId,
+      roleId: user.roleId,
+    } : {
+      roleId: 1,
+      languageId: 1
+    };
   }
 
   canSubmit(): boolean {
@@ -202,11 +201,5 @@ export class UserEditComponent {
       ...(this.permissions.canEditRole ? { roleId } : {}),
       ...(this.permissions.canEditLdap ? { ldapLogin } : {}),
     };
-  }
-
-  // TODO(d.maltsev): user service
-  private readUser(userId: number): Observable<any> {
-    return this.gridService.read('/api/users')
-      .map(response => response.users.find(user => user.id === userId));
   }
 }
