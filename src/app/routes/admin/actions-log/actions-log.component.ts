@@ -81,18 +81,6 @@ export class ActionsLogComponent {
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
   }
 
-  export(): void {
-    const body = this.actionsLogService.createRequest({}, this.filter.getFilterValues());
-    this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx')
-      .take(1)
-      .catch(() => {
-        // TODO(d.maltsev): i18n
-        this.notificationsService.error('Could not download file');
-        return Observable.of(null);
-      })
-      .subscribe();
-  }
-
   refreshData(eventPayload: IGrid2EventPayload): void {
     this.onStoreDispatch(eventPayload);
     this.doSearch();
@@ -104,5 +92,16 @@ export class ActionsLogComponent {
 
   doSearch(): void {
     this.actionsLogService.search(this.filter.getFilterValues());
+  }
+
+  doExport(): void {
+    const body = this.actionsLogService.createRequest({}, this.filter.getFilterValues());
+    this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx')
+      .take(1)
+      .catch(() => {
+        this.notificationsService.error('actionsLog.messages.errors.download');
+        return Observable.of(null);
+      })
+      .subscribe();
   }
 }

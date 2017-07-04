@@ -27,6 +27,13 @@
           </div>
         </div>
       </div>
+      <div class="col-md-6">
+        <label class="mb0">&nbsp;</label>
+        <button class="btn btn-default filter-button" (click)="onExport()">
+          <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+          {{ 'default.buttons.excel' | translate }}
+        </button>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-6">
@@ -108,10 +115,10 @@
           <label class="col-md-12">
             &nbsp;
           </label>
-          <button class="btn btn-default search-button" (click)="onSearch()">
+          <button class="btn btn-default filter-button" (click)="onSearch()">
             <i class="fa fa-search" aria-hidden="true"></i>
             <span>
-              Search
+              {{ 'default.buttons.search' | translate }}
             </span>
           </button>
         </div>

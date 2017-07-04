@@ -2,11 +2,10 @@
   #filter
   [employeesRows]="employeesRows"
   [actionTypesRows]="actionTypesRows"
+  (export)="doExport()"
   (search)="doSearch()"
 >
 </app-actions-log-filter>
-
-<button (click)="export()">Export as Excel</button>
 
 <app-grid2
   columnTranslationKey="actionsLog"

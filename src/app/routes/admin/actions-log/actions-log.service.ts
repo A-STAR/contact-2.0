@@ -64,7 +64,7 @@ export class ActionsLogService {
           });
       }
     )
-    .catch(() => [ this.notifications.createErrorAction('actionsLog.actionsLog.messages.errors.fetch') ]);
+    .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
 
   constructor(
     private gridService: GridService,
