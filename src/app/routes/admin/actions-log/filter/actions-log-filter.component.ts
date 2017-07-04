@@ -25,7 +25,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   @Input() employeesRows;
   @Input() actionTypesRows;
-  @Output() search: EventEmitter<void> = new EventEmitter<void>();
+  @Output() export = new EventEmitter<void>();
+  @Output() search = new EventEmitter<void>();
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
@@ -189,6 +190,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   onSearch(): void {
     this.search.emit();
+  }
+
+  onExport(): void {
+    this.export.emit();
   }
 
   getFilterValues(): IActionsLogFilterRequest {

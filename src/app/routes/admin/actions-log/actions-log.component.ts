@@ -10,8 +10,9 @@ import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/compo
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 
@@ -63,9 +64,10 @@ export class ActionsLogComponent {
   @ViewChild('filter') filter: ActionsLogFilterComponent;
 
   constructor(
-    private store: Store<IAppState>,
-    private gridService: GridService,
     private actionsLogService: ActionsLogService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
   ) {
     this.columnDefs = this.gridService.getColumnDefs('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
@@ -77,6 +79,8 @@ export class ActionsLogComponent {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
+
+    this.columnDefs.subscribe(console.log);
   }
 
   refreshData(eventPayload: IGrid2EventPayload): void {
@@ -90,5 +94,20 @@ export class ActionsLogComponent {
 
   doSearch(): void {
     this.actionsLogService.search(this.filter.getFilterValues());
+  }
+
+  doExport(): void {
+    const body = {
+      // TODO(d.maltsev): column translations
+      // columns,
+      ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
+    };
+
+    this.actionsLogService.export(body)
+      .catch(() => {
+        this.notificationsService.error('actionsLog.messages.errors.download');
+        return Observable.of(null);
+      })
+      .subscribe();
   }
 }

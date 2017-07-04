@@ -19,6 +19,7 @@ import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface'
 import {
   IGrid2ColumnsSettings,
   IGrid2Request,
+  IGrid2RequestPayload,
   IGrid2State
 } from '../../../shared/components/grid2/grid2.interface';
 
@@ -44,38 +45,12 @@ export class ActionsLogService {
         const [action, store]: [Action, IAppState] = payload;
         const customFilter: IActionsLogFilterRequest = action.payload;
         const state: IGrid2State = store.actionsLog.actionsLogGrid;
-        const request: IGrid2Request = this.valueConverterService
-          .toGridRequest({
-            columnsSettings: state.columnsSettings,
-            currentPage: state.currentPage,
-            fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName,
-            pageSize: state.pageSize,
-          });
-
-        request.filtering = FilterObject.create()
-          .and()
-          .addFilter(request.filtering)
-          .addFilter(
-            FilterObject.create()
-              .setName('createDateTime')
-              .betweenOperator()
-              .setValueArray([
-                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime),
-                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime),
-              ])
-          )
-          .addFilter(
-            FilterObject.create()
-              .setName('typeCode')
-              .inOperator()
-              .setValueArray(customFilter.actionsTypes)
-          )
-          .addFilter(
-            FilterObject.create()
-              .setName('userId')
-              .inOperator()
-              .setValueArray(customFilter.employees)
-          );
+        const request = this.createRequest({
+          currentPage: state.currentPage,
+          pageSize: state.pageSize,
+          columnsSettings: state.columnsSettings,
+          fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName
+        }, customFilter);
 
         return this.gridService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
@@ -89,7 +64,7 @@ export class ActionsLogService {
           });
       }
     )
-    .catch(() => [ this.notifications.createErrorAction('actionsLog.actionsLog.messages.errors.fetch') ]);
+    .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
 
   constructor(
     private gridService: GridService,
@@ -153,6 +128,37 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
+  createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
+    const request: IGrid2Request = this.valueConverterService.toGridRequest(payload);
+
+    request.filtering = FilterObject.create()
+      .and()
+      .addFilter(request.filtering)
+      .addFilter(
+        FilterObject.create()
+          .setName('createDateTime')
+          .betweenOperator()
+          .setValueArray([
+            this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime),
+            this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime),
+          ])
+      )
+      .addFilter(
+        FilterObject.create()
+          .setName('typeCode')
+          .inOperator()
+          .setValueArray(customFilter.actionsTypes)
+      )
+      .addFilter(
+        FilterObject.create()
+          .setName('userId')
+          .inOperator()
+          .setValueArray(customFilter.employees)
+      );
+
+    return request;
+  }
+
   getEmployeesAndActionTypes(): Observable<void> {
     return Observable.zip(
       this.getEmployees(),
@@ -189,5 +195,9 @@ export class ActionsLogService {
 
   getEmployees(): Observable<IEmployee[]> {
     return this.gridService.read('/users').map(data => data.users);
+  }
+
+  export(body: IGrid2Request): Observable<any> {
+    return this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx').take(1);
   }
 }
