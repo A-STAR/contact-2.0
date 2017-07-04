@@ -4,6 +4,7 @@ import {
   Input,
   Inject,
   forwardRef,
+  OnDestroy,
 } from '@angular/core';
 
 import { TreeComponent } from '../tree.component';
@@ -16,8 +17,7 @@ import { IClickableComponent, IClickableComponentPlugin } from '../tree.interfac
   selector: 'app-tree-node',
   templateUrl: './treenode.component.html'
 })
-export class TreeNodeComponent implements OnInit, IClickableComponent {
-
+export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent {
   static DEFAULT_BG_COLOR = '#fff';
   static DEFAULT_SELECTED_BG_COLOR = '#def';
 
@@ -42,6 +42,10 @@ export class TreeNodeComponent implements OnInit, IClickableComponent {
     if (typeof this.parentNode !== 'undefined') {
       this.node.parent = this.parentNode;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.clickComponentPlugin.ngOnDestroy();
   }
 
   getBgColor(): string {
@@ -81,7 +85,8 @@ export class TreeNodeComponent implements OnInit, IClickableComponent {
   }
 
   stopEvent(event: MouseEvent): void {
-    this.clickComponentPlugin.stopEvent(event);
+    event.stopPropagation();
+    event.preventDefault();
   }
 
   isSelected(): boolean {
