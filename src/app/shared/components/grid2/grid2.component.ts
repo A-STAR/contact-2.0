@@ -447,19 +447,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       return {
         filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
       };
-    } else if (column.filter === 'set') {
-      if (Array.isArray(column.filterValues)) {
-        const valuesHash = R.reduce((acc, item) => {
-          acc[item.code] = item.name;
-          return acc;
-        }, {}, column.filterValues);
-        return {
-          values: column.filterValues.map(item => item.code),
-          cellRenderer: (node: { value: string }) => {
-            return valuesHash[parseInt(node.value, 10)];
-          },
-        };
-      }
+    } else if (column.filter === 'set' && column.filterValues) {
+      return {
+        values: Object.keys(column.filterValues),
+        cellRenderer: (node: { value: string }) => column.filterValues[parseInt(node.value, 10)]
+      };
     }
     return {};
   }

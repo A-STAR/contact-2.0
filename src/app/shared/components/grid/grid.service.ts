@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
+import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
@@ -117,7 +118,10 @@ export class GridService {
               if (!!column.filterOptionsDictionaryId) {
                 const dictTypes = dictionaries[column.filterOptionsDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterValues = dictTypes;
+                  column.filterValues = R.reduce((acc, item) => {
+                    acc[item.code] = item.name;
+                    return acc;
+                  }, {}, dictTypes);
                 }
               }
             }

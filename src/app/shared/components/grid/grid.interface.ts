@@ -1,5 +1,3 @@
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
-
 export interface IDataSource {
   create?: string;
   read?: string;
@@ -35,7 +33,7 @@ export interface IGridColumn {
   suppressMenu?: boolean;
   suppressSizeToFit?: boolean;
   filter?: string;
-  filterValues?: IDictionaryItem[];
+  filterValues?: { [key: number]: string }|number[]|string[];
   filterOptionsDictionaryId?: number;
 }
 
