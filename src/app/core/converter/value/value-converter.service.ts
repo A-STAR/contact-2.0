@@ -87,7 +87,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.formatDateAsString(valueEntity.valueD);
+        valueEntity.value = this.formatDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -133,17 +133,17 @@ export class ValueConverterService {
     return v;
   }
 
-  toIsoDate(dateAsString: string): string {
+  toIsoDate(str: string): string {
     return this.parseDate(
-      dateAsString,
+      str,
       ValueConverterService.DATE_TIME_ISO_PATTERN,
       ValueConverterService.DATE_USER_PATTERN
     );
   }
 
-  toIsoDateTime(dateAsString: string): string {
+  toIsoDateTime(str: string): string {
     return this.parseDate(
-      dateAsString,
+      str,
       ValueConverterService.DATE_TIME_ISO_PATTERN,
       ValueConverterService.DATE_TIME_USER_PATTERN
     );
@@ -160,32 +160,32 @@ export class ValueConverterService {
     return date ? date.toISOString().split('.')[0] + 'Z' : null;
   }
 
-  isoStringToDate(date: string): Date {
-    return date ? new Date(date) : null;
+  isoStringToDate(str: string): Date {
+    return str ? new Date(str) : null;
   }
 
-  stringToDate(date: string): Date {
-    if (!date) {
+  stringToDate(str: string): Date {
+    if (!str) {
       return null;
     }
-    const momentDate = moment(date);
+    const momentDate = moment(str);
     return momentDate.isValid() ? momentDate.toDate() : null;
   }
 
-  dateToString(date: Date, useTime: boolean = false): string {
-    return date ? moment(date).format(
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
-    ) : null;
+  dateToString(date: Date, format: string = ValueConverterService.DATE_USER_PATTERN): string {
+    return date ? moment(date).format(format) : '';
   }
 
-  formatDateAsString(date: string, useTime: boolean = false): string {
-    return this.dateToString(this.stringToDate(date), useTime);
+  formatDate(str: string, format: string = ValueConverterService.DATE_USER_PATTERN): string {
+    return this.dateToString(this.stringToDate(str), format);
   }
 
-  private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
-    const momentDate = moment(dateAsString, fromPattern);
-    if (momentDate.isValid()) {
-      return momentDate.format(toPattern);
-    }
+  formatDateTime(str: string, format: string = ValueConverterService.DATE_TIME_USER_PATTERN): string {
+    return this.dateToString(this.stringToDate(str), format);
+  }
+
+  private parseDate(str: string, toPattern: string, fromPattern?: string): string {
+    const momentDate = moment(str, fromPattern);
+     return momentDate.isValid() ? momentDate.format(toPattern) : null;
   }
 }

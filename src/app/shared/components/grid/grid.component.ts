@@ -20,8 +20,7 @@ import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDataSource, IMessages, IParameters, TSelectionType } from './grid.interface';
-import { IToolbarAction } from '../toolbar/toolbar.interface';
+import { IDataSource, IMessages, IParameters, TSelectionType, IGridColumn } from './grid.interface';
 
 import { GridService } from './grid.service';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -34,9 +33,9 @@ import { SettingsService } from '../../../core/settings/settings.service';
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
-  @Input() autoLoad = true;
+  @Input() allowDblClick = true;
   @Input() footerHeight = 50;
-  @Input() columns: Array<any> = [];
+  @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
   @Input() dataSource: IDataSource;
   @Input() editPermission: string;
@@ -44,14 +43,14 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
-  @Input() selectionType: TSelectionType;
+  @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
-  @Input() allowDblClick = true;
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
+  columnDefs: IGridColumn[];
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -97,11 +96,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnInit(): void {
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
-    if (this.autoLoad) {
-      this.load(this.initialParameters)
-        .take(1)
-        .subscribe();
-    }
+
+    this.columnDefs = [].concat(this.columns);
 
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
@@ -112,8 +108,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
 
     this.subscription = Observable.merge(
-      this.translate.get(translationKeys)
-        .take(1),
+      this.translate.get(translationKeys).take(1),
       this.translate.onLangChange
         .map(data => data.translations)
         .map(translations => translationKeys.reduce((acc, key) => {
@@ -131,8 +126,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         this.messages.emptyMessage = translations[this.emptyMessage];
       }
     });
-
-    this.selectionType = this.selectionType || 'multi';
   }
 
   ngOnChanges(changes: any): void {
@@ -157,7 +150,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     // 50px - toolbar height
     // 8px => - ?, to be identified
     if (this.styles) {
-      // Don't set the full height if the `styles` param is not set
+      // Don't calculate the full height if the `styles` param is set
       return;
     }
     const offset = 43 + 12 * 2 + 50;
@@ -165,29 +158,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
-  load(parameters?: IParameters): Observable<any> {
-    return this.gridService
-      .read(this.dataSource.read, parameters)
-      .map(data => this.parseFn(data))
-      .do(data => this.updateRows(data));
-  }
-
   update(routeParams: object, body: object): Observable<any> {
     return this.gridService.update(this.dataSource.update, routeParams, body);
   }
 
-  clear(): void {
-    this.updateRows([]);
-  }
-
   onActionClick(event: any): void {
     this.onAction.emit(event);
-  }
-
-  updateRows(data: any[]): void {
-    this.rows = data;
-    this.cdRef.detectChanges();
-    this.onRowsChange.emit(data);
   }
 
   onSelectRow(event: any): void {
@@ -215,7 +191,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   private translateColumns(columnTranslations: object): void {
-    this.columns = this.columns.map(col => {
+    this.columnDefs = this.columnDefs.map(col => {
       col.name = columnTranslations[col.prop];
       return col;
     });

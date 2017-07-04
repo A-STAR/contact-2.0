@@ -37,7 +37,7 @@ export class PermissionsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
+      action: () => this.onBeforeAddPermissions(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('PERMIT_ADD'),
         this.permissionsService.permissions.map(state => !!state.currentRole)
@@ -75,6 +75,7 @@ export class PermissionsComponent implements OnDestroy {
   canViewPermissions$: Observable<boolean>;
 
   emptyMessage$: Observable<string>;
+  availablePermissions: IPermissionModel[];
 
   dialog: IPermissionsDialogEnum;
 
@@ -125,6 +126,15 @@ export class PermissionsComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.permissionsSubscription.unsubscribe();
     this.viewPermissionsSubscription.unsubscribe();
+  }
+
+  onBeforeAddPermissions(): void {
+    this.gridService
+      .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
+      .subscribe(data => {
+        this.availablePermissions = data.permits;
+        this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
+      });
   }
 
   onBeforeEditPermission(): void {

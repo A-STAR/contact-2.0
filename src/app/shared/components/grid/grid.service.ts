@@ -3,13 +3,13 @@ import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from 
 import { AuthHttp } from 'angular2-jwt';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
+import 'rxjs/add/operator/finally';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { ITypeCodeItem, IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
@@ -124,11 +124,11 @@ export class GridService {
                   switch (metadataColumn.dataType) {
                     case 2:
                       // Date
-                      column.renderer = (item: any) => this.converterService.formatDateAsString(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop]);
                       break;
                     case 7:
                       // Date time
-                      column.renderer = (item: any) => this.converterService.formatDateAsString(item[column.prop], true);
+                      column.renderer = (item: any) => this.converterService.formatDateTime(item[column.prop]);
                       break;
                   }
                 }

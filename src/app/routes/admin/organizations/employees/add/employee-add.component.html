@@ -9,7 +9,6 @@
       class="flat"
       [styles]="{ height: '200px' }"
       [columns]="columns"
-      [autoLoad]="false"
       [columnTranslationKey]="'organizations.employees.add'"
       [rows]="(state | async).notAddedEmployees"
       (onSelect)="onSelectEmployees()">

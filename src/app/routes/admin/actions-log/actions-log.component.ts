@@ -82,8 +82,6 @@ export class ActionsLogComponent {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
-
-    this.columnDefs.subscribe(console.log);
   }
 
   refreshData(eventPayload: IGrid2EventPayload): void {
