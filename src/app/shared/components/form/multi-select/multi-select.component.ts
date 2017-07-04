@@ -1,4 +1,13 @@
-import { Component, Input, OnInit, OnDestroy, forwardRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  forwardRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
@@ -41,7 +50,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private onTouched: Function = () => {};
   @Input() equalsFn: Function = (o1: any, o2: any) => o1.id === o2.id;
 
-  constructor() {
+  constructor(private changeDetector: ChangeDetectorRef) {
     this.rowsFilter = this.rowsFilter.bind(this);
   }
 
@@ -117,6 +126,8 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     if (this.syncFormControlChanges) {
       this.syncActiveChanges();
     }
+
+    this.changeDetector.detectChanges();  // TODO(a.poterenko) Workaround: GridComponent update issue
   }
 
   private syncActiveChanges(): void {
