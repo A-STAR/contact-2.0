@@ -141,17 +141,11 @@ export class DictComponent implements OnDestroy {
         isEntityBeingEdited && isRelationsReady && isSelectedDictionaryReady);
   }
 
-  onEdit(): void {
-    this.userPermissionsService.has('DICT_EDIT')
-      .take(1)
-      .subscribe(hasEditPermission => {
-        if (hasEditPermission) {
-          this.editHandler();
-        }
-      });
+  canEdit(): Observable<boolean> {
+    return this.userPermissionsService.has('DICT_EDIT');
   }
 
-  private editHandler(): void {
+  onEdit(): void {
     this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
   }
 

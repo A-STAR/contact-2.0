@@ -46,6 +46,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() rows: Array<any> = [];
   @Input() selectionType: TSelectionType;
   @Input() styles: { [key: string]: any };
+  @Input() allowDblClick = true;
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
@@ -83,7 +84,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       .subscribe(({ type, row }: {type: string; row: any}) => {
         if (type === 'click') {
           this.onSelect.emit(row);
-        } else {
+        } else if (this.allowDblClick) {
           this.onDblClick.emit(row);
         }
       });

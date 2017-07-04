@@ -44,6 +44,7 @@
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
   [rows]="dictionaries | async"
+  [allowDblClick]="canEdit | async"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>
