@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
@@ -34,7 +35,6 @@ export class ActionsLogComponent {
   columns: IGridColumn[] = [
     { prop: 'id', minWidth: 60, filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
-    { prop: 'fullName', mappedFrom: ['lastName', 'firstName', 'middleName'], minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
@@ -68,6 +68,7 @@ export class ActionsLogComponent {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
+    private translateService: TranslateService,
   ) {
     this.columnDefs = this.gridService.getColumnDefs('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
@@ -97,9 +98,14 @@ export class ActionsLogComponent {
   }
 
   doExport(): void {
+    const columns = this.columns.map(column => ({
+      field: column.prop,
+      // TODO(d.maltsev): can we get translations from the grid component?
+      name: this.translateService.instant('actionsLog.grid.' + column.prop)
+    }));
+
     const body = {
-      // TODO(d.maltsev): column translations
-      // columns,
+      columns,
       ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
     };
 
