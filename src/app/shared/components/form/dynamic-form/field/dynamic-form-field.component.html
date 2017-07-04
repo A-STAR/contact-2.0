@@ -101,6 +101,19 @@
     </app-image-upload>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'dialog'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+      </span>
+      <app-popup-input
+        [value]="control.value | async"
+        [placeholder]="control.placeholder"
+        (action)="control.action()"
+      ></app-popup-input>
+    </label>
+  </ng-container>
+
   <input *ngSwitchCase="'hidden'"
          type="hidden"
          class="form-control"

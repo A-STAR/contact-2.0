@@ -31,8 +31,11 @@ export class UsersService {
   }
 
   getUserById(id: number): Observable<IUser> {
-    return this.state.map(state => state.users.find(user => user.id === id))
-      .distinctUntilChanged();
+    // TODO(d.maltsev)
+    // return this.state.map(state => state.users.find(user => user.id === id))
+    //   .distinctUntilChanged();
+    return this.gridService.read('/api/users')
+      .map(response => response.users.find(user => user.id === id));
   }
 
   fetch(): void {

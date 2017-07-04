@@ -32,6 +32,8 @@ export class UserEditComponent {
   controls: Array<IDynamicFormItem>;
   formData: any;
 
+  isLdapUserBeingSelected = false;
+
   private permissions: IUserEditPermissions;
   private userId: number;
 
@@ -104,7 +106,9 @@ export class UserEditComponent {
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ passwordValidators ] },
-      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'text', required: true, disabled: !this.permissions.canEditLdap },
+      // TODO(d.maltsev): consider using control value accessor in app-popup-input
+      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', required: true, disabled: !this.permissions.canEditLdap,
+          action: () => this.isLdapUserBeingSelected = true, value: Observable.of('foo') },
       { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.permissions.canEditRole,
           options: roles },
@@ -152,6 +156,15 @@ export class UserEditComponent {
       roleId: 1,
       languageId: 1
     };
+  }
+
+  onApplyLdapUser(): void {
+    // TODO(d.maltsev)
+    this.onCloseLdapUser();
+  }
+
+  onCloseLdapUser(): void {
+    this.isLdapUserBeingSelected = false;
   }
 
   canSubmit(): boolean {
