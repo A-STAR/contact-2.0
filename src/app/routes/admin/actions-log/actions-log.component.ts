@@ -82,7 +82,8 @@ export class ActionsLogComponent {
   }
 
   export(): void {
-    this.gridService.download('/list/excel?name=actions', {}, {}, 'actions.xlsx')
+    const body = this.actionsLogService.createRequest({}, this.filter.getFilterValues());
+    this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx')
       .take(1)
       .catch(() => {
         // TODO(d.maltsev): i18n
