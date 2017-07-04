@@ -79,6 +79,8 @@ export class ActionsLogComponent {
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
+
+    this.columnDefs.subscribe(console.log);
   }
 
   refreshData(eventPayload: IGrid2EventPayload): void {
@@ -95,9 +97,13 @@ export class ActionsLogComponent {
   }
 
   doExport(): void {
-    const body = this.actionsLogService.createRequest({}, this.filter.getFilterValues());
-    this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx')
-      .take(1)
+    const body = {
+      // TODO(d.maltsev): column translations
+      // columns,
+      ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
+    };
+
+    this.actionsLogService.export(body)
       .catch(() => {
         this.notificationsService.error('actionsLog.messages.errors.download');
         return Observable.of(null);
