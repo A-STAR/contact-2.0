@@ -8,6 +8,7 @@
 </app-actions-log-filter>
 
 <app-grid2
+  #grid
   columnTranslationKey="actionsLog"
   [ngClass]="'actions-log-grid'"
   [rows]="(actionsLogData | async).data"
