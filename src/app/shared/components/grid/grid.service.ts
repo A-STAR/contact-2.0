@@ -105,11 +105,11 @@ export class GridService {
                   switch (metadataColumn.dataType) {
                     case 2:
                       // Date
-                      column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.formatDateAsString(item[column.prop]);
                       break;
                     case 7:
                       // Date time
-                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                      column.renderer = (item: any) => this.converterService.formatDateAsString(item[column.prop], true);
                       break;
                   }
                 }
