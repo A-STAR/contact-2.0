@@ -83,8 +83,8 @@ export class OrganizationsService {
   }
 
   clearAll(): void {
-    this.deleteOrganization();
-    this.deleteOrganization();
+    this.clearEmployees();
+    this.clearOrganizations();
   }
 
   updateOrganizations(organizations: IOrganization[]): void {
