@@ -23,7 +23,7 @@ import {
   IGrid2State
 } from '../../../shared/components/grid2/grid2.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
@@ -52,7 +52,7 @@ export class ActionsLogService {
           fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName
         }, customFilter);
 
-        return this.gridService.create('/list?name=actions', {}, request)
+        return this.dataService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
             return {
               payload: {
@@ -67,7 +67,7 @@ export class ActionsLogService {
     .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
 
   constructor(
-    private gridService: GridService,
+    private dataService: DataService,
     private store: Store<IAppState>,
     private effectActions: Actions,
     private notifications: NotificationsService,
@@ -188,16 +188,16 @@ export class ActionsLogService {
   }
 
   getActionTypes(): Observable<IDictionaryItem[]> {
-    return this.gridService.read('/dictionaries/{code}/terms', {
+    return this.dataService.read('/dictionaries/{code}/terms', {
       code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
     }).map(data => data.terms);
   }
 
   getEmployees(): Observable<IEmployee[]> {
-    return this.gridService.read('/users').map(data => data.users);
+    return this.dataService.read('/users').map(data => data.users);
   }
 
   export(body: IGrid2Request): Observable<any> {
-    return this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx').take(1);
+    return this.dataService.download('/list/excel?name=actions', {}, body, 'actions.xlsx').take(1);
   }
 }

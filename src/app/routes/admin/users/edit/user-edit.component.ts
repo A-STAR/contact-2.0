@@ -7,7 +7,6 @@ import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/compon
 import { IUser } from '../users.interface';
 import { IUserConstant } from '../../../../core/user/constants/user-constants.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -39,7 +38,6 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
   private passwordValidators: ValidatorFn = null;
 
   constructor(
-    private gridService: GridService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {

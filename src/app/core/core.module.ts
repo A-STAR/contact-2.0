@@ -14,6 +14,7 @@ import { AuthService } from './auth/auth.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
+import { DataService } from './data/data.service';
 import { MenuService } from './menu/menu.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
@@ -56,6 +57,7 @@ import { rootReducer } from './state/root.reducer';
     EntityTranslationsService,
     DictionariesService,
     DatePipe,
+    DataService,
     JwtHelper,
     MenuService,
     MetadataService,

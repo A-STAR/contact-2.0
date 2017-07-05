@@ -9,6 +9,7 @@ import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interf
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
@@ -85,6 +86,7 @@ export class PermissionsComponent implements OnDestroy {
   private viewPermissionsSubscription: Subscription;
 
   constructor(
+    private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
@@ -129,7 +131,7 @@ export class PermissionsComponent implements OnDestroy {
   }
 
   onBeforeAddPermissions(): void {
-    this.gridService
+    this.dataService
       .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
       .subscribe(data => {
         this.availablePermissions = data.permits;
