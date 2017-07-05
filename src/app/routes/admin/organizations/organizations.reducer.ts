@@ -19,11 +19,11 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
     return null;
   }
   let result;
-  (nodes || []).forEach((node: ITreeNode) => {
-    result = result || (node.id === selectedOrganizationNode.id
+  (nodes || []).forEach(
+    node => result = result || (node.id === selectedOrganizationNode.id
       ? node
-      : findOrganizationNode(node.children, selectedOrganizationNode));
-  });
+      : findOrganizationNode(node.children, selectedOrganizationNode))
+  );
   return result;
 }
 
