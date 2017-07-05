@@ -37,8 +37,10 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganization: action.payload.organization
-          || findOrganizationNode(state.organizations, state.selectedOrganization)
+        selectedOrganization: action.payload.organization ||
+          // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
+          // so we should find him actual mirror by id
+          findOrganizationNode(state.organizations, state.selectedOrganization)
       };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
