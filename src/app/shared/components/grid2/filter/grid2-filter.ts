@@ -29,7 +29,7 @@ export class FilterObject implements IFilterBaseObject {
   value?: any;
   valueArray?: any[];
 
-  static create(source?: FilterObject, decorators?: { name: Function }): FilterObject {
+  static create(source?: IFilterBaseObject, decorators?: { name: Function }): FilterObject {
     let filter: FilterObject = new FilterObject();
     if (source) {
       filter = filter
@@ -40,7 +40,7 @@ export class FilterObject implements IFilterBaseObject {
         .setOperator(source.operator);
       if (Array.isArray(source.filters) && source.filters.length) {
         filter.setFilters(
-          source.filters.map((_filter: FilterObject) => FilterObject.create(_filter, decorators))
+          source.filters.map(_filter => FilterObject.create(_filter, decorators))
         );
       }
     }

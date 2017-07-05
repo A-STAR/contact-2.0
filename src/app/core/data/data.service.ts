@@ -85,7 +85,7 @@ export class DataService {
         a.download = name;
         document.body.appendChild(a);
         a.click();
-        a.remove();
+        a.parentNode.removeChild(a);
         URL.revokeObjectURL(url);
       });
   }

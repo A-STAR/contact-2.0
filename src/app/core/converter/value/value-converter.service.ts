@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import * as R from 'ramda';
 
 import {
   ILabeledValue,
@@ -9,14 +8,6 @@ import {
   IValueEntity,
   ValueType
 } from './value-converter.interface';
-import {
-  IGrid2ColumnSettings,
-  IGrid2Request,
-  IGrid2RequestPayload,
-  Grid2SortingEnum,
-} from '../../../shared/components/grid2/grid2.interface';
-
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ValueConverterService {
@@ -24,45 +15,6 @@ export class ValueConverterService {
   static DATE_USER_PATTERN = 'DD.MM.YYYY';
   static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
   static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
-
-  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
-    const request: IGrid2Request = {};
-    const filters: FilterObject = FilterObject.create().and();
-
-    if (payload.columnsSettings) {
-      R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        const { filter } = columnSettings;
-        filter.addFilter(
-          FilterObject.create(filter, { name:  payload.fieldNameConverter })
-        );
-      }, R.values(payload.columnsSettings));
-
-      request.filtering = filters;
-
-      request.sorting = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
-            direction: columnSettings.sortingDirection,
-            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
-            order: columnSettings.sortingOrder,
-        }),
-        payload.columnsSettings
-      ))
-      .filter(s => s.direction !== Grid2SortingEnum.NONE)
-      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
-      .map(v => ({
-        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
-        field: v.field,
-      }));
-    }
-
-    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
-      request.paging = {
-        pageNumber: payload.currentPage,
-        resultsPerPage: payload.pageSize
-      };
-    }
-    return request;
-  }
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);

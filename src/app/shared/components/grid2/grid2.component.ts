@@ -633,8 +633,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 }
 
 class ViewPortDatasource implements IViewportDatasource {
-  firstRow: number;
-  lastRow: number;
   params: IViewportDatasourceParams;
   grid: Grid2Component;
 
@@ -645,6 +643,7 @@ class ViewPortDatasource implements IViewportDatasource {
   init(params: IViewportDatasourceParams): void {
     this.params = params;
   }
+
   // the rows are mapped {key: rowIndex}: rowData
   convertData(data: Array<any>): any {
     return data.reduce((acc, row) => {
@@ -654,15 +653,15 @@ class ViewPortDatasource implements IViewportDatasource {
   }
 
   setViewportRange(firstRow: number, lastRow: number): void {
-    console.log('setViewportRange: ' + firstRow + ' to ' + lastRow);
-    console.log('data length: ', this.grid.gridRows && this.grid.gridRows.length);
+    const length = this.grid.gridRows && this.grid.gridRows.length;
+    console.log(`range: ${firstRow} to ${lastRow}, length: ${length}`);
     if (firstRow < this.grid.pageSize) {
       this.params.setRowData(this.grid.gridRows);
     }
   }
 
   destroy(): void {
-    // this doesn't fire.
+    // this doesn't fire
     console.log('ViewPortDatasource destroyed');
   }
 }

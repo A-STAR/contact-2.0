@@ -1,10 +1,10 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  Output,
+  Component,
   EventEmitter,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import * as R from 'ramda';
@@ -29,19 +29,19 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
 
   private static DEFAULT_FILTER_CONTROL_TYPE: ControlTypes = 'text';
 
-  @Input() fieldName: string;
   @Input() columnName: string;
-  @Input() filterControlType: ControlTypes;
+  @Input() fieldName: string;
   @Input() filter: FilterObject;
+  @Input() filterControlType: ControlTypes;
 
   @Output() action: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
   condition: FilteringConditionType = 'AND';
-  firstValueControl: IDynamicFormControl;
-  secondValueControl: IDynamicFormControl;
   firstSelectionControl: IDynamicFormControl;
+  firstValueControl: IDynamicFormControl;
   secondSelectionControl: IDynamicFormControl;
+  secondValueControl: IDynamicFormControl;
 
   conditionItems = [
     { label: 'default.filter.equal', value: FilteringOperators.EQUAL },

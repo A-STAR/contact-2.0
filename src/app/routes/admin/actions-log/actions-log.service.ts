@@ -24,10 +24,11 @@ import {
 } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
-import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 @Injectable()
 export class ActionsLogService {
@@ -68,9 +69,10 @@ export class ActionsLogService {
 
   constructor(
     private dataService: DataService,
-    private store: Store<IAppState>,
     private effectActions: Actions,
+    private gridService: GridService,
     private notifications: NotificationsService,
+    private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
   ) {}
 
@@ -129,7 +131,7 @@ export class ActionsLogService {
   }
 
   createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
-    const request: IGrid2Request = this.valueConverterService.toGridRequest(payload);
+    const request: IGrid2Request = this.gridService.toGridRequest(payload);
 
     request.filtering = FilterObject.create()
       .and()

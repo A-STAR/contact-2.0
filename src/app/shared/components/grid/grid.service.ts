@@ -6,11 +6,19 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
+import {
+  IGrid2ColumnSettings,
+  IGrid2Request,
+  IGrid2RequestPayload,
+  Grid2SortingEnum,
+} from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
-import { MetadataService } from '../../../core/metadata/metadata.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
@@ -20,6 +28,46 @@ export class GridService {
     private metadataService: MetadataService,
     private translateService: TranslateService,
   ) {}
+
+  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
+    const request: IGrid2Request = {};
+    const filters: FilterObject = FilterObject.create().and();
+
+    if (payload.columnsSettings) {
+      R.values(payload.columnsSettings)
+        .forEach(columnSettings => {
+          const { filter } = columnSettings;
+          filter.addFilter(
+            FilterObject.create(filter, { name:  payload.fieldNameConverter })
+          );
+        });
+
+      request.filtering = filters;
+
+      request.sorting = R.values(R.mapObjIndexed(
+        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
+            direction: columnSettings.sortingDirection,
+            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
+            order: columnSettings.sortingOrder,
+        }),
+        payload.columnsSettings
+      ))
+      .filter(s => s.direction !== Grid2SortingEnum.NONE)
+      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
+      .map(v => ({
+        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
+        field: v.field,
+      }));
+    }
+
+    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
+      request.paging = {
+        pageNumber: payload.currentPage,
+        resultsPerPage: payload.pageSize
+      };
+    }
+    return request;
+  }
 
   /**
    * Builds column defs from server metadata
@@ -34,8 +82,8 @@ export class GridService {
       const mapColumns = ([metadata, dictionaries]) =>
         this.setRenderers(columns.filter(column =>
           !!metadata.find(metadataColumn => {
-            const result = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
-            if (result) {
+            const isInMeta = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
+            if (isInMeta) {
               if (!column.renderer) {
                 const currentDictTypes = dictionaries[metadataColumn.dictCode];
                 if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
@@ -53,7 +101,7 @@ export class GridService {
                       column.renderer = (item: any) => this.converterService.formatDate(item[column.prop]);
                       break;
                     case 7:
-                      // Date time
+                      // Datetime
                       column.renderer = (item: any) => this.converterService.formatDateTime(item[column.prop]);
                       break;
                   }
@@ -63,14 +111,14 @@ export class GridService {
               if (!!column.filterOptionsDictionaryId) {
                 const dictTypes = dictionaries[column.filterOptionsDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterValues = R.reduce((acc, item) => {
+                  column.filterValues = dictTypes.reduce((acc, item) => {
                     acc[item.code] = item.name;
                     return acc;
-                  }, {}, dictTypes);
+                  }, {});
                 }
               }
             }
-            return result;
+            return isInMeta;
           })
         ), renderers);
 
