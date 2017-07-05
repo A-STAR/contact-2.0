@@ -1,1 +1,7 @@
-Dropdown
+<div #trigger (click)="toggle()">
+  <ng-content select="[trigger]"></ng-content>
+</div>
+
+<div *ngIf="isOpen" class="dropdown">
+  <ng-content></ng-content>
+</div>

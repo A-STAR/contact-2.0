@@ -1,0 +1,16 @@
+.menu-item {
+  height: 100%;
+
+  a {
+    color: #fff;
+    line-height: 21px;
+    position: relative;
+    display: block;
+    padding: 17px 15px;
+    text-decoration: none;
+
+    &:hover {
+      color: #117391;
+    }
+  }
+}
