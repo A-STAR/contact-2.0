@@ -24,9 +24,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
   @Output() onSelect: EventEmitter<IOrganization> = new EventEmitter<IOrganization>();
   @ViewChild('tree') tree: TreeComponent;
 
-  // TODO: ITreeNode<IOrganization> { ..., data: IOrganization }
-
-  selection: ITreeNode;
   value: ITreeNode[];
 
   toolbarItems: Array<IToolbarItem> = [
@@ -147,7 +144,6 @@ export class OrganizationsTreeComponent implements OnDestroy {
   onNodeSelectOrExpand(node: ITreeNode): void {
     const parent = this.findParentRecursive(node);
     this.collapseSiblings(parent);
-    this.selection = node;
     this.organizationsService.selectOrganization(node.data);
     this.onSelect.emit(node.data);
   }
@@ -168,7 +164,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   onEditSubmit(data: any, create: boolean): void {
     if (create) {
-      this.organizationsService.createOrganization(this.selection ? this.selection.data.id : null, data);
+      this.organizationsService.createOrganization(data);
     } else {
       this.organizationsService.updateOrganization(data);
     }

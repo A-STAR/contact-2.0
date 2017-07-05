@@ -32,11 +32,11 @@
     layout="horizontal"
     selectionMode="single"
     [value]="organizations$ | async"
+    [selection]="selectedOrganization | async"
     (changeNodesLocation)="onChangeNodesLocation($event)"
     (onNodeSelect)="onNodeSelect($event)"
     (onNodeEdit)="onNodeEdit($event)"
-    (onNodeExpand)="onNodeExpand($event)"
-    [(selection)]="selection">
+    (onNodeExpand)="onNodeExpand($event)">
   </app-tree>
 </ng-container>
 
