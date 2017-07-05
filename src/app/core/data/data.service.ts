@@ -3,6 +3,7 @@ import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from 
 import { AuthHttp } from 'angular2-jwt';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/finally';
 
 @Injectable()
@@ -15,9 +16,10 @@ export class DataService {
   private rootUrl$: Observable<string>;
 
   constructor(private http: AuthHttp) {
-    // TODO(d.maltsev): cache root url
     this.rootUrl$ = this.localRequest()
       .read('./assets/server/root.json')
+      .publishReplay(1)
+      .refCount()
       .map(response => response.url);
   }
 
