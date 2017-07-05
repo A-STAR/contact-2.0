@@ -17,7 +17,7 @@ import {
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { OrganizationsService } from './organizations.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { OrganizationsTreeService } from './organizations-tree/organizations-tree.service';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -279,7 +279,7 @@ export class OrganizationsEffects {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
-    private converterService: ValueConverterService,
+    private converterService: OrganizationsTreeService,
   ) {}
 
   private readOrganizations(): Observable<any> {
