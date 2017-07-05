@@ -1,11 +1,13 @@
-import { Injectable, OnInit } from '@angular/core';
-import { Headers, Response } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthHttp, JwtHelper } from 'angular2-jwt';
+import { JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
+
+import { DataService } from '../data/data.service';
 
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
@@ -17,24 +19,17 @@ const setToken = (token: string) => localStorage.setItem(TOKEN_NAME, token);
 const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
-export class AuthService implements CanActivate, OnInit {
+export class AuthService implements CanActivate {
   static JWT_EXPIRATION_THRESHOLD = 60e3;
   static JWT_TIMER_INTERVAL = 10e3;
 
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
-
   private authenticated = false;
-  // backend root url
-  private rootUrl = '';
   private tokenTimer = null;
 
-  private defaultHeaders = new Headers({
-    'Content-Type': 'application/json'
-  });
-
   constructor(
-    private http: AuthHttp,
+    private dataService: DataService,
     private router: Router,
     private jwtHelper: JwtHelper,
     private translateService: TranslateService,
@@ -49,24 +44,6 @@ export class AuthService implements CanActivate, OnInit {
     return this.authenticated;
   }
 
-  ngOnInit(): void {
-    this.getRootUrl();
-  }
-
-  getRootUrl(): Observable<string> {
-    if (this.rootUrl) {
-      return Observable.of(this.rootUrl);
-    }
-
-    return this.http.get('./assets/server/root.json', { headers: this.defaultHeaders })
-      .map(resp => resp.json().url)
-      .do(root => this.rootUrl = root)
-      .catch(err => {
-        console.error(err);
-        throw err;
-      });
-  }
-
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
 
@@ -79,36 +56,28 @@ export class AuthService implements CanActivate, OnInit {
   }
 
   authenticate(login: string, password: string): Observable<boolean> {
-    const body = JSON.stringify({ login, password });
-
-    return this.getRootUrl()
-      .flatMap((root: string) => {
-        return this.http.post(`${root}/auth/login`, body, { headers: this.defaultHeaders })
-          .map((resp: Response) => resp.headers.get('X-Auth-Token'))
-          .do((token: string) => {
-              this.saveToken(token);
-              this.setLanguage(token);
-              this.authenticated = true;
-          })
-          .catch(error => {
-            this.authenticated = false;
-            const { message } = error.json();
-            throw new Error(this.getErrorMessage(message));
-          })
-          .map(resp => true);
-      });
+    return this.dataService.post('/auth/login', {}, { login, password })
+      .map((resp: Response) => resp.headers.get('X-Auth-Token'))
+      .do((token: string) => {
+        this.saveToken(token);
+        this.setLanguage(token);
+        this.authenticated = true;
+      })
+      .catch(error => {
+        this.authenticated = false;
+        const { message } = error.json();
+        throw new Error(this.getErrorMessage(message));
+      })
+      .map(resp => true);
   }
 
   logout(): Observable<boolean> {
-    return this.getRootUrl()
-      .flatMap(root => {
-        return this.http.get(`${root}/auth/logout`, { headers: this.defaultHeaders })
-          .do(() => this.logoutHandler())
-          .map(resp => true)
-          .catch(error => {
-            this.logoutHandler();
-            return Observable.of(false);
-          });
+    return this.dataService.post('/auth/logout', {}, {})
+      .do(() => this.logoutHandler())
+      .map(resp => true)
+      .catch(error => {
+        this.logoutHandler();
+        return Observable.of(false);
       });
   }
 
@@ -151,11 +120,10 @@ export class AuthService implements CanActivate, OnInit {
   }
 
   private refreshToken(): void {
-    this.getRootUrl()
-      .flatMap(root => this.http.get(`${root}/api/refresh`, { headers: this.defaultHeaders }))
+    this.dataService.post('/auth/refresh', {}, {})
+      .map((resp: Response) => resp.headers.get('X-Auth-Token'))
       .subscribe(
-        resp => {
-          const token = resp.headers.get('X-Auth-Token');
+        token => {
           this.saveToken(token);
           this.setLanguage(token);
         },

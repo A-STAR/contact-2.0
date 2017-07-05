@@ -3,9 +3,8 @@ import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from 
 import { AuthHttp } from 'angular2-jwt';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/finally';
-
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class DataService {
@@ -14,7 +13,15 @@ export class DataService {
 
   private nRequests$ = new BehaviorSubject<number>(0);
 
-  constructor(private authService: AuthService, private http: AuthHttp) {}
+  private rootUrl$: Observable<string>;
+
+  constructor(private http: AuthHttp) {
+    this.rootUrl$ = this.localRequest()
+      .read('./assets/server/root.json')
+      .publishReplay(1)
+      .refCount()
+      .map(response => response.url);
+  }
 
   get isLoading$(): Observable<boolean> {
     return this.nRequests$
@@ -64,6 +71,10 @@ export class DataService {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
   }
 
+  post(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
+    return this.request(url, routeParams, { ...options, method: RequestMethod.Post, body }, null);
+  }
+
   download(url: string, routeParams: object = {}, body: object, name: string): Observable<void> {
     return this.createBlob(url, routeParams, body)
       .map(blob => {
@@ -93,7 +104,7 @@ export class DataService {
       .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
   }
 
-  private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
+  private request(url: string, routeParams: object, options: RequestOptionsArgs, prefix: string = '/api'): Observable<any> {
     const headers = options.headers || new Headers();
     if (options.body && options.body.constructor === Object) {
       headers.append('Content-Type', 'application/json');
@@ -104,8 +115,7 @@ export class DataService {
     return this.validateUrl(url)
       .flatMap(rootUrl => {
         const route = this.createRoute(url, routeParams);
-        const prefix = '/api';
-        const api = route.startsWith(prefix) ? route : prefix + route;
+        const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
         return this.http.request(`${rootUrl}${api}`, { ...options, headers });
       })
@@ -118,7 +128,7 @@ export class DataService {
     if (!url) {
       return Observable.throw('Error: no url passed to the GridService');
     }
-    return this.authService.getRootUrl();
+    return this.rootUrl$;
   }
 
   private createRoute(url: string, params: object): string {
