@@ -27,3 +27,8 @@ export interface IOption {
   label: string;
   value: number | string;
 }
+
+export interface ITreeNodeValue {
+  children?: ITreeNodeValue[];
+  sortOrder?: number;
+}

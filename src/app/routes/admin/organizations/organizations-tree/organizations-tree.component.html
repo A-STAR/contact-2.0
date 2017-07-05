@@ -6,7 +6,7 @@
 
 <app-organization-edit
   *ngIf="isEntityBeingEdited | async"
-  [editedEntity]="selectedOrganization | async"
+  [editedEntity]="(selectedOrganization | async)?.data"
   (submit)="onEditSubmit($event, false)"
   (cancel)="cancelAction()">
 </app-organization-edit>
@@ -26,25 +26,16 @@
   [items]="toolbarItems">
 </app-toolbar-2>
 
-<ng-container *ngIf="hasViewPermission$ | async; else message">
-  <app-tree
-    #tree
-    layout="horizontal"
-    selectionMode="single"
-    [value]="organizations$ | async"
-    [selection]="selectedOrganization | async"
-    (changeNodesLocation)="onChangeNodesLocation($event)"
-    (onNodeSelect)="onNodeSelect($event)"
-    (onNodeEdit)="onNodeEdit($event)"
-    (onNodeExpand)="onNodeExpand($event)">
-  </app-tree>
-</ng-container>
-
-<ng-template #message>
-  <div class="message-container">
-    {{ 'organizations.organizations.errors.view' | translate }}
-  </div>
-</ng-template>
-
-
+<app-tree
+  layout="horizontal"
+  selectionMode="single"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="organizations | async"
+  [selection]="selectedOrganization | async"
+  (changeNodesLocation)="onChangeNodesLocation($event)"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeEdit)="onNodeEdit($event)"
+  (onNodeExpand)="onNodeExpand($event)">
+</app-tree>
 

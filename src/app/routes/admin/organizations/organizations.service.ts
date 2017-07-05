@@ -11,6 +11,8 @@ import {
   IOrganizationDialogActionEnum
 } from './organizations.interface';
 
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
+
 @Injectable()
 export class OrganizationsService {
   static ORGANIZATIONS_FETCH               = 'ORGANIZATIONS_FETCH';
@@ -37,7 +39,13 @@ export class OrganizationsService {
   get state(): Observable<IOrganizationsState> {
     return this.store
       .select(state => state.organizations)
-      .filter(Boolean);
+      .distinctUntilChanged();
+  }
+
+  get organizations(): Observable<ITreeNode[]> {
+    return this.store
+      .select(state => state.organizations.organizations)
+      .distinctUntilChanged();
   }
 
   get dialogAction(): Observable<IOrganizationDialogActionEnum> {
@@ -46,7 +54,7 @@ export class OrganizationsService {
       .distinctUntilChanged();
   }
 
-  get selectedOrganization(): Observable<IOrganization> {
+  get selectedOrganization(): Observable<ITreeNode> {
     return this.store
       .select(state => state.organizations.selectedOrganization)
       .distinctUntilChanged();
@@ -93,7 +101,7 @@ export class OrganizationsService {
     });
   }
 
-  selectOrganization(organization: IOrganization): void {
+  selectOrganization(organization: ITreeNode): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_SELECT,
       payload: {
@@ -153,7 +161,7 @@ export class OrganizationsService {
     });
   }
 
-  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: IOrganization): void {
+  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: ITreeNode): void {
     return this.store.dispatch({
       type: OrganizationsService.DIALOG_ACTION,
       payload: {

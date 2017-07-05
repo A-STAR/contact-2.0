@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Inject,
-  forwardRef,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, Inject, OnDestroy, forwardRef } from '@angular/core';
 
 import { TreeComponent } from '../tree.component';
 import { ClickComponentPlugin } from './click.component.plugin';
@@ -17,10 +10,12 @@ import { IClickableComponent, IClickableComponentPlugin } from '../tree.interfac
   selector: 'app-tree-node',
   templateUrl: './treenode.component.html'
 })
-export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent {
+export class TreeNodeComponent implements OnDestroy, IClickableComponent {
   static DEFAULT_BG_COLOR = '#fff';
   static DEFAULT_SELECTED_BG_COLOR = '#def';
 
+  @Input() collapseAdjacentNodes = false;
+  @Input() expandNodeOnClick = false;
   @Input() node: ITreeNode;
   @Input() parentNode: ITreeNode;
   @Input() root: boolean;
@@ -36,12 +31,6 @@ export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent
 
   get dragulaOptions(): any {
     return this.tree.dragulaOptions;
-  }
-
-  ngOnInit(): void {
-    if (typeof this.parentNode !== 'undefined') {
-      this.node.parent = this.parentNode;
-    }
   }
 
   ngOnDestroy(): void {
@@ -61,9 +50,11 @@ export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent
   toggle(event: MouseEvent): void {
     this.stopEvent(event);
     if (this.node.expanded) {
-      this.tree.onNodeCollapse.emit({originalEvent: event, node: this.node});
+      this.doCollapseChildren(this.node);
+      this.tree.nodeCollapse(event, this.node);
     } else {
-      this.tree.onNodeExpand.emit({originalEvent: event, node: this.node});
+      this.doCollapseAdjacentNodes();
+      this.tree.nodeExpand(event, this.node);
     }
     this.node.expanded = !this.node.expanded;
   }
@@ -73,6 +64,7 @@ export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent
   }
 
   onClick(event: MouseEvent): void {
+    this.doExpandNodeOnClick();
     this.tree.onNodeClick(event, this.node);
   }
 
@@ -101,5 +93,36 @@ export class TreeNodeComponent implements OnInit, OnDestroy, IClickableComponent
 
   canShowConnector(): boolean {
     return this.node.parent.children.length > 1;
+  }
+
+  private doExpandNodeOnClick(): void {
+    if (this.expandNodeOnClick && !this.node.expanded) {
+      this.setNodeExpanded(this.node);
+      this.doCollapseAdjacentNodes();
+    }
+  }
+
+  private doCollapseAdjacentNodes(): void {
+    if (this.collapseAdjacentNodes && this.node.parent) {
+      this.node.parent.children
+        .filter(node => node !== this.node)
+        .forEach(node => {
+          node.expanded = false;
+          this.doCollapseChildren(node);
+        });
+    }
+  }
+
+  private doCollapseChildren(node: ITreeNode): void {
+    (node.children || []).forEach(childNode => {
+      childNode.expanded = false;
+      this.doCollapseChildren(childNode);
+    });
+  }
+
+  private setNodeExpanded(node: ITreeNode): void  {
+    if (node.children && node.children.length) {
+      node.expanded = true;
+    }
   }
 }

@@ -17,6 +17,7 @@ import {
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { OrganizationsService } from './organizations.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -29,7 +30,7 @@ export class OrganizationsEffects {
         .map(data => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: {
-            organizations: data.organizations
+            organizations: this.converterService.toTreeNodes(data.organizations)
           }
         }))
         .catch(() => {
@@ -278,6 +279,7 @@ export class OrganizationsEffects {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
+    private converterService: ValueConverterService,
   ) {}
 
   private readOrganizations(): Observable<any> {
