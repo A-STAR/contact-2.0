@@ -72,7 +72,7 @@ export class ActionsLogComponent {
     private store: Store<IAppState>,
     private translateService: TranslateService,
   ) {
-    this.columnDefs = this.gridService.getColumnDefs('Actions', this.columns, this.renderers);
+    this.columnDefs = this.gridService.getColumnDefs('actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.actionsLogData = this.actionsLogService.actionsLogRows;
