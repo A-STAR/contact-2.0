@@ -178,13 +178,11 @@ export class OrganizationsService {
   }
 
   private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {
-    if (Array.isArray(nodes)) {
-      nodes.forEach((node: ITreeNode) => {
-        if (node.expanded) {
-          expandedNodes.add(node.id);
-        }
-        this.observeOrganizations(node.children, expandedNodes);
-      });
-    }
+    (nodes || []).forEach(node => {
+      if (node.expanded) {
+        expandedNodes.add(node.id);
+      }
+      this.observeOrganizations(node.children, expandedNodes);
+    });
   }
 }
