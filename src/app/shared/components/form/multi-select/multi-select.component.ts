@@ -31,15 +31,14 @@ import { GridComponent } from '../../grid/grid.component';
 export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, ControlValueAccessor {
   styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
   gridStyles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
-
   @Input() height: number;
   @Input() columnsFrom: IGridColumn[];
   @Input() columnsTo: IGridColumn[];
   @Input() columnsTranslationKeyFrom: string;
   @Input() columnsTranslationKeyTo: string;
   @Input() rowsFilterFrom: Function;
-  @Input() syncFormControlChanges = true;
   @Input() rowsFrom: any[];
+  @Input() syncFormControlChanges = true;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
@@ -47,7 +46,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private _rowDoubleSelectFromSubscription;
   private _rowDoubleSelectToSubscription;
   private _active: any[] = [];
-
   private onChange: Function = () => {};
   private onTouched: Function = () => {};
 
