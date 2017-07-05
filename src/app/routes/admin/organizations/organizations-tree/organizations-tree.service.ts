@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as R from 'ramda';
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
-import { ITreeNodeValue } from '../../../../core/converter/value/value-converter.interface';
+import { ITreeNodeValue } from './organizations-tree.interface';
 
 @Injectable()
 export class OrganizationsTreeService {
