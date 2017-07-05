@@ -241,6 +241,9 @@
       "email": "Email",
       "languageId": "Language"
     },
+    "ldap": {
+      "title": "Domain users"
+    },
     "messages": {
       "errors": {
         "fetch": "Could not fetch users",
@@ -666,6 +669,7 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Save",
       "cancel": "Cancel",
       "remove": "Remove",
