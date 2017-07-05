@@ -1,7 +1,6 @@
 import { Input, Component } from '@angular/core';
 
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IEmployeeUser } from '../../organizations.interface';
@@ -15,7 +14,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
 
   private canEdit = false;
 
-  constructor(private gridService: GridService, private userPermissionsService: UserPermissionsService) {
+  constructor(private userPermissionsService: UserPermissionsService) {
     super();
     // TODO(d.maltsev): unsubscribe
     this.userPermissionsService.has('ORGANIZATION_EDIT')

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { IUserConstantsResponse } from './user-constants.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { UserConstantsService } from './user-constants.service';
 
@@ -37,11 +37,11 @@ export class UserConstantsEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
 
   private read(): Observable<IUserConstantsResponse> {
-    return this.gridService.read('/constants/values');
+    return this.dataService.read('/constants/values');
   }
 }

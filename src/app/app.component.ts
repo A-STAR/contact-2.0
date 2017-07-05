@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/debounceTime';
 
-import { GridService } from './shared/components/grid/grid.service';
+import { DataService } from './core/data/data.service';
 import { SettingsService } from './core/settings/settings.service';
 
 @Component({
@@ -47,7 +47,7 @@ export class AppComponent {
   }
 
   constructor(
-    private gridService: GridService,
+    private dataService: DataService,
     private router: Router,
     public settings: SettingsService,
     private translateService: TranslateService
@@ -60,7 +60,7 @@ export class AppComponent {
     translateService.use(language).subscribe();
 
     this._isLoading$ = Observable.combineLatest(
-      this.gridService.isLoading$,
+      this.dataService.isLoading$,
       this.router.events,
       (isLoading, event) => isLoading || !(event instanceof NavigationEnd)
     )

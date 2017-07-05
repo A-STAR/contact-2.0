@@ -11,9 +11,9 @@ import { IAppState } from '../state/state.interface';
 import { IDictionary, ITerm } from './dictionaries.interface';
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 
+import { DataService } from '../data/data.service';
 import { DictionariesService } from './dictionaries.service';
 import { EntityTranslationsService } from '../entity/translations/entity-translations.service';
-import { GridService } from '../../shared/components/grid/grid.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
@@ -257,18 +257,18 @@ export class DictionariesEffects {
 
   constructor(
     private actions: Actions,
+    private dataService: DataService,
     private entityTranslationsService: EntityTranslationsService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
 
   private readDictionaries(): Observable<any> {
-    return this.gridService.read('/api/dictionaries');
+    return this.dataService.read('/api/dictionaries');
   }
 
   private createDictionary(dictionary: IDictionary): Observable<any> {
-    return this.gridService.create('/api/dictionaries', {}, dictionary);
+    return this.dataService.create('/api/dictionaries', {}, dictionary);
   }
 
   private updateDictionary(
@@ -279,29 +279,29 @@ export class DictionariesEffects {
     updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
     return Observable.forkJoin([
-      this.gridService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary),
+      this.dataService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary),
       this.entityTranslationsService.saveDictNameTranslations(dictionaryId, updatedTranslations),
       this.entityTranslationsService.deleteDictNameTranslation(dictionaryId, deletedTranslations)
     ]);
   }
 
   private deleteDictionary(dictionaryCode: string): Observable<any> {
-    return this.gridService.delete('/api/dictionaries/{dictionaryCode}', { dictionaryCode });
+    return this.dataService.delete('/api/dictionaries/{dictionaryCode}', { dictionaryCode });
   }
 
   private readTerms(dictionaryCode: string|number): Observable<any> {
-    return this.gridService.read('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode });
+    return this.dataService.read('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode });
   }
 
   private createTerm(dictionaryCode: string, term: ITerm): Observable<any> {
-    return this.gridService.create('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode }, term);
+    return this.dataService.create('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode }, term);
   }
 
   private updateTerm(dictionaryCode: string, termId: number, term: ITerm): Observable<any> {
-    return this.gridService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term);
+    return this.dataService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term);
   }
 
   private deleteTerm(dictionaryCode: string, termId: number): Observable<any> {
-    return this.gridService.delete('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId });
+    return this.dataService.delete('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId });
   }
 }

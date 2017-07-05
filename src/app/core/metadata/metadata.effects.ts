@@ -6,9 +6,9 @@ import 'rxjs/add/operator/switchMap';
 
 import { IMetadataListsState, IMetadataResponse } from './metadata.interface';
 
+import { DataService } from '../data/data.service';
 import { MetadataService } from './metadata.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { GridService } from '../../shared/components/grid/grid.service';
 
 @Injectable()
 export class MetadataEffects {
@@ -36,13 +36,13 @@ export class MetadataEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationService: NotificationsService
   ) {
   }
 
   private read(): Observable<IMetadataListsState> {
-    return this.gridService.read('/list')
+    return this.dataService.read('/list')
       .map((response: IMetadataResponse) => response.lists.reduce((acc, metadata) => {
         acc[metadata.name] = metadata.data;
         return acc;

@@ -9,6 +9,7 @@ import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.i
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ConstantsService } from './constants.service';
+import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
@@ -73,8 +74,9 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   emptyMessage$: Observable<string>;
 
   constructor(
-    private gridService: GridService,
     private constantsService: ConstantsService,
+    private dataService: DataService,
+    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -125,7 +127,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       body[field] = Number(value);
     }
 
-    this.gridService
+    this.dataService
       .update(this.dataSource.update, { id }, body)
       .take(1)
       .subscribe(

@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IDataSource, IMessages, IParameters, TSelectionType, IGridColumn } from './grid.interface';
 
-import { GridService } from './grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
@@ -72,7 +72,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   constructor(
     public cdRef: ChangeDetectorRef,
-    private gridService: GridService,
+    private dataService: DataService,
     public settings: SettingsService,
     private translate: TranslateService,
   ) {
@@ -159,7 +159,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   update(routeParams: object, body: object): Observable<any> {
-    return this.gridService.update(this.dataSource.update, routeParams, body);
+    return this.dataService.update(this.dataSource.update, routeParams, body);
   }
 
   onActionClick(event: any): void {

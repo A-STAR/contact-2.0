@@ -6,8 +6,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { IAppState } from '../../../core/state/state.interface';
 import { IPermissionModel, IPermissionRole, IPermissionsDialogEnum, IPermissionsState, IValueEntity } from './permissions.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
-
 @Injectable()
 export class PermissionsService {
   static STORAGE_KEY = 'state/permissions';
@@ -30,10 +28,7 @@ export class PermissionsService {
   static PERMISSION_SELECTED      = 'PERMISSION_SELECTED';
   static PERMISSION_DIALOG        = 'PERMISSION_DIALOG';
 
-  constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>,
-  ) { }
+  constructor(private store: Store<IAppState>) {}
 
   get permissions(): Observable<IPermissionsState> {
     return this.store.select('permissions');

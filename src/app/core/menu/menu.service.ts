@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
 
-import { GridService } from '../../shared/components/grid/grid.service';
+import { DataService } from '../data/data.service';
 
 import { menuConfig } from '../../routes/menu-config';
 
@@ -22,10 +22,10 @@ export class MenuService {
   private guiObjectIds: { [key: string]: number };
 
   constructor(
-    private gridService: GridService,
+    private dataService: DataService,
     private router: Router
   ) {
-    this.guiObjects$ = this.gridService.read('/guiconfigurations')
+    this.guiObjects$ = this.dataService.read('/guiconfigurations')
       .map(response => response.appGuiObjects)
       .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
       .map(data => this.prepareMenu(data));
@@ -65,7 +65,7 @@ export class MenuService {
       'X-Gui-Object': this.guiObjectIds[name]
     });
 
-    this.gridService
+    this.dataService
       .create('/actions', {}, data, { headers })
       .take(1)
       .subscribe();

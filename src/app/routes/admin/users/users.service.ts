@@ -5,8 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState, IUserDialogActionEnum } from './users.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
-
 @Injectable()
 export class UsersService {
   static USERS_FETCH         = 'USERS_FETCH';
@@ -19,10 +17,7 @@ export class UsersService {
   static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
-  constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>
-  ) {}
+  constructor(private store: Store<IAppState>) {}
 
   get state(): Observable<IUsersState> {
     return this.store
