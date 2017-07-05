@@ -1,9 +1,19 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild, animate, state, style, transition, trigger } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: [ './dropdown.component.scss' ]
+  styleUrls: [ './dropdown.component.scss' ],
+  animations: [
+    trigger(
+      'isOpen', [
+        state('void', style({ opacity: 0 })),
+        state('*', style({ opacity: 1 })),
+        transition(':enter', animate('150ms ease-out')),
+        transition(':leave', animate('150ms ease-in')),
+      ]
+    )
+  ]
 })
 export class DropdownComponent {
   private _isOpen = false;
