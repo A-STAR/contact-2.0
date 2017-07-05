@@ -24,9 +24,9 @@ export class GridService {
   /**
    * Builds column defs from server metadata
    *
-   * @param {string} metadataKey The key used to retreive coldefs the from the metadata service
+   * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {Observable<IGridColumn[]>} columns Initial column descriptions
-   * @param {object} renderers Colums rendered, esentially getters
+   * @param {object} renderers Column renderers, esentially getters
    * @returns {Observable<IGridColumn[]>} Column defininitions
    */
   getColumnDefs(

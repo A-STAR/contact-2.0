@@ -20,6 +20,7 @@ export interface IGridColumn {
   name?: string;
   prop: string;
   renderer?: Function;
+  type?: string;
   width?: number;
   mappedFrom?: string[];
   /*

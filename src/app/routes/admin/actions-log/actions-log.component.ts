@@ -34,7 +34,7 @@ export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'id', minWidth: 60, filter: 'number' },
+    { prop: 'id', minWidth: 60, type: 'number', filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
@@ -43,7 +43,7 @@ export class ActionsLogComponent {
       filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
     { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
     { prop: 'machine', minWidth: 120, filter: 'textFilter' },
-    { prop: 'duration', minWidth: 120, filter: 'text' }
+    { prop: 'duration', minWidth: 100, type: 'number', filter: 'text' }
   ];
 
   columnDefs: Observable<IGridColumn[]>;
@@ -63,7 +63,7 @@ export class ActionsLogComponent {
   actionsLogSelectedRows: Observable<IDictionaryItem[]>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
-  @ViewChild('grid') grid: Grid2Component;
+  @ViewChild(Grid2Component) grid: Grid2Component;
 
   constructor(
     private actionsLogService: ActionsLogService,

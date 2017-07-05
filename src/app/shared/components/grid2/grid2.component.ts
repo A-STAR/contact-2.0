@@ -42,6 +42,7 @@ import {
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { FilterObject } from './filter/grid2-filter';
 import { GridTextFilter } from './filter/text-filter';
@@ -134,9 +135,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() filter(record: any): boolean { return record; }
 
   constructor(
+    private elRef: ElementRef,
+    private notificationService: NotificationsService,
     private renderer2: Renderer2,
     private translate: TranslateService,
-    private elRef: ElementRef,
   ) {}
 
   get gridRows(): any[] {
@@ -284,30 +286,49 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     const pages = `${this.page} / ${pageCount || 0}`;
 
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
-      // refresh  backBtn, forwardBtn, pageSize
-      if ([1, 3, 4].includes(i)) {
-        btn.disabled = !canPaginate;
+      switch (i) {
+        case 1:
+          // refresh backBtn
+          btn.disabled = !canPaginate || this.page === 1;
+          return btn;
+        case 2:
+          // refresh page count
+          btn.text = pages;
+          return btn;
+        case 3:
+          // refresh forwardBtn
+          btn.disabled = !canPaginate || this.page === pageCount;
+          return btn;
+        case 4:
+          // pageSize selector
+          btn.disabled = !canPaginate;
+          return btn;
+        default:
+          return btn;
       }
-      // refresh selected count
-      if (i === 2) {
-        btn.text = pages;
-      }
-      return btn;
     });
   }
 
-  onToolbarActionClick(action: IToolbarAction): void {
+  onPageChange(action: IToolbarAction): void {
     switch (action.type) {
       case ToolbarActionTypeEnum.BACKWARD:
+        if (this.page === 1) {
+          this.notificationService.info(`Can't fetch page no ${this.page}`, false);
+          return;
+        }
         this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
       case ToolbarActionTypeEnum.FORWARD:
+        if (this.page === this.getPageCount()) {
+          this.notificationService.info(`No more data can be loaded`, false);
+          return;
+        }
         this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
         break;
     }
   }
 
-  onToolbarActionSelect(payload: IToolbarActionSelectPayload): void {
+  onPageSizeChange(payload: IToolbarActionSelectPayload): void {
     this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
   }
 
@@ -464,8 +485,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         suppressMenu: true,
         width: column.width || column.minWidth,
       };
-      if (column.prop === 'id') {
-        colDef.cellClass = 'cell-number';
+      if (column.type === 'number') {
+        colDef.cellClass = 'ag-cell-number';
         colDef.floatingFilterComponentParams = { suppressFilterButton: true };
       }
       if (column.renderer) {
@@ -639,11 +660,6 @@ class ViewPortDatasource implements IViewportDatasource {
       this.params.setRowData(this.grid.gridRows);
     }
   }
-
-  // setRowData(rowData: any): void {
-  //   console.log('set row data for viewport');
-  //   this.params.setRowData(rowData);
-  // }
 
   destroy(): void {
     // this doesn't fire.

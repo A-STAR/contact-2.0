@@ -488,6 +488,9 @@ ag-grid-angular {
   overflow: hidden;
   position: absolute;
 }
+.ag-cell-number {
+  text-align: right;
+}
 .ag-value-slide-out {
   opacity: 1;
   -ms-filter: none;
