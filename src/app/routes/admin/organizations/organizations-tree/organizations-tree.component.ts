@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -15,7 +19,7 @@ import { ObservableHelper } from '../../../../core/observable/ObservableHelper';
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
 })
-export class OrganizationsTreeComponent {
+export class OrganizationsTreeComponent implements OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -57,6 +61,10 @@ export class OrganizationsTreeComponent {
       ),
       this
     );
+  }
+
+  ngOnDestroy(): void {
+    this.organizationsService.clearAll();
   }
 
   get organizations(): Observable<ITreeNode[]> {
