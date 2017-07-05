@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BsDropdownDirective } from 'ngx-bootstrap';
 import { Observable } from 'rxjs/Observable';
 
 import { IFilters, INotification } from '../../core/notifications/notifications.interface';
@@ -15,7 +14,7 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
+  // @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
 
   isNavSearchVisible: boolean;
 
@@ -95,6 +94,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onNotificationsClose(): void {
-    this.notificationsDropdown.hide();
+    // this.notificationsDropdown.hide();
   }
 }

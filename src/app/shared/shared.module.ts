@@ -2,12 +2,14 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { MomentModule } from 'angular2-moment';
+// TODO: consider to dump in favour of angular2-text-mask
+import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
-import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 // Angle directives
@@ -22,34 +24,32 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
+import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
-// TODO: consider to dump in favour of angular2-text-mask
-import { MomentModule } from 'angular2-moment';
-import { TextMaskModule } from 'angular2-text-mask';
-
-// App directives
-import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
-import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
-import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
-import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
-import { GridModule } from './components/grid/grid.module';
-import { Grid2Module } from './components/grid2/grid2.module';
-import { SpinnerModule } from './components/spinner/spinner.module';
-import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
-import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
-import { QBuilderService } from './components/qbuilder/qbuilder.service';
-import { TabComponent } from './components/tabstrip/tab.component';
-import { TabstripComponent } from './components/tabstrip/tabstrip.component';
-import { TreeModule } from './components/flowtree/tree.module';
-import { ToolbarModule } from './components/toolbar/toolbar.module';
-import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
-import { IconsService } from './icons/icons.service';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
+import { DropdownModule } from './components/dropdown/dropdown.module';
+import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
+import { GridModule } from './components/grid/grid.module';
+import { Grid2Module } from './components/grid2/grid2.module';
+import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
+import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
-import { TimeModule } from './components/form/time/time.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
+import { SpinnerModule } from './components/spinner/spinner.module';
+import { TimeModule } from './components/form/time/time.module';
+import { ToolbarModule } from './components/toolbar/toolbar.module';
+import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
+import { TreeModule } from './components/flowtree/tree.module';
+
+import { IconsService } from './icons/icons.service';
+import { QBuilderService } from './components/qbuilder/qbuilder.service';
+
+import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
+import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
+import { TabComponent } from './components/tabstrip/tab.component';
+import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -58,7 +58,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     FormsModule,
     ReactiveFormsModule,
     // Angle modules
-    DropdownModule.forRoot(),
+    // DropdownModule.forRoot(),
     TranslateModule,
     ProgressbarModule.forRoot(),
     TextMaskModule,
@@ -69,6 +69,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DropdownModule,
     DynamicFormModule,
     ImageUploadModule,
     InfoDialogModule,
@@ -110,7 +111,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     TranslateModule,
     RouterModule,
     // Angle exports
-    DropdownModule,
     TextMaskModule,
     ProgressbarModule,
     CheckallDirective,
@@ -127,6 +127,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DropdownModule,
     DynamicFormModule,
     DialogModule,
     ImageUploadModule,
