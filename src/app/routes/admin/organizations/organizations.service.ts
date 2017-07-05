@@ -58,13 +58,10 @@ export class OrganizationsService {
     });
   }
 
-  createOrganization(parentId: number, organization: IOrganization): void {
+  createOrganization(organization: IOrganization): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_CREATE,
-      payload: {
-        parentId,
-        organization
-      }
+      payload: organization
     });
   }
 

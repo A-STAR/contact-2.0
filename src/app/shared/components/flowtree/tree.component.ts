@@ -25,10 +25,9 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
-
   @Input() value: ITreeNode[];
   @Input() selectionMode: string;
-  @Input() selection: any;
+  @Input() selection: ITreeNode|ITreeNode[];
   @Output() selectionChange: EventEmitter<any> = new EventEmitter();
   @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
@@ -53,8 +52,13 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
     return this.layout === 'horizontal';
   }
 
+  // TODO(a.poterenko) Check this parameter
   get elementSelector(): string {
     return '.app-treenode-content';
+  }
+
+  get selectionAsArray(): ITreeNode[] {
+    return this.selection as ITreeNode[];
   }
 
   constructor(
@@ -91,7 +95,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           if (this.propagateSelectionDown) {
             this.propagateDown(node, false);
           } else {
-            this.selection = this.selection.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
           }
 
           if (this.propagateSelectionUp && node.parent) {
@@ -104,7 +108,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           if (this.propagateSelectionDown) {
             this.propagateDown(node, true);
           } else {
-            this.selection = [...this.selection || [], node];
+            this.selection = [...this.selectionAsArray || [], node];
           }
 
           if (this.propagateSelectionUp && node.parent) {
@@ -124,7 +128,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
             if (this.isSingleSelectionMode()) {
               this.selectionChange.emit(null);
             } else {
-              this.selection = this.selection.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
               this.selectionChange.emit(this.selection);
             }
 
@@ -134,7 +138,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.selectionChange.emit(node);
             } else if (this.isMultipleSelectionMode()) {
               this.selection = (!metaKey) ? [] : this.selection || [];
-              this.selection = [...this.selection, node];
+              this.selection = [...this.selectionAsArray, node];
               this.selectionChange.emit(this.selection);
             }
 
@@ -151,10 +155,10 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
             }
           } else {
             if (selected) {
-              this.selection = this.selection.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
-              this.selection = [...this.selection || [], node];
+              this.selection = [...this.selectionAsArray || [], node];
               this.onNodeSelect.emit({originalEvent: event, node: node});
             }
           }
@@ -173,10 +177,10 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
     let index: number = -1;
     if (this.selectionMode && this.selection) {
       if (this.isSingleSelectionMode()) {
-        index = (this.selection === node) ? 0 : -1;
+        index = (this.selection === node || node.id === (this.selection as ITreeNode).id) ? 0 : -1;
       } else {
-        for (let i = 0; i < this.selection.length; i++) {
-          if (this.selection[i] === node) {
+        for (let i = 0; i < this.selectionAsArray.length; i++) {
+          if (this.selection[i] === node || node.id === this.selection[i].id) {
             index = i;
             break;
           }
@@ -199,13 +203,13 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
       }
 
       if (select && selectedCount === node.children.length) {
-        this.selection = [...this.selection || [], node];
+        this.selection = [...this.selectionAsArray || [], node];
         node.partialSelected = false;
       } else {
         if (!select) {
           const index = this.findIndexInSelection(node);
           if (index >= 0) {
-            this.selection = this.selection.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
           }
         }
 
@@ -226,9 +230,9 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   propagateDown(node: ITreeNode, select: boolean): void {
     const index = this.findIndexInSelection(node);
     if (select && index === -1) {
-      this.selection = [...this.selection || [], node];
+      this.selection = [...this.selectionAsArray || [], node];
     } else if (!select && index > -1) {
-      this.selection = this.selection.filter((val, i) => i !== index);
+      this.selection = this.selectionAsArray.filter((val, i) => i !== index);
     }
     node.partialSelected = false;
     if (node.children && node.children.length) {

@@ -51,10 +51,12 @@ export class OrganizationsEffects {
   @Effect()
   createOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_CREATE)
-    .switchMap((action: Action) => {
-      const { parentId, organization } = action.payload;
-      return this.createOrganization(parentId, organization)
-        .mergeMap(data => [
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      const parentId = store.organizations.selectedOrganization ? store.organizations.selectedOrganization.id : null;
+      return this.createOrganization(parentId, action.payload)
+        .mergeMap(result => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
