@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown',
@@ -8,12 +8,14 @@ import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 export class DropdownComponent {
   private _isOpen = false;
 
+  @Input() enabled = true;
+
   @ViewChild('trigger') trigger: ElementRef;
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.containsTarget(this.element, event) && !this.containsTarget(this.trigger, event)) {
-      this._isOpen = false;
+      this.setIsOpen(false);
     }
   };
 
@@ -24,15 +26,21 @@ export class DropdownComponent {
   }
 
   toggle(): void {
-    this._isOpen = !this._isOpen;
+    this.setIsOpen(!this._isOpen);
   }
 
   open(): void {
-    this._isOpen = true;
+    this.setIsOpen(true);
   }
 
   close(): void {
-    this._isOpen = false;
+    this.setIsOpen(false);
+  }
+
+  private setIsOpen(isOpen: boolean): void {
+    if (this.enabled || !isOpen) {
+      this._isOpen = isOpen;
+    }
   }
 
   private containsTarget(element: ElementRef, event: MouseEvent): boolean {
