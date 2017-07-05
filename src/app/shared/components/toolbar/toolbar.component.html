@@ -12,7 +12,7 @@
 
 <ul class="app-toolbar">
   <ng-container *ngFor="let action of actions">
-   <li *ngIf="action.visible"
+   <li *ngIf="!action.hidden"
        class="app-control app-control-align-{{ actionAlign }}">
     <ng-container [ngSwitch]="action.control">
       <span
@@ -30,11 +30,12 @@
       </span>
       <span *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
-          [options]="action.value"
           [active]="action.activeValue"
-          [styles]="action.styles"
-          [readonly]="true"
           [autoAlignEnabled]="true"
+          [controlDisabled]="!!action.disabled"
+          [options]="action.value"
+          [readonly]="true"
+          [styles]="action.styles"
           (onSelect)="onSelect(action, $event)"
         >
         </app-select>

@@ -1,6 +1,8 @@
-export interface IClickableComponentPlugin {
+import { OnDestroy } from '@angular/core';
+
+export interface IClickableComponentPlugin extends OnDestroy {
   delegateClick(event: MouseEvent): void;
-  stopEvent(event: MouseEvent): void;
+  ngOnDestroy(): void;
 }
 
 export interface IClickableComponent extends IClickableComponentPlugin {

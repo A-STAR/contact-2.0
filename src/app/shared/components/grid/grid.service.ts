@@ -3,12 +3,13 @@ import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from 
 import { AuthHttp } from 'angular2-jwt';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/finally';
 import { TranslateService } from '@ngx-translate/core';
+import 'rxjs/add/operator/finally';
+import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { ITypeCodeItem, IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
@@ -23,12 +24,12 @@ export class GridService {
   private nRequests$ = new BehaviorSubject<number>(0);
 
   constructor(
-    private http: AuthHttp,
     private authService: AuthService,
-    private translateService: TranslateService,
-    private metadataService: MetadataService,
-    private dictionariesService: DictionariesService,
     private converterService: ValueConverterService,
+    private dictionariesService: DictionariesService,
+    private http: AuthHttp,
+    private metadataService: MetadataService,
+    private translateService: TranslateService,
   ) {}
 
   get isLoading$(): Observable<boolean> {
@@ -67,12 +68,31 @@ export class GridService {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
   }
 
+  createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
+    return this.blobRequest(url, routeParams, { method: RequestMethod.Post, body });
+  }
+
   update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
   }
 
   delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
+  }
+
+  download(url: string, routeParams: object = {}, body: object, name: string): Observable<void> {
+    return this.createBlob(url, routeParams, body)
+      .map(blob => {
+        // TODO(d.maltsev): maybe use a separate component with Renderer2 injected?
+        const href = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = href;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
   }
 
   /**
@@ -104,11 +124,11 @@ export class GridService {
                   switch (metadataColumn.dataType) {
                     case 2:
                       // Date
-                      column.renderer = (item: any) => this.converterService.stringToDate(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop]);
                       break;
                     case 7:
                       // Date time
-                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop], true);
+                      column.renderer = (item: any) => this.converterService.formatDateTime(item[column.prop]);
                       break;
                   }
                 }
@@ -117,7 +137,10 @@ export class GridService {
               if (!!column.filterOptionsDictionaryId) {
                 const dictTypes = dictionaries[column.filterOptionsDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterOptions = dictTypes.map(item => item.name);
+                  column.filterValues = R.reduce((acc, item) => {
+                    acc[item.code] = item.name;
+                    return acc;
+                  }, {}, dictTypes);
                 }
               }
             }

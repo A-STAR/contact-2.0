@@ -12,7 +12,6 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
-import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
@@ -34,16 +33,16 @@ export class DictComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_EDIT'),
-        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.dictionariesService.selectedDictionary
+      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_DELETE'),
-        this.dictionariesService.state.map(state => !!state.selectedDictionaryCode)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.dictionariesService.selectedDictionary
+      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -66,7 +65,6 @@ export class DictComponent implements OnDestroy {
     ]
   };
 
-  selectedEntity: IDictionary;
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
@@ -78,11 +76,9 @@ export class DictComponent implements OnDestroy {
     private gridService: GridService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private entityTranslationsService: EntityTranslationsService,
     private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
-      this.selectedEntity = state.dictionaries.find(dictionary => dictionary.code === state.selectedDictionaryCode);
       this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
@@ -132,52 +128,29 @@ export class DictComponent implements OnDestroy {
       .map(([languages, dictionaryTermTypes]) => languages && !!dictionaryTermTypes);
   }
 
+  get selectedDictionary(): Observable<IDictionary> {
+    return this.dictionariesService.selectedDictionary;
+  }
+
   get isReadyForEditing(): Observable<boolean> {
     return Observable.combineLatest(
       this.isEntityBeingEdited,
       this.isDictionaryRelationsReady,
-      // TODO(a.poterenko) make it as observable
-      Observable.of(
-        this.selectedEntity
-        && !!this.selectedEntity.nameTranslations
-      )
-    ).map(([isEntityBeingEdited, isRelationsReady, isReadyForEditing]) =>
-          isEntityBeingEdited && isRelationsReady && isReadyForEditing);
+      this.dictionariesService.isSelectedDictionaryReady,
+    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedDictionaryReady]) =>
+        isEntityBeingEdited && isRelationsReady && isSelectedDictionaryReady);
+  }
+
+  get canEdit(): Observable<boolean> {
+    return this.userPermissionsService.has('DICT_EDIT');
   }
 
   onEdit(): void {
-    this.userPermissionsService.has('DICT_EDIT')
-      .take(1)
-      .subscribe(hasEditPermission => {
-        if (hasEditPermission) {
-          this.editHandler();
-        }
-      });
-  }
-
-  private editHandler(): void {
-    if (this.selectedEntity) {
-      this.selectedEntity.nameTranslations = null;
-      this.entityTranslationsService.readDictNameTranslations(this.selectedEntity.id)
-        .take(1)
-        .subscribe((translations: IEntityTranslation[]) => this.loadNameTranslations(translations));
-    }
-
     this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
   }
 
   cancelAction(): void {
     this.dictionariesService.setDialogAction(null);
-  }
-
-  loadNameTranslations(currentTranslations: IEntityTranslation[]): void {
-    this.selectedEntity.nameTranslations = currentTranslations
-      .map((entityTranslation: IEntityTranslation) => {
-        return {
-          value: entityTranslation.languageId,
-          context: { translation: entityTranslation.value }
-        };
-      });
   }
 
   modifyEntity(data: IDictionary, editMode: boolean): void {
@@ -222,9 +195,6 @@ export class DictComponent implements OnDestroy {
   }
 
   onSelect(dictionary: IDictionary): void {
-    const selectedDictionaryId = this.selectedEntity && this.selectedEntity.id;
-    if (dictionary && dictionary.id !== selectedDictionaryId) {
-      this.dictionariesService.selectDictionary(dictionary.code);
-    }
+    this.dictionariesService.selectDictionary(dictionary);
   }
 }

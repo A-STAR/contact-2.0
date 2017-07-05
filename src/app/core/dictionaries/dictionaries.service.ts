@@ -12,6 +12,7 @@ import {
   ITerm,
   IDictionaryItem
 } from './dictionaries.interface';
+import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 
 @Injectable()
 export class DictionariesService {
@@ -26,6 +27,8 @@ export class DictionariesService {
   static DICTIONARY_UPDATE          = 'DICTIONARY_UPDATE';
   static DICTIONARY_DELETE          = 'DICTIONARY_DELETE';
   static DICTIONARY_SELECT          = 'DICTIONARY_SELECT';
+  static TRANSLATIONS_FETCH         = 'TRANSLATIONS_FETCH';
+  static TRANSLATIONS_FETCH_SUCCESS = 'TRANSLATIONS_FETCH_SUCCESS';
   static TERMS_FETCH                = 'TERMS_FETCH';
   static TERMS_FETCH_SUCCESS        = 'TERMS_FETCH_SUCCESS';
   static TERMS_CLEAR                = 'TERMS_CLEAR';
@@ -54,6 +57,20 @@ export class DictionariesService {
     return this.store
       .select(state => state.dictionaries)
       .distinctUntilChanged();
+  }
+
+  get selectedDictionary(): Observable<IDictionary> {
+    return this.store
+      .select(state => state.dictionaries.selectedDictionary)
+      .distinctUntilChanged();
+  }
+
+  get isSelectedDictionaryExist(): Observable<boolean> {
+    return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary);
+  }
+
+  get isSelectedDictionaryReady(): Observable<boolean> {
+    return this.selectedDictionary.map(selectedDictionary => selectedDictionary && !!selectedDictionary.nameTranslations);
   }
 
   get dialogAction(): Observable<DictionariesDialogActionEnum> {
@@ -118,11 +135,11 @@ export class DictionariesService {
     });
   }
 
-  selectDictionary(dictionaryCode: string): void {
+  selectDictionary(dictionary: IDictionary): void {
     this.store.dispatch({
       type: DictionariesService.DICTIONARY_SELECT,
       payload: {
-        dictionaryCode
+        dictionary
       }
     });
   }

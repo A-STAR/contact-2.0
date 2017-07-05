@@ -180,11 +180,10 @@
       "machine": "Machine",
       "duration": "Duration"
     },
-    "actionsLog": {
-      "messages": {
-        "errors": {
-          "fetch": "Error when loading the operator logs"
-        }
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch operator action log",
+        "download": "Could not download operator action log"
       }
     }
   },
@@ -675,7 +674,8 @@
       "search": "Search",
       "add": "Add",
       "change": "Change",
-      "back": "Back"
+      "back": "Back",
+      "excel": "Export as Excel"
     },
     "dateTimeRage": {
       "from": "From",

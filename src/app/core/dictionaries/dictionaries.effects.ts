@@ -41,7 +41,7 @@ export class DictionariesEffects {
     .map(() => ({
       type: DictionariesService.DICTIONARY_SELECT,
       payload: {
-        dictionaryCode: null
+        dictionary: null
       }
     }));
 
@@ -72,8 +72,7 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      const selectedDictionary = store.dictionaries.dictionaries
-        .find(dictionary => dictionary.code === store.dictionaries.selectedDictionaryCode);
+      const selectedDictionary = store.dictionaries.selectedDictionary;
       const { dictionary, updatedTranslations, deletedTranslations } = action.payload;
       return this.updateDictionary(selectedDictionary.code, selectedDictionary.id, dictionary, deletedTranslations, updatedTranslations)
         .mergeMap(() => [
@@ -98,7 +97,7 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteDictionary(store.dictionaries.selectedDictionaryCode)
+      return this.deleteDictionary(store.dictionaries.selectedDictionary.code)
         .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
@@ -118,9 +117,36 @@ export class DictionariesEffects {
   @Effect()
   selectDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_SELECT)
-    .map(action => ({
-      type: action.payload.dictionaryCode ? DictionariesService.TERMS_FETCH : DictionariesService.TERMS_CLEAR
-    }));
+    .switchMap(action => ([
+        {
+          type: action.payload.dictionary ? DictionariesService.TERMS_FETCH : DictionariesService.TERMS_CLEAR,
+          payload: action.payload.dictionary
+        }
+      ].concat(action.payload.dictionary ? [
+        {
+          type: DictionariesService.TRANSLATIONS_FETCH,
+          payload: action.payload.dictionary
+        }
+      ] : []))
+    );
+
+  @Effect()
+  fetchTranslations$ = this.actions
+    .ofType(DictionariesService.TRANSLATIONS_FETCH)
+    .switchMap(data => {
+      return this.entityTranslationsService.readDictNameTranslations(data.payload.id)
+        .map((response: IEntityTranslation[]) => {
+          return {
+            type: DictionariesService.TRANSLATIONS_FETCH_SUCCESS,
+            payload: response.map((entityTranslation: IEntityTranslation) => {
+              return {
+                value: entityTranslation.languageId,
+                context: { translation: entityTranslation.value }
+              };
+            })
+          };
+        })
+    });
 
   @Effect()
   fetchTerms$ = this.actions
@@ -129,7 +155,7 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return Observable.zip(
-        this.readTerms(store.dictionaries.selectedDictionaryCode),
+        this.readTerms(store.dictionaries.selectedDictionary.code),
         this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
       )
       .map((response: any[]) => {
@@ -162,7 +188,7 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.createTerm(store.dictionaries.selectedDictionaryCode, action.payload.term)
+      return this.createTerm(store.dictionaries.selectedDictionary.code, action.payload.term)
         .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
@@ -186,7 +212,7 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateTerm(
-        store.dictionaries.selectedDictionaryCode,
+        store.dictionaries.selectedDictionary.code,
         store.dictionaries.selectedTermId,
         action.payload.term
       )
@@ -212,7 +238,7 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteTerm(store.dictionaries.selectedDictionaryCode, store.dictionaries.selectedTermId)
+      return this.deleteTerm(store.dictionaries.selectedDictionary.code, store.dictionaries.selectedTermId)
         .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH

@@ -33,7 +33,7 @@ export interface IGridColumn {
   suppressMenu?: boolean;
   suppressSizeToFit?: boolean;
   filter?: string;
-  filterOptions?: string[];
+  filterValues?: { [key: number]: string }|number[]|string[];
   filterOptionsDictionaryId?: number;
 }
 

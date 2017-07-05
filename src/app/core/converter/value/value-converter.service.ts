@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 import * as R from 'ramda';
 
@@ -21,14 +20,10 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filt
 
 @Injectable()
 export class ValueConverterService {
-
+  // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
   static DATE_USER_PATTERN = 'DD.MM.YYYY';
   static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
   static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
-
-  constructor(
-    private datePipe: DatePipe
-  ) { }
 
   toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
     const request: IGrid2Request = {};
@@ -55,8 +50,8 @@ export class ValueConverterService {
       .filter(s => s.direction !== Grid2SortingEnum.NONE)
       .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
       .map(v => ({
+        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
         field: v.field,
-        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc'
       }));
     }
 
@@ -138,27 +133,20 @@ export class ValueConverterService {
     return v;
   }
 
-  formatDate(dateAsString: string, useTime: boolean = false): string {
+  toIsoDate(str: string): string {
     return this.parseDate(
-      dateAsString,
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
-    );
-  }
-
-  toIsoDateTime(dateAsString: string, useTime: boolean = false): string {
-    return this.parseDate(
-      dateAsString,
+      str,
       ValueConverterService.DATE_TIME_ISO_PATTERN,
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
+      ValueConverterService.DATE_USER_PATTERN
     );
   }
 
-  valueToIsoDate(value: any): string {
-    if (!value) {
-      return null;
-    }
-    const converted = value.split('.').reverse().map(Number);
-    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  toIsoDateTime(str: string): string {
+    return this.parseDate(
+      str,
+      ValueConverterService.DATE_TIME_ISO_PATTERN,
+      ValueConverterService.DATE_TIME_USER_PATTERN
+    );
   }
 
   valuesToOptions(values: Array<INamedValue>): Array<IOption> {
@@ -172,26 +160,32 @@ export class ValueConverterService {
     return date ? date.toISOString().split('.')[0] + 'Z' : null;
   }
 
-  isoStringToDate(date: string): Date {
-    return date ? new Date(date) : null;
+  isoStringToDate(str: string): Date {
+    return str ? new Date(str) : null;
   }
 
-  stringToDate(date: string): Date {
-    if (!date) {
+  stringToDate(str: string): Date {
+    if (!str) {
       return null;
     }
-    const momentDate = moment(date, ValueConverterService.DATE_USER_PATTERN);
+    const momentDate = moment(str);
     return momentDate.isValid() ? momentDate.toDate() : null;
   }
 
-  dateToString(date: Date): string {
-    return date ? moment(date).format(ValueConverterService.DATE_USER_PATTERN) : null;
+  dateToString(date: Date, format: string = ValueConverterService.DATE_USER_PATTERN): string {
+    return date ? moment(date).format(format) : '';
   }
 
-  private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
-    const momentDate = moment(dateAsString, fromPattern);
-    if (momentDate.isValid()) {
-      return momentDate.format(toPattern);
-    }
+  formatDate(str: string, format: string = ValueConverterService.DATE_USER_PATTERN): string {
+    return this.dateToString(this.stringToDate(str), format);
+  }
+
+  formatDateTime(str: string, format: string = ValueConverterService.DATE_TIME_USER_PATTERN): string {
+    return this.dateToString(this.stringToDate(str), format);
+  }
+
+  private parseDate(str: string, toPattern: string, fromPattern?: string): string {
+    const momentDate = moment(str, fromPattern);
+     return momentDate.isValid() ? momentDate.format(toPattern) : null;
   }
 }

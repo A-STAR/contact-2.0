@@ -43,15 +43,9 @@ export enum DictionariesDialogActionEnum {
 
 export interface IDictionariesState {
   dictionaries: Array<IDictionary>;
-  selectedDictionaryCode: string;
+  selectedDictionary: IDictionary;
   terms: Array<ITerm>;
   dictionaryTermTypes: Array<ITerm>;
   selectedTermId: number;
   dialogAction: DictionariesDialogActionEnum;
-}
-
-export interface IEntityTranslation {
-  languageId: number;
-  value: string;
-  isMain?: number;
 }

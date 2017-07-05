@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Column } from 'ag-grid';
@@ -10,10 +11,12 @@ import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/compo
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
   return [ entity.lastName, entity.firstName, entity.middleName ]
@@ -33,7 +36,6 @@ export class ActionsLogComponent {
   columns: IGridColumn[] = [
     { prop: 'id', minWidth: 60, filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
-    { prop: 'fullName', mappedFrom: ['lastName', 'firstName', 'middleName'], minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
@@ -61,11 +63,14 @@ export class ActionsLogComponent {
   actionsLogSelectedRows: Observable<IDictionaryItem[]>;
 
   @ViewChild('filter') filter: ActionsLogFilterComponent;
+  @ViewChild('grid') grid: Grid2Component;
 
   constructor(
-    private store: Store<IAppState>,
-    private gridService: GridService,
     private actionsLogService: ActionsLogService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
+    private translateService: TranslateService,
   ) {
     this.columnDefs = this.gridService.getColumnDefs('Actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
@@ -90,5 +95,25 @@ export class ActionsLogComponent {
 
   doSearch(): void {
     this.actionsLogService.search(this.filter.getFilterValues());
+  }
+
+  doExport(): void {
+    // TODO(d.maltsev): move into component/service
+    const columns = this.grid.columnDefs.map(column => ({
+      field: column.field,
+      name: column.headerName
+    }));
+
+    const body = {
+      columns,
+      ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
+    };
+
+    this.actionsLogService.export(body)
+      .catch(() => {
+        this.notificationsService.error('actionsLog.messages.errors.download');
+        return Observable.of(null);
+      })
+      .subscribe();
   }
 }

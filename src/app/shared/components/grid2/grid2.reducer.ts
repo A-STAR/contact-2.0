@@ -6,7 +6,6 @@ import {
   IGrid2ColumnsPositionsChangePayload,
   IGrid2GroupingColumnsChangePayload,
   IGrid2SelectedRowChangePayload,
-  IGrid2ShowFilterPayload,
   IGrid2SortingDirectionSwitchPayload,
   IGrid2State
 } from './grid2.interface';
@@ -27,18 +26,16 @@ export const GRID2_DEFAULT_STATE: IGrid2State = {
 export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function): Function {
   return function (state: any, action: { type: any }): any {
     switch (action.type) {
+      case Grid2Component.APPLY_FILTER:
       case Grid2Component.COLUMNS_POSITIONS:
-      case Grid2Component.SORTING_DIRECTION:
-      case Grid2Component.OPEN_FILTER:
-      case Grid2Component.CLOSE_FILTER:
-      case Grid2Component.MOVING_COLUMN:
       case Grid2Component.DESTROY_STATE:
       case Grid2Component.GROUPING_COLUMNS:
-      case Grid2Component.SELECTED_ROWS:
-      case Grid2Component.PAGE_SIZE:
-      case Grid2Component.APPLY_FILTER:
+      case Grid2Component.MOVING_COLUMN:
       case Grid2Component.NEXT_PAGE:
+      case Grid2Component.PAGE_SIZE:
       case Grid2Component.PREVIOUS_PAGE:
+      case Grid2Component.SELECTED_ROWS:
+      case Grid2Component.SORTING_DIRECTION:
         return {
           ...state,
           [stateKey]: grid2Reducer(state[stateKey], action as IActionGrid2Payload)
@@ -56,11 +53,13 @@ export function grid2Reducer(
   switch (action.type) {
     case Grid2Component.DESTROY_STATE:
       return { ...GRID2_DEFAULT_STATE };
+
     case Grid2Component.MOVING_COLUMN:
       return {
         ...state,
         columnMovingInProgress: (action.payload as IGrid2ColumnMovingPayload).movingColumnInProgress
       };
+
     case Grid2Component.PAGE_SIZE:
       return {
         ...state,
@@ -68,28 +67,21 @@ export function grid2Reducer(
         currentPage: GRID2_DEFAULT_STATE.currentPage,
         pageSize: (action.payload as number)
       };
+
     case Grid2Component.PREVIOUS_PAGE:
       return {
         ...state,
         selectedRows: [],
         currentPage: (action.payload as number) - 1
       };
+
     case Grid2Component.NEXT_PAGE:
       return {
         ...state,
         selectedRows: [],
         currentPage: (action.payload as number) + 1
       };
-    case Grid2Component.OPEN_FILTER:
-      return {
-        ...state,
-        currentFilterColumn: (action.payload as IGrid2ShowFilterPayload).currentFilterColumn
-      };
-    case Grid2Component.CLOSE_FILTER:
-      return {
-        ...state,
-        currentFilterColumn: null
-      };
+
     case Grid2Component.SELECTED_ROWS:
       const selectedRowPayload: IGrid2SelectedRowChangePayload = action.payload as IGrid2SelectedRowChangePayload;
       return {
@@ -98,6 +90,7 @@ export function grid2Reducer(
           .filter((rowData: any) => selectedRowPayload.rowData !== rowData)
           .concat(selectedRowPayload.selected ? [selectedRowPayload.rowData] : [])
       };
+
     case Grid2Component.GROUPING_COLUMNS:
       const groupingColumnsPayload: IGrid2GroupingColumnsChangePayload = action.payload as IGrid2GroupingColumnsChangePayload;
       return {
@@ -105,6 +98,7 @@ export function grid2Reducer(
         selectedRows: [],
         groupingColumns: groupingColumnsPayload.groupingColumns
       };
+
     case Grid2Component.COLUMNS_POSITIONS:
       const columnsPositionsPayload: IGrid2ColumnsPositionsChangePayload = action.payload as IGrid2ColumnsPositionsChangePayload;
 
@@ -119,6 +113,7 @@ export function grid2Reducer(
           };
         }, state.columnsSettings)
       };
+
     case Grid2Component.SORTING_DIRECTION:
       const sortingDirectionPayload: IGrid2SortingDirectionSwitchPayload = action.payload as IGrid2SortingDirectionSwitchPayload;
       if (sortingDirectionPayload.multiSort) {
