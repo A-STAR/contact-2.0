@@ -242,7 +242,21 @@
       "languageId": "Язык"
     },
     "ldap": {
-      "title": "Пользователи домена"
+      "title": "Пользователи домена",
+      "groups": {
+        "grid": {
+          "name": "Имя",
+          "comment": "Комментарий"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "Имя",
+          "fullName": "ФИО",
+          "isBlocked": "Блокирован",
+          "comment": "Комментарий"
+        }
+      }
     },
     "messages": {
       "errors": {

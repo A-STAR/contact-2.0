@@ -1,8 +1,22 @@
 <div class="row">
-  <div class="col-md-6">
-    1
+  <div class="col-md-5">
+    <app-grid
+      columnTranslationKey="users.ldap.groups"
+      selectionType="single"
+      [columns]="groupsColumns"
+      [rows]="groups$ | async"
+      [styles]="{ height: '200px' }"
+      (onSelect)="onGroupSelect($event)">
+    </app-grid>
   </div>
-  <div class="col-md-6">
-    2
+  <div class="col-md-7">
+    <app-grid
+      columnTranslationKey="users.ldap.users"
+      selectionType="single"
+      [columns]="usersColumns"
+      [rows]="users$ | async"
+      [styles]="{ height: '200px' }"
+      (onSelect)="onUserSelect($event)">
+    </app-grid>
   </div>
 </div>

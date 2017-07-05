@@ -242,7 +242,21 @@
       "languageId": "Language"
     },
     "ldap": {
-      "title": "Domain users"
+      "title": "Domain users",
+      "groups": {
+        "grid": {
+          "name": "Name",
+          "comment": "Comment"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "Name",
+          "fullName": "Full name",
+          "isBlocked": "Blocked",
+          "comment": "Comment"
+        }
+      }
     },
     "messages": {
       "errors": {
