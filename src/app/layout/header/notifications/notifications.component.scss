@@ -17,8 +17,11 @@
       display: block;
     }
   }
+  &.list-group-item {
+    border-width: 1px 0;
+  }
   &.list-group-item:last-child {
-    border-bottom-width: 1px;
+    border-bottom-width: 0;
   }
 }
 .notifications_dismiss {
