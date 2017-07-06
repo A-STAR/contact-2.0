@@ -15,3 +15,14 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+:host /deep/ .toaster-container {
+  top: 48px;
+  left: 15%;
+  right: 15%;
+
+  .toast {
+    width: 100% !important;
+    opacity: 0.9 !important;
+  }
+}
