@@ -42,7 +42,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private _clientY: number;
   private _dragNode: Element;
   private _dragMirror: Element;
-  private _activeElements: Set<Element> = new Set<Element>();
+  private _activeElements: Element[] = [];
   private _dragSubscription: Subscription;
   private _dropSubscription: Subscription;
   private _dragEndSubscription: Subscription;
@@ -64,18 +64,17 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
     this.removeAllActiveElements();
 
-    const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
-    const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
-    const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
+    const intersectedByTargetElements = this.intersectedByTargetElements;
+    const firstNode = intersectedByTargetElements[0];
+    const secondNode = intersectedByTargetElements[1];
 
     if (this.canMove(intersectedByTargetElements)) {
-      this._activeElements.add(firstNode.element);
+      this._activeElements = [firstNode.element];
       this.renderer.addClass(firstNode.element, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
 
     } else if (this.canSwap(intersectedByTargetElements)) {
-      this._activeElements.add(firstNode.element);
-      this._activeElements.add(secondNode.element);
-      intersectedByTargetElements.forEach((value: IIntersectedNodeInfo) =>
+      this._activeElements = [firstNode.element, secondNode.element];
+      intersectedByTargetElements.forEach(value =>
         this.renderer.addClass(value.element, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS));
     }
   }
@@ -93,10 +92,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._dropSubscription = this.dragulaService.drop.subscribe((value: Element[]) => {
       this.removeMouseMoveListener();
 
-      const sourceElement: Element = value[1];
-      const targetElement: Element = value[2];
+      const sourceElement = value[1];
+      const targetElement = value[2];
       if (sourceElement && targetElement
-            && this._activeElements.size === DragAndDropComponentPlugin.MOVED_NODES_COUNT) {
+            && this._activeElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT) {
         this.component.changeLocation({
           swap: false,
           source: this.domHelper.extractNodeId(sourceElement),
@@ -107,15 +106,15 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     });
 
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Element[]) => {
-      const sourceElement: Element = value[1];
-      const sourceNodeId: string = this.domHelper.extractNodeId(sourceElement);
+      const sourceElement = value[1];
+      const sourceNodeId = this.domHelper.extractNodeId(sourceElement);
       this.renderer.removeChild(sourceElement.parentNode, sourceElement);
 
       if (!this._isNodeAlreadyMovedOrRejected
-            && this._activeElements.size === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
+            && this._activeElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
           this.component.changeLocation({
             swap: true,
-            target: this.domHelper.extractNodeId(this._activeElements.values().next().value),
+            target: this.domHelper.extractNodeId(this._activeElements[0]),
             source: sourceNodeId
           });
       }
@@ -147,11 +146,11 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private removeAllActiveElements(): void {
-    this._activeElements.forEach((el: Element) => {
+    this._activeElements.forEach(el => {
       this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
       this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS);
     });
-    this._activeElements.clear();
+    this._activeElements.length = 0;
   }
 
   private get intersectedByTargetElements(): IIntersectedNodeInfo[] {
@@ -172,7 +171,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private canMove(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
-    const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
+    const firstNode = intersectedByTargetElements[0];
 
     return intersectedByTargetElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT
       && this._dragNode !== firstNode.element
@@ -180,8 +179,8 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private canSwap(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
-    const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
-    const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
+    const firstNode = intersectedByTargetElements[0];
+    const secondNode = intersectedByTargetElements[1];
 
     return intersectedByTargetElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT
       && this._dragNode !== secondNode.element
@@ -189,7 +188,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   }
 
   private get draggedElementPosition(): INodeOffset {
-    const mirrorEl: Element = this._dragMirror = this._dragMirror || this.domHelper.queryDragulaMirrorElement();
+    const mirrorEl = this._dragMirror = this._dragMirror || this.domHelper.queryDragulaMirrorElement();
     return mirrorEl
       ? this._draggedElementPosition = this.domHelper.getOffset(mirrorEl)
       : this._draggedElementPosition;
