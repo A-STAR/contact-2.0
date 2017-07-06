@@ -13,4 +13,10 @@ export class ProgressbarComponent {
   get cssClass(): string {
     return `progress-bar progress-bar-${this.type} progress-bar-striped`;
   }
+
+  get style(): object {
+    return {
+      width: `${this.value}%`
+    }
+  }
 }
