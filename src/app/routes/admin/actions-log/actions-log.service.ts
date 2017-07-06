@@ -88,12 +88,6 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionsLogCurrentFilterColumn(): Observable<Column> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.currentFilterColumn)
-      .distinctUntilChanged();
-  }
-
   get actionsLogColumnsSettings(): Observable<IGrid2ColumnsSettings> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.columnsSettings)
@@ -131,7 +125,7 @@ export class ActionsLogService {
   }
 
   createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
-    const request: IGrid2Request = this.gridService.toGridRequest(payload);
+    const request: IGrid2Request = this.gridService.buildRequest(payload);
 
     request.filtering = FilterObject.create()
       .and()
@@ -140,7 +134,7 @@ export class ActionsLogService {
         FilterObject.create()
           .setName('createDateTime')
           .betweenOperator()
-          .setValueArray([
+          .setValues([
             this.valueConverterService.isoFromLocalDateTime(customFilter.startDate + ' ' + customFilter.startTime),
             this.valueConverterService.isoFromLocalDateTime(customFilter.endDate + ' ' + customFilter.endTime),
           ])
@@ -149,13 +143,13 @@ export class ActionsLogService {
         FilterObject.create()
           .setName('typeCode')
           .inOperator()
-          .setValueArray(customFilter.actionsTypes)
+          .setValues(customFilter.actionsTypes)
       )
       .addFilter(
         FilterObject.create()
           .setName('userId')
           .inOperator()
-          .setValueArray(customFilter.employees)
+          .setValues(customFilter.employees)
       );
 
     return request;

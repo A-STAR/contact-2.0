@@ -107,7 +107,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   @Input() columnMovingInProgress: boolean;
   @Input() columnTranslationKey: string;
   @Input() rows: any[];
-  @Input() rowsTotalCount: number;
+  @Input() rowCount = 0;
   @Input() selectedRows: any[] = [];
   @Input() styles: CSSStyleDeclaration;
 
@@ -197,13 +197,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      const { rowsTotalCount: totalCount, rows, currentPage, currentPageSize, selectedRows } = changes;
+      const { rowCount, rows, currentPage, currentPageSize, selectedRows } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
         this.clearAllSelections();
       }
-      if (totalCount) {
-        this.viewportDatasource.params.setRowCount(totalCount.currentValue);
+      if (rowCount) {
+        this.viewportDatasource.params.setRowCount(rowCount.currentValue);
         this.refreshRowCount();
       }
       if (rows) {
@@ -265,7 +265,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
   private refreshRowCount(): void {
     const count = this.translate.instant(
       'default.grid.selectedCounts',
-      { length: this.getRowsTotalCount(), selected: this.selectedRows.length }
+      { length: this.rowCount, selected: this.selectedRows.length }
     );
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       if (i === 0) {
@@ -280,7 +280,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       return;
     }
 
-    const canPaginate: boolean = this.getRowsTotalCount() > this.pageSize;
+    const canPaginate: boolean = this.rowCount > this.pageSize;
     const pageCount = this.getPageCount();
     const pages = `${this.page} / ${pageCount || 0}`;
 
@@ -291,7 +291,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
           btn.disabled = !canPaginate || this.page === 1;
           return btn;
         case 2:
-          // refresh page count
+          // refresh page info
           btn.text = pages;
           return btn;
         case 3:
@@ -413,12 +413,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  private getRowsTotalCount(): number {
-    return Math.max(this.rows.length, this.rowsTotalCount || 0);
-  }
-
   private getPageCount(): number {
-    return Math.ceil(this.getRowsTotalCount() / this.pageSize);
+    return Math.ceil(this.rowCount / this.pageSize);
   }
 
   private getCustomFilter(name: string): any {
@@ -464,8 +460,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         suppressMenu: true,
         width: column.width || column.minWidth,
       };
-      if (column.type === 'number') {
+      if (column.type === 'id') {
         colDef.cellClass = 'ag-cell-number';
+      }
+      if (['id', 'date'].includes(column.type)) {
         colDef.floatingFilterComponentParams = { suppressFilterButton: true };
       }
       if (column.renderer) {
@@ -535,7 +533,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       paginationAutoPageSize: false,
       paginationPageSize: this.pageSize,
       // paginationStartPage: 0,
-      // https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
+      /**
+       * Reposition the popup to appear right below the button
+       * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
+       */
       postProcessPopup: (params) => {
         if (params.type !== 'columnMenu') {
           return;
@@ -579,7 +580,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       onGridSizeChanged: (params) => this.fitGridSize(),
       onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
-      // onFilterChanged: (p) => { console.log('onFilterChanged', p); },
+      onFilterChanged: (p) => { console.log('onFilterChanged', p); },
       // onFilterModified: (p) => { console.log('onFilterModified', p); },
     };
 

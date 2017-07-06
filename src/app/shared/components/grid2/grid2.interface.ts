@@ -3,8 +3,6 @@ import { Renderer2 } from '@angular/core';
 
 import { FilterObject } from './filter/grid2-filter';
 
-import { GridHeaderComponent } from './header/grid-header.component';
-
 export interface IGrid2ColumnSettings {
   sortingDirection?: Grid2SortingEnum;
   sortingOrder?: number;
@@ -29,7 +27,6 @@ export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettings
   groupingColumns: string[];
   selectedRows: any[];
   columnMovingInProgress: boolean;
-  currentFilterColumn?: Column;
   filterColumnName?: string;
 }
 
@@ -61,10 +58,6 @@ export interface IGrid2SelectedRowChangePayload {
   selected: boolean;
 }
 
-export interface IGrid2ShowFilterPayload {
-  currentFilterColumn: Column;
-}
-
 export enum Grid2SortingEnum {
   NONE,
   ASC,
@@ -75,7 +68,6 @@ export interface IActionGrid2Payload {
   type: string;
   payload: IGrid2SortingDirectionSwitchPayload
     |IGrid2ColumnsPositionsChangePayload
-    |IGrid2ShowFilterPayload
     |IGrid2GroupingColumnsChangePayload
     |IGrid2SelectedRowChangePayload
     |IGrid2ColumnMovingPayload
@@ -93,7 +85,6 @@ export interface IGrid2HeaderParams {
   headerHeight: number;
   enableMenu?: boolean;
   serviceDispatcher: IGrid2ServiceDispatcher;
-  headerColumns?: GridHeaderComponent[];
   column?: Column;
   renderer2: Renderer2;
 }
@@ -126,7 +117,6 @@ export interface IGrid2EventPayload {
   payload?: number
     |IGrid2ColumnsPositionsChangePayload
     |IGrid2ColumnMovingPayload
-    |IGrid2ShowFilterPayload
     |IGrid2GroupingColumnsChangePayload
     |IGrid2SelectedRowChangePayload
     |IGrid2SortingDirectionSwitchPayload

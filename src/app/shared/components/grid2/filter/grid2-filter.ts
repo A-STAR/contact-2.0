@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-export type FilteringConditionType = 'AND' | 'OR';
+export type FilteringConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
 export class FilteringOperators {
   static EQUAL: FilteringOperatorType = '==';
@@ -21,7 +21,6 @@ export interface IFilterBaseObject {
 }
 
 export class FilterObject implements IFilterBaseObject {
-
   name: string;
   condition: FilteringConditionType;
   filters: IFilterBaseObject[];
@@ -34,8 +33,7 @@ export class FilterObject implements IFilterBaseObject {
     if (source) {
       filter = filter
         .setName(decorators.name ? decorators.name(source.name) : source.name)
-        .setValue(source.value)
-        .setValueArray(source.valueArray)
+        .setValues(source.value || source.valueArray)
         .setCondition(source.condition)
         .setOperator(source.operator);
       if (Array.isArray(source.filters) && source.filters.length) {
@@ -48,7 +46,7 @@ export class FilterObject implements IFilterBaseObject {
   }
 
   addFilter(filter: FilterObject): FilterObject {
-    if (filter && (filter.hasValue() || filter.hasFilter())) {
+    if (filter && (filter.hasValues() || filter.hasFilter())) {
       this.filters = (this.filters || []).concat(filter);
     }
     return this;
@@ -86,17 +84,16 @@ export class FilterObject implements IFilterBaseObject {
     return this;
   }
 
-  setValue(value: any): FilterObject {
-    this.value = value;
+  setValues(values: any | any[]): FilterObject {
+    if (Array.isArray(values)) {
+      this.valueArray = values;
+    } else {
+      this.value = values;
+    }
     return this;
   }
 
-  setValueArray(valueArray: any[]): FilterObject {
-    this.valueArray = valueArray;
-    return this;
-  }
-
-  hasValue(): boolean {
+  hasValues(): boolean {
     return !R.isNil(this.value) || (!R.isNil(this.valueArray) && this.valueArray.length > 0);
   }
 

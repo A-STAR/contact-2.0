@@ -115,7 +115,7 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
         .addFilter(
           this.makeFieldFilter()
             .setOperator(this._firstOperator)
-            .setValue(data.firstValue)
+            .setValues(data.firstValue)
         );
     }
     if (!R.isNil(data.secondValue) && !R.isEmpty(data.secondValue) && !R.isNil(this._secondOperator)) {
@@ -123,7 +123,7 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
         .addFilter(
           this.makeFieldFilter()
             .setOperator(this._secondOperator)
-            .setValue(data.secondValue)
+            .setValues(data.secondValue)
         );
     }
 

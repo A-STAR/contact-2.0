@@ -34,10 +34,10 @@ export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'id', minWidth: 60, type: 'number', filter: 'number' },
+    { prop: 'id', minWidth: 60, type: 'id', filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
     { prop: 'position', minWidth: 100, filter: 'textFilter' },
-    { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, filter: 'date' },
+    { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, type: 'date', filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
     { prop: 'typeCode', minWidth: 150, filter: 'set',
       filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
@@ -57,7 +57,6 @@ export class ActionsLogComponent {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogCurrentFilterColumn: Observable<Column>;
   actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
   actionsLogColumnMovingInProgress: Observable<boolean>;
   actionsLogSelectedRows: Observable<IDictionaryItem[]>;
@@ -78,7 +77,6 @@ export class ActionsLogComponent {
     this.actionsLogData = this.actionsLogService.actionsLogRows;
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
-    this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn;
     this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
     this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;

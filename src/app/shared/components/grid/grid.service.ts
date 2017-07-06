@@ -29,7 +29,7 @@ export class GridService {
     private translateService: TranslateService,
   ) {}
 
-  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
+  buildRequest(payload: IGrid2RequestPayload): IGrid2Request {
     const request: IGrid2Request = {};
     const filters: FilterObject = FilterObject.create().and();
 
