@@ -7,17 +7,17 @@ import { ITreeNodeValue } from './organizations-tree.interface';
 @Injectable()
 export class OrganizationsTreeService {
 
-  toTreeNodes(rowNodes: ITreeNodeValue[]): ITreeNode[] {
+  toTreeNodes(rowNodes: ITreeNodeValue[], previousExpandedNodes: Set<number> = new Set<number>()): ITreeNode[] {
     const nodes = this.convertToTreeNodes(rowNodes);
     const rootNode = { id: 0, children: nodes };
-    this.prepareTree(rootNode);
+    this.prepareTree(rootNode, previousExpandedNodes);
     return [rootNode];
   }
 
-  private prepareTree(node: ITreeNode, parent: ITreeNode = null): void {
-    node.expanded = !parent || false;
+  private prepareTree(node: ITreeNode, previousExpandedNodes: Set<number>, parent: ITreeNode = null): void {
+    node.expanded = !parent || previousExpandedNodes.has(node.id);
     node.parent = parent;
-    (node.children || []).forEach(childNode => this.prepareTree(childNode, node));
+    (node.children || []).forEach(childNode => this.prepareTree(childNode, previousExpandedNodes, node));
   }
 
   private convertToTreeNodes(rowData: ITreeNodeValue[]): ITreeNode[] {

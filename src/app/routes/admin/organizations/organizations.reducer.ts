@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { IOrganizationsState } from './organizations.interface';
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from './organizations.service';
 
@@ -13,6 +14,19 @@ const defaultState: IOrganizationsState = {
   dialogAction: null
 };
 
+export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNode: ITreeNode): ITreeNode {
+  if (!selectedOrganizationNode) {
+    return null;
+  }
+  let result;
+  (nodes || []).forEach(
+    node => result = result || (node.id === selectedOrganizationNode.id
+      ? node
+      : findOrganizationNode(node.children, selectedOrganizationNode))
+  );
+  return result;
+}
+
 export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
   switch (action.type) {
     case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
@@ -23,7 +37,10 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganization: action.payload.organization
+        selectedOrganization: action.payload.organization ||
+          // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
+          // so we should find him actual mirror by id
+          findOrganizationNode(state.organizations, state.selectedOrganization)
       };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
@@ -63,4 +80,4 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     default:
       return state;
   }
-};
+}

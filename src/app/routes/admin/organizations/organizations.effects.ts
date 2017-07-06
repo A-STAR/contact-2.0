@@ -25,12 +25,17 @@ export class OrganizationsEffects {
   @Effect()
   fetchOrganizations$ = this.actions
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
-    .switchMap((action: Action) => {
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
       return this.readOrganizations()
-        .map(data => ({
+        .map(response => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: {
-            organizations: this.converterService.toTreeNodes(data.organizations)
+            organizations: this.converterService.toTreeNodes(
+              response.organizations,
+              this.organizationsService.getExpandedNodes(store.organizations.organizations)
+            )
           }
         }))
         .catch(() => {
@@ -280,6 +285,7 @@ export class OrganizationsEffects {
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
     private converterService: OrganizationsTreeService,
+    private organizationsService: OrganizationsService,
   ) {}
 
   private readOrganizations(): Observable<any> {

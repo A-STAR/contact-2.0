@@ -170,4 +170,19 @@ export class OrganizationsService {
       }
     });
   }
+
+  getExpandedNodes(organizations: ITreeNode[]): Set<number> {
+    const expandedNodes = new Set<number>();
+    this.observeOrganizations(organizations, expandedNodes);
+    return expandedNodes;
+  }
+
+  private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {
+    (nodes || []).forEach(node => {
+      if (node.expanded) {
+        expandedNodes.add(node.id);
+      }
+      this.observeOrganizations(node.children, expandedNodes);
+    });
+  }
 }
