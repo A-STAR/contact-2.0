@@ -6,10 +6,6 @@ export interface IDataSource {
   dataKey: string;
 }
 
-export interface IParameters {
-  [index: string]: any;
-}
-
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
