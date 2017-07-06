@@ -8,7 +8,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { TranslateModule } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { BsDropdownModule as DropdownModule } from 'ngx-bootstrap/dropdown';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 // Angle directives
 import { FlotDirective } from './directives/flot/flot.directive';
@@ -50,6 +49,7 @@ import { DialogActionModule } from './components/dialog-action/dialog-action.mod
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { TimeModule } from './components/form/time/time.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
+import { ProgressbarModule } from './components/progressbar/progressbar.module';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -60,7 +60,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     // Angle modules
     DropdownModule.forRoot(),
     TranslateModule,
-    ProgressbarModule.forRoot(),
     TextMaskModule,
     MultiSelectModule,
     PerfectScrollbarModule,
@@ -77,6 +76,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     SpinnerModule,
     MomentModule,
     PopupInputModule,
+    ProgressbarModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -112,7 +112,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     // Angle exports
     DropdownModule,
     TextMaskModule,
-    ProgressbarModule,
     CheckallDirective,
     EasypiechartDirective,
     FlotDirective,
@@ -138,6 +137,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
     MultiSelectModule,
     NumericInputComponent,
     PopupInputModule,
+    ProgressbarModule,
     QBuilderComponent,
     RouterOutlet2Directive,
     TabComponent,
