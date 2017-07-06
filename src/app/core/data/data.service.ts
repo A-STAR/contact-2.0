@@ -71,6 +71,10 @@ export class DataService {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
   }
 
+  get(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
+    return this.request(url, routeParams, { ...options, method: RequestMethod.Get }, null);
+  }
+
   post(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
     return this.request(url, routeParams, { ...options, method: RequestMethod.Post, body }, null);
   }

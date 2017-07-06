@@ -72,7 +72,7 @@ export class AuthService implements CanActivate {
   }
 
   logout(): Observable<boolean> {
-    return this.dataService.post('/auth/logout', {}, {})
+    return this.dataService.get('/auth/logout', {})
       .do(() => this.logoutHandler())
       .map(resp => true)
       .catch(error => {
@@ -120,7 +120,7 @@ export class AuthService implements CanActivate {
   }
 
   private refreshToken(): void {
-    this.dataService.post('/auth/refresh', {}, {})
+    this.dataService.get('/api/refresh', {})
       .map((resp: Response) => resp.headers.get('X-Auth-Token'))
       .subscribe(
         token => {
