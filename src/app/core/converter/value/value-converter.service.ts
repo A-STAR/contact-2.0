@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import {
+  IDateFormats,
   ILabeledValue,
   INamedValue,
   IOption,
@@ -12,7 +13,7 @@ import {
 
 @Injectable()
 export class ValueConverterService {
-  private formats = this.translateService.instant('default.date.format');
+  private formats: IDateFormats = this.translateService.instant('default.date.format');
 
   constructor(private translateService: TranslateService) {}
 
