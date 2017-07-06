@@ -80,7 +80,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       .subscribe(({ type, row }: {type: string; row: any}) => {
         if (type === 'click') {
           this.onSelect.emit(row);
-        } else if (this.allowDblClick) {
+        } else if (type === 'dblclick' && this.allowDblClick) {
           this.onDblClick.emit(row);
         }
       });
