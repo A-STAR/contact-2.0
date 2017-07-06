@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -82,21 +83,26 @@ export class OrganizationsService {
     });
   }
 
+  clearAll(): void {
+    this.clearEmployees();
+    this.clearOrganizations();
+  }
+
   updateOrganizations(organizations: IOrganization[]): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_ORDER_UPDATE,
       payload: organizations
     });
   }
 
   deleteOrganization(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_DELETE
     });
   }
 
   clearOrganizations(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATIONS_CLEAR
     });
   }
@@ -168,6 +174,21 @@ export class OrganizationsService {
         dialogAction,
         organization
       }
+    });
+  }
+
+  getExpandedNodes(organizations: ITreeNode[]): Set<number> {
+    const expandedNodes = new Set<number>();
+    this.observeOrganizations(organizations, expandedNodes);
+    return expandedNodes;
+  }
+
+  private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {
+    (nodes || []).forEach(node => {
+      if (node.expanded) {
+        expandedNodes.add(node.id);
+      }
+      this.observeOrganizations(node.children, expandedNodes);
     });
   }
 }

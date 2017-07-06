@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BsDropdownDirective } from 'ngx-bootstrap';
 import { Observable } from 'rxjs/Observable';
 
 import { IFilters, INotification } from '../../core/notifications/notifications.interface';
@@ -15,13 +14,12 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild(BsDropdownDirective) notificationsDropdown: BsDropdownDirective;
-
   isNavSearchVisible: boolean;
 
   isLicenseVisible = false;
 
   filters$: Observable<IFilters>;
+  hasNotifications$: Observable<boolean>;
   notificationsCount$: Observable<number>;
   notifications$: Observable<Array<INotification>>;
 
@@ -32,6 +30,7 @@ export class HeaderComponent implements OnInit {
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
+    this.hasNotifications$ = this.notificationsService.length.map(length => length > 0);
     this.notificationsCount$ = this.notificationsService.length;
     this.notifications$ = this.notificationsService.notifications;
   }
@@ -92,9 +91,5 @@ export class HeaderComponent implements OnInit {
   logout(event: UIEvent): void {
     event.preventDefault();
     this.authService.logout().take(1).subscribe();
-  }
-
-  onNotificationsClose(): void {
-    this.notificationsDropdown.hide();
   }
 }
