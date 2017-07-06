@@ -10,7 +10,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 // Angle directives
 import { FlotDirective } from './directives/flot/flot.directive';
@@ -37,6 +36,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
+import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
@@ -60,7 +60,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // Angle modules
     // DropdownModule.forRoot(),
     TranslateModule,
-    ProgressbarModule.forRoot(),
     TextMaskModule,
     MultiSelectModule,
     PerfectScrollbarModule,
@@ -78,6 +77,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     SpinnerModule,
     MomentModule,
     PopupInputModule,
+    ProgressbarModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -112,7 +112,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     RouterModule,
     // Angle exports
     TextMaskModule,
-    ProgressbarModule,
     CheckallDirective,
     EasypiechartDirective,
     FlotDirective,
@@ -139,6 +138,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     MultiSelectModule,
     NumericInputComponent,
     PopupInputModule,
+    ProgressbarModule,
     QBuilderComponent,
     RouterOutlet2Directive,
     TabComponent,
