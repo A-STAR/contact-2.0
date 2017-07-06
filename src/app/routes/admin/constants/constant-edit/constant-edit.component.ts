@@ -31,7 +31,7 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
   ngOnInit(): void {
     this.formData = {
       ...this.editedEntity,
-      value: this.valueConverterService.isoStringToDate(this.editedEntity.valueD)
+      value: this.valueConverterService.fromIso(this.editedEntity.valueD)
     };
     super.ngOnInit();
   }
@@ -43,7 +43,7 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
   toSubmittedValues(constant: IConstant): IConstant {
     return {
       ...constant,
-      value: this.valueConverterService.dateToIsoString(constant.value)
+      value: this.valueConverterService.toIso(constant.value)
     };
   }
 

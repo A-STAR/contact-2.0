@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import {
+  IDateFormats,
   ILabeledValue,
   INamedValue,
   IOption,
@@ -11,10 +13,9 @@ import {
 
 @Injectable()
 export class ValueConverterService {
-  // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
-  static DATE_USER_PATTERN = 'DD.MM.YYYY';
-  static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
-  static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
+  private formats: IDateFormats = this.translateService.instant('default.date.format');
+
+  constructor(private translateService: TranslateService) {}
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -39,7 +40,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.formatDate(valueEntity.valueD);
+        valueEntity.value = this.isoToLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -85,22 +86,6 @@ export class ValueConverterService {
     return v;
   }
 
-  toIsoDate(str: string): string {
-    return this.parseDate(
-      str,
-      ValueConverterService.DATE_TIME_ISO_PATTERN,
-      ValueConverterService.DATE_USER_PATTERN
-    );
-  }
-
-  toIsoDateTime(str: string): string {
-    return this.parseDate(
-      str,
-      ValueConverterService.DATE_TIME_ISO_PATTERN,
-      ValueConverterService.DATE_TIME_USER_PATTERN
-    );
-  }
-
   valuesToOptions(values: Array<INamedValue>): Array<IOption> {
     return values.map(value => ({
       label: value.name,
@@ -108,36 +93,57 @@ export class ValueConverterService {
     }));
   }
 
-  dateToIsoString(date: Date): string {
-    return date ? date.toISOString().split('.')[0] + 'Z' : null;
+  toIso(date: Date): string {
+    return date ? date.toISOString() : null;
   }
 
-  isoStringToDate(str: string): Date {
-    return str ? new Date(str) : null;
+  toLocalDateTime(date: Date): string {
+    return this.toLocal(date, this.formats.dateTime);
   }
 
-  stringToDate(str: string): Date {
-    if (!str) {
-      return null;
-    }
-    const momentDate = moment(str);
-    return momentDate.isValid() ? momentDate.toDate() : null;
+  toLocalDate(date: Date): string {
+    return this.toLocal(date, this.formats.date);
   }
 
-  dateToString(date: Date, format: string = ValueConverterService.DATE_USER_PATTERN): string {
-    return date ? moment(date).format(format) : '';
+  fromIso(value: string): Date {
+    return value ? new Date(value) : null;
   }
 
-  formatDate(str: string, format: string = ValueConverterService.DATE_USER_PATTERN): string {
-    return this.dateToString(this.stringToDate(str), format);
+  fromLocalDateTime(value: string): Date {
+    return this.fromLocal(value, this.formats.dateTime);
   }
 
-  formatDateTime(str: string, format: string = ValueConverterService.DATE_TIME_USER_PATTERN): string {
-    return this.dateToString(this.stringToDate(str), format);
+  fromLocalDate(value: string): Date {
+    return this.fromLocal(value, this.formats.date);
   }
 
-  private parseDate(str: string, toPattern: string, fromPattern?: string): string {
-    const momentDate = moment(str, fromPattern);
-     return momentDate.isValid() ? momentDate.format(toPattern) : null;
+  /**
+   * @deprecated
+   */
+  isoToLocalDateTime(value: string): string {
+    return this.toLocalDateTime(this.fromIso(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  isoToLocalDate(value: string): string {
+    return this.toLocalDate(this.fromIso(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  isoFromLocalDateTime(value: string): string {
+    return this.toIso(this.fromLocalDateTime(value));
+  }
+
+  private toLocal(date: Date, format: string): string {
+    return date ? moment(date).format(format) : null;
+  }
+
+  private fromLocal(value: string, format: string): Date {
+    const date = value && moment(value, format, true);
+    return date && date.isValid() ? date.toDate() : null;
   }
 }
