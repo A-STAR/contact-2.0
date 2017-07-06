@@ -21,9 +21,11 @@ export class GridDatePickerComponent implements IDateAngularComp {
   }
 
   setDate(date: Date): void {
-    if (Number(this.date) !== Number(date)) {
-      this.date = date;
-      this.dateParams.onDateChanged();
-    }
+    this.date = date;
+  }
+
+  update(date: Date): void {
+    this.setDate(date);
+    this.dateParams.onDateChanged();
   }
 }
