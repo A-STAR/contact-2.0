@@ -33,7 +33,7 @@ export class AppComponent {
     animationClass: 'flyLeft',
     limit: 10,
     mouseoverTimerStop: true,
-    positionClass: 'toast-bottom-right',
+    positionClass: 'toaster-container',
   });
 
   private _isLoading$: Observable<boolean>;
