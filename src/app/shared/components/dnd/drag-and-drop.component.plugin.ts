@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DragulaService } from 'ng2-dragula';
 
 import { DragAndDropDomHelper } from './drag-and-drop.dom-helper';
-import { IDraggedComponent, INodeOffset } from './drag-and-drop.interface';
+import { IDragAndDropConfig, IDragAndDropView, INodeOffset } from './drag-and-drop.interface';
 
 @Injectable()
 export class DragAndDropComponentPluginFactory {
@@ -12,14 +12,10 @@ export class DragAndDropComponentPluginFactory {
   constructor(
     private dragulaService: DragulaService,
     private domHelper: DragAndDropDomHelper
-  ) { }
+  ) {}
 
-  createAndAttachTo(component: IDraggedComponent): DragAndDropComponentPlugin {
-    return new DragAndDropComponentPlugin(
-      component,
-      this.dragulaService,
-      this.domHelper,
-    );
+  attachTo(view: IDragAndDropView, config: IDragAndDropConfig): DragAndDropComponentPlugin {
+    return new DragAndDropComponentPlugin(view, config, this.dragulaService, this.domHelper);
   }
 }
 
@@ -43,11 +39,15 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private _moveSubscription: Function;
 
   constructor(
-    private component: IDraggedComponent,
+    private view: IDragAndDropView,
+    private config: IDragAndDropConfig,
     private dragulaService: DragulaService,
     private domHelper: DragAndDropDomHelper,
   ) {
-    component.dragulaOptions = { copy: true };
+  }
+
+  get dragulaOptions(): any {
+    return { copy: true };
   }
 
   private onMouseMove(event: MouseEvent): void {
@@ -85,10 +85,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
       const targetElement = value[2];
       if (sourceElement && targetElement
             && this._activeElements.length === DragAndDropComponentPlugin.MOVED_NODES_COUNT) {
-        this.component.changeLocation({
+        this.view.changeLocation({
           swap: false,
-          source: this.domHelper.extractNodeId(sourceElement),
-          target: this.domHelper.extractNodeId(targetElement)
+          sourceId: this.domHelper.extractNodeId(sourceElement),
+          targetId: this.domHelper.extractNodeId(targetElement)
         });
         this._isNodeAlreadyMovedOrRejected = true;
       }
@@ -101,10 +101,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
       if (!this._isNodeAlreadyMovedOrRejected
             && this._activeElements.length === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
-          this.component.changeLocation({
+          this.view.changeLocation({
             swap: true,
-            target: this.domHelper.extractNodeId(this._activeElements[0]),
-            source: sourceNodeId
+            targetId: this.domHelper.extractNodeId(this._activeElements[0]),
+            sourceId: sourceNodeId
           });
       }
 
@@ -144,12 +144,12 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     return this.domHelper.getIntersectedByTargetElements(
       this._dragNode,
       this.draggedElementPosition,
-      this.domHelper.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
+      this.domHelper.queryElements(this.config.viewElementRef.nativeElement, this.config.draggableNodesSelector)
     );
   }
 
   private get renderer(): Renderer2 {
-    return this.component.renderer;
+    return this.config.renderer;
   }
 
   private clearCache(): void {

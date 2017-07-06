@@ -14,7 +14,7 @@ import * as R from 'ramda';
 
 import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
 
-import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.interface';
+import { IDragAndDropPayload, IDragAndDropView } from '../dnd/drag-and-drop.interface';
 import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
 
 @Component({
@@ -24,8 +24,9 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
+export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() dblClickEnabled = true;
+  @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
   @Input() expandNodeOnClick = false;
   @Input() value: ITreeNode[];
@@ -45,39 +46,47 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
 
-  dragulaOptions: any = {
-    // prevent any drags by default
-    invalid: () => true
-  };
   private dragAndDropPlugin: DragAndDropComponentPlugin;
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
   }
 
-  // TODO(a.poterenko) Check this parameter
-  get elementSelector(): string {
-    return '.app-treenode-content';
-  }
-
   get selectionAsArray(): ITreeNode[] {
     return this.selection as ITreeNode[];
   }
 
+  get dragulaOptions(): any {
+    return this.dragAndDropPlugin
+      ? this.dragAndDropPlugin.dragulaOptions
+      : {
+        // prevent any drags by default
+        invalid: () => true
+      }
+  };
+
   constructor(
-    public elementRef: ElementRef,
-    public renderer: Renderer2,
-    dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
+    private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
   ) {
-    this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
   }
 
   ngOnInit(): void {
-    this.dragAndDropPlugin.ngOnInit();
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin = this.dragAndDropComponentPluginFactory.attachTo(this, {
+        viewElementRef: this.elementRef,
+        draggableNodesSelector: '.app-treenode-content',
+        renderer: this.renderer
+      });
+      this.dragAndDropPlugin.ngOnInit();
+    }
   }
 
   ngOnDestroy(): void {
-    this.dragAndDropPlugin.ngOnDestroy();
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin.ngOnDestroy();
+    }
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {
@@ -263,11 +272,11 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   }
 
   changeLocation(payload: IDragAndDropPayload): void {
-    const targetElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.target);
-    const sourceElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.source);
+    const targetElement = this.findNodeRecursively(this.value[0], payload.targetId);
+    const sourceElement = this.findNodeRecursively(this.value[0], payload.sourceId);
 
-    if (this.findNodeRecursively(sourceElement, payload.target)) {
-      // User can not move the node under its child
+    if (this.findNodeRecursively(sourceElement, payload.targetId)) {
+      // User cannot move the node under its child
       return;
     }
 
