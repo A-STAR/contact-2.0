@@ -42,8 +42,7 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private _clientY: number;
   private _dragNode: Element;
   private _dragMirror: Element;
-  private _cachedElements: Set<Element> = new Set<Element>();
-  private _allElements: HTMLCollectionOf<Element>;
+  private _activeElements: Set<Element> = new Set<Element>();
   private _dragSubscription: Subscription;
   private _dropSubscription: Subscription;
   private _dragEndSubscription: Subscription;
@@ -63,19 +62,19 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._clientX = event.clientX;
     this._clientY = event.clientY;
 
-    this.deactivateNodes();
+    this.removeAllActiveElements();
 
     const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
     const firstNode: IIntersectedNodeInfo = intersectedByTargetElements[0];
     const secondNode: IIntersectedNodeInfo = intersectedByTargetElements[1];
 
     if (this.canMove(intersectedByTargetElements)) {
-      this._cachedElements.add(firstNode.element);
+      this._activeElements.add(firstNode.element);
       this.renderer.addClass(firstNode.element, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
 
     } else if (this.canSwap(intersectedByTargetElements)) {
-      this._cachedElements.add(firstNode.element);
-      this._cachedElements.add(secondNode.element);
+      this._activeElements.add(firstNode.element);
+      this._activeElements.add(secondNode.element);
       intersectedByTargetElements.forEach((value: IIntersectedNodeInfo) =>
         this.renderer.addClass(value.element, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS));
     }
@@ -92,12 +91,12 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._outSubscription = this.dragulaService.out.subscribe(() => this._isCursorInsideElement = false);
 
     this._dropSubscription = this.dragulaService.drop.subscribe((value: Element[]) => {
-      this.deactivateNodes();
       this.removeMouseMoveListener();
 
       const sourceElement: Element = value[1];
       const targetElement: Element = value[2];
-      if (sourceElement && targetElement && this.canMove(this.intersectedByTargetElements)) {
+      if (sourceElement && targetElement
+            && this._activeElements.size === DragAndDropComponentPlugin.MOVED_NODES_COUNT) {
         this.component.changeLocation({
           swap: false,
           source: this.domHelper.extractNodeId(sourceElement),
@@ -108,20 +107,20 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     });
 
     this._dragEndSubscription = this.dragulaService.dragend.subscribe((value: Element[]) => {
-      this._dragMirror = null; // Here mirror element does not already exist
-
       const sourceElement: Element = value[1];
       const sourceNodeId: string = this.domHelper.extractNodeId(sourceElement);
       this.renderer.removeChild(sourceElement.parentNode, sourceElement);
 
-      const intersectedByTargetElements: IIntersectedNodeInfo[] = this.intersectedByTargetElements;
-      if (!this._isNodeAlreadyMovedOrRejected && this.canSwap(intersectedByTargetElements)) {
+      if (!this._isNodeAlreadyMovedOrRejected
+            && this._activeElements.size === DragAndDropComponentPlugin.SWAPPED_NODES_COUNT) {
           this.component.changeLocation({
             swap: true,
-            target: this.domHelper.extractNodeId(intersectedByTargetElements[0].element),
+            target: this.domHelper.extractNodeId(this._activeElements.values().next().value),
             source: sourceNodeId
           });
       }
+
+      this.removeAllActiveElements();
       this.clearCache();
     });
   }
@@ -147,18 +146,19 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     }
   }
 
-  private deactivateNodes(): void {
-    this._cachedElements.forEach((el: Element) => {
+  private removeAllActiveElements(): void {
+    this._activeElements.forEach((el: Element) => {
       this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
       this.renderer.removeClass(el, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS);
     });
+    this._activeElements.clear();
   }
 
   private get intersectedByTargetElements(): IIntersectedNodeInfo[] {
     return this.domHelper.getIntersectedByTargetElements(
+      this._dragNode,
       this.draggedElementPosition,
-      this._allElements = this._allElements ||
-        this.domHelper.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
+      this.domHelper.queryElements(this.component.elementRef.nativeElement, this.component.elementSelector)
     );
   }
 
@@ -169,8 +169,6 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
   private clearCache(): void {
     this._dragMirror = null;
     this._dragNode = null;
-    this._allElements = null;
-    this._cachedElements.clear();
   }
 
   private canMove(intersectedByTargetElements: IIntersectedNodeInfo[]): boolean {
