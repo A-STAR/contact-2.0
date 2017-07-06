@@ -13,7 +13,6 @@ import {
 export class ValueConverterService {
   // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
   static LOCAL_DATE_FORMAT = 'DD.MM.YYYY';
-  static LOCAL_TIME_FORMAT = 'HH:mm:ss';
   static LOCAL_DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm:ss';
 
   serialize(valueEntity: IValueEntity): IValueEntity {
@@ -104,10 +103,6 @@ export class ValueConverterService {
     return this.toLocal(date, ValueConverterService.LOCAL_DATE_FORMAT);
   }
 
-  toLocalTime(date: Date): string {
-    return this.toLocal(date, ValueConverterService.LOCAL_TIME_FORMAT);
-  }
-
   fromIso(value: string): Date {
     return value ? new Date(value) : null;
   }
@@ -118,10 +113,6 @@ export class ValueConverterService {
 
   fromLocalDate(value: string): Date {
     return this.fromLocal(value, ValueConverterService.LOCAL_DATE_FORMAT);
-  }
-
-  fromLocalTime(value: string): Date {
-    return this.fromLocal(value, ValueConverterService.LOCAL_TIME_FORMAT);
   }
 
   /**
