@@ -7,7 +7,7 @@
     "start": "ng serve --port 4200",
     "start:prod": "ng serve --prod --port 8000",
     "start:proxy": "npm start -- --proxy-config proxy.conf.json",
-    "start:ext": "npm start -- --host 0.0.0.0",
+    "start:ext": "npm start -- --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
