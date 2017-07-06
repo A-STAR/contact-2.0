@@ -15,7 +15,7 @@ export class OrganizationsTreeService {
   }
 
   private prepareTree(node: ITreeNode, previousExpandedNodes: Set<number>, parent: ITreeNode = null): void {
-    node.expanded = !parent || previousExpandedNodes.has(node.id);
+    node.expanded = node.children && node.children.length && (!parent || previousExpandedNodes.has(node.id));
     node.parent = parent;
     (node.children || []).forEach(childNode => this.prepareTree(childNode, previousExpandedNodes, node));
   }

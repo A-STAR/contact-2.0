@@ -82,21 +82,26 @@ export class OrganizationsService {
     });
   }
 
+  clearAll(): void {
+    this.clearEmployees();
+    this.clearOrganizations();
+  }
+
   updateOrganizations(organizations: IOrganization[]): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_ORDER_UPDATE,
       payload: organizations
     });
   }
 
   deleteOrganization(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_DELETE
     });
   }
 
   clearOrganizations(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATIONS_CLEAR
     });
   }
