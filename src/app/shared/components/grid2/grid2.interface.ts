@@ -1,4 +1,4 @@
-import { Column } from 'ag-grid';
+import { Column, RowNode } from 'ag-grid';
 import { Renderer2 } from '@angular/core';
 
 import { FilterObject } from './filter/grid2-filter';
@@ -121,4 +121,16 @@ export interface IGrid2EventPayload {
     |IGrid2SelectedRowChangePayload
     |IGrid2SortingDirectionSwitchPayload
     |IGrid2ColumnFilterPayload;
+}
+
+// need this, since ag-grid doesn't export this interface
+export interface IViewportDatasourceParams {
+    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
+    setRowCount: (count: number) => void;
+    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
+    setRowData: (rowData: {
+        [key: number]: any;
+    }) => void;
+    /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
+    getRow: (rowIndex: number) => RowNode;
 }

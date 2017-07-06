@@ -205,8 +205,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   getFilterValues(): IActionsLogFilterRequest {
     return {
       ...this.value,
-      actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map((record: IDictionaryItem) => record.code),
-      employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
+      actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.code),
+      employees: (this.value.employees as IEmployee[] || []).map(record => record.id),
       endDate: moment(this.value.endDate).format('DD.MM.YYYY'),
       startDate: moment(this.value.startDate).format('DD.MM.YYYY'),
     };

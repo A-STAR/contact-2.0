@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { Column } from 'ag-grid';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
@@ -106,7 +105,7 @@ export class ActionsLogComponent {
       columns,
       ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
     };
-
+    console.log(this.filter.getFilterValues());
     this.actionsLogService.export(body)
       .catch(() => {
         this.notificationsService.error('actionsLog.messages.errors.download');

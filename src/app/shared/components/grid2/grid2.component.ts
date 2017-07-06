@@ -21,7 +21,6 @@ import {
   RowNode,
   Column,
   ColumnChangeEvent,
-  IViewportDatasource,
 } from 'ag-grid';
 
 import {
@@ -45,18 +44,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { FilterObject } from './filter/grid2-filter';
 import { GridTextFilter } from './filter/text-filter';
-
-// need this, since ag-grid doesn't export this interface
-export interface IViewportDatasourceParams {
-    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
-    setRowCount: (count: number) => void;
-    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
-    setRowData: (rowData: {
-        [key: number]: any;
-    }) => void;
-    /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
-    getRow: (rowIndex: number) => RowNode;
-}
+import { ViewPortDatasource } from './data/viewport-data-source';
 
 @Component({
   selector: 'app-grid2',
@@ -184,8 +172,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
             this.translateColumns(translation[this.columnTranslationKey].grid);
           }
         },
-        // TODO: log out the error
-        error => console.error(error)
+        error => this.notificationService.warning(error, false)
       );
 
     this.langSubscription = this.translate.onLangChange
@@ -382,12 +369,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     });
   }
 
-  saveFilterChanges(filter: FilterObject): void {
+  onFilterChanged(filter: FilterObject): void {
+    // const filter = this.gridOptions.api.getFilterInstance(column.headerName);
     this.onFilter.emit({ type: Grid2Component.APPLY_FILTER, payload: {
       columnId: this.filterField,
       filter: filter
     }});
-
   }
 
   dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void {
@@ -581,6 +568,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
       onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: (p) => { console.log('onFilterChanged', p); },
+      // onFloatingRowDataChanged: (p) => { console.log('onFloatingRowDataChanged', p); },
       // onFilterModified: (p) => { console.log('onFilterModified', p); },
     };
 
@@ -609,39 +597,5 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
         groupingColumns: event.getColumns().map(column => column.getColId())
       }
     });
-  }
-}
-
-class ViewPortDatasource implements IViewportDatasource {
-  params: IViewportDatasourceParams;
-  grid: Grid2Component;
-
-  constructor(grid: Grid2Component) {
-    this.grid = grid;
-  }
-
-  init(params: IViewportDatasourceParams): void {
-    this.params = params;
-  }
-
-  // the rows are mapped {key: rowIndex}: rowData
-  convertData(data: Array<any>): any {
-    return data.reduce((acc, row) => {
-      acc[row.id] = row;
-      return acc;
-    }, {});
-  }
-
-  setViewportRange(firstRow: number, lastRow: number): void {
-    const length = this.grid.gridRows && this.grid.gridRows.length;
-    console.log(`range: ${firstRow} to ${lastRow}, length: ${length}`);
-    if (firstRow < this.grid.pageSize) {
-      this.params.setRowData(this.grid.gridRows);
-    }
-  }
-
-  destroy(): void {
-    // this doesn't fire
-    console.log('ViewPortDatasource destroyed');
   }
 }
