@@ -25,6 +25,8 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
+  @Input() collapseAdjacentNodes = false;
+  @Input() expandNodeOnClick = false;
   @Input() value: ITreeNode[];
   @Input() selectionMode: string;
   @Input() selection: ITreeNode|ITreeNode[];
@@ -116,7 +118,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           }
 
           this.selectionChange.emit(this.selection);
-          this.onNodeSelect.emit({originalEvent: event, node: node});
+          this.nodeSelect(event, node);
         }
       } else {
         const metaSelection = this.metaKeySelection;
@@ -141,8 +143,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.selection = [...this.selectionAsArray, node];
               this.selectionChange.emit(this.selection);
             }
-
-            this.onNodeSelect.emit({originalEvent: event, node: node});
+            this.nodeSelect(event, node);
           }
         } else {
           if (this.isSingleSelectionMode()) {
@@ -151,7 +152,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
               this.selection = node;
-              this.onNodeSelect.emit({originalEvent: event, node: node});
+              this.nodeSelect(event, node);
             }
           } else {
             if (selected) {
@@ -159,7 +160,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
               this.selection = [...this.selectionAsArray || [], node];
-              this.onNodeSelect.emit({originalEvent: event, node: node});
+              this.nodeSelect(event, node);
             }
           }
 
@@ -177,10 +178,10 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
     let index: number = -1;
     if (this.selectionMode && this.selection) {
       if (this.isSingleSelectionMode()) {
-        index = (this.selection === node || node.id === (this.selection as ITreeNode).id) ? 0 : -1;
+        index = this.selection === node ? 0 : -1;
       } else {
         for (let i = 0; i < this.selectionAsArray.length; i++) {
-          if (this.selection[i] === node || node.id === this.selection[i].id) {
+          if (this.selection[i] === node) {
             index = i;
             break;
           }
@@ -312,5 +313,17 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
       return result;
     }
     return null;
+  }
+
+  nodeCollapse(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeCollapse.emit({originalEvent: event, node: node});
+  }
+
+  nodeExpand(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeExpand.emit({originalEvent: event, node: node});
+  }
+
+  private nodeSelect(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeSelect.emit({originalEvent: event, node: node});
   }
 }
