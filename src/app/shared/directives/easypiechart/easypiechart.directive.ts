@@ -32,14 +32,14 @@ export class EasypiechartDirective implements OnInit, OnChanges {
     this.options = $.extend({}, this.defaultOptions, this.options);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (EasyPieChart) {
       this.pieChart = new EasyPieChart(this.element.nativeElement, this.options);
       this.pieChart.update(this.percent);
     }
   }
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
     if (this.pieChart && changes['percent']) {
       this.pieChart.update(this.percent);
     }

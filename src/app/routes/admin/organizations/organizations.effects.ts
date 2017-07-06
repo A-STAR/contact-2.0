@@ -27,7 +27,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [_, store]: [Action, IAppState] = data;
       return this.readOrganizations()
         .map(response => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,

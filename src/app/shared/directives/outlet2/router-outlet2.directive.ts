@@ -79,7 +79,7 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
     return this._activatedRoute as ActivatedRoute;
   }
 
-  get activatedRouteData() {
+  get activatedRouteData(): any {
     if (this._activatedRoute) {
       return this._activatedRoute.snapshot.data;
     }
@@ -104,7 +104,7 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
   /**
    * Called when the `RouteReuseStrategy` instructs to re-attach a previously detached subtree
    */
-  attach(ref: ComponentRef<any>, activatedRoute: ActivatedRoute) {
+  attach(ref: ComponentRef<any>, activatedRoute: ActivatedRoute): void {
     this.activated = ref;
     this._activatedRoute = activatedRoute;
     this.location.insert(ref.hostView);

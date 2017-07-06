@@ -3,11 +3,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
 
 import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { ILabeledValue } from "../../../../../core/converter/value/value-converter.interface";
 
 @Component({
   selector: 'app-term-edit',

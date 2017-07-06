@@ -32,7 +32,6 @@ import {
 } from '../toolbar/toolbar.interface';
 import {
   IGrid2ColumnsPositionsChangePayload,
-  Grid2SortingEnum,
   IGrid2EventPayload,
   IGrid2ColumnsSettings,
   IGrid2HeaderParams,
@@ -399,11 +398,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
     this.onColumnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload: payload });
   }
 
-  private changeSortingDirection(direction: Grid2SortingEnum): Grid2SortingEnum {
-    const nextDirection = direction + 1;
-    return nextDirection > 2 ? 0 : nextDirection;
-  }
-
   private getColumnByName(field: string): IGridColumn {
     return this.columns.find(column => column.prop === field);
   }
@@ -425,21 +419,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy, IGrid2Servi
 
   private getPageCount(): number {
     return Math.ceil(this.getRowsTotalCount() / this.pageSize);
-  }
-
-  private applyClientSorting(): void {
-    const sortModel = this.allGridColumns.map(column => {
-      const columnId: string = column.getColDef().field;
-      return this.columnsSettings[columnId]
-        ? {
-          colId: columnId,
-          sort: this.columnsSettings[columnId].sortingDirection,
-        } : null;
-    }).filter(item => !!item);
-
-    if (sortModel.length) {
-      this.gridOptions.api.setSortModel(sortModel);
-    }
   }
 
   private getCustomFilter(name: string): any {

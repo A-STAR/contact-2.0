@@ -12,7 +12,6 @@ import {
   ITerm,
   IDictionaryItem
 } from './dictionaries.interface';
-import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 
 @Injectable()
 export class DictionariesService {

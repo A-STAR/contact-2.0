@@ -30,7 +30,7 @@
 
         progressBar.style.width = '100%';
 
-        setTimeout(function() {
+        setTimeout(function(): void {
             // animate preloader hiding
             removePreloader();
             // retore scrollbar

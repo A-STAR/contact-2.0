@@ -81,7 +81,7 @@ export class AuthService implements CanActivate {
       });
   }
 
-  private logoutHandler() {
+  private logoutHandler(): void {
     removeToken();
     this.authenticated = false;
     this.redirectToLogin();

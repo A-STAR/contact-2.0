@@ -40,7 +40,9 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
 
   ngDoCheck(): void {
     if (this.scrollerEnabled) {
-      this.ps && this.ps.ngDoCheck(); // TODO Make github issue request
+      if (this.ps) {
+        this.ps.ngDoCheck();
+      }
       this.refreshTools();
     }
   }

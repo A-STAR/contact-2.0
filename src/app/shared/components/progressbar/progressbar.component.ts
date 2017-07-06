@@ -17,6 +17,6 @@ export class ProgressbarComponent {
   get style(): object {
     return {
       width: `${this.value}%`
-    }
+    };
   }
 }

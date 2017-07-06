@@ -1,7 +1,7 @@
 import { Directive, Input, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 
 @Directive({
-  selector: '[alignment]'
+  selector: '[appAlignment]'
 })
 export class AlignmentDirective implements AfterViewInit {
 

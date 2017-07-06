@@ -35,7 +35,7 @@ export class PermissionsTreeService {
 
   getDiff(nodes: ITreeNode[], nodes2: ITreeNode[]): ITreeNode[] {
     return nodes
-      .filter((node: ITreeNode) => !node.children && !nodes2.find((node2: ITreeNode) => node2 === node))
+      .filter((node: ITreeNode) => !node.children && !nodes2.find((node2: ITreeNode) => node2 === node));
   }
 
   private updatePermissions(currentRole: IPermissionRole, id: number, add: boolean): Observable<any> {
