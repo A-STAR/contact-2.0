@@ -98,11 +98,11 @@ export class GridService {
                   switch (metadataColumn.dataType) {
                     case 2:
                       // Date
-                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.isoToLocalDate(item[column.prop]);
                       break;
                     case 7:
                       // Datetime
-                      column.renderer = (item: any) => this.converterService.formatDateTime(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.isoToLocalDateTime(item[column.prop]);
                       break;
                   }
                 }
