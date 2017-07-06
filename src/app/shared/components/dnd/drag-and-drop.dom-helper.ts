@@ -14,7 +14,7 @@ export class DragAndDropDomHelper {
     return Object.assign({ width: el.clientWidth, height: el.clientHeight }, $(el).offset());
   }
 
-  getIntersectedByTargetElements(targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>):
+  getIntersectedByTargetElements(dragNode: Element, targetPosition: INodeOffset, elements: HTMLCollectionOf<Element>):
     IIntersectedNodeInfo[] {
     return targetPosition
       ? R.filter(
@@ -39,7 +39,7 @@ export class DragAndDropDomHelper {
             return { element: el, x1: x1, y1: y1, x2: x2, y2: y2 };
           }
           return null;
-        }, Array.from(elements))
+        }, Array.from(elements).filter(element => element !== dragNode))
       )
       : [];
   }
