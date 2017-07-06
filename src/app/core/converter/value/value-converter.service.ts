@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import {
@@ -11,9 +12,9 @@ import {
 
 @Injectable()
 export class ValueConverterService {
-  // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
-  static LOCAL_DATE_FORMAT = 'DD.MM.YYYY';
-  static LOCAL_DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm:ss';
+  private formats = this.translateService.instant('default.date.format');
+
+  constructor(private translateService: TranslateService) {}
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -96,11 +97,11 @@ export class ValueConverterService {
   }
 
   toLocalDateTime(date: Date): string {
-    return this.toLocal(date, ValueConverterService.LOCAL_DATE_TIME_FORMAT);
+    return this.toLocal(date, this.formats.dateTime);
   }
 
   toLocalDate(date: Date): string {
-    return this.toLocal(date, ValueConverterService.LOCAL_DATE_FORMAT);
+    return this.toLocal(date, this.formats.date);
   }
 
   fromIso(value: string): Date {
@@ -108,11 +109,11 @@ export class ValueConverterService {
   }
 
   fromLocalDateTime(value: string): Date {
-    return this.fromLocal(value, ValueConverterService.LOCAL_DATE_TIME_FORMAT);
+    return this.fromLocal(value, this.formats.dateTime);
   }
 
   fromLocalDate(value: string): Date {
-    return this.fromLocal(value, ValueConverterService.LOCAL_DATE_FORMAT);
+    return this.fromLocal(value, this.formats.date);
   }
 
   /**
