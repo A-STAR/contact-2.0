@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Column } from 'ag-grid';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
