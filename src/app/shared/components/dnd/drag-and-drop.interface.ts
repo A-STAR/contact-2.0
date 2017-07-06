@@ -18,8 +18,7 @@ export interface INodeOffset {
   height: number;
 }
 
-export interface IIntersectedNodeInfo {
-  element: Element;
+export interface INodeCoordinates {
   x1: number;
   x2: number;
   y1: number;
