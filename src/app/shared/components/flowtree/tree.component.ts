@@ -25,6 +25,7 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
+  @Input() dblClickEnabled = true;
   @Input() collapseAdjacentNodes = false;
   @Input() expandNodeOnClick = false;
   @Input() value: ITreeNode[];
@@ -35,7 +36,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
-  @Output() onNodeEdit: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Input() style: any;
   @Input() styleClass: string;
@@ -171,7 +172,9 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   }
 
   onDoubleNodeClick(event: MouseEvent, node: ITreeNode): void {
-    this.onNodeEdit.emit(node);
+    if (this.dblClickEnabled) {
+      this.onNodeDblClick.emit(node);
+    }
   }
 
   findIndexInSelection(node: ITreeNode): number {
