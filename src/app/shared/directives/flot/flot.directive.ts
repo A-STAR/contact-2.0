@@ -1,10 +1,10 @@
-import { OnInit, OnChanges, OnDestroy, Directive, ElementRef, Input, Output, SimpleChange, EventEmitter } from '@angular/core';
+import { OnChanges, OnDestroy, Directive, ElementRef, Input, Output, SimpleChange, EventEmitter } from '@angular/core';
 
 @Directive({
   // tslint:disable-next-line
   selector: '[flot]'
 })
-export class FlotDirective implements OnInit, OnChanges, OnDestroy {
+export class FlotDirective implements OnChanges, OnDestroy {
 
     element: any;
     plot: any;
@@ -28,9 +28,7 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
         this.plot = null;
     }
 
-    ngOnInit() { }
-
-    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+    ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
         if (!$.plot) {
             return;
         }
@@ -42,7 +40,7 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    init() {
+    init(): void {
 
         const heightDefault = 220;
 
@@ -65,7 +63,7 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
         return plotObj;
     }
 
-    onDatasetChanged(dataset) {
+    onDatasetChanged(dataset: any): void {
         if (this.plot) {
             this.plot.setData(dataset);
             this.plot.setupGrid();
@@ -77,20 +75,22 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    onSerieToggled(series) {
+    onSerieToggled(series: any): void {
         if (!this.plot || !series) {
             return;
         }
-        let someData = this.plot.getData();
-        for (let sName in series) {
+        const someData = this.plot.getData();
+        for (const sName in series) {
+          if (series.hasOwnProperty(sName)) {
             series[sName].forEach(toggleFor(sName));
+          }
         }
 
         this.plot.setData(someData);
         this.plot.draw();
 
-        function toggleFor(sName) {
-            return function(s, i) {
+        function toggleFor(sName: string): Function {
+            return function(s: any, i: any): void {
                 if (someData[i] && someData[i][sName]) {
                     someData[i][sName].show = s;
                 }
@@ -98,7 +98,7 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         if (this.plot) {
             this.plot.shutdown();
         }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, animate, state, style, transition, trigger } from '@angular/core';
+import { Component, EventEmitter, Input, Output, animate, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } from '../dynamic-form-control.interface';

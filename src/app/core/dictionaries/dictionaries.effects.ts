@@ -145,7 +145,7 @@ export class DictionariesEffects {
               };
             })
           };
-        })
+        });
     });
 
   @Effect()

@@ -2,7 +2,7 @@ import { OnInit, OnDestroy, Directive, Input, ElementRef } from '@angular/core';
 import * as moment from 'moment';
 
 @Directive({
-    selector: '[now]'
+    selector: '[appNow]'
 })
 export class NowDirective implements OnInit, OnDestroy {
 
@@ -11,17 +11,17 @@ export class NowDirective implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.updateTime();
         this.intervalId = setInterval(this.updateTime.bind(this), 1000);
     }
 
-    updateTime() {
+    updateTime(): void {
         const dt = moment().format(this.format);
         this.element.nativeElement.innerHTML = dt;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         clearInterval(this.intervalId);
     }
 

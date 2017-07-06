@@ -9,7 +9,7 @@
     <li *ngIf="filterEnabled"
         class="app-select-search-wrapper">
       <input
-        focus
+        appFocus
         type="text"
         class="form-control app-select-search"
         [(ngModel)]="filterValue"
@@ -51,7 +51,7 @@
   *ngIf="multiple === false"
   [ngStyle]="styles"
   [attr.disabled]="disabled"
-  [offClick]="clickedOutside"
+  [appOffClick]="clickedOutside"
 >
   <div
     *ngIf="!inputMode"
@@ -88,7 +88,7 @@
      [ngStyle]="styles"
      [attr.disabled]="disabled"
      *ngIf="multiple === true"
-     [offClick]="clickedOutside"
+     [appOffClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open"
 >
   <span class="ui-select-match">

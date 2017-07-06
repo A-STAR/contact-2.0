@@ -19,7 +19,7 @@ export interface IMetadataResponse {
 }
 
 export interface IMetadataState {
-  lists: IMetadataListsState
+  lists: IMetadataListsState;
 }
 
 export interface IMetadataListsState {
