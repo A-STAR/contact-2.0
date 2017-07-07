@@ -45,7 +45,6 @@ export class GridService {
         });
 
       if (payload.gridFilters) {
-        console.log('!!!', payload.gridFilters);
         payload.gridFilters.forEach((filter: IFilterBaseObject) => {
           filters.addFilter(
             FilterObject.create(filter)
