@@ -1,28 +1,43 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { ChangeDetectionStrategy, Component, Input, Renderer2 } from '@angular/core';
 
 import { DataService } from '../../../core/data/data.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-downloader',
-  templateUrl: './downloader.component.html'
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloaderComponent {
-  @Input() url: string;
+  @Input() errorTranslationKey: string;
   @Input() name: string;
+  @Input() url: string;
 
-  @ViewChild('link') link: ElementRef;
+  constructor(
+    private notificationsService: NotificationsService,
+    private dataService: DataService,
+    private renderer: Renderer2,
+  ) {}
 
-  href: string = null;
-
-  constructor(private dataService: DataService) {}
-
-  download(body: object): Observable<void> {
-    return this.dataService.createBlob(this.url, {}, body)
+  download(body: object): void {
+    this.dataService.createBlob(this.url, {}, body)
       .map(blob => {
-        this.href = URL.createObjectURL(blob);
-        this.link.nativeElement.dispatchEvent([ new MouseEvent('click') ]);
-        URL.revokeObjectURL(this.href = null);
-      });
+        const href = URL.createObjectURL(blob);
+        this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
+        URL.revokeObjectURL(href);
+      })
+      // TODO(d.maltsev): refactor once we are able to handle server error messages
+      .catch(error => {
+        this.notificationsService.error(this.errorTranslationKey);
+        throw error;
+      })
+      .subscribe();
+  }
+
+  private createLink(href: string, name: string): any {
+    const link = this.renderer.createElement('a');
+    this.renderer.setAttribute(link, 'href', href);
+    this.renderer.setAttribute(link, 'download', name);
+    return link;
   }
 }

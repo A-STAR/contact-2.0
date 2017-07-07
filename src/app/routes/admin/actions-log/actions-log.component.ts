@@ -12,9 +12,9 @@ import { IAppState } from '../../../core/state/state.interface';
 import { ActionsLogService } from './actions-log.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
+import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
@@ -60,13 +60,13 @@ export class ActionsLogComponent {
   actionsLogColumnMovingInProgress: Observable<boolean>;
   actionsLogSelectedRows: Observable<IDictionaryItem[]>;
 
+  @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   constructor(
     private actionsLogService: ActionsLogService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
   ) {
@@ -105,12 +105,7 @@ export class ActionsLogComponent {
       columns,
       ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
     };
-    console.log(this.filter.getFilterValues());
-    this.actionsLogService.export(body)
-      .catch(() => {
-        this.notificationsService.error('actionsLog.messages.errors.download');
-        return Observable.of(null);
-      })
-      .subscribe();
+
+    this.downloader.download(body);
   }
 }

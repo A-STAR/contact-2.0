@@ -79,21 +79,6 @@ export class DataService {
     return this.request(url, routeParams, { ...options, method: RequestMethod.Post, body }, null);
   }
 
-  download(url: string, routeParams: object = {}, body: object, name: string): Observable<void> {
-    return this.createBlob(url, routeParams, body)
-      .map(blob => {
-        // TODO(d.maltsev): maybe use a separate component with Renderer2 injected?
-        const href = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = href;
-        a.download = name;
-        document.body.appendChild(a);
-        a.click();
-        a.parentNode.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-  }
-
   // Request that expects JSON for *response*.
   // Request content type can be application/json, multipart/form-data, etc.
   private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
