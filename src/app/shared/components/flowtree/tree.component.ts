@@ -62,7 +62,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
       : {
         // prevent any drags by default
         invalid: () => true
-      }
+      };
   };
 
   constructor(
