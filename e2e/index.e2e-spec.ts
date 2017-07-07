@@ -9,9 +9,6 @@ describe('Index page', () => {
   });
 
   it('should let click on login button', async () => {
-    // TODO(d.maltsev): how can we use browser.ignoreSynchronization = false
-    browser.ignoreSynchronization = true;
-
     const preloader = element(by.css('app-root ~ div'));
     const loginInput = element(by.css('app-login form > div > input[name="login"]'));
     const passwordInput = element(by.css('app-login form > div > input[name="password"]'));

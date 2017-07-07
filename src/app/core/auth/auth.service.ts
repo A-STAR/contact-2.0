@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { JwtHelper } from 'angular2-jwt';
@@ -33,6 +33,7 @@ export class AuthService implements CanActivate {
     private router: Router,
     private jwtHelper: JwtHelper,
     private translateService: TranslateService,
+    private zone: NgZone,
   ) {
     const token = getToken();
     if (this.isTokenValid(token)) {
@@ -137,15 +138,17 @@ export class AuthService implements CanActivate {
   }
 
   private initTokenTimer(token: string): void {
-    const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+    this.zone.runOutsideAngular(() => {
+      const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
 
-    this.clearTokenTimer();
-    this.tokenTimer = setInterval(() => {
-      const timeUntilExpiration = expirationDate.getTime() - Date.now();
-      if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
-        this.refreshToken();
-      }
-    }, AuthService.JWT_TIMER_INTERVAL);
+      this.clearTokenTimer();
+      this.tokenTimer = setInterval(() => {
+        const timeUntilExpiration = expirationDate.getTime() - Date.now();
+        if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
+          this.zone.run(() => this.refreshToken());
+        }
+      }, AuthService.JWT_TIMER_INTERVAL);
+    });
   }
 
   private clearTokenTimer(): void {
