@@ -31,7 +31,7 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
   ngOnInit(): void {
     this.formData = {
       ...this.editedEntity,
-      value: this.valueConverterService.fromIso(this.editedEntity.valueD)
+      value: this.editedEntity.typeCode === 2 ? this.valueConverterService.fromIso(this.editedEntity.valueD) : this.editedEntity.value
     };
     super.ngOnInit();
   }
@@ -43,7 +43,7 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
   toSubmittedValues(constant: IConstant): IConstant {
     return {
       ...constant,
-      value: this.valueConverterService.toIso(constant.value)
+      value: constant.typeCode === 2 ? this.valueConverterService.toIso(constant.value) : constant.value
     };
   }
 
