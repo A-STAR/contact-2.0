@@ -28,6 +28,7 @@ import { ContentTabstripModule } from './components/content-tabstrip/content-tab
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
+import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
@@ -68,6 +69,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DownloaderModule,
     DropdownModule,
     DynamicFormModule,
     ImageUploadModule,
@@ -126,6 +128,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DownloaderModule,
     DropdownModule,
     DynamicFormModule,
     DialogModule,
