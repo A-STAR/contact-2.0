@@ -44,13 +44,17 @@ export class ActionsLogService {
       (payload): Observable<IActionsLogPayload> => {
         const [action, store]: [Action, IAppState] = payload;
         const customFilter: IActionsLogFilterRequest = action.payload;
-        const state: IGrid2State = store.actionsLog.actionsLogGrid;
-        const request = this.createRequest({
-          currentPage: state.currentPage,
-          pageSize: state.pageSize,
-          columnsSettings: state.columnsSettings,
-          fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName
-        }, customFilter);
+        const grid: IGrid2State = store.actionsLog.actionsLogGrid;
+        // TODO(a.tymchuk): refactor this
+        const request = this.createRequest(
+          {
+            currentPage: grid.currentPage,
+            pageSize: grid.pageSize,
+            columnsSettings: grid.columnsSettings,
+            // fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName,
+          },
+          customFilter
+        );
 
         return this.dataService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
@@ -61,10 +65,10 @@ export class ActionsLogService {
               },
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
-          });
+          })
+          .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
       }
-    )
-    .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
+    );
 
   constructor(
     private dataService: DataService,
@@ -124,6 +128,10 @@ export class ActionsLogService {
   }
 
   createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
+    if (customFilter.gridFilters) {
+      console.log(customFilter.gridFilters);
+      payload.gridFilters = customFilter.gridFilters;
+    }
     const request: IGrid2Request = this.gridService.buildRequest(payload);
 
     request.filtering = FilterObject.create()

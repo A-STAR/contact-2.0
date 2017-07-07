@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import {
@@ -12,6 +12,7 @@ import { IconsService } from '../../icons/icons.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
@@ -45,6 +46,9 @@ export class ToolbarComponent {
   }
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
+    if (!action.permission) {
+      return Observable.of(!!action.disabled);
+    }
     const permissions = Array.isArray(action.permission) ? action.permission : [ action.permission ];
     return this.userPermissionsService.hasAll(permissions)
       .map(permission => !!action.disabled || !(!action.permission || permission));

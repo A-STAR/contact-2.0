@@ -6,7 +6,7 @@ import { ActionsLogFilterModule } from './filter/actions-log-filter.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { ActionsLogService } from './actions-log.service';
-import { ActionsLogResolver } from './actions-log-resolver.service';
+import { ActionsLogResolver } from './actions-log.resolver';
 
 import { ActionsLogComponent } from './actions-log.component';
 

@@ -24,15 +24,16 @@ export class ViewPortDatasource implements IViewportDatasource {
   }
 
   setViewportRange(firstRow: number, lastRow: number): void {
-    const length = this.grid.gridRows && this.grid.gridRows.length;
-    console.log(`range: ${firstRow} to ${lastRow}, length: ${length}`);
+    // const length = this.grid.gridRows && this.grid.gridRows.length;
+    // console.log(`range: ${firstRow} to ${lastRow}, length: ${length}`);
     if (firstRow < this.grid.pageSize) {
       this.params.setRowData(this.grid.gridRows);
     }
   }
 
   destroy(): void {
-    // this doesn't fire
-    console.log('ViewPortDatasource destroyed');
+    // Clean up
+    this.grid = null;
+    this.params = null;
   }
 }
