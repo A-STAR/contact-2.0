@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
+// import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
@@ -81,13 +82,23 @@ export class ActionsLogComponent {
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
   }
 
-  refreshData(eventPayload: IGrid2EventPayload): void {
-    this.onStoreDispatch(eventPayload);
+  onFilter(gridFilters: IGrid2EventPayload): void {
+    const filters: any = this.filter.getFilterValues();
+    filters.gridFilters = gridFilters;
+    this.actionsLogService.search(filters);
+  }
+
+  onRequestData(payload: IGrid2EventPayload): void {
+    this.onStoreDispatch(payload);
     this.doSearch();
   }
 
-  onStoreDispatch(eventPayload: IGrid2EventPayload): void {
-    this.store.dispatch(eventPayload);
+  onColumnAction(payload: IGrid2EventPayload): void {
+    this.onStoreDispatch(payload);
+  }
+
+  onStoreDispatch(payload: IGrid2EventPayload): void {
+    this.store.dispatch(payload);
   }
 
   doSearch(): void {
@@ -105,12 +116,9 @@ export class ActionsLogComponent {
       columns,
       ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
     };
-    console.log(this.filter.getFilterValues());
+
     this.actionsLogService.export(body)
-      .catch(() => {
-        this.notificationsService.error('actionsLog.messages.errors.download');
-        return Observable.of(null);
-      })
+      .catch(() => [ this.notificationsService.createErrorAction('actionsLog.messages.errors.download') ])
       .subscribe();
   }
 }
