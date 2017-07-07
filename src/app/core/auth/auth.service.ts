@@ -120,7 +120,7 @@ export class AuthService implements CanActivate {
   }
 
   private refreshToken(): void {
-    this.dataService.post('/refresh', {}, {})
+    this.dataService.get('/api/refresh', {}, {})
       .map((resp: Response) => resp.headers.get('X-Auth-Token'))
       .subscribe(
         token => {
