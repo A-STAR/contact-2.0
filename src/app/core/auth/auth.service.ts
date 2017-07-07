@@ -39,6 +39,15 @@ export class AuthService implements CanActivate {
     if (this.isTokenValid(token)) {
       this.initTokenTimer(token);
     }
+
+    this.zone.runOutsideAngular(() => {
+      setInterval(() => {
+        console.log(this.zone.hasPendingMacrotasks);
+      }, 1000);
+    });
+
+    this.zone.onStable.subscribe(() => console.log('stable!'));
+    this.zone.onUnstable.subscribe(() => console.log('unstable!'));
   }
 
   get isAuthenticated(): boolean {

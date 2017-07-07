@@ -1,10 +1,10 @@
-import { OnChanges, OnDestroy, Directive, ElementRef, Input, Output, SimpleChange, EventEmitter } from '@angular/core';
+import { OnChanges, OnDestroy, Directive, ElementRef, Input, Output, OnInit, SimpleChange, EventEmitter } from '@angular/core';
 
 @Directive({
   // tslint:disable-next-line
   selector: '[flot]'
 })
-export class FlotDirective implements OnChanges, OnDestroy {
+export class FlotDirective implements OnInit, OnChanges, OnDestroy {
 
     element: any;
     plot: any;
@@ -28,16 +28,22 @@ export class FlotDirective implements OnChanges, OnDestroy {
         this.plot = null;
     }
 
+    ngOnInit(): void {
+      this.init();
+      this.onDatasetChanged(this.dataset);
+      this.onSerieToggled(this.series);
+    }
+
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
         if (!$.plot) {
             return;
         }
-        if (changes['dataset']) {
-            this.onDatasetChanged(this.dataset);
-        }
-        if (changes['series']) {
-            this.onSerieToggled(this.series);
-        }
+        // if (changes['dataset']) {
+        //     this.onDatasetChanged(this.dataset);
+        // }
+        // if (changes['series']) {
+        //     this.onSerieToggled(this.series);
+        // }
     }
 
     init(): void {
