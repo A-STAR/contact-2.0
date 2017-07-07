@@ -138,11 +138,10 @@ export class AuthService implements CanActivate {
   }
 
   private initTokenTimer(token: string): void {
-    const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
-
-    this.clearTokenTimer();
-
     this.zone.runOutsideAngular(() => {
+      const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+
+      this.clearTokenTimer();
       this.tokenTimer = setInterval(() => {
         const timeUntilExpiration = expirationDate.getTime() - Date.now();
         if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
