@@ -5,7 +5,11 @@ import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
+<<<<<<< HEAD
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
+=======
+// import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
+>>>>>>> 962ffa2e2f8452e7a98d36acfe82ba40a0ebd831
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IGrid2ColumnsSettings, IGrid2EventPayload, IGrid2Filter } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
