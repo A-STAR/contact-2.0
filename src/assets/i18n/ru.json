@@ -630,6 +630,7 @@
       "name": "Краткое название",
       "fullName": "Полное название",
       "smsName": "Название для СМС",
+      "responsibleId": "Менеджер",
       "responsibleName": "Менеджер",
       "typeCode": "Тип",
       "phone": "Телефон",

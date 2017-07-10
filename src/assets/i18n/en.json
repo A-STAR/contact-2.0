@@ -631,6 +631,7 @@
       "name": "Short name",
       "fullName": "Full name",
       "smsName": "Name fot SMS",
+      "responsibleId": "Manager",
       "responsibleName": "Manager",
       "typeCode": "Type",
       "phone": "Phone",
