@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IPortfolio } from '../contractors-and-portfolios.interface';
@@ -10,7 +10,8 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 @Component({
   selector: 'app-portfolios',
-  templateUrl: './portfolios.component.html'
+  templateUrl: './portfolios.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfoliosComponent {
   toolbarItems: Array<IToolbarItem> = [

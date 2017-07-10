@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,7 +12,8 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 @Component({
   selector: 'app-contractors',
-  templateUrl: './contractors.component.html'
+  templateUrl: './contractors.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
