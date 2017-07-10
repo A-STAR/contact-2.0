@@ -92,6 +92,9 @@
       background-color: #428bca;
     }
   }
+  &:hover {
+    background-color: #eee;
+  }
   .dropdown-item {
     padding: 3px $padding-base-horizontal;
     line-height: 1.42857143;
