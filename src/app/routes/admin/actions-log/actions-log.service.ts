@@ -199,8 +199,4 @@ export class ActionsLogService {
   getEmployees(): Observable<IEmployee[]> {
     return this.dataService.read('/users').map(data => data.users);
   }
-
-  export(body: IGrid2Request): Observable<any> {
-    return this.dataService.download('/list/excel?name=actions', {}, body, 'actions.xlsx').take(1);
-  }
 }
