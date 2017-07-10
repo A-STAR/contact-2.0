@@ -89,8 +89,11 @@
   &.active {
     .dropdown-item {
       color: #fff;
-      background-color: #428bca;
+      background-color: #23b7e5;
     }
+  }
+  &:hover {
+    background-color: #eee;
   }
   .dropdown-item {
     padding: 3px $padding-base-horizontal;
