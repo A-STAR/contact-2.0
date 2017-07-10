@@ -632,6 +632,18 @@
       "comment": "Comment"
     }
   },
+  "portfolios": {
+    "grid": {
+      "name": "Name",
+      "directionCode": "Direction",
+      "stageCode": "Stage",
+      "statusCode": "Status",
+      "signDate": "Signed on",
+      "startWorkDate": "Processing start date",
+      "endWorkDate": "Processing end date",
+      "comment": "Comment"
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {

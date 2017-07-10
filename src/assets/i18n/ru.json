@@ -631,6 +631,18 @@
       "comment": "Комментарий"
     }
   },
+  "portfolios": {
+    "grid": {
+      "name": "Название",
+      "directionCode": "Направление",
+      "stageCode": "Стадия",
+      "statusCode": "Статус",
+      "signDate": "Дата подписания",
+      "startWorkDate": "Дата начала работ",
+      "endWorkDate": "Дата окончания работ",
+      "comment": "Комментарий"
+    }
+  },
   "notifications": {
     "dismiss": "Удалить",
     "types": {
