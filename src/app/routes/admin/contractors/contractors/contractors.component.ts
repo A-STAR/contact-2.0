@@ -75,6 +75,8 @@ export class ContractorsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.contractorsAndPortfoliosService.clearContractors();
+    this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
   get contractors$(): Observable<Array<IContractor>> {
