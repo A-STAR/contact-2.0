@@ -112,12 +112,7 @@ export class ActionsLogComponent {
   }
 
   doExport(): void {
-    // TODO(d.maltsev): move into component/service
-    const columns = this.grid.columnDefs.map(column => ({
-      field: column.field,
-      name: column.headerName
-    }));
-
+    const columns = this.grid.getExportableColumnNames();
     const body = {
       columns,
       ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())

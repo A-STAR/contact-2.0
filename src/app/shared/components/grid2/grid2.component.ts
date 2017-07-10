@@ -31,18 +31,15 @@ import {
 } from '../toolbar/toolbar.interface';
 import {
   IGrid2ColumnsPositionsPayload,
-  IGrid2ColumnSettings,
   IGrid2ColumnsSettings,
   IGrid2EventPayload,
   IGrid2Filter,
-  IGrid2HeaderParams,
   IGrid2SortDirectionPayload,
 } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
-import { FilterObject } from './filter/grid2-filter';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 
@@ -118,7 +115,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private langSubscription: EventEmitter<any>;
   private initialized = false;
   private viewportDatasource: ViewPortDatasource;
-  @Input() filter(record: any): boolean { return record; }
+  // @Input() filter(record: any): boolean { return record; }
 
   constructor(
     private elRef: ElementRef,
@@ -131,25 +128,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return this.rows || null;
   }
 
-  get filterField(): string {
-    return this.filterColumn && this.filterColumn.getColDef().field;
-  }
-
-  get filterColumnName(): string {
-    return this.filterColumn.getColDef().headerName;
-  }
-
-  get filterObject(): FilterObject {
-    const columnSettings: IGrid2ColumnSettings = this.columnsSettings[this.filterField];
-    return columnSettings ? columnSettings.filter : null;
-  }
-
   get allGridColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
-  }
-
-  get isMultipleRowSelection(): boolean {
-    return this.rowSelection === 'multiple';
   }
 
   ngOnInit(): void {
@@ -408,6 +388,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorting as IGrid2SortDirectionPayload });
   }
 
+  getExportableColumnNames(): Array<any> {
+    return this.columnDefs
+    .filter(column => !column.hide)
+    .map(column => ({
+      field: column.field,
+      name: column.headerName
+    }));
+  }
+
   private getColumnByName(field: string): IGridColumn {
     return this.columns.find(column => column.prop === field);
   }
@@ -520,11 +509,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         headerComponentParams: {
           headerHeight: this.headerHeight,
           enableMenu: false,
-          renderer2: this.renderer2
-        } as IGrid2HeaderParams
+        }
       },
       enableColResize: true,
-      enableFilter: true,
+      // enableFilter: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
       floatingFilter: true,
@@ -569,7 +557,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => this.filterEnabled,
-      doesExternalFilterPass: (node: RowNode) => this.filter(node.data),
+      doesExternalFilterPass: (node: RowNode) => true,
       // onGridReady: () => this.onColumnEverythingChanged(),
       onGridSizeChanged: (params) => this.fitGridSize(),
       onColumnEverythingChanged: () => this.onColumnEverythingChanged(),

@@ -1,5 +1,4 @@
-import { Column, RowNode } from 'ag-grid';
-import { Renderer2 } from '@angular/core';
+import { RowNode } from 'ag-grid';
 
 import { FilterObject } from './filter/grid2-filter';
 
@@ -10,7 +9,7 @@ export interface IGrid2Filter {
 }
 
 export interface IGrid2ColumnSettings {
-  sortDirection?: Grid2SortingEnum;
+  sortDirection?: Grid2SortingType;
   sortOrder?: number;
   filter?: FilterObject;
 }
@@ -40,7 +39,7 @@ export interface IGrid2ColumnFilterPayload {
 
 export interface IGrid2SortDirectionPayload {
   columnId: string;
-  sortDirection: Grid2SortingEnum;
+  sortDirection: Grid2SortingType;
   sortOrder: number;
 }
 
@@ -57,11 +56,7 @@ export interface IGrid2SelectedPayload {
   selected: boolean;
 }
 
-export enum Grid2SortingEnum {
-  NONE,
-  ASC,
-  DESC
-}
+export type Grid2SortingType = 'asc' | 'desc' | null;
 
 export interface IActionGrid2Payload {
   type: string;
@@ -73,13 +68,6 @@ export interface IActionGrid2Payload {
     |IGrid2ColumnsPositionsPayload
     |IGrid2ColumnFilterPayload
     |number;
-}
-
-export interface IGrid2HeaderParams {
-  headerHeight: number;
-  enableMenu?: boolean;
-  column?: Column;
-  renderer2: Renderer2;
 }
 
 export interface IGrid2ColumnMovingPayload {

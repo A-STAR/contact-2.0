@@ -10,7 +10,6 @@ import {
   IGrid2ColumnSettings,
   IGrid2Request,
   IGrid2RequestPayload,
-  Grid2SortingEnum,
 } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
@@ -32,14 +31,13 @@ export class GridService {
   buildRequest(payload: IGrid2RequestPayload): IGrid2Request {
     const request: IGrid2Request = {};
     const filters: FilterObject = FilterObject.create().and();
-
     if (payload.columnsSettings) {
       R.values(payload.columnsSettings)
         .forEach(columnSettings => {
           const { filter } = columnSettings;
           if (filter) {
             filter.addFilter(
-              FilterObject.create(filter, { name:  payload.fieldNameConverter })
+              FilterObject.create(filter)
             );
           }
         });
@@ -57,17 +55,14 @@ export class GridService {
       request.sorting = R.values(R.mapObjIndexed(
         (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
           direction: columnSettings.sortDirection,
-          field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
+          field: columnId,
           order: columnSettings.sortOrder,
         }),
         payload.columnsSettings
       ))
-      .filter(s => s.direction !== Grid2SortingEnum.NONE)
+      .filter(Boolean)
       .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
-      .map(v => ({
-        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
-        field: v.field,
-      }));
+      .map(R.omit(['order']));
     }
 
     if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
