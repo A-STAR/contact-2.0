@@ -19,10 +19,12 @@ export class DownloaderComponent {
     private renderer: Renderer2,
   ) {}
 
-  download(body: object = {}): void {
-    // this.dataService.createBlob(this.url, {}, body)
-    this.dataService.readBlob(this.url, {})
-      .map(blob => {
+  download(body: object = null): void {
+    const request = body ?
+      this.dataService.createBlob(this.url, {}, body) :
+      this.dataService.readBlob(this.url, {});
+
+    request.map(blob => {
         const href = URL.createObjectURL(blob);
         this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
         URL.revokeObjectURL(href);
