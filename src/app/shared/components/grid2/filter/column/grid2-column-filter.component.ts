@@ -90,11 +90,11 @@ export class Grid2ColumnFilterComponent extends DynamicFormComponent implements 
         const firstFilter: FilterObject = this.filter.filters[0] as FilterObject;
         const secondFilter: FilterObject = this.filter.filters[1] as FilterObject;
         if (firstFilter) {
-          data.firstValue = firstFilter.value;
+          data.firstValue = R.head(firstFilter.values);
           data.firstSelectionValue = firstFilter.operator;
         }
         if (secondFilter) {
-          data.secondValue = secondFilter.value;
+          data.secondValue = R.head(secondFilter.values);
           data.secondSelectionValue = secondFilter.operator;
         }
       }

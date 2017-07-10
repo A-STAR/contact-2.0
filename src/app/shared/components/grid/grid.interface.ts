@@ -18,7 +18,6 @@ export interface IGridColumn {
   renderer?: Function;
   type?: string;
   width?: number;
-  mappedFrom?: string[];
   /*
   ** For compatibility with @swimlane/ngx-datatable
   ** Do NOT use, prefer renderer
@@ -27,11 +26,12 @@ export interface IGridColumn {
   /**
    * ag-grid
    */
-  suppressMenu?: boolean;
-  suppressSizeToFit?: boolean;
   filter?: string;
   filterValues?: { [key: number]: string }|number[]|string[];
   filterOptionsDictionaryId?: number;
+  suppressMenu?: boolean;
+  suppressSizeToFit?: boolean;
+  hidden?: boolean;
 }
 
 export interface IRenderer {

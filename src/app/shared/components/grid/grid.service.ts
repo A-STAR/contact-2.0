@@ -80,7 +80,8 @@ export class GridService {
   }
 
   /**
-   * Builds column defs from server metadata
+   * Build column defs from server metadata
+   * Use only once, preferably during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {Observable<IGridColumn[]>} columns Initial column descriptions
@@ -92,7 +93,7 @@ export class GridService {
       const mapColumns = ([metadata, dictionaries]) =>
         this.setRenderers(columns.filter(column =>
           !!metadata.find(metadataColumn => {
-            const isInMeta = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
+            const isInMeta = column.prop === metadataColumn.name;
             if (isInMeta) {
               if (!column.renderer) {
                 const currentDictTypes = dictionaries[metadataColumn.dictCode];

@@ -35,15 +35,15 @@ export class ActionsLogComponent {
 
   columns: IGridColumn[] = [
     { prop: 'id', minWidth: 60, type: 'id', filter: 'number' },
-    { prop: 'fullName', minWidth: 200, filter: 'textFilter' },
-    { prop: 'position', minWidth: 100, filter: 'textFilter' },
+    { prop: 'fullName', minWidth: 200, filter: 'text' },
+    { prop: 'position', minWidth: 100, filter: 'text' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, type: 'date', filter: 'date' },
-    { prop: 'guiObject', minWidth: 150, filter: 'textFilter' },
+    { prop: 'guiObject', minWidth: 150, filter: 'text' },
     { prop: 'typeCode', minWidth: 150, filter: 'set',
       filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
-    { prop: 'dsc', minWidth: 200, filter: 'textFilter' },
-    { prop: 'machine', minWidth: 120, filter: 'textFilter' },
-    { prop: 'duration', minWidth: 100, type: 'number', filter: 'text' }
+    { prop: 'dsc', minWidth: 200, filter: 'text' },
+    { prop: 'machine', minWidth: 120, filter: 'text' },
+    { prop: 'duration', minWidth: 100, type: 'number', filter: 'number' }
   ];
 
   columnDefs: Observable<IGridColumn[]>;
@@ -85,49 +85,30 @@ export class ActionsLogComponent {
   onFilter(gridFilters: IGrid2Filter[]): void {
     const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
     filters.gridFilters = gridFilters;
-    this.actionsLogService.search(filters);
+    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    this.actionsLogService.filter(filters);
   }
 
   onRequestData(payload: IGrid2EventPayload): void {
-    this.onStoreDispatch(payload);
-    this.doSearch();
+    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
+    filters.gridFilters = this.grid.getFilters();
+    this.store.dispatch(payload);
+    this.actionsLogService.fetch(filters);
   }
 
   onColumnAction(payload: IGrid2EventPayload): void {
-    this.onStoreDispatch(payload);
+    this.store.dispatch(payload);
   }
 
-  onStoreDispatch(payload: IGrid2EventPayload): void {
+  onSelect(payload: IGrid2EventPayload): void {
     this.store.dispatch(payload);
   }
 
   doSearch(): void {
-    // this.actionsLogService.search(this.filter.getFilterValues());
-    const filterModel = this.grid.gridOptions.api.getFilterModel();
     const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
-    const gridFilters = Object.keys(filterModel)
-      .map(key => {
-        const filter: IGrid2Filter = { name: key };
-        const el = filterModel[key];
-        switch (el.filterType) {
-          case undefined:
-            filter.operator = 'LIKE';
-            filter.value = `%${el}%`;
-            break;
-          case 'text':
-            filter.operator = 'LIKE';
-            filter.value = `%${el.filter}%`;
-            break;
-          case 'number':
-            filter.operator = '==';
-            filter.value = Number(el.filter);
-            break;
-        }
-        return filter;
-      });
-
-    filters.gridFilters = gridFilters;
-    this.actionsLogService.search(filters);
+    filters.gridFilters = this.grid.getFilters();
+    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    this.actionsLogService.filter(filters);
   }
 
   doExport(): void {
@@ -144,4 +125,5 @@ export class ActionsLogComponent {
 
     this.downloader.download(body);
   }
+
 }

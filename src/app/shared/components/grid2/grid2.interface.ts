@@ -6,7 +6,7 @@ import { FilterObject } from './filter/grid2-filter';
 export interface IGrid2Filter {
   name?: string;
   operator?: string;
-  value?: any;
+  values?: any;
 }
 
 export interface IGrid2ColumnSettings {
@@ -19,16 +19,13 @@ export interface IGrid2ColumnsSettings {
   [key: string]: IGrid2ColumnSettings;
 }
 
-export interface IGrid2ColumnsSettingsInfo {
-  columnsSettings?: IGrid2ColumnsSettings;
-}
-
 export interface IGrid2PaginationInfo {
   currentPage?: number;
   pageSize?: number;
 }
 
-export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+export interface IGrid2State extends IGrid2PaginationInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
@@ -104,7 +101,8 @@ export interface IGrid2Request {
   filtering?: FilterObject;
 }
 
-export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+export interface IGrid2RequestPayload extends IGrid2PaginationInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
   fieldNameConverter?: Function;
   gridFilters?: IGrid2Filter[];
 }

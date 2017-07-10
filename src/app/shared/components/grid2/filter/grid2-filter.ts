@@ -1,5 +1,3 @@
-import * as R from 'ramda';
-
 export type FilteringConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
 export class FilteringOperators {
@@ -16,8 +14,7 @@ export interface IFilterBaseObject {
   filters?: IFilterBaseObject[];
   name?: string;
   operator?: FilteringOperatorType;
-  valueArray?: any[];
-  value?: any;
+  values?: Array<any>;
 }
 
 export class FilterObject implements IFilterBaseObject {
@@ -25,15 +22,14 @@ export class FilterObject implements IFilterBaseObject {
   condition: FilteringConditionType;
   filters: IFilterBaseObject[];
   operator: FilteringOperatorType;
-  value?: any;
-  valueArray?: any[];
+  values?: Array<any>;
 
   static create(source?: IFilterBaseObject, decorators?: { name: Function }): FilterObject {
     let filter: FilterObject = new FilterObject();
     if (source) {
       filter = filter
         .setName(decorators && decorators.name ? decorators.name(source.name) : source.name)
-        .setValues(source.value || source.valueArray)
+        .setValues(source.values)
         .setCondition(source.condition)
         .setOperator(source.operator);
       if (Array.isArray(source.filters) && source.filters.length) {
@@ -54,6 +50,10 @@ export class FilterObject implements IFilterBaseObject {
 
   and(): FilterObject {
     return this.setCondition('AND');
+  }
+
+  or(): FilterObject {
+    return this.setCondition('OR');
   }
 
   setCondition(condition: FilteringConditionType): FilterObject {
@@ -80,24 +80,23 @@ export class FilterObject implements IFilterBaseObject {
   }
 
   setFilters(filters: IFilterBaseObject[]): FilterObject {
-    this.filters = filters;
+    this.filters = [].concat(filters);
     return this;
   }
 
   setValues(values: any | any[]): FilterObject {
-    if (Array.isArray(values)) {
-      this.valueArray = values;
-    } else {
-      this.value = values;
+    // skip null & undefined, since BE doesn't accept them
+    if (values != null) {
+      this.values = [].concat(values);
     }
     return this;
   }
 
   hasValues(): boolean {
-    return !R.isNil(this.value) || (!R.isNil(this.valueArray) && this.valueArray.length > 0);
+    return this.values && this.values.length > 0;
   }
 
   hasFilter(): boolean {
-    return Array.isArray(this.filters) && this.filters.length > 0;
+    return this.filters && this.filters.length > 0;
   }
 }

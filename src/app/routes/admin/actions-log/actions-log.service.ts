@@ -44,6 +44,7 @@ export class ActionsLogService {
       (payload): Observable<IActionsLogPayload> => {
         const [action, store]: [Action, IAppState] = payload;
         const customFilter: IActionsLogFilterRequest = action.payload;
+        // console.log('action payload', action.payload);
         const grid: IGrid2State = store.actionsLog.actionsLogGrid;
         // TODO(a.tymchuk): refactor this
         const request = this.createRequest(
@@ -129,7 +130,6 @@ export class ActionsLogService {
 
   createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
     if (customFilter.gridFilters) {
-      console.log(customFilter.gridFilters);
       payload.gridFilters = customFilter.gridFilters;
     }
     const request: IGrid2Request = this.gridService.buildRequest(payload);
@@ -179,9 +179,16 @@ export class ActionsLogService {
     );
   }
 
-  search(payload: IActionsLogFilterRequest): void {
+  fetch(payload: IActionsLogFilterRequest): void {
     this.store.dispatch({
-      payload: payload,
+      payload,
+      type: ActionsLogService.ACTIONS_LOG_FETCH,
+    });
+  }
+
+  filter(payload: IActionsLogFilterRequest): void {
+    this.store.dispatch({
+      payload: { ...payload, currentPage: 1 },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }

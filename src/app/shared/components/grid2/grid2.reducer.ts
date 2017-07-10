@@ -34,6 +34,8 @@ export function combineWithGrid2Reducer(stateKey: string, outerReducer: Function
       case Grid2Component.NEXT_PAGE:
       case Grid2Component.PAGE_SIZE:
       case Grid2Component.PREVIOUS_PAGE:
+      case Grid2Component.FIRST_PAGE:
+      case Grid2Component.LAST_PAGE:
       case Grid2Component.SELECTED_ROWS:
       case Grid2Component.SORTING_DIRECTION:
         return {
@@ -68,47 +70,56 @@ export function grid2Reducer(
         pageSize: (action.payload as number)
       };
 
+    case Grid2Component.FIRST_PAGE:
+      return {
+        ...state,
+        currentPage: 1
+      };
+
+    case Grid2Component.LAST_PAGE:
+      return {
+        ...state,
+        currentPage: action.payload as number
+      };
+
     case Grid2Component.PREVIOUS_PAGE:
       return {
         ...state,
-        selectedRows: [],
         currentPage: (action.payload as number) - 1
       };
 
     case Grid2Component.NEXT_PAGE:
       return {
         ...state,
-        selectedRows: [],
         currentPage: (action.payload as number) + 1
       };
 
     case Grid2Component.SELECTED_ROWS:
-      const selectedRowPayload = action.payload as IGrid2SelectedPayload;
+      const selectedRow = action.payload as IGrid2SelectedPayload;
       return {
         ...state,
         selectedRows: state.selectedRows
-          .filter((rowData: any) => selectedRowPayload.rowData !== rowData)
-          .concat(selectedRowPayload.selected ? [selectedRowPayload.rowData] : [])
+          .filter((rowData: any) => selectedRow.rowData !== rowData)
+          .concat(selectedRow.selected ? selectedRow.rowData : [])
       };
 
     case Grid2Component.GROUPING_COLUMNS:
-      const groupingColumnsPayload = action.payload as IGrid2GroupingColumnsPayload;
+      const groupingColumns = action.payload as IGrid2GroupingColumnsPayload;
       return {
         ...state,
         selectedRows: [],
-        groupingColumns: groupingColumnsPayload.groupingColumns
+        groupingColumns: groupingColumns.groupingColumns
       };
 
     case Grid2Component.COLUMNS_POSITIONS:
-      const columnsPositionsPayload = action.payload as IGrid2ColumnsPositionsPayload;
+      const colPositions = action.payload as IGrid2ColumnsPositionsPayload;
       return {
         ...state,
-        selectedRows: [],
-        columnsPositions: columnsPositionsPayload.columnsPositions,
+        columnsPositions: colPositions.columnsPositions,
         columnsSettings: R.mapObjIndexed((columnSettings: IGrid2ColumnSettings, columnId: string) => {
           return {
             ...columnSettings,
-            sortOrder: columnsPositionsPayload.columnsPositions.findIndex((_columnId: string) => columnId === _columnId)
+            sortOrder: colPositions.columnsPositions.findIndex(_columnId => columnId === _columnId)
           };
         }, state.columnsSettings)
       };
@@ -117,22 +128,19 @@ export function grid2Reducer(
       const sorters = action.payload as IGrid2SortDirectionPayload;
       return {
         ...state,
-        selectedRows: [],
-        columnsSettings: {
-          ...sorters,
-        }
+        columnsSettings: { ...sorters }
       };
 
     case Grid2Component.APPLY_FILTER:
-      const columnFilterPayload = action.payload as IGrid2ColumnFilterPayload;
+      const filters = action.payload as IGrid2ColumnFilterPayload;
       return {
         ...state,
         selectedRows: [],
         columnsSettings: {
           ...state.columnsSettings,
-          [columnFilterPayload.columnId]: {
-            ...(state.columnsSettings[columnFilterPayload.columnId]),
-            filter: columnFilterPayload.filter
+          [filters.columnId]: {
+            ...(state.columnsSettings[filters.columnId]),
+            filter: filters.filter
           }
         }
       };

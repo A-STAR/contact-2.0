@@ -60,18 +60,18 @@ import { ViewPortDatasource } from './data/viewport-data-source';
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;
 
-  static NEXT_PAGE = 'GRID2_NEXT_PAGE';
-  static PREVIOUS_PAGE = 'GRID2_PREVIOUS_PAGE';
-  static PAGE_SIZE = 'GRID2_PAGE_SIZE';
-  static SORTING_DIRECTION = 'GRID2_SORTING_DIRECTION';
-  static COLUMNS_POSITIONS = 'GRID2_COLUMNS_POSITIONS';
-  static GROUPING_COLUMNS = 'GRID2_GROUPING_COLUMNS';
-  static SELECTED_ROWS = 'GRID2_SELECTED_ROWS';
-  static OPEN_FILTER = 'GRID2_OPEN_FILTER';
-  static CLOSE_FILTER = 'GRID2_CLOSE_FILTER';
-  static APPLY_FILTER = 'GRID2_APPLY_FILTER';
-  static MOVING_COLUMN = 'GRID2_MOVING_COLUMN';
-  static DESTROY_STATE = 'GRID2_DESTROY_STATE';
+  static FIRST_PAGE         = 'GRID2_FIRST_PAGE';
+  static LAST_PAGE          = 'GRID2_LAST_PAGE';
+  static NEXT_PAGE          = 'GRID2_NEXT_PAGE';
+  static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
+  static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
+  static SORTING_DIRECTION  = 'GRID2_SORTING_DIRECTION';
+  static COLUMNS_POSITIONS  = 'GRID2_COLUMNS_POSITIONS';
+  static GROUPING_COLUMNS   = 'GRID2_GROUPING_COLUMNS';
+  static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
+  static APPLY_FILTER       = 'GRID2_APPLY_FILTER';
+  static MOVING_COLUMN      = 'GRID2_MOVING_COLUMN';
+  static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
 
   // Inputs with presets
   @Input() columns: IGridColumn[] = [];
@@ -109,7 +109,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onPageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onSort: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onRowsSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
 
   columnDefs: ColDef[];
   paginationPanel: IToolbarAction[] = [];
@@ -210,18 +210,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.langSubscription.unsubscribe();
-    // TODO(a.tymchuk): how do we destroy filters?
-    // this.columnDefs.forEach(column => {
-    //   if (column.filter) {
-    //     const filter = this.gridOptions.api.getFilterInstance(column.headerName);
-    //     filter.destroy();
-    //   }
-    // });
   }
 
-  onSelect(event: any): void {
+  onRowSelected(event: any): void {
     const rowNode: RowNode = event.node;
-    this.onRowsSelect.emit({
+    this.onSelect.emit({
       type: Grid2Component.SELECTED_ROWS, payload: { rowData: rowNode.data, selected: rowNode.isSelected() }
     });
   }
@@ -235,9 +228,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.paginationPanel = [
       { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.BACKWARD, disabled: true },
+      { type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
       { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.FORWARD, disabled: true },
+      { type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
@@ -296,19 +289,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageChange(action: IToolbarAction): void {
     switch (action.type) {
-      case ToolbarActionTypeEnum.BACKWARD:
+      case ToolbarActionTypeEnum.GO_BACKWARD:
         if (this.page === 1) {
           this.notificationService.info(`Can't fetch page no ${this.page}`, false);
           return;
         }
         this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
-      case ToolbarActionTypeEnum.FORWARD:
+      case ToolbarActionTypeEnum.GO_FORWARD:
         if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`, false);
           return;
         }
         this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
+        break;
+      case ToolbarActionTypeEnum.GO_FIRST:
+        this.onPage.emit({ type: Grid2Component.FIRST_PAGE });
+        break;
+      case ToolbarActionTypeEnum.GO_LAST:
+        this.onPage.emit({ type: Grid2Component.LAST_PAGE, payload: this.getPageCount() });
         break;
     }
   }
@@ -358,6 +357,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onDragStopped(): void {
     this.onColumnMoved.emit({ type: Grid2Component.MOVING_COLUMN, payload: { movingColumnInProgress: false } });
+    // TODO(a.tymchuk): this is hacky, to be refactored
     if (this.rowCount) {
       const payload: IGrid2ColumnsPositionsPayload = { columnsPositions: this.allGridColumns.map(column => column.getColDef().field) };
       this.onColumnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
@@ -365,33 +365,36 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onFilterChanged(): void {
-    if (!this.rowCount) {
-      return;
-    }
+    const filters = this.getFilters();
+    this.onFilter.emit(filters);
+  }
 
+  getFilters(): IGrid2Filter[] {
     const filterModel = this.gridOptions.api.getFilterModel();
+    // console.log('filter model', filterModel);
     const filters = Object.keys(filterModel)
       .map(key => {
         const filter: IGrid2Filter = { name: key };
         const el = filterModel[key];
         switch (el.filterType) {
+          // undefined here because custom filters do not return values as yet
           case undefined:
             filter.operator = 'LIKE';
-            filter.value = `%${el}%`;
+            filter.values = `%${el}%`;
             break;
           case 'text':
             filter.operator = 'LIKE';
-            filter.value = `%${el.filter}%`;
+            filter.values = `%${el.filter}%`;
             break;
           case 'number':
             filter.operator = '==';
-            filter.value = Number(el.filter);
+            filter.values = Number(el.filter);
             break;
         }
         return filter;
       });
 
-    this.onFilter.emit(filters);
+    return filters;
   }
 
   onSortChanged(): void {
@@ -457,6 +460,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         filter: this.getCustomFilter(column.filter),
         filterParams: this.getCustomFilterParams(column),
         headerName: column.prop,
+        hide: !!column.hidden,
         /* to set the menu tabs for a column */
         // menuTabs:['filterMenuTab','generalMenuTab','columnsMenuTab'],
         maxWidth: column.maxWidth,

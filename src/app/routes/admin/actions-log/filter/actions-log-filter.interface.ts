@@ -4,10 +4,11 @@ import { IGrid2Filter } from '../../../../shared/components/grid2/grid2.interfac
 
 export interface IActionsLogFilterRequest {
   actionsTypes: number[]|IDictionaryItem[];
+  currentPage?: number;
   employees: number[]|IEmployee[];
   endDate: Date | string;
   endTime: string;
+  gridFilters?: IGrid2Filter[];
   startDate: Date | string;
   startTime: string;
-  gridFilters?: IGrid2Filter[];
 }
