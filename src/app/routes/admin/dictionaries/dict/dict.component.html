@@ -1,5 +1,5 @@
 <app-dict-edit
-  *ngIf="isEntityBeingCreated | async"
+  *ngIf="isReadyForCreating | async"
   [mode]="'create'"
   [title]="'dictionaries.create.title'"
   [languages]="languages | async"

@@ -30,6 +30,8 @@ export class DictionariesService {
   static TRANSLATIONS_FETCH_SUCCESS = 'TRANSLATIONS_FETCH_SUCCESS';
   static TERMS_FETCH                = 'TERMS_FETCH';
   static TERMS_FETCH_SUCCESS        = 'TERMS_FETCH_SUCCESS';
+  static TERM_TYPES_FETCH           = 'TERM_TYPES_FETCH';
+  static TERMS_TYPES_FETCH_SUCCESS  = 'TERMS_TYPES_FETCH_SUCCESS';
   static TERMS_CLEAR                = 'TERMS_CLEAR';
   static TERM_CREATE                = 'TERM_CREATE';
   static TERM_UPDATE                = 'TERM_UPDATE';

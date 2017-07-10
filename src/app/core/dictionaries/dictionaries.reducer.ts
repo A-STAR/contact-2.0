@@ -37,6 +37,12 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
         terms: action.payload.terms,
         dictionaryTermTypes: action.payload.dictionaryTermTypes
       };
+    case DictionariesService.TERMS_TYPES_FETCH_SUCCESS: {
+      return {
+        ...state,
+        dictionaryTermTypes: action.payload
+      };
+    }
     case DictionariesService.TRANSLATIONS_FETCH_SUCCESS:
       return {
         ...state,
