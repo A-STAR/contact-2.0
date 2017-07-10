@@ -3,6 +3,7 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/zip';
 import 'rxjs/add/operator/withLatestFrom';
@@ -181,16 +182,19 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readTerms(store.dictionaries.selectedDictionary.code)
-        .map((response: any) => {
-          return {
-            type: DictionariesService.TERMS_FETCH_SUCCESS,
-            payload: response.terms
-          };
-        })
-        .catch(() => ([
-          this.notificationsService.createErrorAction('terms.messages.errors.fetch')
-        ]));
+
+      return store.dictionaries.selectedDictionary
+        ? this.readTerms(store.dictionaries.selectedDictionary.code)
+          .map((response: any) => {
+            return {
+              type: DictionariesService.TERMS_FETCH_SUCCESS,
+              payload: response.terms
+            };
+          })
+          .catch(() => ([
+            this.notificationsService.createErrorAction('terms.messages.errors.fetch')
+          ]))
+        : Observable.empty();
     });
 
   @Effect()
