@@ -91,6 +91,8 @@ export class PortfoliosComponent implements OnDestroy {
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE)
     ).subscribe(([ directionCodeOptions, statusCodeOptions, stageCodeOptions ]) => {
+      // TODO(d.maltsev): remove console.log
+      console.log(directionCodeOptions, statusCodeOptions, stageCodeOptions);
       // TODO(d.maltsev): remove fake dictionary
       // this.renderers.directionCode = [].concat(directionCodeOptions);
       this.renderers.directionCode = [].concat([
