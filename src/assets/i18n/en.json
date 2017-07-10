@@ -651,6 +651,15 @@
       "startWorkDate": "Processing start date",
       "endWorkDate": "Processing end date",
       "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to portfolios list denied",
+      "errors": {
+        "fetch": "Could not fetch portfolios list",
+        "create": "Could not create portfolio",
+        "update": "Could not update portfolio",
+        "delete": "Could not delete portfolio"
+      }
     }
   },
   "notifications": {

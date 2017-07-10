@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractorsResponse } from './contractors-and-portfolios.interface';
+import { IContractorsResponse, IPortfoliosResponse } from './contractors-and-portfolios.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 import { DataService } from '../../../core/data/data.service';
@@ -27,8 +27,25 @@ export class ContractorsAndPortfoliosEffects {
           }
         }))
         .catch(() => [
-          // TODO(d.maltsev): i18n
           this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchPortfolios$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
+      return this.readPortfolios(store.contractorsAndPortfolios.selectedContractorId)
+        .map(response => ({
+          type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
+          payload: {
+            portfolios: response.portfolios
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.fetch')
         ]);
     });
 
@@ -58,6 +75,27 @@ export class ContractorsAndPortfoliosEffects {
         }
       ]
     });
-    // return this.dataService.read('/api/banks');
+    // return this.dataService.read('/api/contractors');
+  }
+
+  private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
+    // TODO(d.maltsev): remove fake API
+    return Observable.of({
+      success: true,
+      portfolios: [
+        {
+          id: 1,
+          name: 'Fake portfolio',
+          statusCode: 1,
+          stageCode: 1,
+          directionCode: 1,
+          signDate: '',
+          startWorkDate: '',
+          endWorkDate: '',
+          comment: 'I am a comment. Good to see you here.',
+        }
+      ]
+    });
+    // return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
   }
 }

@@ -38,6 +38,24 @@ export function contractorsAndPortfoliosReducer(
         ...state,
         selectedContractorId: action.payload.contractorId
       };
+    case ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS:
+      return {
+        ...state,
+        portfolios: action.payload.portfolios,
+        // TODO(d.maltsev): preserve selected contractor row
+        selectedPortfolioId: null
+      };
+    case ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR:
+      return {
+        ...state,
+        portfolios: null,
+        selectedPortfolioId: null
+      };
+    case ContractorsAndPortfoliosService.PORTFOLIO_SELECT:
+      return {
+        ...state,
+        selectedPortfolioId: action.payload.portfolioId
+      };
     default:
       return state;
   }
