@@ -33,6 +33,11 @@ export function contractorsAndPortfoliosReducer(
         contractors: null,
         selectedContractorId: null
       };
+    case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
+      return {
+        ...state,
+        selectedContractorId: action.payload.contractorId
+      };
     default:
       return state;
   }

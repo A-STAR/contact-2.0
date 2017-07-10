@@ -104,6 +104,6 @@ export class ContractorsComponent implements OnDestroy {
   }
 
   onSelect(contractor: IContractor): void {
-    // TODO(d.maltsev)
+    this.contractorsAndPortfoliosService.selectContractor(contractor.id);
   }
 }

@@ -10,9 +10,11 @@ export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH         = 'CONTRACTORS_FETCH';
   static CONTRACTORS_FETCH_SUCCESS = 'CONTRACTORS_FETCH_SUCCESS';
   static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
+  static CONTRACTOR_SELECT         = 'CONTRACTOR_SELECT';
   static PORTFOLIOS_FETCH          = 'PORTFOLIOS_FETCH';
   static PORTFOLIOS_FETCH_SUCCESS  = 'PORTFOLIOS_FETCH_SUCCESS';
   static PORTFOLIOS_CLEAR          = 'PORTFOLIOS_CLEAR';
+  static PORTFOLIO_SELECT          = 'PORTFOLIO_SELECT';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -48,12 +50,20 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
   }
 
+  selectContractor(contractorId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
+  }
+
   fetchPortfolios(): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
   }
 
   clearPortfolios(): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR);
+  }
+
+  selectPortfolio(portfolioId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, { portfolioId });
   }
 
   private get state(): Observable<IContractorsAndPortfoliosState> {
