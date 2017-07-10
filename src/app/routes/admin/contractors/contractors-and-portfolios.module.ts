@@ -5,6 +5,8 @@ import { ContractorsModule } from './contractors/contractors.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
+
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
 
 const routes: Routes = [
@@ -23,6 +25,9 @@ const routes: Routes = [
   ],
   declarations: [
     ContractorsAndPortfoliosComponent,
+  ],
+  providers: [
+    ContractorsAndPortfoliosService
   ]
 })
 export class ContractorsAndPortfoliosModule {

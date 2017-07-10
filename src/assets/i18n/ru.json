@@ -619,6 +619,18 @@
       }
     }
   },
+  "contractors": {
+    "grid": {
+      "name": "Краткое название",
+      "fullName": "Полное название",
+      "smsName": "Название для СМС",
+      "responsibleName": "Менеджер",
+      "type": "Тип",
+      "phone": "Телефон",
+      "address": "Адрес",
+      "comment": "Комментарий"
+    }
+  },
   "notifications": {
     "dismiss": "Удалить",
     "types": {

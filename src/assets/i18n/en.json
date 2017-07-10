@@ -620,6 +620,18 @@
       }
     }
   },
+  "contractors": {
+    "grid": {
+      "name": "Short name",
+      "fullName": "Full name",
+      "smsName": "Name fot SMS",
+      "responsibleName": "Manager",
+      "type": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "comment": "Comment"
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {
