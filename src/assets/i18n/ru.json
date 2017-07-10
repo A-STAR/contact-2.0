@@ -99,7 +99,9 @@
       "refresh": "Обновить",
       "search": "Искать",
       "save": "Сохранить",
-      "sms": "Отправить SMS"
+      "sms": "Отправить SMS",
+      "download": "Скачать",
+      "upload": "Загрузить"
     }
   },
   "queryBuilder": {

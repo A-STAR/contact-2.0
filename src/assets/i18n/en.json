@@ -99,7 +99,9 @@
       "refresh": "Refresh",
       "search": "Search",
       "save": "Save",
-      "sms": "Send SMS"
+      "sms": "Send SMS",
+      "download": "Download",
+      "upload": "Upload"
     }
   },
   "queryBuilder": {

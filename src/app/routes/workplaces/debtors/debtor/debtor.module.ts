@@ -7,6 +7,7 @@ import { DebtorResolver } from './debtor.resolver';
 import { DebtorService } from './debtor.service';
 
 import { DebtorComponent } from './debtor.component';
+import { DebtorDocumentsComponent } from './documents/debtor-documents.component';
 import { DebtorGeneralInformationComponent } from './general-information/debtor-general-information.component';
 import { DebtorGeneralInformationPhonesComponent } from './general-information/phones/debtor-general-information-phones.component';
 
@@ -17,6 +18,7 @@ import { DebtorGeneralInformationPhonesComponent } from './general-information/p
   ],
   declarations: [
     DebtorComponent,
+    DebtorDocumentsComponent,
     DebtorGeneralInformationComponent,
     DebtorGeneralInformationPhonesComponent,
   ],
