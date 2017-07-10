@@ -9,8 +9,10 @@ import { IContractorsAndPortfoliosState, IContractor, IPortfolio } from './contr
 export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH         = 'CONTRACTORS_FETCH';
   static CONTRACTORS_FETCH_SUCCESS = 'CONTRACTORS_FETCH_SUCCESS';
+  static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
   static PORTFOLIOS_FETCH          = 'PORTFOLIOS_FETCH';
   static PORTFOLIOS_FETCH_SUCCESS  = 'PORTFOLIOS_FETCH_SUCCESS';
+  static PORTFOLIOS_CLEAR          = 'PORTFOLIOS_CLEAR';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -42,8 +44,16 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_FETCH);
   }
 
+  clearContractors(): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
+  }
+
   fetchPortfolios(): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+  }
+
+  clearPortfolios(): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR);
   }
 
   private get state(): Observable<IContractorsAndPortfoliosState> {

@@ -1,44 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contractors',
   templateUrl: './contractors.component.html'
 })
-export class ContractorsComponent {
+export class ContractorsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('BANK_ADD'),
-      enabled: this.userPermissionsService.has('BANK_ADD')
+      action: () => console.log('CONTRACTOR_ADD'),
+      enabled: this.canAdd$
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('BANK_EDIT'),
+      action: () => console.log('CONTRACTOR_EDIT'),
       enabled: Observable.combineLatest(
-        this.userPermissionsService.has('BANK_EDIT'),
+        this.canEdit$,
         this.contractorsAndPortfoliosService.selectedContractor$
       ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('BANK_DELETE'),
+      action: () => console.log('CONTRACTOR_DELETE'),
       enabled: Observable.combineLatest(
-        this.userPermissionsService.has('BANK_DELETE'),
+        this.canDelete$,
         this.contractorsAndPortfoliosService.selectedContractor$
       ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.contractorsAndPortfoliosService.fetchContractors(),
-      enabled: this.userPermissionsService.has('BANK_VIEW')
+      enabled: this.canView$
     }
   ];
 
@@ -53,17 +55,45 @@ export class ContractorsComponent {
     { prop: 'comment' },
   ];
 
-  canEdit$: Observable<boolean>;
-  contractors$: Observable<Array<IContractor>>;
+  private canViewSubscription: Subscription;
 
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.canEdit$ = this.userPermissionsService.has('BANK_EDIT');
-    this.contractors$ = this.contractorsAndPortfoliosService.contractors$;
+    this.canViewSubscription = this.canView$.subscribe(canView => {
+      if (canView) {
+        this.contractorsAndPortfoliosService.fetchContractors();
+      } else {
+        this.contractorsAndPortfoliosService.clearContractors();
+        this.notificationsService.error('contractors.messages.accessDenied');
+      }
+    });
+  }
 
-    this.contractorsAndPortfoliosService.fetchContractors();
+  ngOnDestroy(): void {
+    this.canViewSubscription.unsubscribe();
+  }
+
+  get contractors$(): Observable<Array<IContractor>> {
+    return this.contractorsAndPortfoliosService.contractors$;
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTRACTOR_VIEW').filter(permission => permission !== undefined);
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTRACTOR_ADD').filter(permission => permission !== undefined);
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTRACTOR_EDIT').filter(permission => permission !== undefined);
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTRACTOR_DELETE').filter(permission => permission !== undefined);
   }
 
   onEdit(contractor: IContractor): void {

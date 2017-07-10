@@ -632,6 +632,7 @@
       "comment": "Comment"
     },
     "messages": {
+      "accessDenied": "Access to contractors list denied",
       "errors": {
         "fetch": "Could not fetch contractors list",
         "create": "Could not create contractor",

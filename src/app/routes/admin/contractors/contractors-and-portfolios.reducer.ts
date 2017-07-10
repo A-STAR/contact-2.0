@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/Store';
+import { Action } from '@ngrx/store';
 
 import { IContractorsAndPortfoliosState } from './contractors-and-portfolios.interface';
 
@@ -26,6 +26,12 @@ export function contractorsAndPortfoliosReducer(
         selectedContractorId: null,
         portfolios: null,
         selectedPortfolioId: null
+      };
+    case ContractorsAndPortfoliosService.CONTRACTORS_CLEAR:
+      return {
+        ...state,
+        contractors: null,
+        selectedContractorId: null
       };
     default:
       return state;
