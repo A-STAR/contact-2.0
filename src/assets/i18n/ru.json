@@ -515,7 +515,10 @@
       "title": "Планирование"
     },
     "documentationTab": {
-      "title": "Документы"
+      "title": "Документы",
+      "errors": {
+        "download": "Не удалось скачать документ"
+      }
     },
     "accountsTab": {
       "title": "Счета"

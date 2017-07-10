@@ -12,7 +12,7 @@
 
 <app-downloader
   #downloader
-  errorTranslationKey="actionsLog.messages.errors.download"
+  [errorTranslationKey]="downloadErrorTranslationKey"
   [name]="name$ | async"
   [url]="url$ | async">
 </app-downloader>

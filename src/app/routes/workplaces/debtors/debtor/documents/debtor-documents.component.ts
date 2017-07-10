@@ -8,13 +8,22 @@ import { IAttachment } from '../../../../../shared/components/attachments/attach
   templateUrl: './debtor-documents.component.html'
 })
 export class DebtorDocumentsComponent {
+
+  // TODO(d.maltsev): remove fake attachments, connect to back-end API
   private attachments: Array<IAttachment> = [
     {
       id: 1,
-      type: 'JPEG',
-      name: 'Photo',
+      type: 'PNG',
+      name: 'Photo 1',
       description: 'Photo description',
       url: '/api/users/3/photo'
+    },
+    {
+      id: 2,
+      type: 'JPEG',
+      name: 'Photo 2',
+      description: '',
+      url: '/api/users/4/photo'
     }
   ];
 

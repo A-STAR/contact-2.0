@@ -15,6 +15,7 @@ import { DownloaderComponent } from '../downloader/downloader.component';
 export class AttachmentsComponent {
 
   @Input() attachments$: Observable<Array<IAttachment>>;
+  @Input() downloadErrorTranslationKey: string;
   @Input() multiple = false;
 
   @Output() onFetch = new EventEmitter<void>();

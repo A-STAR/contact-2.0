@@ -516,7 +516,10 @@
       "title": "Planning"
     },
     "documentationTab": {
-      "title": "Documents"
+      "title": "Documents",
+      "errors": {
+        "download": "Could not download document"
+      }
     },
     "accountsTab": {
       "title": "Accounts"
