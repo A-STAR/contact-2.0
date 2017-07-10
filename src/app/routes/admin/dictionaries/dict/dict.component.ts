@@ -1,4 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -18,7 +22,8 @@ import { UserLanguagesService } from '../../../../core/user/languages/user-langu
 
 @Component({
   selector: 'app-dict',
-  templateUrl: './dict.component.html'
+  templateUrl: './dict.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DictComponent implements OnDestroy {
 

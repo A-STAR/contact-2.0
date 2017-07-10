@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from '@angular/core';
 
 import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -13,7 +18,8 @@ const NAME_CONTROL_NAME = 'name';
 
 @Component({
   selector: 'app-dict-edit',
-  templateUrl: './dict-edit.component.html'
+  templateUrl: './dict-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit {
 
@@ -47,6 +53,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: NAME_TRANSLATIONS_CONTROL_NAME,
         type: 'select',
         multiple: true,
+        required: true,
         placeholder: 'dictionaries.placeholder.select.translation',
         options: this.languages.map(userLanguage =>
           ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
@@ -62,6 +69,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: TRANSLATED_NAME_CONTROL_NAME,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',
+        required: true
       },
       {
         label: 'dictionaries.edit.type',

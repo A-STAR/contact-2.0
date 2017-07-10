@@ -1,5 +1,5 @@
 import { AfterViewInit, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 import {
@@ -116,12 +116,6 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
 
   onAfterInit(): void {
     this.patchDisplayControlValue();
-
-    // Set validator manually because
-    // 1. We need to patch value during form initialization
-    // 2. Angular's Error: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked
-    this.displayControl.setValidators(Validators.required);
-    this.translatedControl.setValidators(Validators.required);
   }
 
   onChanges(changes: T): void {
