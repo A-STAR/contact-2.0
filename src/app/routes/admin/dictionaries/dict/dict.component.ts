@@ -137,6 +137,13 @@ export class DictComponent implements OnDestroy {
     return this.dictionariesService.selectedDictionary;
   }
 
+  get isReadyForCreating(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.isEntityBeingCreated,
+      this.isDictionaryRelationsReady,
+    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+  }
+
   get isReadyForEditing(): Observable<boolean> {
     return Observable.combineLatest(
       this.isEntityBeingEdited,
@@ -151,7 +158,7 @@ export class DictComponent implements OnDestroy {
   }
 
   onEdit(): void {
-    this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
+    this.dictionariesService.setDialogEditDictionaryAction();
   }
 
   cancelAction(): void {

@@ -8,7 +8,7 @@ import 'rxjs/add/operator/zip';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../state/state.interface';
-import { IDictionary, ITerm } from './dictionaries.interface';
+import { DictionariesDialogActionEnum, IDictionary, ITerm } from './dictionaries.interface';
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 
 import { DataService } from '../data/data.service';
@@ -131,6 +131,33 @@ export class DictionariesEffects {
     );
 
   @Effect()
+  onAddDictionary$ = this.actions
+    .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
+    .switchMap(action => {
+        return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
+          .includes(action.payload.dialogAction) ? [
+          {
+            type: DictionariesService.TERM_TYPES_FETCH
+          }
+        ] : [];
+      }
+    );
+
+  @Effect()
+  fetchTermTypes$ = this.actions
+    .ofType(DictionariesService.TERM_TYPES_FETCH)
+    .switchMap(data => {
+      return this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
+        .map((response: any) => {
+          return {
+            type: DictionariesService.TERMS_TYPES_FETCH_SUCCESS,
+            payload: response.terms
+          };
+        });
+    });
+
+
+  @Effect()
   fetchTranslations$ = this.actions
     .ofType(DictionariesService.TRANSLATIONS_FETCH)
     .switchMap(data => {
@@ -154,22 +181,16 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return Observable.zip(
-        this.readTerms(store.dictionaries.selectedDictionary.code),
-        this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
-      )
-      .map((response: any[]) => {
-        return {
-          type: DictionariesService.TERMS_FETCH_SUCCESS,
-          payload: {
-            terms: response[0].terms,
-            dictionaryTermTypes: response[1].terms
-          }
-        };
-      })
-      .catch(() => ([
-        this.notificationsService.createErrorAction('terms.messages.errors.fetch')
-      ]));
+      return this.readTerms(store.dictionaries.selectedDictionary.code)
+        .map((response: any) => {
+          return {
+            type: DictionariesService.TERMS_FETCH_SUCCESS,
+            payload: response.terms
+          };
+        })
+        .catch(() => ([
+          this.notificationsService.createErrorAction('terms.messages.errors.fetch')
+        ]));
     });
 
   @Effect()
