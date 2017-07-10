@@ -12,8 +12,8 @@ import { IEmployeeUser } from '../../organizations.interface';
 export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
 
+  formData: any;
   private canEdit = false;
-  private formData: any;
 
   constructor(private userPermissionsService: UserPermissionsService) {
     super();
