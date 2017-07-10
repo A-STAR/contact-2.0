@@ -134,11 +134,12 @@ export class DictionariesEffects {
   onAddDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
     .switchMap(action => {
-      return action.payload.dialogAction === DictionariesDialogActionEnum.DICTIONARY_ADD ? [
-        {
-          type: DictionariesService.TERM_TYPES_FETCH
-        }
-      ] : [];
+        return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
+          .includes(action.payload.dialogAction) ? [
+          {
+            type: DictionariesService.TERM_TYPES_FETCH
+          }
+        ] : [];
       }
     );
 
@@ -180,17 +181,11 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return Observable.zip(
-        this.readTerms(store.dictionaries.selectedDictionary.code),
-        this.readTerms(DictionariesService.DICTIONARY_CODES.DICTIONARY_TERM_TYPES)
-      )
-      .map((response: any[]) => {
+      return this.readTerms(store.dictionaries.selectedDictionary.code)
+      .map((response: any) => {
         return {
           type: DictionariesService.TERMS_FETCH_SUCCESS,
-          payload: {
-            terms: response[0].terms,
-            dictionaryTermTypes: response[1].terms
-          }
+          payload: response[0].terms
         };
       })
       .catch(() => ([
