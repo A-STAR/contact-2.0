@@ -2,9 +2,13 @@ import { Action } from '@ngrx/Store';
 
 import { IContractorsAndPortfoliosState } from './contractors-and-portfolios.interface';
 
+import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
+
 const defaultState: IContractorsAndPortfoliosState = {
   contractors: null,
-  portfolios: null
+  selectedContractorId: null,
+  portfolios: null,
+  selectedPortfolioId: null
 };
 
 // This should NOT be an arrow function in order to pass AoT compilation
@@ -13,6 +17,17 @@ export function contractorsAndPortfoliosReducer(
   state: IContractorsAndPortfoliosState = defaultState,
   action: Action
 ): IContractorsAndPortfoliosState {
-  // TODO(d.maltsev)
-  return state;
+  switch (action.type) {
+    case ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS:
+      return {
+        ...state,
+        contractors: action.payload.contractors,
+        // TODO(d.maltsev): preserve selected contractor row
+        selectedContractorId: null,
+        portfolios: null,
+        selectedPortfolioId: null
+      };
+    default:
+      return state;
+  }
 };

@@ -54,13 +54,16 @@ export class ContractorsComponent {
   ];
 
   canEdit$: Observable<boolean>;
-  contractors$: Observable<Array<IContractor>> = Observable.of([]);
+  contractors$: Observable<Array<IContractor>>;
 
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.canEdit$ = this.userPermissionsService.has('BANK_EDIT');
+    this.contractors$ = this.contractorsAndPortfoliosService.contractors$;
+
+    this.contractorsAndPortfoliosService.fetchContractors();
   }
 
   onEdit(contractor: IContractor): void {

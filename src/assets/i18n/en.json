@@ -630,6 +630,14 @@
       "phone": "Phone",
       "address": "Address",
       "comment": "Comment"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch contractors list",
+        "create": "Could not create contractor",
+        "update": "Could not update contractor",
+        "delete": "Could not delete contractor"
+      }
     }
   },
   "portfolios": {
