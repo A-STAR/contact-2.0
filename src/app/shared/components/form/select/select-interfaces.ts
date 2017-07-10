@@ -1,10 +1,3 @@
-export interface OptionsBehavior {
-  first(): any;
-  last(): any;
-  prev(): any;
-  next(): any;
-}
-
 export enum SelectionActionTypeEnum {
   SORT
 }
