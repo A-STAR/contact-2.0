@@ -7,8 +7,12 @@ import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.int
 
 @Injectable()
 export class UserDictionariesService {
-  static DICTIONARY_VARIABLE_TYPE = 1;
-  static DICTIONARY_EMPLOYEE_ROLE = 8;
+  static DICTIONARY_VARIABLE_TYPE       =  1;
+  static DICTIONARY_EMPLOYEE_ROLE       =  8;
+  static DICTIONARY_CONTRACTOR_TYPE     = 28;
+  static DICTIONARY_PORTFOLIO_DIRECTION = 29;
+  static DICTIONARY_PORTFOLIO_STATUS    = 30;
+  static DICTIONARY_PORTFOLIO_STAGE     = 31;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
@@ -44,15 +48,17 @@ export class UserDictionariesService {
     return this.state
       .map(state => state.dictionaries[dictionaryId] || [])
       .map(terms => terms.reduce((acc, term) => {
-          acc[term.code] = term;
+        acc[term.code] = term;
         return acc;
-      }, {}));
+      }, {}))
+      .distinctUntilChanged();
   }
 
   getDictionaryOptions(dictionaryId: number): Observable<any> {
     return this.state
       .map(state => state.dictionaries[dictionaryId] || [])
-      .map(terms => terms.map(term => ({ value: term.code, label: term.name })));
+      .map(terms => terms.map(term => ({ value: term.code, label: term.name })))
+      .distinctUntilChanged();
   }
 
   private get state(): Observable<IUserDictionariesState> {
