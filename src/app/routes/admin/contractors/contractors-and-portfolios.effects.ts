@@ -86,7 +86,7 @@ export class ContractorsAndPortfoliosEffects {
         {
           id: 1,
           name: 'Fake portfolio',
-          statusCode: 1,
+          statusCode: 4,
           stageCode: 1,
           directionCode: 1,
           signDate: '',

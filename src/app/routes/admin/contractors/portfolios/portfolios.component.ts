@@ -3,11 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPortfolio } from '../contractors-and-portfolios.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -62,13 +64,61 @@ export class PortfoliosComponent implements OnDestroy {
     { prop: 'comment' },
   ];
 
+  private renderers: IRenderer = {
+    directionCode: [],
+    statusCode: [],
+    stageCode: []
+  };
+
   private canViewSubscription: Subscription;
+  private dictionariesSubscription: Subscription;
 
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private gridService: GridService,
     private notificationsService: NotificationsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION,
+      UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS,
+      UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE,
+    ]);
+
+    this.dictionariesSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE)
+    ).subscribe(([ directionCodeOptions, statusCodeOptions, stageCodeOptions ]) => {
+      // TODO(d.maltsev): remove fake dictionary
+      // this.renderers.directionCode = [].concat(directionCodeOptions);
+      this.renderers.directionCode = [].concat([
+        { value: 1, label: 'Входящий' },
+        { value: 2, label: 'Исходящий' },
+      ]);
+      // TODO(d.maltsev): remove fake dictionary
+      // this.renderers.statusCode = [].concat(statusCodeOptions);
+      this.renderers.statusCode = [].concat([
+        { value: 1, label: 'Загружается' },
+        { value: 2, label: 'В работе' },
+        { value: 3, label: 'Закрыт' },
+        { value: 4, label: 'Новый' },
+        { value: 5, label: 'Сформирован' },
+        { value: 6, label: 'Передан' },
+        { value: 7, label: 'Отозван' },
+        { value: 8, label: 'Окончание работ' },
+        { value: 9, label: 'Архивный' },
+        { value: 10, label: 'Архивный' },
+      ]);
+      // TODO(d.maltsev): remove fake dictionary
+      // this.renderers.stageCode = [].concat(stageCodeOptions);
+      this.renderers.stageCode = [].concat([
+        { value: 1, label: 'Системный' }
+      ]);
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    });
+
     this.canViewSubscription = Observable.combineLatest(
       this.canView$,
       this.contractorsAndPortfoliosService.selectedContractor$
@@ -86,6 +136,7 @@ export class PortfoliosComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
