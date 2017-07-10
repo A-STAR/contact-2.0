@@ -99,14 +99,10 @@ export class TermsComponent implements OnDestroy {
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
 
-    this.viewPermissionsSubscription = Observable.combineLatest(
-      this.hasViewPermission$,
-      this.dictionariesService.selectedDictionary
-    )
-    .subscribe(([ hasViewPermission, currentDictionaryCode ]) => {
+    this.viewPermissionsSubscription = this.hasViewPermission$.subscribe(hasViewPermission => {
       if (!hasViewPermission) {
         this.dictionariesService.clearTerms();
-      } else if (currentDictionaryCode) {
+      } else {
         this.dictionariesService.fetchTerms();
       }
     });
