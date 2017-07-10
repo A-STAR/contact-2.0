@@ -1,4 +1,4 @@
-import { Input, Component } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
@@ -9,10 +9,11 @@ import { IEmployeeUser } from '../../organizations.interface';
   selector: 'app-employee-edit',
   templateUrl: './employee-edit.component.html'
 })
-export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
+export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
 
   private canEdit = false;
+  private formData: any;
 
   constructor(private userPermissionsService: UserPermissionsService) {
     super();
@@ -23,12 +24,14 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> {
       });
   }
 
-  get formData(): any {
-    return {
+  ngOnInit(): void {
+    this.formData = {
       ...this.editedEntity,
       roleCode: [ this.employeeRoleOptions.find(roleOption => roleOption.value === this.editedEntity.roleCode) ],
       fullName: `${this.editedEntity.lastName || ''} ${this.editedEntity.firstName || ''} ${this.editedEntity.middleName || ''}`
     };
+
+    super.ngOnInit();
   }
 
   protected getControls(): Array<IDynamicFormControl> {
