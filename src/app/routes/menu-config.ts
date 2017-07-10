@@ -47,7 +47,7 @@ export const menuConfig: IMenuConfig = {
   },
   clients: {
     text: 'sidebar.nav.menu.BANKS',
-    link: '/admin/banks',
+    link: '/admin/contractors',
     icon: 'icon-briefcase'
   },
   structure: {

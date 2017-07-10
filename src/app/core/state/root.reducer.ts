@@ -1,4 +1,5 @@
 import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.reducer';
+import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
@@ -14,6 +15,7 @@ import { metadataReducer } from '../metadata/metadata.reducer';
 
 export const rootReducer = {
   actionsLog: actionsLogReducer,
+  contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
   dictionaries: dictionariesReducer,
   notifications: notificationReducer,

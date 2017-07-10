@@ -1,0 +1,15 @@
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="portfolios"
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [rows]="portfolios$ | async"
+  [allowDblClick]="canEdit$ | async"
+  (onDblClick)="onEdit($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

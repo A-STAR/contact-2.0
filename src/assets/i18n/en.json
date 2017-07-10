@@ -625,6 +625,48 @@
       }
     }
   },
+  "contractors": {
+    "grid": {
+      "name": "Short name",
+      "fullName": "Full name",
+      "smsName": "Name fot SMS",
+      "responsibleName": "Manager",
+      "type": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to contractors list denied",
+      "errors": {
+        "fetch": "Could not fetch contractors list",
+        "create": "Could not create contractor",
+        "update": "Could not update contractor",
+        "delete": "Could not delete contractor"
+      }
+    }
+  },
+  "portfolios": {
+    "grid": {
+      "name": "Name",
+      "directionCode": "Direction",
+      "stageCode": "Stage",
+      "statusCode": "Status",
+      "signDate": "Signed on",
+      "startWorkDate": "Processing start date",
+      "endWorkDate": "Processing end date",
+      "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to portfolios list denied",
+      "errors": {
+        "fetch": "Could not fetch portfolios list",
+        "create": "Could not create portfolio",
+        "update": "Could not update portfolio",
+        "delete": "Could not delete portfolio"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {

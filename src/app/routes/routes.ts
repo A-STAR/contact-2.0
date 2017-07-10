@@ -45,6 +45,7 @@ export const routes: Route[] = [
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
       { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
+      { path: 'contractors', loadChildren: './admin/contractors/contractors-and-portfolios.module#ContractorsAndPortfoliosModule' },
       { path: 'qbuilder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },

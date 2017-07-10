@@ -18,6 +18,7 @@ export class LayoutComponent {
     DictAndTermsComponent: 'DICTIONARIES',
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
+    ContractorsAndPortfoliosComponent: 'BANKS',
     UsersComponent: 'USERS',
     HelpComponent: 'HELP',
     ActionsLogComponent: 'ACTIONS_LOG',
