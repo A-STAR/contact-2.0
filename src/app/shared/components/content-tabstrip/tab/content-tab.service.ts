@@ -57,4 +57,10 @@ export class ContentTabService {
   getActiveIndex(): number {
     return this._activeIndex;
   }
+
+  navigate(url: string): void {
+    const i = this._activeIndex;
+    this.router.navigate([url])
+      .then(() => this.removeTab(i));
+  }
 }

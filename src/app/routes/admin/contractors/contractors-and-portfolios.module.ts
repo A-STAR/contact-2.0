@@ -10,9 +10,12 @@ import { ContractorsAndPortfoliosEffects } from './contractors-and-portfolios.ef
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
+import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
 
 const routes: Routes = [
   { path: '', component: ContractorsAndPortfoliosComponent },
+  { path: 'create', component: ContractorEditComponent },
+  { path: ':id', component: ContractorEditComponent }
 ];
 
 @NgModule({
