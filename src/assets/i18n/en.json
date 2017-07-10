@@ -632,7 +632,7 @@
       "fullName": "Full name",
       "smsName": "Name fot SMS",
       "responsibleName": "Manager",
-      "type": "Type",
+      "typeCode": "Type",
       "phone": "Phone",
       "address": "Address",
       "comment": "Comment"
@@ -720,7 +720,8 @@
       "search": "Search",
       "add": "Add",
       "change": "Change",
-      "excel": "Export as Excel"
+      "excel": "Export as Excel",
+      "back": "Back"
     },
     "dateTimeRage": {
       "from": "From",

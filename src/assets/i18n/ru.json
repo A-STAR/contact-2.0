@@ -631,7 +631,7 @@
       "fullName": "Полное название",
       "smsName": "Название для СМС",
       "responsibleName": "Менеджер",
-      "type": "Тип",
+      "typeCode": "Тип",
       "phone": "Телефон",
       "address": "Адрес",
       "comment": "Комментарий"
@@ -719,7 +719,8 @@
       "search": "Искать",
       "add": "Добавить",
       "change": "Изменить",
-      "excel": "Экспорт в Excel"
+      "excel": "Экспорт в Excel",
+      "back": "Назад"
     },
     "dateTimeRage": {
       "from": "Начало",
