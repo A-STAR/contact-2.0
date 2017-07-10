@@ -99,7 +99,9 @@
       "refresh": "Обновить",
       "search": "Искать",
       "save": "Сохранить",
-      "sms": "Отправить SMS"
+      "sms": "Отправить SMS",
+      "download": "Скачать",
+      "upload": "Загрузить"
     }
   },
   "queryBuilder": {
@@ -513,7 +515,10 @@
       "title": "Планирование"
     },
     "documentationTab": {
-      "title": "Документы"
+      "title": "Документы",
+      "errors": {
+        "download": "Не удалось скачать документ"
+      }
     },
     "accountsTab": {
       "title": "Счета"

@@ -24,6 +24,7 @@ import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.dire
 
 // App modules
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
+import { AttachmentsModule } from './components/attachments/attachments.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
@@ -66,6 +67,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     PerfectScrollbarModule,
     // app modules
     ActionDialogModule,
+    AttachmentsModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
@@ -125,6 +127,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     VectormapDirective,
     // App exports
     ActionDialogModule,
+    AttachmentsModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,

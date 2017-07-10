@@ -99,7 +99,9 @@
       "refresh": "Refresh",
       "search": "Search",
       "save": "Save",
-      "sms": "Send SMS"
+      "sms": "Send SMS",
+      "download": "Download",
+      "upload": "Upload"
     }
   },
   "queryBuilder": {
@@ -514,7 +516,10 @@
       "title": "Planning"
     },
     "documentationTab": {
-      "title": "Documents"
+      "title": "Documents",
+      "errors": {
+        "download": "Could not download document"
+      }
     },
     "accountsTab": {
       "title": "Accounts"
