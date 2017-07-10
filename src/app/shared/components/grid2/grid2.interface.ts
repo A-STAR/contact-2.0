@@ -3,9 +3,15 @@ import { Renderer2 } from '@angular/core';
 
 import { FilterObject } from './filter/grid2-filter';
 
+export interface IGrid2Filter {
+  name?: string;
+  operator?: string;
+  value?: any;
+}
+
 export interface IGrid2ColumnSettings {
-  sortingDirection?: Grid2SortingEnum;
-  sortingOrder?: number;
+  sortDirection?: Grid2SortingEnum;
+  sortOrder?: number;
   filter?: FilterObject;
 }
 
@@ -30,30 +36,26 @@ export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettings
   filterColumnName?: string;
 }
 
-export interface IGrid2ColumnsSortingDirectionInfo {
-  columnId: string;
-  sortingDirection: Grid2SortingEnum;
-  sortingOrder: number;
-}
-
 export interface IGrid2ColumnFilterPayload {
   columnId: string;
   filter: FilterObject;
 }
 
-export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
-  multiSort: boolean;
+export interface IGrid2SortDirectionPayload {
+  columnId: string;
+  sortDirection: Grid2SortingEnum;
+  sortOrder: number;
 }
 
-export interface IGrid2ColumnsPositionsChangePayload {
+export interface IGrid2ColumnsPositionsPayload {
   columnsPositions: string[];
 }
 
-export interface IGrid2GroupingColumnsChangePayload {
+export interface IGrid2GroupingColumnsPayload {
   groupingColumns: string[];
 }
 
-export interface IGrid2SelectedRowChangePayload {
+export interface IGrid2SelectedPayload {
   rowData: any;
   selected: boolean;
 }
@@ -66,25 +68,19 @@ export enum Grid2SortingEnum {
 
 export interface IActionGrid2Payload {
   type: string;
-  payload: IGrid2SortingDirectionSwitchPayload
-    |IGrid2ColumnsPositionsChangePayload
-    |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload
+  payload: IGrid2ColumnsPositionsPayload
+    |IGrid2SortDirectionPayload
+    |IGrid2GroupingColumnsPayload
+    |IGrid2SelectedPayload
     |IGrid2ColumnMovingPayload
+    |IGrid2ColumnsPositionsPayload
     |IGrid2ColumnFilterPayload
     |number;
-}
-
-export interface IGrid2ServiceDispatcher {
-  allGridColumns: Column[];
-  dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
-  dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void;
 }
 
 export interface IGrid2HeaderParams {
   headerHeight: number;
   enableMenu?: boolean;
-  serviceDispatcher: IGrid2ServiceDispatcher;
   column?: Column;
   renderer2: Renderer2;
 }
@@ -110,17 +106,18 @@ export interface IGrid2Request {
 
 export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
   fieldNameConverter?: Function;
+  gridFilters?: IGrid2Filter[];
 }
 
 export interface IGrid2EventPayload {
   type: string;
   payload?: number
-    |IGrid2ColumnsPositionsChangePayload
+    |IGrid2ColumnFilterPayload
+    |IGrid2ColumnsPositionsPayload
     |IGrid2ColumnMovingPayload
-    |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload
-    |IGrid2SortingDirectionSwitchPayload
-    |IGrid2ColumnFilterPayload;
+    |IGrid2GroupingColumnsPayload
+    |IGrid2SelectedPayload
+    |IGrid2SortDirectionPayload;
 }
 
 // need this, since ag-grid doesn't export this interface

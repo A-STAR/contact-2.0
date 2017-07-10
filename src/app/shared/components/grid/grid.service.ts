@@ -18,7 +18,7 @@ import { DictionariesService } from '../../../core/dictionaries/dictionaries.ser
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject, IFilterBaseObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
@@ -37,18 +37,28 @@ export class GridService {
       R.values(payload.columnsSettings)
         .forEach(columnSettings => {
           const { filter } = columnSettings;
-          filter.addFilter(
-            FilterObject.create(filter, { name:  payload.fieldNameConverter })
+          if (filter) {
+            filter.addFilter(
+              FilterObject.create(filter, { name:  payload.fieldNameConverter })
+            );
+          }
+        });
+
+      if (payload.gridFilters) {
+        payload.gridFilters.forEach((filter: IFilterBaseObject) => {
+          filters.addFilter(
+            FilterObject.create(filter)
           );
         });
+      }
 
       request.filtering = filters;
 
       request.sorting = R.values(R.mapObjIndexed(
         (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
-            direction: columnSettings.sortingDirection,
-            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
-            order: columnSettings.sortingOrder,
+          direction: columnSettings.sortDirection,
+          field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
+          order: columnSettings.sortOrder,
         }),
         payload.columnsSettings
       ))

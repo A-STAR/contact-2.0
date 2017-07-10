@@ -32,7 +32,7 @@ export class FilterObject implements IFilterBaseObject {
     let filter: FilterObject = new FilterObject();
     if (source) {
       filter = filter
-        .setName(decorators.name ? decorators.name(source.name) : source.name)
+        .setName(decorators && decorators.name ? decorators.name(source.name) : source.name)
         .setValues(source.value || source.valueArray)
         .setCondition(source.condition)
         .setOperator(source.operator);

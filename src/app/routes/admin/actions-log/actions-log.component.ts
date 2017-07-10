@@ -5,8 +5,9 @@ import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
+import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2ColumnsSettings, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnsSettings, IGrid2EventPayload, IGrid2Filter } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -81,17 +82,52 @@ export class ActionsLogComponent {
     this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
   }
 
-  refreshData(eventPayload: IGrid2EventPayload): void {
-    this.onStoreDispatch(eventPayload);
+  onFilter(gridFilters: IGrid2Filter[]): void {
+    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
+    filters.gridFilters = gridFilters;
+    this.actionsLogService.search(filters);
+  }
+
+  onRequestData(payload: IGrid2EventPayload): void {
+    this.onStoreDispatch(payload);
     this.doSearch();
   }
 
-  onStoreDispatch(eventPayload: IGrid2EventPayload): void {
-    this.store.dispatch(eventPayload);
+  onColumnAction(payload: IGrid2EventPayload): void {
+    this.onStoreDispatch(payload);
+  }
+
+  onStoreDispatch(payload: IGrid2EventPayload): void {
+    this.store.dispatch(payload);
   }
 
   doSearch(): void {
-    this.actionsLogService.search(this.filter.getFilterValues());
+    // this.actionsLogService.search(this.filter.getFilterValues());
+    const filterModel = this.grid.gridOptions.api.getFilterModel();
+    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
+    const gridFilters = Object.keys(filterModel)
+      .map(key => {
+        const filter: IGrid2Filter = { name: key };
+        const el = filterModel[key];
+        switch (el.filterType) {
+          case undefined:
+            filter.operator = 'LIKE';
+            filter.value = `%${el}%`;
+            break;
+          case 'text':
+            filter.operator = 'LIKE';
+            filter.value = `%${el.filter}%`;
+            break;
+          case 'number':
+            filter.operator = '==';
+            filter.value = Number(el.filter);
+            break;
+        }
+        return filter;
+      });
+
+    filters.gridFilters = gridFilters;
+    this.actionsLogService.search(filters);
   }
 
   doExport(): void {
