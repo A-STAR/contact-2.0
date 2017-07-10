@@ -182,15 +182,15 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readTerms(store.dictionaries.selectedDictionary.code)
-      .map((response: any) => {
-        return {
-          type: DictionariesService.TERMS_FETCH_SUCCESS,
-          payload: response[0].terms
-        };
-      })
-      .catch(() => ([
-        this.notificationsService.createErrorAction('terms.messages.errors.fetch')
-      ]));
+        .map((response: any) => {
+          return {
+            type: DictionariesService.TERMS_FETCH_SUCCESS,
+            payload: response.terms
+          };
+        })
+        .catch(() => ([
+          this.notificationsService.createErrorAction('terms.messages.errors.fetch')
+        ]));
     });
 
   @Effect()
