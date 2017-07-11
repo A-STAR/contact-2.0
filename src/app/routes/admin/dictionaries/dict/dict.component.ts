@@ -157,7 +157,8 @@ export class DictComponent implements OnDestroy {
     return this.userPermissionsService.has('DICT_EDIT');
   }
 
-  onEdit(): void {
+  onEdit(dictionary: IDictionary): void {
+    this.dictionariesService.selectDictionary(dictionary);
     this.dictionariesService.setDialogEditDictionaryAction();
   }
 

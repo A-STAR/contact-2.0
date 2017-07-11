@@ -172,11 +172,12 @@ export class TermsComponent implements OnDestroy {
     this.dictionariesService.setTermDialogAction(null);
   }
 
-  onEdit(): void {
+  onEdit(term: ITerm): void {
     this.userPermissionsService.has('DICT_TERM_EDIT')
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
+          this.dictionariesService.selectTerm(term);
           this.dictionariesService.setDialogEditTermAction();
         }
       });
