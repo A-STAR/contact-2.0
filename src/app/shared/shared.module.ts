@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MomentModule } from 'angular2-moment';
-// TODO: consider to dump in favour of angular2-text-mask
 import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
@@ -60,7 +59,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     FormsModule,
     ReactiveFormsModule,
     // Angle modules
-    // DropdownModule.forRoot(),
     TranslateModule,
     TextMaskModule,
     MultiSelectModule,

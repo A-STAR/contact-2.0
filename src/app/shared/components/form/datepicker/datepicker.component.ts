@@ -20,8 +20,9 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   ]
 })
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() inputClass = 'form-control';
   @Input() buttonClass = 'btn btn-default';
+  @Input() inputClass = 'form-control';
+  @Input() placeholder = 'default.date.datePicker.placeholder';
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;

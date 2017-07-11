@@ -762,6 +762,9 @@
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
         "date": "DD.MM.YYYY"
+      },
+      "datePicker": {
+        "placeholder": "Выберите дату"
       }
     }
   }
