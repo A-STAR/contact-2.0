@@ -28,8 +28,6 @@ export class ContractorEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
 
-  private dictionariesSubscription: Subscription;
-
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
@@ -42,11 +40,12 @@ export class ContractorEditComponent {
     const contractorId = Number((this.activatedRoute.params as any).value.id);
     this.contractorsAndPortfoliosService.fetchContractor(contractorId);
 
-    this.dictionariesSubscription = Observable.combineLatest(
+    Observable.combineLatest(
       this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS).map(action => action.payload.contractor),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
     )
+    // TODO(d.maltsev): handle errors
     .take(1)
     .subscribe(([ contractor, contractorTypeOptions, userOptions ]) => {
       this.initFormControls(contractorTypeOptions, userOptions);
