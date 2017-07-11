@@ -65,7 +65,9 @@ export class UserDictionariesService {
           { value: 1, label: 'Системный' },
         ]);
       case UserDictionariesService.DICTIONARY_BRANCHES:
-        return Observable.of([]);
+        return Observable.of([
+          { value: 1, label: 'Филиал по умолчанию' }
+        ]);
       case UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION:
         return Observable.of([
           { value: 1, label: 'Входящий' },
