@@ -31,6 +31,8 @@
         "DICTIONARIES": "Словари",
         "BANKS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
+        "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
+        "CONTRACTOR_MANAGER": "Менеджер контрагента",
         "DEPARTMENTS": "Структура предприятия",
         "UTILITIES": "Утилиты",
         "UPLOAD_TEMPLATES": "Шаблоны загрузки",

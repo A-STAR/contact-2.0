@@ -31,6 +31,8 @@
         "DICTIONARIES": "Dictionaries",
         "BANKS": "Banks",
         "CONTRACTOR": "Contractor",
+        "CONTRACTOR_MANAGERS": "Contractor Managers",
+        "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
         "UPLOAD_TEMPLATES": "Upload Templates",
