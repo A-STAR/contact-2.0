@@ -68,7 +68,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(response => ({
           type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
           payload: {
-            contractor: response.contractors && response.contractors[0]
+            contractor: response.contractors[0]
           }
         }))
         .catch(() => [
@@ -104,7 +104,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(response => ({
           type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
           payload: {
-            portfolio: response.portfolios && response.portfolios[0]
+            portfolio: response.portfolios[0]
           }
         }))
         .catch(() => [

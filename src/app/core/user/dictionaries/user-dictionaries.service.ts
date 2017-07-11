@@ -3,6 +3,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
+import { IOption } from '../../converter/value/value-converter.interface';
 import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.interface';
 
 @Injectable()
@@ -54,7 +55,7 @@ export class UserDictionariesService {
       .distinctUntilChanged();
   }
 
-  getDictionaryOptions(dictionaryId: number): Observable<any> {
+  getDictionaryOptions(dictionaryId: number): Observable<Array<IOption>> {
     // TODO(d.maltsev): remove this when the db has correct data
     switch (dictionaryId) {
       case UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE:
