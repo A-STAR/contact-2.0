@@ -132,7 +132,7 @@ export class DictionariesEffects {
     );
 
   @Effect()
-  onAddOrEditDictionary$ = this.actions
+  onDictionaryDialogAction$ = this.actions
     .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
     .switchMap(action => {
         return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
@@ -140,12 +140,16 @@ export class DictionariesEffects {
           {
             type: DictionariesService.TERM_TYPES_FETCH
           }
-        ] : [];
+        ] : [
+          {
+            type: DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR
+          }
+        ];
       }
     );
 
   @Effect()
-  onAddOrEditTerm$ = this.actions
+  onTermDialogAction$ = this.actions
     .ofType(DictionariesService.TERM_DIALOG_ACTION)
     .switchMap(action => {
         return [DictionariesDialogActionEnum.TERM_ADD, DictionariesDialogActionEnum.TERM_EDIT]
@@ -154,7 +158,11 @@ export class DictionariesEffects {
             type: DictionariesService.TERM_TRANSLATIONS_FETCH,
             payload: action.payload
           }
-        ] : [];
+        ] : [
+          {
+            type: DictionariesService.TERM_TRANSLATIONS_CLEAR
+          }
+        ];
       }
     );
 
