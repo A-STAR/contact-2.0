@@ -3,11 +3,14 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -50,19 +53,35 @@ export class ContractorsComponent implements OnDestroy {
     { prop: 'fullName' },
     { prop: 'smsName' },
     { prop: 'responsibleName' },
-    { prop: 'type' },
+    { prop: 'typeCode' },
     { prop: 'phone' },
     { prop: 'address' },
     { prop: 'comment' },
   ];
 
   private canViewSubscription: Subscription;
+  private dictionariesSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    typeCode: []
+  };
 
   constructor(
+    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private gridService: GridService,
     private notificationsService: NotificationsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
+
+    this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE)
+      .subscribe(options => {
+        this.renderers.typeCode = [].concat(options);
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      });
+
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
         this.contractorsAndPortfoliosService.fetchContractors();
@@ -75,6 +94,7 @@ export class ContractorsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearContractors();
   }
 
@@ -99,7 +119,7 @@ export class ContractorsComponent implements OnDestroy {
   }
 
   onEdit(contractor: IContractor): void {
-    // TODO(d.maltsev)
+    this.contentTabService.navigate(`/admin/contractors/${contractor.id}`);
   }
 
   onSelect(contractor: IContractor): void {

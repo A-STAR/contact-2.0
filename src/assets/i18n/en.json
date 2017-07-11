@@ -30,6 +30,7 @@
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",
         "BANKS": "Banks",
+        "CONTRACTOR": "Contractor",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
         "UPLOAD_TEMPLATES": "Upload Templates",
@@ -630,8 +631,9 @@
       "name": "Short name",
       "fullName": "Full name",
       "smsName": "Name fot SMS",
+      "responsibleId": "Manager",
       "responsibleName": "Manager",
-      "type": "Type",
+      "typeCode": "Type",
       "phone": "Phone",
       "address": "Address",
       "comment": "Comment"
@@ -719,7 +721,8 @@
       "search": "Search",
       "add": "Add",
       "change": "Change",
-      "excel": "Export as Excel"
+      "excel": "Export as Excel",
+      "back": "Back"
     },
     "dateTimeRage": {
       "from": "From",

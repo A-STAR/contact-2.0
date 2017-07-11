@@ -30,6 +30,7 @@
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Словари",
         "BANKS": "Клиенты и портфели",
+        "CONTRACTOR": "Контрагент",
         "DEPARTMENTS": "Структура предприятия",
         "UTILITIES": "Утилиты",
         "UPLOAD_TEMPLATES": "Шаблоны загрузки",
@@ -629,8 +630,9 @@
       "name": "Краткое название",
       "fullName": "Полное название",
       "smsName": "Название для СМС",
+      "responsibleId": "Менеджер",
       "responsibleName": "Менеджер",
-      "type": "Тип",
+      "typeCode": "Тип",
       "phone": "Телефон",
       "address": "Адрес",
       "comment": "Комментарий"
@@ -718,7 +720,8 @@
       "search": "Искать",
       "add": "Добавить",
       "change": "Изменить",
-      "excel": "Экспорт в Excel"
+      "excel": "Экспорт в Excel",
+      "back": "Назад"
     },
     "dateTimeRage": {
       "from": "Начало",

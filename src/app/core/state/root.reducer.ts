@@ -2,6 +2,7 @@ import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.re
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
+import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
 import { permissionReducer } from '../../routes/admin/roles/permissions.reducer';
@@ -18,6 +19,7 @@ export const rootReducer = {
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
   dictionaries: dictionariesReducer,
+  lookup: lookupReducer,
   notifications: notificationReducer,
   organizations: organizationsReducer,
   permissions: permissionReducer,
