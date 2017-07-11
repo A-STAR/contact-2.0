@@ -9,7 +9,9 @@ import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.int
 @Injectable()
 export class UserDictionariesService {
   static DICTIONARY_VARIABLE_TYPE       =  1;
+  static DICTIONARY_BRANCHES            =  6;
   static DICTIONARY_EMPLOYEE_ROLE       =  8;
+  static DICTIONARY_GENDER              = 13;
   static DICTIONARY_CONTRACTOR_TYPE     = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION = 29;
   static DICTIONARY_PORTFOLIO_STATUS    = 30;
@@ -62,10 +64,17 @@ export class UserDictionariesService {
         return Observable.of([
           { value: 1, label: 'Системный' },
         ]);
+      case UserDictionariesService.DICTIONARY_BRANCHES:
+        return Observable.of([]);
       case UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION:
         return Observable.of([
           { value: 1, label: 'Входящий' },
           { value: 2, label: 'Исходящий' },
+        ]);
+      case UserDictionariesService.DICTIONARY_GENDER:
+        return Observable.of([
+          { value: 1, label: 'Мужской' },
+          { value: 2, label: 'Женский' },
         ]);
       case UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE:
         return Observable.of([

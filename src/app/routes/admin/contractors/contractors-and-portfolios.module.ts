@@ -12,12 +12,14 @@ import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.se
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
 import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
 import { ContractorManagersComponent } from './contractors/managers/contractor-managers.component';
+import { ContractorManagerEditComponent } from './contractors/managers/edit/contractor-manager-edit.component';
 
 const routes: Routes = [
   { path: '', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
   { path: ':id', component: ContractorEditComponent },
   { path: ':id/managers', component: ContractorManagersComponent },
+  { path: ':id/managers/:managerId', component: ContractorManagerEditComponent },
 ];
 
 @NgModule({
