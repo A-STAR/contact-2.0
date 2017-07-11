@@ -8,10 +8,12 @@ import { IContractorsAndPortfoliosState, IContractor, IPortfolio } from './contr
 @Injectable()
 export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH         = 'CONTRACTORS_FETCH';
+  static CONTRACTOR_FETCH          = 'CONTRACTOR_FETCH';
   static CONTRACTORS_FETCH_SUCCESS = 'CONTRACTORS_FETCH_SUCCESS';
   static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
   static CONTRACTOR_SELECT         = 'CONTRACTOR_SELECT';
   static PORTFOLIOS_FETCH          = 'PORTFOLIOS_FETCH';
+  static PORTFOLIO_FETCH           = 'PORTFOLIO_FETCH';
   static PORTFOLIOS_FETCH_SUCCESS  = 'PORTFOLIOS_FETCH_SUCCESS';
   static PORTFOLIOS_CLEAR          = 'PORTFOLIOS_CLEAR';
   static PORTFOLIO_SELECT          = 'PORTFOLIO_SELECT';
@@ -46,6 +48,10 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_FETCH);
   }
 
+  fetchContractor(contractorId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH, { contractorId });
+  }
+
   clearContractors(): void {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
   }
@@ -56,6 +62,10 @@ export class ContractorsAndPortfoliosService {
 
   fetchPortfolios(): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+  }
+
+  fetchPortfolio(portfolioId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_FETCH, { portfolioId });
   }
 
   clearPortfolios(): void {

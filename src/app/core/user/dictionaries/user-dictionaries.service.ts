@@ -55,6 +55,36 @@ export class UserDictionariesService {
   }
 
   getDictionaryOptions(dictionaryId: number): Observable<any> {
+    // TODO(d.maltsev): remove this when the db has correct data
+    switch (dictionaryId) {
+      case UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE:
+        return Observable.of([
+          { value: 1, label: 'Системный' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION:
+        return Observable.of([
+          { value: 1, label: 'Входящий' },
+          { value: 2, label: 'Исходящий' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE:
+        return Observable.of([
+          { value: 1, label: 'Системный' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS:
+        return Observable.of([
+          { value: 1, label: 'Загружается' },
+          { value: 2, label: 'В работе' },
+          { value: 3, label: 'Закрыт' },
+          { value: 4, label: 'Новый' },
+          { value: 5, label: 'Сформирован' },
+          { value: 6, label: 'Передан' },
+          { value: 7, label: 'Отозван' },
+          { value: 8, label: 'Окончание работ' },
+          { value: 9, label: 'Архивный' },
+          { value: 10, label: 'Архивный' },
+        ]);
+    }
+
     return this.state
       .map(state => state.dictionaries[dictionaryId] || [])
       .map(terms => terms.map(term => ({ value: term.code, label: term.name })))

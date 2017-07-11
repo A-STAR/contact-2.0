@@ -78,11 +78,7 @@ export class ContractorsComponent implements OnDestroy {
 
     this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE)
       .subscribe(options => {
-        // TODO(d.maltsev): remove fake dictionary
-        // this.renderers.typeCode = [].concat(options);
-        this.renderers.typeCode = [].concat([
-          { value: 1, label: 'Системный' }
-        ]);
+        this.renderers.typeCode = [].concat(options);
         this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       });
 

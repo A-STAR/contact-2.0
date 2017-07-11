@@ -91,33 +91,9 @@ export class PortfoliosComponent implements OnDestroy {
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE)
     ).subscribe(([ directionCodeOptions, statusCodeOptions, stageCodeOptions ]) => {
-      // TODO(d.maltsev): remove console.log
-      console.log(directionCodeOptions, statusCodeOptions, stageCodeOptions);
-      // TODO(d.maltsev): remove fake dictionary
-      // this.renderers.directionCode = [].concat(directionCodeOptions);
-      this.renderers.directionCode = [].concat([
-        { value: 1, label: 'Входящий' },
-        { value: 2, label: 'Исходящий' },
-      ]);
-      // TODO(d.maltsev): remove fake dictionary
-      // this.renderers.statusCode = [].concat(statusCodeOptions);
-      this.renderers.statusCode = [].concat([
-        { value: 1, label: 'Загружается' },
-        { value: 2, label: 'В работе' },
-        { value: 3, label: 'Закрыт' },
-        { value: 4, label: 'Новый' },
-        { value: 5, label: 'Сформирован' },
-        { value: 6, label: 'Передан' },
-        { value: 7, label: 'Отозван' },
-        { value: 8, label: 'Окончание работ' },
-        { value: 9, label: 'Архивный' },
-        { value: 10, label: 'Архивный' },
-      ]);
-      // TODO(d.maltsev): remove fake dictionary
-      // this.renderers.stageCode = [].concat(stageCodeOptions);
-      this.renderers.stageCode = [].concat([
-        { value: 1, label: 'Системный' }
-      ]);
+      this.renderers.directionCode = [].concat(directionCodeOptions);
+      this.renderers.statusCode = [].concat(statusCodeOptions);
+      this.renderers.stageCode = [].concat(stageCodeOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 

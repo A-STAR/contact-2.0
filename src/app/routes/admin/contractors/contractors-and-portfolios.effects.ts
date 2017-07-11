@@ -15,6 +15,34 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 @Injectable()
 export class ContractorsAndPortfoliosEffects {
 
+  private fakeContractors = [
+    {
+      id: 1,
+      name: 'Fake Contractor',
+      fullName: 'Fake Contractor and Sons Ltd.',
+      smsName: 'Fake Contractor',
+      responsibleName: 'John Smith',
+      typeCode: 1,
+      phone: '+7 (800) 123-45-67',
+      address: '15 Yemen Rd, Yemen',
+      comment: 'No comments for you today!'
+    }
+  ];
+
+  private fakePortfolios = [
+    {
+      id: 1,
+      name: 'Fake portfolio',
+      statusCode: 4,
+      stageCode: 1,
+      directionCode: 1,
+      signDate: '',
+      startWorkDate: '',
+      endWorkDate: '',
+      comment: 'I am a comment. Good to see you here.',
+    }
+  ];
+
   @Effect()
   fetchContractors$ = this.actions
     .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
@@ -24,6 +52,22 @@ export class ContractorsAndPortfoliosEffects {
           type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
           payload: {
             contractors: response.contractors
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchContractor$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
+    .switchMap((action: Action) => {
+      return this.readContractor(action.payload.contractorId)
+        .map(response => ({
+          type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
+          payload: {
+            contractor: response.contractors && response.contractors[0]
           }
         }))
         .catch(() => [
@@ -49,6 +93,24 @@ export class ContractorsAndPortfoliosEffects {
         ]);
     });
 
+  @Effect()
+  fetchPortfolio$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      return this.readPortfolio(store.contractorsAndPortfolios.selectedContractorId, action.payload.portfolioId)
+        .map(response => ({
+          type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
+          payload: {
+            portfolio: response.portfolios && response.portfolios[0]
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.fetch')
+        ]);
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -61,41 +123,35 @@ export class ContractorsAndPortfoliosEffects {
     // TODO(d.maltsev): remove fake API
     return Observable.of({
       success: true,
-      contractors: [
-        {
-          id: 1,
-          name: 'Fake Contractor',
-          fullName: 'Fake Contractor and Sons Ltd.',
-          smsName: 'Fake Contractor',
-          responsibleName: 'John Smith',
-          typeCode: 1,
-          phone: '+7 (800) 123-45-67',
-          address: '15 Yemen Rd, Yemen',
-          comment: 'No comments for you today!'
-        }
-      ]
+      contractors: this.fakeContractors
     });
     // return this.dataService.read('/api/contractors');
+  }
+
+  private readContractor(contractorId: number): Observable<IContractorsResponse> {
+    // TODO(d.maltsev): remove fake API
+    return Observable.of({
+      success: true,
+      contractors: this.fakeContractors
+    });
+    // return this.dataService.read('/api/contractor/{contractorId}', { contractorId });
   }
 
   private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
     // TODO(d.maltsev): remove fake API
     return Observable.of({
       success: true,
-      portfolios: [
-        {
-          id: 1,
-          name: 'Fake portfolio',
-          statusCode: 4,
-          stageCode: 1,
-          directionCode: 1,
-          signDate: '',
-          startWorkDate: '',
-          endWorkDate: '',
-          comment: 'I am a comment. Good to see you here.',
-        }
-      ]
+      portfolios: this.fakePortfolios
     });
     // return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
+  }
+
+  private readPortfolio(contractorId: number, portfolioId: number): Observable<IPortfoliosResponse> {
+    // TODO(d.maltsev): remove fake API
+    return Observable.of({
+      success: true,
+      portfolios: this.fakePortfolios
+    });
+    // return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 }
