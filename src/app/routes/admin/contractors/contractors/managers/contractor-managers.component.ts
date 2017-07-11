@@ -112,6 +112,10 @@ export class ContractorManagersComponent implements OnDestroy {
     this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers/${manager.id}`);
   }
 
+  onSelect(manager: IContractorManager): void {
+    this.contractorsAndPortfoliosService.selectManager(manager.id);
+  }
+
   onClose(): void {
     this.contentTabService.navigate(`/admin/contractors/${this.contractorId}`);
   }
