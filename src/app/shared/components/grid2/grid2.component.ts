@@ -203,14 +203,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.pagination) {
       return;
     }
-    // const hidden = 'hidden';
-    // const paginationItems = paginationItems.map(R.over(R.lensProp(visible), R.propOr(true, visible)));
 
     this.paginationPanel = [
       { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
+      { type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
       { type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
       { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
       { type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
+      { type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
@@ -246,18 +246,26 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       switch (i) {
         case 1:
-          // refresh backBtn
+          // goFirstBtn
           btn.disabled = !canPaginate || this.page === 1;
           return btn;
         case 2:
-          // refresh page info
-          btn.text = pages;
+          // goBackBtn
+          btn.disabled = !canPaginate || this.page === 1;
           return btn;
         case 3:
-          // refresh forwardBtn
-          btn.disabled = !canPaginate || this.page === pageCount;
+          // page of pages
+          btn.text = pages;
           return btn;
         case 4:
+          // goForwardBtn
+          btn.disabled = !canPaginate || this.page === pageCount;
+          return btn;
+        case 5:
+          // goLastBtn
+          btn.disabled = !canPaginate || this.page === pageCount;
+          return btn;
+        case 6:
           // pageSize selector
           btn.disabled = !canPaginate;
           return btn;

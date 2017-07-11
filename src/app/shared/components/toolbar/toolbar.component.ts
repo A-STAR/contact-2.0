@@ -20,7 +20,6 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[] = [];
-  @Input() actionAlign = 'left';
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
   @Output() actionSelect: EventEmitter<IToolbarActionSelectPayload> = new EventEmitter<IToolbarActionSelectPayload>();
 

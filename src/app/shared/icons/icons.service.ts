@@ -12,8 +12,10 @@ export class IconsService {
     [ToolbarActionTypeEnum.REFRESH, 'refresh'],
     [ToolbarActionTypeEnum.SEARCH, 'search'],
     [ToolbarActionTypeEnum.SAVE, 'save'],
-    [ToolbarActionTypeEnum.GO_FORWARD, 'chevron-circle-right'],
-    [ToolbarActionTypeEnum.GO_BACKWARD, 'chevron-circle-left'],
+    [ToolbarActionTypeEnum.GO_FIRST, 'angle-double-left'],
+    [ToolbarActionTypeEnum.GO_BACKWARD, 'angle-left'],
+    [ToolbarActionTypeEnum.GO_FORWARD, 'angle-right'],
+    [ToolbarActionTypeEnum.GO_LAST, 'angle-double-right'],
   ]);
 
   public fromActionType(actionType: ToolbarActionTypeEnum): string {
