@@ -7,9 +7,9 @@ import { DictionariesService } from './dictionaries.service';
 const defaultState: IDictionariesState = {
   dictionaries: [],
   selectedDictionary: null,
+  selectedTerm: null,
   terms: [],
   dictionaryTermTypes: null,
-  selectedTermId: null,
   dialogAction: null
 };
 
@@ -50,18 +50,27 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
           nameTranslations: action.payload
         }
       };
+    case DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS:
+      return {
+        ...state,
+        selectedTerm: {
+          ...state.selectedTerm,
+          nameTranslations: action.payload
+        }
+      };
     case DictionariesService.TERM_SELECT:
       return {
         ...state,
-        selectedTermId: action.payload.termId
+        selectedTerm: action.payload
       };
     case DictionariesService.TERMS_CLEAR:
       return {
         ...state,
         terms: [],
-        selectedTermId: null
+        selectedTerm: null
       };
     case DictionariesService.DICTIONARY_DIALOG_ACTION:
+    case DictionariesService.TERM_DIALOG_ACTION:
       return {
         ...state,
         dialogAction: action.payload.dialogAction
