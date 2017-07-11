@@ -132,13 +132,27 @@ export class DictionariesEffects {
     );
 
   @Effect()
-  onAddDictionary$ = this.actions
+  onAddOrEditDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
     .switchMap(action => {
         return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
           .includes(action.payload.dialogAction) ? [
           {
             type: DictionariesService.TERM_TYPES_FETCH
+          }
+        ] : [];
+      }
+    );
+
+  @Effect()
+  onAddOrEditTerm$ = this.actions
+    .ofType(DictionariesService.TERM_DIALOG_ACTION)
+    .switchMap(action => {
+        return [DictionariesDialogActionEnum.TERM_ADD, DictionariesDialogActionEnum.TERM_EDIT]
+          .includes(action.payload.dialogAction) ? [
+          {
+            type: DictionariesService.TERM_TRANSLATIONS_FETCH,
+            payload: action.payload
           }
         ] : [];
       }
@@ -159,7 +173,7 @@ export class DictionariesEffects {
 
 
   @Effect()
-  fetchTranslations$ = this.actions
+  fetchDictionaryTranslations$ = this.actions
     .ofType(DictionariesService.TRANSLATIONS_FETCH)
     .switchMap(data => {
       return this.entityTranslationsService.readDictNameTranslations(data.payload.id)
@@ -172,6 +186,24 @@ export class DictionariesEffects {
                 context: { translation: entityTranslation.value }
               };
             })
+          };
+        });
+    });
+
+  @Effect()
+  fetchTermTranslations$ = this.actions
+    .ofType(DictionariesService.TERM_TRANSLATIONS_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
+      return this.entityTranslationsService.readTermNameTranslations(store.dictionaries.selectedTerm.id)
+        .map((response: IEntityTranslation[]) => {
+          return {
+            type: DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS,
+            payload: response.map(entityTranslation => ({
+              value: entityTranslation.languageId,
+              context: { translation: entityTranslation.value }
+            }))
           };
         });
     });
@@ -202,9 +234,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERMS_FETCH_SUCCESS)
     .map(() => ({
       type: DictionariesService.TERM_SELECT,
-      payload: {
-        termId: null
-      }
+      payload: null
     }));
 
   @Effect()
@@ -219,7 +249,7 @@ export class DictionariesEffects {
             type: DictionariesService.TERMS_FETCH
           },
           {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
+            type: DictionariesService.TERM_DIALOG_ACTION,
             payload: {
               dialogAction: null
             }
@@ -236,24 +266,23 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.updateTerm(
-        store.dictionaries.selectedDictionary.code,
-        store.dictionaries.selectedTermId,
-        action.payload.term
-      )
+      const selectedTerm = store.dictionaries.selectedTerm;
+      const selectedDictionary = store.dictionaries.selectedDictionary;
+      const { term, updatedTranslations, deletedTranslations } = action.payload;
+      return this.updateTerm(selectedDictionary.code, selectedTerm.id, term, deletedTranslations, updatedTranslations)
         .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
           },
           {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
+            type: DictionariesService.TERM_DIALOG_ACTION,
             payload: {
               dialogAction: null
             }
           }
         ])
         .catch(() => ([
-          this.notificationsService.createErrorAction('terms.messages.errors.update')
+          this.notificationsService.createErrorAction('term.messages.errors.update')
         ]));
     });
 
@@ -263,13 +292,13 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteTerm(store.dictionaries.selectedDictionary.code, store.dictionaries.selectedTermId)
+      return this.deleteTerm(store.dictionaries.selectedDictionary.code, store.dictionaries.selectedTerm.id)
         .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH
           },
           {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
+            type: DictionariesService.TERM_DIALOG_ACTION,
             payload: {
               dialogAction: null
             }
@@ -297,7 +326,7 @@ export class DictionariesEffects {
   }
 
   private updateDictionary(
-    dictionaryCode: string,
+    dictionaryCode: number,
     dictionaryId: number,
     dictionary: IDictionary,
     deletedTranslations: Array<number>,
@@ -310,7 +339,7 @@ export class DictionariesEffects {
     ]);
   }
 
-  private deleteDictionary(dictionaryCode: string): Observable<any> {
+  private deleteDictionary(dictionaryCode: number): Observable<any> {
     return this.dataService.delete('/api/dictionaries/{dictionaryCode}', { dictionaryCode });
   }
 
@@ -318,15 +347,25 @@ export class DictionariesEffects {
     return this.dataService.read('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode });
   }
 
-  private createTerm(dictionaryCode: string, term: ITerm): Observable<any> {
+  private createTerm(dictionaryCode: number, term: ITerm): Observable<any> {
     return this.dataService.create('/api/dictionaries/{dictionaryCode}/terms', { dictionaryCode }, term);
   }
 
-  private updateTerm(dictionaryCode: string, termId: number, term: ITerm): Observable<any> {
-    return this.dataService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term);
+  private updateTerm(
+    dictionaryCode: number,
+    termId: number,
+    term: ITerm,
+    deletedTranslations: Array<number>,
+    updatedTranslations: Array<IEntityTranslation>,
+  ): Observable<any> {
+    return Observable.forkJoin([
+      this.dataService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term),
+      this.entityTranslationsService.saveTermNameTranslations(termId, updatedTranslations),
+      this.entityTranslationsService.deleteTermNameTranslation(termId, deletedTranslations)
+    ]);
   }
 
-  private deleteTerm(dictionaryCode: string, termId: number): Observable<any> {
+  private deleteTerm(dictionaryCode: number, termId: number): Observable<any> {
     return this.dataService.delete('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId });
   }
 }

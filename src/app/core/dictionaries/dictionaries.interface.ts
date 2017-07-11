@@ -13,7 +13,7 @@ export interface ITypeCodeItem {
 
 export interface IDictionary {
   id: number;
-  code: string;
+  code: number;
   name: string;
   translatedName: string;
   nameTranslations: Array<ILabeledValue>;
@@ -26,6 +26,8 @@ export interface ITerm {
   id: number;
   code: number;
   name: string;
+  translatedName: string;
+  nameTranslations: Array<ILabeledValue>;
   typeCode: IDictionaryValue;
   parentCode: IDictionaryValue;
   parentCodeName: string;
@@ -44,8 +46,8 @@ export enum DictionariesDialogActionEnum {
 export interface IDictionariesState {
   dictionaries: Array<IDictionary>;
   selectedDictionary: IDictionary;
+  selectedTerm: ITerm;
   terms: Array<ITerm>;
   dictionaryTermTypes: Array<ITerm>;
-  selectedTermId: number;
   dialogAction: DictionariesDialogActionEnum;
 }
