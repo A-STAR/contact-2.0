@@ -1,3 +1,10 @@
+<app-portfolio-move
+  *ngIf="isPortfolioBeingMoved"
+  [portfolio]="selectedPortfolio$ | async"
+  (onSubmit)="onMoveSubmit()"
+  (onCancel)="onMoveCancel()">
+</app-portfolio-move>
+
 <app-toolbar-2
   class="bordered"
   [items]="toolbarItems">
