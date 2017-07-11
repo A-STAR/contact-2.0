@@ -131,18 +131,12 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
     .switchMap(action => {
         return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
-          .includes(action.payload.dialogAction) ? [
-          {
-            type: DictionariesService.TERM_TYPES_FETCH
-          },
-          {
-            type: DictionariesService.TRANSLATIONS_FETCH
-          }
-        ] : [
-          {
-            type: DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR
-          }
-        ];
+          .includes(action.payload.dialogAction)
+          ? [{ type: DictionariesService.TERM_TYPES_FETCH }]
+              .concat(action.payload.dialogAction === DictionariesDialogActionEnum.DICTIONARY_EDIT
+                        ? [{ type: DictionariesService.TRANSLATIONS_FETCH }]
+                        : [])
+          : [{ type: DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR }];
       }
     );
 
@@ -151,16 +145,11 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_DIALOG_ACTION)
     .switchMap(action => {
         return [DictionariesDialogActionEnum.TERM_ADD, DictionariesDialogActionEnum.TERM_EDIT]
-          .includes(action.payload.dialogAction) ? [
-          {
-            type: DictionariesService.TERM_TRANSLATIONS_FETCH,
-            payload: action.payload
-          }
-        ] : [
-          {
-            type: DictionariesService.TERM_TRANSLATIONS_CLEAR
-          }
-        ];
+          .includes(action.payload.dialogAction)
+          ? [].concat(action.payload.dialogAction === DictionariesDialogActionEnum.TERM_EDIT
+                        ? { type: DictionariesService.TERM_TRANSLATIONS_FETCH, payload: action.payload }
+                        : [])
+          : [{ type: DictionariesService.TERM_TRANSLATIONS_CLEAR }];
       }
     );
 
