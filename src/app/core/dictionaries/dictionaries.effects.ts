@@ -330,10 +330,16 @@ export class DictionariesEffects {
     updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
     return Observable.forkJoin([
-      this.dataService.update('/api/dictionaries/{dictionaryCode}', { dictionaryCode }, dictionary),
-      this.entityTranslationsService.saveDictNameTranslations(dictionaryId, updatedTranslations),
-      this.entityTranslationsService.deleteDictNameTranslation(dictionaryId, deletedTranslations)
-    ]);
+      this.dataService.update('/api/dictionaries/{dictionaryCode}', {dictionaryCode}, dictionary)
+    ].concat(
+      updatedTranslations.length
+        ? this.entityTranslationsService.saveDictNameTranslations(dictionaryId, updatedTranslations)
+        : []
+    ).concat(
+      deletedTranslations.length
+        ? this.entityTranslationsService.deleteDictNameTranslation(dictionaryId, deletedTranslations)
+        : []
+    ));
   }
 
   private deleteDictionary(dictionaryCode: number): Observable<any> {
@@ -356,10 +362,16 @@ export class DictionariesEffects {
     updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
     return Observable.forkJoin([
-      this.dataService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, term),
-      this.entityTranslationsService.saveTermNameTranslations(termId, updatedTranslations),
-      this.entityTranslationsService.deleteTermNameTranslation(termId, deletedTranslations)
-    ]);
+      this.dataService.update('/api/dictionaries/{dictionaryCode}/terms/{termId}', {dictionaryCode, termId}, term)
+    ].concat(
+      updatedTranslations.length
+        ? this.entityTranslationsService.saveTermNameTranslations(termId, updatedTranslations)
+        : []
+    ).concat(
+      deletedTranslations.length
+        ? this.entityTranslationsService.deleteTermNameTranslation(termId, deletedTranslations)
+        : []
+    ));
   }
 
   private deleteTerm(dictionaryCode: number, termId: number): Observable<any> {
