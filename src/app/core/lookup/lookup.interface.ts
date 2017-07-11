@@ -20,6 +20,7 @@ export interface ILookupRolesResponse {
 
 export interface ILookupState {
   roles: Array<ILookupRole>;
+  rolesResolved: boolean;
   users: Array<ILookupUser>;
-  isResolved: boolean;
+  usersResolved: boolean;
 }
