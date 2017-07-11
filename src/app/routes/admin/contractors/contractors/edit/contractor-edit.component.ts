@@ -17,8 +17,7 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 
 @Component({
   selector: 'app-contractor-edit',
-  templateUrl: './contractor-edit.component.html',
-  styleUrls: [ './contractor-edit.component.scss' ]
+  templateUrl: './contractor-edit.component.html'
 })
 export class ContractorEditComponent {
   static COMPONENT_NAME = 'ContractorEditComponent';
