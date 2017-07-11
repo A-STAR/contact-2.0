@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IPortfolio } from '../contractors-and-portfolios.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { PortfolioActionEnum } from './portfolios.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
@@ -33,6 +34,14 @@ export class PortfoliosComponent implements OnDestroy {
       action: () => console.log('PORTFOLIO_EDIT'),
       enabled: Observable.combineLatest(
         this.canEdit$,
+        this.contractorsAndPortfoliosService.selectedPortfolio$
+      ).map(([hasPermissions, selectedPortfolio]) => hasPermissions && !!selectedPortfolio)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_MOVE,
+      action: () => this.dialogAction = PortfolioActionEnum.MOVE,
+      enabled: Observable.combineLatest(
+        this.canMove$,
         this.contractorsAndPortfoliosService.selectedPortfolio$
       ).map(([hasPermissions, selectedPortfolio]) => hasPermissions && !!selectedPortfolio)
     },
@@ -70,6 +79,8 @@ export class PortfoliosComponent implements OnDestroy {
     statusCode: [],
     stageCode: []
   };
+
+  private dialogAction: PortfolioActionEnum;
 
   private canViewSubscription: Subscription;
   private dictionariesSubscription: Subscription;
@@ -120,8 +131,12 @@ export class PortfoliosComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
-  get isPortfolioBeingRemoved(): boolean {
-    return false;
+  get isPortfolioBeingMoved(): boolean {
+    return this.dialogAction === PortfolioActionEnum.MOVE;
+  }
+
+  get isPortfolioBeingDeleted(): boolean {
+    return this.dialogAction === PortfolioActionEnum.DELETE;
   }
 
   get portfolios$(): Observable<Array<IPortfolio>> {
@@ -145,6 +160,10 @@ export class PortfoliosComponent implements OnDestroy {
     return this.userPermissionsService.has('PORTFOLIO_EDIT').filter(permission => permission !== undefined);
   }
 
+  get canMove$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_MOVE').filter(permission => permission !== undefined);
+  }
+
   get canDelete$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_DELETE').filter(permission => permission !== undefined);
   }
@@ -164,9 +183,19 @@ export class PortfoliosComponent implements OnDestroy {
 
   onRemoveSubmit(): void {
     console.log('onRemoveSubmit');
+    this.dialogAction = null;
   }
 
   onCancel(): void {
-    console.log('onCancel');
+    this.dialogAction = null;
+  }
+
+  onMoveSubmit(contractor: IContractor): void {
+    console.log('on move submit', contractor);
+    this.dialogAction = null;
+  }
+
+  onMoveCancel(): void {
+    this.dialogAction = null;
   }
 }

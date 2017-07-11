@@ -103,6 +103,7 @@
       "search": "Search",
       "save": "Save",
       "sms": "Send SMS",
+      "move": "Move",
       "download": "Download",
       "upload": "Upload"
     }
@@ -696,6 +697,9 @@
     "remove": {
       "title": "Delete portfolio",
       "confirmMessage": "Are you sure you want to delete portfolio {{ name }}?"
+    },
+    "move": {
+      "title": "move portfolio {{ name }}"
     },
     "messages": {
       "accessDenied": "Access to portfolios list denied",
