@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IPortfolio } from '../contractors-and-portfolios.interface';
+import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { PortfolioActionEnum } from './portfolios.interface';
 
@@ -181,8 +181,9 @@ export class PortfoliosComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
   }
 
-  onMoveSubmit(): void {
-    console.log('on move submit');
+  onMoveSubmit(contractor: IContractor): void {
+    console.log('on move submit', contractor);
+    this.dialogAction = null;
   }
 
   onMoveCancel(): void {

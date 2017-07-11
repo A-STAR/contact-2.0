@@ -1,7 +1,7 @@
 <app-portfolio-move
   *ngIf="isPortfolioBeingMoved"
   [portfolio]="selectedPortfolio$ | async"
-  (onSubmit)="onMoveSubmit()"
+  (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onMoveCancel()">
 </app-portfolio-move>
 
