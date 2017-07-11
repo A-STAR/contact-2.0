@@ -120,8 +120,16 @@ export class PortfoliosComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
+  get isPortfolioBeingRemoved(): boolean {
+    return false;
+  }
+
   get portfolios$(): Observable<Array<IPortfolio>> {
     return this.contractorsAndPortfoliosService.portfolios$;
+  }
+
+  get selectedPortfolio$(): Observable<IPortfolio> {
+    return this.contractorsAndPortfoliosService.selectedPortfolio$;
   }
 
   get canView$(): Observable<boolean> {
@@ -152,5 +160,13 @@ export class PortfoliosComponent implements OnDestroy {
 
   onSelect(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
+  }
+
+  onRemoveSubmit(): void {
+    console.log('onRemoveSubmit');
+  }
+
+  onCancel(): void {
+    console.log('onCancel');
   }
 }

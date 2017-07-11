@@ -1,3 +1,14 @@
+<app-dialog-action
+  *ngIf="isPortfolioBeingRemoved"
+  titleTranslationKey="portfolios.remove.title"
+  actionTranslationKey="portfolios.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedPortfolio$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-dialog-action>
+
 <app-toolbar-2
   class="bordered"
   [items]="toolbarItems">

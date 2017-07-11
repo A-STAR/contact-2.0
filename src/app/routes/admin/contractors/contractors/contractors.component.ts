@@ -98,8 +98,16 @@ export class ContractorsComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.clearContractors();
   }
 
+  get isContractorBeingRemoved(): boolean {
+    return false;
+  }
+
   get contractors$(): Observable<Array<IContractor>> {
     return this.contractorsAndPortfoliosService.contractors$;
+  }
+
+  get selectedContractor$(): Observable<IContractor> {
+    return this.contractorsAndPortfoliosService.selectedContractor$;
   }
 
   get canView$(): Observable<boolean> {
@@ -124,5 +132,13 @@ export class ContractorsComponent implements OnDestroy {
 
   onSelect(contractor: IContractor): void {
     this.contractorsAndPortfoliosService.selectContractor(contractor.id);
+  }
+
+  onRemoveSubmit(): void {
+    console.log('onRemoveSubmit');
+  }
+
+  onCancel(): void {
+    console.log('onCancel');
   }
 }
