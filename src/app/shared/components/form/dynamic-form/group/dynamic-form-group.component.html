@@ -12,7 +12,7 @@
           <app-dynamic-form-field
             [control]="control"
             [form]="form"
-            (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)"
+            (onSelect)="onSelectItems($event)"
           >
           </app-dynamic-form-field>
 
@@ -32,7 +32,7 @@
             [collapsible]="control.collapsible"
             [title]="control.title"
             [width]="control.width"
-            (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
+            (onSelect)="onSelectItems($event)">
           </app-dynamic-form-group>
         </ng-container>
       </div>
