@@ -655,6 +655,10 @@
         }
       }
     },
+    "remove": {
+      "title": "Delete contractor",
+      "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
+    },
     "grid": {
       "name": "Short name",
       "fullName": "Full name",
@@ -689,6 +693,10 @@
       "startWorkDate": "Processing start date",
       "endWorkDate": "Processing end date",
       "comment": "Comment"
+    },
+    "remove": {
+      "title": "Delete portfolio",
+      "confirmMessage": "Are you sure you want to delete portfolio {{ name }}?"
     },
     "move": {
       "title": "move portfolio {{ name }}"

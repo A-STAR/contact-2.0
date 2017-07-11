@@ -1,8 +1,19 @@
+<app-dialog-action
+  *ngIf="isPortfolioBeingDeleted"
+  titleTranslationKey="portfolios.remove.title"
+  actionTranslationKey="portfolios.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedPortfolio$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
 <app-portfolio-move
   *ngIf="isPortfolioBeingMoved"
   [portfolio]="selectedPortfolio$ | async"
   (onSubmit)="onMoveSubmit($event)"
-  (onCancel)="onMoveCancel()">
+  (onCancel)="onCloseDialog()">
 </app-portfolio-move>
 
 <app-toolbar-2

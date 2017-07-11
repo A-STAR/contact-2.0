@@ -47,7 +47,7 @@ export class PortfoliosComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('PORTFOLIO_DELETE'),
+      action: () => this.dialogAction = PortfolioActionEnum.DELETE,
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedPortfolio$
@@ -181,12 +181,17 @@ export class PortfoliosComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
   }
 
-  onMoveSubmit(contractor: IContractor): void {
-    console.log('on move submit', contractor);
-    this.dialogAction = null;
+  onRemoveSubmit(): void {
+    console.log('onRemoveSubmit');
+    this.onCloseDialog();
   }
 
-  onMoveCancel(): void {
+  onMoveSubmit(contractor: IContractor): void {
+    console.log('onMoveSubmit', contractor);
+    this.onCloseDialog();
+  }
+
+  onCloseDialog(): void {
     this.dialogAction = null;
   }
 }
