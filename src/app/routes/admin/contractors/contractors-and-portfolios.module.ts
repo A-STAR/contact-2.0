@@ -13,6 +13,7 @@ import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.
 import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
 import { ContractorManagersComponent } from './contractors/managers/contractor-managers.component';
 import { ContractorManagerEditComponent } from './contractors/managers/edit/contractor-manager-edit.component';
+import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 
 const routes: Routes = [
   { path: '', component: ContractorsAndPortfoliosComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: ':id', component: ContractorEditComponent },
   { path: ':id/managers', component: ContractorManagersComponent },
   { path: ':id/managers/:managerId', component: ContractorManagerEditComponent },
+  { path: ':id/portfolios/:portfolioId', component: PortfolioEditComponent },
 ];
 
 @NgModule({

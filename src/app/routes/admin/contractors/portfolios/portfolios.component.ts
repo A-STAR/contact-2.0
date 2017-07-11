@@ -6,6 +6,7 @@ import { IPortfolio } from '../contractors-and-portfolios.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -74,6 +75,7 @@ export class PortfoliosComponent implements OnDestroy {
   private dictionariesSubscription: Subscription;
 
   constructor(
+    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -140,10 +142,15 @@ export class PortfoliosComponent implements OnDestroy {
   }
 
   onEdit(portfolio: IPortfolio): void {
-    // TODO(d.maltsev)
+    // TODO(d.maltsev): simplify this
+    this.contractorsAndPortfoliosService.selectedContractor$
+      .take(1)
+      .subscribe(contractor => {
+        this.contentTabService.navigate(`/admin/contractors/${contractor.id}/portfolios/${portfolio.id}`);
+      });
   }
 
   onSelect(portfolio: IPortfolio): void {
-    // TODO(d.maltsev)
+    this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
   }
 }
