@@ -15,7 +15,7 @@ export interface ILookupRole {
 
 export interface ILookupRolesResponse {
   success: boolean;
-  users: Array<ILookupRole>;
+  roles: Array<ILookupRole>;
 }
 
 export interface ILookupState {
