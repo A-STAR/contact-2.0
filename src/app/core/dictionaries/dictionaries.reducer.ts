@@ -69,6 +69,22 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
         terms: [],
         selectedTerm: null
       };
+    case DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR:
+      return {
+        ...state,
+        selectedDictionary: {
+          ...state.selectedDictionary,
+          nameTranslations: null
+        }
+      };
+    case DictionariesService.TERM_TRANSLATIONS_CLEAR:
+      return {
+        ...state,
+        selectedTerm: {
+          ...state.selectedTerm,
+          nameTranslations: null
+        }
+      };
     case DictionariesService.DICTIONARY_DIALOG_ACTION:
     case DictionariesService.TERM_DIALOG_ACTION:
       return {
