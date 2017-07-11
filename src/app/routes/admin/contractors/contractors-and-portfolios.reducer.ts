@@ -8,7 +8,9 @@ const defaultState: IContractorsAndPortfoliosState = {
   contractors: null,
   selectedContractorId: null,
   portfolios: null,
-  selectedPortfolioId: null
+  selectedPortfolioId: null,
+  managers: null,
+  selectedManagerId: null
 };
 
 // This should NOT be an arrow function in order to pass AoT compilation
@@ -18,6 +20,8 @@ export function contractorsAndPortfoliosReducer(
   action: Action
 ): IContractorsAndPortfoliosState {
   switch (action.type) {
+
+    // Contractors:
     case ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS:
       return {
         ...state,
@@ -38,6 +42,28 @@ export function contractorsAndPortfoliosReducer(
         ...state,
         selectedContractorId: action.payload.contractorId
       };
+
+    // Contractors:
+    case ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS:
+      return {
+        ...state,
+        managers: action.payload.managers,
+        // TODO(d.maltsev): preserve selected contractor row
+        selectedManagerId: null
+      };
+    case ContractorsAndPortfoliosService.MANAGERS_CLEAR:
+      return {
+        ...state,
+        managers: null,
+        selectedManagerId: null
+      };
+    case ContractorsAndPortfoliosService.MANAGER_SELECT:
+      return {
+        ...state,
+        selectedManagerId: action.payload.managerId
+      };
+
+    // Portfolios:
     case ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS:
       return {
         ...state,
@@ -56,6 +82,7 @@ export function contractorsAndPortfoliosReducer(
         ...state,
         selectedPortfolioId: action.payload.portfolioId
       };
+
     default:
       return state;
   }

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractorsResponse, IPortfoliosResponse } from './contractors-and-portfolios.interface';
+import { IContractorsResponse, IContractorManagersResponse, IPortfoliosResponse } from './contractors-and-portfolios.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 import { DataService } from '../../../core/data/data.service';
@@ -27,6 +27,24 @@ export class ContractorsAndPortfoliosEffects {
       phone: '+7 (800) 123-45-67',
       address: '15 Yemen Rd, Yemen',
       comment: 'No comments for you today!'
+    }
+  ];
+
+  private fakeManagers = [
+    {
+      id: 1,
+      fullName: 'Jane Karen Smith',
+      firstName: 'Jane',
+      middleName: 'Karen',
+      lastName: 'Smith',
+      genderCode: 1,
+      position: 'Senior manager',
+      branchCode: 1,
+      mobPhone: '+7 (800) 765-43-21',
+      workPhone: '+7 (800) 999-99-99',
+      intPhone: '42',
+      workAddress: '',
+      comment: 'Hiya! My name is Jane!',
     }
   ];
 
@@ -73,6 +91,38 @@ export class ContractorsAndPortfoliosEffects {
         }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchManagers$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH)
+    .switchMap((action: Action) => {
+      return this.readManagers(action.payload.contractorId)
+        .map(response => ({
+          type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
+          payload: {
+            managers: response.managers
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.managers.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchManager$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.MANAGER_FETCH)
+    .switchMap((action: Action) => {
+      return this.readManager(action.payload.contractorId, action.payload.managerId)
+        .map(response => ({
+          type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
+          payload: {
+            manager: response.managers[0]
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.managers.messages.errors.fetch')
         ]);
     });
 
@@ -136,6 +186,24 @@ export class ContractorsAndPortfoliosEffects {
       contractors: this.fakeContractors
     });
     // return this.dataService.read('/api/contractor/{contractorId}', { contractorId });
+  }
+
+  private readManagers(contractorId: number): Observable<IContractorManagersResponse> {
+    // TODO(d.maltsev): remove fake API
+    return Observable.of({
+      success: true,
+      managers: this.fakeManagers
+    });
+    // return this.dataService.read('/api/contractors/{contractorId}/managers', { contractorId });
+  }
+
+  private readManager(contractorId: number, managerId: number): Observable<IContractorManagersResponse> {
+    // TODO(d.maltsev): remove fake API
+    return Observable.of({
+      success: true,
+      managers: this.fakeManagers
+    });
+    // return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {

@@ -32,9 +32,32 @@ export interface IPortfoliosResponse {
   portfolios: Array<IPortfolio>;
 }
 
+export interface IContractorManager {
+  id: number;
+  fullName: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  genderCode: number;
+  position: string;
+  branchCode: number;
+  mobPhone: string;
+  workPhone: string;
+  intPhone: string;
+  workAddress: string;
+  comment: string;
+}
+
+export interface IContractorManagersResponse {
+  success: boolean;
+  managers: Array<IContractorManager>;
+}
+
 export interface IContractorsAndPortfoliosState {
   contractors: Array<IContractor>;
   selectedContractorId: number;
   portfolios: Array<IPortfolio>;
   selectedPortfolioId: number;
+  managers: Array<IContractorManager>;
+  selectedManagerId: number;
 }

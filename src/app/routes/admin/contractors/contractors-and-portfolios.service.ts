@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractorsAndPortfoliosState, IContractor, IPortfolio } from './contractors-and-portfolios.interface';
+import { IContractorsAndPortfoliosState, IContractor, IContractorManager, IPortfolio } from './contractors-and-portfolios.interface';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
@@ -12,17 +12,30 @@ export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH_SUCCESS = 'CONTRACTORS_FETCH_SUCCESS';
   static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
   static CONTRACTOR_SELECT         = 'CONTRACTOR_SELECT';
-  static PORTFOLIOS_FETCH          = 'PORTFOLIOS_FETCH';
-  static PORTFOLIO_FETCH           = 'PORTFOLIO_FETCH';
-  static PORTFOLIOS_FETCH_SUCCESS  = 'PORTFOLIOS_FETCH_SUCCESS';
-  static PORTFOLIOS_CLEAR          = 'PORTFOLIOS_CLEAR';
-  static PORTFOLIO_SELECT          = 'PORTFOLIO_SELECT';
+
+  static MANAGERS_FETCH         = 'MANAGERS_FETCH';
+  static MANAGER_FETCH          = 'MANAGER_FETCH';
+  static MANAGERS_FETCH_SUCCESS = 'MANAGERS_FETCH_SUCCESS';
+  static MANAGERS_CLEAR         = 'MANAGERS_CLEAR';
+  static MANAGER_SELECT         = 'MANAGER_SELECT';
+
+  static PORTFOLIOS_FETCH         = 'PORTFOLIOS_FETCH';
+  static PORTFOLIO_FETCH          = 'PORTFOLIO_FETCH';
+  static PORTFOLIOS_FETCH_SUCCESS = 'PORTFOLIOS_FETCH_SUCCESS';
+  static PORTFOLIOS_CLEAR         = 'PORTFOLIOS_CLEAR';
+  static PORTFOLIO_SELECT         = 'PORTFOLIO_SELECT';
 
   constructor(private store: Store<IAppState>) {}
 
   get contractors$(): Observable<Array<IContractor>> {
     return this.state
       .map(state => state.contractors)
+      .distinctUntilChanged();
+  }
+
+  get managers$(): Observable<Array<IContractorManager>> {
+    return this.state
+      .map(state => state.managers)
       .distinctUntilChanged();
   }
 
@@ -35,6 +48,12 @@ export class ContractorsAndPortfoliosService {
   get selectedContractor$(): Observable<IContractor> {
     return this.state
       .map(state => state.contractors && state.contractors.find(contractor => contractor.id === state.selectedContractorId))
+      .distinctUntilChanged();
+  }
+
+  get selectedManager$(): Observable<IContractorManager> {
+    return this.state
+      .map(state => state.managers && state.managers.find(manager => manager.id === state.selectedManagerId))
       .distinctUntilChanged();
   }
 
@@ -58,6 +77,22 @@ export class ContractorsAndPortfoliosService {
 
   selectContractor(contractorId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
+  }
+
+  fetchManagers(contractorId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH, { contractorId });
+  }
+
+  fetchManager(contractorId: number, managerId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_FETCH, { contractorId, managerId });
+  }
+
+  clearManagers(): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGERS_CLEAR);
+  }
+
+  selectManager(managerId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { managerId });
   }
 
   fetchPortfolios(): void {
