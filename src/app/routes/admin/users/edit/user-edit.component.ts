@@ -68,8 +68,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       {
         ...this.editedEntity,
         roleId: this.editedEntity.roleId,
-        startWorkDate: this.valueConverterService.fromIso(this.editedEntity.startWorkDate as string),
-        endWorkDate: this.valueConverterService.fromIso(this.editedEntity.endWorkDate as string),
+        startWorkDate: this.valueConverterService.fromISO(this.editedEntity.startWorkDate as string),
+        endWorkDate: this.valueConverterService.fromISO(this.editedEntity.endWorkDate as string),
         languageId: this.editedEntity.languageId,
       };
 
@@ -148,8 +148,8 @@ export class UserEditComponent extends EntityBaseComponent<IUser> implements OnI
       password: value.password || undefined,
       // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
-      startWorkDate: this.valueConverterService.toIso(value.startWorkDate as Date),
-      endWorkDate: this.valueConverterService.toIso(value.endWorkDate as Date),
+      startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
+      endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
       // TODO(a.poterenko): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };

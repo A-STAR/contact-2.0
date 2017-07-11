@@ -1,27 +1,22 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
-  OnDestroy,
+  ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
-  ViewEncapsulation,
   OnChanges,
   SimpleChanges,
-  Renderer2,
-  ChangeDetectionStrategy,
-  ElementRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef,
-  Column,
-  ColumnChangeEvent,
-  GridOptions,
-  ICellRendererParams,
-  RowNode,
-} from 'ag-grid';
+  ColDef, Column, ColumnChangeEvent,
+  GridOptions, ICellRendererParams, RowNode,
+} from 'ag-grid/main';
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
   IToolbarAction,
@@ -39,6 +34,8 @@ import {
 import { IGridColumn } from '../grid/grid.interface';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
@@ -120,8 +117,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   constructor(
     private elRef: ElementRef,
     private notificationService: NotificationsService,
-    private renderer2: Renderer2,
     private translate: TranslateService,
+    private valueConverter: ValueConverterService,
   ) {}
 
   get gridRows(): any[] {
@@ -308,7 +305,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.refreshRowCount();
 
     this.translateGridOptionsMessages();
-    this.gridOptions.groupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
+    this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
     // translate column names
     if (this.columnTranslationKey) {
@@ -365,10 +362,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         const filter: IGrid2Filter = { name: key };
         const el = filterModel[key];
         switch (el.filterType) {
-          // undefined here because custom filters do not return values as yet
-          case undefined:
-            filter.operator = 'LIKE';
-            filter.values = `%${el}%`;
+          case 'date':
+            filter.operator = 'BETWEEN';
+            filter.values = this.valueConverter.makeRangeFromLocalDate(el.dateFrom);
             break;
           case 'text':
             filter.operator = 'LIKE';
@@ -377,6 +373,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           case 'number':
             filter.operator = '==';
             filter.values = Number(el.filter);
+            break;
+          default:
+            filter.operator = 'LIKE';
+            filter.values = `%${el}%`;
             break;
         }
         return filter;

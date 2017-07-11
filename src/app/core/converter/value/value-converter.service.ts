@@ -40,7 +40,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.isoToLocalDate(valueEntity.valueD);
+        valueEntity.value = this.ISOToLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -60,7 +60,6 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      // TODO(a.tymchuk): use dictionary service
       return Number(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
@@ -93,7 +92,7 @@ export class ValueConverterService {
     }));
   }
 
-  toIso(date: Date): string {
+  toISO(date: Date): string {
     return date ? date.toISOString() : null;
   }
 
@@ -105,7 +104,7 @@ export class ValueConverterService {
     return this.toLocal(date, this.formats.date);
   }
 
-  fromIso(value: string): Date {
+  fromISO(value: string): Date {
     return value ? new Date(value) : null;
   }
 
@@ -117,25 +116,31 @@ export class ValueConverterService {
     return this.fromLocal(value, this.formats.date);
   }
 
-  /**
-   * @deprecated
-   */
-  isoToLocalDateTime(value: string): string {
-    return this.toLocalDateTime(this.fromIso(value));
+  makeRangeFromLocalDate(value: string): Array<string> {
+    const from = moment(value);
+    const to = from.clone().add(1, 'day').subtract(1, 'second');
+    return from.isValid() ? [from.toISOString(), to.toISOString()] : [];
   }
 
   /**
    * @deprecated
    */
-  isoToLocalDate(value: string): string {
-    return this.toLocalDate(this.fromIso(value));
+  ISOToLocalDateTime(value: string): string {
+    return this.toLocalDateTime(this.fromISO(value));
   }
 
   /**
    * @deprecated
    */
-  isoFromLocalDateTime(value: string): string {
-    return this.toIso(this.fromLocalDateTime(value));
+  ISOToLocalDate(value: string): string {
+    return this.toLocalDate(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOFromLocalDateTime(value: string): string {
+    return this.toISO(this.fromLocalDateTime(value));
   }
 
   private toLocal(date: Date, format: string): string {

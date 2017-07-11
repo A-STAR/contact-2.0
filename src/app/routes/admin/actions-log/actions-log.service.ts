@@ -142,8 +142,8 @@ export class ActionsLogService {
           .setName('createDateTime')
           .betweenOperator()
           .setValues([
-            this.valueConverterService.isoFromLocalDateTime(customFilter.startDate + ' ' + customFilter.startTime),
-            this.valueConverterService.isoFromLocalDateTime(customFilter.endDate + ' ' + customFilter.endTime),
+            this.valueConverterService.ISOFromLocalDateTime(customFilter.startDate + ' ' + customFilter.startTime),
+            this.valueConverterService.ISOFromLocalDateTime(customFilter.endDate + ' ' + customFilter.endTime),
           ])
       )
       .addFilter(
