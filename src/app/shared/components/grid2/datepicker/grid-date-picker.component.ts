@@ -8,7 +8,7 @@ import { IDateAngularComp } from 'ag-grid-angular/main';
   styleUrls: [ './grid-date-picker.component.scss' ]
 })
 export class GridDatePickerComponent implements IDateAngularComp {
-  private date: Date;
+  date: Date;
   private dateParams: IDateParams;
 
   agInit(dateParams: IDateParams): void {
