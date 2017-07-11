@@ -11,11 +11,13 @@ import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.se
 
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
 import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
+import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 
 const routes: Routes = [
   { path: '', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
-  { path: ':id', component: ContractorEditComponent }
+  { path: ':id', component: ContractorEditComponent },
+  { path: ':id/portfolios/:portfolioId', component: PortfolioEditComponent },
 ];
 
 @NgModule({
