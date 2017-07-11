@@ -21,6 +21,7 @@ export class ContractorsAndPortfoliosEffects {
       name: 'Fake Contractor',
       fullName: 'Fake Contractor and Sons Ltd.',
       smsName: 'Fake Contractor',
+      responsibleId: 1,
       responsibleName: 'John Smith',
       typeCode: 1,
       phone: '+7 (800) 123-45-67',
