@@ -646,6 +646,9 @@
         "update": "Could not update contractor",
         "delete": "Could not delete contractor"
       }
+    },
+    "buttons": {
+      "managers": "Managers"
     }
   },
   "portfolios": {
