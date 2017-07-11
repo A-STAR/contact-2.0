@@ -6,7 +6,7 @@
   <app-dynamic-form
     [controls]="controls"
     [data]="editedEntity"
-    (selectedControlItemsChanges)="onSelectedControlItemsChanges($event)">
+    (onSelect)="onSelectItems($event)">
   </app-dynamic-form>
 
   <div dialog-footer>

@@ -58,7 +58,7 @@ export interface IControls {
   [key: string]: FormControl;
 }
 
-export interface ISelectedControlItemsPayload {
+export interface ISelectItemsPayload {
   control: IDynamicFormControl;
   items: ILabeledValue[];
 }

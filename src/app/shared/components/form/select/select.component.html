@@ -30,15 +30,15 @@
         </span>
       </div>
     </li>
-    <li *ngFor="let rawItem of rawData | rawDataFilter: { sortType: sortType }">
+    <li *ngFor="let option of options | rawDataFilter: { sortType: sortType }">
       <div
         class="ui-select-choices-row"
-        [ngClass]="{ active: isActive(rawItem) }"
-        (click)="onSelectMatch($event, rawItem)"
+        [ngClass]="{ active: isActive(option) }"
+        (click)="onSelectMatch($event, option)"
       >
         <div
           class="dropdown-item"
-          [innerHtml]="toDisplayValue(rawItem)">
+          [innerHtml]="toDisplayValue(option)">
         </div>
       </div>
     </li>
@@ -92,7 +92,7 @@
 >
   <span class="ui-select-match">
     <span
-      *ngFor="let item of active"
+      *ngFor="let item of filteredActiveItems"
       class="app-select-match-item"
       (click)="onActiveItemClick(item, $event)"
       [ngClass]="{ 'selected': item.selected, 'context-exist': isItemContextExist(item) }"
