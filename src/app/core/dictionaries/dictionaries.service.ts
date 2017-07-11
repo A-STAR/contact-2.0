@@ -27,7 +27,9 @@ export class DictionariesService {
   static DICTIONARY_DELETE          = 'DICTIONARY_DELETE';
   static DICTIONARY_SELECT          = 'DICTIONARY_SELECT';
   static TRANSLATIONS_FETCH         = 'TRANSLATIONS_FETCH';
+  static TERM_TRANSLATIONS_FETCH    = 'TERM_TRANSLATIONS_FETCH';
   static TRANSLATIONS_FETCH_SUCCESS = 'TRANSLATIONS_FETCH_SUCCESS';
+  static TERM_TRANSLATIONS_FETCH_SUCCESS = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
   static TERMS_FETCH                = 'TERMS_FETCH';
   static TERMS_FETCH_SUCCESS        = 'TERMS_FETCH_SUCCESS';
   static TERM_TYPES_FETCH           = 'TERM_TYPES_FETCH';
@@ -38,6 +40,7 @@ export class DictionariesService {
   static TERM_DELETE                = 'TERM_DELETE';
   static TERM_SELECT                = 'TERM_SELECT';
   static DICTIONARY_DIALOG_ACTION   = 'DICTIONARY_DIALOG_ACTION';
+  static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -66,12 +69,26 @@ export class DictionariesService {
       .distinctUntilChanged();
   }
 
+  get selectedTerm(): Observable<ITerm> {
+    return this.store
+      .select(state => state.dictionaries.selectedTerm)
+      .distinctUntilChanged();
+  }
+
   get isSelectedDictionaryExist(): Observable<boolean> {
     return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary);
   }
 
+  get isSelectedTermExist(): Observable<boolean> {
+    return this.selectedTerm.map(selectedTerm => !!selectedTerm);
+  }
+
   get isSelectedDictionaryReady(): Observable<boolean> {
     return this.selectedDictionary.map(selectedDictionary => selectedDictionary && !!selectedDictionary.nameTranslations);
+  }
+
+  get isSelectedTermReady(): Observable<boolean> {
+    return this.selectedTerm.map(selectedTerm => selectedTerm && !!selectedTerm.nameTranslations);
   }
 
   get dialogAction(): Observable<DictionariesDialogActionEnum> {
@@ -160,11 +177,13 @@ export class DictionariesService {
     });
   }
 
-  updateTerm(term: ITerm): void {
+  updateTerm(term: ITerm, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
     this.store.dispatch({
       type: DictionariesService.TERM_UPDATE,
       payload: {
-        term
+        term,
+        deletedTranslations,
+        updatedTranslations
       }
     });
   }
@@ -181,16 +200,14 @@ export class DictionariesService {
     });
   }
 
-  selectTerm(termId: number): void {
+  selectTerm(term: ITerm): void {
     return this.store.dispatch({
       type: DictionariesService.TERM_SELECT,
-      payload: {
-        termId
-      }
+      payload: term
     });
   }
 
-  setDialogAction(dialogAction: DictionariesDialogActionEnum): void {
+  setDictionaryDialogAction(dialogAction: DictionariesDialogActionEnum): void {
     return this.store.dispatch({
       type: DictionariesService.DICTIONARY_DIALOG_ACTION,
       payload: {
@@ -199,27 +216,36 @@ export class DictionariesService {
     });
   }
 
+  setTermDialogAction(dialogAction: DictionariesDialogActionEnum): void {
+    return this.store.dispatch({
+      type: DictionariesService.TERM_DIALOG_ACTION,
+      payload: {
+        dialogAction
+      }
+    });
+  }
+
   setDialogAddDictionaryAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_ADD);
+    this.setDictionaryDialogAction(DictionariesDialogActionEnum.DICTIONARY_ADD);
   }
 
   setDialogEditDictionaryAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
+    this.setDictionaryDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
   }
 
   setDialogRemoveDictionaryAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_REMOVE);
+    this.setDictionaryDialogAction(DictionariesDialogActionEnum.DICTIONARY_REMOVE);
   }
 
   setDialogAddTermAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.TERM_ADD);
+    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_ADD);
   }
 
   setDialogEditTermAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.TERM_EDIT);
+    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_EDIT);
   }
 
   setDialogRemoveTermAction(): void {
-    this.setDialogAction(DictionariesDialogActionEnum.TERM_REMOVE);
+    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_REMOVE);
   }
 }

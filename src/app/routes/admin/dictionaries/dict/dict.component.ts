@@ -162,7 +162,7 @@ export class DictComponent implements OnDestroy {
   }
 
   cancelAction(): void {
-    this.dictionariesService.setDialogAction(null);
+    this.dictionariesService.setDictionaryDialogAction(null);
   }
 
   modifyEntity(data: IDictionary, editMode: boolean): void {
