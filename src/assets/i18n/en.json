@@ -31,6 +31,8 @@
         "DICTIONARIES": "Dictionaries",
         "BANKS": "Banks",
         "CONTRACTOR": "Contractor",
+        "CONTRACTOR_MANAGERS": "Contractor Managers",
+        "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
         "UPLOAD_TEMPLATES": "Upload Templates",
@@ -627,6 +629,31 @@
     }
   },
   "contractors": {
+    "managers": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "genderCode": "Gender",
+        "position": "Position",
+        "branchCode": "Branch",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "workAddress": "Address",
+        "comment": "Comment"
+      },
+      "messages": {
+        "accessDenied": "Access to managers list denied",
+        "errors": {
+          "fetch": "Could not fetch managers list",
+          "create": "Could not create manager",
+          "update": "Could not update manager",
+          "delete": "Could not delete manager"
+        }
+      }
+    },
     "grid": {
       "name": "Short name",
       "fullName": "Full name",
@@ -646,6 +673,9 @@
         "update": "Could not update contractor",
         "delete": "Could not delete contractor"
       }
+    },
+    "buttons": {
+      "managers": "Managers"
     }
   },
   "portfolios": {

@@ -27,6 +27,8 @@ export class ContractorEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
 
+  private contractorId = Number((this.activatedRoute.params as any).value.id);
+
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
@@ -36,8 +38,7 @@ export class ContractorEditComponent {
     private userDictionariesService: UserDictionariesService,
   ) {
     // TODO(d.maltsev): stronger typing
-    const contractorId = Number((this.activatedRoute.params as any).value.id);
-    this.contractorsAndPortfoliosService.fetchContractor(contractorId);
+    this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
 
     Observable.combineLatest(
       this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS).map(action => action.payload.contractor),
@@ -65,6 +66,10 @@ export class ContractorEditComponent {
 
   onClose(): void {
     this.contentTabService.navigate('/admin/contractors');
+  }
+
+  onManagersClick(): void {
+    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers`);
   }
 
   private initFormControls(contractorTypeOptions: Array<IOption>, userOptions: Array<IOption>): void {

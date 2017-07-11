@@ -31,6 +31,8 @@
         "DICTIONARIES": "Словари",
         "BANKS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
+        "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
+        "CONTRACTOR_MANAGER": "Менеджер контрагента",
         "DEPARTMENTS": "Структура предприятия",
         "UTILITIES": "Утилиты",
         "UPLOAD_TEMPLATES": "Шаблоны загрузки",
@@ -626,6 +628,31 @@
     }
   },
   "contractors": {
+    "managers": {
+      "grid": {
+        "fullName": "ФИО",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
+        "genderCode": "Пол",
+        "position": "Должность",
+        "branchCode": "Филиал",
+        "mobPhone": "Мобильный телефон",
+        "workPhone": "Рабочий телефон",
+        "intPhone": "Внутренний номер",
+        "workAddress": "Адрес",
+        "comment": "Комментарий"
+      },
+      "messages": {
+        "accessDenied": "Доступ к списку менеджеров ограничен",
+        "errors": {
+          "fetch": "Не удалось загрузить список менеджеров",
+          "create": "Не удалось добавить менеджера",
+          "update": "Не удалось сохранить менеджера",
+          "delete": "Не удалось удалить менеджера"
+        }
+      }
+    },
     "grid": {
       "name": "Краткое название",
       "fullName": "Полное название",
@@ -645,6 +672,9 @@
         "update": "Не удалось сохранить контрагента",
         "delete": "Не удалось удалить контрагента"
       }
+    },
+    "buttons": {
+      "managers": "Менеджеры"
     }
   },
   "portfolios": {
