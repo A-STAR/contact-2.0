@@ -30,7 +30,7 @@
         </span>
       </div>
     </li>
-    <li *ngFor="let option of options | rawDataFilter: { sortType: sortType }">
+    <li *ngFor="let option of (options || []) | rawDataFilter: { sortType: sortType }">
       <div
         class="ui-select-choices-row"
         [ngClass]="{ active: isActive(option) }"

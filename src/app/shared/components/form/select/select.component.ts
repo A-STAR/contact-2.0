@@ -311,7 +311,7 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   private lookupAtOptions(value: number|string): ILabeledValue {
-    return this.options.find(item => String(item.value) === String(value));
+    return (this.options || []).find(item => String(item.value) === String(value));
   }
 
   private fromOption(option: ILabeledValue): ILabeledValue {
