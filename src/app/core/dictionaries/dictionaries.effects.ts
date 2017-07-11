@@ -123,12 +123,7 @@ export class DictionariesEffects {
           type: action.payload.dictionary ? DictionariesService.TERMS_FETCH : DictionariesService.TERMS_CLEAR,
           payload: action.payload.dictionary
         }
-      ].concat(action.payload.dictionary ? [
-        {
-          type: DictionariesService.TRANSLATIONS_FETCH,
-          payload: action.payload.dictionary
-        }
-      ] : []))
+      ])
     );
 
   @Effect()
@@ -139,6 +134,9 @@ export class DictionariesEffects {
           .includes(action.payload.dialogAction) ? [
           {
             type: DictionariesService.TERM_TYPES_FETCH
+          },
+          {
+            type: DictionariesService.TRANSLATIONS_FETCH
           }
         ] : [
           {
@@ -183,8 +181,10 @@ export class DictionariesEffects {
   @Effect()
   fetchDictionaryTranslations$ = this.actions
     .ofType(DictionariesService.TRANSLATIONS_FETCH)
+    .withLatestFrom(this.store)
     .switchMap(data => {
-      return this.entityTranslationsService.readDictNameTranslations(data.payload.id)
+      const [_, store]: [Action, IAppState] = data;
+      return this.entityTranslationsService.readDictNameTranslations(store.dictionaries.selectedDictionary.id)
         .map((response: IEntityTranslation[]) => {
           return {
             type: DictionariesService.TRANSLATIONS_FETCH_SUCCESS,
