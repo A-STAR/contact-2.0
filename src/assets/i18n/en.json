@@ -103,6 +103,7 @@
       "search": "Search",
       "save": "Save",
       "sms": "Send SMS",
+      "move": "Move",
       "download": "Download",
       "upload": "Upload"
     }
@@ -688,6 +689,9 @@
       "startWorkDate": "Processing start date",
       "endWorkDate": "Processing end date",
       "comment": "Comment"
+    },
+    "move": {
+      "title": "move portfolio {{ name }}"
     },
     "messages": {
       "accessDenied": "Access to portfolios list denied",

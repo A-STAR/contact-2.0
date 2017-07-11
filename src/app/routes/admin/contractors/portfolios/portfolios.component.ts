@@ -38,8 +38,7 @@ export class PortfoliosComponent implements OnDestroy {
       ).map(([hasPermissions, selectedPortfolio]) => hasPermissions && !!selectedPortfolio)
     },
     {
-      // TODO(d.maltsev): icon
-      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      type: ToolbarItemTypeEnum.BUTTON_MOVE,
       action: () => this.dialogAction = PortfolioActionEnum.MOVE,
       enabled: Observable.combineLatest(
         this.canMove$,
