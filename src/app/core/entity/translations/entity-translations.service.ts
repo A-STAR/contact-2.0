@@ -53,7 +53,7 @@ export class EntityTranslationsService {
   }
 
   deleteTermNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
-    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_DICT_NAME);
+    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_TERM_NAME);
   }
 
   private deleteTranslation(entityId: string|number, languageId: number | Array<number>, entityAttributesId: number): Observable<any> {
