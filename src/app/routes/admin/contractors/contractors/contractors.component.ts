@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IContractor } from '../contractors-and-portfolios.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ContractorActionEnum } from './contractors.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
@@ -35,7 +36,7 @@ export class ContractorsComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('CONTRACTOR_DELETE'),
+      action: () => this.dialogAction = ContractorActionEnum.DELETE,
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedContractor$
@@ -58,6 +59,8 @@ export class ContractorsComponent implements OnDestroy {
     { prop: 'address' },
     { prop: 'comment' },
   ];
+
+  private dialogAction: ContractorActionEnum;
 
   private canViewSubscription: Subscription;
   private dictionariesSubscription: Subscription;
@@ -99,7 +102,7 @@ export class ContractorsComponent implements OnDestroy {
   }
 
   get isContractorBeingRemoved(): boolean {
-    return false;
+    return this.dialogAction === ContractorActionEnum.DELETE;
   }
 
   get contractors$(): Observable<Array<IContractor>> {
@@ -138,7 +141,7 @@ export class ContractorsComponent implements OnDestroy {
     console.log('onRemoveSubmit');
   }
 
-  onCancel(): void {
-    console.log('onCancel');
+  onCloseDialog(): void {
+    this.dialogAction = null;
   }
 }

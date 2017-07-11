@@ -6,7 +6,7 @@
   actionMode="danger"
   [messageParams]="selectedContractor$ | async"
   (action)="onRemoveSubmit()"
-  (cancel)="cancelAction()">
+  (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-toolbar-2
