@@ -46,7 +46,7 @@ export class PortfolioEditComponent {
     // TODO(d.maltsev): handle errors
     .take(1)
     .subscribe(([ portfolio, directionOptions, stageOptions, statusOptions ]) => {
-      this.initFormControls(directionOptions, stageOptions, statusOptions);
+      this.initFormControls(portfolio, directionOptions, stageOptions, statusOptions);
       // TODO(d.maltsev): convert all dates to Date here and in grid
       this.formData = portfolio;
     });
@@ -71,13 +71,19 @@ export class PortfolioEditComponent {
     this.contentTabService.navigate('/admin/contractors');
   }
 
-  private initFormControls(directionOptions: Array<IOption>, stageOptions: Array<IOption>, statusOptions: Array<IOption>): void {
+  private initFormControls(
+    portfolio: IPortfolio,
+    directionOptions: Array<IOption>,
+    stageOptions: Array<IOption>,
+    statusOptions: Array<IOption>
+  ): void {
     this.controls = [
       { label: 'portfolios.grid.name', controlName: 'name', type: 'text', required: true },
-      { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,  disabled: true,
-          options: directionOptions },
+      { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,
+          disabled: true, options: directionOptions },
       { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select', options: stageOptions },
-      { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true, options: statusOptions },
+      { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true,
+          disabled: portfolio.directionCode === 2, options: statusOptions },
       { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'text' },
       { label: 'portfolios.grid.startWorkDate', controlName: 'startWorkDate', type: 'text' },
       { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'text' },
