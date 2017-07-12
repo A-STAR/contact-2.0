@@ -2,11 +2,12 @@
   *ngIf="isLdapUserBeingSelected"
   titleTranslationKey="users.ldap.title"
   actionTranslationKey="default.buttons.ok"
+  [canSubmit]="!!ldapDialog.selectedUser"
   [autoWidth]="false"
-  (action)="onApplyLdapUser()"
+  (action)="onApplyLdapUser(ldapDialog.selectedUser.name)"
   (cancel)="onCloseLdapUser()"
 >
-  <app-user-ldap-dialog>
+  <app-user-ldap-dialog #ldapDialog>
   </app-user-ldap-dialog>
 </app-action-dialog>
 

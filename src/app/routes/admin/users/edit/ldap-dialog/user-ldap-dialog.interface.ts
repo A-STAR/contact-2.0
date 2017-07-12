@@ -9,7 +9,10 @@ export interface ILdapGroupsResponse {
 }
 
 export interface ILdapUser {
+  login: string;
   name: string;
+  isBlocked: boolean;
+  comment: string;
 }
 
 export interface ILdapUsersResponse {

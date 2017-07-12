@@ -27,11 +27,15 @@ export class UserLdapDialogComponent {
   groups$: Observable<Array<ILdapGroup>>;
   users$: Observable<Array<ILdapUser>>;
 
-  private selectedUser: ILdapUser = null;
+  private _selectedUser: ILdapUser = null;
 
   constructor(private userLdapDialogService: UserLdapDialogService) {
     this.groups$ = this.userLdapDialogService.readLdapGroups()
       .map(response => response.groups);
+  }
+
+  get selectedUser(): ILdapUser {
+    return this._selectedUser;
   }
 
   onGroupSelect(group: ILdapGroup): void {
@@ -40,6 +44,6 @@ export class UserLdapDialogComponent {
   }
 
   onUserSelect(user: ILdapUser): void {
-    this.selectedUser = user;
+    this._selectedUser = user;
   }
 }

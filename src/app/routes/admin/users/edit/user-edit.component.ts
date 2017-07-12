@@ -160,7 +160,8 @@ export class UserEditComponent {
     };
   }
 
-  onApplyLdapUser(): void {
+  onApplyLdapUser(name: string): void {
+    console.log(name);
     // TODO(d.maltsev)
     this.onCloseLdapUser();
   }
