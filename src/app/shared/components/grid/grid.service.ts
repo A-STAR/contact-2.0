@@ -1,23 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
-import 'rxjs/add/operator/finally';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import {
-  IGrid2ColumnSettings,
-  IGrid2Request,
-  IGrid2RequestPayload,
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2ColumnSorter, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
-import { FilterObject, IFilterBaseObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
@@ -28,55 +23,58 @@ export class GridService {
     private translateService: TranslateService,
   ) {}
 
-  buildRequest(payload: IGrid2RequestPayload): IGrid2Request {
+  buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
     const request: IGrid2Request = {};
-    const filters: FilterObject = FilterObject.create().and();
-    if (payload.columnsSettings) {
-      R.values(payload.columnsSettings)
-        .forEach(columnSettings => {
-          const { filter } = columnSettings;
-          if (filter) {
-            filter.addFilter(
-              FilterObject.create(filter)
-            );
+    const filter: FilterObject = FilterObject.create().and();
+    const { sorters, currentPage, pageSize } = params;
+
+    if (sorters) {
+      R.values(sorters)
+        .forEach(sorter => {
+          const { filter: f } = sorter;
+          if (f) {
+            filter.addFilter(FilterObject.create(f));
           }
         });
 
-      if (payload.gridFilters) {
-        payload.gridFilters.forEach((filter: IFilterBaseObject) => {
-          filters.addFilter(
-            FilterObject.create(filter)
-          );
-        });
-      }
-
-      request.filtering = filters;
-
       request.sorting = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
+        (columnSettings: IGrid2ColumnSorter, columnId: string) => ({
           direction: columnSettings.sortDirection,
           field: columnId,
           order: columnSettings.sortOrder,
         }),
-        payload.columnsSettings
+        sorters
       ))
       .filter(Boolean)
       .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
       .map(R.omit(['order']));
     }
 
-    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
+    if (filters) {
+      filter.addFilter(filters);
+    }
+
+    // console.log('params', params);
+    // console.log('filters', filters);
+    // console.log('request filter', filter);
+
+    if (filter.hasFilter() || filter.hasValues()) {
+      request.filtering = filter;
+    }
+
+    if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
       request.paging = {
-        pageNumber: payload.currentPage,
-        resultsPerPage: payload.pageSize
+        pageNumber: currentPage,
+        resultsPerPage: pageSize
       };
     }
+
     return request;
   }
 
   /**
    * Build column defs from server metadata
-   * Use only once, preferably during ngOnInit phase
+   * Use only once during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {Observable<IGridColumn[]>} columns Initial column descriptions

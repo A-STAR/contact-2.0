@@ -5,23 +5,19 @@ import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
-import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2ColumnsSettings, IGrid2EventPayload, IGrid2Filter } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorters, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { toFullName } from '../../../core/utils';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
-
-export const toFullName = (entity: { lastName: string, firstName: string, middleName: string }) => {
-  return [ entity.lastName, entity.firstName, entity.middleName ]
-    .filter(Boolean).join(' ');
-};
 
 @Component({
   selector: 'app-actions-log',
@@ -57,9 +53,8 @@ export class ActionsLogComponent {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
-  actionsLogColumnMovingInProgress: Observable<boolean>;
-  actionsLogSelectedRows: Observable<IDictionaryItem[]>;
+  actionsLogSorters: Observable<IGrid2Sorters>;
+  actionsLogSelected: Observable<IDictionaryItem[]>;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
@@ -77,21 +72,20 @@ export class ActionsLogComponent {
     this.actionsLogData = this.actionsLogService.actionsLogRows;
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
-    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
-    this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
-    this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
+    this.actionsLogSorters = this.actionsLogService.actionsLogSorters;
+    this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
   }
 
-  onFilter(gridFilters: IGrid2Filter[]): void {
-    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
-    filters.gridFilters = gridFilters;
+  onFilter(gridFilters: FilterObject): void {
+    const filters = this.filter.getFilters();
+    filters.addFilter(gridFilters);
     this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
     this.actionsLogService.filter(filters);
   }
 
   onRequestData(payload: IGrid2EventPayload): void {
-    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
-    filters.gridFilters = this.grid.getFilters();
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
     this.store.dispatch(payload);
     this.actionsLogService.fetch(filters);
   }
@@ -105,18 +99,21 @@ export class ActionsLogComponent {
   }
 
   doSearch(): void {
-    const filters: IActionsLogFilterRequest = this.filter.getFilterValues();
-    filters.gridFilters = this.grid.getFilters();
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
     this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
     this.actionsLogService.filter(filters);
   }
 
   doExport(): void {
-    const columns = this.grid.getExportableColumnNames();
-    const body = {
-      columns,
-      ...this.actionsLogService.createRequest({}, this.filter.getFilterValues())
-    };
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
+    const sorters = this.grid.getSorters();
+    const { pageSize, page: currentPage } = this.grid;
+    const gridRequestPayload = { currentPage, pageSize, sorters };
+    const request = this.gridService.buildRequest(gridRequestPayload, filters);
+    const columns = this.grid.getExportableColumns();
+    const body = { columns, ...request };
 
     this.downloader.download(body);
   }

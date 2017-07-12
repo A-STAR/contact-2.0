@@ -14,10 +14,10 @@
       [overlayNoRowsTemplate]="'default.grid.empty' | translate"
       [overlayLoadingTemplate]="'default.grid.empty' | translate"
       [rowSelection]="rowSelection"
-      (dragStarted)="onDragStarted()"
-      (dragStopped)="onDragStopped()"
-      (rowSelected)="onRowSelected($event)"
-      (rowDoubleClicked)="onRowDoubleClicked()"
+      (dragStarted)="dragStarted()"
+      (dragStopped)="dragStopped()"
+      (rowSelected)="rowSelected($event)"
+      (rowDoubleClicked)="rowDoubleClicked()"
     >
     </ag-grid-angular>
 </div>

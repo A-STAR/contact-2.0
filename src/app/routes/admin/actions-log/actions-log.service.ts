@@ -15,12 +15,7 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import {
-  IGrid2ColumnsSettings,
-  IGrid2Request,
-  IGrid2RequestPayload,
-  IGrid2State
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorters } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -43,19 +38,12 @@ export class ActionsLogService {
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
         const [action, store]: [Action, IAppState] = payload;
-        const customFilter: IActionsLogFilterRequest = action.payload;
-        // console.log('action payload', action.payload);
-        const grid: IGrid2State = store.actionsLog.actionsLogGrid;
-        // TODO(a.tymchuk): refactor this
-        const request = this.createRequest(
-          {
-            currentPage: grid.currentPage,
-            pageSize: grid.pageSize,
-            columnsSettings: grid.columnsSettings,
-            // fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName,
-          },
-          customFilter
-        );
+        const filterRequest: IActionsLogFilterRequest = action.payload;
+        const { currentPage, pageSize, sorters } = store.actionsLog.actionsLogGrid;
+        const gridRequestPayload = { currentPage, pageSize, sorters };
+        // console.log('filter request', filterRequest);
+
+        const request = this.gridService.buildRequest(gridRequestPayload, filterRequest.filters);
 
         return this.dataService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
@@ -92,19 +80,13 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionsLogColumnsSettings(): Observable<IGrid2ColumnsSettings> {
+  get actionsLogSorters(): Observable<IGrid2Sorters> {
     return this.store
-      .select(state => state.actionsLog.actionsLogGrid.columnsSettings)
+      .select(state => state.actionsLog.actionsLogGrid.sorters)
       .distinctUntilChanged();
   }
 
-  get actionsLogColumnMovingInProgress(): Observable<boolean> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.columnMovingInProgress)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogSelectedRows(): Observable<IDictionaryItem[]> {
+  get actionsLogSelected(): Observable<IDictionaryItem[]> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.selectedRows)
       .distinctUntilChanged();
@@ -128,40 +110,6 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
-    if (customFilter.gridFilters) {
-      payload.gridFilters = customFilter.gridFilters;
-    }
-    const request: IGrid2Request = this.gridService.buildRequest(payload);
-
-    request.filtering = FilterObject.create()
-      .and()
-      .addFilter(request.filtering)
-      .addFilter(
-        FilterObject.create()
-          .setName('createDateTime')
-          .betweenOperator()
-          .setValues([
-            this.valueConverterService.ISOFromLocalDateTime(customFilter.startDate + ' ' + customFilter.startTime),
-            this.valueConverterService.ISOFromLocalDateTime(customFilter.endDate + ' ' + customFilter.endTime),
-          ])
-      )
-      .addFilter(
-        FilterObject.create()
-          .setName('typeCode')
-          .inOperator()
-          .setValues(customFilter.actionsTypes)
-      )
-      .addFilter(
-        FilterObject.create()
-          .setName('userId')
-          .inOperator()
-          .setValues(customFilter.employees)
-      );
-
-    return request;
-  }
-
   getEmployeesAndActionTypes(): Observable<void> {
     return Observable.zip(
       this.getEmployees(),
@@ -179,16 +127,16 @@ export class ActionsLogService {
     );
   }
 
-  fetch(payload: IActionsLogFilterRequest): void {
+  fetch(filters: FilterObject): void {
     this.store.dispatch({
-      payload,
+      payload: { filters },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }
 
-  filter(payload: IActionsLogFilterRequest): void {
+  filter(filters: FilterObject): void {
     this.store.dispatch({
-      payload: { ...payload, currentPage: 1 },
+      payload: { filters, currentPage: 1 },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }

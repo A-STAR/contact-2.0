@@ -12,7 +12,7 @@ import {
 
 import { DebtorsService } from './debtors.service';
 import { ObservableHelper } from '../../../core/observable/ObservableHelper';
-import { toFullName } from '../../admin/actions-log/actions-log.component';
+import { toFullName } from '../../../core/utils';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
 @Component({

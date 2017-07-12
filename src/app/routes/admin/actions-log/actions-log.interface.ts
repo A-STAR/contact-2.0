@@ -12,17 +12,17 @@ export interface IEmployee {
 }
 
 export interface IActionLog {
-  userId: number;
-  lastName: string;
+  createDateTime: string;
+  dsc: string;
   firstName: string;
+  guiObject: string;
+  lastName: string;
+  machine: string;
   middleName: string;
+  personId: number;
   position: string;
   typeCode: number;
-  createDateTime: string;
-  machine: string;
-  guiObject: string;
-  dsc: string;
-  personId: number;
+  userId: number;
 }
 
 export interface IActionsLogServiceState {

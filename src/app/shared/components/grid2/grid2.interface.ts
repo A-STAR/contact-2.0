@@ -2,76 +2,63 @@ import { RowNode } from 'ag-grid';
 
 import { FilterObject } from './filter/grid2-filter';
 
-export interface IGrid2Filter {
-  name?: string;
-  operator?: string;
-  values?: any;
-}
+export type Grid2SortingType = 'asc' | 'desc' | null;
 
-export interface IGrid2ColumnSettings {
+export type IGrid2ColumnsPositions = string[];
+
+export interface IGrid2Sorter {
   sortDirection?: Grid2SortingType;
   sortOrder?: number;
+}
+
+export interface IGrid2ColumnSorter extends IGrid2Sorter {
   filter?: FilterObject;
 }
 
-export interface IGrid2ColumnsSettings {
-  [key: string]: IGrid2ColumnSettings;
-}
-
-export interface IGrid2PaginationInfo {
-  currentPage?: number;
-  pageSize?: number;
-}
-
-export interface IGrid2State extends IGrid2PaginationInfo {
-  columnsSettings?: IGrid2ColumnsSettings;
-  columnsPositions: string[];
-  groupingColumns: string[];
-  selectedRows: any[];
-  columnMovingInProgress: boolean;
-  filterColumnName?: string;
-}
-
-export interface IGrid2ColumnFilterPayload {
+export interface IGrid2ColumnFilter {
   columnId: string;
   filter: FilterObject;
 }
 
-export interface IGrid2SortDirectionPayload {
-  columnId: string;
-  sortDirection: Grid2SortingType;
-  sortOrder: number;
+export interface IGrid2Sorters {
+  [key: string]: IGrid2ColumnSorter;
 }
 
-export interface IGrid2ColumnsPositionsPayload {
-  columnsPositions: string[];
+export interface IGrid2ExportableColumn {
+  field: string;
+  name: string;
 }
 
-export interface IGrid2GroupingColumnsPayload {
+export interface IGrid2RequestParams {
+  currentPage?: number;
+  pageSize?: number;
+  sorters?: IGrid2Sorters;
+}
+
+export interface IGrid2State extends IGrid2RequestParams {
+  columnsPositions: IGrid2ColumnsPositions;
+  groupingColumns: string[];
+  selectedRows: any[];
+}
+
+export interface IGrid2GroupingColumns {
   groupingColumns: string[];
 }
 
-export interface IGrid2SelectedPayload {
+export interface IGrid2Selected {
   rowData: any;
   selected: boolean;
 }
 
-export type Grid2SortingType = 'asc' | 'desc' | null;
-
 export interface IActionGrid2Payload {
   type: string;
-  payload: IGrid2ColumnsPositionsPayload
-    |IGrid2SortDirectionPayload
-    |IGrid2GroupingColumnsPayload
-    |IGrid2SelectedPayload
-    |IGrid2ColumnMovingPayload
-    |IGrid2ColumnsPositionsPayload
-    |IGrid2ColumnFilterPayload
+  payload: IGrid2ColumnsPositions
+    |IGrid2Sorter
+    |IGrid2GroupingColumns
+    |IGrid2Selected
+    |IGrid2ColumnsPositions
+    |IGrid2ColumnFilter
     |number;
-}
-
-export interface IGrid2ColumnMovingPayload {
-  movingColumnInProgress: boolean;
 }
 
 export interface IGrid2RequestSorting {
@@ -89,21 +76,14 @@ export interface IGrid2Request {
   filtering?: FilterObject;
 }
 
-export interface IGrid2RequestPayload extends IGrid2PaginationInfo {
-  columnsSettings?: IGrid2ColumnsSettings;
-  fieldNameConverter?: Function;
-  gridFilters?: IGrid2Filter[];
-}
-
 export interface IGrid2EventPayload {
   type: string;
   payload?: number
-    |IGrid2ColumnFilterPayload
-    |IGrid2ColumnsPositionsPayload
-    |IGrid2ColumnMovingPayload
-    |IGrid2GroupingColumnsPayload
-    |IGrid2SelectedPayload
-    |IGrid2SortDirectionPayload;
+    |IGrid2ColumnFilter
+    |IGrid2ColumnsPositions
+    |IGrid2GroupingColumns
+    |IGrid2Selected
+    |IGrid2Sorter;
 }
 
 // need this, since ag-grid doesn't export this interface

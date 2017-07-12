@@ -1,51 +1,37 @@
-export type FilteringConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
+type FilterConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
-export class FilteringOperators {
-  static EQUAL: FilteringOperatorType = '==';
-  static NOT_EQUAL: FilteringOperatorType = '!=';
-  static EMPTY: FilteringOperatorType = 'EMPTY';
-}
+type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
+  | 'EMPTY'
+  | 'NOT EMPTY'
+  | 'IN'
+  | 'NOT IN'
+  | 'BETWEEN'
+  | 'NOT BETWEEN'
+  | 'LIKE'
+  | 'NOT LIKE';
 
-export type FilteringOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<' | 'EMPTY' | 'NOT EMPTY' | 'IN' | 'NOT IN'
-  | 'BETWEEN' | 'NOT BETWEEN' | 'LIKE' | 'NOT LIKE';
-
-export interface IFilterBaseObject {
-  condition?: FilteringConditionType;
-  filters?: IFilterBaseObject[];
+export class FilterObject {
+  condition?: FilterConditionType;
+  filters?: FilterObject[];
   name?: string;
-  operator?: FilteringOperatorType;
-  values?: Array<any>;
-}
-
-export class FilterObject implements IFilterBaseObject {
-  name: string;
-  condition: FilteringConditionType;
-  filters: IFilterBaseObject[];
-  operator: FilteringOperatorType;
+  operator?: FilterOperatorType;
   values?: Array<any>;
 
-  static create(source?: IFilterBaseObject, decorators?: { name: Function }): FilterObject {
-    let filter: FilterObject = new FilterObject();
+  static create(source?: FilterObject): FilterObject {
+    const filter: FilterObject = new FilterObject();
     if (source) {
-      filter = filter
-        .setName(decorators && decorators.name ? decorators.name(source.name) : source.name)
-        .setValues(source.values)
+      filter
+        .setName(source.name)
         .setCondition(source.condition)
-        .setOperator(source.operator);
-      if (Array.isArray(source.filters) && source.filters.length) {
+        .setOperator(source.operator)
+        .setValues(source.values);
+      if (Array.isArray(source.filters)) {
         filter.setFilters(
-          source.filters.map(_filter => FilterObject.create(_filter, decorators))
+          source.filters.map(_filter => FilterObject.create(_filter))
         );
       }
     }
     return filter;
-  }
-
-  addFilter(filter: FilterObject): FilterObject {
-    if (filter && (filter.hasValues() || filter.hasFilter())) {
-      this.filters = (this.filters || []).concat(filter);
-    }
-    return this;
   }
 
   and(): FilterObject {
@@ -56,13 +42,17 @@ export class FilterObject implements IFilterBaseObject {
     return this.setCondition('OR');
   }
 
-  setCondition(condition: FilteringConditionType): FilterObject {
-    this.condition = condition;
+  setCondition(condition: FilterConditionType): FilterObject {
+    if (condition) {
+      this.condition = condition;
+    }
     return this;
   }
 
   setName(name: string): FilterObject {
-    this.name = name;
+    if (name != null) {
+      this.name = name;
+    }
     return this;
   }
 
@@ -74,18 +64,36 @@ export class FilterObject implements IFilterBaseObject {
     return this.setOperator('BETWEEN');
   }
 
-  setOperator(operator: FilteringOperatorType): FilterObject {
+  setOperator(operator: FilterOperatorType): FilterObject {
     this.operator = operator;
     return this;
   }
 
-  setFilters(filters: IFilterBaseObject[]): FilterObject {
+  addFilter(filter: FilterObject): FilterObject {
+    if (filter && (filter.hasValues() || filter.hasFilter())) {
+      if (!this.condition) {
+        throw new Error('You must set a condition prior to adding a filter');
+      }
+      this.filters = (this.filters || []).concat(filter);
+    }
+    return this;
+  }
+
+  addFilters(filters: FilterObject[]): FilterObject {
+    if (!this.condition) {
+      throw new Error('You must set a condition prior to adding filters');
+    }
+    this.filters = (this.filters || []).concat(filters);
+    return this;
+  }
+
+  setFilters(filters: FilterObject[]): FilterObject {
     this.filters = [].concat(filters);
     return this;
   }
 
   setValues(values: any | any[]): FilterObject {
-    // skip null & undefined, since BE doesn't accept them
+    // skip null & undefined, since BE doesn't accept those
     if (values != null) {
       this.values = [].concat(values);
     }
