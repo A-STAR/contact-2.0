@@ -33,7 +33,7 @@ export class DialogComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    if (this.autoWidth) {
+    if (this.autoWidth && !this.styles.width) {
       this.styles.width = 'auto';
     }
     this.renderer2.appendChild(this.environmentContainer, this.element.nativeElement);

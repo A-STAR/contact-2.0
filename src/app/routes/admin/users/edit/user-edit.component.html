@@ -3,7 +3,7 @@
   titleTranslationKey="users.ldap.title"
   actionTranslationKey="default.buttons.ok"
   [canSubmit]="!!ldapDialog.selectedUser"
-  [autoWidth]="false"
+  [styles]="{ width: '80%', 'max-width': '80%' }"
   (action)="onLdapDialogAction(ldapDialog.selectedUser.login)"
   (cancel)="onLdapDialogClose()"
 >

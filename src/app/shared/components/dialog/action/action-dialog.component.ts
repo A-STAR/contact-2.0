@@ -13,6 +13,7 @@ export class ActionDialogComponent {
   @Input() actionTranslationKey = 'default.buttons.save';
   @Input() actionMode = 'success';
   @Input() canSubmit = true;
+  @Input() styles = {} as CSSStyleDeclaration;
 
   @Output() action: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();

@@ -1,5 +1,8 @@
-<app-dialog [autoWidth]="autoWidth"
-            (displayChange)="onDisplayChange($event)">
+<app-dialog
+  [autoWidth]="autoWidth"
+  [styles]="styles"
+  (displayChange)="onDisplayChange($event)"
+>
   <div dialog-header>
     <h3>{{ titleTranslationKey | translate:titleTranslationParams }}</h3>
   </div>
