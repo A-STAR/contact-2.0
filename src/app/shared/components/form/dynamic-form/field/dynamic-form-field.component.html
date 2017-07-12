@@ -106,11 +106,16 @@
       <span class="form-label">
         {{ control.label | translate }}
       </span>
-      <app-popup-input
-        [value]="control.value | async"
-        [placeholder]="control.placeholder"
-        (action)="control.action()"
-      ></app-popup-input>
+      <div class="popupinput">
+        <span class="input-group">
+          <input readonly class="form-control" [formControlName]="control.controlName"/>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" (click)="control.action()">
+              <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+            </button>
+          </span>
+        </span>
+      </div>
     </label>
   </ng-container>
 

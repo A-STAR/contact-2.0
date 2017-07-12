@@ -161,8 +161,7 @@ export class UserEditComponent {
   }
 
   onApplyLdapUser(name: string): void {
-    console.log(name);
-    // TODO(d.maltsev)
+    this.form.form.patchValue({ ldapLogin: name });
     this.onCloseLdapUser();
   }
 
