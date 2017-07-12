@@ -3,9 +3,12 @@ import { Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
+
+import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
 
@@ -20,6 +23,8 @@ const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
 export class AuthService implements CanActivate {
+  static GLOBAL_RESET = 'GLOBAL_RESET';
+
   static JWT_EXPIRATION_THRESHOLD = 60e3;
   static JWT_TIMER_INTERVAL = 10e3;
 
@@ -32,6 +37,7 @@ export class AuthService implements CanActivate {
     private dataService: DataService,
     private router: Router,
     private jwtHelper: JwtHelper,
+    private store: Store<IAppState>,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
@@ -66,6 +72,7 @@ export class AuthService implements CanActivate {
       })
       .catch(error => {
         this.authenticated = false;
+        this.dispatchResetAction();
         const { message } = error.json();
         throw new Error(this.getErrorMessage(message));
       })
@@ -86,12 +93,17 @@ export class AuthService implements CanActivate {
     removeToken();
     this.authenticated = false;
     this.redirectToLogin();
+    this.dispatchResetAction();
   }
 
   redirectToLogin(url: string = null): void {
     this.clearTokenTimer();
     this.redirectUrl = url || this.router.url || '/home';
     this.router.navigate(['/login']);
+  }
+
+  private dispatchResetAction(): void {
+    this.store.dispatch({ type: AuthService.GLOBAL_RESET });
   }
 
   private getErrorMessage(message: any = null): string {
@@ -117,6 +129,7 @@ export class AuthService implements CanActivate {
       return this.authenticated = true;
     }
 
+    this.dispatchResetAction();
     return this.authenticated = false;
   }
 

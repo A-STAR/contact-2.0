@@ -1,5 +1,5 @@
 import { compose } from '@ngrx/core';
-import { Action, ActionReducer, combineReducers } from '@ngrx/store';
+import { Action, combineReducers } from '@ngrx/store';
 
 import { IAppState } from './state.interface';
 
@@ -7,6 +7,7 @@ import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.re
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
+import { authReducer } from '../auth/auth.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
@@ -37,10 +38,6 @@ export const reducers = {
   constants: constantsReducer,
 };
 
-export function globalResetReducer(reducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
-  return (state: IAppState, action: Action): IAppState => reducer(action.type === 'GLOBAL_RESET' ? undefined : state, action);
-}
-
 export function rootReducer(state: IAppState, action: Action): IAppState {
-  return compose(globalResetReducer, combineReducers)(reducers)(state, action);
+  return compose(authReducer, combineReducers)(reducers)(state, action);
 };
