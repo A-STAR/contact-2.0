@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Actions } from '@ngrx/effects';
@@ -42,6 +42,7 @@ export class UserEditComponent {
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
@@ -88,6 +89,7 @@ export class UserEditComponent {
 
       this.controls = this.getFormControls(data.languages, data.roles, passwordValidators);
       this.formData = this.getFormData(data.user);
+      this.changeDetectorRef.markForCheck();
     });
   }
 
