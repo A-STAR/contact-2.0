@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-user-ldap-dialog',
-  templateUrl: './user-ldap-dialog.component.html'
+  templateUrl: './user-ldap-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserLdapDialogComponent {
   groupsColumns: Array<IGridColumn> = [

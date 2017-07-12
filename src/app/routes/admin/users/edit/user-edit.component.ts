@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Actions } from '@ngrx/effects';
@@ -22,7 +22,8 @@ import { password } from '../../../../core/validators/password';
 
 @Component({
   selector: 'app-user-edit',
-  templateUrl: 'user-edit.component.html'
+  templateUrl: 'user-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditComponent {
   static COMPONENT_NAME = 'UserEditComponent';

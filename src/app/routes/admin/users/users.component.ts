@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -20,7 +20,8 @@ import { ValueConverterService } from '../../../core/converter/value/value-conve
 
 @Component({
   selector: 'app-users',
-  templateUrl: 'users.component.html'
+  templateUrl: 'users.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
