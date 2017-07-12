@@ -7,7 +7,7 @@ import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interfa
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2Sorters, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorter, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -53,7 +53,7 @@ export class ActionsLogComponent {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogSorters: Observable<IGrid2Sorters>;
+  actionsLogSorters: Observable<IGrid2Sorter[]>;
   actionsLogSelected: Observable<IDictionaryItem[]>;
 
   @ViewChild('downloader') downloader: DownloaderComponent;

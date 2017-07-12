@@ -24,13 +24,7 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
-import {
-  IGrid2ColumnsPositions,
-  IGrid2Sorters,
-  IGrid2EventPayload,
-  IGrid2ExportableColumn,
-  IGrid2Sorter,
-} from './grid2.interface';
+import { IGrid2ColumnsPositions, IGrid2Sorter, IGrid2EventPayload, IGrid2ExportableColumn } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { FilterObject } from './filter/grid2-filter';
 
@@ -85,7 +79,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
 
   // Inputs without presets
-  @Input() sorters = null as IGrid2Sorters;
+  @Input() sorters = null as IGrid2Sorter[];
   @Input() filterColumn: Column;
   @Input() columnTranslationKey: string;
   @Input() rows: any[];
@@ -357,15 +351,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onSortChanged(): void {
     const sorters = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter });
+    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter[] });
   }
 
   getSorters(): any {
     return this.gridOptions.api.getSortModel()
-      .reduce((acc, col, i) => {
-        acc[col.colId] = { sortDirection: col.sort, sortOrder: i };
-        return acc;
-      }, {});
+      .map(col => {
+        return { field: col.colId, direction: col.sort };
+      });
   }
 
   getExportableColumns(): IGrid2ExportableColumn[] {

@@ -15,7 +15,7 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IGrid2Sorters } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorter } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -46,12 +46,10 @@ export class ActionsLogService {
         const request = this.gridService.buildRequest(gridRequestPayload, filterRequest.filters);
 
         return this.dataService.create('/list?name=actions', {}, request)
-          .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
+          .map((result: { data: IActionLog[], total: number }): IActionsLogPayload => {
+            const { data, total } = result;
             return {
-              payload: {
-                data: data.data,
-                total: data.total
-              },
+              payload: { data, total },
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
           })
@@ -80,7 +78,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionsLogSorters(): Observable<IGrid2Sorters> {
+  get actionsLogSorters(): Observable<IGrid2Sorter[]> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.sorters)
       .distinctUntilChanged();

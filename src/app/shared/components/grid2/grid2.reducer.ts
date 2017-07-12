@@ -1,7 +1,5 @@
 import {
   IActionGrid2Payload,
-  IGrid2ColumnFilter,
-  IGrid2ColumnSorter,
   IGrid2ColumnsPositions,
   IGrid2GroupingColumns,
   IGrid2Selected,
@@ -15,7 +13,7 @@ import { Grid2Component } from './grid2.component';
 export const GRID2_DEFAULT_STATE: IGrid2State = {
   currentPage: 1,
   pageSize: Grid2Component.DEFAULT_PAGE_SIZE,
-  sorters: {},
+  sorters: [],
   columnsPositions: [],
   groupingColumns: [],
   selectedRows: [],
@@ -100,41 +98,28 @@ export function grid2Reducer(
       return {
         ...state,
         selectedRows: [],
-        groupingColumns: groupingColumns.groupingColumns
+        groupingColumns: [...groupingColumns.groupingColumns]
       };
 
     case Grid2Component.COLUMNS_POSITIONS:
-      const columnsPositions = action.payload as IGrid2ColumnsPositions;
+      const columns = action.payload as IGrid2ColumnsPositions;
       return {
         ...state,
-        columnsPositions: [...columnsPositions],
-        sorters: R.mapObjIndexed((sorter: IGrid2ColumnSorter, columnId: string) => {
-          return {
-            ...sorter,
-            sortOrder: columnsPositions.findIndex(_columnId => columnId === _columnId)
-          };
-        }, state.sorters)
+        columnsPositions: [...columns],
       };
 
     case Grid2Component.SORTING_DIRECTION:
-      const sorters = action.payload as IGrid2Sorter;
+      const sorters = action.payload as IGrid2Sorter[];
       return {
         ...state,
-        sorters: { ...sorters }
+        sorters: [...sorters]
       };
 
     case Grid2Component.APPLY_FILTER:
-      const filters = action.payload as IGrid2ColumnFilter;
+      // const filters = action.payload as IGrid2ColumnFilter;
       return {
         ...state,
         selectedRows: [],
-        sorters: {
-          ...state.sorters,
-          [filters.columnId]: {
-            ...(state.sorters[filters.columnId]),
-            filter: filters.filter
-          }
-        }
       };
     default:
       return state;

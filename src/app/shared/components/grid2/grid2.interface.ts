@@ -7,21 +7,13 @@ export type Grid2SortingType = 'asc' | 'desc' | null;
 export type IGrid2ColumnsPositions = string[];
 
 export interface IGrid2Sorter {
-  sortDirection?: Grid2SortingType;
-  sortOrder?: number;
-}
-
-export interface IGrid2ColumnSorter extends IGrid2Sorter {
-  filter?: FilterObject;
+  direction: Grid2SortingType;
+  field: string;
 }
 
 export interface IGrid2ColumnFilter {
   columnId: string;
   filter: FilterObject;
-}
-
-export interface IGrid2Sorters {
-  [key: string]: IGrid2ColumnSorter;
 }
 
 export interface IGrid2ExportableColumn {
@@ -32,7 +24,7 @@ export interface IGrid2ExportableColumn {
 export interface IGrid2RequestParams {
   currentPage?: number;
   pageSize?: number;
-  sorters?: IGrid2Sorters;
+  sorters?: IGrid2Sorter[];
 }
 
 export interface IGrid2State extends IGrid2RequestParams {
@@ -53,7 +45,7 @@ export interface IGrid2Selected {
 export interface IActionGrid2Payload {
   type: string;
   payload: IGrid2ColumnsPositions
-    |IGrid2Sorter
+    |IGrid2Sorter[]
     |IGrid2GroupingColumns
     |IGrid2Selected
     |IGrid2ColumnsPositions
@@ -61,18 +53,12 @@ export interface IActionGrid2Payload {
     |number;
 }
 
-export interface IGrid2RequestSorting {
-  field: string;
-  direction: string;
-  order?: number;
-}
-
 export interface IGrid2Request {
   paging?: {
     pageNumber: number,
     resultsPerPage: number
   };
-  sorting?: IGrid2RequestSorting[];
+  sorting?: IGrid2Sorter[];
   filtering?: FilterObject;
 }
 
@@ -83,7 +69,7 @@ export interface IGrid2EventPayload {
     |IGrid2ColumnsPositions
     |IGrid2GroupingColumns
     |IGrid2Selected
-    |IGrid2Sorter;
+    |IGrid2Sorter[];
 }
 
 // need this, since ag-grid doesn't export this interface
