@@ -40,7 +40,6 @@ export interface IDynamicFormControl {
   height?: number;
   // options for dialog input
   action?: () => void;
-  value?: Observable<string>;
 }
 
 export type ControlTypes = 'number'

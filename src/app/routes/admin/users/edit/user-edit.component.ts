@@ -53,6 +53,11 @@ export class UserEditComponent {
   ) {
     this.usersService.fetchOne(this.userId);
 
+    this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
+      .take(1)
+      .do(() => this.onClose())
+      .subscribe();
+
     Observable.combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
       this.userPermissionsService.has('USER_ROLE_EDIT'),
@@ -108,9 +113,8 @@ export class UserEditComponent {
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
       { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ passwordValidators ] },
-      // TODO(d.maltsev): consider using control value accessor in app-popup-input
-      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', required: true, disabled: !this.permissions.canEditLdap,
-          action: () => this.isLdapUserBeingSelected = true, value: Observable.of('foo') },
+      { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', disabled: !this.permissions.canEditLdap,
+          action: () => this.isLdapUserBeingSelected = true },
       { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.permissions.canEditRole,
           options: roles },
@@ -185,11 +189,6 @@ export class UserEditComponent {
     } else {
       this.usersService.create(user, image);
     }
-
-    this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
-      .take(1)
-      .do(() => this.onClose())
-      .subscribe();
   }
 
   onClose(): void {
