@@ -15,7 +15,8 @@ export class UserConstantsService {
   constructor(private store: Store<IAppState>) {}
 
   get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved).filter(isResolved => isResolved !== null);
+    return this.state.map(state => state.isResolved)
+      .filter(isResolved => isResolved !== null);
   }
 
   createRefreshAction(): Action {
