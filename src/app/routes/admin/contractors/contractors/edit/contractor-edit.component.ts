@@ -37,7 +37,6 @@ export class ContractorEditComponent {
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    // TODO(d.maltsev): stronger typing
     this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
 
     Observable.combineLatest(

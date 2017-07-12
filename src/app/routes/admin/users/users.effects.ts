@@ -38,11 +38,25 @@ export class UsersEffects {
             }
           }
         ])
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.fetch')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchContractor$ = this.actions
+    .ofType(UsersService.USER_FETCH)
+    .switchMap((action: Action) => {
+      return this.readUser(action.payload.userId)
+        .map(response => ({
+          type: UsersService.USERS_FETCH_SUCCESS,
+          payload: {
+            user: response.users[0]
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
     });
 
   @Effect()
@@ -66,11 +80,9 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.create')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.create')
+        ]);
     });
 
   @Effect()
@@ -94,11 +106,9 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.update')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.update')
+        ]);
     });
 
   @Effect()
@@ -131,6 +141,10 @@ export class UsersEffects {
 
   private readUsers(): Observable<any> {
     return this.dataService.read('/users');
+  }
+
+  private readUser(id: number): Observable<any> {
+    return this.dataService.read('/users/{id}', { id });
   }
 
   private createUser(user: IUser): Observable<any> {

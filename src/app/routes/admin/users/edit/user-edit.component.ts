@@ -34,8 +34,9 @@ export class UserEditComponent {
 
   isLdapUserBeingSelected = false;
 
+  // TODO(d.maltsev): stronger typing
+  private userId = Number((this.activatedRoute.params as any).value.id);
   private permissions: IUserEditPermissions;
-  private userId: number;
 
   constructor(
     private actions: Actions,
@@ -48,8 +49,7 @@ export class UserEditComponent {
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    // TODO(d.maltsev): stronger typing
-    this.userId = Number((this.activatedRoute.params as any).value.id);
+    this.usersService.fetchOne(this.userId);
 
     Observable.combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
@@ -59,8 +59,7 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.permissionsService.roles.map(this.valueConverterService.valuesToOptions),
-      // TODO(d.maltsev): preload user
-      this.usersService.getUserById(this.userId),
+      this.actions.ofType(UsersService.USERS_FETCH_SUCCESS).map(action => action.payload.user),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, languages, roles, user) => ({
         canEditUser,
         canEditRole,

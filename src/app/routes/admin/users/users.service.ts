@@ -11,6 +11,7 @@ import { DataService } from '../../../core/data/data.service';
 @Injectable()
 export class UsersService {
   static USERS_FETCH         = 'USERS_FETCH';
+  static USER_FETCH          = 'USER_FETCH';
   static USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS';
   static USERS_CLEAR         = 'USERS_CLEAR';
   static USER_CREATE         = 'USER_CREATE';
@@ -31,15 +32,18 @@ export class UsersService {
       .filter(Boolean);
   }
 
-  getUserById(id: number): Observable<IUser> {
-    // TODO(d.maltsev): remove this
-    return this.dataService.read('/api/users')
-      .map(response => response.users.find(user => user.id === id));
-  }
-
   fetch(): void {
     return this.store.dispatch({
       type: UsersService.USERS_FETCH
+    });
+  }
+
+  fetchOne(userId: number): void {
+    return this.store.dispatch({
+      type: UsersService.USER_FETCH,
+      payload: {
+        userId
+      }
     });
   }
 
