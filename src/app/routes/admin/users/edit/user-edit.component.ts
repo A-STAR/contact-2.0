@@ -164,12 +164,12 @@ export class UserEditComponent {
     };
   }
 
-  onApplyLdapUser(name: string): void {
-    this.form.form.patchValue({ ldapLogin: name });
-    this.onCloseLdapUser();
+  onLdapDialogAction(ldapLogin: string): void {
+    this.form.form.patchValue({ ldapLogin });
+    this.onLdapDialogClose();
   }
 
-  onCloseLdapUser(): void {
+  onLdapDialogClose(): void {
     this.isLdapUserBeingSelected = false;
   }
 

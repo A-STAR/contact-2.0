@@ -4,8 +4,8 @@
   actionTranslationKey="default.buttons.ok"
   [canSubmit]="!!ldapDialog.selectedUser"
   [autoWidth]="false"
-  (action)="onApplyLdapUser(ldapDialog.selectedUser.name)"
-  (cancel)="onCloseLdapUser()"
+  (action)="onLdapDialogAction(ldapDialog.selectedUser.login)"
+  (cancel)="onLdapDialogClose()"
 >
   <app-user-ldap-dialog #ldapDialog>
   </app-user-ldap-dialog>
