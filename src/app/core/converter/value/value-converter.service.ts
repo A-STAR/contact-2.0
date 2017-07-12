@@ -1,68 +1,21 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import * as R from 'ramda';
 
 import {
+  IDateFormats,
   ILabeledValue,
   INamedValue,
   IOption,
   IValueEntity,
   ValueType
 } from './value-converter.interface';
-import {
-  IGrid2ColumnSettings,
-  IGrid2Request,
-  IGrid2RequestPayload,
-  Grid2SortingEnum,
-} from '../../../shared/components/grid2/grid2.interface';
-
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ValueConverterService {
-  // TODO(d.maltsev): move DATE_USER_PATTERN to locale files
-  static DATE_USER_PATTERN = 'DD.MM.YYYY';
-  static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
-  static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
+  private formats: IDateFormats = this.translateService.instant('default.date.format');
 
-  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
-    const request: IGrid2Request = {};
-    const filters: FilterObject = FilterObject.create().and();
-
-    if (payload.columnsSettings) {
-      R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        const { filter } = columnSettings;
-        filter.addFilter(
-          FilterObject.create(filter, { name:  payload.fieldNameConverter })
-        );
-      }, R.values(payload.columnsSettings));
-
-      request.filtering = filters;
-
-      request.sorting = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
-            direction: columnSettings.sortingDirection,
-            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
-            order: columnSettings.sortingOrder,
-        }),
-        payload.columnsSettings
-      ))
-      .filter(s => s.direction !== Grid2SortingEnum.NONE)
-      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
-      .map(v => ({
-        direction: v.direction === Grid2SortingEnum.ASC ? 'asc' : 'desc',
-        field: v.field,
-      }));
-    }
-
-    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
-      request.paging = {
-        pageNumber: payload.currentPage,
-        resultsPerPage: payload.pageSize
-      };
-    }
-    return request;
-  }
+  constructor(private translateService: TranslateService) {}
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -87,7 +40,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.formatDate(valueEntity.valueD);
+        valueEntity.value = this.ISOToLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -107,7 +60,6 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      // TODO(a.tymchuk): use dictionary service
       return Number(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
@@ -133,22 +85,6 @@ export class ValueConverterService {
     return v;
   }
 
-  toIsoDate(str: string): string {
-    return this.parseDate(
-      str,
-      ValueConverterService.DATE_TIME_ISO_PATTERN,
-      ValueConverterService.DATE_USER_PATTERN
-    );
-  }
-
-  toIsoDateTime(str: string): string {
-    return this.parseDate(
-      str,
-      ValueConverterService.DATE_TIME_ISO_PATTERN,
-      ValueConverterService.DATE_TIME_USER_PATTERN
-    );
-  }
-
   valuesToOptions(values: Array<INamedValue>): Array<IOption> {
     return values.map(value => ({
       label: value.name,
@@ -156,36 +92,63 @@ export class ValueConverterService {
     }));
   }
 
-  dateToIsoString(date: Date): string {
-    return date ? date.toISOString().split('.')[0] + 'Z' : null;
+  toISO(date: Date): string {
+    return date ? date.toISOString() : null;
   }
 
-  isoStringToDate(str: string): Date {
-    return str ? new Date(str) : null;
+  toLocalDateTime(date: Date): string {
+    return this.toLocal(date, this.formats.dateTime);
   }
 
-  stringToDate(str: string): Date {
-    if (!str) {
-      return null;
-    }
-    const momentDate = moment(str);
-    return momentDate.isValid() ? momentDate.toDate() : null;
+  toLocalDate(date: Date): string {
+    return this.toLocal(date, this.formats.date);
   }
 
-  dateToString(date: Date, format: string = ValueConverterService.DATE_USER_PATTERN): string {
-    return date ? moment(date).format(format) : '';
+  fromISO(value: string): Date {
+    return value ? new Date(value) : null;
   }
 
-  formatDate(str: string, format: string = ValueConverterService.DATE_USER_PATTERN): string {
-    return this.dateToString(this.stringToDate(str), format);
+  fromLocalDateTime(value: string): Date {
+    return this.fromLocal(value, this.formats.dateTime);
   }
 
-  formatDateTime(str: string, format: string = ValueConverterService.DATE_TIME_USER_PATTERN): string {
-    return this.dateToString(this.stringToDate(str), format);
+  fromLocalDate(value: string): Date {
+    return this.fromLocal(value, this.formats.date);
   }
 
-  private parseDate(str: string, toPattern: string, fromPattern?: string): string {
-    const momentDate = moment(str, fromPattern);
-     return momentDate.isValid() ? momentDate.format(toPattern) : null;
+  makeRangeFromLocalDate(value: string): Array<string> {
+    const from = moment(value);
+    const to = from.clone().add(1, 'day').subtract(1, 'second');
+    return from.isValid() ? [from.toISOString(), to.toISOString()] : [];
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDateTime(value: string): string {
+    return this.toLocalDateTime(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDate(value: string): string {
+    return this.toLocalDate(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOFromLocalDateTime(value: string): string {
+    return this.toISO(this.fromLocalDateTime(value));
+  }
+
+  private toLocal(date: Date, format: string): string {
+    return date ? moment(date).format(format) : null;
+  }
+
+  private fromLocal(value: string, format: string): Date {
+    const date = value && moment(value, format, true);
+    return date && date.isValid() ? date.toDate() : null;
   }
 }

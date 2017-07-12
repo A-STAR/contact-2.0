@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { IUserPermissionsResponse } from './user-permissions.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { UserPermissionsService } from './user-permissions.service';
 
@@ -40,11 +40,11 @@ export class UserPermissionsEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
 
   private read(): Observable<IUserPermissionsResponse> {
-    return this.gridService.read('/userpermits');
+    return this.dataService.read('/userpermits');
   }
 }

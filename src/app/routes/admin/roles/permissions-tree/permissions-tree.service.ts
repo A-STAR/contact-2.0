@@ -6,18 +6,20 @@ import { IPermissionRole } from '../permissions.interface';
 import { IPermissionsTreeNode } from './permissions-tree.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
+import { DataService } from '../../../../core/data/data.service';
+
 import { menuConfig } from '../../../menu-config';
 
 @Injectable()
 export class PermissionsTreeService {
 
-  constructor(private gridService: GridService,
-              private translateService: TranslateService) {
-  }
+  constructor(
+    private dataService: DataService,
+    private translateService: TranslateService
+  ) {}
 
   load(currentRole: IPermissionRole, selection: ITreeNode[]): Observable<ITreeNode[]> {
-    return this.gridService.read('/roles/{id}/guiobjects', currentRole)
+    return this.dataService.read('/roles/{id}/guiobjects', currentRole)
       .map(data => this.convertToTreeNodes(data.appGuiObjects, selection));
   }
 
@@ -33,11 +35,11 @@ export class PermissionsTreeService {
 
   getDiff(nodes: ITreeNode[], nodes2: ITreeNode[]): ITreeNode[] {
     return nodes
-      .filter((node: ITreeNode) => !node.children && !nodes2.find((node2: ITreeNode) => node2 === node))
+      .filter((node: ITreeNode) => !node.children && !nodes2.find((node2: ITreeNode) => node2 === node));
   }
 
   private updatePermissions(currentRole: IPermissionRole, id: number, add: boolean): Observable<any> {
-    return this.gridService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: add });
+    return this.dataService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: add });
   }
 
   private filterAndConvertToIds(nodes: ITreeNode[]): number[] {

@@ -27,3 +27,8 @@ export interface IOption {
   label: string;
   value: number | string;
 }
+
+export interface IDateFormats {
+  date: string;
+  dateTime: string;
+}

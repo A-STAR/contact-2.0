@@ -1,11 +1,11 @@
 <div class="grid grid-default">
-    <!--<app-toolbar
-      *ngIf="hasToolbar"
+    <!--<app-toolbar-2
+      *ngIf="toolbarActions"
       class="app-toolbar"
       [actions]="toolbarActions"
       (actionClick)="onActionClick($event)"
     >
-    </app-toolbar>-->
+    </app-toolbar-2>-->
     <ag-grid-angular
       class="app-grid2 ag-contact2"
       [columnDefs]="columnDefs"
@@ -16,7 +16,7 @@
       [rowSelection]="rowSelection"
       (dragStarted)="onDragStarted()"
       (dragStopped)="onDragStopped()"
-      (rowSelected)="onSelect($event)"
+      (rowSelected)="onRowSelected($event)"
       (rowDoubleClicked)="onRowDoubleClicked()"
     >
     </ag-grid-angular>
@@ -25,7 +25,7 @@
   *ngIf="pagination"
   class="app-toolbar"
   [actions]="paginationPanel"
-  (actionClick)="onToolbarActionClick($event)"
-  (actionSelect)="onToolbarActionSelect($event)"
+  (actionClick)="onPageChange($event)"
+  (actionSelect)="onPageSizeChange($event)"
 >
 </app-toolbar>

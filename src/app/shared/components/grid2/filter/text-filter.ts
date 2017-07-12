@@ -46,7 +46,7 @@ export class GridTextFilter implements IFilter {
   doesFilterPass(params: IDoesFilterPassParams): boolean {
     // make sure each separate word passes separately
     // p.e. `Rebecca Show` could be filtered as `re sh`
-    console.log(`filter text: ${this.filterText}, params: ${this.valueGetter(params)}`);
+    // console.log(`filter text: ${this.filterText}, params: ${this.valueGetter(params)}`);
     return this.filterText
       .toLowerCase()
       .split(' ')

@@ -37,7 +37,7 @@ export class QueryBuilderComponent {
     this.isQueryBuilderDialogVisible = true;
   }
 
-  toggleBetweenQueryBuilderAndResultingJson() {
+  toggleBetweenQueryBuilderAndResultingJson(): void {
     this.isQueryBuilderShown = !this.isQueryBuilderShown;
   }
 

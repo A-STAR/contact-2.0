@@ -12,7 +12,12 @@
   background-color: inherit;
 }
 
-.filter-button {
+.export-button,
+.search-button {
   font-size: 14px;
   border-color: #dde6e9;
+}
+
+.search-button {
+  width: 100%;
 }

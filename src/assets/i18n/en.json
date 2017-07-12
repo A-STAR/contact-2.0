@@ -31,6 +31,9 @@
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",
         "BANKS": "Banks",
+        "CONTRACTOR": "Contractor",
+        "CONTRACTOR_MANAGERS": "Contractor Managers",
+        "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
         "UPLOAD_TEMPLATES": "Upload Templates",
@@ -100,7 +103,10 @@
       "refresh": "Refresh",
       "search": "Search",
       "save": "Save",
-      "sms": "Send SMS"
+      "sms": "Send SMS",
+      "move": "Move",
+      "download": "Download",
+      "upload": "Upload"
     }
   },
   "queryBuilder": {
@@ -533,7 +539,10 @@
       "title": "Planning"
     },
     "documentationTab": {
-      "title": "Documents"
+      "title": "Documents",
+      "errors": {
+        "download": "Could not download document"
+      }
     },
     "accountsTab": {
       "title": "Accounts"
@@ -639,6 +648,88 @@
       }
     }
   },
+  "contractors": {
+    "managers": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "genderCode": "Gender",
+        "position": "Position",
+        "branchCode": "Branch",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "workAddress": "Address",
+        "comment": "Comment"
+      },
+      "messages": {
+        "accessDenied": "Access to managers list denied",
+        "errors": {
+          "fetch": "Could not fetch managers list",
+          "create": "Could not create manager",
+          "update": "Could not update manager",
+          "delete": "Could not delete manager"
+        }
+      }
+    },
+    "remove": {
+      "title": "Delete contractor",
+      "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
+    },
+    "grid": {
+      "name": "Short name",
+      "fullName": "Full name",
+      "smsName": "Name fot SMS",
+      "responsibleId": "Manager",
+      "responsibleName": "Manager",
+      "typeCode": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to contractors list denied",
+      "errors": {
+        "fetch": "Could not fetch contractors list",
+        "create": "Could not create contractor",
+        "update": "Could not update contractor",
+        "delete": "Could not delete contractor"
+      }
+    },
+    "buttons": {
+      "managers": "Managers"
+    }
+  },
+  "portfolios": {
+    "grid": {
+      "name": "Name",
+      "directionCode": "Direction",
+      "stageCode": "Stage",
+      "statusCode": "Status",
+      "signDate": "Signed on",
+      "startWorkDate": "Processing start date",
+      "endWorkDate": "Processing end date",
+      "comment": "Comment"
+    },
+    "remove": {
+      "title": "Delete portfolio",
+      "confirmMessage": "Are you sure you want to delete portfolio {{ name }}?"
+    },
+    "move": {
+      "title": "move portfolio {{ name }}"
+    },
+    "messages": {
+      "accessDenied": "Access to portfolios list denied",
+      "errors": {
+        "fetch": "Could not fetch portfolios list",
+        "create": "Could not create portfolio",
+        "update": "Could not update portfolio",
+        "delete": "Could not delete portfolio"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {
@@ -730,6 +821,13 @@
       "months": {
         "full": [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
         "short": [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+      },
+      "format": {
+        "dateTime": "MM/DD/YYYY HH:mm:ss",
+        "date": "MM/DD/YYYY"
+      },
+      "datePicker": {
+        "placeholder": "Select a date"
       }
     }
   }

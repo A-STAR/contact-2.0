@@ -4,7 +4,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { IImage } from './image-upload.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
+import { DataService } from '../../../../core/data/data.service';
 
 @Component({
   selector: 'app-image-upload',
@@ -29,13 +29,13 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   private propagateChange: Function = () => {};
 
   constructor(
-    private gridService: GridService,
+    private dataService: DataService,
     private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {
     if (this.url) {
-      this.gridService
+      this.dataService
       .readBlob(this.url)
       .take(1)
       .subscribe(image => this.image = image);

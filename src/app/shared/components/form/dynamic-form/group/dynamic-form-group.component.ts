@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, animate, state, style, transition, trigger } from '@angular/core';
+import { Component, EventEmitter, Input, Output, animate, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } from '../dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -37,7 +37,7 @@ export class DynamicFormGroupComponent {
   @Input() title = null;
   @Input() width: number;
 
-  @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
+  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
   _isCollapsed = false;
 
@@ -64,7 +64,7 @@ export class DynamicFormGroupComponent {
     }));
   }
 
-  onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
-    this.selectedControlItemsChanges.emit(event);
+  onSelectItems(event: ISelectItemsPayload): void {
+    this.onSelect.emit(event);
   }
 }

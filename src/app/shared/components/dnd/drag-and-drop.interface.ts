@@ -1,14 +1,9 @@
-import {
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  Renderer2
-} from '@angular/core';
+import { ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 export interface IDragAndDropPayload {
   swap: boolean;
-  source: string;
-  target: string;
+  sourceId: string;
+  targetId: string;
 }
 
 export interface INodeOffset {
@@ -18,18 +13,20 @@ export interface INodeOffset {
   height: number;
 }
 
-export interface IIntersectedNodeInfo {
-  element: Element;
+export interface INodeCoordinates {
   x1: number;
   x2: number;
   y1: number;
   y2: number;
 }
 
-export interface IDraggedComponent extends OnInit, OnDestroy {
+export interface IDragAndDropView extends OnInit, OnDestroy {
   dragulaOptions: any;
-  elementRef: ElementRef;
-  elementSelector: string;
-  renderer: Renderer2;
   changeLocation(payload: IDragAndDropPayload): void;
+}
+
+export interface IDragAndDropConfig {
+  viewElementRef: ElementRef;
+  draggableNodesSelector: string;
+  renderer: Renderer2;
 }

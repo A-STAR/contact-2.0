@@ -1,0 +1,26 @@
+<app-toolbar-2
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  selectionType="single"
+  [columns]="columns"
+  [rows]="attachments$ | async"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>
+
+<app-downloader
+  #downloader
+  [errorTranslationKey]="downloadErrorTranslationKey"
+  [name]="name$ | async"
+  [url]="url$ | async">
+</app-downloader>
+
+<input
+  #input
+  hidden="hidden"
+  type="file"
+  [multiple]="multiple || undefined"
+  (change)="onFileChange($event)"
+>

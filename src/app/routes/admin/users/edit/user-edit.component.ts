@@ -148,8 +148,8 @@ export class UserEditComponent {
   private getFormData(user: IUser): Partial<IUser> {
     return this.userId ? {
       ...user,
-      startWorkDate: this.valueConverterService.isoStringToDate(user.startWorkDate as string),
-      endWorkDate: this.valueConverterService.isoStringToDate(user.endWorkDate as string),
+      startWorkDate: this.valueConverterService.fromISO(user.startWorkDate as string),
+      endWorkDate: this.valueConverterService.fromISO(user.endWorkDate as string),
       languageId: user.languageId,
       roleId: user.roleId,
     } : {
@@ -201,8 +201,8 @@ export class UserEditComponent {
       password: value.password || undefined,
       // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
-      startWorkDate: this.valueConverterService.dateToIsoString(value.startWorkDate as Date),
-      endWorkDate: this.valueConverterService.dateToIsoString(value.endWorkDate as Date),
+      startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
+      endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
       // TODO(a.poterenko): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };

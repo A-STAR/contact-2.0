@@ -53,6 +53,8 @@
         >
           <app-tree-node
               *ngFor="let childNode of node.children; let firstChild=first; let lastChild=last; let index=index"
+              [collapseAdjacentNodes]="collapseAdjacentNodes"
+              [expandNodeOnClick]="expandNodeOnClick"
               [node]="childNode"
               [parentNode]="node"
               [firstChild]="firstChild"
@@ -106,6 +108,8 @@
           <div class="ui-treenode-children">
             <app-tree-node
               *ngFor="let childNode of node.children; let firstChild = first; let lastChild = last;"
+              [collapseAdjacentNodes]="collapseAdjacentNodes"
+              [expandNodeOnClick]="expandNodeOnClick"
               [node]="childNode"
               [firstChild]="firstChild"
               [lastChild]="lastChild">

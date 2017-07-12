@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
+import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
 import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
@@ -31,6 +32,7 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     resolve: {
       menu: MenuResolver,
+      lookupDataResolved: LookupResolver,
       userConstantsResolved: UserConstantsResolver,
       userLanguagesResolved: UserLanguagesResolver,
       userPermissionsResolved: UserPermissionsResolver,
@@ -45,6 +47,7 @@ export const routes: Route[] = [
       { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
       { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
       { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
+      { path: 'contractors', loadChildren: './admin/contractors/contractors-and-portfolios.module#ContractorsAndPortfoliosModule' },
       { path: 'qbuilder', loadChildren: './querybuilder/querybuilder.module#QueryBuilderModule' },
     ]
   },

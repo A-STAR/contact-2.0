@@ -1,4 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -18,7 +22,8 @@ import { UserLanguagesService } from '../../../../core/user/languages/user-langu
 
 @Component({
   selector: 'app-dict',
-  templateUrl: './dict.component.html'
+  templateUrl: './dict.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DictComponent implements OnDestroy {
 
@@ -132,6 +137,13 @@ export class DictComponent implements OnDestroy {
     return this.dictionariesService.selectedDictionary;
   }
 
+  get isReadyForCreating(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.isEntityBeingCreated,
+      this.isDictionaryRelationsReady,
+    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+  }
+
   get isReadyForEditing(): Observable<boolean> {
     return Observable.combineLatest(
       this.isEntityBeingEdited,
@@ -145,12 +157,13 @@ export class DictComponent implements OnDestroy {
     return this.userPermissionsService.has('DICT_EDIT');
   }
 
-  onEdit(): void {
-    this.dictionariesService.setDialogAction(DictionariesDialogActionEnum.DICTIONARY_EDIT);
+  onEdit(dictionary: IDictionary): void {
+    this.dictionariesService.selectDictionary(dictionary);
+    this.dictionariesService.setDialogEditDictionaryAction();
   }
 
   cancelAction(): void {
-    this.dictionariesService.setDialogAction(null);
+    this.dictionariesService.setDictionaryDialogAction(null);
   }
 
   modifyEntity(data: IDictionary, editMode: boolean): void {

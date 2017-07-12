@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 
@@ -14,9 +22,9 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { toFullName } from '../actions-log.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-actions-log-filter',
   styleUrls: ['./actions-log-filter.component.scss'],
   templateUrl: './actions-log-filter.component.html',
@@ -68,17 +76,15 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   private _action: string;
 
-  actionTypesEqualsFn = (o1: IDictionaryItem, o2: IDictionaryItem) => o1.code === o2.code;
-
-  employeesRowsFilter: Function = (record: IEmployee) => {
-    const blockingEmployees: boolean = this.value[this.blockingEmployeesControl.controlName];
-    return blockingEmployees || !record.isBlocked;
-  }
+  get employeesRowsFilter(): Function {
+    return this.value[this.blockingEmployeesControl.controlName]
+      ? () => true
+      : (record: IEmployee) => !record.isBlocked;
+  };
 
   constructor(
     formBuilder: FormBuilder,
     gridService: GridService,
-    private valueConverterService: ValueConverterService,
   ) {
     super(formBuilder);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
@@ -199,8 +205,8 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   getFilterValues(): IActionsLogFilterRequest {
     return {
       ...this.value,
-      actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map((record: IDictionaryItem) => record.code),
-      employees: (this.value.employees as IEmployee[] || []).map((record: IEmployee) => record.id),
+      actionsTypes: (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.code),
+      employees: (this.value.employees as IEmployee[] || []).map(record => record.id),
       endDate: moment(this.value.endDate).format('DD.MM.YYYY'),
       startDate: moment(this.value.startDate).format('DD.MM.YYYY'),
     };

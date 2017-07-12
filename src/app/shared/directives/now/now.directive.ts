@@ -1,28 +1,34 @@
-import { OnInit, OnDestroy, Directive, Input, ElementRef } from '@angular/core';
+import { OnInit, OnDestroy, Directive, Input, ElementRef, NgZone } from '@angular/core';
 import * as moment from 'moment';
 
 @Directive({
-    selector: '[now]'
+  selector: '[appNow]'
 })
 export class NowDirective implements OnInit, OnDestroy {
+  @Input() format;
 
-    @Input() format;
-    intervalId;
+  intervalId;
 
-    constructor(private element: ElementRef) { }
+  constructor(
+    private element: ElementRef,
+    private zone: NgZone,
+  ) {}
 
-    ngOnInit() {
+  ngOnInit(): void {
+    this.updateTime();
+    this.zone.runOutsideAngular(() => {
+      this.intervalId = setInterval(() => {
         this.updateTime();
-        this.intervalId = setInterval(this.updateTime.bind(this), 1000);
-    }
+      }, 1000);
+    });
+  }
 
-    updateTime() {
-        const dt = moment().format(this.format);
-        this.element.nativeElement.innerHTML = dt;
-    }
+  updateTime(): void {
+    const dt = moment().format(this.format);
+    this.element.nativeElement.innerHTML = dt;
+  }
 
-    ngOnDestroy() {
-        clearInterval(this.intervalId);
-    }
-
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+  }
 }

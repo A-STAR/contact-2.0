@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 
 @Injectable()
 export class UsersService {
@@ -20,8 +21,8 @@ export class UsersService {
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>
+    private dataService: DataService,
+    private store: Store<IAppState>,
   ) {}
 
   get state(): Observable<IUsersState> {
@@ -31,10 +32,8 @@ export class UsersService {
   }
 
   getUserById(id: number): Observable<IUser> {
-    // TODO(d.maltsev)
-    // return this.state.map(state => state.users.find(user => user.id === id))
-    //   .distinctUntilChanged();
-    return this.gridService.read('/api/users')
+    // TODO(d.maltsev): remove this
+    return this.dataService.read('/api/users')
       .map(response => response.users.find(user => user.id === id));
   }
 

@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 import { IDebtorsFetchResponse } from './debtors.interface';
 
 import { DebtorsService } from './debtors.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
@@ -30,7 +29,6 @@ export class DebtorsEffects {
   constructor(
     private actions: Actions,
     private notificationsService: NotificationsService,
-    private gridService: GridService,
   ) {}
 
   private readDebtors(): Observable<IDebtorsFetchResponse> {

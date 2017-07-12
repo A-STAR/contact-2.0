@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import 'rxjs/add/operator/finally';
@@ -9,98 +6,81 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
+import {
+  IGrid2ColumnSettings,
+  IGrid2Request,
+  IGrid2RequestPayload,
+} from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
-import { AuthService } from '../../../core/auth/auth.service';
-import { MetadataService } from '../../../core/metadata/metadata.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { FilterObject, IFilterBaseObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
-  // defines whether the request should fetch a resource from the server's root
-  private _localRequest = false;
-
-  private nRequests$ = new BehaviorSubject<number>(0);
-
   constructor(
-    private authService: AuthService,
     private converterService: ValueConverterService,
     private dictionariesService: DictionariesService,
-    private http: AuthHttp,
     private metadataService: MetadataService,
     private translateService: TranslateService,
   ) {}
 
-  get isLoading$(): Observable<boolean> {
-    return this.nRequests$
-      .map(n => n > 0)
-      .distinctUntilChanged();
-  }
+  buildRequest(payload: IGrid2RequestPayload): IGrid2Request {
+    const request: IGrid2Request = {};
+    const filters: FilterObject = FilterObject.create().and();
+    if (payload.columnsSettings) {
+      R.values(payload.columnsSettings)
+        .forEach(columnSettings => {
+          const { filter } = columnSettings;
+          if (filter) {
+            filter.addFilter(
+              FilterObject.create(filter)
+            );
+          }
+        });
 
-  localRequest(): GridService {
-    this._localRequest = true;
-    return this;
-  }
+      if (payload.gridFilters) {
+        payload.gridFilters.forEach((filter: IFilterBaseObject) => {
+          filters.addFilter(
+            FilterObject.create(filter)
+          );
+        });
+      }
 
-  /**
-   * NOTE: route params have to be enclosed in curly braces
-   * Example:
-   *  url = '/api/roles/{id}/permits', params = { id: 5 }
-   *  route = '/api/roles/5/permits
-   */
-  read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    if (this._localRequest) {
-      // this would not be a default value, so clear the flag for further requests
-      this._localRequest = false;
-      return this.http.get(url, options)
-        .map(data => data.json());
+      request.filtering = filters;
+
+      request.sorting = R.values(R.mapObjIndexed(
+        (columnSettings: IGrid2ColumnSettings, columnId: string) => ({
+          direction: columnSettings.sortDirection,
+          field: columnId,
+          order: columnSettings.sortOrder,
+        }),
+        payload.columnsSettings
+      ))
+      .filter(Boolean)
+      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
+      .map(R.omit(['order']));
     }
 
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get });
-  }
-
-  readBlob(url: string, routeParams: object = {}): Observable<Blob> {
-    return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
-  }
-
-  create(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
-  }
-
-  createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
-    return this.blobRequest(url, routeParams, { method: RequestMethod.Post, body });
-  }
-
-  update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
-  }
-
-  delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
-  }
-
-  download(url: string, routeParams: object = {}, body: object, name: string): Observable<void> {
-    return this.createBlob(url, routeParams, body)
-      .map(blob => {
-        // TODO(d.maltsev): maybe use a separate component with Renderer2 injected?
-        const href = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = href;
-        a.download = name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      });
+    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
+      request.paging = {
+        pageNumber: payload.currentPage,
+        resultsPerPage: payload.pageSize
+      };
+    }
+    return request;
   }
 
   /**
-   * Builds column defs from server metadata
+   * Build column defs from server metadata
+   * Use only once, preferably during ngOnInit phase
    *
-   * @param {string} metadataKey The key used to retreive coldefs the from the metadata service
+   * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {Observable<IGridColumn[]>} columns Initial column descriptions
-   * @param {object} renderers Colums rendered, esentially getters
+   * @param {object} renderers Column renderers, esentially getters
    * @returns {Observable<IGridColumn[]>} Column defininitions
    */
   getColumnDefs(
@@ -108,8 +88,8 @@ export class GridService {
       const mapColumns = ([metadata, dictionaries]) =>
         this.setRenderers(columns.filter(column =>
           !!metadata.find(metadataColumn => {
-            const result = column.prop === metadataColumn.name || (column.mappedFrom || []).includes(metadataColumn.name);
-            if (result) {
+            const isInMeta = column.prop === metadataColumn.name;
+            if (isInMeta) {
               if (!column.renderer) {
                 const currentDictTypes = dictionaries[metadataColumn.dictCode];
                 if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
@@ -124,11 +104,11 @@ export class GridService {
                   switch (metadataColumn.dataType) {
                     case 2:
                       // Date
-                      column.renderer = (item: any) => this.converterService.formatDate(item[column.prop]);
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
                       break;
                     case 7:
-                      // Date time
-                      column.renderer = (item: any) => this.converterService.formatDateTime(item[column.prop]);
+                      // Datetime
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
                       break;
                   }
                 }
@@ -137,14 +117,14 @@ export class GridService {
               if (!!column.filterOptionsDictionaryId) {
                 const dictTypes = dictionaries[column.filterOptionsDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterValues = R.reduce((acc, item) => {
+                  column.filterValues = dictTypes.reduce((acc, item) => {
                     acc[item.code] = item.name;
                     return acc;
-                  }, {}, dictTypes);
+                  }, {});
                 }
               }
             }
-            return result;
+            return isInMeta;
           })
         ), renderers);
 
@@ -189,54 +169,5 @@ export class GridService {
     // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
     return column;
-  }
-
-  // Request that expects JSON for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    return this.request(url, routeParams, options)
-      .map(data => data.json());
-  }
-
-  // Request that expects binary data for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private blobRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<Blob> {
-    return this.request(url, routeParams, { ...options, responseType: ResponseContentType.Blob })
-      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
-  }
-
-  private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    const headers = options.headers || new Headers();
-    if (options.body && options.body.constructor === Object) {
-      headers.append('Content-Type', 'application/json');
-    }
-
-    this.nRequests$.next(this.nRequests$.getValue() + 1);
-
-    return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        const prefix = '/api';
-        const api = route.startsWith(prefix) ? route : prefix + route;
-
-        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
-      })
-      .finally(() => {
-        this.nRequests$.next(this.nRequests$.getValue() - 1);
-      });
-  }
-
-  private validateUrl(url: string = ''): Observable<any> {
-    if (!url) {
-      return Observable.throw('Error: no url passed to the GridService');
-    }
-    return this.authService.getRootUrl();
-  }
-
-  private createRoute(url: string, params: object): string {
-    return Object.keys(params).reduce((acc, id) => {
-      const re = RegExp(`{${id}}`, 'gi');
-      return acc.replace(re, params[id]);
-    }, url);
   }
 }

@@ -3,6 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
+import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
+import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -11,6 +14,7 @@ import { DictionariesService } from '../../../../core/dictionaries/dictionaries.
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 
 @Component({
   selector: 'app-terms',
@@ -32,7 +36,7 @@ export class TermsComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogEditTermAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_TERM_EDIT'),
-        this.dictionariesService.state.map(state => !!state.selectedTermId)
+        this.dictionariesService.isSelectedTermExist
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
@@ -40,7 +44,7 @@ export class TermsComponent implements OnDestroy {
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('DICT_TERM_DELETE'),
-        this.dictionariesService.state.map(state => !!state.selectedTermId)
+        this.dictionariesService.isSelectedTermExist
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
     {
@@ -73,8 +77,6 @@ export class TermsComponent implements OnDestroy {
 
   masterEntity: IDictionary;
 
-  selectedEntity: ITerm;
-
   hasViewPermission$: Observable<boolean>;
 
   emptyMessage$: Observable<string>;
@@ -87,11 +89,11 @@ export class TermsComponent implements OnDestroy {
     private gridService: GridService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
+    private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.terms;
-      this.selectedEntity = state.terms.find(term => term.id === state.selectedTermId);
       this.masterEntity = state.selectedDictionary;
     });
 
@@ -99,14 +101,10 @@ export class TermsComponent implements OnDestroy {
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
 
-    this.viewPermissionsSubscription = Observable.combineLatest(
-      this.hasViewPermission$,
-      this.dictionariesService.selectedDictionary
-    )
-    .subscribe(([ hasViewPermission, currentDictionaryCode ]) => {
+    this.viewPermissionsSubscription = this.hasViewPermission$.subscribe(hasViewPermission => {
       if (!hasViewPermission) {
         this.dictionariesService.clearTerms();
-      } else if (currentDictionaryCode) {
+      } else {
         this.dictionariesService.fetchTerms();
       }
     });
@@ -119,28 +117,51 @@ export class TermsComponent implements OnDestroy {
     this.viewPermissionsSubscription.unsubscribe();
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.action === DictionariesDialogActionEnum.TERM_ADD;
+  get selectedEntity(): Observable<ITerm> {
+    return this.dictionariesService.selectedTerm;
+  };
+
+  get languages(): Observable<IUserLanguage[]> {
+    return this.userLanguagesService.userLanguages;
   }
 
-  get isEntityBeingEdited(): boolean {
-    return this.action === DictionariesDialogActionEnum.TERM_EDIT;
+  get terms(): Observable<ITerm[]> {
+    return this.dictionariesService.terms;
   }
 
-  get isEntityBeingRemoved(): boolean {
-    return this.action === DictionariesDialogActionEnum.TERM_REMOVE;
+  get isEntityBeingCreated(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_ADD);
   }
 
-  onEditSubmit(data: ITerm, createMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
-    data.isClosed = Number(data.isClosed);
+  get isEntityBeingEdited(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_EDIT);
+  }
 
-    if (createMode) {
-      this.dictionariesService.createTerm(data);
-    } else {
-      this.dictionariesService.updateTerm(data);
-    }
+  get isEntityBeingRemoved(): Observable<boolean> {
+    return this.dictionariesService.dialogAction
+      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_REMOVE);
+  }
+
+  get isReadyForCreating(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.isEntityBeingCreated,
+      this.isTermRelationsReady,
+    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+  }
+
+  get isReadyForEditing(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.isEntityBeingEdited,
+      this.isTermRelationsReady,
+      this.dictionariesService.isSelectedTermReady,
+    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedTermReady]) =>
+    isEntityBeingEdited && isRelationsReady && isSelectedTermReady);
+  }
+
+  get isTermRelationsReady(): Observable<boolean> {
+    return this.languages.map((languages) => !!languages);
   }
 
   onRemoveSubmit(): void {
@@ -148,23 +169,58 @@ export class TermsComponent implements OnDestroy {
   }
 
   cancelAction(): void {
-    this.dictionariesService.setDialogAction(null);
+    this.dictionariesService.setTermDialogAction(null);
   }
 
-  onEdit(): void {
+  onEdit(term: ITerm): void {
     this.userPermissionsService.has('DICT_TERM_EDIT')
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
+          this.dictionariesService.selectTerm(term);
           this.dictionariesService.setDialogEditTermAction();
         }
       });
   }
 
-  onSelect(term: ITerm): void {
-    const selectedTermId = this.selectedEntity && this.selectedEntity.id;
-    if (term && term.id !== selectedTermId) {
-      this.dictionariesService.selectTerm(term.id);
+  modifyEntity(data: ITerm, editMode: boolean): void {
+    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
+    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
+    data.isClosed = Number(data.isClosed);
+
+    if (editMode) {
+      const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
+
+      const deletedTranslations = nameTranslations
+        .filter((item: ILabeledValue) => item.removed)
+        .map((item: ILabeledValue) => item.value);
+
+      const updatedTranslations = nameTranslations
+        .filter((item: ILabeledValue) => !item.removed)
+        .map((item: ILabeledValue) => ({
+          languageId: item.value,
+          value: item.context ? item.context.translation : null
+        }))
+        .filter((item: IEntityTranslation) => item.value !== null);
+
+      delete data.translatedName;
+      delete data.nameTranslations;
+
+      this.dictionariesService.updateTerm(data, deletedTranslations, updatedTranslations);
+    } else {
+      this.dictionariesService.createTerm(data);
     }
+  }
+
+  onUpdateEntity(data: ITerm): void {
+    this.modifyEntity(data, true);
+  }
+
+  onCreateEntity(data: ITerm): void {
+    this.modifyEntity(data, false);
+  }
+
+  onSelect(term: ITerm): void {
+    this.dictionariesService.selectTerm(term);
   }
 }

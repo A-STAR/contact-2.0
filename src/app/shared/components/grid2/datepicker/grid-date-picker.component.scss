@@ -3,6 +3,7 @@
   padding: 10px;
 }
 
+.ag-floating-filter-full-body :host /deep/,
 .ag-floating-filter-body :host /deep/ {
   .datepicker {
     padding: 0;
@@ -11,10 +12,16 @@
   .btn,
   input {
     line-height: 17px;
+    padding: 0 4px;
   }
 
   .btn {
-    padding: 0 2px;
+    padding: 0 3px;
     border: 1px solid lightgrey;
+  }
+
+  .form-control:focus {
+    border-color: lightgrey;
+    z-index:2;
   }
 }

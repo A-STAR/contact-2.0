@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../state/state.interface';
 import { IMetadataListsState, IMetadataState } from './metadata.interface';

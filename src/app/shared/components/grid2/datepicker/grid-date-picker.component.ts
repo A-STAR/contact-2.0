@@ -9,7 +9,6 @@ import { IDateAngularComp } from 'ag-grid-angular/main';
 })
 export class GridDatePickerComponent implements IDateAngularComp {
   date: Date;
-
   private dateParams: IDateParams;
 
   agInit(dateParams: IDateParams): void {
@@ -21,9 +20,11 @@ export class GridDatePickerComponent implements IDateAngularComp {
   }
 
   setDate(date: Date): void {
-    if (Number(this.date) !== Number(date)) {
-      this.date = date;
-      this.dateParams.onDateChanged();
-    }
+    this.date = date;
+  }
+
+  update(date: Date): void {
+    this.setDate(date);
+    this.dateParams.onDateChanged();
   }
 }

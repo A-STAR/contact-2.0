@@ -14,7 +14,7 @@ import * as R from 'ramda';
 
 import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
 
-import { IDragAndDropPayload, IDraggedComponent } from '../dnd/drag-and-drop.interface';
+import { IDragAndDropPayload, IDragAndDropView } from '../dnd/drag-and-drop.interface';
 import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
 
 @Component({
@@ -24,17 +24,20 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
-
+export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+  @Input() dblClickEnabled = true;
+  @Input() dndEnabled = false;
+  @Input() collapseAdjacentNodes = false;
+  @Input() expandNodeOnClick = false;
   @Input() value: ITreeNode[];
   @Input() selectionMode: string;
-  @Input() selection: any;
+  @Input() selection: ITreeNode|ITreeNode[];
   @Output() selectionChange: EventEmitter<any> = new EventEmitter();
   @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
-  @Output() onNodeEdit: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Input() style: any;
   @Input() styleClass: string;
@@ -43,34 +46,47 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
 
-  dragulaOptions: any = {
-    // prevent any drags by default
-    invalid: () => true
-  };
   private dragAndDropPlugin: DragAndDropComponentPlugin;
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
   }
 
-  get elementSelector(): string {
-    return '.app-treenode-content';
+  get selectionAsArray(): ITreeNode[] {
+    return this.selection as ITreeNode[];
   }
 
+  get dragulaOptions(): any {
+    return this.dragAndDropPlugin
+      ? this.dragAndDropPlugin.dragulaOptions
+      : {
+        // prevent any drags by default
+        invalid: () => true
+      };
+  };
+
   constructor(
-    public elementRef: ElementRef,
-    public renderer: Renderer2,
-    dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
+    private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
   ) {
-    this.dragAndDropPlugin = dragAndDropComponentPluginFactory.createAndAttachTo(this);
   }
 
   ngOnInit(): void {
-    this.dragAndDropPlugin.ngOnInit();
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin = this.dragAndDropComponentPluginFactory.attachTo(this, {
+        viewElementRef: this.elementRef,
+        draggableNodesSelector: '.app-treenode-content',
+        renderer: this.renderer
+      });
+      this.dragAndDropPlugin.ngOnInit();
+    }
   }
 
   ngOnDestroy(): void {
-    this.dragAndDropPlugin.ngOnDestroy();
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin.ngOnDestroy();
+    }
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {
@@ -91,7 +107,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           if (this.propagateSelectionDown) {
             this.propagateDown(node, false);
           } else {
-            this.selection = this.selection.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
           }
 
           if (this.propagateSelectionUp && node.parent) {
@@ -104,7 +120,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           if (this.propagateSelectionDown) {
             this.propagateDown(node, true);
           } else {
-            this.selection = [...this.selection || [], node];
+            this.selection = [...this.selectionAsArray || [], node];
           }
 
           if (this.propagateSelectionUp && node.parent) {
@@ -112,7 +128,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
           }
 
           this.selectionChange.emit(this.selection);
-          this.onNodeSelect.emit({originalEvent: event, node: node});
+          this.nodeSelect(event, node);
         }
       } else {
         const metaSelection = this.metaKeySelection;
@@ -124,7 +140,7 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
             if (this.isSingleSelectionMode()) {
               this.selectionChange.emit(null);
             } else {
-              this.selection = this.selection.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
               this.selectionChange.emit(this.selection);
             }
 
@@ -134,11 +150,10 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.selectionChange.emit(node);
             } else if (this.isMultipleSelectionMode()) {
               this.selection = (!metaKey) ? [] : this.selection || [];
-              this.selection = [...this.selection, node];
+              this.selection = [...this.selectionAsArray, node];
               this.selectionChange.emit(this.selection);
             }
-
-            this.onNodeSelect.emit({originalEvent: event, node: node});
+            this.nodeSelect(event, node);
           }
         } else {
           if (this.isSingleSelectionMode()) {
@@ -147,15 +162,15 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
               this.selection = node;
-              this.onNodeSelect.emit({originalEvent: event, node: node});
+              this.nodeSelect(event, node);
             }
           } else {
             if (selected) {
-              this.selection = this.selection.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
-              this.selection = [...this.selection || [], node];
-              this.onNodeSelect.emit({originalEvent: event, node: node});
+              this.selection = [...this.selectionAsArray || [], node];
+              this.nodeSelect(event, node);
             }
           }
 
@@ -166,16 +181,18 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   }
 
   onDoubleNodeClick(event: MouseEvent, node: ITreeNode): void {
-    this.onNodeEdit.emit(node);
+    if (this.dblClickEnabled) {
+      this.onNodeDblClick.emit(node);
+    }
   }
 
   findIndexInSelection(node: ITreeNode): number {
     let index: number = -1;
     if (this.selectionMode && this.selection) {
       if (this.isSingleSelectionMode()) {
-        index = (this.selection === node) ? 0 : -1;
+        index = this.selection === node ? 0 : -1;
       } else {
-        for (let i = 0; i < this.selection.length; i++) {
+        for (let i = 0; i < this.selectionAsArray.length; i++) {
           if (this.selection[i] === node) {
             index = i;
             break;
@@ -199,13 +216,13 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
       }
 
       if (select && selectedCount === node.children.length) {
-        this.selection = [...this.selection || [], node];
+        this.selection = [...this.selectionAsArray || [], node];
         node.partialSelected = false;
       } else {
         if (!select) {
           const index = this.findIndexInSelection(node);
           if (index >= 0) {
-            this.selection = this.selection.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
           }
         }
 
@@ -226,9 +243,9 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   propagateDown(node: ITreeNode, select: boolean): void {
     const index = this.findIndexInSelection(node);
     if (select && index === -1) {
-      this.selection = [...this.selection || [], node];
+      this.selection = [...this.selectionAsArray || [], node];
     } else if (!select && index > -1) {
-      this.selection = this.selection.filter((val, i) => i !== index);
+      this.selection = this.selectionAsArray.filter((val, i) => i !== index);
     }
     node.partialSelected = false;
     if (node.children && node.children.length) {
@@ -255,11 +272,11 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
   }
 
   changeLocation(payload: IDragAndDropPayload): void {
-    const targetElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.target);
-    const sourceElement: ITreeNode = this.findNodeRecursively(this.value[0], payload.source);
+    const targetElement = this.findNodeRecursively(this.value[0], payload.targetId);
+    const sourceElement = this.findNodeRecursively(this.value[0], payload.sourceId);
 
-    if (this.findNodeRecursively(sourceElement, payload.target)) {
-      // User can not move the node under its child
+    if (this.findNodeRecursively(sourceElement, payload.targetId)) {
+      // User cannot move the node under its child
       return;
     }
 
@@ -308,5 +325,17 @@ export class TreeComponent implements IDraggedComponent, OnInit, OnDestroy {
       return result;
     }
     return null;
+  }
+
+  nodeCollapse(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeCollapse.emit({originalEvent: event, node: node});
+  }
+
+  nodeExpand(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeExpand.emit({originalEvent: event, node: node});
+  }
+
+  private nodeSelect(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeSelect.emit({originalEvent: event, node: node});
   }
 }

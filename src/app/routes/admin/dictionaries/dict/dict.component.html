@@ -1,5 +1,5 @@
 <app-dict-edit
-  *ngIf="isEntityBeingCreated | async"
+  *ngIf="isReadyForCreating | async"
   [mode]="'create'"
   [title]="'dictionaries.create.title'"
   [languages]="languages | async"
@@ -44,6 +44,6 @@
   [columnTranslationKey]="'dictionaries'"
   [rows]="dictionaries | async"
   [allowDblClick]="canEdit | async"
-  (onDblClick)="onEdit()"
+  (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

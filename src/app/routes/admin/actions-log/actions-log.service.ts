@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Column } from 'ag-grid';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
@@ -23,11 +22,12 @@ import {
   IGrid2State
 } from '../../../shared/components/grid2/grid2.interface';
 
+import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
-import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 
 @Injectable()
 export class ActionsLogService {
@@ -44,15 +44,20 @@ export class ActionsLogService {
       (payload): Observable<IActionsLogPayload> => {
         const [action, store]: [Action, IAppState] = payload;
         const customFilter: IActionsLogFilterRequest = action.payload;
-        const state: IGrid2State = store.actionsLog.actionsLogGrid;
-        const request = this.createRequest({
-          currentPage: state.currentPage,
-          pageSize: state.pageSize,
-          columnsSettings: state.columnsSettings,
-          fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName
-        }, customFilter);
+        // console.log('action payload', action.payload);
+        const grid: IGrid2State = store.actionsLog.actionsLogGrid;
+        // TODO(a.tymchuk): refactor this
+        const request = this.createRequest(
+          {
+            currentPage: grid.currentPage,
+            pageSize: grid.pageSize,
+            columnsSettings: grid.columnsSettings,
+            // fieldNameConverter: (fieldName: string) => fieldName === 'fullName' ? 'lastName' : fieldName,
+          },
+          customFilter
+        );
 
-        return this.gridService.create('/list?name=actions', {}, request)
+        return this.dataService.create('/list?name=actions', {}, request)
           .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
             return {
               payload: {
@@ -61,16 +66,17 @@ export class ActionsLogService {
               },
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
-          });
+          })
+          .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
       }
-    )
-    .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
+    );
 
   constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>,
+    private dataService: DataService,
     private effectActions: Actions,
+    private gridService: GridService,
     private notifications: NotificationsService,
+    private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
   ) {}
 
@@ -83,12 +89,6 @@ export class ActionsLogService {
   get actionsLogCurrentPageSize(): Observable<number> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.pageSize)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogCurrentFilterColumn(): Observable<Column> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.currentFilterColumn)
       .distinctUntilChanged();
   }
 
@@ -129,7 +129,10 @@ export class ActionsLogService {
   }
 
   createRequest(payload: IGrid2RequestPayload, customFilter: IActionsLogFilterRequest): IGrid2Request {
-    const request: IGrid2Request = this.valueConverterService.toGridRequest(payload);
+    if (customFilter.gridFilters) {
+      payload.gridFilters = customFilter.gridFilters;
+    }
+    const request: IGrid2Request = this.gridService.buildRequest(payload);
 
     request.filtering = FilterObject.create()
       .and()
@@ -138,22 +141,22 @@ export class ActionsLogService {
         FilterObject.create()
           .setName('createDateTime')
           .betweenOperator()
-          .setValueArray([
-            this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime),
-            this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime),
+          .setValues([
+            this.valueConverterService.ISOFromLocalDateTime(customFilter.startDate + ' ' + customFilter.startTime),
+            this.valueConverterService.ISOFromLocalDateTime(customFilter.endDate + ' ' + customFilter.endTime),
           ])
       )
       .addFilter(
         FilterObject.create()
           .setName('typeCode')
           .inOperator()
-          .setValueArray(customFilter.actionsTypes)
+          .setValues(customFilter.actionsTypes)
       )
       .addFilter(
         FilterObject.create()
           .setName('userId')
           .inOperator()
-          .setValueArray(customFilter.employees)
+          .setValues(customFilter.employees)
       );
 
     return request;
@@ -176,9 +179,16 @@ export class ActionsLogService {
     );
   }
 
-  search(payload: IActionsLogFilterRequest): void {
+  fetch(payload: IActionsLogFilterRequest): void {
     this.store.dispatch({
-      payload: payload,
+      payload,
+      type: ActionsLogService.ACTIONS_LOG_FETCH,
+    });
+  }
+
+  filter(payload: IActionsLogFilterRequest): void {
+    this.store.dispatch({
+      payload: { ...payload, currentPage: 1 },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }
@@ -188,16 +198,12 @@ export class ActionsLogService {
   }
 
   getActionTypes(): Observable<IDictionaryItem[]> {
-    return this.gridService.read('/dictionaries/{code}/terms', {
+    return this.dataService.read('/dictionaries/{code}/terms', {
       code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
     }).map(data => data.terms);
   }
 
   getEmployees(): Observable<IEmployee[]> {
-    return this.gridService.read('/users').map(data => data.users);
-  }
-
-  export(body: IGrid2Request): Observable<any> {
-    return this.gridService.download('/list/excel?name=actions', {}, body, 'actions.xlsx').take(1);
+    return this.dataService.read('/users').map(data => data.users);
   }
 }

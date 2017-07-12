@@ -29,7 +29,7 @@
       </div>
       <div class="col-md-6">
         <label class="mb0">&nbsp;</label>
-        <button class="btn btn-default filter-button" (click)="onExport()">
+        <button class="btn btn-default export-button" (click)="onExport()">
           <i class="fa fa-file-excel-o" aria-hidden="true"></i>
           {{ 'default.buttons.excel' | translate }}
         </button>
@@ -100,7 +100,6 @@
               [formControlName]="actionTypesControl.controlName"
               [syncFormControlChanges]="false"
               [height]="190"
-              [equalsFn]="actionTypesEqualsFn"
               [rowsFrom]="actionTypesRows | async"
               [columnsTranslationKeyFrom]="'actionsLog.filter.actionsTypes'"
               [columnsTranslationKeyTo]="'actionsLog.filter.actionsTypes'"
@@ -115,12 +114,14 @@
           <label class="col-md-12">
             &nbsp;
           </label>
-          <button class="btn btn-default filter-button" (click)="onSearch()">
+          <div class="col-md-12 align-right pl0">
+          <button class="btn btn-default search-button" (click)="onSearch()">
             <i class="fa fa-search" aria-hidden="true"></i>
             <span>
               {{ 'default.buttons.search' | translate }}
             </span>
           </button>
+          </div>
         </div>
         <!--<app-toolbar
           [actions]="toolbarActions"

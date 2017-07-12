@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -10,6 +11,8 @@ import {
   IEmployeeUpdateRequest,
   IOrganizationDialogActionEnum
 } from './organizations.interface';
+
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 @Injectable()
 export class OrganizationsService {
@@ -37,7 +40,13 @@ export class OrganizationsService {
   get state(): Observable<IOrganizationsState> {
     return this.store
       .select(state => state.organizations)
-      .filter(Boolean);
+      .distinctUntilChanged();
+  }
+
+  get organizations(): Observable<ITreeNode[]> {
+    return this.store
+      .select(state => state.organizations.organizations)
+      .distinctUntilChanged();
   }
 
   get dialogAction(): Observable<IOrganizationDialogActionEnum> {
@@ -46,7 +55,7 @@ export class OrganizationsService {
       .distinctUntilChanged();
   }
 
-  get selectedOrganization(): Observable<IOrganization> {
+  get selectedOrganization(): Observable<ITreeNode> {
     return this.store
       .select(state => state.organizations.selectedOrganization)
       .distinctUntilChanged();
@@ -58,13 +67,10 @@ export class OrganizationsService {
     });
   }
 
-  createOrganization(parentId: number, organization: IOrganization): void {
+  createOrganization(organization: IOrganization): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_CREATE,
-      payload: {
-        parentId,
-        organization
-      }
+      payload: organization
     });
   }
 
@@ -77,26 +83,31 @@ export class OrganizationsService {
     });
   }
 
+  clearAll(): void {
+    this.clearEmployees();
+    this.clearOrganizations();
+  }
+
   updateOrganizations(organizations: IOrganization[]): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_ORDER_UPDATE,
       payload: organizations
     });
   }
 
   deleteOrganization(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_DELETE
     });
   }
 
   clearOrganizations(): void {
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.ORGANIZATIONS_CLEAR
     });
   }
 
-  selectOrganization(organization: IOrganization): void {
+  selectOrganization(organization: ITreeNode): void {
     return this.store.dispatch({
       type: OrganizationsService.ORGANIZATION_SELECT,
       payload: {
@@ -156,13 +167,28 @@ export class OrganizationsService {
     });
   }
 
-  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: IOrganization): void {
+  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: ITreeNode): void {
     return this.store.dispatch({
       type: OrganizationsService.DIALOG_ACTION,
       payload: {
         dialogAction,
         organization
       }
+    });
+  }
+
+  getExpandedNodes(organizations: ITreeNode[]): Set<number> {
+    const expandedNodes = new Set<number>();
+    this.observeOrganizations(organizations, expandedNodes);
+    return expandedNodes;
+  }
+
+  private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {
+    (nodes || []).forEach(node => {
+      if (node.expanded) {
+        expandedNodes.add(node.id);
+      }
+      this.observeOrganizations(node.children, expandedNodes);
     });
   }
 }

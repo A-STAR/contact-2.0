@@ -20,8 +20,9 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
   ]
 })
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() inputClass = 'form-control';
   @Input() buttonClass = 'btn btn-default';
+  @Input() inputClass = 'form-control';
+  @Input() placeholder = 'default.date.datePicker.placeholder';
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -64,7 +65,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   get formattedDate(): string {
-    return this.valueConverterService.dateToString(this.value);
+    return this.valueConverterService.toLocalDate(this.value);
   }
 
   @HostListener('document:click', ['$event'])
@@ -105,7 +106,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     const newDate = newValue instanceof Date ?
       newValue :
-      this.valueConverterService.stringToDate((newValue.target as HTMLInputElement).value);
+      this.valueConverterService.fromLocalDate((newValue.target as HTMLInputElement).value);
 
     if (Number(newDate) !== Number(this.value)) {
       this.value = newDate;

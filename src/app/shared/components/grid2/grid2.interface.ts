@@ -1,13 +1,16 @@
-import { Column } from 'ag-grid';
-import { Renderer2 } from '@angular/core';
+import { RowNode } from 'ag-grid';
 
 import { FilterObject } from './filter/grid2-filter';
 
-import { GridHeaderComponent } from './header/grid-header.component';
+export interface IGrid2Filter {
+  name?: string;
+  operator?: string;
+  values?: any;
+}
 
 export interface IGrid2ColumnSettings {
-  sortingDirection?: Grid2SortingEnum;
-  sortingOrder?: number;
+  sortDirection?: Grid2SortingType;
+  sortOrder?: number;
   filter?: FilterObject;
 }
 
@@ -15,28 +18,18 @@ export interface IGrid2ColumnsSettings {
   [key: string]: IGrid2ColumnSettings;
 }
 
-export interface IGrid2ColumnsSettingsInfo {
-  columnsSettings?: IGrid2ColumnsSettings;
-}
-
 export interface IGrid2PaginationInfo {
   currentPage?: number;
   pageSize?: number;
 }
 
-export interface IGrid2State extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+export interface IGrid2State extends IGrid2PaginationInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
   columnsPositions: string[];
   groupingColumns: string[];
   selectedRows: any[];
   columnMovingInProgress: boolean;
-  currentFilterColumn?: Column;
   filterColumnName?: string;
-}
-
-export interface IGrid2ColumnsSortingDirectionInfo {
-  columnId: string;
-  sortingDirection: Grid2SortingEnum;
-  sortingOrder: number;
 }
 
 export interface IGrid2ColumnFilterPayload {
@@ -44,58 +37,37 @@ export interface IGrid2ColumnFilterPayload {
   filter: FilterObject;
 }
 
-export interface IGrid2SortingDirectionSwitchPayload extends IGrid2ColumnsSortingDirectionInfo {
-  multiSort: boolean;
+export interface IGrid2SortDirectionPayload {
+  columnId: string;
+  sortDirection: Grid2SortingType;
+  sortOrder: number;
 }
 
-export interface IGrid2ColumnsPositionsChangePayload {
+export interface IGrid2ColumnsPositionsPayload {
   columnsPositions: string[];
 }
 
-export interface IGrid2GroupingColumnsChangePayload {
+export interface IGrid2GroupingColumnsPayload {
   groupingColumns: string[];
 }
 
-export interface IGrid2SelectedRowChangePayload {
+export interface IGrid2SelectedPayload {
   rowData: any;
   selected: boolean;
 }
 
-export interface IGrid2ShowFilterPayload {
-  currentFilterColumn: Column;
-}
-
-export enum Grid2SortingEnum {
-  NONE,
-  ASC,
-  DESC
-}
+export type Grid2SortingType = 'asc' | 'desc' | null;
 
 export interface IActionGrid2Payload {
   type: string;
-  payload: IGrid2SortingDirectionSwitchPayload
-    |IGrid2ColumnsPositionsChangePayload
-    |IGrid2ShowFilterPayload
-    |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload
+  payload: IGrid2ColumnsPositionsPayload
+    |IGrid2SortDirectionPayload
+    |IGrid2GroupingColumnsPayload
+    |IGrid2SelectedPayload
     |IGrid2ColumnMovingPayload
+    |IGrid2ColumnsPositionsPayload
     |IGrid2ColumnFilterPayload
     |number;
-}
-
-export interface IGrid2ServiceDispatcher {
-  allGridColumns: Column[];
-  dispatchSortingDirection(payload: IGrid2SortingDirectionSwitchPayload): void;
-  dispatchColumnsPositions(payload: IGrid2ColumnsPositionsChangePayload): void;
-}
-
-export interface IGrid2HeaderParams {
-  headerHeight: number;
-  enableMenu?: boolean;
-  serviceDispatcher: IGrid2ServiceDispatcher;
-  headerColumns?: GridHeaderComponent[];
-  column?: Column;
-  renderer2: Renderer2;
 }
 
 export interface IGrid2ColumnMovingPayload {
@@ -117,18 +89,31 @@ export interface IGrid2Request {
   filtering?: FilterObject;
 }
 
-export interface IGrid2RequestPayload extends IGrid2PaginationInfo, IGrid2ColumnsSettingsInfo {
+export interface IGrid2RequestPayload extends IGrid2PaginationInfo {
+  columnsSettings?: IGrid2ColumnsSettings;
   fieldNameConverter?: Function;
+  gridFilters?: IGrid2Filter[];
 }
 
 export interface IGrid2EventPayload {
   type: string;
   payload?: number
-    |IGrid2ColumnsPositionsChangePayload
+    |IGrid2ColumnFilterPayload
+    |IGrid2ColumnsPositionsPayload
     |IGrid2ColumnMovingPayload
-    |IGrid2ShowFilterPayload
-    |IGrid2GroupingColumnsChangePayload
-    |IGrid2SelectedRowChangePayload
-    |IGrid2SortingDirectionSwitchPayload
-    |IGrid2ColumnFilterPayload;
+    |IGrid2GroupingColumnsPayload
+    |IGrid2SelectedPayload
+    |IGrid2SortDirectionPayload;
+}
+
+// need this, since ag-grid doesn't export this interface
+export interface IViewportDatasourceParams {
+    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
+    setRowCount: (count: number) => void;
+    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
+    setRowData: (rowData: {
+        [key: number]: any;
+    }) => void;
+    /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
+    getRow: (rowIndex: number) => RowNode;
 }

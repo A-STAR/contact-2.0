@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import {
@@ -12,6 +12,7 @@ import { IconsService } from '../../icons/icons.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
@@ -19,7 +20,6 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 export class ToolbarComponent {
 
   @Input() actions: IToolbarAction[] = [];
-  @Input() actionAlign = 'left';
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
   @Output() actionSelect: EventEmitter<IToolbarActionSelectPayload> = new EventEmitter<IToolbarActionSelectPayload>();
 
@@ -45,6 +45,9 @@ export class ToolbarComponent {
   }
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
+    if (!action.permission) {
+      return Observable.of(!!action.disabled);
+    }
     const permissions = Array.isArray(action.permission) ? action.permission : [ action.permission ];
     return this.userPermissionsService.hasAll(permissions)
       .map(permission => !!action.disabled || !(!action.permission || permission));

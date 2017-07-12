@@ -11,7 +11,6 @@ import {
 
 import { DebtorService } from './debtor.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 
 @Injectable()
 export class DebtorCardEffects {
@@ -64,7 +63,6 @@ export class DebtorCardEffects {
   constructor(
     private actions: Actions,
     private notificationsService: NotificationsService,
-    private gridService: GridService,
   ) {}
 
   private readDebtor(id: number): Observable<IDebtorFetchResponse> {

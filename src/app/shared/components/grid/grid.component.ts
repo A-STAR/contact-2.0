@@ -1,6 +1,6 @@
 import {
   AfterViewInit,
-  // ChangeDetectionStrategy,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -20,16 +20,16 @@ import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDataSource, IMessages, IParameters, TSelectionType, IGridColumn } from './grid.interface';
+import { IDataSource, IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
-import { GridService } from './grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid',
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
@@ -38,16 +38,13 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
   @Input() dataSource: IDataSource;
-  @Input() editPermission: string;
   @Input() emptyMessage: string = null;
-  @Input() initialParameters: IParameters;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
-  @Output() onRowsChange: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
   columnDefs: IGridColumn[];
@@ -71,10 +68,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   constructor(
-    public cdRef: ChangeDetectorRef,
-    private gridService: GridService,
+    private dataService: DataService,
     public settings: SettingsService,
     private translate: TranslateService,
+    private changeDetector: ChangeDetectorRef,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.clickDebouncer = new Subject();
@@ -83,7 +80,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       .subscribe(({ type, row }: {type: string; row: any}) => {
         if (type === 'click') {
           this.onSelect.emit(row);
-        } else if (this.allowDblClick) {
+        } else if (type === 'dblclick' && this.allowDblClick) {
           this.onDblClick.emit(row);
         }
       });
@@ -125,6 +122,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       if (this.emptyMessage) {
         this.messages.emptyMessage = translations[this.emptyMessage];
       }
+      this.changeDetector.markForCheck();
     });
   }
 
@@ -159,7 +157,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   update(routeParams: object, body: object): Observable<any> {
-    return this.gridService.update(this.dataSource.update, routeParams, body);
+    return this.dataService.update(this.dataSource.update, routeParams, body);
   }
 
   onActionClick(event: any): void {

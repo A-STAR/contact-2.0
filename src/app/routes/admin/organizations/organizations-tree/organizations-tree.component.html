@@ -1,13 +1,13 @@
 <app-organization-edit
   *ngIf="isEntityBeingCreated | async"
-  (submit)="onEditSubmit($event, true)"
+  (submit)="createOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
 <app-organization-edit
   *ngIf="isEntityBeingEdited | async"
-  [editedEntity]="selectedOrganization | async"
-  (submit)="onEditSubmit($event, false)"
+  [editedEntity]="(selectedOrganization | async)?.data"
+  (submit)="updateOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
@@ -17,7 +17,7 @@
   [actionTranslationKey]="'organizations.organizations.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
   [actionMode]="'danger'"
-  (action)="onRemoveSubmit()"
+  (action)="onRemove()"
   (cancel)="cancelAction()">
 </app-dialog-action>
 
@@ -26,25 +26,18 @@
   [items]="toolbarItems">
 </app-toolbar-2>
 
-<ng-container *ngIf="hasViewPermission$ | async; else message">
-  <app-tree
-    #tree
-    layout="horizontal"
-    selectionMode="single"
-    [value]="organizations$ | async"
-    (changeNodesLocation)="onChangeNodesLocation($event)"
-    (onNodeSelect)="onNodeSelect($event)"
-    (onNodeEdit)="onNodeEdit($event)"
-    (onNodeExpand)="onNodeExpand($event)"
-    [(selection)]="selection">
-  </app-tree>
-</ng-container>
-
-<ng-template #message>
-  <div class="message-container">
-    {{ 'organizations.organizations.errors.view' | translate }}
-  </div>
-</ng-template>
-
-
+<app-tree
+  layout="horizontal"
+  selectionMode="single"
+  [dndEnabled]="true"
+  [dblClickEnabled]="canEditOrganization | async"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="organizations | async"
+  [selection]="selectedOrganization | async"
+  (changeNodesLocation)="onChangeNodesLocation($event)"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeDblClick)="onNodeEdit($event)"
+  (onNodeExpand)="onNodeSelect($event)">
+</app-tree>
 

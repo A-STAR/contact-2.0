@@ -39,6 +39,18 @@ export class Toolbar2Component {
       label: 'toolbar.action.sms',
       icon: 'fa fa-envelope',
     },
+    [ToolbarItemTypeEnum.BUTTON_MOVE]: {
+      label: 'toolbar.action.move',
+      icon: 'fa fa-share',
+    },
+    [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: {
+      label: 'toolbar.action.download',
+      icon: 'fa fa-cloud-download',
+    },
+    [ToolbarItemTypeEnum.BUTTON_UPLOAD]: {
+      label: 'toolbar.action.upload',
+      icon: 'fa fa-cloud-upload',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -49,6 +61,9 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_DELETE,
     ToolbarItemTypeEnum.BUTTON_REFRESH,
     ToolbarItemTypeEnum.BUTTON_SMS,
+    ToolbarItemTypeEnum.BUTTON_MOVE,
+    ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+    ToolbarItemTypeEnum.BUTTON_UPLOAD,
   ];
 
   constructor(

@@ -15,8 +15,10 @@ export enum ToolbarActionTypeEnum {
   REFRESH,
   SEARCH,
   SAVE,
-  FORWARD,
-  BACKWARD,
+  GO_FORWARD,
+  GO_BACKWARD,
+  GO_FIRST,
+  GO_LAST,
 }
 
 export interface IToolbarAction {

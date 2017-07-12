@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[focus]'
+  selector: '[appFocus]'
 })
 export class FocusDirective implements AfterViewInit {
 

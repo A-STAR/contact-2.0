@@ -2,7 +2,7 @@
   <span class="input-group">
     <input
       #input
-      placeholder="Select a date"
+      [attr.placeholder]="placeholder | translate"
       [disabled]="isDisabled"
       [ngClass]="inputClass"
       [ngModel]="formattedDate"

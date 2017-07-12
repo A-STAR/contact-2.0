@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { IUserTermsResponse } from './user-dictionaries.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { UserDictionariesService } from './user-dictionaries.service';
 
@@ -42,11 +42,11 @@ export class UserDictionariesEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
 
   private read(dictionaryId: number): Observable<IUserTermsResponse> {
-    return this.gridService.read('/dictionaries/{dictionaryId}/userterms', { dictionaryId });
+    return this.dataService.read('/dictionaries/{dictionaryId}/userterms', { dictionaryId });
   }
 }

@@ -6,10 +6,6 @@ export interface IDataSource {
   dataKey: string;
 }
 
-export interface IParameters {
-  [index: string]: any;
-}
-
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
@@ -20,8 +16,8 @@ export interface IGridColumn {
   name?: string;
   prop: string;
   renderer?: Function;
+  type?: string;
   width?: number;
-  mappedFrom?: string[];
   /*
   ** For compatibility with @swimlane/ngx-datatable
   ** Do NOT use, prefer renderer
@@ -30,11 +26,12 @@ export interface IGridColumn {
   /**
    * ag-grid
    */
-  suppressMenu?: boolean;
-  suppressSizeToFit?: boolean;
   filter?: string;
   filterValues?: { [key: number]: string }|number[]|string[];
   filterOptionsDictionaryId?: number;
+  suppressMenu?: boolean;
+  suppressSizeToFit?: boolean;
+  hidden?: boolean;
 }
 
 export interface IRenderer {

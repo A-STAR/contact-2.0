@@ -12,9 +12,12 @@ import { environment } from '../../environments/environment';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
+import { DataService } from './data/data.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
+import { LookupEffects } from './lookup/lookup.effects';
+import { LookupService } from './lookup/lookup.service';
 import { MenuService } from './menu/menu.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
@@ -39,6 +42,7 @@ import { rootReducer } from './state/root.reducer';
   imports: [
     StoreModule.provideStore(rootReducer),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserDictionariesEffects),
@@ -58,7 +62,9 @@ import { rootReducer } from './state/root.reducer';
     EntityTranslationsService,
     DictionariesService,
     DatePipe,
+    DataService,
     JwtHelper,
+    LookupService,
     MenuService,
     MetadataService,
     NotificationsService,

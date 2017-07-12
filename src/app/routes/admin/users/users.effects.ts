@@ -8,9 +8,9 @@ import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser } from './users.interface';
 
-import { UsersService } from './users.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersEffects {
@@ -124,30 +124,30 @@ export class UsersEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
 
   private readUsers(): Observable<any> {
-    return this.gridService.read('/users');
+    return this.dataService.read('/users');
   }
 
   private createUser(user: IUser): Observable<any> {
-    return this.gridService.create('/users', {}, user);
+    return this.dataService.create('/users', {}, user);
   }
 
   private updateUser(userId: number, user: IUser): Observable<any> {
-    return this.gridService.update('/users/{userId}', { userId }, user);
+    return this.dataService.update('/users/{userId}', { userId }, user);
   }
 
   private updatePhoto(userId: number, photo: File | false): Observable<any> {
     if (photo === false) {
-      return this.gridService.delete('/users/{userId}/photo', { userId });
+      return this.dataService.delete('/users/{userId}/photo', { userId });
     }
 
     const data = new FormData();
     data.append('file', photo);
-    return this.gridService.create('/users/{userId}/photo', { userId }, data);
+    return this.dataService.create('/users/{userId}/photo', { userId }, data);
   }
 }

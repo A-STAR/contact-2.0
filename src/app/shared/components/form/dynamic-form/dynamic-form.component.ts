@@ -8,7 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload, IValue } from './dynamic-form-control.interface';
+import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, IValue } from './dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -16,7 +16,7 @@ import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectedControlItems
 })
 export class DynamicFormComponent implements OnInit, OnChanges {
 
-  @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
+  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
 
@@ -48,8 +48,8 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   onControlsStatusChanges(): void {
   }
 
-  onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
-    this.selectedControlItemsChanges.emit(event);
+  onSelectItems(event: ISelectItemsPayload): void {
+    this.onSelect.emit(event);
   }
 
   private createForm(): FormGroup {

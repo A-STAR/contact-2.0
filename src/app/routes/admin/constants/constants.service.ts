@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant, IConstantsState } from './constants.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
@@ -19,7 +18,6 @@ export class ConstantsService {
 
   constructor(
     private store: Store<IAppState>,
-    private gridService: GridService,
     private valueConverterService: ValueConverterService
   ) {}
 

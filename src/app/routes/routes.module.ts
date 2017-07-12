@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '../shared/shared.module';
 import { PagesModule } from './pages/pages.module';
 
+import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { MenuResolver } from '../core/menu/menu-resolver.service';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
@@ -23,6 +24,7 @@ import { routes } from './routes';
     PagesModule,
   ],
   providers: [
+    LookupResolver,
     MenuResolver,
     MetadataResolver,
     PermissionsService,
@@ -34,5 +36,4 @@ import { routes } from './routes';
     RouterModule
   ]
 })
-
 export class RoutesModule { }

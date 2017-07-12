@@ -32,7 +32,7 @@ export class NavsearchComponent implements OnInit, OnChanges {
     this.onclose.emit();
   }
 
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }): void {
     if (changes['visible'].currentValue === true) {
       this.elem.nativeElement.querySelector('input').focus();
     }

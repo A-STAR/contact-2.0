@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { IUserLanguagesResponse } from './user-languages.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { UserLanguagesService } from './user-languages.service';
 
@@ -37,11 +37,11 @@ export class UserLanguagesEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
 
   private read(): Observable<IUserLanguagesResponse> {
-    return this.gridService.read('/userlanguages');
+    return this.dataService.read('/userlanguages');
   }
 }
