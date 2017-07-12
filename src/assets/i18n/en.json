@@ -257,8 +257,8 @@
       },
       "users": {
         "grid": {
-          "name": "Name",
-          "fullName": "Full name",
+          "name": "Full name",
+          "login": "Login",
           "isBlocked": "Blocked",
           "comment": "Comment"
         }

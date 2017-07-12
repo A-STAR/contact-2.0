@@ -257,8 +257,8 @@
       },
       "users": {
         "grid": {
-          "name": "Имя",
-          "fullName": "ФИО",
+          "name": "ФИО",
+          "login": "Логин",
           "isBlocked": "Блокирован",
           "comment": "Комментарий"
         }

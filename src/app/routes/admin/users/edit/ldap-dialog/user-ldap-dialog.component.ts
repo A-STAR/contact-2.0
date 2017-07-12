@@ -19,7 +19,7 @@ export class UserLdapDialogComponent {
 
   usersColumns: Array<IGridColumn> = [
     { prop: 'name' },
-    { prop: 'fullName' },
+    { prop: 'login' },
     { prop: 'isBlocked' },
     { prop: 'comment' },
   ];
