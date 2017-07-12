@@ -9,7 +9,7 @@ import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value/value-converter.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { PermissionsService } from '../../roles/permissions.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -44,7 +44,7 @@ export class UserEditComponent {
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private permissionsService: PermissionsService,
+    private lookupService: LookupService,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
@@ -65,7 +65,7 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPassword.MinLength'),
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
-      this.permissionsService.roles.map(this.valueConverterService.valuesToOptions),
+      this.lookupService.roleOptions,
       this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, languages, roles, user) => ({
         canEditUser,
