@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { ILdapGroup, ILdapUser } from './user-ldap-dialog.interface';
 
-import { UsersService } from '../../users.service';
+import { UserLdapDialogService } from './user-ldap-dialog.service';
 
 @Component({
   selector: 'app-user-ldap-dialog',
@@ -23,19 +24,22 @@ export class UserLdapDialogComponent {
     { prop: 'comment' },
   ];
 
-  groups$ = this.usersService.ldapGroups$;
+  groups$: Observable<Array<ILdapGroup>>;
+  users$: Observable<Array<ILdapUser>>;
 
-  users$ = Observable.of([]);
+  private selectedUser: ILdapUser = null;
 
-  constructor(private usersService: UsersService) {
-    this.usersService.fetchLdapGroups();
+  constructor(private userLdapDialogService: UserLdapDialogService) {
+    this.groups$ = this.userLdapDialogService.readLdapGroups()
+      .map(response => response.groups);
   }
 
-  onGroupSelect(event: any): void {
-    //
+  onGroupSelect(group: ILdapGroup): void {
+    this.users$ = this.userLdapDialogService.readLdapUsers(group.name)
+      .map(response => response.users);
   }
 
-  onUserSelect(event: any): void {
-    //
+  onUserSelect(user: ILdapUser): void {
+    this.selectedUser = user;
   }
 }

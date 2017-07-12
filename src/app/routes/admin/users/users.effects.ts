@@ -60,23 +60,6 @@ export class UsersEffects {
     });
 
   @Effect()
-  fetchLdapGroups$ = this.actions
-    .ofType(UsersService.USER_FETCH_LDAP_GROUPS)
-    .switchMap((action: Action) => {
-      return this.readLdapGroups()
-        .map(response => ({
-          type: UsersService.USER_FETCH_LDAP_GROUPS_SUCCESS,
-          payload: {
-            ldapGroups: response.groups
-          }
-        }))
-        .catch(() => [
-          // TODO(d.maltsev): i18n
-          this.notificationsService.createErrorAction('users.messages.errors.fetch')
-        ]);
-    });
-
-  @Effect()
   createUser$ = this.actions
     .ofType(UsersService.USER_CREATE)
     .switchMap((action: Action) => {
@@ -162,10 +145,6 @@ export class UsersEffects {
 
   private readUser(id: number): Observable<any> {
     return this.dataService.read('/users/{id}', { id });
-  }
-
-  private readLdapGroups(): Observable<any> {
-    return this.dataService.read('/ldapgroups');
   }
 
   private createUser(user: IUser): Observable<any> {

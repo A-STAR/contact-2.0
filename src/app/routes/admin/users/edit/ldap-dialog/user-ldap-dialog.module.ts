@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
+
+import { UserLdapDialogService } from './user-ldap-dialog.service';
+
 import { UserLdapDialogComponent } from './user-ldap-dialog.component';
 
 @NgModule({
@@ -12,6 +15,9 @@ import { UserLdapDialogComponent } from './user-ldap-dialog.component';
   ],
   declarations: [
     UserLdapDialogComponent,
+  ],
+  providers: [
+    UserLdapDialogService,
   ]
 })
 export class UserLdapDialogModule { }

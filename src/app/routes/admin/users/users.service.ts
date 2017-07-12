@@ -5,25 +5,23 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { ILdapGroup, IUser, IUsersState } from './users.interface';
+import { IUser, IUsersState } from './users.interface';
 
 import { DataService } from '../../../core/data/data.service';
 
 @Injectable()
 export class UsersService {
-  static USERS_FETCH                    = 'USERS_FETCH';
-  static USERS_FETCH_SUCCESS            = 'USERS_FETCH_SUCCESS';
-  static USER_FETCH                     = 'USER_FETCH';
-  static USER_FETCH_SUCCESS             = 'USER_FETCH_SUCCESS';
-  static USER_FETCH_LDAP_GROUPS         = 'USER_FETCH_LDAP_GROUPS';
-  static USER_FETCH_LDAP_GROUPS_SUCCESS = 'USER_FETCH_LDAP_GROUPS_SUCCESS';
-  static USERS_CLEAR                    = 'USERS_CLEAR';
-  static USER_CREATE                    = 'USER_CREATE';
-  static USER_UPDATE                    = 'USER_UPDATE';
-  static USER_UPDATE_PHOTO              = 'USER_UPDATE_PHOTO';
-  static USER_UPDATE_SUCCESS            = 'USER_UPDATE_SUCCESS';
-  static USER_SELECT                    = 'USER_SELECT';
-  static USER_TOGGLE_BLOCKED            = 'USER_TOGGLE_BLOCKED';
+  static USERS_FETCH         = 'USERS_FETCH';
+  static USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS';
+  static USER_FETCH          = 'USER_FETCH';
+  static USER_FETCH_SUCCESS  = 'USER_FETCH_SUCCESS';
+  static USERS_CLEAR         = 'USERS_CLEAR';
+  static USER_CREATE         = 'USER_CREATE';
+  static USER_UPDATE         = 'USER_UPDATE';
+  static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
+  static USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
+  static USER_SELECT         = 'USER_SELECT';
+  static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
     private dataService: DataService,
@@ -36,21 +34,12 @@ export class UsersService {
       .filter(Boolean);
   }
 
-  get ldapGroups$(): Observable<Array<ILdapGroup>> {
-    return this.state.map(state => state.ldapGroups)
-      .distinctUntilChanged();
-  }
-
   fetch(): void {
     this.dispatchAction(UsersService.USERS_FETCH);
   }
 
   fetchOne(userId: number): void {
     this.dispatchAction(UsersService.USER_FETCH, { userId });
-  }
-
-  fetchLdapGroups(): void {
-    this.dispatchAction(UsersService.USER_FETCH_LDAP_GROUPS);
   }
 
   create(user: IUser, photo: File | false): void {
