@@ -7,7 +7,8 @@ import { UsersService } from './users.service';
 const defaultState: IUsersState = {
   users: [],
   selectedUserId: null,
-  displayBlocked: false
+  displayBlocked: false,
+  ldapGroups: null,
 };
 
 export function usersReducer(state: IUsersState = defaultState, action: Action): IUsersState {
@@ -16,6 +17,11 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
       return {
         ...state,
         users: action.payload.users
+      };
+    case UsersService.USER_FETCH_LDAP_GROUPS_SUCCESS:
+      return {
+        ...state,
+        ldapGroups: action.payload.ldapGroups
       };
     case UsersService.USER_SELECT:
       return {

@@ -61,7 +61,7 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.permissionsService.roles.map(this.valueConverterService.valuesToOptions),
-      this.actions.ofType(UsersService.USERS_FETCH_SUCCESS).map(action => action.payload.user),
+      this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, languages, roles, user) => ({
         canEditUser,
         canEditRole,

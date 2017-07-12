@@ -3,6 +3,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
+import { UsersService } from '../../users.service';
+
 @Component({
   selector: 'app-user-ldap-dialog',
   templateUrl: './user-ldap-dialog.component.html',
@@ -21,12 +23,12 @@ export class UserLdapDialogComponent {
     { prop: 'comment' },
   ];
 
-  groups$ = Observable.of([]);
+  groups$ = this.usersService.ldapGroups$;
 
   users$ = Observable.of([]);
 
-  constructor() {
-    //
+  constructor(private usersService: UsersService) {
+    this.usersService.fetchLdapGroups();
   }
 
   onGroupSelect(event: any): void {

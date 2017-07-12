@@ -31,9 +31,14 @@ export interface IUserEditPermissions {
   canEditLdap: boolean;
 }
 
+export interface ILdapGroup {
+  name: string;
+  description: string;
+}
+
 export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
   displayBlocked: boolean;
+  ldapGroups: Array<ILdapGroup>;
 }
-
