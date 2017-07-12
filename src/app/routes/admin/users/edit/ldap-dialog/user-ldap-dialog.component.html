@@ -4,6 +4,7 @@
       columnTranslationKey="users.ldap.groups"
       selectionType="single"
       [columns]="groupsColumns"
+      [footerHeight]="false"
       [rows]="groups$ | async"
       [styles]="{ height: '200px' }"
       (onSelect)="onGroupSelect($event)">
@@ -14,6 +15,7 @@
       columnTranslationKey="users.ldap.users"
       selectionType="single"
       [columns]="usersColumns"
+      [footerHeight]="false"
       [rows]="users$ | async"
       [styles]="{ height: '200px' }"
       (onSelect)="onUserSelect($event)">
