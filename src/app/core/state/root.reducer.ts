@@ -1,7 +1,13 @@
+import { compose } from '@ngrx/core';
+import { Action, combineReducers } from '@ngrx/store';
+
+import { IAppState } from './state.interface';
+
 import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.reducer';
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
+import { authReducer } from '../auth/auth.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
@@ -14,7 +20,7 @@ import { userPermissionsReducer } from '../user/permissions/user-permissions.red
 import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
 import { metadataReducer } from '../metadata/metadata.reducer';
 
-export const rootReducer = {
+export const reducers = {
   actionsLog: actionsLogReducer,
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
@@ -30,4 +36,8 @@ export const rootReducer = {
   userPermissions: userPermissionsReducer,
   metadata: metadataReducer,
   constants: constantsReducer,
+};
+
+export function rootReducer(state: IAppState, action: Action): IAppState {
+  return compose(authReducer, combineReducers)(reducers)(state, action);
 };
