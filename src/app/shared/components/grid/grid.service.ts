@@ -1,74 +1,171 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
+import * as R from 'ramda';
 
-import { AuthService } from '../../../core/auth/auth.service';
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+import { IGridColumn, IRenderer } from './grid.interface';
+import { IGrid2ColumnSorter, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
+
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
-  // defines whether the request should fetch a resource from the server's root
-  private _localRequest = false;
+  constructor(
+    private converterService: ValueConverterService,
+    private dictionariesService: DictionariesService,
+    private metadataService: MetadataService,
+    private translateService: TranslateService,
+  ) {}
 
-  constructor(private http: AuthHttp, private authService: AuthService) { }
+  buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
+    const request: IGrid2Request = {};
+    const filter: FilterObject = FilterObject.create().and();
+    const { sorters, currentPage, pageSize } = params;
 
-  localRequest(): GridService {
-    this._localRequest = true;
-    return this;
-  }
+    if (sorters) {
+      R.values(sorters)
+        .forEach(sorter => {
+          const { filter: f } = sorter;
+          if (f) {
+            filter.addFilter(FilterObject.create(f));
+          }
+        });
 
-  read(url: string, routeParams: object = {}): Observable<any> {
-    if (this._localRequest) {
-      // this would not be a default value, so clear the flag for further requests
-      this._localRequest = false;
-      return this.http.get(url)
-        .map(data => data.json());
+      request.sorting = R.values(R.mapObjIndexed(
+        (columnSettings: IGrid2ColumnSorter, columnId: string) => ({
+          direction: columnSettings.sortDirection,
+          field: columnId,
+          order: columnSettings.sortOrder,
+        }),
+        sorters
+      ))
+      .filter(Boolean)
+      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
+      .map(R.omit(['order']));
     }
 
-    return this.request(url, RequestMethod.Get, routeParams);
+    if (filters) {
+      filter.addFilter(filters);
+    }
+
+    // console.log('params', params);
+    // console.log('filters', filters);
+    // console.log('request filter', filter);
+
+    if (filter.hasFilter() || filter.hasValues()) {
+      request.filtering = filter;
+    }
+
+    if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
+      request.paging = {
+        pageNumber: currentPage,
+        resultsPerPage: pageSize
+      };
+    }
+
+    return request;
   }
 
   /**
-   * NOTE: route params have to be enclosed in curly braces
-   * Example:
-   *  url = '/api/roles/{id}/permits', params = { id: 5 }
-   *  route = '/api/roles/5/permits
+   * Build column defs from server metadata
+   * Use only once during ngOnInit phase
+   *
+   * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
+   * @param {Observable<IGridColumn[]>} columns Initial column descriptions
+   * @param {object} renderers Column renderers, esentially getters
+   * @returns {Observable<IGridColumn[]>} Column defininitions
    */
-  create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Post, routeParams, body);
+  getColumnDefs(
+    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+      const mapColumns = ([metadata, dictionaries]) =>
+        this.setRenderers(columns.filter(column =>
+          !!metadata.find(metadataColumn => {
+            const isInMeta = column.prop === metadataColumn.name;
+            if (isInMeta) {
+              if (!column.renderer) {
+                const currentDictTypes = dictionaries[metadataColumn.dictCode];
+                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                  column.renderer = (item: ITypeCodeItem) => {
+                    const typeDescription = currentDictTypes.find(
+                      dictionaryItem => dictionaryItem.code === item.typeCode
+                    );
+                    return typeDescription ? typeDescription.name : item.typeCode;
+                  };
+                } else {
+                  // Data types
+                  switch (metadataColumn.dataType) {
+                    case 2:
+                      // Date
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
+                      break;
+                    case 7:
+                      // Datetime
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
+                      break;
+                  }
+                }
+              }
+              // Filters
+              if (!!column.filterOptionsDictionaryId) {
+                const dictTypes = dictionaries[column.filterOptionsDictionaryId];
+                if (Array.isArray(dictTypes)) {
+                  column.filterValues = dictTypes.reduce((acc, item) => {
+                    acc[item.code] = item.name;
+                    return acc;
+                  }, {});
+                }
+              }
+            }
+            return isInMeta;
+          })
+        ), renderers);
+
+      return Observable.combineLatest(
+        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
+        this.dictionariesService.dictionariesByCode
+      ).map(mapColumns);
   }
 
-  update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.request(url, RequestMethod.Put, routeParams, body);
+  setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
+    return columns.map((column: IGridColumn) => {
+      const renderer = renderers[column.prop];
+      return renderer ? this.setRenderer(column, renderer) : column;
+    });
   }
 
-  delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.request(url, RequestMethod.Delete, routeParams);
-  }
+  private setRenderer(
+      column: IGridColumn,
+      rendererFn: Function | IRenderer
+  ): IGridColumn {
 
-  private request(url: string, method: RequestMethod, routeParams: object, body: object = null): Observable<any> {
-    return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        return this.http.request(`${rootUrl}${route}`, {
-          method: method,
-          body: body
-        })
-        .map(data => data.json());
-      });
-  }
+    const isArray = Array.isArray(rendererFn);
+    const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
 
-  private validateUrl(url: string = ''): Observable<any> {
-    if (!url) {
-      return Observable.throw('Error: no url passed to the GridService');
-    }
-    return this.authService.getRootUrl();
-  }
+    column.$$valueGetter = (entity: any, fieldName: string) => {
+      const value: any = Reflect.get(entity, fieldName);
 
-  private createRoute(url: string, params: object): string {
-    return Object.keys(params).reduce((acc, id) => {
-      const re = RegExp(`{${id}}`, 'gi');
-      return acc.replace(re, params[id]);
-    }, url);
+      if (isArray) {
+        const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
+        return labeledValue
+          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
+          : entity[column.prop];
+      } else {
+
+        const displayValue = String((rendererFn as Function)(entity, value));
+        return column.localized
+          ? this.translateService.instant(displayValue)
+          : displayValue;
+      }
+    };
+    // NOTE: for compatibility between grid & grid2
+    // TODO(a.tymchuk): see if @swimlane has a better option
+    column.renderer = column.$$valueGetter;
+    return column;
   }
 }

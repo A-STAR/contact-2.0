@@ -1,21 +1,14 @@
-<div class="panel panel-default">
-  <div class="panel-body">
-    <app-toolbar
-      *ngIf="bottomActions"
-      class="app-toolbar"
-      [actions]="bottomActions"
-      (actionClick)="onActionClick($event)"
-    >
-    </app-toolbar>
+<div class="grid grid-default">
+  <div class="grid-body">
     <ngx-datatable
       class="material"
       [ngStyle]="styles"
       [cssClasses]="cssClasses"
-      [columns]="columns"
+      [columns]="columnDefs"
       [columnMode]="'force'"
-      [footerHeight]="50"
+      [footerHeight]="footerHeight"
       [rowHeight]="25"
-      [rows]="rows"
+      [rows]="filteredRows"
       [limit]="25"
       [messages]="messages"
       [selected]="selected"
@@ -23,8 +16,7 @@
       [scrollbarV]="true"
       [scrollbarH]="false"
       (activate)="onActivate($event)"
-      (select)="onSelect($event)"
-      (page)="onPage($event)"
+      (select)="onSelectRow($event)"
     >
     </ngx-datatable>
   </div>

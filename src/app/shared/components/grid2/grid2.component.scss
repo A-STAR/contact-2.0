@@ -1,0 +1,82 @@
+@import "../../styles/app/variables.scss";
+
+app-grid2 {
+  line-height: 0;
+}
+
+.app-grid2 {
+  width: 100%;
+  border: 1px solid #d6d6d6;
+
+  .ag-root {
+    height: 100%;
+  }
+
+  .ag-row {
+    // &.ag-row-hover {
+    &:hover {
+      background-color: #eeeeee;
+      &.ag-row-selected {
+        background-color: #23b7e5;
+      }
+    }
+  }
+
+  .header-item-wrapper {
+    width: 100%;
+    text-align: left;
+  }
+
+  .header-item-wrapper:hover {
+    .header-filter-item {
+      visibility: visible;
+    }
+  }
+
+  .header-item-wrapper > * {
+    display: inline-block;
+  }
+
+  .header-display-item {
+    width: 70%;
+    padding-left: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: break-word;
+  }
+
+  .header-filter-item {
+    visibility: hidden;
+    right: 4px;
+    .fa:hover {
+      color: #23b7e5;
+    }
+    &.active-filter {
+      visibility: visible;
+      color: #0198c4;
+      .fa:hover {
+        color: #007a9d;
+      }
+    }
+  }
+
+  .header-sort-item {
+    right: 22px;
+    .fa:hover {
+      color: #23b7e5;
+    }
+  }
+
+  .header-filter-item, .header-sort-item {
+    width: 18px;
+    position: absolute;
+    text-align: center;
+    cursor: pointer;
+  }
+}
+
+.ag-dnd-ghost {
+  z-index: $zindex-app-grid2-dnd-ghost;
+}

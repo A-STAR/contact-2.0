@@ -1,24 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-tab',
-  styles: [`
-    .pane{
-      padding: 0;
-    }
-  `],
-  template: `
-    <div [hidden]="!active" class="pane">
-      <ng-content></ng-content>
-    </div>
-  `
+  templateUrl: './tab.component.html',
+  styleUrls: ['./tab.component.scss'],
 })
 export class TabComponent {
   @Input() title: string;
   @Input() active = false;
+  @Input() closable = true;
   @Output() onClose = new EventEmitter<number>();
 
-  constructor() {
-
-  }
+  constructor() {}
 }

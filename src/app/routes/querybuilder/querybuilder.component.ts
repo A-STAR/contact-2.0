@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component } from '@angular/core';
 import { IGroup } from '../../shared/components/qbuilder/qbuilder.interface';
 import { QBuilderService } from '../../shared/components/qbuilder/qbuilder.service';
 
@@ -27,26 +26,26 @@ export class QueryBuilderComponent {
     this.resetGroup();
   }
 
-  resetGroup() {
+  resetGroup(): void {
     this.group = {
       operator: null,
       rules: []
     };
   }
 
-  showQueryBuilderDialog() {
+  showQueryBuilderDialog(): void {
     this.isQueryBuilderDialogVisible = true;
   }
 
-  toggleBetweenQueryBuilderAndResultingJson() {
+  toggleBetweenQueryBuilderAndResultingJson(): void {
     this.isQueryBuilderShown = !this.isQueryBuilderShown;
   }
 
-  onQueryBuilderDialogHide() {
+  onQueryBuilderDialogHide(): void {
     this.resetGroup();
   }
 
-  toJson(group) {
+  toJson(group: any): string {
     return this.builderService.toJson(group);
   }
 }

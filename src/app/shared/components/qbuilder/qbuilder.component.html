@@ -1,4 +1,4 @@
-<div class="group">
+<div class="group" *ngIf="group">
   <div class="form-inline">
     <select [(ngModel)]="group.operator" class="form-control input-sm">
       <option *ngFor="let operator of logicalOperators" [ngValue]="operator">{{ operator.name }}</option>
@@ -34,7 +34,7 @@
             </span>
             <span *ngSwitchCase="'date'">
               <!-- FIXME: name -->
-              <app-input-datepicker name="fake-form-date" [(value)]="rule.value"></app-input-datepicker>
+              <!--<app-input-datepicker name="fake-form-date" [(value)]="rule.value"></app-input-datepicker>-->
             </span>
             <span *ngSwitchCase="'currency'">
               <!-- FIXME: name -->

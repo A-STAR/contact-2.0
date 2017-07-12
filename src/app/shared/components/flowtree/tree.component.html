@@ -1,28 +1,42 @@
 <div
-    [ngClass]="{'ui-tree ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode,'ui-treenode-dragover':dragHover}"
-    [ngStyle]="style"
-    [class]="styleClass"
-    *ngIf="!horizontal"
-    (drop)="onDrop($event)"
-    (dragover)="onDragOver($event)"
-    (dragenter)="onDragEnter($event)"
-    (dragleave)="onDragLeave($event)">
-    <ul class="ui-tree-container">
-        <app-tree-node *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index" [node]="node"
-        [firstChild]="firstChild" [lastChild]="lastChild" [index]="index"></app-tree-node>
-    </ul>
+  *ngIf="!horizontal"
+  [ngClass]="{'ui-tree ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
+  [ngStyle]="style"
+  [class]="styleClass">
+  <ul class="app-tree-container">
+    <app-tree-node
+      *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index"
+      [collapseAdjacentNodes]="collapseAdjacentNodes"
+      [expandNodeOnClick]="expandNodeOnClick"
+      [node]="node"
+      [firstChild]="firstChild"
+      [lastChild]="lastChild"
+      [index]="index">
+    </app-tree-node>
+  </ul>
 </div>
 <div
-    [ngClass]="{'ui-tree ui-tree-horizontal ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
-    [ngStyle]="style"
-    [class]="styleClass"
-    *ngIf="horizontal">
-    <div *ngIf="value && value[0]">
-        <table *ngIf="value[0].children">
-            <app-tree-node [node]="child" [root]="true" *ngFor="let child of value[0].children"></app-tree-node>
-        </table>
-        <table *ngIf="!value[0].children">
-            <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
-        </table>
-    </div>
+  *ngIf="horizontal"
+  [ngClass]="{'ui-tree ui-tree-horizontal ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
+  [ngStyle]="style"
+  [class]="styleClass">
+  <ng-container *ngIf="value?.length">
+    <table *ngIf="value[0].children">
+      <app-tree-node
+        *ngFor="let child of value[0].children"
+        [collapseAdjacentNodes]="collapseAdjacentNodes"
+        [expandNodeOnClick]="expandNodeOnClick"
+        [node]="child"
+        [root]="true">
+      </app-tree-node>
+    </table>
+    <table *ngIf="!value[0].children">
+      <app-tree-node
+        [collapseAdjacentNodes]="collapseAdjacentNodes"
+        [expandNodeOnClick]="expandNodeOnClick"
+        [node]="value[0]"
+        [root]="true">
+      </app-tree-node>
+    </table>
+  </ng-container>
 </div>

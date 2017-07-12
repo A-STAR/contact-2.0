@@ -1,10 +1,12 @@
-<div class="content-heading">
-  {{ 'sidebar.nav.menu.ROLES_AND_PERMISSIONS' | translate }}
-</div>
-
-<app-roles (onSelect)="onSelect($event)"></app-roles>
+<app-roles></app-roles>
 
 <br>
 
-<app-permissions (cloneRole)="onRoleClone()"
-                 [currentRole]="currentRole"></app-permissions>
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab [title]="'roles.permissions.tab.title'">
+    <app-permissions></app-permissions>
+  </app-tab>
+  <app-tab [title]="'roles.permissions.tab2.title'" [closable]="false">
+    <app-permissions-tree></app-permissions-tree>
+  </app-tab>
+</app-tabstrip>

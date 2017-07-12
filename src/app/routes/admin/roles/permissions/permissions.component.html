@@ -1,36 +1,43 @@
-<app-edit-permission *ngIf="displayProperties.editPermit"
-                     [displayProperties]="displayProperties"
-                     [record]="editedPermission"
-                     (save)="onEditPermission($event)">
-</app-edit-permission>
-
-<app-add-permission *ngIf="displayProperties.addPermit"
-                    [displayProperties]="displayProperties"
-                    [currentRole]="currentRole"
-                    (cancel)="displayProperties.addPermit = false"
-                    (add)="onAddPermissions($event)">
+<app-add-permission
+  *ngIf="isDialog(1)"
+  [availablePermissions]="availablePermissions"
+  (add)="onAddPermissions($event)"
+  (cancel)="onCancel()"
+>
 </app-add-permission>
 
-<app-remove-permission *ngIf="displayProperties.removePermit"
-                       [displayProperties]="displayProperties"
-                       (confirm)="onRemovePermission()">
-</app-remove-permission>
+<app-edit-permission
+  *ngIf="isDialog(2)"
+  [record]="currentPermission"
+  (save)="onAfterEditPermission($event)"
+  (cancel)="onCancel()"
+>
+</app-edit-permission>
 
-<app-tabstrip>
-  <app-tab *ngFor="let tab of tabs" [title]="tab.title" (onClose)="onClose($event)" [active]="tab.active">
-    <app-grid
-      #permitsGrid
-      [styles]="{height: '200px'}"
-      [columns]="columns"
-      [parseFn]="parseFn"
-      [dataSource]="dataSource"
-      [autoLoad]="false"
-      [selectionType]="'single'"
-      [editPermission]="'PERMIT_EDIT'"
-      [bottomActions]="bottomActions"
-      (onEdit)="onBeginEditPermission($event)"
-      (onRowSelect)="onSelectPermissions($event)"
-      (onAction)="onAction($event)">
-    </app-grid>
-  </app-tab>
-</app-tabstrip>
+<app-dialog-action
+  *ngIf="isDialog(3)"
+  [actionMode]="'danger'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
+  [messageParams]="currentPermission"
+  [titleTranslationKey]="'roles.permissions.remove.title'"
+  (action)="onRemovePermission()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  [columns]="columns"
+  [columnTranslationKey]="'roles.permissions'"
+  [emptyMessage]="emptyMessage$ | async"
+  [rows]="permissions$ | async"
+  [selectionType]="'single'"
+  [styles]="{height: '200px'}"
+  (onDblClick)="onBeforeEditPermission()"
+  (onSelect)="onSelectPermissions($event)">
+</app-grid>

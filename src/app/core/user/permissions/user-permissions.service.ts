@@ -1,40 +1,56 @@
 import { Injectable } from '@angular/core';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { IUserPermissionModel, IUserPermissionsResponse } from './user-permissions.interface';
+import 'rxjs/add/operator/switchMap';
+
+import { IAppState } from '../../state/state.interface';
+import { IUserPermissionsState } from './user-permissions.interface';
 
 @Injectable()
 export class UserPermissionsService {
+  static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
+  static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
+  static USER_PERMISSIONS_FETCH_FAILURE = 'USER_PERMISSIONS_FETCH_FAILURE';
 
-  private userPermits: Map<string, boolean> = new Map<string, boolean>();
+  constructor(private store: Store<IAppState>) {}
 
-  constructor(private gridService: GridService) {
-    // TODO Temp solution
-    this.loadUserPermissions().subscribe();
+  get isResolved(): Observable<boolean> {
+    return this.state.map(state => state.isResolved);
   }
 
-  public loadUserPermissions(): Observable<IUserPermissionsResponse> {
-    return this.gridService.read('/api/userpermits')
-      .map((response: IUserPermissionsResponse) => {
-        response.userPermits.forEach((userPermission: IUserPermissionModel) => {
-          this.userPermits.set(userPermission.name, this.toUserPermissionValue(userPermission));
-        });
-        return response;
-      });
+  createRefreshAction(): Action {
+    return {
+      type: UserPermissionsService.USER_PERMISSIONS_FETCH
+    };
   }
 
-  public hasPermission(permissionName: string): boolean {
-    return this.userPermits.get(permissionName) || false;
+  refresh(): void {
+    const action = this.createRefreshAction();
+    this.store.dispatch(action);
   }
 
-  private toUserPermissionValue(userPermissionModel: IUserPermissionModel): boolean {
-    if (userPermissionModel.valueB !== null) {
-      return userPermissionModel.valueB;
-    } else if (userPermissionModel.valueN !== null) {
-      return !!userPermissionModel.valueN;
-    } else if (userPermissionModel.valueS !== null) {
-      return !!parseInt(userPermissionModel.valueS, 10);
-    }
-    return false;
+  has(permissionName: string): Observable<boolean> {
+    return this.state.map(state => this.userHasPermission(state, permissionName)).distinctUntilChanged();
+  }
+
+  hasOne(permissionNames: Array<string>): Observable<boolean> {
+    return this.state.map(state =>
+      permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(state, permissionName), false)
+    ).distinctUntilChanged();
+  }
+
+  hasAll(permissionNames: Array<string>): Observable<boolean> {
+    return this.state.map(state =>
+      permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(state, permissionName), true)
+    ).distinctUntilChanged();
+  }
+
+  private userHasPermission(state: IUserPermissionsState, permissionName: string): boolean {
+    const permission = state.permissions[permissionName];
+    return permission && permission.valueB;
+  }
+
+  private get state(): Observable<IUserPermissionsState> {
+    return this.store.select(state => state.userPermissions);
   }
 }

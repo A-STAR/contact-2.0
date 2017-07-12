@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { TranslatorService } from '../../../core/translator/translator.service';
 
 @Component({
   selector: 'app-login',
@@ -11,41 +12,41 @@ import { TranslatorService } from '../../../core/translator/translator.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  static LOGIN_KEY = 'auth-login';
+  static LOGIN_KEY = 'auth/login';
 
-  valForm: FormGroup;
+  form: FormGroup;
   error: string = null;
 
   constructor(
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
+    private translateService: TranslateService,
     private router: Router,
-    private translator: TranslatorService,
   ) {
     const login = this.login;
     const remember = !!login;
 
-    this.valForm = fb.group({
+    this.form = fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
       'password': [ null, Validators.required ],
-      'account_remember': [remember],
+      'remember_login': [remember],
     });
 
-    this.valForm.valueChanges.subscribe(() => this.error = null);
+    this.form.valueChanges.subscribe(() => this.error = null);
   }
 
-  submitForm(event, value: any): void {
+  submitForm(event: UIEvent, value: any): void {
     event.preventDefault();
 
     this.error = null;
-    this.login = value.account_remember ? value.login : null;
+    this.login = value.remember_login ? value.login : null;
 
-    [].forEach.call(this.valForm.controls, ctrl => {
+    [].forEach.call(this.form.controls, ctrl => {
         ctrl.markAsTouched();
     });
 
-    if (this.valForm.valid) {
+    if (this.form.valid) {
       const { login, password } = value;
       this.authService
         .authenticate(login, password)
@@ -63,7 +64,7 @@ export class LoginComponent {
     return localStorage.getItem(LoginComponent.LOGIN_KEY);
   }
 
-  private set login(login) {
+  private set login(login: string) {
     if (login) {
       localStorage.setItem(LoginComponent.LOGIN_KEY, login);
     } else {

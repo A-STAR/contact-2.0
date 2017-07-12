@@ -1,0 +1,11 @@
+<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  [columns]="columns"
+  [columnTranslationKey]="'debtors'"
+  [rows]="debtors"
+  [styles]="{height: '200px'}"
+  (onDblClick)="onDblClick($event)"
+  (onSelect)="onSelect($event)"
+>
+</app-grid>

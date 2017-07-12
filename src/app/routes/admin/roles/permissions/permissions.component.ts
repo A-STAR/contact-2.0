@@ -1,187 +1,186 @@
-import {
-  Component, Input, OnChanges, SimpleChange, ViewChild, AfterViewInit
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/zip';
 
-import { TableColumn } from '@swimlane/ngx-datatable';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interface';
+import { IPermissionModel, IPermissionRole } from '../permissions.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { IDataSource } from '../../../../shared/components/grid/grid.interface';
-import { IDisplayProperties } from '../roles.interface';
-import { IPermissionModel, IPermissionRole, IPermissionsResponse } from './permissions.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-
-import { GridColumnDecoratorService } from '../../../../shared/components/grid/grid.column.decorator.service';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-import { PermissionsService } from './permissions.service';
+import { DataService } from '../../../../core/data/data.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { PermissionsService } from '../permissions.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-permissions',
-  templateUrl: './permissions.component.html'
+  templateUrl: './permissions.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PermissionsComponent implements AfterViewInit, OnChanges {
+export class PermissionsComponent implements OnDestroy {
 
-  displayProperties: IDisplayProperties = {
-    removePermit: false,
-    addPermit: false,
-    editPermit: false
-  };
-  private editedPermission: IPermissionModel;
-
-  @ViewChild('permitsGrid') permitsGrid: GridComponent;
-  @Input() currentRole: IPermissionRole;
-
-  columns: Array<TableColumn> = [
-    { name: 'ID доступа', prop: 'id', minWidth: 70, maxWidth: 100 },
-    { name: 'Название', prop: 'name', minWidth: 200, maxWidth: 350 },
-    this.columnDecoratorService.decorateColumn(
-      {name: 'Значение', prop: 'value', minWidth: 70, maxWidth: 100},
-      (permission: IPermissionModel) => this.valueConverterService.deserializeBooleanViewValue(permission)
-    ),
-    { name: 'Описание', prop: 'dsc', minWidth: 200 },
-    { name: 'Альт. коментарий', prop: 'altDsc', minWidth: 200 },
-    { name: 'Комментарий', prop: 'comment' },
+  columns: Array<IGridColumn> = [
+    { prop: 'id', minWidth: 70, maxWidth: 100 },
+    { prop: 'name', minWidth: 200, maxWidth: 350 },
+    { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
+    { prop: 'dsc', minWidth: 200 },
+    { prop: 'comment', minWidth: 300 },
   ];
 
-  bottomActions: Array<IToolbarAction> = [
-    { text: 'Добавить', type: ToolbarActionTypeEnum.ADD, visible: false, permission: 'PERMIT_ADD' },
-    { text: 'Изменить', type: ToolbarActionTypeEnum.EDIT, visible: false, permission: 'PERMIT_EDIT' },
-    { text: 'Удалить', type: ToolbarActionTypeEnum.REMOVE, visible: false, permission: 'PERMIT_DELETE' },
-  ];
-
-  bottomPermitActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.EDIT,
-    ToolbarActionTypeEnum.REMOVE,
-  ];
-
-  bottomRoleActionsGroup: Array<ToolbarActionTypeEnum> = [
-    ToolbarActionTypeEnum.ADD,
-  ];
-
-  tabs: Array<any> = [
-    {id: 0, title: 'Доступы', active: true},
-  ];
-
-  dataSource: IDataSource = {
-    read: '/api/roles/{id}/permits',
-    dataKey: 'permits'
+  renderers: IRenderer = {
+    value: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
   };
 
-  constructor(private permissionsService: PermissionsService,
-              private columnDecoratorService: GridColumnDecoratorService,
-              private valueConverterService: ValueConverterService) {
-  }
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.onBeforeAddPermissions(),
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_ADD'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_EDIT'),
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_DELETE'),
+        this.permissionsService.permissions.map(state => !!state.currentPermission)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.permissionsService.fetchPermissions(),
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_VIEW'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    },
+  ];
 
-  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
+  // TODO(d.maltsev): type
+  permissions$: Observable<Array<any>>;
 
-  public ngAfterViewInit() {
-    this.refreshGrid();
-  }
+  canViewPermissions$: Observable<boolean>;
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    this.refreshGrid();
-  }
+  emptyMessage$: Observable<string>;
+  availablePermissions: IPermissionModel[];
 
-  private onAction(action: IToolbarAction): void {
-    this.displayProperties.editPermit = false;
-    this.displayProperties.addPermit = false;
-    this.displayProperties.removePermit = false;
+  dialog: IPermissionsDialogEnum;
 
-    switch (action.type) {
-      case ToolbarActionTypeEnum.EDIT:
-        this.displayProperties.editPermit = true;
-        break;
-      case ToolbarActionTypeEnum.ADD:
-        this.displayProperties.addPermit = true;
-        break;
-      case ToolbarActionTypeEnum.REMOVE:
-        this.displayProperties.removePermit = true;
-        break;
-    }
-  }
+  private currentPermission: IPermissionModel;
+  private currentRole: IPermissionRole;
+  private permissionsSubscription: Subscription;
+  private viewPermissionsSubscription: Subscription;
 
-  onBeginEditPermission(): void {
-    this.displayProperties.editPermit = true;
-  }
-
-  onSelectPermissions(records: IPermissionModel[]): void {
-    if (records.length) {
-      this.editedPermission = records[0];
-    }
-    this.refreshToolbar(records);
-  }
-
-  onEditPermission(permission: IPermissionModel): void {
-    const permissionId: number = this.editedPermission.id;
-    this.permissionsService.editPermission(this.currentRole, permissionId, permission)
+  constructor(
+    private dataService: DataService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private permissionsService: PermissionsService,
+    private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService
+  ) {
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.permissionsSubscription = this.permissionsService.permissions
       .subscribe(
-        () => {
-          this.displayProperties.editPermit = false;
-          this.refreshGrid();
-        },
-        // TODO: display & log a message
-        err => console.error(err)
+        (permissions: IPermissionsState) => {
+          this.currentRole = permissions.currentRole;
+          this.currentPermission = permissions.currentPermission;
+          this.dialog = permissions.dialog;
+        }
       );
+
+    this.permissions$ = this.permissionsService.permissions
+      .map(state => state.rawPermissions)
+      .distinctUntilChanged()
+      .map(permissions => this.valueConverterService.deserializeSet(permissions));
+
+    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
+
+    this.viewPermissionsSubscription = Observable.combineLatest(
+      this.canViewPermissions$,
+      this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
+    )
+    .subscribe(([ hasViewPermission, currentRole ]) => {
+      if (!hasViewPermission) {
+        this.permissionsService.clearPremissions();
+      } else if (currentRole) {
+        this.permissionsService.fetchPermissions();
+      }
+    });
+
+    this.emptyMessage$ = this.canViewPermissions$.map(hasPermission => hasPermission ? null : 'roles.permissions.errors.view');
+  }
+
+  ngOnDestroy(): void {
+    this.permissionsSubscription.unsubscribe();
+    this.viewPermissionsSubscription.unsubscribe();
+  }
+
+  onBeforeAddPermissions(): void {
+    this.dataService
+      .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
+      .subscribe(data => {
+        this.availablePermissions = data.permits;
+        this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
+      });
+  }
+
+  onBeforeEditPermission(): void {
+    this.userPermissionsService.has('PERMIT_EDIT')
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission && this.currentPermission) {
+          this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
+        }
+      });
+  }
+
+  onSelectPermissions(record: IPermissionModel): void {
+    if (record) {
+      this.permissionsService.changeSelected(record);
+    }
+  }
+
+  onAfterEditPermission(permission: IPermissionModel): void {
+    this.permissionsService.updatePermission(
+      this.currentRole.id,
+      this.valueConverterService.serialize(permission)
+    );
+  }
+
+  onCancel(): void {
+    this.dialogAction(IPermissionsDialogEnum.NONE);
   }
 
   onAddPermissions(addedPermissions: IPermissionModel[]): void {
-    const permissionsIds: number [] = addedPermissions.map((rec: IPermissionModel) => rec.id);
-
-    this.permissionsService.addPermission(this.currentRole, permissionsIds)
-      .subscribe(
-        () => {
-          this.displayProperties.addPermit = false;
-          this.refreshGrid();
-        },
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+    const permissionsIds: number[] = addedPermissions.map((rec: IPermissionModel) => rec.id);
+    this.permissionsService.addPermission(this.currentRole, permissionsIds);
   }
 
   onRemovePermission(): void {
-    const permissionId: number = this.editedPermission.id;
-    this.permissionsService.removePermission(this.currentRole, permissionId)
-      .subscribe(
-        () => {
-          this.displayProperties.removePermit = false;
-          this.refreshGrid();
-        },
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+    const permissionId: number = this.currentPermission.id;
+    this.permissionsService.removePermission(this.currentRole, permissionId);
   }
 
-  private loadGrid(): void {
-    this.permitsGrid.load(this.currentRole)
-      .subscribe(
-        () => this.refreshToolbar(),
-        // TODO: display & log a message
-        err => console.error(err)
-      );
+  isDialog(dialog: IPermissionsDialogEnum): boolean {
+    return this.dialog === dialog;
   }
 
-  private refreshGrid(): void {
-    if (!this.permitsGrid) {
-      return;
-    }
-
-    if (this.currentRole) {
-      this.loadGrid();
-    } else {
-      this.permitsGrid.clear();
-    }
-  }
-
-  private refreshToolbar(permissions: IPermissionModel[] = []): void {
-    const isRoleSelected: boolean = !!this.currentRole;
-    const isRolePermissionSelected: boolean = permissions.length > 0;
-
-    this.setActionsVisibility(this.bottomRoleActionsGroup, isRoleSelected);
-    this.setActionsVisibility(this.bottomPermitActionsGroup, isRolePermissionSelected);
-  }
-
-  private setActionsVisibility(actionTypesGroup: Array<ToolbarActionTypeEnum>, visible: boolean): void {
-    actionTypesGroup.forEach((actionType: ToolbarActionTypeEnum) => {
-      this.bottomActions.find((action: IToolbarAction) => actionType === action.type).visible = visible;
-    });
+  private dialogAction(dialog: IPermissionsDialogEnum): void {
+    this.permissionsService.permissionDialog(dialog);
   }
 }

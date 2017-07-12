@@ -1,0 +1,28 @@
+<div class="toolbar">
+  <div class="toolbar-item" *ngFor="let item of items">
+
+    <!-- Button -->
+    <button
+      *ngIf="isButton(item)"
+      class="btn btn-default"
+      [disabled]="isDisabled(item) | async"
+      [title]="getLabel(item) | translate"
+      (click)="onClick(item)"
+    >
+      <i [ngClass]="getIcon(item)"></i>
+    </button>
+
+    <!-- Checkbox -->
+    <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">
+      <label>
+        <input
+          type="checkbox"
+          [checked]="item.state | async"
+          [disabled]="item.disabled | async"
+          (change)="onClick(item)"
+        >
+        {{ getLabel(item) | translate }}
+      </label>
+    </span>
+  </div>
+</div>

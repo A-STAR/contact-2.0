@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="block-center mt-xl wd-xl">
+  <div class="block-center vertical-align wd-xl">
     <!-- START panel-->
     <div class="panel panel-dark panel-flat">
       <div class="panel-heading text-center">
@@ -8,40 +8,35 @@
         </a>
       </div>
       <div class="panel-body">
-        <p class="text-center pv">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
-        <form [formGroup]="valForm" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, valForm.value)">
+        <p class="text-center pv-lg">{{ 'login.PLEASE_AUTHENTICATE' | translate }}</p>
+        <form [formGroup]="form" class="form-validate" role="form" name="loginForm" (submit)="submitForm($event, form.value)">
           <div class="form-group has-feedback">
             <input class="form-control" type="text" name="login" placeholder="{{ 'login.LOGIN_PLACEHOLDER' | translate }}" autocomplete="off" minlength="2" formControlName="login" required="" />
-            <span class="fa fa-envelope form-control-feedback text-muted"></span>
-            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('required') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">
-              {{ 'validation.FIELD_REQUIRED' | translate }}
+            <span class="fa fa-user form-control-feedback text-muted"></span>
+            <span class="text-danger" *ngIf="form.controls['login'].hasError('required') && (form.controls['login'].dirty || form.controls['login'].touched)">
+              {{ 'validation.fieldRequired' | translate }}
             </span>
-            <span class="text-danger" *ngIf="valForm.controls['login'].hasError('minlength') && (valForm.controls['login'].dirty || valForm.controls['login'].touched)">
+            <span class="text-danger" *ngIf="form.controls['login'].hasError('minlength') && (form.controls['login'].dirty || form.controls['login'].touched)">
               <!-- TODO: cases and singular/plural, i.e. 1 символа, 2 символов -->
-              {{ 'validation.FIELD_MIN_LENGTH' | translate:{length: 2} }}
+              {{ 'validation.fieldMinLength' | translate:{requiredLength: 2} }}
             </span>
           </div>
           <div class="form-group has-feedback">
             <input class="form-control" type="password" name="password" placeholder="{{ 'login.PASSWORD_PLACEHOLDER' | translate }}" formControlName="password" required="" />
             <span class="fa fa-lock form-control-feedback text-muted"></span>
-            <span class="text-danger" *ngIf="valForm.controls['password'].hasError('required') && (valForm.controls['password'].dirty || valForm.controls['password'].touched)">
-              {{ 'validation.FIELD_REQUIRED' | translate }}
+            <span class="text-danger" *ngIf="form.controls['password'].hasError('required') && (form.controls['password'].dirty || form.controls['password'].touched)">
+              {{ 'validation.fieldRequired' | translate }}
             </span>
           </div>
           <div class="clearfix">
             <div class="checkbox c-checkbox pull-left mt0">
               <label>
-                <input type="checkbox" value="" name="account_remember" formControlName="account_remember"/>
+                <input type="checkbox" value="" name="remember_login" formControlName="remember_login"/>
                 <span class="fa fa-check"></span>{{ 'login.REMEMBER_ME' | translate }}
               </label>
             </div>
-            <!--
-            <div class="pull-right">
-              <a class="text-muted" [routerLink]="'/recover'">{{ 'login.FORGOT_PASSWORD' | translate }}</a>
-            </div>
-            -->
           </div>
-          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!valForm.valid">
+          <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!form.valid">
             {{ 'login.LOGIN_BUTTON' | translate }}
           </button>
           <span class="text-danger" *ngIf="error">
@@ -52,12 +47,7 @@
     </div>
     <!-- END panel-->
     <div class="p-lg text-center">
-      <span>{{ settings.app.description }}</span>
-      <span>&copy;</span>
-      <span>{{ settings.app.year }}</span>
-      <span>-</span>
-      <span>{{ settings.app.name }}</span>
-      <br/>
+      <span>{{ settings.app.description }} &copy; {{ settings.app.year }} - {{ settings.app.name }}</span>
     </div>
   </div>
 </div>

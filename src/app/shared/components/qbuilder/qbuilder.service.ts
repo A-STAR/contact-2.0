@@ -1,4 +1,4 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { IGroup, IField, ILogicalOperator, ICondition, IMetadata, IComparisonOperator } from './qbuilder.interface';
 
@@ -119,13 +119,15 @@ export class QBuilderService {
     return JSON.stringify(group, (key, value) => key === 'parent' ? undefined : value, 2);
   }
 
-  toString(group): string {
+  toString(group: IGroup|ICondition): string {
     if (!group) { return ''; }
-    const str = group.rules.reduce((acc, rule, i) => {
+    const str = (group as IGroup).rules.reduce((acc, rule, i) => {
       if (i > 0) {
         acc += ` ${group.operator.name} `;
       }
-      return acc + (rule.rules ? this.toString(rule) : `${rule.field.code} ${rule.operator.name} ${rule.value}`);
+      return acc + ((rule as IGroup).rules
+          ? this.toString((rule as IGroup))
+          : `${(rule as ICondition).field.code} ${rule.operator.name} ${(rule as ICondition).value}`);
     }, '');
 
     return `(${str})`;

@@ -20,7 +20,7 @@ export class ThemesService {
         this.setTheme(this.defaultTheme);
     }
 
-    private createStyle() {
+    private createStyle(): void {
         const head = document.head || document.getElementsByTagName('head')[0];
         this.styleTag = document.createElement('style');
         this.styleTag.type = 'text/css';
@@ -28,7 +28,7 @@ export class ThemesService {
         head.appendChild(this.styleTag);
     }
 
-    setTheme(name) {
+    setTheme(name: string): void {
         switch (name) {
             case 'A':
                 this.injectStylesheet(themeA);
@@ -57,11 +57,11 @@ export class ThemesService {
         }
     }
 
-    injectStylesheet(css) {
+    injectStylesheet(css: string): void {
         this.styleTag.innerHTML = css;
     }
 
-    getDefaultTheme() {
+    getDefaultTheme(): string {
         return this.defaultTheme;
     }
 

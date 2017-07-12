@@ -1,21 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import './crossvent.patch';
 import { TreeComponent } from './tree.component';
-import { UITreeNodeComponent } from './uitreenode.component';
-import { TreeNodeTemplateLoaderComponent } from './treenodetemplateloader.component';
+import { TreeNodeComponent } from './treenode/treenode.component';
+import { DragAndDropModule } from '../dnd/drag-and-drop.module';
 
 @NgModule({
-    imports: [
-      CommonModule
-    ],
-    exports: [
-      TreeComponent
-    ],
-    declarations: [
-      TreeComponent,
-      UITreeNodeComponent,
-      TreeNodeTemplateLoaderComponent
-    ]
+  imports: [
+    CommonModule,
+    DragAndDropModule,
+  ],
+  exports: [
+    TreeComponent,
+  ],
+  declarations: [
+    TreeComponent,
+    TreeNodeComponent,
+  ],
 })
 export class TreeModule {
 }

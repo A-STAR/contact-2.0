@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DialogModule, ButtonModule } from 'primeng/primeng';
 import { DatePipe } from '@angular/common';
+import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../../shared/shared.module';
+
+import { ConstantsEffects } from '../constants/constants.effects';
+import { ConstantsService } from '../constants/constants.service';
+
 import { ConstantsComponent } from './constants.component';
+import { ConstantEditComponent } from './constant-edit/constant-edit.component';
 
 const routes: Routes = [
   { path: '', component: ConstantsComponent },
@@ -12,8 +17,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    ButtonModule,
-    DialogModule,
+    EffectsModule.run(ConstantsEffects),
     RouterModule.forChild(routes),
     SharedModule,
   ],
@@ -22,8 +26,10 @@ const routes: Routes = [
   ],
   declarations: [
     ConstantsComponent,
+    ConstantEditComponent,
   ],
   providers: [
+    ConstantsService,
     DatePipe,
   ]
 })

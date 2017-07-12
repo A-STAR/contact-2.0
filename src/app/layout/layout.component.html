@@ -3,13 +3,12 @@
     <app-header class="topnavbar-wrapper"></app-header>
     <!-- sidebar-->
     <app-sidebar class="aside"></app-sidebar>
-    <!-- offsidebar-->
-    <app-offsidebar class="offsidebar"></app-offsidebar>
     <!-- Main section-->
     <section>
         <!-- Page content-->
         <div class="content-wrapper">
-            <router-outlet></router-outlet>
+          <app-router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></app-router-outlet>
+          <app-content-tabstrip [tabs]="tabs"></app-content-tabstrip>
         </div>
     </section>
 </div>

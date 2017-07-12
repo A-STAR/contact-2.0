@@ -1,0 +1,40 @@
+<app-employee-add
+  *ngIf="isEntityBeingCreated"
+  [employeeRoleOptions]="employeeRoleOptions$ | async"
+  (submit)="onAddSubmit($event)"
+  (cancel)="cancelAction()">
+</app-employee-add>
+
+<app-employee-edit
+  *ngIf="isEntityBeingEdited"
+  [editedEntity]="editedEntity"
+  [employeeRoleOptions]="employeeRoleOptions$ | async"
+  (submit)="onEditSubmit($event)"
+  (cancel)="cancelAction()">
+</app-employee-edit>
+
+<app-dialog-action
+  *ngIf="isEntityBeingRemoved"
+  [titleTranslationKey]="'organizations.employees.remove.title'"
+  [actionTranslationKey]="'organizations.employees.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemoveSubmit()"
+  (cancel)="cancelAction()">
+</app-dialog-action>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  class="flat"
+  [columns]="columns"
+  [columnTranslationKey]="'organizations.employees'"
+  [emptyMessage]="emptyMessage$ | async"
+  [rows]="employees$ | async"
+  selectionType="single"
+  (onDblClick)="onEdit()"
+  (onSelect)="onSelect($event)">
+</app-grid>

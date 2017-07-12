@@ -1,0 +1,13 @@
+<app-dialog (onClose)="onClose.emit()">
+  <div dialog-header>
+    <h3>{{ titleTranslationKey | translate:titleTranslationParams }}</h3>
+  </div>
+
+  <ng-content></ng-content>
+
+  <div dialog-footer>
+    <button class="btn btn-{{ actionMode }}" (click)="onClose.emit()">
+      <i class="fa fa-check"></i> {{ actionTranslationKey | translate }}
+    </button>
+  </div>
+</app-dialog>

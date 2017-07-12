@@ -1,13 +1,25 @@
 stages:
+  - test
   - build
   - deploy
+
+job_test:
+  stage: test
+  script:
+    - cd $CI_PROJECT_DIR
+    - echo $CI_PROJECT_DIR
+    - npm install
+    - npm run lint && npm run build -- --prod --progress=false
+  except:
+    - dev
+
 job_build:
   stage: build
   script:
     - cd $CI_PROJECT_DIR
-    - echo $CI_PROJECT_DIR    
-    - npm install
-    - npm run build -- --prod --aot --progress=false
+    - echo $CI_PROJECT_DIR
+    - node -v && npm install
+    - npm run build -- --prod --progress=false
   artifacts:
     name: "frontend_default_build"
     paths:
@@ -22,6 +34,18 @@ deploy_dev:
     - cp -R dist/ /var/www/html/angular-java-dev/
     - cp -R /var/www/configs/angular-java-dev/* /var/www/html/angular-java-dev/
   environment:
-    name: dev    
+    name: dev
+  only:
+    - dev
+
+deploy_demo:
+  stage: deploy
+  script:
+    - rm -rf /var/www/html/angular-java-demo/dist
+    - cp -R dist/ /var/www/html/angular-java-demo/
+    - cp -R /var/www/configs/angular-java-demo/* /var/www/html/angular-java-demo/
+  environment:
+    name: demo
+  when: manual
   only:
     - dev

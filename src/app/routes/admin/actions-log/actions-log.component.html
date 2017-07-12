@@ -1,0 +1,36 @@
+<app-actions-log-filter
+  #filter
+  [employeesRows]="employeesRows"
+  [actionTypesRows]="actionTypesRows"
+  (export)="doExport()"
+  (search)="doSearch()"
+>
+</app-actions-log-filter>
+
+<app-downloader
+  #downloader
+  errorTranslationKey="actionsLog.messages.errors.download"
+  name="actions.xlsx"
+  url="/list/excel?name=actions">
+</app-downloader>
+
+<app-grid2
+  columnTranslationKey="actionsLog"
+  [columns]="columnDefs | async"
+  [sorters]="actionsLogSorters | async"
+  [ngClass]="'actions-log-grid'"
+  [page]="actionsLogCurrentPage | async"
+  [pageSize]="actionsLogCurrentPageSize | async"
+  [rows]="(actionsLogData | async).data"
+  [rowCount]="(actionsLogData | async)?.total"
+  [selected]="actionsLogSelected | async"
+  (onPage)="onRequestData($event)"
+  (onPageSize)="onRequestData($event)"
+  (onSort)="onRequestData($event)"
+  (onColumnGroup)="onRequestData($event)"
+  (onDragStarted)="onColumnAction($event)"
+  (onDragStopped)="onColumnAction($event)"
+  (onFilter)="onFilter($event)"
+  (onSelect)="onSelect($event)"
+>
+</app-grid2>

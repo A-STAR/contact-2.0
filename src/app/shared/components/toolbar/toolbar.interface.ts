@@ -1,13 +1,40 @@
+import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+
+export enum ToolbarControlEnum {
+  BUTTON,
+  CHECKBOX,
+  LABEL,
+  SELECT,
+}
+
 export enum ToolbarActionTypeEnum {
   ADD,
   EDIT,
   CLONE,
-  REMOVE
+  REMOVE,
+  REFRESH,
+  SEARCH,
+  SAVE,
+  GO_FORWARD,
+  GO_BACKWARD,
+  GO_FIRST,
+  GO_LAST,
 }
 
 export interface IToolbarAction {
-  text: string;
-  type: ToolbarActionTypeEnum;
+  activeValue?: any;
+  control?: ToolbarControlEnum;
+  disabled?: boolean;
+  hasLabel?: boolean;
+  permission?: string | Array<string>;
+  styles?: { width?: string };
+  text?: string;
+  type?: ToolbarActionTypeEnum;
+  value?: any;
   visible?: boolean;
-  permission?: string;
+}
+
+export interface IToolbarActionSelectPayload {
+  action: IToolbarAction;
+  value: ILabeledValue[];
 }

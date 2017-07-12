@@ -1,0 +1,31 @@
+<div class="grid grid-default">
+    <!--<app-toolbar-2
+      *ngIf="toolbarActions"
+      class="app-toolbar"
+      [actions]="toolbarActions"
+      (actionClick)="onActionClick($event)"
+    >
+    </app-toolbar-2>-->
+    <ag-grid-angular
+      class="app-grid2 ag-contact2"
+      [columnDefs]="columnDefs"
+      [gridOptions]="gridOptions"
+      [ngStyle]="styles"
+      [overlayNoRowsTemplate]="'default.grid.empty' | translate"
+      [overlayLoadingTemplate]="'default.grid.empty' | translate"
+      [rowSelection]="rowSelection"
+      (dragStarted)="dragStarted()"
+      (dragStopped)="dragStopped()"
+      (rowSelected)="rowSelected($event)"
+      (rowDoubleClicked)="rowDoubleClicked()"
+    >
+    </ag-grid-angular>
+</div>
+<app-toolbar
+  *ngIf="pagination"
+  class="app-toolbar"
+  [actions]="paginationPanel"
+  (actionClick)="onPageChange($event)"
+  (actionSelect)="onPageSizeChange($event)"
+>
+</app-toolbar>

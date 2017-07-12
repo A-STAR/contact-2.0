@@ -13,36 +13,6 @@ export const menuConfig: IMenuConfig = {
     link: '/workflow',
     icon: 'icon-graph'
   },
-  menuItemQueryBuilder: {
-    text: 'sidebar.nav.menu.QUERY_BUILDER',
-    link: '/query-builder',
-    icon: 'icon-list'
-  },
-  menuItemGrids: {
-    text: 'sidebar.nav.menu.GRIDS',
-    link: '/grid',
-    icon: 'icon-grid'
-  },
-  menuItemLargeDataset: {
-    text: 'sidebar.nav.menu.LARGE_DATASET',
-    link: '/grid/large',
-    icon: 'icon-grid'
-  },
-  menuItemSortable: {
-    text: 'sidebar.nav.menu.SORTABLE',
-    link: '/grid/sortable',
-    icon: 'icon-grid'
-  },
-  menuItemReorderable: {
-    text: 'sidebar.nav.menu.REORDERABLE',
-    link: '/grid/reorderable',
-    icon: 'icon-grid'
-  },
-  menuItemGroupable: {
-    text: 'sidebar.nav.menu.GROUPABLE',
-    link: '/grid/groupable',
-    icon: 'icon-grid'
-  },
 
   // Администрирование:
   administration: {
@@ -77,12 +47,12 @@ export const menuConfig: IMenuConfig = {
   },
   clients: {
     text: 'sidebar.nav.menu.BANKS',
-    link: '/admin/banks',
+    link: '/admin/contractors',
     icon: 'icon-briefcase'
   },
   structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
-    link: '/admin/departments',
+    link: '/admin/organizations',
     icon: 'icon-link'
   },
 

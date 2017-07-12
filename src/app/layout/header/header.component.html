@@ -1,150 +1,84 @@
-<!-- START Top Navbar-->
 <nav class="navbar topnavbar" role="navigation">
-    <!-- START navbar header-->
-    <div class="navbar-header">
-        <a class="navbar-brand" href="#/">
-            <div class="brand-logo">
-                <img class="img-responsive" src="assets/img/logo.png" alt="App Logo" />
-            </div>
-            <div class="brand-logo-collapsed">
-                <img class="img-responsive" src="assets/img/logo-single.png" alt="App Logo" />
-            </div>
+  <div class="navbar-header">
+    <a class="navbar-brand" (click)="showLicenseInfo()">
+      <div class="brand-logo">
+        <div>Contact <span class="brand-logo-version">2.0</span></div>
+      </div>
+      <div class="brand-logo-collapsed">
+        <div>C <span class="brand-logo-version">2.0</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="nav-wrapper">
+    <ul class="nav navbar-nav">
+      <li>
+        <a class="hidden-xs" trigger-resize="" (click)="toggleCollapsedSidebar()" *ngIf="!isCollapsedText()">
+          <i class="fa fa-navicon"></i>
         </a>
-    </div>
-    <!-- END navbar header-->
-    <!-- START Nav wrapper-->
-    <div class="nav-wrapper">
-        <!-- START Left navbar-->
-        <ul class="nav navbar-nav">
-            <li>
-                <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
-                <a class="hidden-xs" trigger-resize="" (click)="toggleCollapsedSidebar()" *ngIf="!isCollapsedText()">
-                    <em class="fa fa-navicon"></em>
-                </a>
-                <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
-                <a class="visible-xs sidebar-toggle" (click)="settings.layout.asideToggled =! settings.layout.asideToggled">
-                    <em class="fa fa-navicon"></em>
-                </a>
-            </li>
-        </ul>
-        <!-- END Left navbar-->
-        <!-- START Right Navbar-->
-        <ul class="nav navbar-nav navbar-right">
-            <!-- Search icon-->
-            <li>
-                <a title="Search" (click)="openNavSearch($event)">
-                    <em class="icon-magnifier"></em>
-                </a>
-            </li>
-            <!-- Fullscreen (only desktops)-->
-            <li class="visible-lg">
-                <a title="Full screen" #fsbutton (click)="toggleFullScreen($event)">
-                    <em class="fa fa-expand"></em>
-                </a>
-            </li>
-            <!-- START Alert menu-->
-            <li class="dropdown dropdown-list" dropdown>
-                <a title="Messages" dropdownToggle>
-                    <em class="icon-bell"></em>
-                    <div class="label label-danger">11</div>
-                </a>
-                <!-- START Dropdown menu-->
-                <ul *dropdownMenu class="dropdown-menu animated fadeIn">
-                    <li>
-                        <!-- START list group-->
-                        <div class="list-group">
-                            <!-- list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-twitter fa-2x text-info"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">New followers</p>
-                                        <p class="m0 text-muted">
-                                            <small>1 new follower</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-envelope fa-2x text-warning"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">New e-mails</p>
-                                        <p class="m0 text-muted">
-                                            <small>You have 10 new emails</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-tasks fa-2x text-success"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">Pending Tasks</p>
-                                        <p class="m0 text-muted">
-                                            <small>11 pending tasks</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- last list item-->
-                            <a class="list-group-item">
-                                <div class="media-box">
-                                    <div class="pull-left">
-                                        <em class="fa fa-comment-o fa-2x text-success"></em>
-                                    </div>
-                                    <div class="media-box-body clearfix">
-                                        <p class="m0">New messages</p>
-                                        <p class="m0 text-muted">
-                                            <small>System messages</small>
-                                            <span class="label label-danger pull-right">14</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <!-- END list group-->
-                    </li>
-                </ul>
-                <!-- END Dropdown menu-->
-            </li>
-            <!-- END Alert menu-->
-            <!-- START Offsidebar button-->
-            <li *ngIf="false">
-                <a (click)="toggleOffsidebar()">
-                    <em class="icon-notebook"></em>
-                </a>
-            </li>
-            <!-- END Offsidebar menu-->
-            <!-- START User avatar toggle-->
-            <li>
-                <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
-                <a title="Settings" (click)="toggleUserSettings($event)">
-                    <em class="icon-user"></em>
-                </a>
-            </li>
-            <!-- END User avatar toggle-->
-            <!-- START lock screen-->
-            <li>
-                <a title="Logout" (click)="logout($event)">
-                    <em class="icon-lock"></em>
-                </a>
-            </li>
-            <!-- END lock screen-->
-        </ul>
-        <!-- END Right Navbar-->
-    </div>
-    <!-- END Nav wrapper-->
+        <a class="visible-xs sidebar-toggle" (click)="settings.layout.asideToggled = !settings.layout.asideToggled">
+          <i class="fa fa-navicon"></i>
+        </a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a title="Search" (click)="openNavSearch($event)">
+          <i class="icon-magnifier"></i>
+        </a>
+      </li>
 
-    <app-navsearch [visible]="getNavSearchVisible()" (onclose)="setNavSearchVisible(false)"></app-navsearch>
+      <li class="visible-lg">
+        <a title="Language" (click)="toggleLanguage()">
+          <i class="fa fa-language"></i>
+        </a>
+      </li>
 
+      <li>
+        <app-dropdown #dropdown class="menu-item" [enabled]="hasNotifications$ | async">
+          <a trigger title="Messages">
+            <i class="icon-bell"></i>
+            <div *ngIf="hasNotifications$ | async" class="label label-danger">
+              {{ notificationsCount$ | async }}
+            </div>
+          </a>
+          <app-notifications
+            [filters]="filters$ | async"
+            [notifications]="notifications$ | async"
+            (onClose)="dropdown.close()"
+          >
+          </app-notifications>
+        </app-dropdown>
+      </li>
+
+      <li *ngIf="false">
+        <a (click)="toggleOffsidebar()">
+          <i class="icon-notebook"></i>
+        </a>
+      </li>
+
+      <li>
+        <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+        <a title="Settings" (click)="toggleUserSettings($event)">
+          <i class="icon-user"></i>
+        </a>
+      </li>
+
+      <li>
+        <a title="Logout" (click)="logout($event)">
+          <i class="icon-lock"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <app-navsearch [visible]="getNavSearchVisible()" (onclose)="setNavSearchVisible(false)"></app-navsearch>
 </nav>
-<!-- END Top Navbar-->
+
+<app-info-dialog
+  *ngIf="isLicenseVisible"
+  titleTranslationKey="header.license.title"
+  (onClose)="closeLicenseInfo()"
+>
+  <section class="pv-xl">{{ 'header.license.info' | translate }} <em>CRIF-CO-9821-9873-4259-5601</em>.</section>
+</app-info-dialog>

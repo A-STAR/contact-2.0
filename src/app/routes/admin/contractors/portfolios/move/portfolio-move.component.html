@@ -1,0 +1,24 @@
+<app-dialog (onClose)="cancel()">
+  <div dialog-header>
+    <h3>{{ 'portfolios.move.title' | translate:portfolio }}</h3>
+  </div>
+
+  <app-grid
+    columnTranslationKey="contractors"
+    selectionType="single"
+    [styles]="{height: '200px'}"
+    [columns]="columns"
+    [rows]="contractors$ | async"
+    [allowDblClick]="false"
+    (onSelect)="onSelect($event)">
+  </app-grid>
+
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="cancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

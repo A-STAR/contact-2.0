@@ -1,56 +1,56 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IRoleRecord } from '../roles.interface';
-import { AbstractRolesPopup } from '../roles-abstract-popup';
+import { IPermissionRole } from '../../permissions.interface';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
+
+import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { PermissionsService } from '../../permissions.service';
 
 @Component({
   selector: 'app-roles-copy',
   templateUrl: './roles-copy.component.html'
 })
-export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
-  @Input() originalRole: IRoleRecord = null;
+export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> implements OnDestroy {
 
-  controls: Array<IDynamicFormControl>;
+  private roles: ILabeledValue[];
+  private rolesSubscription: Subscription;
 
-  constructor(private formBuilder: FormBuilder, private gridService: GridService) {
+  constructor(permissionsService: PermissionsService) {
     super();
+    this.rolesSubscription = permissionsService.roles.subscribe((rolesList: IPermissionRole[]) => {
+      this.roles = rolesList
+        .map(
+          (role: IPermissionRole) => ({label: role.name, value: role.id})
+        );
+    });
   }
 
-  ngOnInit() {
-    this.gridService
-      .read('/api/roles')
-      .subscribe(
-        data => this.initControls(data),
-        // TODO: display & log message
-        error => console.log(error)
-      );
-  }
-
-  private initControls(data) {
-    const options = data.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    }));
-
-    this.controls = [
+  protected getControls(): Array<IDynamicFormControl> {
+    return [
       {
-        label: 'Название оригинальной роли',
+        label: 'roles.roles.copy.originalRoleName',
         controlName: 'originalRoleId',
         type: 'select',
-        options,
-        required: true
+        required: true,
+        options: this.roles,
+        optionsActions: [
+          { text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT }
+        ]
       },
       {
-        label: 'Название',
+        label: 'roles.roles.copy.roleName',
         controlName: 'name',
         type: 'text',
         required: true
       },
       {
-        label: 'Комментарий',
+        label: 'roles.roles.copy.roleComment',
         controlName: 'comment',
         type: 'textarea',
         rows: 2
@@ -58,16 +58,13 @@ export class RolesCopyComponent extends AbstractRolesPopup implements OnInit {
     ];
   }
 
-  protected createForm(role: IRoleRecord): FormGroup {
-    return this.formBuilder.group({
-      originalRoleId: [ this.originalRole.id, Validators.required ],
-      name: [ this.role.name, Validators.required ],
-      comment: [ this.role.comment ],
-    });
+  get formData(): any {
+    return {
+      originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
+    };
   }
 
-  protected httpAction(): Observable<any> {
-    const data = this.form.getRawValue();
-    return this.gridService.create('/api/roles/{id}/copy', { id: data.originalRoleId }, data);
+  ngOnDestroy(): void {
+    this.rolesSubscription.unsubscribe();
   }
 }

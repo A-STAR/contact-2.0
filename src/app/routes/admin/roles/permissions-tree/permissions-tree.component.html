@@ -1,0 +1,27 @@
+<app-toolbar-2
+  class="app-toolbar"
+  [items]="toolbarActions"
+  (actionClick)="onSaveChanges()">
+</app-toolbar-2>
+
+<ng-container *ngIf="hasViewPermission | async; else message">
+  <app-tree
+    *ngIf="value"
+    [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
+    [style]="{height: '100%', width: '100%', border: 'none'}"
+    [value]="value"
+    (selectionChange)="onSelectionChange($event)"
+    [selection]="selection">
+  </app-tree>
+  <div
+    *ngIf="!value"
+    class="message-container">
+    {{ 'default.grid.empty' | translate }}
+  </div>
+</ng-container>
+
+<ng-template #message>
+  <div class="message-container">
+    {{ 'roles.permissions.tree.access_denied' | translate }}
+  </div>
+</ng-template>

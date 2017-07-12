@@ -1,0 +1,9 @@
+<!-- supress the placeholder to make it look like other filters -->
+<div class="datepicker">
+  <app-input-datepicker
+    [ngModel]="date"
+    placeholder=""
+    (ngModelChange)="update($event)"
+  >
+  </app-input-datepicker>
+</div>

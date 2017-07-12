@@ -1,109 +1,132 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import { Component, ElementRef, forwardRef, HostListener, Input, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-input-datepicker',
   templateUrl: './datepicker.component.html',
-  styles: [
-    '.datepicker { display: inline-block; }',
-    '.dropdown { position: fixed; padding: 8px 0; z-index: 20000; }'
+  styleUrls: ['./datepicker.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true
+    }
   ]
 })
-export class DatePickerComponent implements OnInit, OnDestroy {
-  @Input() controlName: string;
-  @Input() name: string;
-  @Input() value: string;
-  @Input() form: FormGroup;
-  @Output() valueChange = new EventEmitter<string>();
+export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @Input() buttonClass = 'btn btn-default';
+  @Input() inputClass = 'form-control';
+  @Input() placeholder = 'default.date.datePicker.placeholder';
+
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
+  isDisabled = false;
   isExpanded = false;
+  value: Date = null;
+  style$ = new BehaviorSubject<{ top: string; left: string; }>(null);
 
-  dropdownStyle = {};
+  private locale = {};
+  private subscription: Subscription;
 
-  dateFormat = 'dd.mm.yy';
+  private wheelListener: Function;
 
-  mask = {
-    mask: [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/],
-    pipe: createAutoCorrectedDatePipe('dd.mm.yyyy'),
-    keepCharPositions: true
-  };
+  private propagateChange: Function = () => {};
 
-  locale = {
-    firstDayOfWeek: 1,  // 0 = Sunday, 1 = Monday, etc.
-    dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-    dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
-  };
+  constructor(
+    private renderer: Renderer2,
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService,
+  ) {
+    this.subscription = Observable.merge(
+      this.translateService.get('default.date')
+        .take(1),
+      this.translateService.onLangChange
+        .distinctUntilChanged()
+        .map(data => data.translations.default.date)
+    ).subscribe((translations: any) => {
+      const { days, months } = translations;
+      this.locale = {
+        firstDayOfWeek: 1,
+        dayNames: days.full,
+        dayNamesShort: days.short,
+        dayNamesMin: days.short,
+        monthNames: months.full,
+        monthNamesShort: months.short
+      };
+    });
+  }
 
-  constructor() {
-    if (this.controlName && this.name) {
-      throw new SyntaxError('Please pass either [name] or [controlName] parameter, but not both.');
-    }
+  get formattedDate(): string {
+    return this.valueConverterService.toLocalDate(this.value);
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent): void {
     if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target)) {
       this.toggleCalendar(false);
     }
   };
 
-  @HostListener('document:scroll')
-  onDocumentScroll() {
-    this.toggleCalendar(false);
-  }
-
-  ngOnInit() {
-    if (this.controlName && this.form.get(this.controlName).value) {
-      this.value = this.form.get(this.controlName).value;
-    }
+  ngOnInit(): void {
     document.body.appendChild(this.dropdown.nativeElement);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     document.body.removeChild(this.dropdown.nativeElement);
+    this.subscription.unsubscribe();
   }
 
-  onValueChange(newValue: string) {
-    this.value = newValue;
-    this.valueChange.emit(newValue);
+  writeValue(value: Date): void {
+    this.value = value;
   }
 
-  onDateChange(newValue: Date) {
-    const d = newValue.getDate();
-    const m = newValue.getMonth() + 1;
-    const y = newValue.getFullYear();
-    const date = `${d > 9 ? d : '0' + d}.${m > 9 ? m : '0' + m}.${y}`;
+  registerOnChange(fn: Function): void {
+    this.propagateChange = fn;
+  }
 
-    if (this.form) {
-      if (this.controlName) {
-        this.form.patchValue({ [this.controlName]: date });
-      }
-      this.form.markAsDirty();
+  registerOnTouched(fn: Function): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  onValueChange(newValue: Date | Event): void {
+    if (this.isExpanded) {
+      this.toggleCalendar(false);
     }
 
-    this.onValueChange(date);
-    this.toggleCalendar(false);
+    const newDate = newValue instanceof Date ?
+      newValue :
+      this.valueConverterService.fromLocalDate((newValue.target as HTMLInputElement).value);
+
+    if (Number(newDate) !== Number(this.value)) {
+      this.value = newDate;
+      this.propagateChange(newDate);
+    }
   }
 
-  get date() {
-    return this.value || null;
-  }
-
-  toggleCalendar(isExpanded?: boolean) {
+  toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
-      setTimeout(() => this.positionDropdown(), 0);  // TODO: is there a better way to do this?
+      // TODO(d.maltsev): is there a better way to do this?
+      setTimeout(() => this.positionDropdown(), 0);
+    }
+
+    if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
+      this.removeWheelListener();
     }
   }
 
-  private positionDropdown() {
+  private positionDropdown(): void {
     const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();
     const contentRect: ClientRect = this.dropdown.nativeElement.children[0].getBoundingClientRect();
 
@@ -111,9 +134,23 @@ export class DatePickerComponent implements OnInit, OnDestroy {
     const top = inputRect.bottom + contentRect.height > window.innerHeight ? inputRect.top - contentRect.height : inputRect.bottom;
     const left = inputRect.left;
 
-    this.dropdownStyle = {
+    this.style$.next({
       top: `${top}px`,
       left: `${left}px`
-    };
+    });
+
+    this.addWheelListener();
+  }
+
+  private addWheelListener(): void {
+    this.wheelListener = this.renderer.listen(document, 'wheel', () => {
+      this.toggleCalendar(false);
+    });
+  }
+
+  private removeWheelListener(): void {
+    if (this.wheelListener) {
+      this.wheelListener();
+    }
   }
 }

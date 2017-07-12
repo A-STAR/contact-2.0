@@ -67,7 +67,7 @@ $brand-yellow-dark:            darken($brand-yellow, $amountOfLight);
 //** Background color for `<body>`.
 $body-bg:               #f5f7fa;
 //** Global text color on `<body>`.
-$text-color:            #515253;
+$text-color:            #1f1f1f;
 
 //** Global textual link color.
 $link-color:            $brand-primary;
@@ -81,7 +81,8 @@ $link-hover-decoration: underline;
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+// $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif:  "Fira Sans Extra Condensed", sans-serif !default;
 $font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -127,7 +128,7 @@ $icon-font-svg-id:        "glyphicons_halflingsregular";
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
 $padding-base-vertical:     6px;
-$padding-base-horizontal:   16px;
+$padding-base-horizontal:   12px;
 
 $padding-large-vertical:    10px;
 $padding-large-horizontal:  20px;
@@ -304,14 +305,18 @@ $dropdown-caret-color:           #000;
 //
 // Note: These variables are not generated into the Customizer.
 
-$zindex-navbar:            1000;
-$zindex-dropdown:          1000;
-$zindex-popover:           1060;
-$zindex-tooltip:           1070;
-$zindex-navbar-fixed:      1030;
-$zindex-modal-background:  1040;
-$zindex-modal:             1050;
-
+$zindex-navbar:               1000;
+$zindex-dropdown:             1000;
+$zindex-popover:              1060;
+$zindex-tooltip:              1070;
+$zindex-navbar-fixed:         1030;
+$zindex-modal-background:     1040;
+$zindex-modal:                1050;
+$zindex-app-dialog:          10000;
+$zindex-app-datepicker:      10100;
+$zindex-app-validation:      10200;
+$zindex-app-grid2-dnd-ghost: 10300;
+$zindex-app-loader:          20000;
 
 //== Media queries breakpoints
 //
@@ -640,13 +645,15 @@ $modal-content-border-color:                   rgba(0,0,0,.2);
 $modal-content-fallback-border-color:          #999;
 
 //** Modal backdrop background color
-$modal-backdrop-bg:           #000;
+$modal-backdrop-bg:           rgba(0, 0, 0, 0.5);
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      .5;
 //** Modal header border color
 $modal-header-border-color:   #e5e5e5;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color;
+$modal-footer-bg:             #f9f9f9;
+$modal-footer-border-color:   #eee;
 
 $modal-lg:                    900px;
 $modal-md:                    600px;
@@ -905,3 +912,8 @@ $dl-horizontal-offset:        $component-offset-horizontal;
 $hr-border:                   $gray-lighter;
 
 
+//== App-dialog
+//
+//##
+$app-dialog-close-color:        #aaa;
+$app-dialog-close-hover-color:  #333;

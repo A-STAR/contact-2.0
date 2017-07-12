@@ -7,8 +7,6 @@
           [routerLink]="item.link"
           [attr.route]="item.link"
           [title]="(item.text | translate) || item.name"
-          (click)="toggleSubmenuClick($event)"
-          (mouseenter)="toggleSubmenuHover($event)"
         >
           <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
         </a>
@@ -23,7 +21,12 @@
         <ul *ngIf="item.children" class="nav sidebar-subnav" [routerLinkActive]="['opening']">
           <li class="sidebar-subnav-header">{{ (item.text | translate) || item.name }}</li>
           <li *ngFor='let subitem of item.children' [routerLinkActive]="['active']">
-            <a *ngIf="!subitem.children" [routerLink]="subitem.link" [attr.route]="subitem.link" [title]="(subitem.text | translate) || subitem.name">
+            <a
+              *ngIf="!subitem.children"
+              [routerLink]="subitem.link"
+              [attr.route]="subitem.link"
+              [title]="subitem.text | translate"
+            >
               <em class="{{subitem.icon}}" *ngIf="subitem.icon"></em><span>{{ subitem.text | translate }}</span>
             </a>
           <li>

@@ -1,0 +1,26 @@
+<app-dialog-action
+  *ngIf="isContractorBeingRemoved"
+  titleTranslationKey="contractors.remove.title"
+  actionTranslationKey="contractors.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedContractor$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="contractors"
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [rows]="contractors$ | async"
+  [allowDblClick]="canEdit$ | async"
+  (onDblClick)="onEdit($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

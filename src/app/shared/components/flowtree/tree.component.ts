@@ -1,454 +1,341 @@
-// Official site at https://www.primefaces.org/primeng/#/tree
 import {
+  ChangeDetectionStrategy,
   Component,
-  Input,
-  AfterContentInit,
-  OnDestroy,
-  Output,
+  ElementRef,
   EventEmitter,
+  Input,
+  OnDestroy,
   OnInit,
-  ContentChildren,
-  QueryList,
-  TemplateRef,
-  Optional,
-  ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { TreeNode } from './common/api';
-import { TreeDragDropService } from './common/treedragdrop.service';
-import { PrimeTemplate, SharedModule } from './common/shared';
+  Output,
+  Renderer2,
+  ViewEncapsulation,
+} from '@angular/core';
+import * as R from 'ramda';
+
+import { DragAndDropComponentPlugin, DragAndDropComponentPluginFactory } from '../dnd/drag-and-drop.component.plugin';
+
+import { IDragAndDropPayload, IDragAndDropView } from '../dnd/drag-and-drop.interface';
+import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
 
 @Component({
-    selector: 'app-tree',
-    styleUrls: ['./tree.component.scss'],
-    templateUrl: './tree.component.html',
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-tree',
+  styleUrls: ['./tree.component.scss'],
+  templateUrl: './tree.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements OnInit, AfterContentInit, OnDestroy {
+export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+  @Input() dblClickEnabled = true;
+  @Input() dndEnabled = false;
+  @Input() collapseAdjacentNodes = false;
+  @Input() expandNodeOnClick = false;
+  @Input() value: ITreeNode[];
+  @Input() selectionMode: string;
+  @Input() selection: ITreeNode|ITreeNode[];
+  @Output() selectionChange: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
+  @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
+  @Input() style: any;
+  @Input() styleClass: string;
+  @Input() layout = 'vertical';
+  @Input() metaKeySelection = true;
+  @Input() propagateSelectionUp = true;
+  @Input() propagateSelectionDown = true;
 
-    @Input() value: TreeNode[];
+  private dragAndDropPlugin: DragAndDropComponentPlugin;
 
-    @Input() selectionMode: string;
+  get horizontal(): boolean {
+    return this.layout === 'horizontal';
+  }
 
-    @Input() selection: any;
+  get selectionAsArray(): ITreeNode[] {
+    return this.selection as ITreeNode[];
+  }
 
-    @Output() selectionChange: EventEmitter<any> = new EventEmitter();
+  get dragulaOptions(): any {
+    return this.dragAndDropPlugin
+      ? this.dragAndDropPlugin.dragulaOptions
+      : {
+        // prevent any drags by default
+        invalid: () => true
+      };
+  };
 
-    @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
+    private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
+  ) {
+  }
 
-    @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
-
-    @Output() onNodeExpand: EventEmitter<any> = new EventEmitter();
-
-    @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
-
-    @Output() onNodeContextMenuSelect: EventEmitter<any> = new EventEmitter();
-
-    @Output() onNodeDrop: EventEmitter<any> = new EventEmitter();
-
-    @Input() style: any;
-
-    @Input() styleClass: string;
-
-    @Input() contextMenu: any;
-
-    @Input() layout = 'vertical';
-
-    @Input() draggableScope: any;
-
-    @Input() droppableScope: any;
-
-    @Input() draggableNodes: boolean;
-
-    @Input() droppableNodes: boolean;
-
-    @Input() metaKeySelection = true;
-
-    @Input() propagateSelectionUp = true;
-
-    @Input() propagateSelectionDown = true;
-
-    @ContentChildren(PrimeTemplate) templates: QueryList<any>;
-
-    public templateMap: any;
-
-    public nodeTouched: boolean;
-
-    public dragNodeTree: TreeComponent;
-
-    public dragNode: TreeNode;
-
-    public dragNodeSubNodes: TreeNode[];
-
-    public dragNodeIndex: number;
-
-    public dragNodeScope: any;
-
-    public dragHover: boolean;
-
-    public dragStartSubscription: Subscription;
-
-    public dragStopSubscription: Subscription;
-
-    constructor(@Optional() public dragDropService: TreeDragDropService) {}
-
-    ngOnInit() {
-        if (this.droppableNodes) {
-            this.dragStartSubscription = this.dragDropService.dragStart$.subscribe(
-              event => {
-                this.dragNodeTree = event.tree;
-                this.dragNode = event.node;
-                this.dragNodeSubNodes = event.subNodes;
-                this.dragNodeIndex = event.index;
-                this.dragNodeScope = event.scope;
-            });
-
-            this.dragStopSubscription = this.dragDropService.dragStop$.subscribe(
-              event => {
-                this.dragNodeTree = null;
-                this.dragNode = null;
-                this.dragNodeSubNodes = null;
-                this.dragNodeIndex = null;
-                this.dragNodeScope = null;
-                this.dragHover = false;
-            });
-        }
+  ngOnInit(): void {
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin = this.dragAndDropComponentPluginFactory.attachTo(this, {
+        viewElementRef: this.elementRef,
+        draggableNodesSelector: '.app-treenode-content',
+        renderer: this.renderer
+      });
+      this.dragAndDropPlugin.ngOnInit();
     }
+  }
 
-    get horizontal(): boolean {
-        return this.layout === 'horizontal';
+  ngOnDestroy(): void {
+    if (this.dndEnabled) {
+      this.dragAndDropPlugin.ngOnDestroy();
     }
+  }
 
-    ngAfterContentInit() {
-        if (this.templates.length) {
-            this.templateMap = {};
-        }
+  onNodeClick(event: MouseEvent, node: ITreeNode): void {
+    const eventTarget = (<Element> event.target);
 
-        this.templates.forEach((item) => {
-            this.templateMap[item.getType()] = item.template;
-        });
-    }
+    if (eventTarget.className && eventTarget.className.indexOf('app-tree-toggler') === 0) {
+      return;
+    } else if (this.selectionMode) {
+      if (node.selectable === false) {
+        return;
+      }
 
-    onNodeClick(event: MouseEvent, node: TreeNode) {
-        const eventTarget = (<Element> event.target);
+      const index = this.findIndexInSelection(node);
+      const selected = (index >= 0);
 
-        if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
-            return;
-        } else if (this.selectionMode) {
-            if (node.selectable === false) {
-                return;
-            }
+      if (this.isCheckboxSelectionMode()) {
+        if (selected) {
+          if (this.propagateSelectionDown) {
+            this.propagateDown(node, false);
+          } else {
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+          }
 
-            const index = this.findIndexInSelection(node);
-            const selected = (index >= 0);
+          if (this.propagateSelectionUp && node.parent) {
+            this.propagateUp(node.parent, false);
+          }
 
-            if (this.isCheckboxSelectionMode()) {
-                if (selected) {
-                    if (this.propagateSelectionDown) {
-                        this.propagateDown(node, false);
-                    } else {
-                        this.selection = this.selection.filter((val, i) => i !== index);
-                    }
-
-                    if (this.propagateSelectionUp && node.parent) {
-                        this.propagateUp(node.parent, false);
-                    }
-
-                    this.selectionChange.emit(this.selection);
-                    this.onNodeUnselect.emit({originalEvent: event, node: node});
-                } else {
-                    if (this.propagateSelectionDown) {
-                        this.propagateDown(node, true);
-                    } else {
-                        this.selection = [...this.selection || [], node];
-                    }
-
-                    if (this.propagateSelectionUp && node.parent) {
-                        this.propagateUp(node.parent, true);
-                    }
-
-                    this.selectionChange.emit(this.selection);
-                    this.onNodeSelect.emit({originalEvent: event, node: node});
-                }
-            } else {
-                const metaSelection = this.nodeTouched ? false : this.metaKeySelection;
-
-                if (metaSelection) {
-                    const metaKey = (event.metaKey || event.ctrlKey);
-
-                    if (selected && metaKey) {
-                        if (this.isSingleSelectionMode()) {
-                            this.selectionChange.emit(null);
-                        } else {
-                            this.selection = this.selection.filter((val, i) => i !== index);
-                            this.selectionChange.emit(this.selection);
-                        }
-
-                        this.onNodeUnselect.emit({originalEvent: event, node: node});
-                    } else {
-                        if (this.isSingleSelectionMode()) {
-                            this.selectionChange.emit(node);
-                        } else if (this.isMultipleSelectionMode()) {
-                            this.selection = (!metaKey) ? [] : this.selection || [];
-                            this.selection = [...this.selection, node];
-                            this.selectionChange.emit(this.selection);
-                        }
-
-                        this.onNodeSelect.emit({originalEvent: event, node: node});
-                    }
-                } else {
-                    if (this.isSingleSelectionMode()) {
-                        if (selected) {
-                            this.selection = null;
-                            this.onNodeUnselect.emit({originalEvent: event, node: node});
-                        } else {
-                            this.selection = node;
-                            this.onNodeSelect.emit({originalEvent: event, node: node});
-                        }
-                    } else {
-                        if (selected) {
-                            this.selection = this.selection.filter((val, i) => i !== index);
-                            this.onNodeUnselect.emit({originalEvent: event, node: node});
-                        } else {
-                            this.selection = [...this.selection || [], node];
-                            this.onNodeSelect.emit({originalEvent: event, node: node});
-                        }
-                    }
-
-                    this.selectionChange.emit(this.selection);
-                }
-            }
-        }
-
-        this.nodeTouched = false;
-    }
-
-    onNodeTouchEnd() {
-        this.nodeTouched = true;
-    }
-
-    onNodeRightClick(event: MouseEvent, node: TreeNode) {
-        if (this.contextMenu) {
-            const eventTarget = (<Element> event.target);
-
-            if (eventTarget.className && eventTarget.className.indexOf('ui-tree-toggler') === 0) {
-                return;
-            } else {
-                const index = this.findIndexInSelection(node);
-                const selected = (index >= 0);
-
-                if (!selected) {
-                    if (this.isSingleSelectionMode()) {
-                        this.selectionChange.emit(node);
-                    } else {
-                        this.selectionChange.emit([node]);
-                    }
-                }
-
-                this.contextMenu.show(event);
-                this.onNodeContextMenuSelect.emit({originalEvent: event, node: node});
-            }
-        }
-    }
-
-    findIndexInSelection(node: TreeNode) {
-        let index: number = -1;
-
-        if (this.selectionMode && this.selection) {
-            if (this.isSingleSelectionMode()) {
-                index = (this.selection == node) ? 0 : - 1;
-            } else {
-                for (let i = 0; i  < this.selection.length; i++) {
-                    if (this.selection[i] == node) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return index;
-    }
-
-    propagateUp(node: TreeNode, select: boolean) {
-        if (node.children && node.children.length) {
-            let selectedCount = 0;
-            let childPartialSelected = false;
-            for (const child of node.children) {
-                if (this.isSelected(child)) {
-                    selectedCount++;
-                } else if(child.partialSelected) {
-                    childPartialSelected = true;
-                }
-            }
-
-            if (select && selectedCount === node.children.length) {
-                this.selection = [...this.selection || [], node];
-                node.partialSelected = false;
-            } else {
-                if (!select) {
-                    const index = this.findIndexInSelection(node);
-                    if (index >= 0) {
-                        this.selection = this.selection.filter((val, i) => i != index);
-                    }
-                }
-
-                if (childPartialSelected || selectedCount > 0 && selectedCount != node.children.length) {
-                    node.partialSelected = true;
-                } else {
-                    node.partialSelected = false;
-                }
-            }
-        }
-
-        const { parent } = node;
-        if (parent) {
-            this.propagateUp(parent, select);
-        }
-    }
-
-    propagateDown(node: TreeNode, select: boolean) {
-        const index = this.findIndexInSelection(node);
-
-        if (select && index === -1) {
-            this.selection = [...this.selection || [], node];
-        } else if (!select && index > -1) {
-            this.selection = this.selection.filter((val, i) => i !== index);
-        }
-
-        node.partialSelected = false;
-
-        if (node.children && node.children.length) {
-            for (const child of node.children) {
-                this.propagateDown(child, select);
-            }
-        }
-    }
-
-    isSelected(node: TreeNode) {
-        return this.findIndexInSelection(node) !== -1;
-    }
-
-    isSingleSelectionMode() {
-        return this.selectionMode && this.selectionMode === 'single';
-    }
-
-    isMultipleSelectionMode() {
-        return this.selectionMode && this.selectionMode === 'multiple';
-    }
-
-    isCheckboxSelectionMode() {
-        return this.selectionMode && this.selectionMode === 'checkbox';
-    }
-
-    getTemplateForNode(node: TreeNode): TemplateRef<any> {
-        if (this.templateMap) {
-            return node.type ? this.templateMap[node.type] : this.templateMap['default'];
+          this.selectionChange.emit(this.selection);
+          this.onNodeUnselect.emit({originalEvent: event, node: node});
         } else {
-            return null;
+          if (this.propagateSelectionDown) {
+            this.propagateDown(node, true);
+          } else {
+            this.selection = [...this.selectionAsArray || [], node];
+          }
+
+          if (this.propagateSelectionUp && node.parent) {
+            this.propagateUp(node.parent, true);
+          }
+
+          this.selectionChange.emit(this.selection);
+          this.nodeSelect(event, node);
         }
-    }
+      } else {
+        const metaSelection = this.metaKeySelection;
 
-    onDragOver(event) {
-        if (this.droppableNodes && (!this.value || this.value.length === 0)) {
-            event.dataTransfer.dropEffect = 'move';
-            event.preventDefault();
-        }
-    }
+        if (metaSelection) {
+          const metaKey = (event.metaKey || event.ctrlKey);
 
-    onDrop(event) {
-        if (this.droppableNodes && (!this.value || this.value.length === 0)) {
-            event.preventDefault();
-            const dragNode = this.dragNode;
-            if (this.allowDrop(dragNode, null, this.dragNodeScope)) {
-                const { dragNodeIndex } = this;
-                this.dragNodeSubNodes.splice(dragNodeIndex, 1);
-                this.value = this.value||[];
-                this.value.push(dragNode);
-
-                this.dragDropService.stopDrag({
-                    node: dragNode
-                });
-            }
-        }
-    }
-
-    onDragEnter(event) {
-        if (this.droppableNodes && this.allowDrop(this.dragNode, null, this.dragNodeScope)) {
-            this.dragHover = true;
-        }
-    }
-
-    onDragLeave(event) {
-        if (this.droppableNodes) {
-            const rect = event.currentTarget.getBoundingClientRect();
-            if (event.x > rect.left + rect.width || event.x < rect.left || event.y > rect.top + rect.height || event.y < rect.top) {
-               this.dragHover = false;
-            }
-        }
-    }
-
-    allowDrop(dragNode: TreeNode, dropNode: TreeNode, dragNodeScope: any): boolean {
-        if (!this.isValidDragScope(dragNodeScope)) {
-            return false;
-        }
-
-        let allow = true;
-
-        if (dropNode) {
-            if (dragNode === dropNode) {
-                allow = false;
+          if (selected && metaKey) {
+            if (this.isSingleSelectionMode()) {
+              this.selectionChange.emit(null);
             } else {
-                let parent = dropNode.parent;
-                while (parent != null) {
-                    if (parent === dragNode) {
-                        allow = false;
-                        break;
-                    }
-                    parent = parent.parent;
-                }
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+              this.selectionChange.emit(this.selection);
             }
+
+            this.onNodeUnselect.emit({originalEvent: event, node: node});
+          } else {
+            if (this.isSingleSelectionMode()) {
+              this.selectionChange.emit(node);
+            } else if (this.isMultipleSelectionMode()) {
+              this.selection = (!metaKey) ? [] : this.selection || [];
+              this.selection = [...this.selectionAsArray, node];
+              this.selectionChange.emit(this.selection);
+            }
+            this.nodeSelect(event, node);
+          }
+        } else {
+          if (this.isSingleSelectionMode()) {
+            if (selected) {
+              this.selection = null;
+              this.onNodeUnselect.emit({originalEvent: event, node: node});
+            } else {
+              this.selection = node;
+              this.nodeSelect(event, node);
+            }
+          } else {
+            if (selected) {
+              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+              this.onNodeUnselect.emit({originalEvent: event, node: node});
+            } else {
+              this.selection = [...this.selectionAsArray || [], node];
+              this.nodeSelect(event, node);
+            }
+          }
+
+          this.selectionChange.emit(this.selection);
+        }
+      }
+    }
+  }
+
+  onDoubleNodeClick(event: MouseEvent, node: ITreeNode): void {
+    if (this.dblClickEnabled) {
+      this.onNodeDblClick.emit(node);
+    }
+  }
+
+  findIndexInSelection(node: ITreeNode): number {
+    let index: number = -1;
+    if (this.selectionMode && this.selection) {
+      if (this.isSingleSelectionMode()) {
+        index = this.selection === node ? 0 : -1;
+      } else {
+        for (let i = 0; i < this.selectionAsArray.length; i++) {
+          if (this.selection[i] === node) {
+            index = i;
+            break;
+          }
+        }
+      }
+    }
+    return index;
+  }
+
+  propagateUp(node: ITreeNode, select: boolean): void {
+    if (node.children && node.children.length) {
+      let selectedCount = 0;
+      let childPartialSelected = false;
+      for (const child of node.children) {
+        if (this.isSelected(child)) {
+          selectedCount++;
+        } else if (child.partialSelected) {
+          childPartialSelected = true;
+        }
+      }
+
+      if (select && selectedCount === node.children.length) {
+        this.selection = [...this.selectionAsArray || [], node];
+        node.partialSelected = false;
+      } else {
+        if (!select) {
+          const index = this.findIndexInSelection(node);
+          if (index >= 0) {
+            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+          }
         }
 
-        return allow;
+        if (childPartialSelected || selectedCount > 0 && selectedCount !== node.children.length) {
+          node.partialSelected = true;
+        } else {
+          node.partialSelected = false;
+        }
+      }
     }
 
-    isValidDragScope(dragScope: any): boolean {
-        const dropScope = this.droppableScope;
+    const {parent} = node;
+    if (parent) {
+      this.propagateUp(parent, select);
+    }
+  }
 
-        if (!dropScope) {
-            return true;
-        }
+  propagateDown(node: ITreeNode, select: boolean): void {
+    const index = this.findIndexInSelection(node);
+    if (select && index === -1) {
+      this.selection = [...this.selectionAsArray || [], node];
+    } else if (!select && index > -1) {
+      this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+    }
+    node.partialSelected = false;
+    if (node.children && node.children.length) {
+      for (const child of node.children) {
+        this.propagateDown(child, select);
+      }
+    }
+  }
 
-        if (typeof dropScope === 'string') {
-            if (typeof dragScope === 'string') {
-                return dropScope === dragScope;
-            } else if (dragScope instanceof Array) {
-                return (<Array<any>>dragScope).indexOf(dropScope) !== -1;
-            }
-        } else if (dropScope instanceof Array) {
-            if (typeof dragScope === 'string') {
-                return (<Array<any>>dropScope).indexOf(dragScope) !== -1;
-            } else if (dragScope instanceof Array) {
-                for (const s of dropScope) {
-                    for (const ds of dragScope) {
-                        if (s === ds) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+  isSelected(node: ITreeNode): boolean {
+    return this.findIndexInSelection(node) !== -1;
+  }
+
+  isSingleSelectionMode(): boolean {
+    return this.selectionMode && this.selectionMode === 'single';
+  }
+
+  isMultipleSelectionMode(): boolean {
+    return this.selectionMode && this.selectionMode === 'multiple';
+  }
+
+  isCheckboxSelectionMode(): boolean {
+    return this.selectionMode && this.selectionMode === 'checkbox';
+  }
+
+  changeLocation(payload: IDragAndDropPayload): void {
+    const targetElement = this.findNodeRecursively(this.value[0], payload.targetId);
+    const sourceElement = this.findNodeRecursively(this.value[0], payload.sourceId);
+
+    if (this.findNodeRecursively(sourceElement, payload.targetId)) {
+      // User cannot move the node under its child
+      return;
     }
 
-    ngOnDestroy() {
-        if (this.dragStartSubscription) {
-            this.dragStartSubscription.unsubscribe();
-        }
+    const sourceParentElement: ITreeNode = sourceElement.parent;
+    sourceParentElement.children = sourceParentElement.children.filter((node: ITreeNode) => node !== sourceElement);
 
-        if (this.dragStopSubscription) {
-            this.dragStopSubscription.unsubscribe();
-        }
+    if (!sourceParentElement.children.length) {
+      delete sourceParentElement.children;
+      sourceParentElement.expanded = false;
     }
+
+    if (payload.swap) {
+      const targetParent: ITreeNode = targetElement.parent;
+      targetParent.children = R.insert(
+        R.findIndex((node: ITreeNode) => node === targetElement, targetParent.children) + 1,
+        sourceElement,
+        targetParent.children
+      );
+      sourceElement.parent = targetParent;
+    } else {
+      targetElement.children = R.insert(
+        (targetElement.children || []).length, sourceElement, targetElement.children || []
+      );
+      sourceElement.parent = targetElement;
+    }
+
+    const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: ITreeNode, index: number) => {
+      return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
+    }, (payload.swap ? targetElement : sourceElement).parent.children);
+
+    this.changeNodesLocation.emit(payloads);
+  }
+
+  findNodeRecursively(node: ITreeNode, id: string): ITreeNode {
+    if (node.id === parseInt(id, 10)) {
+      return node;
+    }
+    if (node.children) {
+      let result: ITreeNode;
+      node.children.forEach((childNode: ITreeNode) => {
+        const currentNode: ITreeNode = this.findNodeRecursively(childNode, id);
+        if (currentNode) {
+          result = currentNode;
+        }
+      });
+      return result;
+    }
+    return null;
+  }
+
+  nodeCollapse(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeCollapse.emit({originalEvent: event, node: node});
+  }
+
+  nodeExpand(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeExpand.emit({originalEvent: event, node: node});
+  }
+
+  private nodeSelect(event: MouseEvent, node: ITreeNode): void {
+    this.onNodeSelect.emit({originalEvent: event, node: node});
+  }
 }
-

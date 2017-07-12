@@ -1,51 +1,56 @@
-import { OnInit, OnDestroy, Directive, Input, ElementRef } from '@angular/core';
-declare var $: any;
+import { Directive, ElementRef, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 
 @Directive({
-    selector: '[sparkline]'
+  // tslint:disable-next-line
+  selector: '[sparkline]'
 })
 export class SparklineDirective implements OnInit, OnDestroy {
 
-    @Input() sparkline;
+  @Input() sparkline;
 
-    // generate a unique resize event so we can detach later
-    private resizeEventId = 'resize.sparkline' + 1324;
-    private $element;
+  private $element;
+  private resizeListener: () => void;
 
-    constructor(private el: ElementRef) {
-        this.$element = $(el.nativeElement);
+  constructor(
+    private element: ElementRef,
+    private renderer: Renderer2,
+  ) {
+    this.$element = $(element.nativeElement);
+  }
+
+  ngOnInit(): void {
+    this.initSparkLine();
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeListener) {
+      this.resizeListener();
+    }
+  }
+
+  private initSparkLine(): void {
+    let options = this.sparkline;
+    const data = this.$element.data();
+
+    if (!options) {
+      // If no scope options, try with data attributes
+      options = data;
+    } else if (data) {
+      // Data attributes overrides scope options
+      options = $.extend({}, options, data);
     }
 
-    ngOnInit() {
-        this.initSparkLine();
+    options.type = options.type || 'bar';
+    options.disableHiddenCheck = true;
+
+    this.render(options);
+
+    if (options.resize) {
+      this.resizeListener = this.renderer.listen(document, 'resize', () => this.render(options));
     }
+  }
 
-    initSparkLine() {
-        let options = this.sparkline,
-            data = this.$element.data();
-
-        if (!options) {// if no scope options, try with data attributes
-            options = data;
-        }
-        else {
-            if (data) {// data attributes overrides scope options
-                options = $.extend({}, options, data);
-            }
-        }
-
-        options.type = options.type || 'bar'; // default chart is bar
-        options.disableHiddenCheck = true;
-
-        this.$element.sparkline('html', options);
-
-        if (options.resize) {
-            $(window).on(this.resizeEventId, () => {
-                this.$element.sparkline('html', options);
-            });
-        }
-    }
-
-    ngOnDestroy() {
-        $(window).off(this.resizeEventId);
-    }
+  private render(options: object): void {
+    this.$element.sparkline('html', options);
+  }
 }

@@ -1,42 +1,52 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { IValueEntity, ValueType } from './value-converter.interface';
+import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
+
+import {
+  IDateFormats,
+  ILabeledValue,
+  INamedValue,
+  IOption,
+  IValueEntity,
+  ValueType
+} from './value-converter.interface';
 
 @Injectable()
 export class ValueConverterService {
+  private formats: IDateFormats = this.translateService.instant('default.date.format');
 
-  constructor(private datePipe: DatePipe) {
-  }
+  constructor(private translateService: TranslateService) {}
 
-  public serialize(valueEntity: IValueEntity) {
-    switch (valueEntity.typeCode) {
+  serialize(valueEntity: IValueEntity): IValueEntity {
+    const result: IValueEntity = Object.assign({}, valueEntity);
+    switch (result.typeCode) {
       case 1:
-        valueEntity.valueN = this.toNumber(valueEntity.value);
+        result.valueN = Number(result.value);
         break;
       case 3:
-        valueEntity.valueS = valueEntity as string;
+        result.valueS = String(result.value);
         break;
       case 4:
-        valueEntity.valueB = this.toNumber(valueEntity.value);
+        result.valueB = Number(result.value);
         break;
     }
-    delete valueEntity.value;
-    return valueEntity;
+    delete result.value;
+    return result;
   }
 
-  public deserialize(valueEntity: IValueEntity): IValueEntity {
+  deserialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.datePipe.transform(new Date(valueEntity.valueD), 'dd.MM.yyyy HH:mm:ss');
+        valueEntity.value = this.ISOToLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
         break;
       case 4:
-        valueEntity.value = valueEntity.valueB;
+        valueEntity.value = String(valueEntity.valueB);
         break;
       default:
         valueEntity.value = '';
@@ -44,31 +54,101 @@ export class ValueConverterService {
     return valueEntity;
   }
 
-  public deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
-    if (!dataSet) {
-      return [];
-    }
-    return dataSet.map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
+  deserializeSet(dataSet: IValueEntity[]): IValueEntity[] {
+    return (dataSet || []).map((valueEntity: IValueEntity) => this.deserialize(valueEntity));
   }
 
-  public deserializeBooleanViewValue(valueEntity: IValueEntity): ValueType {
-    const booleanValue: number = this.toNumber(valueEntity.value);
-    if (valueEntity.typeCode === 1 || valueEntity.typeCode === 3) {
-      return valueEntity.value;
-    } else if (valueEntity.typeCode === 4) {
-      return booleanValue === 1 ? 'Истина' : 'Ложь'; // TODO translator
+  deserializeBoolean(valueEntity: IValueEntity): ValueType {
+    if (valueEntity.typeCode === 4) {
+      return Number(valueEntity.value) === 1
+        ? 'default.boolean.TRUE'
+        : 'default.boolean.FALSE';
     }
-    return booleanValue;
+    return valueEntity.value;
   }
 
-  private toNumber(value: ValueType): number {
-    if (typeof value === 'number') {
-      return value;
-    } else if (typeof value === 'boolean') {
-      return value ? 1 : 0;
-    } else if (typeof value === 'string') {
-      return parseInt(value as string, 10) ? 1 : 0;
+  toLabeledValues(data: string|number|ILabeledValue[]): number|any[] {
+    if (data === '') {
+      return null;
     }
-    return value;
+    if (Array.isArray(data)) {
+      return data.map((labeledValue: ILabeledValue) => labeledValue.value);
+    }
+    return data as number;
+  }
+
+  firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
+    const v: number|any[] = this.toLabeledValues(data);
+    if (Array.isArray(v)) {
+      return v.length ? v[0] : data;
+    }
+    return v;
+  }
+
+  valuesToOptions(values: Array<INamedValue>): Array<IOption> {
+    return values.map(value => ({
+      label: value.name,
+      value: value.id
+    }));
+  }
+
+  toISO(date: Date): string {
+    return date ? date.toISOString() : null;
+  }
+
+  toLocalDateTime(date: Date): string {
+    return this.toLocal(date, this.formats.dateTime);
+  }
+
+  toLocalDate(date: Date): string {
+    return this.toLocal(date, this.formats.date);
+  }
+
+  fromISO(value: string): Date {
+    return value ? new Date(value) : null;
+  }
+
+  fromLocalDateTime(value: string): Date {
+    return this.fromLocal(value, this.formats.dateTime);
+  }
+
+  fromLocalDate(value: string): Date {
+    return this.fromLocal(value, this.formats.date);
+  }
+
+  makeRangeFromLocalDate(value: string): Array<string> {
+    const from = moment(value);
+    const to = from.clone().add(1, 'day').subtract(1, 'second');
+    return from.isValid() ? [from.toISOString(), to.toISOString()] : [];
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDateTime(value: string): string {
+    return this.toLocalDateTime(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDate(value: string): string {
+    return this.toLocalDate(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOFromLocalDateTime(value: string): string {
+    return this.toISO(this.fromLocalDateTime(value));
+  }
+
+  private toLocal(date: Date, format: string): string {
+    return date ? moment(date).format(format) : null;
+  }
+
+  private fromLocal(value: string, format: string): Date {
+    const date = value && moment(value, format, true);
+    return date && date.isValid() ? date.toDate() : null;
   }
 }

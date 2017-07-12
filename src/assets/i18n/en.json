@@ -1,95 +1,814 @@
 {
-    "header": {
-        "search": {
-            "PLACEHOLDER": "Type and hit enter..."
-        }
+  "header": {
+    "search": {
+      "PLACEHOLDER": "Type and hit enter..."
     },
-    "offsidebar": {
-        "setting": {
-            "SETTINGS": "Settings"
-        }
+    "license": {
+      "title": "License",
+      "info": "Your license number is"
+    }
+  },
+  "offsidebar": {
+    "setting": {
+      "SETTINGS": "Settings"
+    }
+  },
+  "sidebar": {
+    "heading": {
+      "HEADER": "Menu Heading"
     },
-    "sidebar": {
-        "WELCOME": "Welcome",
-        "heading": {
-            "HEADER": "Menu Heading"
-        },
-        "nav": {
-            "SINGLEVIEW": "Single View",
-            "menu": {
-                "HOME": "Home",
-                "WORKFLOW": "Workflow",
-                "QUERY_BUILDER": "Query Builder",
-                "GRIDS": "Grids",
-                "LARGE_DATASET": "Large Dataset",
-                "SORTABLE": "Sortable",
-                "REORDERABLE": "Reorderable",
-                "GROUPABLE": "Groupable",
-                "ADMIN_PANEL": "Admin Panel",
-                "ROLES_AND_PERMISSIONS": "Roles and Permissions",
-                "USERS": "Users",
-                "ACTIONS_LOG": "Actions Log",
-                "CONSTANTS": "Constants",
-                "DICTIONARIES": "Dictionaries",
-                "BANKS": "Banks",
-                "DEPARTMENTS": "Departments",
-                "UTILITIES": "Utilities",
-                "UPLOAD_TEMPLATES": "Upload Templates",
-                "DATA_UPLOAD": "Data Upload",
-                "ARBITRARY_VALUES": "Arbitrary Values",
-                "CONTACT_TREES": "Contact Trees",
-                "MESSAGE_SCENARIOS": "Message Scenarios",
-                "GROUPS": "Groups",
-                "CAMPAIGNS": "Campaigns",
-                "SCHEDULE": "Schedule",
-                "FORMULAS": "Formulas",
-                "COURTS": "Coutrs",
-                "WORKPLACES": "Workplaces",
-                "DEBT_LIST": "Debt List",
-                "TASKS": "Tasks",
-                "DEBTS": "Debts Processing",
-                "CONTACT_PROTOCOL": "Contact Protocol",
-                "CALL_CENTER": "Call Center",
-                "PAYMENTS": "Payments",
-                "COURTS_2": "Courts",
-                "OUTGOING_INFORMATION": "Outgoing Information",
-                "SEARCH_GROUPS": "Search Groups",
-                "MAIL": "Mail",
-                "REPORTS": "Reports",
-                "ARBITRARY_REPORTS": "Arbitrary Reports",
-                "HELP": "Help"
-            }
-        }
+    "nav": {
+      "SINGLEVIEW": "Single View",
+      "menu": {
+        "HOME": "Home",
+        "WORKFLOW": "Workflow",
+        "QUERY_BUILDER": "Query Builder",
+        "ADMIN_PANEL": "Administration",
+        "ROLES_AND_PERMISSIONS": "Roles and Permissions",
+        "USERS": "Users",
+        "ACTIONS_LOG": "Actions Log",
+        "CONSTANTS": "Constants",
+        "DICTIONARIES": "Dictionaries",
+        "BANKS": "Banks",
+        "CONTRACTOR": "Contractor",
+        "CONTRACTOR_MANAGERS": "Contractor Managers",
+        "CONTRACTOR_MANAGER": "Contractor Manager",
+        "DEPARTMENTS": "Departments",
+        "UTILITIES": "Utilities",
+        "UPLOAD_TEMPLATES": "Upload Templates",
+        "DATA_UPLOAD": "Data Upload",
+        "ARBITRARY_VALUES": "Arbitrary Values",
+        "CONTACT_TREES": "Contact Trees",
+        "MESSAGE_SCENARIOS": "Message Scenarios",
+        "GROUPS": "Groups",
+        "CAMPAIGNS": "Campaigns",
+        "SCHEDULE": "Schedule",
+        "FORMULAS": "Formulas",
+        "COURTS": "Coutrs",
+        "WORKPLACES": "Workplaces",
+        "DEBT_LIST": "Debt List",
+        "DEBTOR_CARD": "Debtor",
+        "TASKS": "Tasks",
+        "DEBTS": "Debts Processing",
+        "CONTACT_PROTOCOL": "Contact Protocol",
+        "CALL_CENTER": "Call Center",
+        "PAYMENTS": "Payments",
+        "COURTS_2": "Courts",
+        "OUTGOING_INFORMATION": "Outgoing Information",
+        "SEARCH_GROUPS": "Search Groups",
+        "MAIL": "Mail",
+        "REPORTS": "Reports",
+        "ARBITRARY_REPORTS": "Arbitrary Reports",
+        "HELP": "Help"
+      }
     },
-    "dashboard": {
-        "WELCOME": "Welcome"
-    },
-    "validation": {
-        "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
-        "login": {
-            "INVALID_CREDENTIALS": "Incorrect login or password"
-        }
+    "messages": {
+      "loadError": "Could not load menu"
+    }
+  },
+  "dashboard": {
+    "TITLE": "Dashboard",
+    "messages": {
+      "chartLoadError": "Could not load chart data"
+    }
+  },
+  "validation": {
+    "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "fieldRequired": "This field is required",
+    "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
+    "fieldDigits": "This field should contain at least one digit",
+    "fieldLowerCase": "This field should contain at least one lower case character",
+    "fieldUpperCase": "This field should contain at least one upper case character",
+    "login": {
+      "INVALID_CREDENTIALS": "Incorrect login or password"
+    }
+  },
+  "network": {
+    "CONNECTION_ERROR": "Connection error"
+  },
+  "grid": {
+    "messages": {
+      "emptyMessage": "No data to display",
+      "totalMessage": "total",
+      "selectedMessage": "selected"
+    }
+  },
+  "toolbar": {
+    "action": {
+      "add": "Add",
+      "edit": "Edit",
+      "remove": "Remove",
+      "copy": "Copy",
+      "refresh": "Refresh",
+      "search": "Search",
+      "save": "Save",
+      "sms": "Send SMS",
+      "move": "Move",
+      "download": "Download",
+      "upload": "Upload"
+    }
+  },
+  "queryBuilder": {
+    "TITLE": "Query builder",
+    "ADD_CONDITION": "Add condition",
+    "ADD_GROUP": "Add group",
+    "REMOVE_GROUP": "Remove group",
+    "buttons": {
+      "GET_QUERY": "Build the query",
+      "BACK": "Back"
+    }
+  },
+  "login": {
+    "PLEASE_AUTHENTICATE": "Please, authenticate",
+    "LOGIN_PLACEHOLDER": "Login",
+    "PASSWORD_PLACEHOLDER": "Password",
+    "REMEMBER_ME": "Remember login",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "LOGIN_BUTTON": "Login"
+  },
+  "constants": {
+    "title": "Constants",
+    "edit": {
+      "title": "Constant",
+      "name": "Name",
+      "type": "Type",
+      "value": "Value",
+      "comment": "Comments"
     },
     "grid": {
-      "messages": {
-        "emptyMessage": "No data to display",
-        "totalMessage": "total",
-        "selectedMessage": "selected"
+      "id": "Id",
+      "name": "Name",
+      "value": "Value",
+      "dsc": "Comments"
+    },
+    "api": {
+      "errors": {
+        "fetch": "Could not fetch the constants",
+        "update": "Could not update the constant"
       }
     },
-    "network": {
-      "CONNECTION_ERROR": "Connection Error"
-    },
-    "constants": {
-      "title": "Constants",
-      "form": {
-        "title": "Constant"
+    "errors": {
+      "view": "Access to constants list denied"
+    }
+  },
+  "actionsLog": {
+    "title": "Operator log",
+    "filter": {
+      "employees": {
+        "title": "Operators",
+        "placeholder": "Select operator(s)",
+        "blocking": "Show blocked operators",
+        "grid": {
+          "id": "Id",
+          "position": "Position",
+          "fullName": "Full name",
+          "organization": "Department"
+        }
+      },
+      "actionsTypes": {
+        "title": "Action types",
+        "placeholder": "Select action type(s)",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
-    "default": {
-      "buttons": {
-        "save": "Save",
-        "cancel": "Cancel"
+    "grid": {
+      "id": "Id",
+      "fullName": "Full name",
+      "position": "Position",
+      "createDateTime": "Date",
+      "guiObject": "Module",
+      "typeCode": "Action type",
+      "dsc": "Description",
+      "machine": "Machine",
+      "duration": "Duration"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch operator action log",
+        "download": "Could not download operator action log"
       }
     }
+  },
+  "users": {
+    "title": "Users",
+    "toolbar": {
+      "action": {
+        "show_blocked_users": "show blocked"
+      }
+    },
+    "edit": {
+      "personalData": "Personal Data",
+      "details": "Details",
+      "title": "User: {{ id }}",
+      "lastName": "Family name",
+      "firstName": "Name",
+      "middleName": "Middle name",
+      "photo": "Photo",
+      "blocked": "Blocked",
+      "login": "Login",
+      "password": "Password",
+      "role": "Role",
+      "position": "Position",
+      "startWorkDate": "Start date",
+      "endWorkDate": "Resign date",
+      "mobPhone": "Mobile",
+      "workPhone": "Office phone",
+      "intPhone": "Extension",
+      "email": "Email",
+      "address": "Office address",
+      "language": "Language",
+      "comment": "Comments"
+    },
+    "select": {
+      "role": {
+        "title": "Choose a role"
+      }
+    },
+    "create": {
+      "title": "New user"
+    },
+    "grid": {
+      "id": "Id",
+      "login": "Login",
+      "lastName": "Family name",
+      "firstName": "Name",
+      "middleName": "Middle name",
+      "position": "Position",
+      "roleId": "Role",
+      "isBlocked": "Blocked",
+      "mobPhone": "Mobile",
+      "workPhone": "Work phone",
+      "intPhone": "Extension",
+      "email": "Email",
+      "languageId": "Language"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch users",
+        "create": "Could not create user",
+        "update": "Could not update user",
+        "updatePhoto": "Could not update user photo",
+        "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
+        "deletePhoto": "Could not delete user photo"
+      }
+    },
+    "errors": {
+      "view": "Access to users list denied"
+    }
+  },
+  "dictionaries": {
+    "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
+    "TITLE": "Dictionaries",
+    "edit": {
+      "title": "Dictionary: {{ code }}",
+      "code": "Code",
+      "name": "Name",
+      "type": "Type",
+      "parent": "Parent dictionary",
+      "select": {
+        "title": {
+          "dictList": "Dictionary list",
+          "termTypesList": "Term types list"
+        }
+      },
+      "translation": "Translation language",
+      "termTypeCode": "Type of terms"
+    },
+    "create": {
+      "title": "New dictionary"
+    },
+    "grid": {
+      "code": "Code",
+      "name": "Name",
+      "parentCode": "Parent dictionary",
+      "typeCode": "Dictionary type"
+    },
+    "remove": {
+      "title": "Remove dictionary",
+      "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
+    },
+    "types": {
+      "system": "System",
+      "client": "Client"
+    },
+    "placeholder": {
+      "translatedName": "Select a dictionary",
+      "select": {
+        "translation": "Select language"
+      }
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch dictionaries",
+        "create": "Could not create dictionary",
+        "update": "Could not update dictionary",
+        "delete": "Could not remove dictionary"
+      }
+    },
+    "errors": {
+      "view": "Access to dictionaries list denied"
+    }
+  },
+  "terms": {
+    "edit": {
+      "title": "Term: {{ code }}",
+      "code": "Term code",
+      "text": "Term text",
+      "type": "Term type",
+      "parent": "Parent dictionary term",
+      "closed": "Unused term",
+      "select": {
+        "title": "Term type"
+      }
+    },
+    "create": {
+      "title": "New term"
+    },
+    "grid": {
+      "code": "Code",
+      "name": "Term text",
+      "typeCode": "Term type",
+      "parentCodeName": "Parent term",
+      "isClosed": "Unused term"
+    },
+    "remove": {
+      "title": "Remove term",
+      "confirmMessage": "Do you really want to remove the term {{ name }}?"
+    },
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch dictionary terms",
+        "create": "Could not create dictionary term",
+        "update": "Could not update dictionary term",
+        "delete": "Could not remove dictionary term"
+      }
+    },
+    "errors": {
+      "view": "Access to dictionary terms list denied"
+    }
+  },
+  "roles": {
+    "roles": {
+      "copy": {
+        "title": "Copy role",
+        "originalRoleName": "Original role name",
+        "roleName": "Name",
+        "roleComment": "Comments",
+        "select": {
+          "title": "Select a role"
+        }
+      },
+      "edit": {
+        "title": "Edit role: {{ id }}",
+        "name": "Name",
+        "comment": "Comments"
+      },
+      "create": {
+        "title": "New role"
+      },
+      "remove": {
+        "title": "Remove the role",
+        "confirmMessage": "Do you really want to remove the role {{ name }}?"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "comment": "Comments"
+      },
+      "api": {
+        "errors": {
+          "fetch": "Could not fetch roles",
+          "add": "Could not add role",
+          "copy": "Could not copy role",
+          "update": "Could not update role",
+          "delete": "Could not delete role"
+        }
+      },
+      "errors": {
+        "view": "Access to roles list denied"
+      }
+    },
+    "permissions": {
+      "tab": {
+        "title": "Permits"
+      },
+      "tab2": {
+        "title": "Access settings"
+      },
+      "add": {
+        "title": "Choose a permission",
+        "grid": {
+          "name": "Name",
+          "dsc": "Description"
+        }
+      },
+      "edit": {
+        "title": "Permission",
+        "type": "Type",
+        "name": "Name",
+        "value": "Value",
+        "description": "Description",
+        "comment": "Comments"
+      },
+      "tree": {
+        "access_denied": "Access to GUI objects permission tree denied"
+      },
+      "remove": {
+        "title": "Remove role permission",
+        "confirmMessage": "Do you really want to remove the permission {{ name }}?"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "value": "Value",
+        "dsc": "Description",
+        "comment": "Comments"
+      },
+      "api": {
+        "errors": {
+          "fetch": "Could not fetch permissions",
+          "add": "Could not add the permission",
+          "update": "Could not update the permission",
+          "delete": "Could not remove the permission"
+        }
+      },
+      "messages": {
+        "no_view": "You do not have the rights '{{ permission }}' for viewing records",
+        "no_add": "You do not have the rights '{{ permission }}' for adding records",
+        "no_edit": "You do not have the rights '{{ permission }}' for editing records",
+        "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
+      },
+      "errors": {
+        "view": "Access to permissions list denied"
+      }
+    }
+  },
+  "debtor": {
+    "title": "Debtor",
+    "id": "Id",
+    "firstName": "Name",
+    "lastName": "Family name",
+    "middleName": "Middle name",
+    "type": "Type",
+    "responsible": "Manager",
+    "reward": "Remuneration",
+    "generalInformationTab": {
+      "title": "General",
+      "generalInformation": "General information",
+      "birthDate": "Date of birth",
+      "company": "Company",
+      "position": "Position",
+      "income": "Income",
+      "citizenship": "Citizenship",
+      "sex": "Sex",
+      "workplaceChecked": "Employment verified",
+      "importance": "Importance",
+      "stage": "Stage",
+      "decency": "Decency",
+      "maritalStatus": "Marital status",
+      "education": "Education",
+      "email": "Email",
+      "passport": "Passport",
+      "series": "Series",
+      "number": "No",
+      "issueDate": "Issue date",
+      "issuedBy": "Issued by",
+      "birthPlace": "Place of birth",
+      "phonesTab": {
+        "title": "Phones",
+        "contactsVerification": "Verification of contacts",
+        "grid": {
+          "type": "Type",
+          "number": "Number",
+          "status": "Status",
+          "lastCall": "Last call",
+          "contactPerson": "Contact person",
+          "comment": "Comments",
+          "region": "Region",
+          "active": "Active",
+          "qualityCode": "Quality code",
+          "numberExists": "Number exists",
+          "qualityCodeByDataQ": "DataQ code quality",
+          "verified": "Verified",
+          "blockingDate": "Blocking date",
+          "blockingReason": "Blocking reason"
+        }
+      },
+      "addressesTab": {
+        "title": "Addresses"
+      },
+      "emailTab": {
+        "title": "Email"
+      }
+    },
+    "debtsTab": {
+      "title": "Debts"
+    },
+    "propertyTab": {
+      "title": "Property"
+    },
+    "guarantorsTab": {
+      "title": "Guarantors"
+    },
+    "contactsTab": {
+      "title": "Contacts"
+    },
+    "planningTab": {
+      "title": "Planning"
+    },
+    "documentationTab": {
+      "title": "Documents",
+      "errors": {
+        "download": "Could not download document"
+      }
+    },
+    "accountsTab": {
+      "title": "Accounts"
+    },
+    "tasksTab": {
+      "title": "Tasks"
+    },
+    "workHistoryTab": {
+      "title": "Work history (full)"
+    },
+    "actionLogTab": {
+      "title": "Actions log"
+    },
+    "arbitraryAttributesTab": {
+      "title": "Arbitrary attributes"
+    },
+    "commentTab": {
+      "title": "Comments"
+    },
+    "promotionsTab": {
+      "title": "Promotions"
+    },
+    "socialNetworksTab": {
+      "title": "Social networks"
+    },
+    "extrasDebtInfoTab": {
+      "title": "Debt info"
+    }
+  },
+  "debtors": {
+    "grid": {
+      "id": "Id",
+      "fullName": "Full name",
+      "debtId": "Debt id",
+      "type": "Debtor type",
+      "product": "Product",
+      "city": "City"
+    }
+  },
+  "organizations": {
+    "title": "Company structure",
+    "organizations": {
+      "create": {
+        "title": "New company"
+      },
+      "edit": {
+        "title": "Edit company",
+        "name": "Name",
+        "branchCode": "Branch",
+        "comment": "Comment",
+        "boxColor": "Color"
+      },
+      "remove": {
+        "title": "Delete company",
+        "confirmMessage": "Are you sure you want to delete company?"
+      },
+      "messages": {
+        "errors": {
+          "fetch": "Could not load organizations list",
+          "create": "Could not add organization",
+          "update": "Could not update organization",
+          "delete": "Could not delete organization"
+        }
+      },
+      "errors": {
+        "view": "Access to organizations list denied"
+      }
+    },
+    "employees": {
+      "add": {
+        "title": "Choose employees",
+        "grid": {
+          "fullName": "Full name",
+          "position": "Position",
+          "isBlocked": "Blocked"
+        }
+      },
+      "edit": {
+        "title": "Employee",
+        "fullName": "Full name"
+      },
+      "remove": {
+        "title": "Delete employee",
+        "confirmMessage": "Are you sure you want to delete the employee?"
+      },
+      "grid": {
+        "name": "Name",
+        "position": "Position",
+        "fullName": "Full name",
+        "roleCode": "Role code",
+        "isBlocked": "Blocked"
+      },
+      "messages": {
+        "errors": {
+          "fetch": "Could not load the list of employees",
+          "create": "Could not add the employee",
+          "update": "Could not update the employee",
+          "delete": "Could not delete the employee"
+        }
+      },
+      "errors": {
+        "view": "Access to employees list denied"
+      }
+    }
+  },
+  "contractors": {
+    "managers": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "genderCode": "Gender",
+        "position": "Position",
+        "branchCode": "Branch",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "workAddress": "Address",
+        "comment": "Comment"
+      },
+      "messages": {
+        "accessDenied": "Access to managers list denied",
+        "errors": {
+          "fetch": "Could not fetch managers list",
+          "create": "Could not create manager",
+          "update": "Could not update manager",
+          "delete": "Could not delete manager"
+        }
+      }
+    },
+    "remove": {
+      "title": "Delete contractor",
+      "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
+    },
+    "grid": {
+      "name": "Short name",
+      "fullName": "Full name",
+      "smsName": "Name fot SMS",
+      "responsibleId": "Manager",
+      "responsibleName": "Manager",
+      "typeCode": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to contractors list denied",
+      "errors": {
+        "fetch": "Could not fetch contractors list",
+        "create": "Could not create contractor",
+        "update": "Could not update contractor",
+        "delete": "Could not delete contractor"
+      }
+    },
+    "buttons": {
+      "managers": "Managers"
+    }
+  },
+  "portfolios": {
+    "grid": {
+      "name": "Name",
+      "directionCode": "Direction",
+      "stageCode": "Stage",
+      "statusCode": "Status",
+      "signDate": "Signed on",
+      "startWorkDate": "Processing start date",
+      "endWorkDate": "Processing end date",
+      "comment": "Comment"
+    },
+    "remove": {
+      "title": "Delete portfolio",
+      "confirmMessage": "Are you sure you want to delete portfolio {{ name }}?"
+    },
+    "move": {
+      "title": "move portfolio {{ name }}"
+    },
+    "messages": {
+      "accessDenied": "Access to portfolios list denied",
+      "errors": {
+        "fetch": "Could not fetch portfolios list",
+        "create": "Could not create portfolio",
+        "update": "Could not update portfolio",
+        "delete": "Could not delete portfolio"
+      }
+    }
+  },
+  "notifications": {
+    "dismiss": "Dismiss",
+    "types": {
+      "debug": "Debug",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Info"
+    }
+  },
+  "user": {
+    "constants": {
+      "errors": {
+        "fetch": "Could not load user constants"
+      }
+    },
+    "languages": {
+      "errors": {
+        "fetch": "Could not load user languages"
+      }
+    },
+    "permissions": {
+      "errors": {
+        "fetch": "Could not load user permissions"
+      }
+    }
+  },
+  "default": {
+    "yesNo": {
+      "Yes": "Yes",
+      "No": "No"
+    },
+    "boolean": {
+      "TRUE": "True",
+      "FALSE": "False"
+    },
+    "typeCode": {
+      "number": "Number",
+      "date": "Date",
+      "string": "String",
+      "boolean": "Boolean",
+      "currency": "Currency",
+      "dictionary": "Dictionary"
+    },
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "close": "Close",
+      "clear": "Clear",
+      "search": "Search",
+      "add": "Add",
+      "change": "Change",
+      "excel": "Export as Excel",
+      "back": "Back"
+    },
+    "dateTimeRage": {
+      "from": "From",
+      "to": "To"
+    },
+    "grid": {
+      "empty": "No data to display",
+      "filter": {
+        "title": "Filter",
+        "showOnlyLines": "Show only records, where:",
+        "and": "And",
+        "or": "Or"
+      },
+      "groupColumn": "Row groups",
+      "groupDndTitle": "Drag here to set row groups",
+      "loading": "Loading data...",
+      "selectedCounts": "{{ selected }} selected / {{ length }} total"
+    },
+    "filter": {
+      "value": "Value",
+      "equal": "equal",
+      "notEqual": "not equal",
+      "empty": "empty"
+    },
+    "sex": {
+      "m": "m",
+      "w": "w"
+    },
+    "date": {
+      "days": {
+        "full": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+        "short": [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+      },
+      "months": {
+        "full": [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+        "short": [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+      },
+      "format": {
+        "dateTime": "MM/DD/YYYY HH:mm:ss",
+        "date": "MM/DD/YYYY"
+      },
+      "datePicker": {
+        "placeholder": "Select a date"
+      }
+    }
+  }
 }

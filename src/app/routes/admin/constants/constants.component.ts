@@ -1,193 +1,164 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthHttp } from 'angular2-jwt';
-import { DatePipe } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 
-import { IDataSource } from '../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl, IValue } from '../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IConstant } from './constants.interface';
+import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { ConstantsService } from './constants.service';
+import { DataService } from '../../../core/data/data.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-constants',
-  templateUrl: './constants.component.html'
+  templateUrl: './constants.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class ConstantsComponent implements AfterViewInit, OnDestroy {
+  static COMPONENT_NAME = 'ConstantsComponent';
 
-export class ConstantsComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
-  form: FormGroup;
+
   display = false;
-  editedRecord: any = null;
-  tabs: Array<any> = [
-    { id: 0, title: 'Константы', active: true },
-  ];
 
-  columns: Array<any> = [
-    { name: 'Ид', prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { name: 'Наименование', prop: 'name', maxWidth: 350 },
-    { name: 'Значение', prop: 'value', minWidth: 100, maxWidth: 150 },
-    { name: 'Описание', prop: 'dsc', width: 200, maxWidth: 400 },
-    { name: 'Альт. описание', prop: 'altDsc', minWidth: 200 },
-  ];
-
-  controls: Array<IDynamicFormControl> = [
-    { label: 'Идентификатор', controlName: 'id', type: 'number', required: true, disabled: true },
-    { label: 'Наименование', controlName: 'name', type: 'text', required: true, disabled: true },
-    { label: 'Тип значения', controlName: 'typeCode', type: 'select', required: true, disabled: true,
-      options: [
-        { label: 'Число', value: 1 },
-        { label: 'Дата', value: 2 },
-        { label: 'Строка', value: 3 },
-        { label: 'Булево', value: 4 },
-        { label: 'Деньги', value: 5 },
-        { label: 'Словарь', value: 6 },
-      ]
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.display = true,
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CONST_VALUE_EDIT'),
+        this.constantsService.state.map(state => !!state.currentConstant)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
-    { label: 'Значение', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
-    { label: 'Описание', controlName: 'dsc', type: 'textarea', required: true, disabled: true, rows: 2 },
-    { label: 'Альт. описание', controlName: 'altDsc', type: 'textarea', required: true, disabled: true, rows: 2 },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.constantsService.fetch(),
+      enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
+    },
   ];
+
+  columns: Array<IGridColumn> = [
+    { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+    { prop: 'name', minWidth: 150, maxWidth: 350 },
+    { prop: 'value', minWidth: 100, maxWidth: 150, localized: true },
+    { prop: 'dsc', minWidth: 200 },
+  ];
+
+  renderers = {
+    value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
+  };
 
   dataSource: IDataSource = {
-    read: '/api/constants',
-    update: '/api/constants/{id}',
+    read: '/constants',
+    update: '/constants/{id}',
     dataKey: 'constants',
   };
 
-  parseFn = (data) => {
-    const { dataKey } = this.dataSource;
-    const dataSet = data[dataKey];
-    if (!dataSet) {
-      return [];
-    }
-    return dataSet.map(val => {
-      switch (val.typeCode) {
-        case 1:
-          val.value = String(val.valueN);
-          break;
-        case 2:
-          val.value = this.datePipe.transform(new Date(val.valueD), 'dd.MM.yyyy HH:mm:ss');
-          break;
-        case 3:
-          val.value = val.valueS || '';
-          break;
-        case 4:
-          val.value = Boolean(val.valueB) ? 'Истина' : 'Ложь';
-          break;
-        default:
-          val.value = '';
-      }
-      return val;
-    });
+  permissionSub: Subscription;
+
+  rows$: Observable<Array<IConstant>>;
+
+  selectedRecord$: Observable<IConstant>;
+
+  hasViewPermission$: Observable<boolean>;
+
+  emptyMessage$: Observable<string>;
+
+  constructor(
+    private constantsService: ConstantsService,
+    private dataService: DataService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
+  ) {
+    this.constantsService.fetch();
+
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
+    this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
-  constructor(private fb: FormBuilder, private http: AuthHttp, private datePipe: DatePipe) { }
+  ngAfterViewInit(): void {
+    this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
-  ngOnInit(): void {
-    this.createForm();
+    this.permissionSub = this.hasViewPermission$
+      .filter(hasPermission => hasPermission !== undefined)
+      .subscribe(hasPermission => {
+        if (!hasPermission) {
+          this.constantsService.clear();
+          this.notificationsService.error('constants.errors.view');
+        } else {
+          this.constantsService.fetch();
+        }
+      });
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
   }
 
-  createForm(): void {
-    const ctrls = this.controls.reduce((arr, ctrl) => {
-      const config = { disabled: !!ctrl.disabled };
-      arr[ctrl.controlName] = ctrl.required
-        ? new FormControl(config, Validators.required)
-        : new FormControl(config);
-      return arr;
-    }, {});
-
-    this.form = this.fb.group(ctrls);
-
-    // disable controls where necessary
-    this.controls.forEach(ctrl => {
-      if (ctrl.disabled) {
-        this.form.get(ctrl.controlName).disable();
-      }
-    });
+  ngOnDestroy(): void {
+    this.permissionSub.unsubscribe();
   }
 
-  populateForm(record: any) {
-    let value = record.value;
-    switch (record.typeCode) {
-      case 2:
-        value = this.datePipe.transform(new Date(record.valueD), 'dd.MM.yyyy');
-        break;
-      case 3:
-        value = value || null;
-        break;
-      case 4:
-        value = value === 'Истина' ? '1' : '0';
-        break;
-      case 1:
-      default:
-    }
-
-    const values: IValue = this.controls.reduce((arr, ctrl) => {
-      arr[ctrl.controlName] = record[ctrl.controlName];
-      return arr;
-    }, {});
-
-    // NOTE: this is special, to be revised to make more universal
-    values.value = value;
-    this.form.setValue(values);
-  }
-
-  onTabClose(id: number): void {
-    this.tabs = this.tabs.filter((tab, tabId) => tabId !== id);
-  }
-
-  onEdit(record: any): void {
-    this.editedRecord = record;
-    this.createForm();
-    this.populateForm(record);
-    this.display = true;
-  }
-
-  getFieldValue(field: string): any {
-    return this.form.get(field).value;
-  }
-
-  valueToIsoDate(value: any): string {
-    const converted = value.split('.').reverse().map(Number);
-    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
-  }
-
-  onSave(): void {
-    const id = this.getFieldValue('id');
-    const typeCode = this.getFieldValue('typeCode');
-    const value = this.getFieldValue('value');
+  onSubmit(constant: IConstant): void {
+    // TODO: move the logic to constants service
+    const { id, typeCode, value } = constant;
     const fieldMap: object = {
       1: 'valueN',
       2: 'valueD',
       3: 'valueS',
       4: 'valueB',
     };
-    const field: string = fieldMap[this.getFieldValue('typeCode')];
+    const field: string = fieldMap[typeCode];
     const body = { [field]: value };
 
     if (typeCode === 4) {
       // convert the boolean to a number
       body[field] = Number(value);
-    } else if (typeCode === 2) {
-      // convert the date back to ISO8601
-      body[field] = this.valueToIsoDate(value);
     }
 
-    this.grid.update({ id: id }, body)
+    this.dataService
+      .update(this.dataSource.update, { id }, body)
+      .take(1)
       .subscribe(
-        resp => {
-          this.display = false;
-          this.form.reset();
-          this.grid.load();
+        () => {
+          this.constantsService.fetch();
+          this.userConstantsService.refresh();
+          this.onCancel();
         },
-        // TODO: display & log a message
-        error => console.log(error.statusText || error.status || 'Request error')
+        error => this.notificationsService.error('constants.api.errors.update')
       );
+  }
+
+  onBeforeEdit(): void {
+    const permission = 'CONST_VALUE_EDIT';
+    this.userPermissionsService.has('CONST_VALUE_EDIT')
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.display = true;
+        } else {
+          this.notificationsService.error({ message: 'roles.permissions.messages.no_edit', param: { permission } });
+        }
+      });
   }
 
   onCancel(): void {
     this.display = false;
-    this.editedRecord = null;
-    this.form.reset();
   }
 
+  onSelect(record: IConstant): void {
+    this.constantsService.changeSelected(record);
+  }
 }

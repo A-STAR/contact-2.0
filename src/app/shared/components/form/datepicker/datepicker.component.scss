@@ -1,0 +1,7 @@
+@import "../../../styles/app/variables.scss";
+
+.dropdown {
+  position: fixed;
+  padding: 1px 0;
+  z-index: $zindex-app-datepicker;
+}

@@ -79,17 +79,26 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
     // Different Logo size depends on the navbar state
     .brand-logo,
     .brand-logo-collapsed {
+      line-height: $navbar-height;
+      color: white;
+      font-size: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,.15);
       > img {
         margin: 0;
       }
     }
     .brand-logo {
+      padding: 0 25px;
       display: block;
-      padding: 10px 15px;
+      // padding: 10px 15px;
+      text-align: left;
     }
     .brand-logo-collapsed {
       display: none;
-      padding: 6px 15px;
+      // padding: 6px 15px;
+    }
+    .brand-logo-version {
+      color: #ffead8;
     }
   }
 

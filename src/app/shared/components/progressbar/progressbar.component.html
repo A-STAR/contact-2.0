@@ -1,0 +1,12 @@
+<div class="progress">
+  <div
+    [attr.aria-valuenow]="value"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    role="progressbar"
+    [ngClass]="cssClass"
+    [ngStyle]="style"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>

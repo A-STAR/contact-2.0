@@ -8,10 +8,15 @@ exports.config = {
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
-  capabilities: {
-    'browserName': 'chrome'
-  },
-  directConnect: true,
+  multiCapabilities: [
+    {
+      browserName: 'chrome'
+    },
+    // {
+    //   browserName: 'internet explorer',
+    //   version: '11'
+    // }
+  ],
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',
   jasmineNodeOpts: {

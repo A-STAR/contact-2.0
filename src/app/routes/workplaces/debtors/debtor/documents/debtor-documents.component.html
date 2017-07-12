@@ -1,0 +1,7 @@
+<app-attachments
+  downloadErrorTranslationKey="debtor.documentationTab.errors.download"
+  [attachments$]="attachments$"
+  (onFetch)="onFetch()"
+  (onDelete)="onDelete($event)"
+  (onUpload)="onUpload($event)">
+</app-attachments>
