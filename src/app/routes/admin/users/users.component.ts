@@ -132,7 +132,7 @@ export class UsersComponent implements OnDestroy {
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;
-          this.editedEntity = state.users.find(users => users.id === state.selectedUserId);
+          this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
         },
         // TODO: notifications
         error => console.error(error)
