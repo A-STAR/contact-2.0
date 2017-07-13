@@ -165,7 +165,9 @@ export class UserEditComponent {
   }
 
   onLdapDialogAction(ldapLogin: string): void {
-    this.form.form.patchValue({ ldapLogin });
+    const { form } = this.form;
+    form.patchValue({ ldapLogin });
+    form.markAsDirty();
     this.onLdapDialogClose();
   }
 
@@ -200,7 +202,7 @@ export class UserEditComponent {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
-      ldapLogin: value.ldapLogin || undefined,
+      ldapLogin: value.ldapLogin || null,
       // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),

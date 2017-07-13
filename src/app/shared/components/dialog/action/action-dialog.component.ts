@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-action-dialog',
-  templateUrl: './action-dialog.component.html'
+  templateUrl: './action-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionDialogComponent {
 
