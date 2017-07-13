@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IGrid2Sorter, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';

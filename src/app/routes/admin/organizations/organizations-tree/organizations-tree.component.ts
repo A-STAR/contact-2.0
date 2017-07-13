@@ -4,6 +4,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IOrganizationDialogActionEnum } from '../organizations.interface';
@@ -12,7 +13,6 @@ import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree
 
 import { OrganizationsService } from '../organizations.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ObservableHelper } from '../../../../core/observable/ObservableHelper';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +20,7 @@ import { ObservableHelper } from '../../../../core/observable/ObservableHelper';
   templateUrl: './organizations-tree.component.html',
 })
 export class OrganizationsTreeComponent implements OnDestroy {
+  permissionSub: Subscription;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -54,16 +55,14 @@ export class OrganizationsTreeComponent implements OnDestroy {
     private organizationsService: OrganizationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    ObservableHelper.subscribe(
-      this.userPermissionsService.has('ORGANIZATION_VIEW').subscribe(hasViewPermission => hasViewPermission
+      this.permissionSub = this.userPermissionsService.has('ORGANIZATION_VIEW').subscribe(hasViewPermission => hasViewPermission
         ? this.organizationsService.fetchOrganizations()
         : this.organizationsService.clearOrganizations()
-      ),
-      this
     );
   }
 
   ngOnDestroy(): void {
+    this.permissionSub.unsubscribe();
     this.organizationsService.clearAll();
   }
 

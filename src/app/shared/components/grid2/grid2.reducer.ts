@@ -6,7 +6,6 @@ import {
   IGrid2Sorter,
   IGrid2State
 } from './grid2.interface';
-import * as R from 'ramda';
 
 import { Grid2Component } from './grid2.component';
 
