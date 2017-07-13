@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { ILdapGroup, ILdapUser } from './user-ldap-dialog.interface';
 
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserLdapDialogService } from './user-ldap-dialog.service';
 
 @Component({
@@ -20,16 +21,24 @@ export class UserLdapDialogComponent {
   usersColumns: Array<IGridColumn> = [
     { prop: 'name' },
     { prop: 'login' },
-    { prop: 'isBlocked' },
+    { prop: 'isBlocked', localized: true },
     { prop: 'comment' },
   ];
+
+  userRenderers: IRenderer = {
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
+  };
 
   groups$: Observable<Array<ILdapGroup>>;
   users$: Observable<Array<ILdapUser>>;
 
   private _selectedUser: ILdapUser = null;
 
-  constructor(private userLdapDialogService: UserLdapDialogService) {
+  constructor(
+    private gridService: GridService,
+    private userLdapDialogService: UserLdapDialogService
+  ) {
+    this.usersColumns = this.gridService.setRenderers(this.usersColumns, this.userRenderers);
     this.groups$ = this.userLdapDialogService.readLdapGroups()
       .map(response => response.groups);
   }

@@ -45,7 +45,7 @@ export class UsersComponent implements OnDestroy {
 
   renderers: IRenderer = {
     roleId: [],
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE',
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
     languageId: [],
   };
 
