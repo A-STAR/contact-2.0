@@ -33,7 +33,7 @@ export class UserConstantsService {
   get(constantName: string): Observable<IUserConstant> {
     // TODO(d.maltsev): remove fake constant
     if (constantName === 'UserPhoto.MaxSize') {
-      return Observable.of({ valueN: 2000 });
+      return Observable.of({ valueN: 1000 });
     }
 
     return this.state.map(state => state.constants.find(constant => constant.name === constantName));
