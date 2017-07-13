@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",
         "USERS": "Пользователи",
+        "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Словари",
@@ -210,6 +211,7 @@
       "blocked": "Блокирован",
       "login": "Логин",
       "password": "Пароль",
+      "ldapLogin": "LDAP-логин",
       "role": "Роль",
       "position": "Должность",
       "startWorkDate": "Дата начала работы",
@@ -244,6 +246,23 @@
       "intPhone": "Внутренний номер",
       "email": "Эл. почта",
       "languageId": "Язык"
+    },
+    "ldap": {
+      "title": "Пользователи домена",
+      "groups": {
+        "grid": {
+          "name": "Имя",
+          "comment": "Комментарий"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "ФИО",
+          "login": "Логин",
+          "isBlocked": "Блокирован",
+          "comment": "Комментарий"
+        }
+      }
     },
     "messages": {
       "errors": {
@@ -754,6 +773,7 @@
       "dictionary": "Словарь"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Сохранить",
       "cancel": "Отменить",
       "remove": "Удалить",
@@ -762,8 +782,8 @@
       "search": "Искать",
       "add": "Добавить",
       "change": "Изменить",
-      "excel": "Экспорт в Excel",
-      "back": "Назад"
+      "back": "Назад",
+      "excel": "Экспорт в Excel"
     },
     "dateTimeRage": {
       "from": "Начало",

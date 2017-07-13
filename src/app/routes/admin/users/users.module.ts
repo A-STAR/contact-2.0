@@ -9,9 +9,12 @@ import { UsersEffects } from './users.effects';
 import { UsersService } from './users.service';
 
 import { UsersComponent } from './users.component';
+import { UserEditComponent } from './edit/user-edit.component';
 
 const routes: Routes = [
   { path: '', component: UsersComponent },
+  { path: 'create', component: UserEditComponent },
+  { path: ':id', component: UserEditComponent },
 ];
 
 @NgModule({

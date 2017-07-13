@@ -23,6 +23,7 @@ export class LayoutComponent {
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
     UsersComponent: 'USERS',
+    UserEditComponent: 'USER_EDIT',
     HelpComponent: 'HELP',
     ActionsLogComponent: 'ACTIONS_LOG',
     DebtorComponent: 'DEBTOR_CARD',

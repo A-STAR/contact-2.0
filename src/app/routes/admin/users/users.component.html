@@ -1,26 +1,3 @@
-<app-user-edit
-  *ngIf="isEntityBeingCreated"
-  title="users.create.title"
-  [roles]="roleOptions$ | async"
-  [languages]="languageOptions$ | async"
-  [passwordMinLength]="passwordMinLength$ | async"
-  [passwordComplexity]="passwordComplexity$ | async"
-  (submit)="onAddSubmit($event)"
-  (cancel)="cancelAction()">
-</app-user-edit>
-
-<app-user-edit
-  *ngIf="isEntityBeingEdited"
-  title="users.edit.title"
-  [editedEntity]="editedEntity"
-  [roles]="roleOptions$ | async"
-  [languages]="languageOptions$ | async"
-  [passwordMinLength]="passwordMinLength$ | async"
-  [passwordComplexity]="passwordComplexity$ | async"
-  (submit)="onEditSubmit($event)"
-  (cancel)="cancelAction()">
-</app-user-edit>
-
 <app-toolbar-2
   class="bordered"
   [items]="toolbarItems">
