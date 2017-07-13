@@ -80,7 +80,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   // Inputs without presets
   @Input() sorters = null as IGrid2Sorter[];
-  @Input() filterColumn: Column;
   @Input() columnTranslationKey: string;
   @Input() rows: any[];
   @Input() rowCount = 0;
@@ -317,12 +316,27 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   getFilters(): FilterObject {
     const filterModel = this.gridOptions.api.getFilterModel();
-    // console.log('filter model', filterModel);
+    console.log('filter model', filterModel);
     const filters = Object.keys(filterModel)
       .map(key => {
         const filter: any = { name: key };
         const el = filterModel[key];
-        switch (el.filterType) {
+        // NOTE: `set` filter doesn't return the `filterType` => WTF?
+        switch (el.filterType || 'set') {
+          case 'set':
+            filter.operator = 'IN';
+            const column = this.columns.find(col => col.prop === key);
+            if (column && column.filterValues && Array.isArray(el)) {
+              filter.values = el.map(value => column.filterValues.find(val => val.name === value))
+                .map(val => val.code);
+            } else {
+              filter.values = [];
+            }
+            if (!filter.values.length) {
+              filter.operator = '==';
+              filter.values = null;
+            }
+            break;
           case 'date':
             filter.operator = 'BETWEEN';
             filter.values = this.valueConverter.makeRangeFromLocalDate(el.dateFrom);
@@ -438,8 +452,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       };
     } else if (column.filter === 'set' && column.filterValues) {
       return {
-        values: Object.keys(column.filterValues),
-        cellRenderer: (node: { value: string }) => column.filterValues[parseInt(node.value, 10)]
+        values: column.filterValues.map(item => item.name),
+        cellRenderer: (node: { value: string }) => node.value,
+        suppressMiniFilter: true,
+        apply: true,
       };
     }
     return {};
@@ -457,23 +473,30 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
-        maxWidth: column.maxWidth,
+        // maxWidth: column.maxWidth,
         minWidth: column.minWidth,
-        suppressSizeToFit: !!column.suppressSizeToFit,
         // suppressFilter: !column.filter,
         // suppressMenu: !!column.suppressMenu,
         suppressMenu: true,
         width: column.width || column.minWidth,
       };
-      if (column.type === 'primary') {
-        colDef.cellClass = 'ag-cell-number';
-      }
-      if (['primary', 'date'].includes(column.type)) {
-        colDef.floatingFilterComponentParams = { suppressFilterButton: true };
+
+      switch (column.type) {
+        case 'primary':
+          colDef.cellClass = 'ag-cell-number';
+          colDef.floatingFilterComponentParams = { suppressFilterButton: true };
+          break;
+        case 'date':
+          colDef.floatingFilterComponentParams = { suppressFilterButton: true };
+          colDef.suppressSizeToFit = true;
+          break;
       }
       if (column.renderer) {
         colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.renderer(params.data);
         colDef.valueGetter = colDef.cellRenderer;
+      }
+      if (column.filter === 'set') {
+        colDef.keyCreator = (params) => params.value.code;
       }
       return colDef;
     });

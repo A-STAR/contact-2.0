@@ -33,7 +33,7 @@ export class ActionsLogComponent {
     { prop: 'id', minWidth: 60, type: 'primary', filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'text' },
     { prop: 'position', minWidth: 100, filter: 'text' },
-    { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, type: 'date', filter: 'date' },
+    { prop: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'text' },
     { prop: 'typeCode', minWidth: 150, filter: 'set',
       filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES

@@ -104,10 +104,7 @@ export class GridService {
               if (column.filterDictionaryId) {
                 const dictTypes = dictionaries[column.filterDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterValues = dictTypes.reduce((acc, item) => {
-                    acc[item.code] = item.name;
-                    return acc;
-                  }, {});
+                  column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
                 }
               }
             }

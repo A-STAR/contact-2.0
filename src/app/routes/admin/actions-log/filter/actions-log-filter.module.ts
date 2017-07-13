@@ -15,5 +15,4 @@ import { ActionsLogFilterComponent } from './actions-log-filter.component';
     ActionsLogFilterComponent,
   ]
 })
-export class ActionsLogFilterModule {
-}
+export class ActionsLogFilterModule {}
