@@ -28,7 +28,7 @@ export interface IGridColumn {
    */
   filter?: string;
   filterValues?: { [key: number]: string }|number[]|string[];
-  filterOptionsDictionaryId?: number;
+  filterDictionaryId?: number;
   suppressMenu?: boolean;
   suppressSizeToFit?: boolean;
   hidden?: boolean;

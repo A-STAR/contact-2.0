@@ -459,16 +459,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,
-        suppressSizeToFit: column.suppressSizeToFit,
+        suppressSizeToFit: !!column.suppressSizeToFit,
         // suppressFilter: !column.filter,
         // suppressMenu: !!column.suppressMenu,
         suppressMenu: true,
         width: column.width || column.minWidth,
       };
-      if (column.type === 'id') {
+      if (column.type === 'primary') {
         colDef.cellClass = 'ag-cell-number';
       }
-      if (['id', 'date'].includes(column.type)) {
+      if (['primary', 'date'].includes(column.type)) {
         colDef.floatingFilterComponentParams = { suppressFilterButton: true };
       }
       if (column.renderer) {

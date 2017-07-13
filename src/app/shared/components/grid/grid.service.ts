@@ -100,9 +100,9 @@ export class GridService {
                   }
                 }
               }
-              // Filters
-              if (!!column.filterOptionsDictionaryId) {
-                const dictTypes = dictionaries[column.filterOptionsDictionaryId];
+              // Dictionary filters
+              if (column.filterDictionaryId) {
+                const dictTypes = dictionaries[column.filterDictionaryId];
                 if (Array.isArray(dictTypes)) {
                   column.filterValues = dictTypes.reduce((acc, item) => {
                     acc[item.code] = item.name;
@@ -117,8 +117,9 @@ export class GridService {
 
       return Observable.combineLatest(
         this.metadataService.metadata.map(metadata => metadata[metadataKey]),
-        this.dictionariesService.dictionariesByCode
-      ).map(mapColumns);
+        this.dictionariesService.dictionariesByCode,
+      )
+      .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {

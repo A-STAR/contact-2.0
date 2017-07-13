@@ -30,13 +30,14 @@ export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'id', minWidth: 60, type: 'id', filter: 'number' },
+    { prop: 'id', minWidth: 60, type: 'primary', filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'text' },
     { prop: 'position', minWidth: 100, filter: 'text' },
     { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, type: 'date', filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'text' },
     { prop: 'typeCode', minWidth: 150, filter: 'set',
-      filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
+      filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+    },
     { prop: 'dsc', minWidth: 200, filter: 'text' },
     { prop: 'machine', minWidth: 120, filter: 'text' },
     { prop: 'duration', minWidth: 100, type: 'number', filter: 'number' }
