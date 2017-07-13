@@ -200,6 +200,7 @@ export class UserEditComponent {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
+      ldapLogin: value.ldapLogin || undefined,
       // TODO(a.poterenko): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
