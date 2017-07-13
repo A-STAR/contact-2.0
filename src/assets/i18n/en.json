@@ -77,9 +77,10 @@
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
     "fieldRequired": "This field is required",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
-    "fieldDigits": "This field should contain at least one digit",
-    "fieldLowerCase": "This field should contain at least one lower case character",
-    "fieldUpperCase": "This field should contain at least one upper case character",
+    "fieldDigits": "This field must contain at least one digit",
+    "fieldLowerCase": "This field must contain at least one lower case character",
+    "fieldUpperCase": "This field must contain at least one upper case character",
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
     "login": {
       "INVALID_CREDENTIALS": "Incorrect login or password"
     }

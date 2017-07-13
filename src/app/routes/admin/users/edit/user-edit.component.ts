@@ -18,7 +18,7 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { password } from '../../../../core/validators/password';
+import { maxFileSize, password } from '../../../../core/validators';
 
 @Component({
   selector: 'app-user-edit',
@@ -64,19 +64,12 @@ export class UserEditComponent {
       this.userPermissionsService.has('USER_LDAP_LOGIN_EDIT'),
       this.userConstantsService.get('UserPassword.MinLength'),
       this.userConstantsService.get('UserPassword.Complexity.Use'),
+      this.userConstantsService.get('UserPhoto.MaxSize'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.lookupService.roleOptions,
       this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user),
-      (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, languages, roles, user) => ({
-        canEditUser,
-        canEditRole,
-        canEditLdap,
-        passwordMinLength,
-        passwordComplexity,
-        languages,
-        roles,
-        user,
-      })
+      (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user) =>
+        ({ canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user })
     )
     .take(1)
     .subscribe((data: any) => {
@@ -86,19 +79,21 @@ export class UserEditComponent {
         canEditLdap: data.canEditLdap,
       };
 
-      const passwordValidators = password(
-        !this.userId,
-        data.passwordMinLength.valueN,
-        data.passwordComplexity.valueB
-      );
+      const passwordValidator = password(!this.userId, data.passwordMinLength.valueN, data.passwordComplexity.valueB);
+      const photoValidator = maxFileSize(1e3 * data.photoMaxSize.valueN);
 
-      this.controls = this.getFormControls(data.languages, data.roles, passwordValidators);
+      this.controls = this.getFormControls(data.languages, data.roles, passwordValidator, photoValidator);
       this.formData = this.getFormData(data.user);
       this.changeDetectorRef.markForCheck();
     });
   }
 
-  private getFormControls(languages: IOption[], roles: IOption[], passwordValidators: ValidatorFn): Array<IDynamicFormItem> {
+  private getFormControls(
+    languages: IOption[],
+    roles: IOption[],
+    passwordValidators: ValidatorFn,
+    photoValidator: ValidatorFn
+  ): Array<IDynamicFormItem> {
     const photoUrl = this.userId ? `/users/${this.userId}/photo` : null;
 
     const nameBlock = ([
@@ -138,7 +133,7 @@ export class UserEditComponent {
         children: [
           { children: nameBlock, width: 9 },
           { label: 'users.edit.photo', controlName: 'image', type: 'image', url: photoUrl, disabled: !this.permissions.canEditUser,
-              width: 3, height: 178 }
+              width: 3, height: 178, validators: [ photoValidator ] }
         ],
         collapsible: true,
         title: 'users.edit.personalData'

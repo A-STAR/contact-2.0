@@ -29,6 +29,7 @@ export class DynamicFormGroupComponent {
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
     hasuppercasechars: 'validation.fieldUpperCase',
+    maxsize: 'validation.fieldMaxSize'
   };
 
   @Input() collapsible = false;
