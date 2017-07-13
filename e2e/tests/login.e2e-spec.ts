@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 import { Preloader } from '../components/preloader';
 import { LoginPage } from '../pages/login-page';
 
-describe('Login page', () => {
+describe('/login', () => {
   const preloader = new Preloader();
   const loginPage = new LoginPage();
 
