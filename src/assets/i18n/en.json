@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and Permissions",
         "USERS": "Users",
+        "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",
@@ -210,6 +211,7 @@
       "blocked": "Blocked",
       "login": "Login",
       "password": "Password",
+      "ldapLogin": "LDAP login",
       "role": "Role",
       "position": "Position",
       "startWorkDate": "Start date",
@@ -244,6 +246,23 @@
       "intPhone": "Extension",
       "email": "Email",
       "languageId": "Language"
+    },
+    "ldap": {
+      "title": "Domain users",
+      "groups": {
+        "grid": {
+          "name": "Name",
+          "comment": "Comment"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "Full name",
+          "login": "Login",
+          "isBlocked": "Blocked",
+          "comment": "Comment"
+        }
+      }
     },
     "messages": {
       "errors": {
@@ -755,6 +774,7 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Save",
       "cancel": "Cancel",
       "remove": "Remove",

@@ -24,8 +24,9 @@ export class LookupService {
   ) {}
 
   get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.rolesResolved && state.usersResolved)
-      .filter(isResolved => isResolved !== null)
+    return this.state
+      .filter(state => state.rolesResolved !== null && state.usersResolved !== null)
+      .map(state => state.rolesResolved && state.usersResolved)
       .take(1);
   }
 

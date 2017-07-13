@@ -1,5 +1,8 @@
-<app-dialog [autoWidth]="autoWidth"
-            (displayChange)="onDisplayChange($event)">
+<app-dialog
+  [autoWidth]="autoWidth"
+  [styles]="styles"
+  (displayChange)="onDisplayChange($event)"
+>
   <div dialog-header>
     <h3>{{ titleTranslationKey | translate:titleTranslationParams }}</h3>
   </div>
@@ -9,7 +12,7 @@
   </div>
 
   <div dialog-footer>
-    <button class="btn btn-{{ actionMode }}" (click)="onAction()">
+    <button class="btn btn-{{ actionMode }}" [disabled]="!canSubmit" (click)="onAction()">
       <i class="fa fa-check"></i> {{ actionTranslationKey | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">
