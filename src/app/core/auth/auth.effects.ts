@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -22,14 +23,18 @@ export class AuthEffects {
           type: AuthService.AUTH_CREATE_SESSION,
           payload: { token }
         }))
-        .catch(() => [
-          {
-            type: AuthService.AUTH_DESTROY_SESSION,
-            payload: { redirectToLogin: false }
-          },
-          // TODO(d.maltsev): i18n
-          this.notificationService.createErrorAction('auth.errors.login'),
-        ]);
+        .catch(error => {
+          const code = error instanceof Response ? error.json().message.code : null;
+          const message = code ? `auth.errors.${code}` : 'auth.errors.login';
+          return [
+            {
+              type: AuthService.AUTH_DESTROY_SESSION,
+              payload: { redirectToLogin: false }
+            },
+            // TODO(d.maltsev): i18n
+            this.notificationService.createErrorAction(message),
+          ];
+        });
     });
 
   @Effect()

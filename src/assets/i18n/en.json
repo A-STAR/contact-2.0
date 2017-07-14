@@ -757,6 +757,14 @@
       }
     }
   },
+  "auth": {
+    "errors": {
+      "login": "Could not log in",
+      "login.invalidCredentials": "Invalid login or password",
+      "logout": "Could not log out",
+      "refresh": "Could not refresh token"
+    }
+  },
   "default": {
     "yesNo": {
       "Yes": "Yes",
