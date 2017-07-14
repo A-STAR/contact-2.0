@@ -5,96 +5,106 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Column } from 'ag-grid';
 
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import {
   IActionLog,
   IActionsLogData,
   IActionsLogPayload,
-  IActionType,
   IEmployee
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import {
-  IGrid2ColumnsSettings,
-  IGrid2Request,
-  IGrid2State
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorter } from '../../../shared/components/grid2/grid2.interface';
 
+import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ActionsLogService {
-  static ACTION_TYPES_FETCH_SUCCESS = 'ACTION_TYPES_FETCH_SUCCESS';
-  static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
-  static ACTIONS_LOG_FETCH = 'ACTIONS_LOG_FETCH';
-  static ACTIONS_LOG_FETCH_SUCCESS = 'ACTIONS_LOG_FETCH_SUCCESS';
-  static ACTIONS_LOG_DESTROY = 'ACTIONS_LOG_DESTROY';
+  static ACTION_TYPES_FETCH_SUCCESS           = 'ACTION_TYPES_FETCH_SUCCESS';
+  static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS  = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
+  static ACTIONS_LOG_FETCH                    = 'ACTIONS_LOG_FETCH';
+  static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
+  static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
+
+  @Effect() onSearchEffect = this.effectActions
+    .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
+    .withLatestFrom(this.store)
+    .switchMap(
+      (payload): Observable<IActionsLogPayload> => {
+        const [action, store]: [Action, IAppState] = payload;
+        const filterRequest: IActionsLogFilterRequest = action.payload;
+        const { currentPage, pageSize, sorters } = store.actionsLog.actionsLogGrid;
+        const gridRequestPayload = { currentPage, pageSize, sorters };
+        // console.log('filter request', filterRequest);
+
+        const request = this.gridService.buildRequest(gridRequestPayload, filterRequest.filters);
+
+        return this.dataService.create('/list?name=actions', {}, request)
+          .map((result: { data: IActionLog[], total: number }): IActionsLogPayload => {
+            const { data, total } = result;
+            return {
+              payload: { data, total },
+              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
+            };
+          })
+          .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
+      }
+    );
 
   constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>,
+    private dataService: DataService,
     private effectActions: Actions,
+    private gridService: GridService,
     private notifications: NotificationsService,
-    private valueConverterService: ValueConverterService
-  ) {
-  }
+    private store: Store<IAppState>,
+    private valueConverterService: ValueConverterService,
+  ) {}
 
   get actionsLogCurrentPage(): Observable<number> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentPage)
+      .select(state => state.actionsLog.actionsLogGrid.currentPage)
       .distinctUntilChanged();
   }
 
   get actionsLogCurrentPageSize(): Observable<number> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.pageSize)
+      .select(state => state.actionsLog.actionsLogGrid.pageSize)
       .distinctUntilChanged();
   }
 
-  get actionsLogCurrentFilterColumn(): Observable<Column> {
+  get actionsLogSorters(): Observable<IGrid2Sorter[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.currentFilterColumn)
+      .select(state => state.actionsLog.actionsLogGrid.sorters)
       .distinctUntilChanged();
   }
 
-  get actionsLogColumnsSettings(): Observable<IGrid2ColumnsSettings> {
+  get actionsLogSelected(): Observable<IDictionaryItem[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnsSettings)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogColumnMovingInProgress(): Observable<boolean> {
-    return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.columnMovingInProgress)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogSelectedRows(): Observable<IActionType[]> {
-    return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLogGrid.selectedRows)
+      .select(state => state.actionsLog.actionsLogGrid.selectedRows)
       .distinctUntilChanged();
   }
 
   get actionsLogRows(): Observable<IActionsLogData> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionsLog)
+      .select(state => state.actionsLog.actionsLog)
       .distinctUntilChanged();
   }
 
   get employeesRows(): Observable<IEmployee[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.employees)
+      .select(state => state.actionsLog.employees)
       .distinctUntilChanged();
   }
 
-  get actionTypesRows(): Observable<IActionType[]> {
+  get actionTypesRows(): Observable<IDictionaryItem[]> {
     return this.store
-      .select((state: IAppState) => state.actionsLog.actionTypes)
+      .select(state => state.actionsLog.actionTypes)
       .distinctUntilChanged();
   }
 
@@ -104,85 +114,28 @@ export class ActionsLogService {
       this.getActionTypes(),
       (employees, actionTypes) => {
         this.store.dispatch({
+          payload: employees,
           type: ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS,
-          payload: employees
         });
         this.store.dispatch({
+          payload: actionTypes,
           type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
-          payload: actionTypes
         });
       }
     );
   }
 
-  @Effect() onSearchEffect = this.effectActions
-    .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(
-      (payload): Observable<IActionsLogPayload> => {
-        const [action, store]: [Action, IAppState] = payload;
-        const customFilter: IActionsLogFilterRequest = action.payload;
-        const state: IGrid2State = store.actionsLog.actionsLogGrid;
-        const request: IGrid2Request = this.valueConverterService
-          .toGridRequest({
-            currentPage: state.currentPage,
-            pageSize: state.pageSize,
-            columnsSettings: state.columnsSettings,
-            fieldNameConverter: (fieldName: string) => {
-              switch (fieldName) {
-                case 'fullName':
-                  return 'lastName';
-                default:
-                  return fieldName;
-              }
-            }
-          });
-
-        request.filtering = FilterObject.create()
-          .and()
-          .addFilter(request.filtering)
-          .addFilter(
-            FilterObject.create()
-              .setName('createDateTime')
-              .betweenOperator()
-              .setValueArray([
-                this.valueConverterService.toIsoDateTime(customFilter.startDate + ' ' + customFilter.startTime, true),
-                this.valueConverterService.toIsoDateTime(customFilter.endDate + ' ' + customFilter.endTime, true),
-              ])
-          )
-          .addFilter(
-            FilterObject.create()
-              .setName('typeCode')
-              .inOperator()
-              .setValueArray(customFilter.actionsTypes)
-          )
-          .addFilter(
-            FilterObject.create()
-              .setName('userId')
-              .inOperator()
-              .setValueArray(customFilter.employees)
-          );
-
-        return this.gridService.create('/actions/grid', {}, request)
-          .map((data: { data: IActionLog[], total: number }): IActionsLogPayload => {
-            return {
-              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
-              payload: {
-                data: data.data,
-                total: data.total
-              }
-            };
-          });
-      }
-    ).catch(() => {
-      this.notifications.error('actionsLog.actionsLog.messages.errors.fetch');
-      return null;
-    });
-
-  search(payload: IActionsLogFilterRequest): void {
+  fetch(filters: FilterObject): void {
     this.store.dispatch({
+      payload: { filters },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
-      payload: payload
+    });
+  }
+
+  filter(filters: FilterObject): void {
+    this.store.dispatch({
+      payload: { filters, currentPage: 1 },
+      type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }
 
@@ -190,12 +143,13 @@ export class ActionsLogService {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
 
-  getActionTypes(): Observable<IActionType[]> {
-    // TODO Move dict type
-    return this.gridService.read('/dictionaries/{code}/terms', { code: 4 }).map(data => data.terms);
+  getActionTypes(): Observable<IDictionaryItem[]> {
+    return this.dataService.read('/dictionaries/{code}/terms', {
+      code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+    }).map(data => data.terms);
   }
 
   getEmployees(): Observable<IEmployee[]> {
-    return this.gridService.read('/users').map(data => data.users);
+    return this.dataService.read('/users').map(data => data.users);
   }
 }

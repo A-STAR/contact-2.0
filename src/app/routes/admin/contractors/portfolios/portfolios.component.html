@@ -1,0 +1,33 @@
+<app-dialog-action
+  *ngIf="isPortfolioBeingDeleted"
+  titleTranslationKey="portfolios.remove.title"
+  actionTranslationKey="portfolios.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedPortfolio$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-portfolio-move
+  *ngIf="isPortfolioBeingMoved"
+  [portfolio]="selectedPortfolio$ | async"
+  (onSubmit)="onMoveSubmit($event)"
+  (onCancel)="onCloseDialog()">
+</app-portfolio-move>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="portfolios"
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [rows]="portfolios$ | async"
+  [allowDblClick]="canEdit$ | async"
+  (onDblClick)="onEdit($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

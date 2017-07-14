@@ -7,7 +7,9 @@ import * as R from 'ramda';
 
 import { IAppState } from '../state/state.interface';
 import {
+  IFilters,
   IMessage,
+  INotification,
   INotificationActionType,
   INotificationActionPayload,
   INotificationServiceState,
@@ -40,6 +42,24 @@ export class NotificationsService implements OnDestroy {
 
   get state(): Observable<INotificationServiceState> {
     return this.store.select(state => state.notifications);
+  }
+
+  get length(): Observable<number> {
+    return this.state
+      .map(state => state.notifications.length)
+      .distinctUntilChanged();
+  }
+
+  get notifications(): Observable<Array<INotification>> {
+    return this.state
+      .map(state => state.notifications)
+      .distinctUntilChanged();
+  }
+
+  get filters(): Observable<IFilters> {
+    return this.state
+      .map(state => state.filters)
+      .distinctUntilChanged();
   }
 
   createDebugAction(message: string | IMessage, showAlert: boolean = true): Action {
@@ -98,8 +118,8 @@ export class NotificationsService implements OnDestroy {
   private createPushAction(type: NotificationTypeEnum, message: string | IMessage, showAlert: boolean = true): Action {
     const translate = R.ifElse(
       R.has('message'),
-      ({ text, param }) => this.translateService.instant(text, param),
-      text => this.translateService.instant(text)
+      ({ message: key, param }) => this.translateService.instant(key, param),
+      key => this.translateService.instant(key)
     );
     const translatedMessage = translate(message);
 

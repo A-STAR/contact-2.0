@@ -1,4 +1,14 @@
-import { Component, Input, OnInit, OnDestroy, forwardRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  forwardRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
@@ -6,6 +16,7 @@ import { IGridColumn } from '../../grid/grid.interface';
 import { GridComponent } from '../../grid/grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-multi-select',
   styleUrls: ['./multi-select.component.scss'],
   templateUrl: './multi-select.component.html',
@@ -18,17 +29,15 @@ import { GridComponent } from '../../grid/grid.component';
   ],
 })
 export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, ControlValueAccessor {
-
   styles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
   gridStyles: CSSStyleDeclaration = {} as CSSStyleDeclaration;
-
   @Input() height: number;
   @Input() columnsFrom: IGridColumn[];
   @Input() columnsTo: IGridColumn[];
   @Input() columnsTranslationKeyFrom: string;
   @Input() columnsTranslationKeyTo: string;
-  @Input() rowsFrom: Array<any>;
   @Input() rowsFilterFrom: Function;
+  @Input() rowsFrom: any[];
   @Input() syncFormControlChanges = true;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
@@ -39,10 +48,15 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private _active: any[] = [];
   private onChange: Function = () => {};
   private onTouched: Function = () => {};
-  @Input() equalsFn: Function = (o1: any, o2: any) => o1.id === o2.id;
 
-  constructor() {
-    this.rowsFilter = this.rowsFilter.bind(this);
+  constructor(private changeDetector: ChangeDetectorRef) {}
+
+  get filteredRowsFrom(): any[] {
+    return this.rowsFrom.filter(
+      (row: any) => (!this.rowsFilterFrom || this.rowsFilterFrom(row)) && (
+        !this._active.length || !this._active.find((selectedRecord: any) => selectedRecord === row)
+      )
+    );
   }
 
   get rowsTo(): any[] {
@@ -54,8 +68,14 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   }
 
   ngAfterViewInit(): void {
-    this._rowDoubleSelectFromSubscription = this.gridFrom.onDblClick.subscribe(() => this.onRightAction());
-    this._rowDoubleSelectToSubscription = this.gridTo.onDblClick.subscribe(() => this.onLeftAction());
+    this._rowDoubleSelectFromSubscription = this.gridFrom.onDblClick.subscribe(() => {
+      this.onRightAction();
+      this.changeDetector.markForCheck();
+    });
+    this._rowDoubleSelectToSubscription = this.gridTo.onDblClick.subscribe(() => {
+      this.onLeftAction();
+      this.changeDetector.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -77,13 +97,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     this.onTouched = fn;
   }
 
-  rowsFilter(record: any): boolean {
-    return (!this.rowsFilterFrom || this.rowsFilterFrom(record)) && (
-        !this._active || !this._active.length ||
-        !this._active.find((selectedRecord: any) => this.equalsFn(selectedRecord, record))
-      );
-  }
-
   onRightAction(): void {
     this._active = this._active.concat(this.gridFrom.selected);
     this.updateState();
@@ -91,13 +104,13 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
 
   onRightDoubleAction(): void {
     this._active = [];
-    this._active = this._active.concat(this.gridFrom.rows);
+    this._active = this._active.concat(this.rowsFrom);
     this.updateState();
   }
 
   onLeftAction(): void {
     this._active = this._active.filter((record: any) =>
-      !this.gridTo.selected.find((selectedRecord) => this.equalsFn(selectedRecord, record)));
+      !this.gridTo.selected.find((selectedRecord) => selectedRecord === record));
     this.updateState();
   }
 

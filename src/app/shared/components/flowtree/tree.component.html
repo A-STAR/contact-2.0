@@ -6,6 +6,8 @@
   <ul class="app-tree-container">
     <app-tree-node
       *ngFor="let node of value;let firstChild=first;let lastChild=last; let index=index"
+      [collapseAdjacentNodes]="collapseAdjacentNodes"
+      [expandNodeOnClick]="expandNodeOnClick"
       [node]="node"
       [firstChild]="firstChild"
       [lastChild]="lastChild"
@@ -22,12 +24,19 @@
     <table *ngIf="value[0].children">
       <app-tree-node
         *ngFor="let child of value[0].children"
+        [collapseAdjacentNodes]="collapseAdjacentNodes"
+        [expandNodeOnClick]="expandNodeOnClick"
         [node]="child"
         [root]="true">
       </app-tree-node>
     </table>
     <table *ngIf="!value[0].children">
-      <app-tree-node [node]="value[0]" [root]="true"></app-tree-node>
+      <app-tree-node
+        [collapseAdjacentNodes]="collapseAdjacentNodes"
+        [expandNodeOnClick]="expandNodeOnClick"
+        [node]="value[0]"
+        [root]="true">
+      </app-tree-node>
     </table>
   </ng-container>
 </div>

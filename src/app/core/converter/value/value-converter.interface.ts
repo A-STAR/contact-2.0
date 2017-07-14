@@ -17,3 +17,18 @@ export interface ILabeledValue {
   canRemove?: boolean;
   context?: any;
 }
+
+export interface INamedValue {
+  id: number;
+  name: string;
+}
+
+export interface IOption {
+  label: string;
+  value: number | string;
+}
+
+export interface IDateFormats {
+  date: string;
+  dateTime: string;
+}

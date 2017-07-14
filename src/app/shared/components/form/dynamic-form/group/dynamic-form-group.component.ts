@@ -1,12 +1,26 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, animate, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicFormItem, IDynamicFormControl, ISelectedControlItemsPayload } from '../dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form-control.interface';
 
 @Component({
   selector: 'app-dynamic-form-group',
   templateUrl: './dynamic-form-group.component.html',
-  styleUrls: [ './dynamic-form-group.component.scss' ]
+  styleUrls: [ './dynamic-form-group.component.scss' ],
+  animations: [
+    trigger(
+      'isCollapsed', [
+        transition(':enter', [
+          style({ height: '0', overflow: 'hidden' }),
+          animate('150ms ease', style({ height: '*' }))
+        ]),
+        transition(':leave', [
+          style({ height: '*', overflow: 'hidden' }),
+          animate('150ms ease', style({ height: '0' }))
+        ]),
+      ]
+    )
+  ]
 })
 export class DynamicFormGroupComponent {
   static DEFAULT_MESSAGES = {
@@ -15,6 +29,7 @@ export class DynamicFormGroupComponent {
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
     hasuppercasechars: 'validation.fieldUpperCase',
+    maxsize: 'validation.fieldMaxSize'
   };
 
   @Input() collapsible = false;
@@ -23,7 +38,7 @@ export class DynamicFormGroupComponent {
   @Input() title = null;
   @Input() width: number;
 
-  @Output() selectedControlItemsChanges: EventEmitter<ISelectedControlItemsPayload> = new EventEmitter<ISelectedControlItemsPayload>();
+  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
   _isCollapsed = false;
 
@@ -32,7 +47,9 @@ export class DynamicFormGroupComponent {
   }
 
   toggle(): void {
-    this._isCollapsed = !this._isCollapsed;
+    if (this.collapsible) {
+      this._isCollapsed = !this._isCollapsed;
+    }
   }
 
   displayControlErrors(control: IDynamicFormControl): boolean {
@@ -48,7 +65,7 @@ export class DynamicFormGroupComponent {
     }));
   }
 
-  onSelectedControlItemsChanges(event: ISelectedControlItemsPayload): void {
-    this.selectedControlItemsChanges.emit(event);
+  onSelectItems(event: ISelectItemsPayload): void {
+    this.onSelect.emit(event);
   }
 }

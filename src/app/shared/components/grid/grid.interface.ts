@@ -1,5 +1,3 @@
-import { ControlTypes } from '../form/dynamic-form/dynamic-form-control.interface';
-
 export interface IDataSource {
   create?: string;
   read?: string;
@@ -8,30 +6,38 @@ export interface IDataSource {
   dataKey: string;
 }
 
-export interface IParameters {
-  [index: string]: any;
-}
-
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
   disabled?: boolean;
-  filterControlType?: ControlTypes;
   localized?: boolean;
   maxWidth?: number;
   minWidth?: number;
   name?: string;
   prop: string;
   renderer?: Function;
+  type?: string;
+  width?: number;
   /*
   ** For compatibility with @swimlane/ngx-datatable
   ** Do NOT use, prefer renderer
   */
-  suppressSizeToFit?: boolean;
   $$valueGetter?: Function;
-  width?: number;
+  /**
+   * ag-grid
+   */
+  filter?: string;
+  filterValues?: Array<any>;
+  filterDictionaryId?: number;
+  suppressMenu?: boolean;
+  suppressSizeToFit?: boolean;
+  hidden?: boolean;
 }
 
 export interface IRenderer {
   [key: string]: Function | Array<any>;
+}
+
+export interface IMessages {
+  [key: string]: string;
 }

@@ -1,10 +1,6 @@
-import { IActionType, IEmployee } from '../actions-log.interface';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid2-filter';
 
 export interface IActionsLogFilterRequest {
-  actionsTypes: number[]|IActionType[];
-  employees: number[]|IEmployee[];
-  endDate: string;
-  endTime: string;
-  startDate: string;
-  startTime: string;
+  filters: FilterObject;
+  currentPage?: number;
 }

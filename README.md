@@ -4,15 +4,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
 ## Running unit tests
 
@@ -23,11 +19,14 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 Before running the tests make sure you are serving the app via `ng serve`.
 
-## Further help
+## Run the project locally
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Prerequisites
+* install [node.js](https://nodejs.org/download/release/v8.1.2/) engine >= v8
+* install git bash or [cmder](http://cmder.net)
+* clone this repository
 
-### Clone this project
+### Clone this repo
 ```
 git clone http://repository2.luxbase.int/Contact-2.0/front-end.git
 cd front-end-prototype
@@ -37,17 +36,12 @@ git commit -m "add README"
 git push -u origin master
 ```
 
-## Production build
-
-### Prerequisites
-* install node.js engine >= v6.9
-* install git bash
-* clone this repository
-
-### Building
+### Installing dependencies
  * cd to this repository
  * run `npm install`, ensure there are no errors in the console
- * run `npm run build -- --prod --aot` (this will output the compiled bundle to `/dist`)
+
+### Building
+ * run `npm run build -- --prod` (this will output the compiled bundle to `/dist`)
 
 ### Running
 * cd to the `/dist` folder

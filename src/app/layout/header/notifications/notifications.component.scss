@@ -17,15 +17,18 @@
       display: block;
     }
   }
+  &.list-group-item {
+    border-width: 1px 0;
+  }
   &.list-group-item:last-child {
-    border-bottom-width: 1px;
+    border-bottom-width: 0;
   }
 }
 .notifications_dismiss {
     display: none;
     position: absolute;
     top: 2px;
-    right: 4px;
+    right: 8px;
     font-size: 10px;
     font-weight: bold;
     color: #bbb;
@@ -41,4 +44,8 @@
     font-size: 16px;
     padding-right: 5px;
   }
+}
+
+.notifications_list_wrapper {
+  height: 320px;
 }

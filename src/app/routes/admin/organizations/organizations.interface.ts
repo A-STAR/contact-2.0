@@ -1,4 +1,5 @@
 import { IUser } from '../users/users.interface';
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 export interface IOrganization {
   id: number;
@@ -42,8 +43,8 @@ export enum IOrganizationDialogActionEnum {
 }
 
 export interface IOrganizationsState {
-  organizations: Array<IOrganization>;
-  selectedOrganizationId: number;
+  organizations: ITreeNode[];
+  selectedOrganization: ITreeNode;
   employees: Array<IEmployee>;
   notAddedEmployees: Array<IEmployee>;
   selectedEmployeeUserId: number;

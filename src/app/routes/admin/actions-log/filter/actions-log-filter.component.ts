@@ -1,28 +1,40 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IActionsLogFilterRequest } from './actions-log-filter.interface';
-import { IEmployee, IActionType } from '../actions-log.interface';
+import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
+import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
-import { toFullName } from '../actions-log.component';
+import { toFullName, timeToHourMinSec } from '../../../../core/utils';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid2-filter';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-actions-log-filter',
+  styleUrls: ['./actions-log-filter.component.scss'],
   templateUrl: './actions-log-filter.component.html',
-  styleUrls: ['./actions-log-filter.component.scss']
 })
 export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
 
   @Input() employeesRows;
   @Input() actionTypesRows;
-  @Output() search: EventEmitter<void> = new EventEmitter<void>();
+  @Output() export = new EventEmitter<void>();
+  @Output() search = new EventEmitter<void>();
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
@@ -64,16 +76,15 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   private _action: string;
 
-  actionTypesEqualsFn = (o1: IActionType, o2: IActionType) => o1.code === o2.code;
-
-  employeesRowsFilter: Function = (record: IEmployee) => {
-    const blockingEmployees: boolean = this.value[this.blockingEmployeesControl.controlName];
-    return blockingEmployees || !record.isBlocked;
-  }
+  get employeesRowsFilter(): Function {
+    return this.value[this.blockingEmployeesControl.controlName]
+      ? () => true
+      : (record: IEmployee) => !record.isBlocked;
+  };
 
   constructor(
     formBuilder: FormBuilder,
-    gridService: GridService
+    gridService: GridService,
   ) {
     super(formBuilder);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
@@ -83,53 +94,55 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   ngOnInit(): void {
     this.controls = [
       this.employeesControl = {
-        label: 'actionsLog.filter.employees.title',
         controlName: 'employees',
-        type: 'multiselect',
+        label: 'actionsLog.filter.employees.title',
+        placeholder: 'actionsLog.filter.employees.placeholder',
         required: true,
-        placeholder: 'actionsLog.filter.employees.placeholder'
+        type: 'multiselect',
       },
       this.blockingEmployeesControl = {
-        label: 'actionsLog.filter.employees.blocking',
         controlName: 'blockingEmployees',
+        label: 'actionsLog.filter.employees.blocking',
         type: 'checkbox',
       },
       this.actionTypesControl = {
-        label: 'actionsLog.filter.actionsTypes.title',
         controlName: 'actionsTypes',
-        type: 'multiselect',
+        label: 'actionsLog.filter.actionsTypes.title',
+        placeholder: 'actionsLog.filter.actionsTypes.placeholder',
         required: true,
-        placeholder: 'actionsLog.filter.actionsTypes.placeholder'
+        type: 'multiselect',
       },
       this.startDateControl = {
-        label: 'default.dateTimeRage.from',
         controlName: 'startDate',
+        label: 'default.dateTimeRage.from',
+        required: true,
         type: 'datepicker',
-        required: true
       },
       this.startTimeControl = {
         controlName: 'startTime',
+        label: null,
+        required: true,
         type: 'text',
-        required: true
-      } as IDynamicFormControl,
+      },
       this.endDateControl = {
-        label: 'default.dateTimeRage.to',
         controlName: 'endDate',
+        label: 'default.dateTimeRage.to',
+        required: true,
         type: 'datepicker',
-        required: true
       },
       this.endTimeControl = {
         controlName: 'endTime',
+        label: null,
+        required: true,
         type: 'text',
-        required: true
-      } as IDynamicFormControl,
+      },
     ];
 
     this.data = {
       [this.startTimeControl.controlName]: '00:00:00',
       [this.endTimeControl.controlName]: '23:59:59',
-      [this.startDateControl.controlName]: moment(Date.now()).startOf('month').format('DD.MM.YYYY'),
-      [this.endDateControl.controlName]: moment(Date.now()).endOf('month').format('DD.MM.YYYY')
+      [this.startDateControl.controlName]: moment().startOf('month').toDate(),
+      [this.endDateControl.controlName]: moment().endOf('month').toDate()
     };
 
     super.ngOnInit();
@@ -137,14 +150,14 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   get selectedEmployees(): string {
     if (Array.isArray(this.value.employees)) {
-      return (this.value.employees as IEmployee[] || []).map((record: IEmployee) => toFullName(record)).join(', ');
+      return (this.value.employees as IEmployee[] || []).map(record => toFullName(record)).join(', ');
     }
     return '';
   }
 
   get selectedActionTypes(): string {
     if (Array.isArray(this.value.actionsTypes)) {
-      return (this.value.actionsTypes as IActionType[] || []).map((record: IActionType) => record.name).join(', ');
+      return (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.name).join(', ');
     }
     return '';
   }
@@ -179,18 +192,45 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     this._action = 'actionTypes';
   }
 
-  onControlsStatusChanges(): void {
-    this.toolbarActions[0].visible = this.form.valid;
-  }
-
   onSearch(): void {
     this.search.emit();
   }
 
-  getFilterValues(): IActionsLogFilterRequest {
-    const request: IActionsLogFilterRequest = this.value;
-    request.employees = (request.employees as IEmployee[] || []).map((record: IEmployee) => record.id);
-    request.actionsTypes = (request.actionsTypes as IActionType[] || []).map((record: IActionType) => record.code);
-    return request;
+  onExport(): void {
+    this.export.emit();
+  }
+
+  getFilters(): FilterObject {
+    const endTime = timeToHourMinSec(this.value.endTime);
+    const startTime = timeToHourMinSec(this.value.startTime);
+
+    const endDate = moment(this.value.endDate).set(endTime).toISOString();
+    const startDate = moment(this.value.startDate).set(startTime).toISOString();
+
+    const actionsTypes = (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.code);
+    const employees = (this.value.employees as IEmployee[] || []).map(record => record.id);
+
+    return FilterObject
+      .create()
+      .and()
+      .addFilter(
+        FilterObject.create()
+          .setName('createDateTime')
+          .betweenOperator()
+          .setValues([ startDate, endDate ])
+      )
+      .addFilter(
+        FilterObject.create()
+          .setName('typeCode')
+          .inOperator()
+          .setValues(actionsTypes)
+      )
+      .addFilter(
+        FilterObject.create()
+          .setName('userId')
+          .inOperator()
+          .setValues(employees)
+      );
+
   }
 }

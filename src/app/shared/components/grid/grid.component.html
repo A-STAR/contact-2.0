@@ -1,17 +1,10 @@
 <div class="grid grid-default">
   <div class="grid-body">
-    <app-toolbar
-      *ngIf="hasToolbar"
-      class="app-toolbar"
-      [actions]="toolbarActions"
-      (actionClick)="onActionClick($event)"
-    >
-    </app-toolbar>
     <ngx-datatable
       class="material"
       [ngStyle]="styles"
       [cssClasses]="cssClasses"
-      [columns]="columns"
+      [columns]="columnDefs"
       [columnMode]="'force'"
       [footerHeight]="footerHeight"
       [rowHeight]="25"
@@ -24,7 +17,6 @@
       [scrollbarH]="false"
       (activate)="onActivate($event)"
       (select)="onSelectRow($event)"
-      (page)="onPage($event)"
     >
     </ngx-datatable>
   </div>

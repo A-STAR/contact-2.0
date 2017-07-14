@@ -11,7 +11,7 @@ import {
 } from './permissions.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from './permissions.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -105,13 +105,6 @@ export class PermissionsEffects {
     });
 
   @Effect()
-  selectRole$ = this.actions
-    .ofType(PermissionsService.ROLE_SELECTED)
-    .map(action => ({
-      type: action.payload.role ? PermissionsService.PERMISSION_FETCH : PermissionsService.PERMISSION_CLEAR
-    }));
-
-  @Effect()
   fetchRolePermissions$ = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .withLatestFrom(this.store)
@@ -183,22 +176,22 @@ export class PermissionsEffects {
   constructor(
     private actions: Actions,
     private store: Store<IAppState>,
-    private gridService: GridService,
+    private dataService: DataService,
     private permissionsService: PermissionsService,
     private notifications: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   private readPermissions(roleId: number): Observable<any> {
-    return this.gridService.read('/roles/{roleId}/permits', { roleId });
+    return this.dataService.read('/roles/{roleId}/permits', { roleId });
   }
 
   private add(role: IPermissionRole, permissionIds: number[]): Observable<any> {
-    return this.gridService.create(`/roles/{id}/permits`, { id: role.id }, { permitIds: permissionIds });
+    return this.dataService.create(`/roles/{id}/permits`, { id: role.id }, { permitIds: permissionIds });
   }
 
   private update(roleId: number, permission: IPermissionModel): Observable<any> {
-    return this.gridService.update(
+    return this.dataService.update(
       `/roles/{roleId}/permits/{permissionId}`,
       { roleId, permissionId: permission.id },
       permission
@@ -206,26 +199,26 @@ export class PermissionsEffects {
   }
 
   private delete(role: IPermissionRole, permissionId: number): Observable<any> {
-    return this.gridService.delete('/roles/{roleId}/permits/{permissionId}', { roleId: role.id, permissionId });
+    return this.dataService.delete('/roles/{roleId}/permits/{permissionId}', { roleId: role.id, permissionId });
   }
 
   private readRoles(): Observable<any> {
-    return this.gridService.read('/roles');
+    return this.dataService.read('/roles');
   }
 
   private addRole(role: any): Observable<any> {
-    return this.gridService.create('/roles', {}, role);
+    return this.dataService.create('/roles', {}, role);
   }
 
   private copyRole(originalRoleId: number, role: any): Observable<any> {
-    return this.gridService.create('/roles/{originalRoleId}/copy', { originalRoleId }, role);
+    return this.dataService.create('/roles/{originalRoleId}/copy', { originalRoleId }, role);
   }
 
   private updateRole(roleId: number, role: any): Observable<any> {
-    return this.gridService.update('/roles/{roleId}', { roleId }, role);
+    return this.dataService.update('/roles/{roleId}', { roleId }, role);
   }
 
   private deleteRole(roleId: number): Observable<any> {
-    return this.gridService.delete('/roles/{roleId}', {roleId});
+    return this.dataService.delete('/roles/{roleId}', {roleId});
   }
 }

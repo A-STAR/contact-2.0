@@ -6,15 +6,14 @@
 >
 </app-constant-edit>
 
-<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   selectionType="single"
-  [autoLoad]="false"
   [columns]="columns"
   columnTranslationKey="constants"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="rows$ | async"
   (onDblClick)="onBeforeEdit()"
-  (onSelect)="onSelect($event)"
->
+  (onSelect)="onSelect($event)">
 </app-grid>

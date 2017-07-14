@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 
-import { IConstant } from '../../../core/constants/constants.interface';
+import { IConstant } from './constants.interface';
 import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ConstantsService } from '../../../core/constants/constants.service';
+import { ConstantsService } from './constants.service';
+import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
@@ -20,7 +22,7 @@ import { GridComponent } from '../../../shared/components/grid/grid.component';
 @Component({
   selector: 'app-constants',
   templateUrl: './constants.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstantsComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ConstantsComponent';
@@ -68,9 +70,14 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   selectedRecord$: Observable<IConstant>;
 
+  hasViewPermission$: Observable<boolean>;
+
+  emptyMessage$: Observable<string>;
+
   constructor(
-    private gridService: GridService,
     private constantsService: ConstantsService,
+    private dataService: DataService,
+    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -84,18 +91,20 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const permission = 'CONST_VALUE_VIEW';
+    this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
-    this.permissionSub = this.userPermissionsService.has(permission)
-      .distinctUntilChanged()
+    this.permissionSub = this.hasViewPermission$
+      .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_view', param: { permission } });
+          this.notificationsService.error('constants.errors.view');
         } else {
           this.constantsService.fetch();
         }
       });
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -117,12 +126,9 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     if (typeCode === 4) {
       // convert the boolean to a number
       body[field] = Number(value);
-    } else if (typeCode === 2) {
-      // convert the date back to ISO8601
-      body[field] = this.valueConverterService.valueToIsoDate(value);
     }
 
-    this.gridService
+    this.dataService
       .update(this.dataSource.update, { id }, body)
       .take(1)
       .subscribe(

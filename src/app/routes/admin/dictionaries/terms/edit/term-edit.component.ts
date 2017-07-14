@@ -1,35 +1,49 @@
-import { Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from '@angular/core';
 
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
 
-import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
+import {
+  EntityBaseComponent,
+  TranslationFieldsExtension
+} from '../../../../../shared/components/entity/edit/entity.base.component';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { ILabeledValue } from "../../../../../core/converter/value/value-converter.interface";
+const NAME_TRANSLATIONS_CONTROL_NAME = 'nameTranslations';
+const TRANSLATED_NAME_CONTROL_NAME = 'translatedName';
+const NAME_CONTROL_NAME = 'name';
 
 @Component({
   selector: 'app-term-edit',
-  templateUrl: './term-edit.component.html'
+  templateUrl: './term-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnDestroy {
+export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnInit {
 
-  private termsSubscription;
-  private terms: ILabeledValue[];
+  @Input() languages: IUserLanguage[];
+  @Input() terms: ITerm[];
 
-  constructor(dictionariesService: DictionariesService) {
+  constructor() {
     super();
+  }
 
-    this.termsSubscription = dictionariesService.terms.subscribe((terms: ITerm[]) => {
-      this.terms = terms.map((term: ITerm) => {
-        return { label: term.name, value: term.id };
-      });
-    });
+  ngOnInit(): void {
+    if (this.isEditMode()) {
+      this.extensions.push(
+        new TranslationFieldsExtension<ITerm>(this, TRANSLATED_NAME_CONTROL_NAME, NAME_TRANSLATIONS_CONTROL_NAME)
+      );
+    }
+    super.ngOnInit();
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    return [
+    const filteredControls = [
       {
         label: 'terms.edit.code',
         controlName: 'code',
@@ -38,8 +52,25 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnD
       },
       {
         label: 'terms.edit.text',
-        controlName: 'name',
+        controlName: NAME_TRANSLATIONS_CONTROL_NAME,
+        type: 'select',
+        multiple: true,
+        required: true,
+        placeholder: 'dictionaries.placeholder.select.translation',
+        options: this.languages.map(userLanguage =>
+          ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
+        )
+      },
+      {
+        label: 'terms.edit.text',
+        controlName: NAME_CONTROL_NAME,
         type: 'text',
+        required: true
+      },
+      {
+        controlName: TRANSLATED_NAME_CONTROL_NAME,
+        type: 'text',
+        placeholder: 'dictionaries.placeholder.translatedName',
         required: true
       },
       {
@@ -57,7 +88,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnD
         label: 'terms.edit.parent',
         controlName: 'parentCode',
         type: 'select',
-        options: this.terms,
+        options: this.terms.map(term => ({ label: term.name, value: term.code })),
         optionsActions: [
           { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
@@ -66,11 +97,14 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnD
         label: 'terms.edit.closed',
         controlName: 'isClosed',
         type: 'checkbox'
-      },
-    ];
-  }
+      }
+    ].filter(
+      (control) => {
+        return this.isEditMode()
+          ? ![NAME_CONTROL_NAME].includes(control.controlName)
+          : ![NAME_TRANSLATIONS_CONTROL_NAME, TRANSLATED_NAME_CONTROL_NAME].includes(control.controlName);
+      });
 
-  ngOnDestroy(): void {
-    this.termsSubscription.unsubscribe();
+    return filteredControls as Array<IDynamicFormControl>;
   }
 }

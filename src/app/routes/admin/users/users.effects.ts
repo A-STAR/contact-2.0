@@ -8,22 +8,15 @@ import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser } from './users.interface';
 
-import { UsersService } from './users.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersEffects {
 
   private fetchAction = {
     type: UsersService.USERS_FETCH
-  };
-
-  private closeDialogAction = {
-    type: UsersService.USER_DIALOG_ACTION,
-    payload: {
-      dialogAction: null
-    }
   };
 
   @Effect()
@@ -45,11 +38,25 @@ export class UsersEffects {
             }
           }
         ])
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.fetch')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchUser$ = this.actions
+    .ofType(UsersService.USER_FETCH)
+    .switchMap((action: Action) => {
+      return this.readUser(action.payload.userId)
+        .map(response => ({
+          type: UsersService.USER_FETCH_SUCCESS,
+          payload: {
+            user: response.users[0]
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
     });
 
   @Effect()
@@ -61,7 +68,9 @@ export class UsersEffects {
         .mergeMap(response => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
@@ -71,39 +80,35 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.create')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.create')
+        ]);
     });
 
   @Effect()
   updateUser$ = this.actions
     .ofType(UsersService.USER_UPDATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [ action, store ]: [Action, IAppState] = data;
-      const { user, photo } = action.payload;
-      return this.updateUser(store.users.selectedUserId, user)
+    .switchMap((action: Action) => {
+      const { user, photo, userId } = action.payload;
+      return this.updateUser(userId, user)
         .mergeMap(() => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
             payload: {
-              userId: store.users.selectedUserId,
+              userId,
               photo
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.update')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.update')
+        ]);
     });
 
   @Effect()
@@ -112,9 +117,15 @@ export class UsersEffects {
     .switchMap(data => {
       const { userId, photo } = data.payload;
       return this.updatePhoto(userId, photo)
-        .mergeMap(() => [])
-        .catch(() => {
-          const message = photo ? 'users.messages.errors.updatePhoto' : 'users.messages.errors.deletePhoto';
+        .mergeMap(() => [
+          {
+            type: UsersService.USER_UPDATE_SUCCESS
+          }
+        ])
+        .catch(error => {
+          const message = photo ?
+            error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
+            'users.messages.errors.deletePhoto';
           return [
             this.notificationsService.createErrorAction(message)
           ];
@@ -123,30 +134,34 @@ export class UsersEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
 
   private readUsers(): Observable<any> {
-    return this.gridService.read('/users');
+    return this.dataService.read('/users');
+  }
+
+  private readUser(id: number): Observable<any> {
+    return this.dataService.read('/users/{id}', { id });
   }
 
   private createUser(user: IUser): Observable<any> {
-    return this.gridService.create('/users', {}, user);
+    return this.dataService.create('/users', {}, user);
   }
 
   private updateUser(userId: number, user: IUser): Observable<any> {
-    return this.gridService.update('/users/{userId}', { userId }, user);
+    return this.dataService.update('/users/{userId}', { userId }, user);
   }
 
   private updatePhoto(userId: number, photo: File | false): Observable<any> {
     if (photo === false) {
-      return this.gridService.delete('/users/{userId}/photo', { userId });
+      return this.dataService.delete('/users/{userId}/photo', { userId });
     }
 
     const data = new FormData();
     data.append('file', photo);
-    return this.gridService.create('/users/{userId}/photo', { userId }, data);
+    return this.dataService.create('/users/{userId}/photo', { userId }, data);
   }
 }

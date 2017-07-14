@@ -1,43 +1,49 @@
 <app-dict-edit
-  *ngIf="isEntityBeingCreated"
+  *ngIf="isReadyForCreating | async"
   [mode]="'create'"
   [title]="'dictionaries.create.title'"
+  [languages]="languages | async"
+  [dictionaries]="dictionaries | async"
+  [dictionaryTermTypes]="dictionaryTermTypes | async"
   (submit)="onCreateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dict-edit
-  *ngIf="isEntityBeingEdited && isReadyForEditing"
+  *ngIf="isReadyForEditing | async"
   [mode]="'update'"
   [title]="'dictionaries.edit.title'"
-  [editedEntity]="selectedEntity"
+  [editedEntity]="selectedDictionary | async"
+  [languages]="languages | async"
+  [dictionaries]="dictionaries | async"
+  [dictionaryTermTypes]="dictionaryTermTypes | async"
   (submit)="onUpdateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dialog-action
-  *ngIf="isEntityBeingRemoved"
+  *ngIf="isEntityBeingRemoved | async"
   [titleTranslationKey]="'dictionaries.remove.title'"
   [actionTranslationKey]="'dictionaries.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
-  [messageParams]="selectedEntity"
+  [messageParams]="selectedDictionary | async"
   [actionMode]="'danger'"
   (action)="onRemoveSubmit()"
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2
+<app-toolbar-2 class="bordered"
   [items]="toolbarItems">
 </app-toolbar-2>
 
 <app-grid
   selectionType="single"
-  [autoLoad]="false"
+  [emptyMessage]="emptyMessage$ | async"
   [styles]="{height: '200px'}"
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
-  [editPermission]="'DICT_EDIT'"
-  [rows]="rows"
-  (onDblClick)="onEdit()"
+  [rows]="dictionaries | async"
+  [allowDblClick]="canEdit | async"
+  (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

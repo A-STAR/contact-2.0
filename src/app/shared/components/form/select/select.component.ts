@@ -4,7 +4,6 @@ import {
   Output,
   EventEmitter,
   ElementRef,
-  OnInit,
   forwardRef,
   ViewChild,
   ChangeDetectionStrategy,
@@ -15,9 +14,11 @@ import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
-import { ISelectionAction, OptionsBehavior, IdType, SelectInputValueType } from './select-interfaces';
+import { ISelectionAction } from './select-interfaces';
 
 import { SelectionToolsPlugin } from './selection-tools.plugin';
+
+export type SelectInputValueType = number|string|ILabeledValue[];
 
 @Component({
   selector: 'app-select',
@@ -32,26 +33,20 @@ import { SelectionToolsPlugin } from './selection-tools.plugin';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
+export class SelectComponent implements ControlValueAccessor {
 
-  // Inputs with presets
   @Input() placeholder = '';
   @Input() filterEnabled = false;
-
-  @Input() styles: CSSStyleDeclaration;
+  @Input() options: ILabeledValue[] = [];
   @Input() actions: Array<ISelectionAction> = [];
 
-  // Outputs
+  @Input() styles: CSSStyleDeclaration;
+
   @Output() onSelect: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
-  @Output() onSelectedItems: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
   @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter<ISelectionAction>();
 
   @ViewChild('input') inputRef: ElementRef;
 
-  // Template fields
-  rawData: ILabeledValue[] = [];
-
-  activeOption: ILabeledValue;
   sortType: string;
   optionsOpened = false;
 
@@ -61,44 +56,35 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   private _closableSelectedItem = true;
   private _readonly = true;
   private _multiple = false;
-  private behavior: OptionsBehavior;
-
-  // Private fields
   private _active: ILabeledValue[];
   private _autoAlignEnabled = false;
   private selectionToolsPlugin: SelectionToolsPlugin;
 
   private onChange: Function = () => {};
-  private onTouched: Function = () => {};
-
-  @Input()
-  set options(value: ILabeledValue[]) {
-    this.rawData = value || [];
-  }
 
   @Input()
   set closableSelectedItem(value: boolean) {
-    this._closableSelectedItem = this.toPropertyValue(value, this._closableSelectedItem);
+    this._closableSelectedItem = this.nvl(value, this._closableSelectedItem);
   }
 
   @Input()
   set readonly(value: boolean) {
-    this._readonly = this.toPropertyValue(value, this._readonly);
+    this._readonly = this.nvl(value, this._readonly);
   }
 
   @Input()
   set autoAlignEnabled(autoAlignEnabled: boolean) {
-    this._autoAlignEnabled = this.toPropertyValue(autoAlignEnabled, this._autoAlignEnabled);
+    this._autoAlignEnabled = this.nvl(autoAlignEnabled, this._autoAlignEnabled);
   }
 
   @Input()
   set multiple(value: boolean) {
-    this._multiple = this.toPropertyValue(value, this._multiple);
+    this._multiple = this.nvl(value, this._multiple);
   }
 
   @Input()
   set controlDisabled(value: boolean) {
-    this._disabled = this.toPropertyValue(value, this._disabled);
+    this._disabled = this.nvl(value, this._disabled);
 
     if (this._disabled) {
       this.hideOptions();
@@ -126,7 +112,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   get disabled(): boolean {
-    return this._disabled;
+    return this._disabled || undefined;
   }
 
   get inputMode(): boolean {
@@ -142,8 +128,12 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this._active = activeValue as ILabeledValue[] || [];
 
     if (['string', 'number'].includes(typeof this._active)) {
-      const selectedRawItem: ILabeledValue = this.lookupAtRawData(activeValue as string | number);
-      this._active = selectedRawItem ? [selectedRawItem] : [ { value: this._active } ];
+      const option = this.lookupAtOptions(activeValue as string | number);
+      if (option) {
+        this._active = [ this.fromOption(option) ];
+      } else {
+        this._active = [ { value: this._active } ];
+      }
     }
     if (this.canSelectMultipleItem && this.multiple && this._active.length) {
       this._active[0].selected = true;
@@ -160,10 +150,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.selectionToolsPlugin = new SelectionToolsPlugin(this);
   }
 
-  ngOnInit(): void {
-    this.behavior = new GenericBehavior(this);
-  }
-
   writeValue(value: any): void {
     this.active = value;
   }
@@ -173,7 +159,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
-    this.onTouched = fn;
   }
 
   isItemContextExist(item: ILabeledValue): boolean {
@@ -183,7 +168,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   canCloseItem(item: ILabeledValue): boolean {
     return this.closableSelectedItem
       && !!this._active.length
-      && this.lookupAtRawData(item.value).canRemove !== false;
+      && this.lookupAtOptions(item.value).canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
@@ -197,10 +182,18 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     return !!this._active.length ?  this.extractDisplayValue(this._active[0]) : (this.placeholder || '');
   }
 
+  get filteredActiveItems(): ILabeledValue[] {
+    return (this.active as ILabeledValue[]).filter(value => !value.removed);
+  }
+
   extractDisplayValue(item: ILabeledValue): string|number {
-    return item.label
-      ? this.translateService.instant(item.label)
-      : item.value;
+    let itemAtOptions = item;
+    if (!itemAtOptions.label) {
+      itemAtOptions = this.lookupAtOptions(item.value) || item;
+    }
+    return itemAtOptions.label
+      ? this.translateService.instant(itemAtOptions.label)
+      : itemAtOptions.value;
   }
 
   toDisplayValue(item: ILabeledValue): SafeHtml {
@@ -209,9 +202,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     if (item.label) {
       displayValue = item.label;
     } else {
-      const itemAtRawData: ILabeledValue = this.lookupAtRawData(item.value);
-      if (itemAtRawData) {
-        displayValue = itemAtRawData.label;
+      const option = this.lookupAtOptions(item.value);
+      if (option) {
+        displayValue = option.label;
       }
     }
     return this.sanitizer.bypassSecurityTrustHtml(
@@ -221,38 +214,20 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     );
   }
 
-  private lookupAtRawData(value: number|string): ILabeledValue {
-    return this.rawData
-      .find((item: ILabeledValue) => String(item.value) === String(value));
-  }
-
-  remove(item: ILabeledValue): void {
-    if (this.canSelectMultipleItem) {
-      item.selected = false;
-    }
-    item.removed = true;
-
-    if (this.multiple === true && this._active) {
-      this.active = this._active.filter((i: ILabeledValue) => i !== item);
-    } else if (this.multiple === false) {
-      this.active = [];
-    }
-  }
-
   clickedOutside(): void {
     this._inputMode = false;
     this.optionsOpened = false;
   }
 
-  activeItemClick(item: ILabeledValue, $event: MouseEvent): void {
+  onActiveItemClick(item: ILabeledValue, $event: MouseEvent): void {
     this.stopEvent($event);
 
     if (this.canSelectMultipleItem) {
-      this._active.forEach((i: ILabeledValue) => i.selected = false);
+      this._active.forEach(labeledValue => labeledValue.selected = false);
       if (!item.selected) {
         item.selected = true;
       }
-      this.onSelectedItems.emit(this.rawData);
+      this.emitSelectActive();
     }
   }
 
@@ -262,8 +237,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
   onRemoveItem(item: ILabeledValue, $event: Event): void {
     this.stopEvent($event);
-    this.remove(item);
-    this.onSelectedItems.emit(this.rawData);
+    item.selected = false;
+    item.removed = true;
+
+    this.selectAtLeastOne();
+    this.emitSelectActive();
   }
 
   onInputClick($event: Event): void {
@@ -271,74 +249,26 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.hideOptions();
   }
 
-  matchClick($event: Event): void {
+  onMatchClick($event: Event): void {
     this.stopEvent($event);
 
-    if (this._disabled === true || !this.canSelectMultiItem()) {
+    if (this._disabled === true) {
       return;
     }
 
     this._inputMode = !this._inputMode;
-    if (this._inputMode === true && ((this.multiple === true && $event) || this.multiple === false)) {
-      this.focusToInput();
+    if (this._inputMode) {
       this.open();
     } else {
       this.hideOptions();
     }
   }
 
-  protected mainClick(event: any): void {
-    if (this._inputMode === true || this._disabled === true || !this.canSelectMultiItem()) {
-      return;
-    }
-    if (event.keyCode === 46) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 8) {
-      event.preventDefault();
-      return;
-    }
-    if (event.keyCode === 9 || event.keyCode === 13 ||
-      event.keyCode === 27 || (event.keyCode >= 37 && event.keyCode <= 40)) {
-      event.preventDefault();
-      return;
-    }
-    this._inputMode = true;
-    const value = String
-      .fromCharCode(96 <= event.keyCode && event.keyCode <= 105 ? event.keyCode - 48 : event.keyCode)
-      .toLowerCase();
-    this.focusToInput(value);
-    this.open();
-    const target = event.target || event.srcElement;
-    target.value = value;
-  }
-
-  protected selectActive(value: ILabeledValue): void {
-    this.activeOption = value;
-  }
-
-  protected isActive(labeledValue: ILabeledValue): boolean {
-    return !!this._active.find((v: ILabeledValue) => v.value === labeledValue.value);
-  }
-
-  private focusToInput(value: string = ''): void {
-    setTimeout(() => {
-      const el = this.getInputElement();
-      if (el) {
-        el.value = value;
-      }
-    }, 0);
-  }
-
-  private getInputElement(): any {
-    return this.element.nativeElement.querySelector('div.ui-select-container > input');
+  isActive(option: ILabeledValue): boolean {
+    return !!this._active.find(v => v.value === option.value && !v.removed);
   }
 
   private open(): void {
-    if (this.rawData.length > 0) {
-      this.behavior.first();
-    }
     this.optionsOpened = true;
   }
 
@@ -347,36 +277,28 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     this.optionsOpened = false;
   }
 
-  onSelectMatch($event: Event, value: ILabeledValue): void {
+  onSelectMatch($event: Event, option: ILabeledValue): void {
     this.stopEvent($event);
 
-    if (!this.rawData.length) {
-      return;
-    }
-    if (this.multiple === true) {
-      this._active.push(value);
-      if (!this._active.find((item: ILabeledValue) => item.selected)) {
-        // If no one has been selected yet
-        value.selected = true;
+    if (this.multiple) {
+      if (this.isActive(option)) {
+        this.hideOptions();
+        return;
       }
-    } else if (this.multiple === false) {
-      this.active = [value];
+      let item = this._active.find(v => v.value === option.value);
+      if (item) {
+        delete item.removed;
+      } else {
+        this._active.push(item = this.fromOption(option));
+      }
+      this.selectAtLeastOne();
+    } else {
+      this._active = [ this.fromOption(option) ];
     }
-    this.onSelect.emit(this._active);
-    this.onTouched();
     this.onChange(this._active);
+    this.emitSelectActive();
 
     this.hideOptions();
-    if (this.multiple === true) {
-      this.focusToInput('');
-    } else {
-      this.focusToInput(value.label);
-    }
-    this.onSelectedItems.emit(this.rawData);
-  }
-
-  private canSelectMultiItem(): boolean {
-    return this.rawData.length > this._active.length;
   }
 
   private stopEvent($event: Event): void {
@@ -384,81 +306,28 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     $event.preventDefault();
   }
 
-  private toPropertyValue(value: boolean, defaultValue: boolean): boolean {
+  private nvl(value: boolean, defaultValue: boolean): boolean {
     return R.isNil(value) ? defaultValue : value;
   }
-}
 
-export class Behavior {
-  optionsMap: Map<string, number> = new Map<string, number>();
-
-  actor: SelectComponent;
-
-  constructor(actor: SelectComponent) {
-    this.actor = actor;
+  private lookupAtOptions(value: number|string): ILabeledValue {
+    return (this.options || []).find(item => String(item.value) === String(value));
   }
 
-  ensureHighlightVisible(optionsMap: Map<string, number> = void 0): void {
-    const container = this.actor.element.nativeElement.querySelector('.ui-select-choices-content');
-    if (!container) {
-      return;
-    }
-    const choices = container.querySelectorAll('.ui-select-choices-row');
-    if (choices.length < 1) {
-      return;
-    }
-    const activeIndex = this.getActiveIndex(optionsMap);
-    if (activeIndex < 0) {
-      return;
-    }
-    const highlighted: any = choices[activeIndex];
-    if (!highlighted) {
-      return;
-    }
-    const posY: number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
-    const height: number = container.offsetHeight;
-    if (posY > height) {
-      container.scrollTop += posY - height;
-    } else if (posY < highlighted.clientHeight) {
-      container.scrollTop -= highlighted.clientHeight - posY;
+  private fromOption(option: ILabeledValue): ILabeledValue {
+    return { value: option.value };
+  }
+
+  private selectAtLeastOne(): void {
+    if (!this._active.find(v => v.selected && !v.removed)) {
+      const item = this._active.find(v => !v.selected && !v.removed);
+      if (item) {
+        item.selected = true;
+      }
     }
   }
 
-  private getActiveIndex(optionsMap: Map<IdType, number> = void 0): number {
-    let ai = this.actor.rawData.indexOf(this.actor.activeOption);
-    if (ai < 0 && optionsMap !== void 0) {
-      ai = optionsMap.get(this.actor.activeOption.value);
-    }
-    return ai;
-  }
-}
-
-export class GenericBehavior extends Behavior implements OptionsBehavior {
-  constructor(actor: SelectComponent) {
-    super(actor);
-  }
-
-  first(): void {
-    this.actor.activeOption = this.actor.rawData[0];
-    super.ensureHighlightVisible();
-  }
-
-  last(): void {
-    this.actor.activeOption = this.actor.rawData[this.actor.rawData.length - 1];
-    super.ensureHighlightVisible();
-  }
-
-  prev(): void {
-    const index = this.actor.rawData.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
-      .rawData[index - 1 < 0 ? this.actor.rawData.length - 1 : index - 1];
-    super.ensureHighlightVisible();
-  }
-
-  next(): void {
-    const index = this.actor.rawData.indexOf(this.actor.activeOption);
-    this.actor.activeOption = this.actor
-      .rawData[index + 1 > this.actor.rawData.length - 1 ? 0 : index + 1];
-    super.ensureHighlightVisible();
+  private emitSelectActive(): void {
+    this.onSelect.emit(this._active);
   }
 }

@@ -1,5 +1,5 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+
 import { ISelectionAction } from '../select/select-interfaces';
 import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
 
@@ -37,6 +37,8 @@ export interface IDynamicFormControl {
   width?: number;
   // image height (px)
   height?: number;
+  // options for dialog input
+  action?: () => void;
 }
 
 export type ControlTypes = 'number'
@@ -49,7 +51,8 @@ export type ControlTypes = 'number'
   | 'hidden'
   | 'checkbox'
   | 'multiselect'
-  | 'image';
+  | 'image'
+  | 'dialog';
 
 export interface IValue {
   [key: string]: any;
@@ -59,7 +62,7 @@ export interface IControls {
   [key: string]: FormControl;
 }
 
-export interface ISelectedControlItemsPayload {
+export interface ISelectItemsPayload {
   control: IDynamicFormControl;
   items: ILabeledValue[];
 }

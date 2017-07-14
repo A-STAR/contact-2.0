@@ -16,7 +16,8 @@ export class UserLanguagesService {
   constructor(private store: Store<IAppState>) {}
 
   get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved);
+    return this.state.map(state => state.isResolved)
+      .filter(isResolved => isResolved !== null);
   }
 
   createRefreshAction(): Action {

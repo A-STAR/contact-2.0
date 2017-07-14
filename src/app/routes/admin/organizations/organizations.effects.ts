@@ -14,9 +14,10 @@ import {
   IOrganization
 } from './organizations.interface';
 
-import { OrganizationsService } from './organizations.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { OrganizationsService } from './organizations.service';
+import { OrganizationsTreeService } from './organizations-tree/organizations-tree.service';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -24,12 +25,17 @@ export class OrganizationsEffects {
   @Effect()
   fetchOrganizations$ = this.actions
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
-    .switchMap((action: Action) => {
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
       return this.readOrganizations()
-        .map(data => ({
+        .map(response => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: {
-            organizations: data.organizations
+            organizations: this.converterService.toTreeNodes(
+              response.organizations,
+              this.organizationsService.getExpandedNodes(store.organizations.organizations)
+            )
           }
         }))
         .catch(() => {
@@ -51,17 +57,20 @@ export class OrganizationsEffects {
   @Effect()
   createOrganization$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_CREATE)
-    .switchMap((action: Action) => {
-      const { parentId, organization } = action.payload;
-      return this.createOrganization(parentId, organization)
-        .mergeMap(data => [
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      const parentId = store.organizations.selectedOrganization ? store.organizations.selectedOrganization.id : null;
+      return this.createOrganization(parentId, action.payload)
+        .mergeMap(result => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
           },
           {
             type: OrganizationsService.DIALOG_ACTION,
             payload: {
-              dialogAction: null
+              dialogAction: null,
+              selectedOrganization: null
             }
           }
         ])
@@ -77,7 +86,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.updateOrganization(store.organizations.selectedOrganizationId, action.payload.organization)
+      return this.updateOrganization(store.organizations.selectedOrganization.id, action.payload.organization)
         .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -122,7 +131,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteOrganization(store.organizations.selectedOrganizationId)
+      return this.deleteOrganization(store.organizations.selectedOrganization.id)
         .mergeMap(() => [
           {
             type: OrganizationsService.ORGANIZATIONS_FETCH
@@ -147,25 +156,12 @@ export class OrganizationsEffects {
     });
 
   @Effect()
-  selectOrganization$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_SELECT)
-    .switchMap(action => {
-      return action.payload.organizationId ?
-        Observable.of({
-          type: OrganizationsService.EMPLOYEES_FETCH
-        }) :
-        Observable.of({
-          type: OrganizationsService.EMPLOYEES_CLEAR
-        });
-    });
-
-  @Effect()
   fetchEmployees$ = this.actions
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readEmployees(store.organizations.selectedOrganizationId)
+      return this.readEmployees(store.organizations.selectedOrganization.id)
         .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
           payload: {
@@ -194,7 +190,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.readNotAddedEmployees(store.organizations.selectedOrganizationId)
+      return this.readNotAddedEmployees(store.organizations.selectedOrganization.id)
         .map((response: IEmployeesResponse) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
           payload: {
@@ -213,7 +209,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      return this.createEmployee(store.organizations.selectedOrganizationId, action.payload.employee)
+      return this.createEmployee(store.organizations.selectedOrganization.id, action.payload.employee)
         .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
@@ -238,7 +234,7 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
       return this.updateEmployee(
-        store.organizations.selectedOrganizationId,
+        store.organizations.selectedOrganization.id,
         store.organizations.selectedEmployeeUserId,
         action.payload.employee
       )
@@ -265,7 +261,7 @@ export class OrganizationsEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-      return this.deleteEmployee(store.organizations.selectedOrganizationId, store.organizations.selectedEmployeeUserId)
+      return this.deleteEmployee(store.organizations.selectedOrganization.id, store.organizations.selectedEmployeeUserId)
         .mergeMap(() => [
           {
             type: OrganizationsService.EMPLOYEES_FETCH
@@ -285,44 +281,46 @@ export class OrganizationsEffects {
 
   constructor(
     private actions: Actions,
-    private gridService: GridService,
+    private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
+    private converterService: OrganizationsTreeService,
+    private organizationsService: OrganizationsService,
   ) {}
 
   private readOrganizations(): Observable<any> {
-    return this.gridService.read('/api/organizations');
+    return this.dataService.read('/api/organizations');
   }
 
   private createOrganization(parentId: number, organization: any): Observable<any> {
-    return this.gridService.create('/api/organizations', {}, { ...organization, parentId });
+    return this.dataService.create('/api/organizations', {}, { ...organization, parentId });
   }
 
   private updateOrganization(organizationId: number, organization: any): Observable<any> {
-    return this.gridService.update('/api/organizations/{organizationId}', { organizationId }, organization);
+    return this.dataService.update('/api/organizations/{organizationId}', { organizationId }, organization);
   }
 
   private deleteOrganization(organizationId: number): Observable<any> {
-    return this.gridService.delete('/api/organizations/{organizationId}', { organizationId });
+    return this.dataService.delete('/api/organizations/{organizationId}', { organizationId });
   }
 
   private readEmployees(organizationId: number): Observable<any> {
-    return this.gridService.read('/api/organizations/{organizationId}/users', { organizationId });
+    return this.dataService.read('/api/organizations/{organizationId}/users', { organizationId });
   }
 
   private readNotAddedEmployees(organizationId: number): Observable<any> {
-    return this.gridService.read('/api/organizations/{organizationId}/users/notadded', { organizationId });
+    return this.dataService.read('/api/organizations/{organizationId}/users/notadded', { organizationId });
   }
 
   private createEmployee(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {
-    return this.gridService.create('/api/organizations/{organizationId}/users', { organizationId }, employee);
+    return this.dataService.create('/api/organizations/{organizationId}/users', { organizationId }, employee);
   }
 
   private updateEmployee(organizationId: number, userId: number, employee: IEmployeeUpdateRequest): Observable<any> {
-    return this.gridService.update('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
+    return this.dataService.update('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
   }
 
   private deleteEmployee(organizationId: number, userId: number): Observable<any> {
-    return this.gridService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
+    return this.dataService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
   }
 }

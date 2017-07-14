@@ -15,7 +15,8 @@ export class UserPermissionsService {
   constructor(private store: Store<IAppState>) {}
 
   get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved);
+    return this.state.map(state => state.isResolved)
+      .filter(isResolved => isResolved !== null);
   }
 
   createRefreshAction(): Action {
@@ -30,24 +31,24 @@ export class UserPermissionsService {
   }
 
   has(permissionName: string): Observable<boolean> {
-    return this.state.map(state => this.userHasPermission(state, permissionName));
+    return this.state.map(state => this.userHasPermission(state, permissionName)).distinctUntilChanged();
   }
 
   hasOne(permissionNames: Array<string>): Observable<boolean> {
     return this.state.map(state =>
       permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(state, permissionName), false)
-    );
+    ).distinctUntilChanged();
   }
 
   hasAll(permissionNames: Array<string>): Observable<boolean> {
     return this.state.map(state =>
       permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(state, permissionName), true)
-    );
+    ).distinctUntilChanged();
   }
 
   private userHasPermission(state: IUserPermissionsState, permissionName: string): boolean {
     const permission = state.permissions[permissionName];
-    return permission && permission.valueB === true;
+    return permission && permission.valueB;
   }
 
   private get state(): Observable<IUserPermissionsState> {

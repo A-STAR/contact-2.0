@@ -7,6 +7,7 @@ import { IPermissionsDialogEnum } from '../permissions.interface';
 import { IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -19,7 +20,7 @@ export class RolesComponent implements OnDestroy {
 
   dialog: IPermissionsDialogEnum = null;
 
-  rows: Array<IPermissionRole>;
+  roles$: Observable<Array<IPermissionRole>>;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -56,7 +57,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchRoles(),
-      enabled: this.userPermissionsService.has('PERMIT_VIEW')
+      enabled: this.userPermissionsService.has('ROLE_VIEW')
     },
   ];
 
@@ -66,23 +67,36 @@ export class RolesComponent implements OnDestroy {
     { prop: 'comment', width: 200 },
   ];
 
-  private permissionsServiceSub: Subscription;
+  hasRoleViewPermission$: Observable<boolean>;
+
+  emptyMessage$: Observable<string>;
+
+  private permissionsServiceSubscription: Subscription;
+  private hasViewPermissionSubscription: Subscription;
 
   constructor(
+    private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.permissionsService.fetchRoles();
-
-    this.permissionsServiceSub = this.permissionsService.permissions.subscribe(state => {
-      this.rows = state.roles;
+    this.permissionsServiceSubscription = this.permissionsService.permissions.subscribe(state => {
       this.dialog = state.dialog;
       this.editedEntity = state.currentRole;
     });
+
+    this.roles$ = this.permissionsService.permissions.map(state => state.roles);
+
+    this.hasRoleViewPermission$ = this.userPermissionsService.has('ROLE_VIEW');
+    this.hasViewPermissionSubscription = this.hasRoleViewPermission$.subscribe(hasViewPermission =>
+      hasViewPermission ? this.permissionsService.fetchRoles() : this.permissionsService.clearRoles()
+    );
+
+    this.emptyMessage$ = this.hasRoleViewPermission$.map(hasPermission => hasPermission ? null : 'roles.roles.errors.view');
   }
 
   ngOnDestroy(): void {
-    this.permissionsServiceSub.unsubscribe();
+    this.permissionsServiceSubscription.unsubscribe();
+    this.hasViewPermissionSubscription.unsubscribe();
   }
 
   get isRoleBeingCreated(): boolean {
@@ -102,7 +116,13 @@ export class RolesComponent implements OnDestroy {
   }
 
   onEdit(): void {
-    this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
+    this.userPermissionsService.has('ROLE_EDIT')
+      .take(1)
+      .subscribe(hasEditPermission => {
+        if (hasEditPermission) {
+          this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
+        }
+      });
   }
 
   onSelect(role: IPermissionRole): void {

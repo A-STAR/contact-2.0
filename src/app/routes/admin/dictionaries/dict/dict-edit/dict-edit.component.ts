@@ -1,12 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from '@angular/core';
 
-import { IDictionary } from '../../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { ILabeledValue } from '../../../../../core/converter/value/value-converter.interface';
-
-import { UserLanguagesService } from '../../../../../core/user/languages/user-languages.service';
-import { DictionariesService } from '../../../../../core/dictionaries/dictionaries.service';
+import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
 
 import { EntityBaseComponent, TranslationFieldsExtension } from '../../../../../shared/components/entity/edit/entity.base.component';
 
@@ -16,36 +18,17 @@ const NAME_CONTROL_NAME = 'name';
 
 @Component({
   selector: 'app-dict-edit',
-  templateUrl: './dict-edit.component.html'
+  templateUrl: './dict-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit, OnDestroy {
+export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit {
 
-  private languagesSubscription;
-  private dictionariesSubscription;
-  private languages: ILabeledValue[];
-  private dictionaries: ILabeledValue[];
-  private dictionaryTermTypesSubscription;
-  private dictionaryTermTypes: ILabeledValue[];
+  @Input() languages: IUserLanguage[];
+  @Input() dictionaries: IDictionary[];
+  @Input() dictionaryTermTypes: ITerm[];
 
-  constructor(
-    private userLanguagesService: UserLanguagesService,
-    private dictionariesService: DictionariesService
-  ) {
+  constructor() {
     super();
-
-    this.languagesSubscription = userLanguagesService.userLanguages.subscribe(terms => {
-      this.languages = terms.map(userLanguage =>
-        ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
-      );
-    });
-    this.dictionariesSubscription = dictionariesService.dictionaries.subscribe(dictionaries => {
-      this.dictionaries = dictionaries.map(dictionary =>
-        ({ label: dictionary.name, value: dictionary.code }));
-    });
-    this.dictionaryTermTypesSubscription = dictionariesService.dictionaryTermTypes.subscribe(terms => {
-      this.dictionaryTermTypes = terms.map(term =>
-        ({ label: term.name, value: term.code }));
-    });
   }
 
   ngOnInit(): void {
@@ -70,8 +53,11 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: NAME_TRANSLATIONS_CONTROL_NAME,
         type: 'select',
         multiple: true,
+        required: true,
         placeholder: 'dictionaries.placeholder.select.translation',
-        options: this.languages
+        options: this.languages.map(userLanguage =>
+          ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
+        )
       },
       {
         label: 'dictionaries.edit.name',
@@ -83,6 +69,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: TRANSLATED_NAME_CONTROL_NAME,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',
+        required: true
       },
       {
         label: 'dictionaries.edit.type',
@@ -99,7 +86,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         label: 'dictionaries.edit.parent',
         controlName: 'parentCode',
         type: 'select',
-        options: this.dictionaries,
+        options: this.dictionaries.map(dictionary => ({ label: dictionary.name, value: dictionary.code })),
         optionsActions: [
           { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
         ]
@@ -109,7 +96,7 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
         controlName: 'termTypeCode',
         type: 'select',
         required: true,
-        options: this.dictionaryTermTypes,
+        options: this.dictionaryTermTypes.map(term => ({ label: term.name, value: term.code })),
         optionsActions: [
           { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ]
@@ -117,16 +104,10 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
     ].filter(
       (control) => {
         return this.isEditMode()
-          ? [NAME_CONTROL_NAME].indexOf(control.controlName) === -1
-          : [NAME_TRANSLATIONS_CONTROL_NAME, TRANSLATED_NAME_CONTROL_NAME].indexOf(control.controlName) === -1;
+          ? ![NAME_CONTROL_NAME].includes(control.controlName)
+          : ![NAME_TRANSLATIONS_CONTROL_NAME, TRANSLATED_NAME_CONTROL_NAME].includes(control.controlName);
       });
 
     return filteredControls as Array<IDynamicFormControl>;
-  }
-
-  ngOnDestroy(): void {
-    this.languagesSubscription.unsubscribe();
-    this.dictionariesSubscription.unsubscribe();
-    this.dictionaryTermTypesSubscription.unsubscribe();
   }
 }

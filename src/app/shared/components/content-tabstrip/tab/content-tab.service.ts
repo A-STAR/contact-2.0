@@ -8,7 +8,7 @@ export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   get tabs(): ITab[] {
     return this._tabs;
@@ -56,5 +56,11 @@ export class ContentTabService {
 
   getActiveIndex(): number {
     return this._activeIndex;
+  }
+
+  navigate(url: string): void {
+    const i = this._activeIndex;
+    this.router.navigate([url])
+      .then(() => this.removeTab(i));
   }
 }

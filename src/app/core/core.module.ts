@@ -11,20 +11,26 @@ import { environment } from '../../environments/environment';
 
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
-import { ConstantsEffects } from './constants/constants.effects';
-import { ConstantsService } from './constants/constants.service';
+import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
+import { DataService } from './data/data.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { LookupEffects } from './lookup/lookup.effects';
+import { LookupService } from './lookup/lookup.service';
 import { MenuService } from './menu/menu.service';
+import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
+import { MetadataEffects } from './metadata/metadata.effects';
 import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
+import { UserDictionariesEffects } from './user/dictionaries/user-dictionaries.effects';
+import { UserDictionariesService } from './user/dictionaries/user-dictionaries.service';
 import { UserLanguagesEffects } from './user/languages/user-languages.effects';
 import { UserLanguagesService } from './user/languages/user-languages.service';
 import { UserPermissionsEffects } from './user/permissions/user-permissions.effects';
@@ -36,12 +42,14 @@ import { rootReducer } from './state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
-    EffectsModule.run(ConstantsEffects),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(UserConstantsEffects),
+    EffectsModule.run(UserDictionariesEffects),
     EffectsModule.run(UserLanguagesEffects),
     EffectsModule.run(UserPermissionsEffects),
+    EffectsModule.run(MetadataEffects),
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
@@ -51,17 +59,21 @@ import { rootReducer } from './state/root.reducer';
   providers: [
     AuthHttpService,
     AuthService,
+    ContentTabService,
     EntityTranslationsService,
-    ConstantsService,
     DictionariesService,
     DatePipe,
+    DataService,
     JwtHelper,
+    LookupService,
     MenuService,
+    MetadataService,
     NotificationsService,
     SettingsService,
     ThemesService,
     TranslateService,
     UserConstantsService,
+    UserDictionariesService,
     UserLanguagesService,
     UserPermissionsService,
     ValueConverterService,

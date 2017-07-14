@@ -35,10 +35,24 @@ export function permissionReducer(
         ...state,
         currentRole: action.payload.role
       };
+    case PermissionsService.ROLE_CLEAR:
+      return {
+        ...state,
+        roles: [],
+        currentRole: null,
+        rawPermissions: [],
+        currentPermission: null
+      };
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return {
         ...state,
         rawPermissions: action.payload.permissions,
+      };
+    case PermissionsService.PERMISSION_CLEAR:
+      return {
+        ...state,
+        rawPermissions: [],
+        currentPermission: null
       };
 
     /*

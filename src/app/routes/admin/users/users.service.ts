@@ -1,27 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IUser, IUsersState, IUserDialogActionEnum } from './users.interface';
+import { IUser, IUsersState } from './users.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { DataService } from '../../../core/data/data.service';
 
 @Injectable()
 export class UsersService {
   static USERS_FETCH         = 'USERS_FETCH';
   static USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS';
+  static USER_FETCH          = 'USER_FETCH';
+  static USER_FETCH_SUCCESS  = 'USER_FETCH_SUCCESS';
   static USERS_CLEAR         = 'USERS_CLEAR';
   static USER_CREATE         = 'USER_CREATE';
   static USER_UPDATE         = 'USER_UPDATE';
   static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
+  static USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
   static USER_SELECT         = 'USER_SELECT';
-  static USER_DIALOG_ACTION  = 'USER_DIALOG_ACTION';
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
-    private gridService: GridService,
-    private store: Store<IAppState>
+    private dataService: DataService,
+    private store: Store<IAppState>,
   ) {}
 
   get state(): Observable<IUsersState> {
@@ -31,61 +35,37 @@ export class UsersService {
   }
 
   fetch(): void {
-    return this.store.dispatch({
-      type: UsersService.USERS_FETCH
-    });
+    this.dispatchAction(UsersService.USERS_FETCH);
+  }
+
+  fetchOne(userId: number): void {
+    this.dispatchAction(UsersService.USER_FETCH, { userId });
   }
 
   create(user: IUser, photo: File | false): void {
-    return this.store.dispatch({
-      type: UsersService.USER_CREATE,
-      payload: {
-        user,
-        photo
-      }
-    });
+    this.dispatchAction(UsersService.USER_CREATE, { user, photo });
   }
 
-  update(user: IUser, photo: File | false): void {
-    return this.store.dispatch({
-      type: UsersService.USER_UPDATE,
-      payload: {
-        user,
-        photo
-      }
-    });
+  update(user: IUser, photo: File | false, userId: number): void {
+    this.dispatchAction(UsersService.USER_UPDATE, { user, photo, userId });
+  }
+
+  clear(): void {
+    this.dispatchAction(UsersService.USERS_CLEAR);
   }
 
   select(userId: number): void {
-    return this.store.dispatch({
-      type: UsersService.USER_SELECT,
-      payload: {
-        userId
-      }
-    });
-  }
-
-  setDialogAction(dialogAction: IUserDialogActionEnum, userId?: number): void {
-    return this.store.dispatch({
-      type: UsersService.USER_DIALOG_ACTION,
-      payload: {
-        dialogAction,
-        userId
-      }
-    });
-  }
-
-  setDialogAddAction(): void {
-    this.setDialogAction(IUserDialogActionEnum.USER_ADD);
-  }
-
-  setDialogEditAction(): void {
-    this.setDialogAction(IUserDialogActionEnum.USER_EDIT);
+    this.dispatchAction(UsersService.USER_SELECT, { userId });
   }
 
   toggleBlockedFilter(): void {
+    this.dispatchAction(UsersService.USER_TOGGLE_BLOCKED);
+  }
+
+  private dispatchAction(type: string, payload: object = {}): void {
     return this.store.dispatch({
-      type: UsersService.USER_TOGGLE_BLOCKED
+      type,
+      payload
     });
   }
 }

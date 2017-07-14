@@ -1,76 +1,21 @@
 import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import * as R from 'ramda';
 
 import {
+  IDateFormats,
   ILabeledValue,
+  INamedValue,
+  IOption,
   IValueEntity,
   ValueType
 } from './value-converter.interface';
-import {
-  IGrid2ColumnSettings,
-  IGrid2Request,
-  IGrid2RequestPayload,
-  IGrid2RequestSorting,
-} from '../../../shared/components/grid2/grid2.interface';
-
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class ValueConverterService {
+  private formats: IDateFormats = this.translateService.instant('default.date.format');
 
-  static DATE_USER_PATTERN = 'DD.MM.YYYY';
-  static DATE_TIME_USER_PATTERN = 'DD.MM.YYYY HH:mm:ss';
-  static DATE_TIME_ISO_PATTERN = 'YYYY-MM-DDTHH:mm:ss';
-
-  constructor(
-    private datePipe: DatePipe
-  ) { }
-
-  toGridRequest(payload: IGrid2RequestPayload): IGrid2Request {
-    const request: IGrid2Request = {};
-    const filter: FilterObject = FilterObject.create().and();
-
-    if (payload.columnsSettings) {
-      R.forEach((columnSettings: IGrid2ColumnSettings) => {
-        const originalFilter: FilterObject = columnSettings.filter;
-        filter.addFilter(
-          FilterObject.create(originalFilter, { name:  payload.fieldNameConverter })
-        );
-      }, R.values(payload.columnsSettings));
-
-      request.filtering = filter;
-
-      const sorting: IGrid2RequestSorting[] = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSettings, columnId: string) => {
-          return {
-            field: payload.fieldNameConverter ? payload.fieldNameConverter(columnId) : columnId,
-            order: columnSettings.sortingOrder,
-            direction: columnSettings.sortingDirection ? 'desc' : 'asc'
-          };
-        },
-        payload.columnsSettings
-      ));
-      if (sorting.length) {
-        request.sorting = R.map((v: IGrid2RequestSorting) => {
-          return {
-            field: v.field,
-            direction: v.direction
-          };
-        }, sorting.sort((o1: IGrid2RequestSorting, o2: IGrid2RequestSorting) => {
-          return o1.order === o2.order ? 0 : (o1.order > o2.order ? 1 : -1);
-        }));
-      }
-    }
-    if (!R.isNil(payload.currentPage) && !R.isNil(payload.pageSize)) {
-      request.paging = {
-        pageNumber: payload.currentPage,
-        resultsPerPage: payload.pageSize
-      };
-    }
-    return request;
-  }
+  constructor(private translateService: TranslateService) {}
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -95,7 +40,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.formatDate(valueEntity.valueD);
+        valueEntity.value = this.ISOToLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -115,7 +60,6 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      // TODO(a.tymchuk): use dictionary service
       return Number(valueEntity.value) === 1
         ? 'default.boolean.TRUE'
         : 'default.boolean.FALSE';
@@ -141,33 +85,70 @@ export class ValueConverterService {
     return v;
   }
 
-  formatDate(dateAsString: string, useTime: boolean = false): string {
-    return this.parseDate(
-      dateAsString,
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
-    );
+  valuesToOptions(values: Array<INamedValue>): Array<IOption> {
+    return values.map(value => ({
+      label: value.name,
+      value: value.id
+    }));
   }
 
-  toIsoDateTime(dateAsString: string, useTime: boolean = false): string {
-    return this.parseDate(
-      dateAsString,
-      ValueConverterService.DATE_TIME_ISO_PATTERN,
-      useTime ? ValueConverterService.DATE_TIME_USER_PATTERN : ValueConverterService.DATE_USER_PATTERN
-    );
+  toISO(date: Date): string {
+    return date ? date.toISOString() : null;
   }
 
-  valueToIsoDate(value: any): string {
-    if (!value) {
-      return null;
-    }
-    const converted = value.split('.').reverse().map(Number);
-    return this.datePipe.transform(new Date(converted), 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+  toLocalDateTime(date: Date): string {
+    return this.toLocal(date, this.formats.dateTime);
   }
 
-  private parseDate(dateAsString: string, toPattern: string, fromPattern?: string): string {
-    const momentDate = moment(dateAsString, fromPattern);
-    if (momentDate.isValid()) {
-      return momentDate.format(toPattern);
-    }
+  toLocalDate(date: Date): string {
+    return this.toLocal(date, this.formats.date);
+  }
+
+  fromISO(value: string): Date {
+    return value ? new Date(value) : null;
+  }
+
+  fromLocalDateTime(value: string): Date {
+    return this.fromLocal(value, this.formats.dateTime);
+  }
+
+  fromLocalDate(value: string): Date {
+    return this.fromLocal(value, this.formats.date);
+  }
+
+  makeRangeFromLocalDate(value: string): Array<string> {
+    const from = moment(value);
+    const to = from.clone().add(1, 'day').subtract(1, 'second');
+    return from.isValid() ? [from.toISOString(), to.toISOString()] : [];
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDateTime(value: string): string {
+    return this.toLocalDateTime(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOToLocalDate(value: string): string {
+    return this.toLocalDate(this.fromISO(value));
+  }
+
+  /**
+   * @deprecated
+   */
+  ISOFromLocalDateTime(value: string): string {
+    return this.toISO(this.fromLocalDateTime(value));
+  }
+
+  private toLocal(date: Date, format: string): string {
+    return date ? moment(date).format(format) : null;
+  }
+
+  private fromLocal(value: string, format: string): Date {
+    const date = value && moment(value, format, true);
+    return date && date.isValid() ? date.toDate() : null;
   }
 }

@@ -1,4 +1,5 @@
 import { IGrid2State } from '../../../shared/components/grid2/grid2.interface';
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 
 export interface IEmployee {
   id: number;
@@ -10,35 +11,30 @@ export interface IEmployee {
   isBlocked: number;
 }
 
-export interface IActionType {
-  code: number;
-  name: string;
-}
-
 export interface IActionLog {
-  userId: number;
-  lastName: string;
+  createDateTime: string;
+  dsc: string;
   firstName: string;
+  guiObject: string;
+  lastName: string;
+  machine: string;
   middleName: string;
+  personId: number;
   position: string;
   typeCode: number;
-  createDateTime: string;
-  machine: string;
-  guiObject: string;
-  dsc: string;
-  personId: number;
+  userId: number;
 }
 
 export interface IActionsLogServiceState {
   actionsLog: IActionsLogData;
   employees: IEmployee[];
-  actionTypes: IActionType[];
+  actionTypes: IDictionaryItem[];
   actionsLogGrid: IGrid2State;
 }
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IActionsLogData|IEmployee[]|IActionType[];
+  payload?: IActionsLogData|IEmployee[]|IDictionaryItem[];
 }
 
 export interface IActionsLogData {

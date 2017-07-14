@@ -1,52 +1,31 @@
 <div class="grid grid-default">
-  <div class="grid-body">
-    <app-toolbar
-      *ngIf="hasToolbar"
+    <!--<app-toolbar-2
+      *ngIf="toolbarActions"
       class="app-toolbar"
       [actions]="toolbarActions"
       (actionClick)="onActionClick($event)"
     >
-    </app-toolbar>
+    </app-toolbar-2>-->
     <ag-grid-angular
       class="app-grid2 ag-contact2"
-      [ngStyle]="styles"
-      [rowHeight]="rowHeight"
-      [headerHeight]="headerHeight"
-      [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
-      [rowData]="gridRows"
-      [pagination]="false"
-      [enableColResize]="true"
-      [enableFilter]="true"
-      [enableSorting]="true"
-      [showToolPanel]="false"
-      [paginationAutoPageSize]="true"
-      [overlayNoRowsTemplate]="'default.data.empty' | translate"
-      [overlayLoadingTemplate]="'default.data.empty' | translate"
+      [gridOptions]="gridOptions"
+      [ngStyle]="styles"
+      [overlayNoRowsTemplate]="'default.grid.empty' | translate"
+      [overlayLoadingTemplate]="'default.grid.empty' | translate"
       [rowSelection]="rowSelection"
-      (dragStarted)="onDragStarted()"
-      (dragStopped)="onDragStopped()"
-      (rowSelected)="onSelect($event)"
-      (rowDoubleClicked)="onRowDoubleClicked()"
+      (dragStarted)="dragStarted()"
+      (dragStopped)="dragStopped()"
+      (rowSelected)="rowSelected($event)"
+      (rowDoubleClicked)="rowDoubleClicked()"
     >
     </ag-grid-angular>
-  </div>
 </div>
 <app-toolbar
-  *ngIf="gridToolbarActions"
+  *ngIf="pagination"
   class="app-toolbar"
-  [actions]="gridToolbarActions"
-  (actionClick)="onToolbarActionClick($event)"
-  (actionSelect)="onToolbarActionSelect($event)"
+  [actions]="paginationPanel"
+  (actionClick)="onPageChange($event)"
+  (actionSelect)="onPageSizeChange($event)"
 >
 </app-toolbar>
-<app-grid2-column-filter
-  *ngIf="filterField"
-  [fieldName]="filterField"
-  [columnName]="filterColumnName"
-  [filter]="filterObject"
-  [filterControlType]="filterControlType"
-  (action)="saveFilterChanges($event)"
-  (cancel)="closeFilter()"
->
-</app-grid2-column-filter>

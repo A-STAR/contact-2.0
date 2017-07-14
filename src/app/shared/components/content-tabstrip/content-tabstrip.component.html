@@ -1,14 +1,13 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs app-tabstrip">
   <li *ngFor="let tab of tabs; let i=index" [class.active]="tab.active" role="presentation">
     <div *ngIf="isClosable(tab)" (click)="onClose($event, i)" class="close">
       <i class="fa fa-close"></i>
     </div>
-    <a [routerLink]="tab.path" (click)="onSelectTab(i)">{{tab.title | translate}}</a>
+    <a class="tab-title" [routerLink]="tab.path" (click)="onSelectTab(i)">{{tab.title | translate}}</a>
   </li>
 </ul>
 
 <div class="tabstrip-content">
-  <div *ngFor="let tab of tabs" [hidden]="!tab.active">
-    <app-content-tab [tab]="tab"></app-content-tab>
-  </div>
+  <app-content-tab *ngFor="let tab of tabs" [tab]="tab" [hidden]="!tab.active">
+  </app-content-tab>
 </div>

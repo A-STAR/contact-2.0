@@ -1,73 +1,58 @@
-import * as R from 'ramda';
+type FilterConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
-export type FilteringConditionType = 'AND' | 'OR';
+type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
+  | 'EMPTY'
+  | 'NOT EMPTY'
+  | 'IN'
+  | 'NOT IN'
+  | 'BETWEEN'
+  | 'NOT BETWEEN'
+  | 'LIKE'
+  | 'NOT LIKE';
 
-export class FilteringOperators {
-  static EQUAL: FilteringOperatorType = '==';
-  static NOT_EQUAL: FilteringOperatorType = '!=';
-  static EMPTY: FilteringOperatorType = 'EMPTY';
-}
-
-export type FilteringOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<' | 'EMPTY' | 'NOT EMPTY' | 'IN' | 'NOT IN'
-  | 'BETWEEN' | 'NOT BETWEEN' | 'LIKE' | 'NOT LIKE';
-
-export interface IFilterBaseObject {
-  condition?: FilteringConditionType;
-  filters?: IFilterBaseObject[];
+export class FilterObject {
+  condition?: FilterConditionType;
+  filters?: FilterObject[];
   name?: string;
-  operator?: FilteringOperatorType;
-  valueArray?: any[];
-  value?: any;
-}
+  operator?: FilterOperatorType;
+  values?: Array<any>;
 
-export class FilterObject implements IFilterBaseObject {
-
-  name: string;
-  condition: FilteringConditionType;
-  filters: IFilterBaseObject[];
-  operator: FilteringOperatorType;
-  value?: any;
-  valueArray?: any[];
-
-  static create(source?: FilterObject, decorators?: { name: Function }): FilterObject {
-    let filter: FilterObject = new FilterObject();
-    if (!R.isNil(source)) {
-      filter = filter
-        .setName(decorators.name ? decorators.name(source.name) : source.name)
-        .setValue(source.value)
-        .setValueArray(source.valueArray)
+  static create(source?: FilterObject): FilterObject {
+    const filter: FilterObject = new FilterObject();
+    if (source) {
+      filter
+        .setName(source.name)
         .setCondition(source.condition)
-        .setOperator(source.operator);
-      if (Array.isArray(source.filters) && source.filters.length) {
+        .setOperator(source.operator)
+        .setValues(source.values);
+      if (Array.isArray(source.filters)) {
         filter.setFilters(
-          source.filters.map((_filter: FilterObject) => FilterObject.create(_filter, decorators))
+          source.filters.map(_filter => FilterObject.create(_filter))
         );
       }
     }
     return filter;
   }
 
-  constructor() {
-  }
-
-  addFilter(filter: FilterObject): FilterObject {
-    if (filter && (filter.hasValue() || filter.hasFilter())) {
-      this.filters = (this.filters || []).concat(filter);
-    }
-    return this;
-  }
-
   and(): FilterObject {
     return this.setCondition('AND');
   }
 
-  setCondition(condition: FilteringConditionType): FilterObject {
-    this.condition = condition;
+  or(): FilterObject {
+    return this.setCondition('OR');
+  }
+
+  setCondition(condition: FilterConditionType): FilterObject {
+    if (condition) {
+      this.condition = condition;
+    }
     return this;
   }
 
   setName(name: string): FilterObject {
-    this.name = name;
+    if (name != null) {
+      this.name = name;
+    }
     return this;
   }
 
@@ -79,31 +64,47 @@ export class FilterObject implements IFilterBaseObject {
     return this.setOperator('BETWEEN');
   }
 
-  setOperator(operator: FilteringOperatorType): FilterObject {
+  setOperator(operator: FilterOperatorType): FilterObject {
     this.operator = operator;
     return this;
   }
 
-  setFilters(filters: IFilterBaseObject[]): FilterObject {
-    this.filters = filters;
+  addFilter(filter: FilterObject): FilterObject {
+    if (filter && (filter.hasValues() || filter.hasFilter())) {
+      if (!this.condition) {
+        throw new Error('You must set a condition prior to adding a filter');
+      }
+      this.filters = (this.filters || []).concat(filter);
+    }
     return this;
   }
 
-  setValue(value: any): FilterObject {
-    this.value = value;
+  addFilters(filters: FilterObject[]): FilterObject {
+    if (!this.condition) {
+      throw new Error('You must set a condition prior to adding filters');
+    }
+    this.filters = (this.filters || []).concat(filters);
     return this;
   }
 
-  setValueArray(valueArray: any[]): FilterObject {
-    this.valueArray = valueArray;
+  setFilters(filters: FilterObject[]): FilterObject {
+    this.filters = [].concat(filters);
     return this;
   }
 
-  hasValue(): boolean {
-    return !R.isNil(this.value) || (!R.isNil(this.valueArray) && this.valueArray.length > 0);
+  setValues(values: any | any[]): FilterObject {
+    // skip null & undefined, since BE doesn't accept those
+    if (values != null) {
+      this.values = [].concat(values);
+    }
+    return this;
+  }
+
+  hasValues(): boolean {
+    return this.values && this.values.length > 0;
   }
 
   hasFilter(): boolean {
-    return Array.isArray(this.filters) && this.filters.length > 0;
+    return this.filters && this.filters.length > 0;
   }
 }

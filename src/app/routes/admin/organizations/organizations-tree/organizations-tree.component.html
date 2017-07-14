@@ -1,36 +1,43 @@
 <app-organization-edit
-  *ngIf="isEntityBeingCreated"
-  (submit)="onEditSubmit($event, true)"
+  *ngIf="isEntityBeingCreated | async"
+  (submit)="createOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
 <app-organization-edit
-  *ngIf="isEntityBeingEdited"
-  [editedEntity]="editedEntity"
-  (submit)="onEditSubmit($event, false)"
+  *ngIf="isEntityBeingEdited | async"
+  [editedEntity]="(selectedOrganization | async)?.data"
+  (submit)="updateOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
 <app-dialog-action
-  *ngIf="isEntityBeingRemoved"
+  *ngIf="isEntityBeingRemoved | async"
   [titleTranslationKey]="'organizations.organizations.remove.title'"
   [actionTranslationKey]="'organizations.organizations.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
   [actionMode]="'danger'"
-  (action)="onRemoveSubmit()"
+  (action)="onRemove()"
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
 
 <app-tree
-  #tree
   layout="horizontal"
   selectionMode="single"
-  [value]="value"
+  [dndEnabled]="true"
+  [dblClickEnabled]="canEditOrganization | async"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="organizations | async"
+  [selection]="selectedOrganization | async"
   (changeNodesLocation)="onChangeNodesLocation($event)"
   (onNodeSelect)="onNodeSelect($event)"
-  (onNodeEdit)="onNodeEdit($event)"
-  (onNodeExpand)="onNodeExpand($event)"
-  [(selection)]="selection">
+  (onNodeDblClick)="onNodeEdit($event)"
+  (onNodeExpand)="onNodeSelect($event)">
 </app-tree>
+

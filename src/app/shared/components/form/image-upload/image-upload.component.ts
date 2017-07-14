@@ -1,10 +1,10 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { IImage } from './image-upload.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
+import { DataService } from '../../../../core/data/data.service';
 
 @Component({
   selector: 'app-image-upload',
@@ -16,7 +16,8 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
       useExisting: forwardRef(() => ImageUploadComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   @Input() height = null as number;
@@ -29,16 +30,20 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   private propagateChange: Function = () => {};
 
   constructor(
-    private gridService: GridService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {
     if (this.url) {
-      this.gridService
+      this.dataService
       .readBlob(this.url)
       .take(1)
-      .subscribe(image => this.image = image);
+      .subscribe(image => {
+        this.image = image;
+        this.changeDetectorRef.markForCheck();
+      });
     }
   }
 

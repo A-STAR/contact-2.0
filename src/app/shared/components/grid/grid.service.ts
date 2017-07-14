@@ -1,64 +1,126 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
+import * as R from 'ramda';
 
-import { AuthService } from '../../../core/auth/auth.service';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
+import { IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
+
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Injectable()
 export class GridService {
-  // defines whether the request should fetch a resource from the server's root
-  private _localRequest = false;
-
   constructor(
-    private http: AuthHttp,
-    private authService: AuthService,
-    private translateService: TranslateService
-  ) { }
+    private converterService: ValueConverterService,
+    private dictionariesService: DictionariesService,
+    private metadataService: MetadataService,
+    private translateService: TranslateService,
+  ) {}
 
-  localRequest(): GridService {
-    this._localRequest = true;
-    return this;
+  /**
+   * Builds request parameters necessary to talk to the BE
+   *
+   * @param {IGrid2RequestParams} params
+   * @param {FilterObject} filters
+   * @returns {IGrid2Request}
+   */
+  buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
+    const request: IGrid2Request = {};
+    const filter: FilterObject = FilterObject.create().and();
+    const { sorters, currentPage, pageSize } = params;
+
+    if (sorters) {
+      request.sorting = sorters;
+    }
+
+    if (filters) {
+      filter.addFilter(filters);
+    }
+
+    // console.log('params', params);
+    // console.log('filters', filters);
+    // console.log('request filter', filter);
+
+    if (filter.hasFilter() || filter.hasValues()) {
+      request.filtering = filter;
+    }
+
+    if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
+      request.paging = {
+        pageNumber: currentPage,
+        resultsPerPage: pageSize
+      };
+    }
+
+    return request;
   }
 
   /**
-   * NOTE: route params have to be enclosed in curly braces
-   * Example:
-   *  url = '/api/roles/{id}/permits', params = { id: 5 }
-   *  route = '/api/roles/5/permits
+   * Builds column defs from server metadata
+   * To be used only once during ngOnInit phase
+   *
+   * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
+   * @param {Observable<IGridColumn[]>} columns Initial column descriptions
+   * @param {object} renderers Column renderers, esentially getters
+   * @returns {Observable<IGridColumn[]>} Column defininitions
    */
-  read(url: string, routeParams: object = {}): Observable<any> {
-    if (this._localRequest) {
-      // this would not be a default value, so clear the flag for further requests
-      this._localRequest = false;
-      return this.http.get(url)
-        .map(data => data.json());
-    }
+  getColumnDefs(
+    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+      const mapColumns = ([metadata, dictionaries]) =>
+        this.setRenderers(columns.filter(column =>
+          !!metadata.find(metadataColumn => {
+            const isInMeta = column.prop === metadataColumn.name;
+            if (isInMeta) {
+              if (!column.renderer) {
+                const currentDictTypes = dictionaries[metadataColumn.dictCode];
+                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                  column.renderer = (item: ITypeCodeItem) => {
+                    const typeDescription = currentDictTypes.find(
+                      dictionaryItem => dictionaryItem.code === item.typeCode
+                    );
+                    return typeDescription ? typeDescription.name : item.typeCode;
+                  };
+                } else {
+                  // Data types
+                  switch (metadataColumn.dataType) {
+                    case 2:
+                      // Date
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
+                      break;
+                    case 7:
+                      // Datetime
+                      column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
+                      break;
+                  }
+                }
+              }
+              // Dictionary filters
+              if (column.filterDictionaryId) {
+                const dictTypes = dictionaries[column.filterDictionaryId];
+                if (Array.isArray(dictTypes)) {
+                  column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
+                }
+              }
+            }
+            return isInMeta;
+          })
+        ), renderers);
 
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get });
-  }
-
-  readBlob(url: string, routeParams: object = {}): Observable<Blob> {
-    return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
-  }
-
-  create(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Post, body });
-  }
-
-  update(url: string, routeParams: object = {}, body: object): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Put, body });
-  }
-
-  delete(url: string, routeParams: object = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Delete } );
+      return Observable.combineLatest(
+        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
+        this.dictionariesService.dictionariesByCode,
+      )
+      .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
-    return columns.map((column: IGridColumn) => {
+    return columns.map(column => {
       const renderer = renderers[column.prop];
       return renderer ? this.setRenderer(column, renderer) : column;
     });
@@ -92,49 +154,5 @@ export class GridService {
     // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
     return column;
-  }
-
-  // Request that expects JSON for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    return this.request(url, routeParams, options)
-      .map(data => data.json());
-  }
-
-  // Request that expects binary data for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private blobRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<Blob> {
-    return this.request(url, routeParams, { ...options, responseType: ResponseContentType.Blob })
-      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
-  }
-
-  private request(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    const headers = new Headers();
-    if (options.body && options.body.constructor === Object) {
-      headers.append('Content-Type', 'application/json');
-    }
-
-    return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        const prefix = '/api';
-        const api = route.startsWith(prefix) ? route : prefix + route;
-
-        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
-      });
-  }
-
-  private validateUrl(url: string = ''): Observable<any> {
-    if (!url) {
-      return Observable.throw('Error: no url passed to the GridService');
-    }
-    return this.authService.getRootUrl();
-  }
-
-  private createRoute(url: string, params: object): string {
-    return Object.keys(params).reduce((acc, id) => {
-      const re = RegExp(`{${id}}`, 'gi');
-      return acc.replace(re, params[id]);
-    }, url);
   }
 }

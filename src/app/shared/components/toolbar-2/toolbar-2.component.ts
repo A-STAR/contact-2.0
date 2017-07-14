@@ -23,6 +23,10 @@ export class Toolbar2Component {
       label: 'toolbar.action.edit',
       icon: 'fa fa-pencil',
     },
+    [ToolbarItemTypeEnum.BUTTON_SAVE]: {
+      label: 'toolbar.action.save',
+      icon: 'fa fa-save',
+    },
     [ToolbarItemTypeEnum.BUTTON_DELETE]: {
       label: 'toolbar.action.remove',
       icon: 'fa fa-trash',
@@ -31,14 +35,35 @@ export class Toolbar2Component {
       label: 'toolbar.action.refresh',
       icon: 'fa fa-refresh',
     },
+    [ToolbarItemTypeEnum.BUTTON_SMS]: {
+      label: 'toolbar.action.sms',
+      icon: 'fa fa-envelope',
+    },
+    [ToolbarItemTypeEnum.BUTTON_MOVE]: {
+      label: 'toolbar.action.move',
+      icon: 'fa fa-share',
+    },
+    [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: {
+      label: 'toolbar.action.download',
+      icon: 'fa fa-cloud-download',
+    },
+    [ToolbarItemTypeEnum.BUTTON_UPLOAD]: {
+      label: 'toolbar.action.upload',
+      icon: 'fa fa-cloud-upload',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
     ToolbarItemTypeEnum.BUTTON,
     ToolbarItemTypeEnum.BUTTON_ADD,
     ToolbarItemTypeEnum.BUTTON_EDIT,
+    ToolbarItemTypeEnum.BUTTON_SAVE,
     ToolbarItemTypeEnum.BUTTON_DELETE,
     ToolbarItemTypeEnum.BUTTON_REFRESH,
+    ToolbarItemTypeEnum.BUTTON_SMS,
+    ToolbarItemTypeEnum.BUTTON_MOVE,
+    ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+    ToolbarItemTypeEnum.BUTTON_UPLOAD,
   ];
 
   constructor(

@@ -1,11 +1,7 @@
 .ag-contact2 {
   line-height: 1.4;
-  font-family: "Fira Sans Extra Condensed", sans-serif;
   font-size: 14px;
   color: #222;
-  /* WTFIT ? */
-  /* this is for the rowGroupPanel, that appears along the top of the grid */
-  /* this is for the column drops that appear in the toolPanel */
 
   img {
     vertical-align: middle;
@@ -184,9 +180,6 @@
     margin-right: 1px;
     border: 1px solid transparent;
     border-radius: 3px;
-    -webkit-box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
-    -moz-box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
-    box-sizing: content-box /* When using bootstrap, box-sizing was set to 'border-box' */;
     line-height: 0px /* normal line height, a space was appearing below the menu button */;
   }
   .ag-ltr .ag-pinned-right-header {
@@ -228,14 +221,14 @@
   .ag-overlay-loading-center {
     background-color: #fff;
     border: 1px solid #fff;
-    border-radius: 10px;
+    border-radius: 2px;
     padding: 10px;
     color: #000;
   }
   .ag-overlay-no-rows-center {
     background-color: #fff;
     border: 1px solid #fff;
-    border-radius: 10px;
+    border-radius: 2px;
     padding: 10px;
   }
   .ag-group-cell-entire-row {
@@ -289,7 +282,6 @@
     border: 1px solid #d6d6d6;
     background-color: #fff;
     cursor: default;
-    font-family: "Fira Sans Extra Condensed", sans-serif;
     font-size: 14px;
   }
   .ag-menu .ag-tab-header {
@@ -363,15 +355,38 @@
     padding-left: 4px;
   }
   .ag-paging-panel {
-    padding: 4px;
+    padding: 10px 12px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    height: 50px;
+    line-height: 30px;
   }
   .ag-paging-button {
     margin-left: 4px;
     margin-right: 4px;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #c0c0c0;
+    transition: all 200ms ease-in-out;
+    &:hover {
+      border-color: #808080;
+      background-color: #c0c0c0;
+    }
   }
   .ag-paging-row-summary-panel {
     display: inline-block;
-    width: 300px;
+    width: 150px;
+    float: left;
+  }
+  .ag-paging-page-summary-panel {
+    display: inline-block;
+    float: right;
+
+    button:last-child {
+      margin-right: 0;
+    }
   }
   .ag-tool-panel {
     background-color: #fff;
@@ -475,4 +490,14 @@
     background-color: #bde2e5;
   }
 
+  .ag-custom-filter {
+    padding: 4px 6px;
+    width: 200px;
+  }
+
+  .ag-custom-filter-text {
+     margin: 4px 0px;
+     padding: 0 3px;
+     width: 100%;
+  }
 }

@@ -4,14 +4,14 @@
   </div>
 
   <app-grid
-    [styles]="{height: '200px'}"
     [columns]="columns"
-    [parseFn]="parseFn"
-    [autoLoad]="false"
     [columnTranslationKey]="'roles.permissions.add'"
     [dataSource]="dataSource"
+    [parseFn]="parseFn"
+    [rows]="availablePermissions"
+    [styles]="{height: '200px'}"
     (onDblClick)="onAddPermissions()"
-    (onSelect)="onSelectPermissions($event)">
+    (onSelect)="onSelectPermissions()">
   </app-grid>
 
   <div dialog-footer>

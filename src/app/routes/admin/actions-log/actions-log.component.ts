@@ -1,119 +1,122 @@
-import {
-  Component,
-  OnDestroy,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { Column } from 'ag-grid';
 
-import {
-  IActionLog,
-  IActionsLogData,
-  IActionType,
-  IEmployee,
-} from './actions-log.interface';
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IActionsLogData, IEmployee } from './actions-log.interface';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import {
-  IGrid2ColumnsSettings,
-  IGrid2EventPayload
-} from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorter, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
+import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { toFullName } from '../../../core/utils';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
-
-export const toFullName = (entity: { userId?: number, lastName: string, firstName: string, middleName: string }) => {
-  return [ entity.userId || '', entity.lastName, entity.firstName, entity.middleName ]
-    .filter(Boolean).join(' ');
-};
+import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-actions-log',
   templateUrl: './actions-log.component.html',
   styleUrls: ['./actions-log.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActionsLogComponent implements OnDestroy {
+export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'fullName', minWidth: 200 },
-    { prop: 'position', minWidth: 100 },
-    { prop: 'createDateTime', minWidth: 150, suppressSizeToFit: true, filterControlType: 'datepicker' },
-    { prop: 'guiObject', minWidth: 150 },
-    { prop: 'typeCode', minWidth: 150 },
-    { prop: 'dsc', minWidth: 200 },
-    { prop: 'machine', minWidth: 100 },
-    { prop: 'duration', minWidth: 100 }
+    { prop: 'id', minWidth: 60, type: 'primary', filter: 'number' },
+    { prop: 'fullName', minWidth: 200, filter: 'text' },
+    { prop: 'position', minWidth: 100, filter: 'text' },
+    { prop: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
+    { prop: 'guiObject', minWidth: 150, filter: 'text' },
+    { prop: 'typeCode', minWidth: 150, filter: 'set',
+      filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+    },
+    { prop: 'dsc', minWidth: 200, filter: 'text' },
+    { prop: 'machine', minWidth: 120, filter: 'text' },
+    { prop: 'duration', minWidth: 100, type: 'number', filter: 'number' }
   ];
+
+  columnDefs: Observable<IGridColumn[]>;
 
   renderers: IRenderer = {
     fullName: toFullName,
-    typeCode: (actionLog: IActionLog) => {
-      const currentActionType: IActionType =
-        this.actionTypesRawRows.find((actionType: IActionType) => actionType.code === actionLog.typeCode);
-      return currentActionType ? currentActionType.name : actionLog.typeCode;
-    },
-    createDateTime: (actionLog: IActionLog) => this.converterService.formatDate(actionLog.createDateTime, true)
   };
 
   employeesRows: Observable<IEmployee[]>;
-  actionTypesRows: Observable<IActionType[]>;
+  actionTypesRows: Observable<IDictionaryItem[]>;
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogCurrentFilterColumn: Observable<Column>;
-  actionsLogColumnsSettings: Observable<IGrid2ColumnsSettings>;
-  actionsLogColumnMovingInProgress: Observable<boolean>;
-  actionsLogSelectedRows: Observable<IActionType[]>;
+  actionsLogSorters: Observable<IGrid2Sorter[]>;
+  actionsLogSelected: Observable<IDictionaryItem[]>;
 
+  @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
-
-  private actionTypesRawRows: IActionType[];
-  private actionTypesRowsSubscription: Subscription;
+  @ViewChild(Grid2Component) grid: Grid2Component;
 
   constructor(
-    private store: Store<IAppState>,
-    private gridService: GridService,
-    private converterService: ValueConverterService,
     private actionsLogService: ActionsLogService,
+    private gridService: GridService,
+    private store: Store<IAppState>,
+    private translateService: TranslateService,
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.columnDefs = this.gridService.getColumnDefs('actions', this.columns, this.renderers);
     this.employeesRows = this.actionsLogService.employeesRows;
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.actionsLogData = this.actionsLogService.actionsLogRows;
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
-    this.actionsLogCurrentFilterColumn = this.actionsLogService.actionsLogCurrentFilterColumn;
-    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
-    this.actionsLogColumnsSettings = this.actionsLogService.actionsLogColumnsSettings;
-    this.actionsLogColumnMovingInProgress = this.actionsLogService.actionsLogColumnMovingInProgress;
-    this.actionsLogSelectedRows = this.actionsLogService.actionsLogSelectedRows;
-
-    this.actionTypesRowsSubscription = this.actionTypesRows.subscribe((actionTypesRawRows: IActionType[]) =>
-      this.actionTypesRawRows = actionTypesRawRows);
+    this.actionsLogSorters = this.actionsLogService.actionsLogSorters;
+    this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
   }
 
-  ngOnDestroy(): void {
-    this.actionTypesRowsSubscription.unsubscribe();
+  onFilter(gridFilters: FilterObject): void {
+    const filters = this.filter.getFilters();
+    filters.addFilter(gridFilters);
+    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    this.actionsLogService.filter(filters);
   }
 
-  refreshData(eventPayload: IGrid2EventPayload): void {
-    this.onStoreDispatch(eventPayload);
-    this.doSearch();
+  onRequestData(payload: IGrid2EventPayload): void {
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
+    this.store.dispatch(payload);
+    this.actionsLogService.fetch(filters);
   }
 
-  onStoreDispatch(eventPayload: IGrid2EventPayload): void {
-    this.store.dispatch(eventPayload);
+  onColumnAction(payload: IGrid2EventPayload): void {
+    this.store.dispatch(payload);
+  }
+
+  onSelect(payload: IGrid2EventPayload): void {
+    this.store.dispatch(payload);
   }
 
   doSearch(): void {
-    this.actionsLogService.search(this.filter.getFilterValues());
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
+    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    this.actionsLogService.filter(filters);
   }
+
+  doExport(): void {
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
+    const sorters = this.grid.getSorters();
+    const { pageSize, page: currentPage } = this.grid;
+    const gridRequestPayload = { currentPage, pageSize, sorters };
+    const request = this.gridService.buildRequest(gridRequestPayload, filters);
+    const columns = this.grid.getExportableColumns();
+    const body = { columns, ...request };
+
+    this.downloader.download(body);
+  }
+
 }

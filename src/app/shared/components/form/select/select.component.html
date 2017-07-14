@@ -1,7 +1,7 @@
 <ng-template #optionsTemplate>
   <ul
     *ngIf="optionsOpened"
-    alignment
+    appAlignment
     class="ui-select-choices dropdown-menu"
     [alignTarget]="inputRef"
     [autoAlignEnabled]="autoAlignEnabled"
@@ -9,7 +9,7 @@
     <li *ngIf="filterEnabled"
         class="app-select-search-wrapper">
       <input
-        focus
+        appFocus
         type="text"
         class="form-control app-select-search"
         [(ngModel)]="filterValue"
@@ -30,16 +30,15 @@
         </span>
       </div>
     </li>
-    <li *ngFor="let rawItem of rawData | rawDataFilter: { sortType: sortType }">
+    <li *ngFor="let option of (options || []) | rawDataFilter: { sortType: sortType }">
       <div
         class="ui-select-choices-row"
-        [ngClass]="{ active: isActive(rawItem) }"
-        (mouseenter)="selectActive(rawItem)"
-        (click)="onSelectMatch($event, rawItem)"
+        [ngClass]="{ active: isActive(option) }"
+        (click)="onSelectMatch($event, option)"
       >
         <div
           class="dropdown-item"
-          [innerHtml]="toDisplayValue(rawItem)">
+          [innerHtml]="toDisplayValue(option)">
         </div>
       </div>
     </li>
@@ -48,11 +47,10 @@
 
 <div
   class="ui-select-container dropdown open"
-  *ngIf="multiple === false"
+  *ngIf="!multiple"
   [ngStyle]="styles"
   [attr.disabled]="disabled"
-  [offClick]="clickedOutside"
-  (keyup)="mainClick($event)"
+  [appOffClick]="clickedOutside"
 >
   <div
     *ngIf="!inputMode"
@@ -60,7 +58,7 @@
   >
     <span
       class="form-control app-select-unselectable"
-      (click)="matchClick($event)"
+      (click)="onMatchClick($event)"
     >
       <span
         *ngIf="active.length"
@@ -88,16 +86,15 @@
 <div tabindex="0"
      [ngStyle]="styles"
      [attr.disabled]="disabled"
-     *ngIf="multiple === true"
-     (keyup)="mainClick($event)"
-     [offClick]="clickedOutside"
+     *ngIf="multiple"
+     [appOffClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open"
 >
   <span class="ui-select-match">
     <span
-      *ngFor="let item of active"
+      *ngFor="let item of filteredActiveItems"
       class="app-select-match-item"
-      (click)="activeItemClick(item, $event)"
+      (click)="onActiveItemClick(item, $event)"
       [ngClass]="{ 'selected': item.selected, 'context-exist': isItemContextExist(item) }"
     >
       <span
@@ -114,7 +111,7 @@
   <input
     #input
     type="text"
-    (click)="matchClick($event)"
+    (click)="onMatchClick($event)"
     [attr.readonly]="readonly"
     [ngClass]="{ hidden: !isInputVisible() }"
     autocomplete="false"

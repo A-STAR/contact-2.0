@@ -2,35 +2,35 @@
   #filter
   [employeesRows]="employeesRows"
   [actionTypesRows]="actionTypesRows"
+  (export)="doExport()"
   (search)="doSearch()"
 >
 </app-actions-log-filter>
 
+<app-downloader
+  #downloader
+  errorTranslationKey="actionsLog.messages.errors.download"
+  name="actions.xlsx"
+  url="/list/excel?name=actions">
+</app-downloader>
+
 <app-grid2
   columnTranslationKey="actionsLog"
+  [columns]="columnDefs | async"
+  [sorters]="actionsLogSorters | async"
   [ngClass]="'actions-log-grid'"
-  [rows]="(actionsLogData | async).data"
-  [rowsTotalCount]="(actionsLogData | async).total"
-  [columns]="columns"
-  [pagination]="true"
-  [remoteSorting]="true"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"
-  [filterColumn]="actionsLogCurrentFilterColumn | async"
-  [columnsSettings]="actionsLogColumnsSettings | async"
-  [columnMovingInProgress]="actionsLogColumnMovingInProgress | async"
-  [selectedRows]="actionsLogSelectedRows | async"
-  (onNextPage)="refreshData($event)"
-  (onPreviousPage)="refreshData($event)"
-  (onPageSize)="refreshData($event)"
-  (onSortingDirection)="refreshData($event)"
-  (onColumnMoving)="onStoreDispatch($event)"
-  (onColumnMoved)="onStoreDispatch($event)"
-  (onColumnsPositions)="refreshData($event)"
-  (onCloseFilter)="onStoreDispatch($event)"
-  (onOpenFilter)="onStoreDispatch($event)"
-  (onApplyFilter)="refreshData($event)"
-  (onRowsSelect)="onStoreDispatch($event)"
-  (onGroupingColumns)="onStoreDispatch($event)"
+  [rows]="(actionsLogData | async).data"
+  [rowCount]="(actionsLogData | async)?.total"
+  [selected]="actionsLogSelected | async"
+  (onPage)="onRequestData($event)"
+  (onPageSize)="onRequestData($event)"
+  (onSort)="onRequestData($event)"
+  (onColumnGroup)="onRequestData($event)"
+  (onDragStarted)="onColumnAction($event)"
+  (onDragStopped)="onColumnAction($event)"
+  (onFilter)="onFilter($event)"
+  (onSelect)="onSelect($event)"
 >
 </app-grid2>

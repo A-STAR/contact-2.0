@@ -2,12 +2,14 @@ import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/zip';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interface';
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
@@ -36,7 +38,7 @@ export class PermissionsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD),
+      action: () => this.onBeforeAddPermissions(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('PERMIT_ADD'),
         this.permissionsService.permissions.map(state => !!state.currentRole)
@@ -61,53 +63,90 @@ export class PermissionsComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      enabled: this.userPermissionsService.has('PERMIT_VIEW')
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('PERMIT_VIEW'),
+        this.permissionsService.permissions.map(state => !!state.currentRole)
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
     },
   ];
 
-  dataSource: IDataSource = {
-    read: '/api/roles/{id}/permits',
-    dataKey: 'permits'
-  };
+  // TODO(d.maltsev): type
+  permissions$: Observable<Array<any>>;
 
-  // data for the grid
-  rawPermissions: Array<any> = [];
+  canViewPermissions$: Observable<boolean>;
+
+  emptyMessage$: Observable<string>;
+  availablePermissions: IPermissionModel[];
 
   dialog: IPermissionsDialogEnum;
 
   private currentPermission: IPermissionModel;
   private currentRole: IPermissionRole;
-  private permissionsSub: Subscription;
+  private permissionsSubscription: Subscription;
+  private viewPermissionsSubscription: Subscription;
 
   constructor(
+    private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.permissionsSub = this.permissionsService.permissions
-        .subscribe(
-          (permissions: IPermissionsState) => {
-            this.currentRole = permissions.currentRole;
-            this.currentPermission = permissions.currentPermission;
-            this.dialog = permissions.dialog;
-            this.rawPermissions = this.valueConverterService.deserializeSet(permissions.rawPermissions);
-          }
-        );
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.permissionsSubscription = this.permissionsService.permissions
+      .subscribe(
+        (permissions: IPermissionsState) => {
+          this.currentRole = permissions.currentRole;
+          this.currentPermission = permissions.currentPermission;
+          this.dialog = permissions.dialog;
+        }
+      );
+
+    this.permissions$ = this.permissionsService.permissions
+      .map(state => state.rawPermissions)
+      .distinctUntilChanged()
+      .map(permissions => this.valueConverterService.deserializeSet(permissions));
+
+    this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
+
+    this.viewPermissionsSubscription = Observable.combineLatest(
+      this.canViewPermissions$,
+      this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
+    )
+    .subscribe(([ hasViewPermission, currentRole ]) => {
+      if (!hasViewPermission) {
+        this.permissionsService.clearPremissions();
+      } else if (currentRole) {
+        this.permissionsService.fetchPermissions();
+      }
+    });
+
+    this.emptyMessage$ = this.canViewPermissions$.map(hasPermission => hasPermission ? null : 'roles.permissions.errors.view');
   }
 
   ngOnDestroy(): void {
-    this.permissionsSub.unsubscribe();
+    this.permissionsSubscription.unsubscribe();
+    this.viewPermissionsSubscription.unsubscribe();
+  }
+
+  onBeforeAddPermissions(): void {
+    this.dataService
+      .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
+      .subscribe(data => {
+        this.availablePermissions = data.permits;
+        this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
+      });
   }
 
   onBeforeEditPermission(): void {
-    if (!this.currentPermission) {
-      return;
-    }
-
-    this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
+    this.userPermissionsService.has('PERMIT_EDIT')
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission && this.currentPermission) {
+          this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
+        }
+      });
   }
 
   onSelectPermissions(record: IPermissionModel): void {

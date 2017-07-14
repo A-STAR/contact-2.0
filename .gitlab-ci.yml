@@ -9,7 +9,7 @@ job_test:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
     - npm install
-    - npm run build -- --prod --progress=false
+    - npm run lint && npm run build -- --prod --progress=false
   except:
     - dev
 

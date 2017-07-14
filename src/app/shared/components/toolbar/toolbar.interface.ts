@@ -15,24 +15,26 @@ export enum ToolbarActionTypeEnum {
   REFRESH,
   SEARCH,
   SAVE,
-  FORWARD,
-  BACKWARD,
+  GO_FORWARD,
+  GO_BACKWARD,
+  GO_FIRST,
+  GO_LAST,
 }
 
 export interface IToolbarAction {
-  text?: string;
-  hasLabel?: boolean;
-  type?: ToolbarActionTypeEnum;
-  visible?: boolean;
-  permission?: string | Array<string>;
-  control?: ToolbarControlEnum;
-  value?: any;
   activeValue?: any;
-  noRender?: boolean;
+  control?: ToolbarControlEnum;
+  disabled?: boolean;
+  hasLabel?: boolean;
+  permission?: string | Array<string>;
   styles?: { width?: string };
+  text?: string;
+  type?: ToolbarActionTypeEnum;
+  value?: any;
+  visible?: boolean;
 }
 
 export interface IToolbarActionSelectPayload {
   action: IToolbarAction;
-  value: ILabeledValue;
+  value: ILabeledValue[];
 }

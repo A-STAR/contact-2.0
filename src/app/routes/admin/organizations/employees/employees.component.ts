@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
@@ -29,8 +30,8 @@ export class EmployeesComponent implements OnDestroy {
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -53,8 +54,8 @@ export class EmployeesComponent implements OnDestroy {
       action: () => this.organizationsService.fetchEmployees(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_VIEW'),
-        this.organizationsService.state.map(state => !!state.selectedOrganizationId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.organizationsService.selectedOrganization
+      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
   ];
 
@@ -86,18 +87,29 @@ export class EmployeesComponent implements OnDestroy {
 
   editedEntity: IEmployee;
 
-  private state$: Subscription;
+  // TODO(d.maltsev): type
+  employeeRoleOptions$: Observable<Array<any>>;
+
+  employees$: Observable<Array<IEmployee>>;
+
+  emptyMessage$: Observable<string>;
+
+  private hasViewPermission$: Observable<boolean>;
+
+  private organizationsStateSubscription: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
+    private translateService: TranslateService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private translateService: TranslateService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
-    this.state$ = this.organizationsService.state
+    this.organizationsStateSubscription = this.organizationsService.state
       .subscribe(
         state => {
           this.action = state.dialogAction;
@@ -106,10 +118,32 @@ export class EmployeesComponent implements OnDestroy {
         // TODO: notifications
         error => console.error(error)
       );
+
+    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
+    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
+
+    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_EDIT');
+
+    this.viewPermissionSubscription = Observable.combineLatest(
+      this.hasViewPermission$,
+      this.organizationsService.selectedOrganization
+    )
+    .subscribe(([ hasViewPermission, currentOrganization ]) => {
+      if (!hasViewPermission) {
+        this.organizationsService.clearEmployees();
+      } else if (currentOrganization) {
+        this.organizationsService.fetchEmployees();
+      }
+    });
+
+    this.employees$ = this.organizationsService.state.map(state => state.employees);
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {
-    this.state$.unsubscribe();
+    this.organizationsStateSubscription.unsubscribe();
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get state(): Observable<IOrganizationsState> {
@@ -139,7 +173,13 @@ export class EmployeesComponent implements OnDestroy {
   }
 
   onEdit(): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+    this.userPermissionsService.has('ORGANIZATION_EDIT')
+      .take(1)
+      .subscribe(hasEditPermission => {
+        if (hasEditPermission) {
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+        }
+      });
   }
 
   onAddSubmit(data: any): void {

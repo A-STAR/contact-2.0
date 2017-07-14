@@ -1,17 +1,31 @@
 import { Action } from '@ngrx/store';
 
 import { IOrganizationsState } from './organizations.interface';
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from './organizations.service';
 
 const defaultState: IOrganizationsState = {
   organizations: [],
-  selectedOrganizationId: null,
+  selectedOrganization: null,
   employees: [],
   notAddedEmployees: [],
   selectedEmployeeUserId: null,
   dialogAction: null
 };
+
+export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNode: ITreeNode): ITreeNode {
+  if (!selectedOrganizationNode) {
+    return null;
+  }
+  let result;
+  (nodes || []).forEach(
+    node => result = result || (node.id === selectedOrganizationNode.id
+      ? node
+      : findOrganizationNode(node.children, selectedOrganizationNode))
+  );
+  return result;
+}
 
 export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
   switch (action.type) {
@@ -23,13 +37,16 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganizationId: action.payload.organizationId
+        selectedOrganization: action.payload.organization ||
+          // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
+          // so we should find him actual mirror by id
+          findOrganizationNode(state.organizations, state.selectedOrganization)
       };
     case OrganizationsService.ORGANIZATIONS_CLEAR:
       return {
         ...state,
         organizations: [],
-        selectedOrganizationId: null
+        selectedOrganization: null
       };
     case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
       return {
@@ -55,9 +72,12 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
     case OrganizationsService.DIALOG_ACTION:
       return {
         ...state,
-        dialogAction: action.payload.dialogAction
+        dialogAction: action.payload.dialogAction,
+        selectedOrganization: action.payload.organization === null
+          ? null
+          : action.payload.organization || state.selectedOrganization
       };
     default:
       return state;
   }
-};
+}

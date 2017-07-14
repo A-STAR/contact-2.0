@@ -1,5 +1,5 @@
 export interface IPermissionsTreeNode {
-  children?: IPermissionsTreeNode[],
+  children?: IPermissionsTreeNode[];
   dsc: string;
   id: number;
   name: string;

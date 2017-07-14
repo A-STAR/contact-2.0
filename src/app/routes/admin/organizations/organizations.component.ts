@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
 })
 export class OrganizationsComponent {
   static COMPONENT_NAME = 'OrganizationsComponent';
-
-  constructor() {}
 }

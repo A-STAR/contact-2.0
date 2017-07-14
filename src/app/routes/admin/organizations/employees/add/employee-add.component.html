@@ -6,14 +6,12 @@
   <!-- TODO: styles -->
   <div style="margin: 12px 0;">
     <app-grid
-      #addEmplpoyeeGrid
       class="flat"
       [styles]="{ height: '200px' }"
       [columns]="columns"
-      [autoLoad]="false"
       [columnTranslationKey]="'organizations.employees.add'"
       [rows]="(state | async).notAddedEmployees"
-      (onSelect)="onSelectEmployees($event)">
+      (onSelect)="onSelectEmployees()">
     </app-grid>
   </div>
 

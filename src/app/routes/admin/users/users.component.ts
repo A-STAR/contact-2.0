@@ -1,15 +1,14 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
-import { IUser, IUserDialogActionEnum, IUsersState } from './users.interface';
-import { IUserConstant } from '../../../core/user/constants/user-constants.interface';
+import { IUser, IUsersState } from './users.interface';
 import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
 
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../roles/permissions.service';
@@ -17,10 +16,12 @@ import { UserConstantsService } from '../../../core/user/constants/user-constant
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
+import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-users',
-  templateUrl: 'users.component.html'
+  templateUrl: 'users.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
@@ -44,7 +45,7 @@ export class UsersComponent implements OnDestroy {
 
   renderers: IRenderer = {
     roleId: [],
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.boolean.TRUE' : 'default.boolean.FALSE',
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
     languageId: [],
   };
 
@@ -59,12 +60,12 @@ export class UsersComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.usersService.setDialogAddAction(),
+      action: () => this.onAdd(),
       enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.usersService.setDialogEditAction(),
+      action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId)
@@ -83,40 +84,39 @@ export class UsersComponent implements OnDestroy {
     }
   ];
 
-  action: IUserDialogActionEnum;
-
   editedEntity: IUser;
-
-  passwordMinLength$: Observable<IUserConstant>;
-  passwordComplexity$: Observable<IUserConstant>;
 
   // TODO(d.maltsev): role options type
   roleOptions$: Observable<any>;
   languageOptions$: Observable<Array<IUserLanguageOption>>;
 
+  users$: Observable<Array<IUser>>;
+
+  emptyMessage$: Observable<string>;
+
+  private hasViewPermission$: Observable<boolean>;
+
   private usersSubscription: Subscription;
   private optionsSubscription: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
+    private contentTabService: ContentTabService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private permissionsService: PermissionsService,
     private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
+    private valueConverterService: ValueConverterService,
   ) {
-    this.roleOptions$ = this.permissionsService.permissions.map(state => state.roles.map(role => ({
-      label: role.name,
-      value: role.id
-    })));
+    this.roleOptions$ = this.permissionsService.roles.map(valueConverterService.valuesToOptions);
 
     this.languageOptions$ = this.userLanguagesService.languageOptions;
 
     // TODO(d.maltsev):
-    // preload roles in resolver or create PermissionsService.refreshRoles method
-    // that only loads roles if they are not already loaded
+    // Remove when UserRolesService is ready (currently waiting for spec & API)
     this.permissionsService.fetchRoles();
 
     this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
@@ -128,33 +128,30 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    this.usersService.fetch();
     this.usersSubscription = this.usersService.state
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;
-          this.action = state.dialogAction;
-          this.editedEntity = state.users.find(users => users.id === state.selectedUserId);
+          this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
         },
         // TODO: notifications
         error => console.error(error)
       );
 
-    this.passwordMinLength$ = this.userConstantsService.get('UserPassword.MinLength');
-    this.passwordComplexity$ = this.userConstantsService.get('UserPassword.Complexity.Use');
+    this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
+    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
+      hasViewPermission ? this.usersService.fetch() : this.usersService.clear()
+    );
+
+    this.users$ = this.usersService.state.map(state => state.users);
+
+    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
   }
 
   ngOnDestroy(): void {
     this.usersSubscription.unsubscribe();
     this.optionsSubscription.unsubscribe();
-  }
-
-  get isEntityBeingCreated(): boolean {
-    return this.action === IUserDialogActionEnum.USER_ADD;
-  }
-
-  get isEntityBeingEdited(): boolean {
-    return this.action === IUserDialogActionEnum.USER_EDIT;
+    this.viewPermissionSubscription.unsubscribe();
   }
 
   get state(): Observable<IUsersState> {
@@ -165,22 +162,13 @@ export class UsersComponent implements OnDestroy {
     return !user.isBlocked || this.displayBlockedUsers;
   }
 
-  onAddSubmit(data: any): void {
-    const { image, ...user } = data;
-    this.usersService.create(user, image);
+  onAdd(): void {
+    this.contentTabService.navigate('/admin/users/create');
   }
 
-  onEditSubmit(data: any): void {
-    const { image, ...user } = data;
-    this.usersService.update(user, image);
-  }
-
-  cancelAction(): void {
-    this.usersService.setDialogAction(null);
-  }
-
-  onEdit(user: IUser): void {
-    this.usersService.setDialogAction(IUserDialogActionEnum.USER_EDIT, user.id);
+  onEdit(user?: IUser): void {
+    const id = user ? user.id : this.editedEntity.id;
+    this.contentTabService.navigate(`/admin/users/${id}`);
   }
 
   onSelect(user: IUser): void {

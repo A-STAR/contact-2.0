@@ -1,0 +1,18 @@
+.ps > .ps__scrollbar-x-rail {
+  height: 6px !important;
+}
+.ps > .ps__scrollbar-y-rail {
+  width: 6px !important;
+}
+
+.ps > .ps__scrollbar-x-rail > .ps__scrollbar-x {
+  height: 6px !important;
+  bottom: 0 !important;
+  border-radius: 3px !important;
+}
+
+.ps > .ps__scrollbar-y-rail > .ps__scrollbar-y {
+  width: 6px !important;
+  right: 0 !important;
+  border-radius: 3px !important;
+}

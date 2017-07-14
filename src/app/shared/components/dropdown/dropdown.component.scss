@@ -1,0 +1,50 @@
+$border-color: #d5d5d5;
+$arrow-width: 8px;
+$arrow-margin: 20px;
+
+.dropdown {
+  border: 1px solid $border-color;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  left: 0;
+  margin-left: 50%;
+  transform: translateX(-$arrow-margin - $arrow-width);
+
+  &:before,
+  &:after {
+    bottom: 100%;
+    border-color: transparent;
+    left: $arrow-margin;
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &:before {
+    border-bottom-color: $border-color;
+    border-width: $arrow-width;
+    margin-left: -$arrow-width;
+  }
+
+  &:after {
+    border-bottom-color: #fafafa;
+    border-width: $arrow-width - 1;
+    margin-left: -($arrow-width - 1);
+  }
+}
+
+.dropdown.right {
+  left: auto;
+  right: 0;
+  margin-right: 50%;
+  transform: translateX($arrow-margin + $arrow-width);
+
+  &:before,
+  &:after {
+    left: auto;
+    right: $arrow-margin;
+  }
+}

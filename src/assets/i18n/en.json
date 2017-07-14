@@ -26,10 +26,14 @@
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and Permissions",
         "USERS": "Users",
+        "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",
         "BANKS": "Banks",
+        "CONTRACTOR": "Contractor",
+        "CONTRACTOR_MANAGERS": "Contractor Managers",
+        "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
         "UPLOAD_TEMPLATES": "Upload Templates",
@@ -44,6 +48,7 @@
         "COURTS": "Coutrs",
         "WORKPLACES": "Workplaces",
         "DEBT_LIST": "Debt List",
+        "DEBTOR_CARD": "Debtor",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -72,9 +77,10 @@
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
     "fieldRequired": "This field is required",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
-    "fieldDigits": "This field should contain at least one digit",
-    "fieldLowerCase": "This field should contain at least one lower case character",
-    "fieldUpperCase": "This field should contain at least one upper case character",
+    "fieldDigits": "This field must contain at least one digit",
+    "fieldLowerCase": "This field must contain at least one lower case character",
+    "fieldUpperCase": "This field must contain at least one upper case character",
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
     "login": {
       "INVALID_CREDENTIALS": "Incorrect login or password"
     }
@@ -97,7 +103,11 @@
       "copy": "Copy",
       "refresh": "Refresh",
       "search": "Search",
-      "save": "Save"
+      "save": "Save",
+      "sms": "Send SMS",
+      "move": "Move",
+      "download": "Download",
+      "upload": "Upload"
     }
   },
   "queryBuilder": {
@@ -138,6 +148,9 @@
         "fetch": "Could not fetch the constants",
         "update": "Could not update the constant"
       }
+    },
+    "errors": {
+      "view": "Access to constants list denied"
     }
   },
   "actionsLog": {
@@ -164,6 +177,7 @@
       }
     },
     "grid": {
+      "id": "Id",
       "fullName": "Full name",
       "position": "Position",
       "createDateTime": "Date",
@@ -173,11 +187,10 @@
       "machine": "Machine",
       "duration": "Duration"
     },
-    "actionsLog": {
-      "messages": {
-        "errors": {
-          "fetch": "Error when loading the operator logs"
-        }
+    "messages": {
+      "errors": {
+        "fetch": "Could not fetch operator action log",
+        "download": "Could not download operator action log"
       }
     }
   },
@@ -199,6 +212,7 @@
       "blocked": "Blocked",
       "login": "Login",
       "password": "Password",
+      "ldapLogin": "LDAP login",
       "role": "Role",
       "position": "Position",
       "startWorkDate": "Start date",
@@ -234,18 +248,39 @@
       "email": "Email",
       "languageId": "Language"
     },
+    "ldap": {
+      "title": "Domain users",
+      "groups": {
+        "grid": {
+          "name": "Name",
+          "comment": "Comment"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "Full name",
+          "login": "Login",
+          "isBlocked": "Blocked",
+          "comment": "Comment"
+        }
+      }
+    },
     "messages": {
       "errors": {
         "fetch": "Could not fetch users",
         "create": "Could not create user",
         "update": "Could not update user",
         "updatePhoto": "Could not update user photo",
+        "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
         "deletePhoto": "Could not delete user photo"
       }
+    },
+    "errors": {
+      "view": "Access to users list denied"
     }
   },
   "dictionaries": {
-    "access_denied": "You have no acces to the dictionaries. Please contact the administrator.",
+    "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
     "TITLE": "Dictionaries",
     "edit": {
       "title": "Dictionary: {{ code }}",
@@ -280,6 +315,7 @@
       "client": "Client"
     },
     "placeholder": {
+      "translatedName": "Select a dictionary",
       "select": {
         "translation": "Select language"
       }
@@ -291,6 +327,9 @@
         "update": "Could not update dictionary",
         "delete": "Could not remove dictionary"
       }
+    },
+    "errors": {
+      "view": "Access to dictionaries list denied"
     }
   },
   "terms": {
@@ -326,6 +365,9 @@
         "update": "Could not update dictionary term",
         "delete": "Could not remove dictionary term"
       }
+    },
+    "errors": {
+      "view": "Access to dictionary terms list denied"
     }
   },
   "roles": {
@@ -364,11 +406,17 @@
           "update": "Could not update role",
           "delete": "Could not delete role"
         }
+      },
+      "errors": {
+        "view": "Access to roles list denied"
       }
     },
     "permissions": {
       "tab": {
         "title": "Permits"
+      },
+      "tab2": {
+        "title": "Access settings"
       },
       "add": {
         "title": "Choose a permission",
@@ -386,7 +434,7 @@
         "comment": "Comments"
       },
       "tree": {
-        "access_denied": "The current role does not have a permission to access data. Please contact the administrator"
+        "access_denied": "Access to GUI objects permission tree denied"
       },
       "remove": {
         "title": "Remove role permission",
@@ -412,7 +460,127 @@
         "no_add": "You do not have the rights '{{ permission }}' for adding records",
         "no_edit": "You do not have the rights '{{ permission }}' for editing records",
         "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
+      },
+      "errors": {
+        "view": "Access to permissions list denied"
       }
+    }
+  },
+  "debtor": {
+    "title": "Debtor",
+    "id": "Id",
+    "firstName": "Name",
+    "lastName": "Family name",
+    "middleName": "Middle name",
+    "type": "Type",
+    "responsible": "Manager",
+    "reward": "Remuneration",
+    "generalInformationTab": {
+      "title": "General",
+      "generalInformation": "General information",
+      "birthDate": "Date of birth",
+      "company": "Company",
+      "position": "Position",
+      "income": "Income",
+      "citizenship": "Citizenship",
+      "sex": "Sex",
+      "workplaceChecked": "Employment verified",
+      "importance": "Importance",
+      "stage": "Stage",
+      "decency": "Decency",
+      "maritalStatus": "Marital status",
+      "education": "Education",
+      "email": "Email",
+      "passport": "Passport",
+      "series": "Series",
+      "number": "No",
+      "issueDate": "Issue date",
+      "issuedBy": "Issued by",
+      "birthPlace": "Place of birth",
+      "phonesTab": {
+        "title": "Phones",
+        "contactsVerification": "Verification of contacts",
+        "grid": {
+          "type": "Type",
+          "number": "Number",
+          "status": "Status",
+          "lastCall": "Last call",
+          "contactPerson": "Contact person",
+          "comment": "Comments",
+          "region": "Region",
+          "active": "Active",
+          "qualityCode": "Quality code",
+          "numberExists": "Number exists",
+          "qualityCodeByDataQ": "DataQ code quality",
+          "verified": "Verified",
+          "blockingDate": "Blocking date",
+          "blockingReason": "Blocking reason"
+        }
+      },
+      "addressesTab": {
+        "title": "Addresses"
+      },
+      "emailTab": {
+        "title": "Email"
+      }
+    },
+    "debtsTab": {
+      "title": "Debts"
+    },
+    "propertyTab": {
+      "title": "Property"
+    },
+    "guarantorsTab": {
+      "title": "Guarantors"
+    },
+    "contactsTab": {
+      "title": "Contacts"
+    },
+    "planningTab": {
+      "title": "Planning"
+    },
+    "documentationTab": {
+      "title": "Documents",
+      "errors": {
+        "download": "Could not download document"
+      }
+    },
+    "accountsTab": {
+      "title": "Accounts"
+    },
+    "tasksTab": {
+      "title": "Tasks"
+    },
+    "workHistoryTab": {
+      "title": "Work history (full)"
+    },
+    "actionLogTab": {
+      "title": "Actions log"
+    },
+    "arbitraryAttributesTab": {
+      "title": "Arbitrary attributes"
+    },
+    "commentTab": {
+      "title": "Comments"
+    },
+    "promotionsTab": {
+      "title": "Promotions"
+    },
+    "socialNetworksTab": {
+      "title": "Social networks"
+    },
+    "extrasDebtInfoTab": {
+      "title": "Debt info"
+    }
+  },
+  "debtors": {
+    "grid": {
+      "id": "Id",
+      "fullName": "Full name",
+      "debtId": "Debt id",
+      "type": "Debtor type",
+      "product": "Product",
+      "city": "City"
     }
   },
   "organizations": {
@@ -439,6 +607,9 @@
           "update": "Could not update organization",
           "delete": "Could not delete organization"
         }
+      },
+      "errors": {
+        "view": "Access to organizations list denied"
       }
     },
     "employees": {
@@ -472,6 +643,91 @@
           "update": "Could not update the employee",
           "delete": "Could not delete the employee"
         }
+      },
+      "errors": {
+        "view": "Access to employees list denied"
+      }
+    }
+  },
+  "contractors": {
+    "managers": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "genderCode": "Gender",
+        "position": "Position",
+        "branchCode": "Branch",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "workAddress": "Address",
+        "comment": "Comment"
+      },
+      "messages": {
+        "accessDenied": "Access to managers list denied",
+        "errors": {
+          "fetch": "Could not fetch managers list",
+          "create": "Could not create manager",
+          "update": "Could not update manager",
+          "delete": "Could not delete manager"
+        }
+      }
+    },
+    "remove": {
+      "title": "Delete contractor",
+      "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
+    },
+    "grid": {
+      "name": "Short name",
+      "fullName": "Full name",
+      "smsName": "Name fot SMS",
+      "responsibleId": "Manager",
+      "responsibleName": "Manager",
+      "typeCode": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "comment": "Comment"
+    },
+    "messages": {
+      "accessDenied": "Access to contractors list denied",
+      "errors": {
+        "fetch": "Could not fetch contractors list",
+        "create": "Could not create contractor",
+        "update": "Could not update contractor",
+        "delete": "Could not delete contractor"
+      }
+    },
+    "buttons": {
+      "managers": "Managers"
+    }
+  },
+  "portfolios": {
+    "grid": {
+      "name": "Name",
+      "directionCode": "Direction",
+      "stageCode": "Stage",
+      "statusCode": "Status",
+      "signDate": "Signed on",
+      "startWorkDate": "Processing start date",
+      "endWorkDate": "Processing end date",
+      "comment": "Comment"
+    },
+    "remove": {
+      "title": "Delete portfolio",
+      "confirmMessage": "Are you sure you want to delete portfolio {{ name }}?"
+    },
+    "move": {
+      "title": "move portfolio {{ name }}"
+    },
+    "messages": {
+      "accessDenied": "Access to portfolios list denied",
+      "errors": {
+        "fetch": "Could not fetch portfolios list",
+        "create": "Could not create portfolio",
+        "update": "Could not update portfolio",
+        "delete": "Could not delete portfolio"
       }
     }
   },
@@ -519,6 +775,7 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Save",
       "cancel": "Cancel",
       "remove": "Remove",
@@ -526,24 +783,25 @@
       "clear": "Clear",
       "search": "Search",
       "add": "Add",
-      "change": "Change"
+      "change": "Change",
+      "excel": "Export to Excel",
+      "back": "Back"
     },
     "dateTimeRage": {
       "from": "From",
       "to": "To"
     },
-    "data": {
-      "empty": "No data to display"
-    },
     "grid": {
-      "groupColumn": "Row groups",
-      "groupDndTitle": "Drag here to set row groups",
+      "empty": "No data to display",
       "filter": {
         "title": "Filter",
         "showOnlyLines": "Show only records, where:",
         "and": "And",
         "or": "Or"
       },
+      "groupColumn": "Row groups",
+      "groupDndTitle": "Drag here to set row groups",
+      "loading": "Loading data...",
       "selectedCounts": "{{ selected }} selected / {{ length }} total"
     },
     "filter": {
@@ -551,6 +809,27 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "sex": {
+      "m": "m",
+      "w": "w"
+    },
+    "date": {
+      "days": {
+        "full": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+        "short": [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+      },
+      "months": {
+        "full": [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+        "short": [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+      },
+      "format": {
+        "dateTime": "MM/DD/YYYY HH:mm:ss",
+        "date": "MM/DD/YYYY"
+      },
+      "datePicker": {
+        "placeholder": "Select a date"
+      }
     }
   }
 }

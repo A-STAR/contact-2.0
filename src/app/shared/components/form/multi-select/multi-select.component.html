@@ -4,9 +4,7 @@
       #gridFrom
       [styles]="gridStyles"
       [columns]="columnsFrom"
-      [rows]="rowsFrom"
-      [filter]="rowsFilter"
-      [autoLoad]="false"
+      [rows]="filteredRowsFrom"
       [footerHeight]="false"
       [columnTranslationKey]="columnsTranslationKeyFrom">
     </app-grid>
@@ -35,7 +33,6 @@
       [styles]="gridStyles"
       [columns]="columnsTo"
       [rows]="rowsTo"
-      [autoLoad]="false"
       [footerHeight]="0"
       [columnTranslationKey]="columnsTranslationKeyTo">
     </app-grid>

@@ -1,106 +1,97 @@
-import { OnInit, OnChanges, OnDestroy, Directive, ElementRef, Input, Output, SimpleChange, EventEmitter } from '@angular/core';
+import { Directive, ElementRef, Input, NgZone, OnInit, OnChanges, OnDestroy, SimpleChange } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line
-  selector: '[flot]'
+  selector: '[appFlot]'
 })
 export class FlotDirective implements OnInit, OnChanges, OnDestroy {
+  @Input() dataset: any;
+  @Input() options: any;
+  @Input() width = '100%';
+  @Input() height = '220px';
+  @Input() series: any;
 
-    element: any;
-    plot: any;
-    width: any;
+  private plot: any;
 
-    @Input() dataset: any;
-    @Input() options: any;
-    @Input() attrWidth: any;
-    @Input() height: number;
-    @Input() series: any;
+  constructor(
+    private element: ElementRef,
+    private zone: NgZone,
+  ) {
+    if (!$.plot) {
+      throw new Error('jQuery flot plugin not available.');
+    }
+  }
 
-    @Output() ready = new EventEmitter();
+  ngOnInit(): void {
+    this.init();
+    this.onDatasetChanged(this.dataset);
+    this.onSeriesToggled(this.series);
+  }
 
-    constructor(private el: ElementRef) {
-        this.element = $(this.el.nativeElement);
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
+    if (!$.plot) {
+      return;
+    }
+    if (changes.dataset) {
+      this.onDatasetChanged(changes.dataset.currentValue);
+    }
+    if (changes.series) {
+      this.onSeriesToggled(changes.series.currentValue);
+    }
+  }
 
-        if (!$.plot) {
-            console.log('Flot chart no available.');
-        }
+  init(): void {
+    const element = this.element.nativeElement;
 
-        this.plot = null;
+    $(element).css({
+      width: this.width,
+      height: this.height
+    });
+
+    // Flot has to be initialized outside zone.
+    // Otherwise zone gets destabilized.
+    this.zone.runOutsideAngular(() => {
+      this.plot = $.plot(element, [], this.options);
+    });
+  }
+
+  onDatasetChanged(dataset: any): void {
+    if (!this.plot || !this.dataset) {
+      return;
     }
 
-    ngOnInit() { }
+    this.plot.setData(dataset);
+    this.plot.setupGrid();
+    this.plot.draw();
+  }
 
-    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-        if (!$.plot) {
-            return;
-        }
-        if (changes['dataset']) {
-            this.onDatasetChanged(this.dataset);
-        }
-        if (changes['series']) {
-            this.onSerieToggled(this.series);
-        }
+  onSeriesToggled(series: any): void {
+    if (!this.plot || !series) {
+      return;
     }
 
-    init() {
+    const data = this.plot.getData();
 
-        const heightDefault = 220;
-
-        this.width = this.attrWidth || '100%';
-        this.height = this.height || heightDefault;
-
-        this.element.css({
-            width: this.width,
-            height: this.height
-        });
-
-        let plotObj;
-        if (!this.dataset || !this.options) {
-            return;
+    const toggleFor = (sName: string) => {
+      return function(s: any, i: any): void {
+        if (data[i] && data[i][sName]) {
+          data[i][sName].show = s;
         }
-        plotObj = $.plot(this.el.nativeElement, this.dataset, this.options);
-        if (this.ready) {
-            this.ready.next({ plot: plotObj });
-        }
-        return plotObj;
+      };
+    };
+
+    for (const sName in series) {
+      if (series.hasOwnProperty(sName)) {
+        series[sName].forEach(toggleFor(sName));
+      }
     }
 
-    onDatasetChanged(dataset) {
-        if (this.plot) {
-            this.plot.setData(dataset);
-            this.plot.setupGrid();
-            return this.plot.draw();
-        } else {
-            this.plot = this.init();
-            this.onSerieToggled(this.series);
-            return this.plot;
-        }
+    this.plot.setData(data);
+    this.plot.draw();
+  }
+
+  ngOnDestroy(): void {
+    if (this.plot) {
+      this.plot.shutdown();
     }
-
-    onSerieToggled(series) {
-        if (!this.plot || !series) {
-            return;
-        }
-        let someData = this.plot.getData();
-        for (let sName in series) {
-            series[sName].forEach(toggleFor(sName));
-        }
-
-        this.plot.setData(someData);
-        this.plot.draw();
-
-        function toggleFor(sName) {
-            return function(s, i) {
-                if (someData[i] && someData[i][sName]) {
-                    someData[i][sName].show = s;
-                }
-            };
-        }
-    }
-
-    ngOnDestroy() {
-        if (this.plot) {
-            this.plot.shutdown();
-        }
-    }
+  }
 }
