@@ -158,7 +158,13 @@ export class AuthService implements CanActivate {
       this.tokenTimer = setInterval(() => {
         const timeUntilExpiration = expirationDate.getTime() - Date.now();
         if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
-          this.zone.run(() => this.refreshToken());
+          this.zone.run(() => {
+            if (this.isTokenValid(token)) {
+              this.refreshToken();
+            } else {
+              this.redirectToLogin();
+            }
+          });
         }
       }, AuthService.JWT_TIMER_INTERVAL);
     });
