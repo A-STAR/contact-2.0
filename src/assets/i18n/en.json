@@ -757,6 +757,14 @@
       }
     }
   },
+  "errors": {
+    "default": "An unknown error has occurred",
+    "403": {
+      "login": {
+        "invalidCredentials": "Invalid login or password"
+      }
+    }
+  },
   "default": {
     "yesNo": {
       "Yes": "Yes",

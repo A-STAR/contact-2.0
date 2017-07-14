@@ -1,18 +1,31 @@
 import { Injectable, ErrorHandler } from '@angular/core';
+import { Response } from '@angular/http';
 
-import { environment } from '../../../environments/environment';
+import { NotificationsService } from '../notifications/notifications.service';
+
+import { AppError } from './app-error';
 
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
-  handleError(error: any): void {
-    if (environment.production) {
-      // TODO(d.maltsev): production error handling
-    } else {
-      this.consoleHandler(error);
-    }
+  constructor(private notificationsService: NotificationsService) {}
+
+  handleError(error: Error | Response | AppError): void {
+    const appError = this.getAppError(error);
+    this.notificationsService.error({ message: appError.message, param: {} });
+    console.error(error);
   }
 
-  private consoleHandler(error: any): void {
-    console.error(error);
+  private getAppError(error: Error | Response | AppError): AppError {
+    if (error instanceof AppError) {
+      return error;
+    }
+
+    if (error instanceof Response) {
+      const { code } = error.json().message;
+      const message = `errors.${error.status}.${code}`;
+      return new AppError(message);
+    }
+
+    return new AppError('errors.default');
   }
 }

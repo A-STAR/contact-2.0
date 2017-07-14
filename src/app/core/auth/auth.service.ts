@@ -12,6 +12,8 @@ import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
 
+import { AppError } from '../error/app-error';
+
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
 
@@ -71,10 +73,11 @@ export class AuthService implements CanActivate {
         this.authenticated = true;
       })
       .catch(error => {
-        this.authenticated = false;
+        // this.authenticated = false;
         this.dispatchResetAction();
-        const { message } = error.json();
-        throw new Error(this.getErrorMessage(message));
+        throw error;
+        // const { message } = error.json();
+        // throw new Error(this.getErrorMessage(message));
       })
       .map(resp => true);
   }
@@ -106,14 +109,14 @@ export class AuthService implements CanActivate {
     this.store.dispatch({ type: AuthService.GLOBAL_RESET });
   }
 
-  private getErrorMessage(message: any = null): string {
-    switch (message.code) {
-      case 'login.invalidCredentials':
-        return 'validation.login.INVALID_CREDENTIALS';
-      default:
-        return 'validation.DEFAULT_ERROR_MESSAGE';
-    }
-  }
+  // private getErrorMessage(message: any = null): string {
+  //   switch (message.code) {
+  //     case 'login.invalidCredentials':
+  //       return 'validation.login.INVALID_CREDENTIALS';
+  //     default:
+  //       return 'validation.DEFAULT_ERROR_MESSAGE';
+  //   }
+  // }
 
   private isTokenValid(token: string): boolean {
     return token && !this.jwtHelper.isTokenExpired(token);
