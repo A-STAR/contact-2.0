@@ -80,10 +80,7 @@
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
-    "login": {
-      "INVALID_CREDENTIALS": "Incorrect login or password"
-    }
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"
