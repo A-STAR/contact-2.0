@@ -6,7 +6,7 @@ import { IAuthState } from './auth.interface';
 import { AuthService } from './auth.service';
 
 const defaultState: IAuthState = {
-  token: null
+  token: localStorage.getItem(AuthService.TOKEN_NAME) || null
 };
 
 export function authReducer(state: IAuthState = defaultState, action: Action): IAuthState {
