@@ -47,8 +47,7 @@ export class AuthEffects {
         }))
         .catch(() => [
           {
-            type: AuthService.AUTH_DESTROY_SESSION,
-            payload: {}
+            type: AuthService.AUTH_DESTROY_SESSION
           },
           this.notificationService.createErrorAction('auth.errors.refresh'),
         ]);
@@ -60,13 +59,11 @@ export class AuthEffects {
     .switchMap((action: Action) => {
       return this.logout()
         .map(() => ({
-          type: AuthService.AUTH_DESTROY_SESSION,
-          payload: {}
+          type: AuthService.AUTH_DESTROY_SESSION
         }))
         .catch(() => [
           {
-            type: AuthService.AUTH_DESTROY_SESSION,
-            payload: {}
+            type: AuthService.AUTH_DESTROY_SESSION
           },
           this.notificationService.createErrorAction('auth.errors.logout')
         ]);
@@ -90,10 +87,9 @@ export class AuthEffects {
   destroySession$ = this.actions
     .ofType(AuthService.AUTH_DESTROY_SESSION)
     .do((action: Action) => {
-      const { redirectToLogin } = action.payload;
       this.authService.removeToken();
       this.authService.clearTokenTimer();
-      if (redirectToLogin !== false) {
+      if (!action.payload || action.payload.redirectToLogin !== false) {
         this.authService.redirectToLogin();
       }
     })
