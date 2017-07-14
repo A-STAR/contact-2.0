@@ -9,6 +9,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { environment } from '../../environments/environment';
 
+import { AuthEffects } from './auth/auth.effects';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
@@ -41,6 +42,7 @@ import { rootReducer } from './state/root.reducer';
 @NgModule({
   imports: [
     StoreModule.provideStore(rootReducer),
+    EffectsModule.run(AuthEffects),
     EffectsModule.run(DictionariesEffects),
     EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),

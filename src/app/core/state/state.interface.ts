@@ -1,4 +1,5 @@
 import { IActionsLogServiceState } from '../../routes/admin/actions-log/actions-log.interface';
+import { IAuthState } from '../auth/auth.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
@@ -16,6 +17,7 @@ import { IMetadataState } from '../metadata/metadata.interface';
 
 export interface IAppState {
   readonly actionsLog: IActionsLogServiceState;
+  readonly auth: IAuthState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
   readonly dictionaries: IDictionariesState;

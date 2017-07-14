@@ -4,10 +4,10 @@ import { Action, combineReducers } from '@ngrx/store';
 import { IAppState } from './state.interface';
 
 import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.reducer';
+import { authReducer, resetReducer } from '../auth/auth.reducer';
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
-import { authReducer } from '../auth/auth.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
@@ -22,6 +22,7 @@ import { metadataReducer } from '../metadata/metadata.reducer';
 
 export const reducers = {
   actionsLog: actionsLogReducer,
+  auth: authReducer,
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
   dictionaries: dictionariesReducer,
@@ -39,5 +40,5 @@ export const reducers = {
 };
 
 export function rootReducer(state: IAppState, action: Action): IAppState {
-  return compose(authReducer, combineReducers)(reducers)(state, action);
+  return compose(resetReducer, combineReducers)(reducers)(state, action);
 };

@@ -1,6 +1,7 @@
 import { Http, RequestOptions } from '@angular/http';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
-import { getToken } from '../auth/auth.service';
+
+import { AuthService } from './auth.service';
 
 /**
  * Must be an exported non-arrow function to pass static analysis.
@@ -8,7 +9,7 @@ import { getToken } from '../auth/auth.service';
  */
 export function authHttpServiceFactory(http: Http, options: RequestOptions): AuthHttp {
   return new AuthHttp(new AuthConfig({
-    tokenGetter: getToken,
+    tokenGetter: () => localStorage.getItem(AuthService.TOKEN_NAME),
     noJwtError: true
   }), http, options);
 }

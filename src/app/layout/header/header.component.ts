@@ -39,10 +39,6 @@ export class HeaderComponent implements OnInit {
     this.isNavSearchVisible = false;
   }
 
-  get isAuthenticated(): boolean {
-    return this.authService.isAuthenticated;
-  }
-
   toggleUserSettings(event: UIEvent): void {
     event.preventDefault();
   }
@@ -90,6 +86,6 @@ export class HeaderComponent implements OnInit {
 
   logout(event: UIEvent): void {
     event.preventDefault();
-    this.authService.logout().take(1).subscribe();
+    this.authService.dispatchLogoutAction();
   }
 }
