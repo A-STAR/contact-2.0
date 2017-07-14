@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
-import { IAuthState } from './auth.interface';
 
 import { DataService } from '../data/data.service';
 
@@ -42,7 +41,8 @@ export class AuthService implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.isTokenValid$
+    return this.token$
+      .map(token => this.isTokenValid(token))
       .do(isTokenValid => {
         if (!isTokenValid) {
           this.dispatchResetAction();
@@ -111,7 +111,7 @@ export class AuthService implements CanActivate {
     const timeUntilExpiration = this.jwtHelper.getTokenExpirationDate(token).getTime() - Date.now();
     if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
       this.zone.run(() => {
-        if (this.isTokenExpired(token)) {
+        if (this.isTokenValid(token)) {
           this.dispatchRefreshAction();
         } else {
           this.dispatchResetAction();
@@ -124,17 +124,14 @@ export class AuthService implements CanActivate {
     return { type, payload };
   }
 
-  private isTokenExpired(token: string): boolean {
+  private isTokenValid(token: string): boolean {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
-  private get isTokenValid$(): Observable<boolean> {
-    return this.state$.map(state => state.token)
-      .distinctUntilChanged()
-      .map(token => this.isTokenExpired(token));
-  }
-
-  private get state$(): Observable<IAuthState> {
-    return this.store.select(state => state.auth);
+  private get token$(): Observable<string> {
+    return this.store
+      .select(state => state.auth)
+      .map(state => state.token)
+      .distinctUntilChanged();
   }
 }
