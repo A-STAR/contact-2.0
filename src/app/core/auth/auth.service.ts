@@ -73,11 +73,9 @@ export class AuthService implements CanActivate {
         this.authenticated = true;
       })
       .catch(error => {
-        // this.authenticated = false;
+        this.authenticated = false;
         this.dispatchResetAction();
         throw error;
-        // const { message } = error.json();
-        // throw new Error(this.getErrorMessage(message));
       })
       .map(resp => true);
   }
@@ -108,15 +106,6 @@ export class AuthService implements CanActivate {
   private dispatchResetAction(): void {
     this.store.dispatch({ type: AuthService.GLOBAL_RESET });
   }
-
-  // private getErrorMessage(message: any = null): string {
-  //   switch (message.code) {
-  //     case 'login.invalidCredentials':
-  //       return 'validation.login.INVALID_CREDENTIALS';
-  //     default:
-  //       return 'validation.DEFAULT_ERROR_MESSAGE';
-  //   }
-  // }
 
   private isTokenValid(token: string): boolean {
     return token && !this.jwtHelper.isTokenExpired(token);
