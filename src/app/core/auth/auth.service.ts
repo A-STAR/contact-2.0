@@ -12,8 +12,6 @@ import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
 
-import { AppError } from '../error/app-error';
-
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
 

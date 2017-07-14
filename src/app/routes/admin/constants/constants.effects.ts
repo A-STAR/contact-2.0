@@ -10,6 +10,8 @@ import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ConstantsService } from './constants.service';
 
+import { ResponseError } from '../../../core/error/response-error';
+
 @Injectable()
 export class ConstantsEffects {
 
@@ -24,10 +26,8 @@ export class ConstantsEffects {
             payload: response.constants
           };
         })
-        .catch(() => {
-          return [
-            this.notificationService.createErrorAction('constants.api.errors.fetch')
-          ];
+        .catch(error => {
+          throw new ResponseError(error, 'constants.fetch');
         });
     });
 

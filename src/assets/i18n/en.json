@@ -755,11 +755,16 @@
     }
   },
   "errors": {
-    "default": "An unknown error has occurred",
-    "403": {
-      "login": {
-        "invalidCredentials": "Invalid login or password"
-      }
+    "server": {
+      "login.invalidCredentials": "Invalid login or password"
+    },
+    "default": {
+      "constants": {
+        "fetch": {
+          "403": "Acceess to constants list denied"
+        }
+      },
+      "generic": "An unknown error has occurred"
     }
   },
   "default": {

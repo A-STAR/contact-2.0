@@ -83,6 +83,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
+    // TODO(d.maltsev): remove this line
     this.constantsService.fetch();
 
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
