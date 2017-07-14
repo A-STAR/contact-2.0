@@ -31,7 +31,6 @@ export class AuthEffects {
               type: AuthService.AUTH_DESTROY_SESSION,
               payload: { redirectToLogin: false }
             },
-            // TODO(d.maltsev): i18n
             this.notificationService.createErrorAction(message),
           ];
         });
@@ -51,7 +50,6 @@ export class AuthEffects {
             type: AuthService.AUTH_DESTROY_SESSION,
             payload: {}
           },
-          // TODO(d.maltsev): i18n
           this.notificationService.createErrorAction('auth.errors.refresh'),
         ]);
     });
@@ -70,7 +68,6 @@ export class AuthEffects {
             type: AuthService.AUTH_DESTROY_SESSION,
             payload: {}
           },
-          // TODO(d.maltsev): i18n
           this.notificationService.createErrorAction('auth.errors.logout')
         ]);
     });
