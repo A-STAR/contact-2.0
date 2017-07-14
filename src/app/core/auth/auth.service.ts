@@ -38,7 +38,15 @@ export class AuthService implements CanActivate {
     private store: Store<IAppState>,
     private translateService: TranslateService,
     private zone: NgZone,
-  ) {}
+  ) {
+    this.token$
+      .do(token => {
+        if (this.isTokenValid(token)) {
+          this.initTokenTimer(token);
+        }
+      })
+      .subscribe();
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.token$
