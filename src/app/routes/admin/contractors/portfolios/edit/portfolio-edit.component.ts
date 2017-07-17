@@ -11,6 +11,7 @@ import { IOption } from '../../../../../core/converter/value/value-converter.int
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -26,29 +27,44 @@ export class PortfolioEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IPortfolio = null;
 
+  private contractorId: number;
+  private portfolioId: number;
+
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
+    private valueConverterService: ValueConverterService,
   ) {
     // TODO(d.maltsev): stronger typing
-    const portfolioId = Number((this.activatedRoute.params as any).value.id);
-    this.contractorsAndPortfoliosService.fetchPortfolio(portfolioId);
+    const { value } = this.activatedRoute.params as any;
+    this.contractorId = value.id;
+    this.portfolioId = value.portfolioId;
+
+    if (this.contractorId && this.portfolioId) {
+      this.contractorsAndPortfoliosService.fetchPortfolio(this.contractorId, this.portfolioId);
+    }
 
     Observable.combineLatest(
-      this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS).map(action => action.payload.portfolio),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS)
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
+      this.contractorId && this.portfolioId ?
+        this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS).map(action => action.payload.portfolio) :
+        Observable.of(null)
     )
     // TODO(d.maltsev): handle errors
     .take(1)
-    .subscribe(([ portfolio, directionOptions, stageOptions, statusOptions ]) => {
+    .subscribe(([ directionOptions, stageOptions, statusOptions, portfolio ]) => {
       this.initFormControls(portfolio, directionOptions, stageOptions, statusOptions);
-      // TODO(d.maltsev): convert all dates to Date here and in grid
-      this.formData = portfolio;
+      this.formData = portfolio ? {
+        ...portfolio,
+        signDate: this.valueConverterService.fromISO(portfolio.signDate),
+        startWorkDate: this.valueConverterService.fromISO(portfolio.startWorkDate),
+        endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
+      } : null;
     });
 
     this.userDictionariesService.preload([
@@ -56,6 +72,13 @@ export class PortfolioEditComponent {
       UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE,
       UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS,
     ]);
+
+    this.actions.ofType(
+      ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS,
+      ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
+    )
+    .take(1)
+    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -63,11 +86,15 @@ export class PortfolioEditComponent {
   }
 
   onSubmit(): void {
-    console.log('Submitting...');
-    console.log(this.form.data);
+    const portfolio = this.getPortfolioFromFormData();
+    if (this.contractorId) {
+      this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio);
+    } else {
+      this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio);
+    }
   }
 
-  onClose(): void {
+  onBack(): void {
     this.contentTabService.navigate('/admin/contractors');
   }
 
@@ -80,14 +107,27 @@ export class PortfolioEditComponent {
     this.controls = [
       { label: 'portfolios.grid.name', controlName: 'name', type: 'text', required: true },
       { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,
-          disabled: true, options: directionOptions },
+          disabled: !!portfolio, options: directionOptions },
       { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select', options: stageOptions },
       { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true,
-          disabled: portfolio.directionCode === 2, options: statusOptions },
-      { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'text' },
-      { label: 'portfolios.grid.startWorkDate', controlName: 'startWorkDate', type: 'text' },
-      { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'text' },
+          disabled: portfolio && portfolio.directionCode === 2, options: statusOptions },
+      { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'datepicker' },
+      { label: 'portfolios.grid.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
+      { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
       { label: 'portfolios.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
+  }
+
+  private getPortfolioFromFormData(): IPortfolio {
+    const data = this.form.value;
+    return {
+      ...data,
+      directionCode: Array.isArray(data.directionCode) ? data.directionCode[0].value : data.directionCode,
+      stageCode: Array.isArray(data.stageCode) ? data.stageCode[0].value : data.stageCode,
+      statusCode: Array.isArray(data.statusCode) ? data.statusCode[0].value : data.statusCode,
+      signDate: this.valueConverterService.fromLocalDate(data.signDate),
+      startWorkDate: this.valueConverterService.fromLocalDate(data.startWorkDate),
+      endWorkDate: this.valueConverterService.fromLocalDate(data.endWorkDate)
+    };
   }
 }

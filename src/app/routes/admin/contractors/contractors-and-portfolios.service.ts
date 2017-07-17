@@ -143,8 +143,8 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
   }
 
-  fetchPortfolio(portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_FETCH, { portfolioId });
+  fetchPortfolio(contractorId: number, portfolioId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_FETCH, { contractorId, portfolioId });
   }
 
   clearPortfolios(): void {

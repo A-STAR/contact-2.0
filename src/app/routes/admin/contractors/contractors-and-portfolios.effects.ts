@@ -209,10 +209,9 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   fetchPortfolio$ = this.actions
     .ofType(ContractorsAndPortfoliosService.PORTFOLIO_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
-      return this.readPortfolio(store.contractorsAndPortfolios.selectedContractorId, action.payload.portfolioId)
+    .switchMap((action: Action) => {
+      const { contractorId, portfolioId } = action.payload;
+      return this.readPortfolio(contractorId, portfolioId)
         .map(response => ({
           type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
           payload: {
@@ -248,7 +247,7 @@ export class ContractorsAndPortfoliosEffects {
       return this.updatePortfolio(contractorId, portfolioId, portfolio)
         .mergeMap(() => [
           {
-            type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
+            type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
           }
         ])
         .catch(() => [
@@ -258,7 +257,7 @@ export class ContractorsAndPortfoliosEffects {
 
   @Effect()
   deletePortfolio$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE)
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
