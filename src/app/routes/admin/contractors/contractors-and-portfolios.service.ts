@@ -13,6 +13,9 @@ export class ContractorsAndPortfoliosService {
   static CONTRACTOR_FETCH_SUCCESS  = 'CONTRACTOR_FETCH_SUCCESS';
   static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
   static CONTRACTOR_SELECT         = 'CONTRACTOR_SELECT';
+  static CONTRACTOR_CREATE         = 'CONTRACTOR_CREATE';
+  static CONTRACTOR_UPDATE         = 'CONTRACTOR_UPDATE';
+  static CONTRACTOR_DELETE         = 'CONTRACTOR_DELETE';
 
   static MANAGERS_FETCH         = 'MANAGERS_FETCH';
   static MANAGER_FETCH          = 'MANAGER_FETCH';

@@ -6,7 +6,12 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractorsResponse, IContractorManagersResponse, IPortfoliosResponse } from './contractors-and-portfolios.interface';
+import {
+  IContractor,
+  IContractorsResponse,
+  IContractorManagersResponse,
+  IPortfoliosResponse
+} from './contractors-and-portfolios.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 import { DataService } from '../../../core/data/data.service';
@@ -43,6 +48,46 @@ export class ContractorsAndPortfoliosEffects {
         }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  createContractor$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
+    .switchMap((action: Action) => {
+      return this.createContractor(action.payload.contractor)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.messages.errors.create')
+        ]);
+    });
+
+  @Effect()
+  updateContractor$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
+    .switchMap((action: Action) => {
+      const { contractor, contractorId } = action.payload;
+      return this.updateContractor(contractor, contractorId)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.messages.errors.update')
+        ]);
+    });
+
+  @Effect()
+  deleteContractor$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [_, store]: [Action, IAppState] = data;
+      return this.deleteContractor(store.contractorsAndPortfolios.selectedContractorId)
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH
+          }
+        ])
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.messages.errors.delete')
         ]);
     });
 
@@ -128,6 +173,18 @@ export class ContractorsAndPortfoliosEffects {
 
   private readContractor(contractorId: number): Observable<IContractorsResponse> {
     return this.dataService.read('/api/contractors/{contractorId}', { contractorId });
+  }
+
+  private createContractor(contractor: IContractor): Observable<any> {
+    return this.dataService.create('/api/contractors', {}, contractor);
+  }
+
+  private updateContractor(contractor: IContractor, contractorId: number): Observable<any> {
+    return this.dataService.update('/api/contractors/{contractorId}', { contractorId }, contractor);
+  }
+
+  private deleteContractor(contractorId: number): Observable<any> {
+    return this.dataService.delete('/api/contractors/{contractorId}', { contractorId });
   }
 
   private readManagers(contractorId: number): Observable<IContractorManagersResponse> {
