@@ -65,8 +65,8 @@ export class ContractorManagerEditComponent {
     ]);
 
     this.actions.ofType(
-      ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
-      ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+      ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS,
+      ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
     )
     .take(1)
     .subscribe(() => this.onBack());

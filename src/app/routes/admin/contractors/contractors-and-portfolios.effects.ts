@@ -142,7 +142,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, manager } = action.payload;
       return this.createManager(contractorId, manager)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.create')
         ]);
@@ -154,7 +158,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, managerId, manager } = action.payload;
       return this.updateManager(contractorId, managerId, manager)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.update')
         ]);
