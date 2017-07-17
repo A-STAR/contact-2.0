@@ -4,12 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContractorManager } from '../../contractors-and-portfolios.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -49,10 +51,10 @@ export class ContractorManagersComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'fullName' },
-    { prop: 'firstName' },
-    { prop: 'middleName' },
+    // { prop: 'fullName' },
     { prop: 'lastName' },
+    { prop: 'middleName' },
+    { prop: 'firstName' },
     { prop: 'genderCode' },
     { prop: 'position' },
     { prop: 'branchCode' },
@@ -65,12 +67,19 @@ export class ContractorManagersComponent implements OnDestroy {
 
   private contractorId = Number((this.activatedRoute.params as any).value.id);
   private canViewSubscription: Subscription;
+  private dictionariesSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    genderCode: []
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private gridService: GridService,
     private notificationsService: NotificationsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.canViewSubscription = this.canView$.subscribe(canView => {
@@ -81,10 +90,17 @@ export class ContractorManagersComponent implements OnDestroy {
         this.notificationsService.error('contractors.managers.messages.accessDenied');
       }
     });
+
+    this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER)
+      .subscribe(options => {
+        this.renderers.genderCode = [].concat(options);
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      });
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearManagers();
   }
 
