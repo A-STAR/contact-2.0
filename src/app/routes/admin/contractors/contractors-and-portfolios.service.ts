@@ -31,6 +31,9 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIOS_FETCH_SUCCESS = 'PORTFOLIOS_FETCH_SUCCESS';
   static PORTFOLIOS_CLEAR         = 'PORTFOLIOS_CLEAR';
   static PORTFOLIO_SELECT         = 'PORTFOLIO_SELECT';
+  static PORTFOLIO_CREATE         = 'PORTFOLIO_CREATE';
+  static PORTFOLIO_UPDATE         = 'PORTFOLIO_UPDATE';
+  static PORTFOLIO_DELETE         = 'PORTFOLIO_DELETE';
 
   constructor(private store: Store<IAppState>) {}
 

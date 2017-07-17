@@ -11,6 +11,7 @@ import {
   IContractorsResponse,
   IContractorManager,
   IContractorManagersResponse,
+  IPortfolio,
   IPortfoliosResponse
 } from './contractors-and-portfolios.interface';
 
@@ -201,6 +202,47 @@ export class ContractorsAndPortfoliosEffects {
         ]);
     });
 
+  @Effect()
+  createPortfolio$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_CREATE)
+    .switchMap((action: Action) => {
+      const { contractorId, portfolio } = action.payload;
+      return this.createPortfolio(contractorId, portfolio)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.create')
+        ]);
+    });
+
+  @Effect()
+  updatePortfolio$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE)
+    .switchMap((action: Action) => {
+      const { contractorId, portfolioId, portfolio } = action.payload;
+      return this.updatePortfolio(contractorId, portfolioId, portfolio)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.update')
+        ]);
+    });
+
+  @Effect()
+  deletePortfolio$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      return this.deletePortfolio(action.payload.contractorId, store.contractorsAndPortfolios.selectedPortfolioId)
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH
+          }
+        ])
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.delete')
+        ]);
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -255,5 +297,17 @@ export class ContractorsAndPortfoliosEffects {
 
   private readPortfolio(contractorId: number, portfolioId: number): Observable<IPortfoliosResponse> {
     return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+  }
+
+  private createPortfolio(contractorId: number, portfolio: IPortfolio): Observable<any> {
+    return this.dataService.create('/api/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
+  }
+
+  private updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): Observable<any> {
+    return this.dataService.update('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
+  }
+
+  private deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
+    return this.dataService.delete('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 }
