@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -62,9 +63,10 @@ export class ContractorsComponent implements OnDestroy {
 
   private dialogAction: ContractorActionEnum;
 
+  private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private dictionariesSubscription: Subscription;
   private contractorsSubscription: Subscription;
+  private dictionariesSubscription: Subscription;
 
   private selectedContractor: IContractor;
 
@@ -73,6 +75,7 @@ export class ContractorsComponent implements OnDestroy {
   };
 
   constructor(
+    private actions: Actions,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
@@ -100,12 +103,17 @@ export class ContractorsComponent implements OnDestroy {
     this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractor$.subscribe(contractor => {
       this.selectedContractor = contractor;
     });
+
+    this.actionsSubscription = this.actions
+      .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS)
+      .subscribe(() => this.dialogAction = null);
   }
 
   ngOnDestroy(): void {
+    this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.dictionariesSubscription.unsubscribe();
     this.contractorsSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearContractors();
   }
 
@@ -150,7 +158,7 @@ export class ContractorsComponent implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    console.log('onRemoveSubmit');
+    this.contractorsAndPortfoliosService.deleteContractor();
   }
 
   onCloseDialog(): void {
