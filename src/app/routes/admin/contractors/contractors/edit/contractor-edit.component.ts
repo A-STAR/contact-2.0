@@ -56,6 +56,13 @@ export class ContractorEditComponent {
     });
 
     this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
+
+    this.actions.ofType(
+      ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
+      ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+    )
+    .take(1)
+    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {

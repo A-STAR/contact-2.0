@@ -58,7 +58,11 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
     .switchMap((action: Action) => {
       return this.createContractor(action.payload.contractor)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.create')
         ]);
@@ -70,7 +74,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractor, contractorId } = action.payload;
       return this.updateContractor(contractorId, contractor)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.update')
         ]);
