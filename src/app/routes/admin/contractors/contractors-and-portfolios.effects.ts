@@ -36,7 +36,7 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       return this.readContractor(action.payload.contractorId)
         .map(response => ({
-          type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
+          type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS,
           payload: {
             contractor: response.contractors[0]
           }

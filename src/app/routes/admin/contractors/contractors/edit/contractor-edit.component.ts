@@ -40,7 +40,7 @@ export class ContractorEditComponent {
     this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
 
     Observable.combineLatest(
-      this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS).map(action => action.payload.contractor),
+      this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS).map(action => action.payload.contractor),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
     )

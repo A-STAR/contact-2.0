@@ -8,8 +8,9 @@ import { IContractorsAndPortfoliosState, IContractor, IContractorManager, IPortf
 @Injectable()
 export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH         = 'CONTRACTORS_FETCH';
-  static CONTRACTOR_FETCH          = 'CONTRACTOR_FETCH';
   static CONTRACTORS_FETCH_SUCCESS = 'CONTRACTORS_FETCH_SUCCESS';
+  static CONTRACTOR_FETCH          = 'CONTRACTOR_FETCH';
+  static CONTRACTOR_FETCH_SUCCESS  = 'CONTRACTOR_FETCH_SUCCESS';
   static CONTRACTORS_CLEAR         = 'CONTRACTORS_CLEAR';
   static CONTRACTOR_SELECT         = 'CONTRACTOR_SELECT';
 
