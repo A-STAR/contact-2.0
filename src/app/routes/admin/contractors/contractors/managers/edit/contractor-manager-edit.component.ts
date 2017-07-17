@@ -41,16 +41,20 @@ export class ContractorManagerEditComponent {
     this.contractorId = value.id;
     this.managerId = value.managerId;
 
-    this.contractorsAndPortfoliosService.fetchManager(this.contractorId, this.managerId);
+    if (this.contractorId && this.managerId) {
+      this.contractorsAndPortfoliosService.fetchManager(this.contractorId, this.managerId);
+    }
 
     Observable.combineLatest(
-      this.actions.ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS).map(action => action.payload.manager),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER),
+      this.contractorId && this.managerId ?
+        this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS).map(action => action.payload.manager) :
+        Observable.of(null)
     )
     // TODO(d.maltsev): handle errors
     .take(1)
-    .subscribe(([ manager, branchesOptions, genderOptions ]) => {
+    .subscribe(([ branchesOptions, genderOptions, manager ]) => {
       this.initFormControls(branchesOptions, genderOptions);
       this.formData = manager;
     });

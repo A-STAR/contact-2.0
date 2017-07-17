@@ -126,7 +126,7 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       return this.readManager(action.payload.contractorId, action.payload.managerId)
         .map(response => ({
-          type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
+          type: ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS,
           payload: {
             manager: response.managers[0]
           }
