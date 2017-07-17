@@ -120,8 +120,16 @@ export class ContractorManagersComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.clearManagers();
   }
 
+  get isManagerBeingRemoved(): boolean {
+    return this.dialogAction === ContractorManagerActionEnum.DELETE;
+  }
+
   get managers$(): Observable<Array<IContractorManager>> {
     return this.contractorsAndPortfoliosService.managers$;
+  }
+
+  get selectedManager$(): Observable<IContractorManager> {
+    return this.contractorsAndPortfoliosService.selectedManager$;
   }
 
   get canView$(): Observable<boolean> {
