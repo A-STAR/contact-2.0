@@ -89,6 +89,18 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
   }
 
+  createContractor(contractor: IContractor): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE, { contractor });
+  }
+
+  updateContractor(contractorId: number, contractor: IContractor): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE, { contractorId, contractor });
+  }
+
+  deleteContractor(): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_DELETE);
+  }
+
   fetchManagers(contractorId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH, { contractorId });
   }
@@ -105,6 +117,18 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { managerId });
   }
 
+  createManager(contractorId: number, manager: IContractorManager): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });
+  }
+
+  updateManager(contractorId: number, managerId: number, manager: IContractorManager): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_UPDATE, { contractorId, managerId, manager });
+  }
+
+  deleteManager(contractorId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_DELETE, { contractorId });
+  }
+
   fetchPortfolios(): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
   }
@@ -119,6 +143,18 @@ export class ContractorsAndPortfoliosService {
 
   selectPortfolio(portfolioId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, { portfolioId });
+  }
+
+  createPortfolio(contractorId: number, portfolio: IPortfolio): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_CREATE, { contractorId, portfolio });
+  }
+
+  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE, { contractorId, portfolioId, portfolio });
+  }
+
+  deletePortfolio(contractorId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_DELETE, { contractorId });
   }
 
   private get state(): Observable<IContractorsAndPortfoliosState> {
