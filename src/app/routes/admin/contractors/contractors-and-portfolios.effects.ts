@@ -230,7 +230,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolio } = action.payload;
       return this.createPortfolio(contractorId, portfolio)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('portfolios.messages.errors.create')
         ]);
@@ -242,7 +246,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolioId, portfolio } = action.payload;
       return this.updatePortfolio(contractorId, portfolioId, portfolio)
-        .mergeMap(() => Observable.empty())
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
+          }
+        ])
         .catch(() => [
           this.notificationsService.createErrorAction('portfolios.messages.errors.update')
         ]);
@@ -258,6 +266,9 @@ export class ContractorsAndPortfoliosEffects {
         .mergeMap(() => [
           {
             type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH
+          },
+          {
+            type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS
           }
         ])
         .catch(() => [
