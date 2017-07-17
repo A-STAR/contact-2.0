@@ -87,7 +87,7 @@ export class PortfolioEditComponent {
 
   onSubmit(): void {
     const portfolio = this.getPortfolioFromFormData();
-    if (this.contractorId) {
+    if (this.contractorId && this.portfolioId) {
       this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio);
     } else {
       this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio);

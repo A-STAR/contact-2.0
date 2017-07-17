@@ -78,7 +78,7 @@ export class ContractorManagerEditComponent {
 
   onSubmit(): void {
     const manager = this.getManagerFromFormData();
-    if (this.contractorId) {
+    if (this.contractorId && this.managerId) {
       this.contractorsAndPortfoliosService.updateManager(this.contractorId, this.managerId, manager);
     } else {
       this.contractorsAndPortfoliosService.createManager(this.contractorId, manager);

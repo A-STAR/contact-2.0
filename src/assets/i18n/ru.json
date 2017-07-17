@@ -650,6 +650,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Удаление менеджера",
+        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }}?"
+      },
       "grid": {
         "fullName": "ФИО",
         "firstName": "Имя",

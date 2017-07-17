@@ -177,7 +177,8 @@ export class ContractorsAndPortfoliosEffects {
       return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
         .mergeMap(() => [
           {
-            type: ContractorsAndPortfoliosService.MANAGERS_FETCH
+            type: ContractorsAndPortfoliosService.MANAGERS_FETCH,
+            payload: action.payload
           },
           {
             type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS

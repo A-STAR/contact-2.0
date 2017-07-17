@@ -651,6 +651,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Delete manager",
+        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+      },
       "grid": {
         "fullName": "Full name",
         "firstName": "First name",

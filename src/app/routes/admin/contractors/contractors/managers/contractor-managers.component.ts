@@ -55,8 +55,8 @@ export class ContractorManagersComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     // { prop: 'fullName' },
     { prop: 'lastName' },
-    { prop: 'middleName' },
     { prop: 'firstName' },
+    { prop: 'middleName' },
     { prop: 'genderCode' },
     { prop: 'position' },
     { prop: 'branchCode' },
