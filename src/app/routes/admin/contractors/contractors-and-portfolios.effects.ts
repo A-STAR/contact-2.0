@@ -66,7 +66,7 @@ export class ContractorsAndPortfoliosEffects {
 
   @Effect()
   updateContractor$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
+    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE)
     .switchMap((action: Action) => {
       const { contractor, contractorId } = action.payload;
       return this.updateContractor(contractorId, contractor)
