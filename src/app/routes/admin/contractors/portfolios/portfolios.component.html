@@ -28,6 +28,6 @@
   [columns]="columns"
   [rows]="portfolios$ | async"
   [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

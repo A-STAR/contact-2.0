@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -23,7 +24,7 @@ export class PortfoliosComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('PORTFOLIO_ADD'),
+      action: () => this.onAdd(),
       enabled: Observable.combineLatest(
         this.canAdd$,
         this.contractorsAndPortfoliosService.selectedContractor$
@@ -31,7 +32,7 @@ export class PortfoliosComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('PORTFOLIO_EDIT'),
+      action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.canEdit$,
         this.contractorsAndPortfoliosService.selectedPortfolio$
@@ -82,10 +83,17 @@ export class PortfoliosComponent implements OnDestroy {
 
   private dialogAction: PortfolioActionEnum;
 
+  private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private contractorsSubscription: Subscription;
   private dictionariesSubscription: Subscription;
+  private portfoliosSubscription: Subscription;
+
+  private selectedContractor: IContractor;
+  private selectedPortfolio: IPortfolio;
 
   constructor(
+    private actions: Actions,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
@@ -123,11 +131,26 @@ export class PortfoliosComponent implements OnDestroy {
         }
       }
     });
+
+    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractor$.subscribe(contractor => {
+      this.selectedContractor = contractor;
+    });
+
+    this.portfoliosSubscription = this.contractorsAndPortfoliosService.selectedPortfolio$.subscribe(portfolio => {
+      this.selectedPortfolio = portfolio;
+    });
+
+    this.actionsSubscription = this.actions
+      .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS)
+      .subscribe(() => this.dialogAction = null);
   }
 
   ngOnDestroy(): void {
+    this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.contractorsSubscription.unsubscribe();
     this.dictionariesSubscription.unsubscribe();
+    this.portfoliosSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
@@ -148,7 +171,6 @@ export class PortfoliosComponent implements OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    // TODO(d.maltsev): double check portfolio view permission
     return this.userPermissionsService.has('PORTFOLIO_VIEW').filter(permission => permission !== undefined);
   }
 
@@ -168,13 +190,12 @@ export class PortfoliosComponent implements OnDestroy {
     return this.userPermissionsService.has('PORTFOLIO_DELETE').filter(permission => permission !== undefined);
   }
 
-  onEdit(portfolio: IPortfolio): void {
-    // TODO(d.maltsev): simplify this
-    this.contractorsAndPortfoliosService.selectedContractor$
-      .take(1)
-      .subscribe(contractor => {
-        this.contentTabService.navigate(`/admin/contractors/${contractor.id}/portfolios/${portfolio.id}`);
-      });
+  onAdd(): void {
+    this.contentTabService.navigate(`/admin/contractors/${this.selectedContractor.id}/portfolios/create`);
+  }
+
+  onEdit(): void {
+    this.contentTabService.navigate(`/admin/contractors/${this.selectedContractor.id}/portfolios/${this.selectedPortfolio.id}`);
   }
 
   onSelect(portfolio: IPortfolio): void {
@@ -182,8 +203,7 @@ export class PortfoliosComponent implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    console.log('onRemoveSubmit');
-    this.onCloseDialog();
+    this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractor.id);
   }
 
   onMoveSubmit(contractor: IContractor): void {
