@@ -23,12 +23,12 @@ export class ContractorsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('CONTRACTOR_ADD'),
+      action: () => this.onAdd(),
       enabled: this.canAdd$
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('CONTRACTOR_EDIT'),
+      action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.canEdit$,
         this.contractorsAndPortfoliosService.selectedContractor$
@@ -64,6 +64,9 @@ export class ContractorsComponent implements OnDestroy {
 
   private canViewSubscription: Subscription;
   private dictionariesSubscription: Subscription;
+  private contractorsSubscription: Subscription;
+
+  private selectedContractor: IContractor;
 
   private renderers: IRenderer = {
     typeCode: []
@@ -93,11 +96,16 @@ export class ContractorsComponent implements OnDestroy {
         this.notificationsService.error('contractors.messages.accessDenied');
       }
     });
+
+    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractor$.subscribe(contractor => {
+      this.selectedContractor = contractor;
+    });
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.dictionariesSubscription.unsubscribe();
+    this.contractorsSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearContractors();
   }
 
@@ -129,8 +137,12 @@ export class ContractorsComponent implements OnDestroy {
     return this.userPermissionsService.has('CONTRACTOR_DELETE').filter(permission => permission !== undefined);
   }
 
-  onEdit(contractor: IContractor): void {
-    this.contentTabService.navigate(`/admin/contractors/${contractor.id}`);
+  onAdd(): void {
+    this.contentTabService.navigate(`/admin/contractors/create`);
+  }
+
+  onEdit(): void {
+    this.contentTabService.navigate(`/admin/contractors/${this.selectedContractor.id}`);
   }
 
   onSelect(contractor: IContractor): void {

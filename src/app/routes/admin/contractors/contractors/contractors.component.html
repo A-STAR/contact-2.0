@@ -21,6 +21,6 @@
   [columns]="columns"
   [rows]="contractors$ | async"
   [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>
