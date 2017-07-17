@@ -140,6 +140,7 @@ export class PortfoliosComponent implements OnDestroy {
       this.selectedPortfolio = portfolio;
     });
 
+    // TODO(d.maltsev): PORTFOLIO_MOVE, PORTFOLIO_MOVE_SUCCESS actions
     this.actionsSubscription = this.actions
       .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS)
       .subscribe(() => this.dialogAction = null);
@@ -207,8 +208,8 @@ export class PortfoliosComponent implements OnDestroy {
   }
 
   onMoveSubmit(contractor: IContractor): void {
-    console.log('onMoveSubmit', contractor);
-    this.onCloseDialog();
+    const body = { newContractorId: contractor.id };
+    this.contractorsAndPortfoliosService.updatePortfolio(this.selectedContractor.id, this.selectedPortfolio.id, body);
   }
 
   onCloseDialog(): void {

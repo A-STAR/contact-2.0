@@ -3,7 +3,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractorsAndPortfoliosState, IContractor, IContractorManager, IPortfolio } from './contractors-and-portfolios.interface';
+import {
+  IContractor,
+  IContractorsAndPortfoliosState,
+  IContractorManager,
+  IPortfolio,
+  IPortfolioMoveRequest
+} from './contractors-and-portfolios.interface';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
@@ -159,7 +165,7 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_CREATE, { contractorId, portfolio });
   }
 
-  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): void {
+  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio | IPortfolioMoveRequest): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE, { contractorId, portfolioId, portfolio });
   }
 
