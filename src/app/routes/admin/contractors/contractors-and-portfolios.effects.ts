@@ -9,6 +9,7 @@ import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor,
   IContractorsResponse,
+  IContractorManager,
   IContractorManagersResponse,
   IPortfoliosResponse
 } from './contractors-and-portfolios.interface';
@@ -67,7 +68,7 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
     .switchMap((action: Action) => {
       const { contractor, contractorId } = action.payload;
-      return this.updateContractor(contractor, contractorId)
+      return this.updateContractor(contractorId, contractor)
         .mergeMap(() => Observable.empty())
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.update')
@@ -120,6 +121,47 @@ export class ContractorsAndPortfoliosEffects {
         }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  createManager$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.MANAGER_CREATE)
+    .switchMap((action: Action) => {
+      const { contractorId, manager } = action.payload;
+      return this.createManager(contractorId, manager)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.managers.messages.errors.create')
+        ]);
+    });
+
+  @Effect()
+  updateManager$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.MANAGER_UPDATE)
+    .switchMap((action: Action) => {
+      const { contractorId, managerId, manager } = action.payload;
+      return this.updateManager(contractorId, managerId, manager)
+        .mergeMap(() => Observable.empty())
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.managers.messages.errors.update')
+        ]);
+    });
+
+  @Effect()
+  deleteManager$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE)
+    .withLatestFrom(this.store)
+    .switchMap(data => {
+      const [action, store]: [Action, IAppState] = data;
+      return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
+        .mergeMap(() => [
+          {
+            type: ContractorsAndPortfoliosService.MANAGERS_FETCH
+          }
+        ])
+        .catch(() => [
+          this.notificationsService.createErrorAction('contractors.managers.messages.errors.delete')
         ]);
     });
 
@@ -179,7 +221,7 @@ export class ContractorsAndPortfoliosEffects {
     return this.dataService.create('/api/contractors', {}, contractor);
   }
 
-  private updateContractor(contractor: IContractor, contractorId: number): Observable<any> {
+  private updateContractor(contractorId: number, contractor: IContractor): Observable<any> {
     return this.dataService.update('/api/contractors/{contractorId}', { contractorId }, contractor);
   }
 
@@ -193,6 +235,18 @@ export class ContractorsAndPortfoliosEffects {
 
   private readManager(contractorId: number, managerId: number): Observable<IContractorManagersResponse> {
     return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+  }
+
+  private createManager(contractorId: number, manager: IContractorManager): Observable<any> {
+    return this.dataService.create('/api/contractors/{contractorId}/managers', { contractorId }, manager);
+  }
+
+  private updateManager(contractorId: number, managerId: number, manager: IContractorManager): Observable<any> {
+    return this.dataService.update('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager);
+  }
+
+  private deleteManager(contractorId: number, managerId: number): Observable<any> {
+    return this.dataService.delete('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
