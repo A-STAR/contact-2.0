@@ -91,9 +91,9 @@ export class ActionsLogComponent {
     this.actionsLogService.fetch(filters);
   }
 
-  onColumnAction(payload: IGrid2EventPayload): void {
-    this.store.dispatch(payload);
-  }
+  // onColumnAction(payload: IGrid2EventPayload): void {
+  //   this.store.dispatch(payload);
+  // }
 
   onSelect(payload: IGrid2EventPayload): void {
     this.store.dispatch(payload);

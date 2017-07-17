@@ -802,7 +802,25 @@
       "groupColumn": "Row groups",
       "groupDndTitle": "Drag here to set row groups",
       "loading": "Loading data...",
-      "selectedCounts": "{{ selected }} selected / {{ length }} total"
+      "selectedCounts": "{{ selected }} selected / {{ length }} total",
+      "localeText": {
+        "noRowsToShow": "No data to display",
+        "equals": "equals",
+        "notEqual": "not equal",
+        "lessThan": "less than",
+        "lessThanOrEqual": "less than or equal",
+        "greaterThan": "greater than",
+        "greaterThanOrEqual": "greater than or equal",
+        "inRange": "in range",
+        "contains": "contains",
+        "notContains": "not contains",
+        "startsWith": "starts with",
+        "endsWith": "ends with",
+        "selectAll": "All",
+        "copy": "copy",
+        "copyWithHeaders": "copy with headers",
+        "toolPanel": "Tool panel"
+      }
     },
     "filter": {
       "value": "Value",
