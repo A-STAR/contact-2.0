@@ -59,6 +59,13 @@ export class ContractorManagerEditComponent {
       UserDictionariesService.DICTIONARY_BRANCHES,
       UserDictionariesService.DICTIONARY_GENDER
     ]);
+
+    this.actions.ofType(
+      ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
+      ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+    )
+    .take(1)
+    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -66,11 +73,15 @@ export class ContractorManagerEditComponent {
   }
 
   onSubmit(): void {
-    console.log('Submitting...');
-    console.log(this.form.data);
+    const manager = this.getManagerFromFormData();
+    if (this.contractorId) {
+      this.contractorsAndPortfoliosService.updateManager(this.contractorId, this.managerId, manager);
+    } else {
+      this.contractorsAndPortfoliosService.createManager(this.contractorId, manager);
+    }
   }
 
-  onClose(): void {
+  onBack(): void {
     this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers`);
   }
 
@@ -88,5 +99,14 @@ export class ContractorManagerEditComponent {
       { label: 'contractors.managers.grid.workAddress', controlName: 'workAddress', type: 'text' },
       { label: 'contractors.managers.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
+  }
+
+  private getManagerFromFormData(): IContractorManager {
+    const data = this.form.value;
+    return {
+      ...data,
+      branchCode: Array.isArray(data.branchCode) ? data.branchCode[0].value : data.branchCode,
+      genderCode: Array.isArray(data.genderCode) ? data.genderCode[0].value : data.genderCode,
+    };
   }
 }

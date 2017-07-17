@@ -71,7 +71,6 @@ export class ContractorEditComponent {
 
   onSubmit(): void {
     const contractor = this.getContractorFromFormData();
-    console.log(contractor);
     if (this.contractorId) {
       this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor);
     } else {

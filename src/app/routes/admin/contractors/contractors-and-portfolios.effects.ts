@@ -170,6 +170,9 @@ export class ContractorsAndPortfoliosEffects {
         .mergeMap(() => [
           {
             type: ContractorsAndPortfoliosService.MANAGERS_FETCH
+          },
+          {
+            type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS
           }
         ])
         .catch(() => [
