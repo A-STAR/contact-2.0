@@ -14,54 +14,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Injectable()
 export class ContractorsAndPortfoliosEffects {
-
-  private fakeContractors = [
-    {
-      id: 1,
-      name: 'Fake Contractor',
-      fullName: 'Fake Contractor and Sons Ltd.',
-      smsName: 'Fake Contractor',
-      responsibleId: 1,
-      responsibleName: 'John Smith',
-      typeCode: 1,
-      phone: '+7 (800) 123-45-67',
-      address: '15 Yemen Rd, Yemen',
-      comment: 'No comments for you today!'
-    }
-  ];
-
-  private fakeManagers = [
-    {
-      id: 1,
-      fullName: 'Jane Karen Smith',
-      firstName: 'Jane',
-      middleName: 'Karen',
-      lastName: 'Smith',
-      genderCode: 1,
-      position: 'Senior manager',
-      branchCode: 1,
-      mobPhone: '+7 (800) 765-43-21',
-      workPhone: '+7 (800) 999-99-99',
-      intPhone: '42',
-      workAddress: '',
-      comment: 'Hiya! My name is Jane!',
-    }
-  ];
-
-  private fakePortfolios = [
-    {
-      id: 1,
-      name: 'Fake portfolio',
-      directionCode: 1,
-      stageCode: 1,
-      statusCode: 4,
-      signDate: '',
-      startWorkDate: '',
-      endWorkDate: '',
-      comment: 'I am a comment. Good to see you here.',
-    }
-  ];
-
   @Effect()
   fetchContractors$ = this.actions
     .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
@@ -171,56 +123,26 @@ export class ContractorsAndPortfoliosEffects {
   ) {}
 
   private readContractors(): Observable<IContractorsResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      contractors: this.fakeContractors
-    });
-    // return this.dataService.read('/api/contractors');
+    return this.dataService.read('/api/contractors');
   }
 
   private readContractor(contractorId: number): Observable<IContractorsResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      contractors: this.fakeContractors
-    });
-    // return this.dataService.read('/api/contractor/{contractorId}', { contractorId });
+    return this.dataService.read('/api/contractors/{contractorId}', { contractorId });
   }
 
   private readManagers(contractorId: number): Observable<IContractorManagersResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      managers: this.fakeManagers
-    });
-    // return this.dataService.read('/api/contractors/{contractorId}/managers', { contractorId });
+    return this.dataService.read('/api/contractors/{contractorId}/managers', { contractorId });
   }
 
   private readManager(contractorId: number, managerId: number): Observable<IContractorManagersResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      managers: this.fakeManagers
-    });
-    // return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+    return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      portfolios: this.fakePortfolios
-    });
-    // return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
+    return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
   }
 
   private readPortfolio(contractorId: number, portfolioId: number): Observable<IPortfoliosResponse> {
-    // TODO(d.maltsev): remove fake API
-    return Observable.of({
-      success: true,
-      portfolios: this.fakePortfolios
-    });
-    // return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+    return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 }
