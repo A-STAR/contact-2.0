@@ -77,6 +77,7 @@ export class ContractorManagersComponent implements OnDestroy {
   private selectedManager: IContractorManager;
 
   private renderers: IRenderer = {
+    branchCode: [],
     genderCode: []
   };
 
@@ -99,11 +100,19 @@ export class ContractorManagersComponent implements OnDestroy {
       }
     });
 
-    this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER)
-      .subscribe(options => {
-        this.renderers.genderCode = [].concat(options);
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      });
+    this.dictionariesSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER)
+    ).subscribe(([ branchOptions, genderOptions ]) => {
+      this.renderers.branchCode = [].concat(branchOptions);
+      this.renderers.genderCode = [].concat(genderOptions);
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    });
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_BRANCHES,
+      UserDictionariesService.DICTIONARY_GENDER
+    ]);
 
     this.managersSubscription = this.contractorsAndPortfoliosService.selectedManager$.subscribe(manager => {
       this.selectedManager = manager;
