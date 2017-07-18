@@ -818,7 +818,8 @@
         "selectAll": "Все",
         "copy": "копировать",
         "copyWithHeaders": "копировать c заголовками",
-        "toolPanel": "Панель инструментов"
+        "toolPanel": "Панель инструментов",
+        "applyFilter": "Применить"
       }
     },
     "filter": {

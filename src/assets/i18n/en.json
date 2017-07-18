@@ -819,7 +819,8 @@
         "selectAll": "All",
         "copy": "copy",
         "copyWithHeaders": "copy with headers",
-        "toolPanel": "Tool panel"
+        "toolPanel": "Tool panel",
+        "applyFilter": "Apply filter"
       }
     },
     "filter": {

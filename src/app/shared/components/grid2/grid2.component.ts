@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,7 +21,7 @@ import {
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
   IToolbarAction,
-  IToolbarActionSelectPayload,
+  IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
@@ -104,6 +105,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
     private notificationService: NotificationsService,
     private translate: TranslateService,
@@ -148,7 +150,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
-        this.clearAllSelections();
+        this.clearRangeSelections();
       }
       if (rowCount) {
         this.viewportDatasource.params.setRowCount(rowCount.currentValue);
@@ -192,18 +194,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onPageSizeChange(payload: IToolbarActionSelectPayload): void {
+  onPageSizeChange(payload: IToolbarActionSelect): void {
     this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
   }
 
   dragStarted(): void {
-    // does really nothing, good for debugging
+    // does nothing, for debugging only
     this.onDragStarted.emit({ type: Grid2Component.MOVING_COLUMN });
   }
 
   dragStopped(): void {
     this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
-    // TODO(a.tymchuk): this is hacky, to be refactored
     if (this.rowCount) {
       const payload: IGrid2ColumnPositions = this.allGridColumns.map(column => column.getColDef().field);
       this.onColumnMove.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
@@ -228,7 +229,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   getFilters(): FilterObject {
     const filterModel = this.gridOptions.api.getFilterModel();
-    console.log('filter model', filterModel);
     const filters = Object.keys(filterModel)
       .map(key => {
         const filter: any = { name: key };
@@ -425,13 +425,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
 
-    this.translateGridOptionsMessages();
+    this.translateOptionsMessages();
     this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
-    // translate column names
     if (this.columnTranslationKey) {
-      // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-      const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
+      // NOTE: the key 'grid' should be present in translation files for every grid component
+      // or this will throw
+      const columnTranslations = this.columnTranslationKey
+        .split('.')
+        .reduce((acc, prop) => acc[prop], translations)
+        .grid;
       this.translateColumns(columnTranslations);
     }
 
@@ -441,7 +444,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // this.gridOptions.api.doLayout();
   }
 
-  private translateGridOptionsMessages(): any {
+  private translateOptionsMessages(): any {
     return Object.assign(
       this.gridOptions.localeText,
       { rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle') },
@@ -449,7 +452,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private clearAllSelections(): void {
+  private clearRangeSelections(): void {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
@@ -485,11 +488,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getCustomFilterParams(column: IGridColumn): any {
-    // if (column.filter === 'date') {
-    //   return {
-    //     filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
-    //   };
-    // } else
     if (column.filter === 'set' && column.filterValues) {
       return {
         values: column.filterValues.map(item => item.name),
@@ -589,7 +587,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
       headerHeight: this.headerHeight,
-      // NOTE: There is a huge translation under `localeText`
+      // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
       overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
@@ -632,7 +630,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       onFilterChanged: this.onFilterChanged.bind(this),
     };
 
-    this.translateGridOptionsMessages();
+    this.translateOptionsMessages();
   }
 
   private onColumnEverythingChanged(): void {

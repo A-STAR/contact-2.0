@@ -30,7 +30,7 @@ export class GridService {
    * @param {FilterObject} filters
    * @returns {IGrid2Request}
    */
-  buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
+  buildRequest(params: IGrid2RequestParams, filters?: FilterObject): IGrid2Request {
     const request: IGrid2Request = {};
     const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
