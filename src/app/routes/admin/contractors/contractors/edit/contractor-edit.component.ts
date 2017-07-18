@@ -37,21 +37,32 @@ export class ContractorEditComponent {
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
+    if (this.contractorId) {
+      this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
+    }
 
     Observable.combineLatest(
-      this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS).map(action => action.payload.contractor),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
+      this.contractorId ?
+        this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS).map(action => action.payload.contractor) :
+        Observable.of(null)
     )
     // TODO(d.maltsev): handle errors
     .take(1)
-    .subscribe(([ contractor, contractorTypeOptions, userOptions ]) => {
+    .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
       this.initFormControls(contractorTypeOptions, userOptions);
       this.formData = contractor;
     });
 
     this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
+
+    this.actions.ofType(
+      ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
+      ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+    )
+    .take(1)
+    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -59,11 +70,15 @@ export class ContractorEditComponent {
   }
 
   onSubmit(): void {
-    console.log('Submitting...');
-    console.log(this.form.data);
+    const contractor = this.getContractorFromFormData();
+    if (this.contractorId) {
+      this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor);
+    } else {
+      this.contractorsAndPortfoliosService.createContractor(contractor);
+    }
   }
 
-  onClose(): void {
+  onBack(): void {
     this.contentTabService.navigate('/admin/contractors');
   }
 
@@ -82,5 +97,14 @@ export class ContractorEditComponent {
       { label: 'contractors.grid.address', controlName: 'address', type: 'text' },
       { label: 'contractors.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
+  }
+
+  private getContractorFromFormData(): IContractor {
+    const data = this.form.value;
+    return {
+      ...data,
+      typeCode: Array.isArray(data.typeCode) ? data.typeCode[0].value : data.typeCode,
+      responsibleId: Array.isArray(data.responsibleId) ? data.responsibleId[0].value : data.responsibleId,
+    };
   }
 }

@@ -4,7 +4,7 @@
   actionTranslationKey="contractors.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedContractor$ | async"
+  [messageParams]="selectedContractor"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
@@ -21,6 +21,6 @@
   [columns]="columns"
   [rows]="contractors$ | async"
   [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

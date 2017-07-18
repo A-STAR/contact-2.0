@@ -651,6 +651,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Delete manager",
+        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+      },
       "grid": {
         "fullName": "Full name",
         "firstName": "First name",
@@ -727,6 +731,7 @@
         "fetch": "Could not fetch portfolios list",
         "create": "Could not create portfolio",
         "update": "Could not update portfolio",
+        "move": "Could not move portfolio",
         "delete": "Could not delete portfolio"
       }
     }
