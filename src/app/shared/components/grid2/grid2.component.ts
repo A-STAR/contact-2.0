@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,11 +21,11 @@ import {
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
   IToolbarAction,
-  IToolbarActionSelectPayload,
+  IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
-import { IGrid2ColumnsPositions, IGrid2Sorter, IGrid2EventPayload, IGrid2ExportableColumn } from './grid2.interface';
+import { IGrid2ColumnPositions, IGrid2Sorter, IGrid2EventPayload, IGrid2ExportableColumn } from './grid2.interface';
 import { IGridColumn } from '../grid/grid.interface';
 import { FilterObject } from './filter/grid2-filter';
 
@@ -62,8 +63,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static MOVING_COLUMN      = 'GRID2_MOVING_COLUMN';
   static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
 
-  // Inputs with presets
   @Input() columns: IGridColumn[] = [];
+  @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
   @Input() headerHeight = 25;
   @Input() groupColumnMinWidth = 120;
@@ -72,24 +73,21 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() pagination = true;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
     .sort((x, y) => x > y ? 1 : -1);
-  // NOTE: need this to override the default functionality
+  // NOTE: remote by default, if you need local sorting => change to `false`
   @Input() remoteSorting = true;
-  @Input() rowHeight = 25;
-  @Input() rowSelection = 'multiple';
-  @Input() showDndGroupPanel = false;
-
-  // Inputs without presets
-  @Input() sorters = null as IGrid2Sorter[];
-  @Input() columnTranslationKey: string;
-  @Input() rows: any[];
   @Input() rowCount = 0;
+  @Input() rowHeight = 25;
+  @Input() rows: any[] = [];
+  @Input() rowSelection = 'multiple';
+  // selected rows
   @Input() selected: any[] = [];
+  @Input() showDndGroupPanel = false;
+  @Input() sorters = null as IGrid2Sorter[];
   @Input() styles: CSSStyleDeclaration;
 
-  // Outputs
   @Output() onDragStopped: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onDragStarted: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onColumnsPositions: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onColumnMove: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onColumnGroup: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
@@ -107,15 +105,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
     private notificationService: NotificationsService,
     private translate: TranslateService,
     private valueConverter: ValueConverterService,
   ) {}
-
-  get gridRows(): any[] {
-    return this.rows || null;
-  }
 
   get allGridColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
@@ -155,28 +150,200 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
-        this.clearAllSelections();
+        this.clearRangeSelections();
       }
       if (rowCount) {
         this.viewportDatasource.params.setRowCount(rowCount.currentValue);
         this.refreshRowCount();
       }
       if (rows) {
-        this.viewportDatasource.params.setRowData(this.gridRows);
+        this.viewportDatasource.params.setRowData(this.rows);
       }
       if (selected) {
         this.refreshRowCount();
       }
-      // if (R.prop('sorters', changes)) {
-      //   if (this.remoteSorting) {
-      //     this.applyClientSorting();
-      //   }
-      // }
     }
   }
 
   ngOnDestroy(): void {
     this.langSubscription.unsubscribe();
+  }
+
+  onPageChange(action: IToolbarAction): void {
+    switch (action.type) {
+      case ToolbarActionTypeEnum.GO_BACKWARD:
+        if (this.page === 1) {
+          this.notificationService.info(`Can't fetch page no ${this.page}`, {}, false);
+          return;
+        }
+        this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
+        break;
+      case ToolbarActionTypeEnum.GO_FORWARD:
+        if (this.page === this.getPageCount()) {
+          this.notificationService.info(`No more data can be loaded`, {}, false);
+          return;
+        }
+        this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
+        break;
+      case ToolbarActionTypeEnum.GO_FIRST:
+        this.onPage.emit({ type: Grid2Component.FIRST_PAGE });
+        break;
+      case ToolbarActionTypeEnum.GO_LAST:
+        this.onPage.emit({ type: Grid2Component.LAST_PAGE, payload: this.getPageCount() });
+        break;
+    }
+  }
+
+  onPageSizeChange(payload: IToolbarActionSelect): void {
+    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
+  }
+
+  dragStarted(): void {
+    // does nothing, for debugging only
+    this.onDragStarted.emit({ type: Grid2Component.MOVING_COLUMN });
+  }
+
+  dragStopped(): void {
+    this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
+    if (this.rowCount) {
+      const payload: IGrid2ColumnPositions = this.allGridColumns.map(column => column.getColDef().field);
+      this.onColumnMove.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
+    }
+  }
+
+  onSelectionChanged(): void {
+    const selected = this.gridOptions.api.getSelectedRows();
+    this.onSelect.emit({
+      type: Grid2Component.SELECTED_ROWS, payload: selected.map(row => row.id)
+    });
+  }
+
+  rowDoubleClicked(): void {
+    this.onDblClick.emit(this.selected.map(node => node.data));
+  }
+
+  onFilterChanged(): void {
+    const filters = this.getFilters();
+    this.onFilter.emit(filters);
+  }
+
+  getFilters(): FilterObject {
+    const filterModel = this.gridOptions.api.getFilterModel();
+    const filters = Object.keys(filterModel)
+      .map(key => {
+        const filter: any = { name: key };
+        const model = filterModel[key];
+        // NOTE: `set` filter doesn't return the `filterType` => WTF?
+        switch (model.filterType || 'set') {
+          case 'set':
+            filter.operator = 'IN';
+            const column = this.columns.find(col => col.prop === key);
+            if (column && column.filterValues && Array.isArray(model)) {
+              filter.values = model.map(value => column.filterValues.find(val => val.name === value))
+                .map(val => val.code);
+            } else {
+              filter.values = [];
+            }
+            if (!filter.values.length) {
+              filter.operator = '==';
+              filter.values = null;
+            }
+            break;
+          case 'date':
+            filter.operator = 'BETWEEN';
+            filter.values = this.valueConverter.makeRangeFromLocalDate(model.dateFrom);
+            break;
+          case 'text':
+            Object.assign(filter, this.getTextFilter(model));
+            break;
+          case 'number':
+            Object.assign(filter, this.getNumberFilter(model));
+            break;
+          default:
+            filter.operator = 'LIKE';
+            filter.values = [`%${model}%`];
+            break;
+        }
+        return filter;
+      });
+
+    return FilterObject
+      .create()
+      .and()
+      .addFilters(filters);
+  }
+
+  private getTextFilter(model: any): any {
+    const { filter, type } = model;
+    const operators = {
+      equals: '==',
+      notEqual: '!=',
+      contains: 'LIKE',
+      notContains: 'NOT LIKE',
+      startsWith: 'LIKE',
+      endsWith: 'LIKE',
+    };
+    const patterns = {
+      contains: '%{v}%',
+      notContains: '%{v}%',
+      startsWith: '{v}%',
+      endsWith: '%{v}',
+    };
+    const result = {
+      operator: operators[type],
+      values: [],
+    };
+    if (['equals', 'notEqual'].includes(type)) {
+      result.values = [filter];
+    } else {
+      result.values = [patterns[type].replace('{v}', filter)];
+    }
+    return result;
+  }
+
+  private getNumberFilter(model: any): any {
+    // NOTE: `filter` here means `filterFrom`
+    const { filter, filterTo, type } = model;
+    const operators = {
+      lessThan: '<',
+      greaterThan: '>',
+      lessThanOrEqual: '<=',
+      greaterThanOrEqual: '>=',
+      equals: '==',
+      notEqual: '!=',
+      inRange: 'BETWEEN',
+    };
+    const result = {
+      operator: operators[type],
+      values: [],
+    };
+    if (type === 'inRange') {
+      result.values = [filter, filterTo];
+    } else {
+      result.values = [filter];
+    }
+    return result;
+  }
+
+  onSortChanged(): void {
+    const sorters = this.getSorters();
+    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter[] });
+  }
+
+  getSorters(): any {
+    return this.gridOptions.api.getSortModel()
+      .map(col => {
+        return { field: col.colId, direction: col.sort };
+      });
+  }
+
+  getExportableColumns(): IGrid2ExportableColumn[] {
+    return this.allGridColumns
+      .filter(column => column.isVisible())
+      .map(column => {
+        const { field, headerName: name } = column.getColDef();
+        return { field, name };
+      });
   }
 
   private setPagination(): void {
@@ -255,145 +422,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  onPageChange(action: IToolbarAction): void {
-    switch (action.type) {
-      case ToolbarActionTypeEnum.GO_BACKWARD:
-        if (this.page === 1) {
-          this.notificationService.info(`Can't fetch page no ${this.page}`, {}, false);
-          return;
-        }
-        this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
-        break;
-      case ToolbarActionTypeEnum.GO_FORWARD:
-        if (this.page === this.getPageCount()) {
-          this.notificationService.info(`No more data can be loaded`, {}, false);
-          return;
-        }
-        this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
-        break;
-      case ToolbarActionTypeEnum.GO_FIRST:
-        this.onPage.emit({ type: Grid2Component.FIRST_PAGE });
-        break;
-      case ToolbarActionTypeEnum.GO_LAST:
-        this.onPage.emit({ type: Grid2Component.LAST_PAGE, payload: this.getPageCount() });
-        break;
-    }
-  }
-
-  onPageSizeChange(payload: IToolbarActionSelectPayload): void {
-    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
-  }
-
-  dragStarted(): void {
-    // does really nothing, good for debugging
-    this.onDragStarted.emit({ type: Grid2Component.MOVING_COLUMN });
-  }
-
-  dragStopped(): void {
-    this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
-    // TODO(a.tymchuk): this is hacky, to be refactored
-    if (this.rowCount) {
-      const payload: IGrid2ColumnsPositions = this.allGridColumns.map(column => column.getColDef().field);
-      this.onColumnsPositions.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
-    }
-  }
-
-  rowSelected(event: any): void {
-    const rowNode: RowNode = event.node;
-    this.onSelect.emit({
-      type: Grid2Component.SELECTED_ROWS, payload: { rowData: rowNode.data, selected: rowNode.isSelected() }
-    });
-  }
-
-  rowDoubleClicked(): void {
-    this.onDblClick.emit(this.selected.map(node => node.data));
-  }
-
-  onFilterChanged(): void {
-    const filters = this.getFilters();
-    this.onFilter.emit(filters);
-  }
-
-  getFilters(): FilterObject {
-    const filterModel = this.gridOptions.api.getFilterModel();
-    console.log('filter model', filterModel);
-    const filters = Object.keys(filterModel)
-      .map(key => {
-        const filter: any = { name: key };
-        const el = filterModel[key];
-        // NOTE: `set` filter doesn't return the `filterType` => WTF?
-        switch (el.filterType || 'set') {
-          case 'set':
-            filter.operator = 'IN';
-            const column = this.columns.find(col => col.prop === key);
-            if (column && column.filterValues && Array.isArray(el)) {
-              filter.values = el.map(value => column.filterValues.find(val => val.name === value))
-                .map(val => val.code);
-            } else {
-              filter.values = [];
-            }
-            if (!filter.values.length) {
-              filter.operator = '==';
-              filter.values = null;
-            }
-            break;
-          case 'date':
-            filter.operator = 'BETWEEN';
-            filter.values = this.valueConverter.makeRangeFromLocalDate(el.dateFrom);
-            break;
-          case 'text':
-            filter.operator = 'LIKE';
-            filter.values = [`%${el.filter}%`];
-            break;
-          case 'number':
-            filter.operator = '==';
-            filter.values = [Number(el.filter)];
-            break;
-          default:
-            filter.operator = 'LIKE';
-            filter.values = [`%${el}%`];
-            break;
-        }
-        return filter;
-      });
-
-    return FilterObject
-      .create()
-      .and()
-      .addFilters(filters);
-  }
-
-  onSortChanged(): void {
-    const sorters = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter[] });
-  }
-
-  getSorters(): any {
-    return this.gridOptions.api.getSortModel()
-      .map(col => {
-        return { field: col.colId, direction: col.sort };
-      });
-  }
-
-  getExportableColumns(): IGrid2ExportableColumn[] {
-    return this.allGridColumns
-      .filter(column => column.isVisible())
-      .map(column => {
-        const { field, headerName } = column.getColDef();
-        return { field, name: headerName };
-      });
-  }
-
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
 
-    this.translateGridOptionsMessages();
+    this.translateOptionsMessages();
     this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
-    // translate column names
     if (this.columnTranslationKey) {
-      // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-      const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
+      // NOTE: the key 'grid' should be present in translation files for every grid component
+      // or this will throw
+      const columnTranslations = this.columnTranslationKey
+        .split('.')
+        .reduce((acc, prop) => acc[prop], translations)
+        .grid;
       this.translateColumns(columnTranslations);
     }
 
@@ -403,14 +444,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // this.gridOptions.api.doLayout();
   }
 
-  private translateGridOptionsMessages(): any {
-    return Object.assign(this.gridOptions.localeText || {}, {
-      noRowsToShow: this.translate.instant('default.grid.empty'),
-      rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle')
-    });
+  private translateOptionsMessages(): any {
+    return Object.assign(
+      this.gridOptions.localeText,
+      { rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle') },
+      this.translate.instant('default.grid.localeText')
+    );
   }
 
-  private clearAllSelections(): void {
+  private clearRangeSelections(): void {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
@@ -446,11 +488,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getCustomFilterParams(column: IGridColumn): any {
-    if (column.filter === 'date') {
-      return {
-        filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
-      };
-    } else if (column.filter === 'set' && column.filterValues) {
+    if (column.filter === 'set' && column.filterValues) {
       return {
         values: column.filterValues.map(item => item.name),
         cellRenderer: (node: { value: string }) => node.value,
@@ -484,7 +522,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       switch (column.type) {
         case 'primary':
           colDef.cellClass = 'ag-cell-number';
-          colDef.floatingFilterComponentParams = { suppressFilterButton: true };
+          // colDef.floatingFilterComponentParams = { suppressFilterButton: true };
           break;
         case 'date':
           colDef.floatingFilterComponentParams = { suppressFilterButton: true };
@@ -540,21 +578,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         }
       },
       enableColResize: true,
-      // enableFilter: true,
+      enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
       floatingFilter: true,
       getMainMenuItems: (params) => {
         // hide the tool menu
-        const menuItems = params.defaultItems.slice(0, params.defaultItems.length - 1);
-        return menuItems;
+        return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
       headerHeight: this.headerHeight,
-      localeText: {
-        noRowsToShow : this.translate.instant('default.grid.empty'),
-        rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle'),
-      },
-      // overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
+      // NOTE: There is a huge translation under `localeText` pulled from *.json
+      localeText: {},
+      overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
       paginationAutoPageSize: false,
       paginationPageSize: this.pageSize,
@@ -589,12 +624,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       // onGridReady: () => this.onColumnEverythingChanged(),
       onGridSizeChanged: (params) => this.fitGridSize(),
       onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
+      onSelectionChanged: this.onSelectionChanged.bind(this),
       onSortChanged: this.onSortChanged.bind(this),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: this.onFilterChanged.bind(this),
     };
 
-    this.translateGridOptionsMessages();
+    this.translateOptionsMessages();
   }
 
   private onColumnEverythingChanged(): void {
@@ -632,9 +668,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.fitGridSize();
 
     this.onColumnGroup.emit({
-      type: Grid2Component.GROUPING_COLUMNS, payload: {
-        groupingColumns: event.getColumns().map(column => column.getColId())
-      }
+      type: Grid2Component.GROUPING_COLUMNS, payload: event.getColumns().map(column => column.getColId())
     });
   }
 }

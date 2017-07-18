@@ -14,6 +14,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   templateUrl: './portfolio-move.component.html'
 })
 export class PortfolioMoveComponent implements OnDestroy {
+  @Input() contractor: IContractor;
   @Input() portfolio: IPortfolio;
   @Output() onSubmit = new EventEmitter<IContractor>();
   @Output() onCancel = new EventEmitter<void>();
@@ -56,7 +57,8 @@ export class PortfolioMoveComponent implements OnDestroy {
   }
 
   get contractors$(): Observable<Array<IContractor>> {
-    return this.contractorsAndPortfoliosService.contractors$;
+    return this.contractorsAndPortfoliosService.contractors$
+      .map(contractors => contractors.filter(contractor => contractor.id !== this.contractor.id));
   }
 
   onSelect(contractor: IContractor): void {

@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import {
-  IToolbarAction,
-  IToolbarActionSelectPayload,
-  ToolbarControlEnum
-} from './toolbar.interface';
+import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 
 import { IconsService } from '../../icons/icons.service';
@@ -18,10 +14,9 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
   styleUrls: ['./toolbar.component.scss'],
 })
 export class ToolbarComponent {
-
   @Input() actions: IToolbarAction[] = [];
   @Output() actionClick: EventEmitter<IToolbarAction> = new EventEmitter<IToolbarAction>();
-  @Output() actionSelect: EventEmitter<IToolbarActionSelectPayload> = new EventEmitter<IToolbarActionSelectPayload>();
+  @Output() actionSelect: EventEmitter<IToolbarActionSelect> = new EventEmitter<IToolbarActionSelect>();
 
   ToolbarControlEnum = ToolbarControlEnum;
 

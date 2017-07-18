@@ -27,6 +27,10 @@ export interface IPortfolio {
   comment: string;
 }
 
+export interface IPortfolioMoveRequest {
+  newContractorId: number;
+}
+
 export interface IPortfoliosResponse {
   success: boolean;
   portfolios: Array<IPortfolio>;

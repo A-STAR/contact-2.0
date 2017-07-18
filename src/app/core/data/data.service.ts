@@ -99,6 +99,11 @@ export class DataService {
       headers.append('Content-Type', 'application/json');
     }
 
+    const body = options.method === RequestMethod.Post ? Object.keys(options.body).reduce((acc, key) => {
+      acc[key] = options.body[key] === '' ? null : options.body[key];
+      return acc;
+    }, {}) : options.body;
+
     this.nRequests$.next(this.nRequests$.value + 1);
 
     return this.validateUrl(url)
@@ -106,7 +111,7 @@ export class DataService {
         const route = this.createRoute(url, routeParams);
         const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
+        return this.http.request(`${rootUrl}${api}`, { ...{ ...options, body }, headers });
       })
       .finally(() => {
         this.nRequests$.next(this.nRequests$.value - 1);

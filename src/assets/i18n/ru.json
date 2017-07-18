@@ -642,6 +642,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Удаление менеджера",
+        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }}?"
+      },
       "grid": {
         "fullName": "ФИО",
         "firstName": "Имя",
@@ -718,6 +722,7 @@
         "fetch": "Не удалось загрузить список портфелей",
         "create": "Не удалось добавить портфель",
         "update": "Не удалось сохранить портфель",
+        "move": "Не удалось переместить портфель",
         "delete": "Не удалось удалить портфель"
       }
     }
@@ -815,17 +820,36 @@
       "to": "Окончание"
     },
     "grid": {
-      "empty": "Нет данных",
+      "empty": "Нет данных для отображения",
       "filter": {
         "title": "Фильтр",
-        "showOnlyLines": "Показать только те строки, значения которых:",
+        "showOnlyLines": "Показать только...",
         "and": "И",
         "or": "Или"
       },
       "groupDndTitle": "Группировка",
       "groupColumn": "Группировка",
       "loading": "Загрузка данных...",
-      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
+      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего",
+      "localeText": {
+        "noRowsToShow": "Нет данных для отображения",
+        "equals": "равно",
+        "notEqual": "не равно",
+        "lessThan": "меньше",
+        "lessThanOrEqual": "меньше или равно",
+        "greaterThan": "больше",
+        "greaterThanOrEqual": "больше или равно",
+        "inRange": "диапазон",
+        "contains": "содержит",
+        "notContains": "не содержит",
+        "startsWith": "начинается с",
+        "endsWith": "заканчивается на",
+        "selectAll": "Все",
+        "copy": "копировать",
+        "copyWithHeaders": "копировать c заголовками",
+        "toolPanel": "Панель инструментов",
+        "applyFilter": "Применить"
+      }
     },
     "filter": {
       "value": "Значение",
