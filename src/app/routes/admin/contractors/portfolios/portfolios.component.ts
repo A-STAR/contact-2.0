@@ -15,6 +15,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-portfolios',
@@ -79,7 +80,10 @@ export class PortfoliosComponent implements OnDestroy {
   private renderers: IRenderer = {
     directionCode: [],
     statusCode: [],
-    stageCode: []
+    stageCode: [],
+    signDate: (_, date) => this.valueConverterService.ISOToLocalDate(date) || '',
+    startWorkDate: (_, date) => this.valueConverterService.ISOToLocalDate(date) || '',
+    endWorkDate: (_, date) => this.valueConverterService.ISOToLocalDate(date) || '',
   };
 
   private dialogAction$ = new BehaviorSubject<PortfolioActionEnum>(null);
@@ -101,6 +105,7 @@ export class PortfoliosComponent implements OnDestroy {
     private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.userDictionariesService.preload([
       UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION,
