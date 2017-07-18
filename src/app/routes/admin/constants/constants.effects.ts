@@ -10,8 +10,6 @@ import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ConstantsService } from './constants.service';
 
-import { ResponseError } from '../../../core/notifications/response-error';
-
 @Injectable()
 export class ConstantsEffects {
 
@@ -26,10 +24,7 @@ export class ConstantsEffects {
             payload: response.constants
           };
         })
-        .catch(error => {
-          this.notificationService.error(new ResponseError(error, ''));
-          return Observable.empty();
-        });
+        .catch(this.notificationService.createResponseErrorAction('errors.default.read', { entity: 'constants.entity.plural' }));
     });
 
   constructor(

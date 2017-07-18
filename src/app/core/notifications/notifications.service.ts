@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Response } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -98,6 +99,29 @@ export class NotificationsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
+  responseError(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Observable<{}> {
+    const translatedParams = {
+      ...params,
+      entity: this.translateService.instant(params['entity'])
+    };
+
+    return (error: Response) => {
+      this.error(new ResponseError(error, action), translatedParams, showAlert);
+      return Observable.empty();
+    };
+  }
+
+  createResponseErrorAction(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Array<Action> {
+    const translatedParams = {
+      ...params,
+      entity: this.translateService.instant(params['entity'])
+    };
+
+    return (error: Response) => [
+      this.createErrorAction(new ResponseError(error, action), translatedParams, showAlert)
+    ];
+  }
+
   reset(): void {
     const action = this.createAction(NotificationsService.NOTIFICATION_RESET);
     this.store.dispatch(action);
@@ -130,17 +154,17 @@ export class NotificationsService implements OnDestroy {
     if (message instanceof ResponseError) {
       const messages = [
         `errors.server.${message.message}`,
-        `errors.default.${message.translationKey}.${message.status}`,
-        `errors.default.generic.${message.status}`
+        `${message.action}.${message.status}`,
+        `${message.action}.*`
       ];
-      const translations = this.translateService.instant(messages);
-      return (() => {
-        for (const m of messages) {
-          if (m !== translations[m]) {
-            return translations[m];
-          }
+
+      const translations = this.translateService.instant(messages, params);
+      for (const m of messages) {
+        if (m !== translations[m]) {
+          return translations[m];
         }
-      })();
+      }
+      return this.translateService.instant(`errors.default.*`, params);
     }
 
     return this.translateService.instant(message, params);

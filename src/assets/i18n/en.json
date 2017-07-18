@@ -395,15 +395,6 @@
         "name": "Name",
         "comment": "Comments"
       },
-      "api": {
-        "errors": {
-          "fetch": "Could not fetch roles",
-          "add": "Could not add role",
-          "copy": "Could not copy role",
-          "update": "Could not update role",
-          "delete": "Could not delete role"
-        }
-      },
       "errors": {
         "view": "Access to roles list denied"
       }
@@ -443,14 +434,6 @@
         "value": "Value",
         "dsc": "Description",
         "comment": "Comments"
-      },
-      "api": {
-        "errors": {
-          "fetch": "Could not fetch permissions",
-          "add": "Could not add the permission",
-          "update": "Could not update the permission",
-          "delete": "Could not remove the permission"
-        }
       },
       "messages": {
         "no_view": "You do not have the rights '{{ permission }}' for viewing records",
@@ -759,14 +742,31 @@
       "login.invalidCredentials": "Invalid login or password"
     },
     "default": {
-      "constants": {
-        "fetch": {
-          "403": "Acceess to constants list denied"
-        }
+      "read": {
+        "403": "You don't have permissions to load {{ entity }}",
+        "*": "Could not load {{ entity }}"
       },
-      "generic": {
-        "500": "An unknown error has occurred"
-      }
+      "create": {
+        "403": "You don't have permissions to create {{ entity }}",
+        "*": "Could not create {{ entity }}"
+      },
+      "copy": {
+        "403": "You don't have permissions to copy {{ entity }}",
+        "*": "Could not copy {{ entity }}"
+      },
+      "move": {
+        "403": "You don't have permissions to move {{ entity }}",
+        "*": "Could not move {{ entity }}"
+      },
+      "update": {
+        "403": "You don't have permissions to update {{ entity }}",
+        "*": "Could not update {{ entity }}"
+      },
+      "delete": {
+        "403": "You don't have permissions to delete {{ entity }}",
+        "*": "Could not delete {{ entity }}"
+      },
+      "*": "An unknown error has occurred"
     }
   },
   "default": {

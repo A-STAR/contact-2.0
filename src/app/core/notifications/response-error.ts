@@ -1,7 +1,10 @@
 import { Response } from '@angular/http';
 
 export class ResponseError {
-  constructor(private _response: Response, private _translationKey: string) {}
+  constructor(
+    private _response: Response,
+    private _action: string = null
+  ) {}
 
   get status(): number {
     return this._response.status;
@@ -15,7 +18,7 @@ export class ResponseError {
     }
   }
 
-  get translationKey(): string {
-    return this._translationKey;
+  get action(): string {
+    return this._action;
   }
 }

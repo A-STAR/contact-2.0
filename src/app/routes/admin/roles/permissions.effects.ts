@@ -37,9 +37,7 @@ export class PermissionsEffects {
           type: PermissionsService.ROLE_FETCH_SUCCESS,
           payload: response.roles
         }))
-        .catch(() => [
-          this.notifications.createErrorAction('roles.roles.api.errors.fetch'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.read', { entity: 'roles.entity.plural' }));
     });
 
   @Effect()
@@ -51,9 +49,7 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.hideDialogAction,
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.roles.api.errors.add'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.create', { entity: 'roles.entity.singular' }));
     });
 
   @Effect()
@@ -65,9 +61,7 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.hideDialogAction,
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.roles.api.errors.copy'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.copy', { entity: 'roles.entity.singular' }));
     });
 
   @Effect()
@@ -82,9 +76,7 @@ export class PermissionsEffects {
           this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.roles.api.errors.update'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.update', { entity: 'roles.entity.singular' }));
     });
 
   @Effect()
@@ -99,9 +91,7 @@ export class PermissionsEffects {
           this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.roles.api.errors.delete'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.delete', { entity: 'roles.entity.singular' }));
     });
 
   @Effect()
@@ -117,9 +107,22 @@ export class PermissionsEffects {
             permissions: response.permits
           }
         }))
-        .catch(() => [
-          this.notifications.createErrorAction('roles.permissions.api.errors.fetch')
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.read', { entity: 'permissions.entity.plural' }));
+    });
+
+  @Effect()
+  createPermission = this.actions
+    .ofType(PermissionsService.PERMISSION_ADD)
+    .map(toPayload)
+    .switchMap(payload => {
+      const { role, permissionIds } = payload;
+      return this.add(role, permissionIds)
+        .mergeMap(() => [
+          this.hideDialogAction,
+          this.rolePermissionFetchAction,
+          this.userPermissionsService.createRefreshAction(),
+        ])
+        .catch(this.notifications.createResponseErrorAction('errors.default.create', { entity: 'permissions.entity.singular' }));
     });
 
   @Effect()
@@ -134,26 +137,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.permissions.api.errors.update'),
-        ]);
-    });
-
-  @Effect()
-  addPermission = this.actions
-    .ofType(PermissionsService.PERMISSION_ADD)
-    .map(toPayload)
-    .switchMap(payload => {
-      const { role, permissionIds } = payload;
-      return this.add(role, permissionIds)
-        .mergeMap(() => [
-          this.hideDialogAction,
-          this.rolePermissionFetchAction,
-          this.userPermissionsService.createRefreshAction(),
-        ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.permissions.api.errors.create'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.update', { entity: 'permissions.entity.singular' }));
     });
 
   @Effect()
@@ -168,9 +152,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(() => [
-          this.notifications.createErrorAction('roles.permissions.api.errors.delete'),
-        ]);
+        .catch(this.notifications.createResponseErrorAction('errors.default.delete', { entity: 'permissions.entity.singular' }));
     });
 
   constructor(
