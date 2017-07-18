@@ -48,6 +48,8 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIO_CREATE_SUCCESS = 'PORTFOLIO_CREATE_SUCCESS';
   static PORTFOLIO_UPDATE         = 'PORTFOLIO_UPDATE';
   static PORTFOLIO_UPDATE_SUCCESS = 'PORTFOLIO_UPDATE_SUCCESS';
+  static PORTFOLIO_MOVE           = 'PORTFOLIO_MOVE';
+  static PORTFOLIO_MOVE_SUCCESS   = 'PORTFOLIO_MOVE_SUCCESS';
   static PORTFOLIO_DELETE         = 'PORTFOLIO_DELETE';
   static PORTFOLIO_DELETE_SUCCESS = 'PORTFOLIO_DELETE_SUCCESS';
 
@@ -165,8 +167,12 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_CREATE, { contractorId, portfolio });
   }
 
-  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio | IPortfolioMoveRequest): void {
+  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): void {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE, { contractorId, portfolioId, portfolio });
+  }
+
+  movePortfolio(contractorId: number, newContractorId: number, portfolioId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_MOVE, { contractorId, newContractorId, portfolioId });
   }
 
   deletePortfolio(contractorId: number): void {

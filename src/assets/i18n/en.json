@@ -731,6 +731,7 @@
         "fetch": "Could not fetch portfolios list",
         "create": "Could not create portfolio",
         "update": "Could not update portfolio",
+        "move": "Could not move portfolio",
         "delete": "Could not delete portfolio"
       }
     }

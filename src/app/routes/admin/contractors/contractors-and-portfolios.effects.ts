@@ -12,6 +12,7 @@ import {
   IContractorManager,
   IContractorManagersResponse,
   IPortfolio,
+  IPortfolioMoveRequest,
   IPortfoliosResponse
 } from './contractors-and-portfolios.interface';
 
@@ -58,11 +59,9 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
     .switchMap((action: Action) => {
       return this.createContractor(action.payload.contractor)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.create')
         ]);
@@ -74,11 +73,9 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractor, contractorId } = action.payload;
       return this.updateContractor(contractorId, contractor)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.update')
         ]);
@@ -92,12 +89,8 @@ export class ContractorsAndPortfoliosEffects {
       const [_, store]: [Action, IAppState] = data;
       return this.deleteContractor(store.contractorsAndPortfolios.selectedContractorId)
         .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH
-          },
-          {
-            type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS
-          }
+          { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
+          { type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS }
         ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.messages.errors.delete')
@@ -142,11 +135,9 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, manager } = action.payload;
       return this.createManager(contractorId, manager)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.create')
         ]);
@@ -158,11 +149,9 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, managerId, manager } = action.payload;
       return this.updateManager(contractorId, managerId, manager)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.update')
         ]);
@@ -176,13 +165,8 @@ export class ContractorsAndPortfoliosEffects {
       const [action, store]: [Action, IAppState] = data;
       return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
         .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.MANAGERS_FETCH,
-            payload: action.payload
-          },
-          {
-            type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS
-          }
+          { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
+          { type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS }
         ])
         .catch(() => [
           this.notificationsService.createErrorAction('contractors.managers.messages.errors.delete')
@@ -230,11 +214,9 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolio } = action.payload;
       return this.createPortfolio(contractorId, portfolio)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('portfolios.messages.errors.create')
         ]);
@@ -246,13 +228,26 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolioId, portfolio } = action.payload;
       return this.updatePortfolio(contractorId, portfolioId, portfolio)
-        .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
-          }
-        ])
+        .map(() => ({
+          type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
+        }))
         .catch(() => [
           this.notificationsService.createErrorAction('portfolios.messages.errors.update')
+        ]);
+    });
+
+  @Effect()
+  movePortfolio$ = this.actions
+    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_MOVE)
+    .switchMap((action: Action) => {
+      const { contractorId, newContractorId, portfolioId } = action.payload;
+      return this.updatePortfolio(contractorId, portfolioId, { newContractorId })
+        .mergeMap(() => [
+          { type: ContractorsAndPortfoliosService.PORTFOLIO_MOVE_SUCCESS },
+          { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH }
+        ])
+        .catch(() => [
+          this.notificationsService.createErrorAction('portfolios.messages.errors.move')
         ]);
     });
 
@@ -264,12 +259,8 @@ export class ContractorsAndPortfoliosEffects {
       const [action, store]: [Action, IAppState] = data;
       return this.deletePortfolio(action.payload.contractorId, store.contractorsAndPortfolios.selectedPortfolioId)
         .mergeMap(() => [
-          {
-            type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH
-          },
-          {
-            type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS
-          }
+          { type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH },
+          { type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS }
         ])
         .catch(() => [
           this.notificationsService.createErrorAction('portfolios.messages.errors.delete')
@@ -336,7 +327,7 @@ export class ContractorsAndPortfoliosEffects {
     return this.dataService.create('/api/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
   }
 
-  private updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): Observable<any> {
+  private updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio | IPortfolioMoveRequest): Observable<any> {
     return this.dataService.update('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
   }
 

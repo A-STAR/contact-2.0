@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -40,7 +41,7 @@ export class PortfoliosComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_MOVE,
-      action: () => this.dialogAction = PortfolioActionEnum.MOVE,
+      action: () => this.dialogAction$.next(PortfolioActionEnum.MOVE),
       enabled: Observable.combineLatest(
         this.canMove$,
         this.contractorsAndPortfoliosService.selectedPortfolio$
@@ -48,7 +49,7 @@ export class PortfoliosComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dialogAction = PortfolioActionEnum.DELETE,
+      action: () => this.dialogAction$.next(PortfolioActionEnum.DELETE),
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedPortfolio$
@@ -81,7 +82,7 @@ export class PortfoliosComponent implements OnDestroy {
     stageCode: []
   };
 
-  private dialogAction: PortfolioActionEnum;
+  private dialogAction$ = new BehaviorSubject<PortfolioActionEnum>(null);
 
   private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -140,10 +141,11 @@ export class PortfoliosComponent implements OnDestroy {
       this.selectedPortfolio = portfolio;
     });
 
-    // TODO(d.maltsev): PORTFOLIO_MOVE, PORTFOLIO_MOVE_SUCCESS actions
     this.actionsSubscription = this.actions
-      .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS)
-      .subscribe(() => this.dialogAction = null);
+      .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS, ContractorsAndPortfoliosService.PORTFOLIO_MOVE_SUCCESS)
+      .subscribe(() => {
+        this.dialogAction$.next(null);
+      });
   }
 
   ngOnDestroy(): void {
@@ -155,12 +157,12 @@ export class PortfoliosComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
-  get isPortfolioBeingMoved(): boolean {
-    return this.dialogAction === PortfolioActionEnum.MOVE;
+  get isPortfolioBeingMoved$(): Observable<boolean> {
+    return this.dialogAction$.map(value => value === PortfolioActionEnum.MOVE);
   }
 
-  get isPortfolioBeingDeleted(): boolean {
-    return this.dialogAction === PortfolioActionEnum.DELETE;
+  get isPortfolioBeingDeleted$(): Observable<boolean> {
+    return this.dialogAction$.map(value => value === PortfolioActionEnum.DELETE);
   }
 
   get portfolios$(): Observable<Array<IPortfolio>> {
@@ -208,11 +210,10 @@ export class PortfoliosComponent implements OnDestroy {
   }
 
   onMoveSubmit(contractor: IContractor): void {
-    const body = { newContractorId: contractor.id };
-    this.contractorsAndPortfoliosService.updatePortfolio(this.selectedContractor.id, this.selectedPortfolio.id, body);
+    this.contractorsAndPortfoliosService.movePortfolio(this.selectedContractor.id, contractor.id, this.selectedPortfolio.id);
   }
 
   onCloseDialog(): void {
-    this.dialogAction = null;
+    this.dialogAction$.next(null);
   }
 }
