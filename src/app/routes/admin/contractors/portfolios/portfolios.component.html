@@ -4,14 +4,15 @@
   actionTranslationKey="portfolios.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedPortfolio$ | async"
+  [messageParams]="selectedPortfolio"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-portfolio-move
   *ngIf="isPortfolioBeingMoved$ | async"
-  [portfolio]="selectedPortfolio$ | async"
+  [contractor]="selectedContractor"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onCloseDialog()">
 </app-portfolio-move>

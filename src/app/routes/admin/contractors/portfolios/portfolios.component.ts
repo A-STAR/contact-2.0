@@ -169,10 +169,6 @@ export class PortfoliosComponent implements OnDestroy {
     return this.contractorsAndPortfoliosService.portfolios$;
   }
 
-  get selectedPortfolio$(): Observable<IPortfolio> {
-    return this.contractorsAndPortfoliosService.selectedPortfolio$;
-  }
-
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_VIEW').filter(permission => permission !== undefined);
   }

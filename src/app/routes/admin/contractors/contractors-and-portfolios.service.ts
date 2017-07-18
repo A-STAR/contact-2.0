@@ -3,13 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import {
-  IContractor,
-  IContractorsAndPortfoliosState,
-  IContractorManager,
-  IPortfolio,
-  IPortfolioMoveRequest
-} from './contractors-and-portfolios.interface';
+import { IContractor, IContractorsAndPortfoliosState, IContractorManager, IPortfolio } from './contractors-and-portfolios.interface';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {

@@ -125,10 +125,6 @@ export class ContractorsComponent implements OnDestroy {
     return this.contractorsAndPortfoliosService.contractors$;
   }
 
-  get selectedContractor$(): Observable<IContractor> {
-    return this.contractorsAndPortfoliosService.selectedContractor$;
-  }
-
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('CONTRACTOR_VIEW').filter(permission => permission !== undefined);
   }
