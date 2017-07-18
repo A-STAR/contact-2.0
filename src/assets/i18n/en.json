@@ -764,7 +764,9 @@
           "403": "Acceess to constants list denied"
         }
       },
-      "generic": "An unknown error has occurred"
+      "generic": {
+        "500": "An unknown error has occurred"
+      }
     }
   },
   "default": {

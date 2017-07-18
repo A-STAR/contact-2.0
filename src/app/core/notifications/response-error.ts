@@ -7,6 +7,14 @@ export class ResponseError {
     return this._response.status;
   }
 
+  get message(): string {
+    try {
+      return this._response.json().message.code;
+    } catch (error) {
+      return null;
+    }
+  }
+
   get translationKey(): string {
     return this._translationKey;
   }

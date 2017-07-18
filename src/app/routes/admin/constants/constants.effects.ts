@@ -10,7 +10,7 @@ import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ConstantsService } from './constants.service';
 
-import { ResponseError } from '../../../core/error/response-error';
+import { ResponseError } from '../../../core/notifications/response-error';
 
 @Injectable()
 export class ConstantsEffects {
@@ -27,13 +27,13 @@ export class ConstantsEffects {
           };
         })
         .catch(error => {
-          throw new ResponseError(error, 'constants.fetch');
+          this.notificationService.error(new ResponseError(error, ''));
+          return Observable.empty();
         });
     });
 
   constructor(
     private actions: Actions,
-    // private store: Store<IAppState>,
     private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}

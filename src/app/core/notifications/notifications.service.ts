@@ -16,6 +16,8 @@ import {
   NotificationTypeEnum,
 } from './notifications.interface';
 
+import { ResponseError } from './response-error';
+
 @Injectable()
 export class NotificationsService implements OnDestroy {
   static NOTIFICATION_PUSH:   INotificationActionType = 'NOTIFICATION_PUSH';
@@ -62,38 +64,38 @@ export class NotificationsService implements OnDestroy {
       .distinctUntilChanged();
   }
 
-  createDebugAction(message: string | IMessage, showAlert: boolean = true): Action {
+  createDebugAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
     return this.createPushAction(NotificationTypeEnum.DEBUG, message, showAlert);
   }
 
-  createErrorAction(message: string | IMessage, showAlert: boolean = true): Action {
+  createErrorAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
     return this.createPushAction(NotificationTypeEnum.ERROR, message, showAlert);
   }
 
-  createWarningAction(message: string | IMessage, showAlert: boolean = true): Action {
+  createWarningAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
     return this.createPushAction(NotificationTypeEnum.WARNING, message, showAlert);
   }
 
-  createInfoAction(message: string | IMessage, showAlert: boolean = true): Action {
+  createInfoAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
     return this.createPushAction(NotificationTypeEnum.INFO, message, showAlert);
   }
 
-  debug(message: string | IMessage, showAlert: boolean = true): void {
+  debug(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
     const action = this.createDebugAction(message, showAlert);
     this.store.dispatch(action);
   }
 
-  error(message: string | IMessage, showAlert: boolean = true): void {
+  error(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
     const action = this.createErrorAction(message, showAlert);
     this.store.dispatch(action);
   }
 
-  warning(message: string | IMessage, showAlert: boolean = true): void {
+  warning(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
     const action = this.createWarningAction(message, showAlert);
     this.store.dispatch(action);
   }
 
-  info(message: string | IMessage, showAlert: boolean = true): void {
+  info(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
     const action = this.createInfoAction(message, showAlert);
     this.store.dispatch(action);
   }
@@ -115,13 +117,31 @@ export class NotificationsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
-  private createPushAction(type: NotificationTypeEnum, message: string | IMessage, showAlert: boolean = true): Action {
-    const translate = R.ifElse(
-      R.has('message'),
-      ({ message: key, param }) => this.translateService.instant(key, param),
-      key => this.translateService.instant(key)
-    );
-    const translatedMessage = translate(message);
+  private createPushAction(type: NotificationTypeEnum, message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
+    // TODO(d.maltsev): refactor this mess
+    let translatedMessage;
+    if (message instanceof ResponseError) {
+      const messages = [
+        `errors.server.${message.message}`,
+        `errors.default.${message.translationKey}.${message.status}`,
+        `errors.default.generic.${message.status}`
+      ];
+      const translations = this.translateService.instant(messages);
+      translatedMessage = (() => {
+        for (const m of messages) {
+          if (m !== translations[m]) {
+            return translations[m];
+          }
+        }
+      })();
+    } else {
+      const translate = R.ifElse(
+        R.has('message'),
+        ({ message: key, param }) => this.translateService.instant(key, param),
+        key => this.translateService.instant(key)
+      );
+      translatedMessage = translate(message);
+    }
 
     return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
       notification: {

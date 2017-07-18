@@ -11,6 +11,9 @@ import 'rxjs/add/operator/catch';
 import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
+import { NotificationsService } from '../notifications/notifications.service';
+
+import { ResponseError } from '../notifications/response-error';
 
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
@@ -37,6 +40,7 @@ export class AuthService implements CanActivate {
     private dataService: DataService,
     private router: Router,
     private jwtHelper: JwtHelper,
+    private notificationsService: NotificationsService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
     private zone: NgZone,
@@ -73,7 +77,8 @@ export class AuthService implements CanActivate {
       .catch(error => {
         this.authenticated = false;
         this.dispatchResetAction();
-        throw error;
+        this.notificationsService.error(new ResponseError(error, 'constants.fetch'));
+        return Observable.empty();
       })
       .map(resp => true);
   }
