@@ -13,8 +13,6 @@ import { IAppState } from '../state/state.interface';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
-import { ResponseError } from '../notifications/response-error';
-
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
 
@@ -77,7 +75,7 @@ export class AuthService implements CanActivate {
       .catch(error => {
         this.authenticated = false;
         this.dispatchResetAction();
-        this.notificationsService.error(new ResponseError(error));
+        this.notificationsService.error({ response: error });
         return Observable.empty();
       })
       .map(resp => true);

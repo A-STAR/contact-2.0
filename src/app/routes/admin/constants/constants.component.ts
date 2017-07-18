@@ -96,7 +96,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error('errors.default.read.403', { entity: 'constants.entity.plural' });
+          this.notificationsService.error({ text: 'errors.default.read.403', params: { entity: 'constants.entity.plural' } });
         } else {
           this.constantsService.fetch();
         }
@@ -147,7 +147,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
         if (hasPermission) {
           this.display = true;
         } else {
-          this.notificationsService.error('roles.permissions.messages.no_edit', { permission });
+          this.notificationsService.error({ text: 'roles.permissions.messages.no_edit', params: { permission } });
         }
       });
   }

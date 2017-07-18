@@ -8,14 +8,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '../state/state.interface';
 import {
   IFilters,
+  IMessageOptions,
   INotification,
   INotificationActionType,
   INotificationActionPayload,
   INotificationServiceState,
   NotificationTypeEnum,
 } from './notifications.interface';
-
-import { ResponseError } from './response-error';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -63,52 +62,45 @@ export class NotificationsService implements OnDestroy {
       .distinctUntilChanged();
   }
 
-  createDebugAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.DEBUG, message, params, showAlert);
+  createDebugAction(message: string | IMessageOptions): Action {
+    return this.createPushAction(NotificationTypeEnum.DEBUG, message);
   }
 
-  createErrorAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.ERROR, message, params, showAlert);
+  createErrorAction(message: string | IMessageOptions): Action {
+    return this.createPushAction(NotificationTypeEnum.ERROR, message);
   }
 
-  createWarningAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.WARNING, message, params, showAlert);
+  createWarningAction(message: string | IMessageOptions): Action {
+    return this.createPushAction(NotificationTypeEnum.WARNING, message);
   }
 
-  createInfoAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.INFO, message, params, showAlert);
+  createInfoAction(message: string | IMessageOptions): Action {
+    return this.createPushAction(NotificationTypeEnum.INFO, message);
   }
 
-  debug(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
-    const action = this.createDebugAction(message, params, showAlert);
+  debug(message: string | IMessageOptions): void {
+    const action = this.createDebugAction(message);
     this.store.dispatch(action);
   }
 
-  error(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
-    const action = this.createErrorAction(message, params, showAlert);
+  error(message: string | IMessageOptions): void {
+    const action = this.createErrorAction(message);
     this.store.dispatch(action);
   }
 
-  warning(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
-    const action = this.createWarningAction(message, params, showAlert);
+  warning(message: string | IMessageOptions): void {
+    const action = this.createWarningAction(message);
     this.store.dispatch(action);
   }
 
-  info(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
-    const action = this.createInfoAction(message, params, showAlert);
+  info(message: string | IMessageOptions): void {
+    const action = this.createInfoAction(message);
     this.store.dispatch(action);
   }
 
-  responseError(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Observable<{}> {
-    return (error: Response) => {
-      this.error(new ResponseError(error, action), params, showAlert);
-      return Observable.empty();
-    };
-  }
-
-  createResponseErrorAction(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Array<Action> {
-    return (error: Response) => [
-      this.createErrorAction(new ResponseError(error, action), params, showAlert)
+  createResponseErrorAction(text: string, params: any = {}): (error: Response) => Array<Action> {
+    return (response: Response) => [
+      this.createErrorAction({ text, params, response })
     ];
   }
 
@@ -129,40 +121,48 @@ export class NotificationsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
-  private createPushAction(type: NotificationTypeEnum, message: string | ResponseError, params: object, showAlert: boolean = true): Action {
-    const translatedParams = Object.keys(params).reduce((acc, key) => {
-      acc[key] = this.translateService.instant(params[key]);
-      return acc;
-    }, {});
-
+  private createPushAction(type: NotificationTypeEnum, message: string | IMessageOptions): Action {
     return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
       notification: {
         type,
-        message: this.translateMessage(message, translatedParams),
+        message: this.translateMessage(message),
         created: new Date(),
-        showAlert
+        showAlert: (message as IMessageOptions).alert !== false
       }
     });
   }
 
-  private translateMessage(message: string | ResponseError, params: object): string {
-    if (message instanceof ResponseError) {
-      const messages = [
-        `errors.server.${message.message}`,
-        `${message.action}.${message.status}`,
-        `${message.action}.*`
-      ];
-
-      const translations = this.translateService.instant(messages, params);
-      for (const m of messages) {
-        if (m !== translations[m]) {
-          return translations[m];
-        }
-      }
-      return this.translateService.instant(`errors.default.*`, params);
+  private translateMessage(message: string | IMessageOptions): string {
+    if (message instanceof String) {
+      return this.translateService.instant(message);
     }
 
-    return this.translateService.instant(message, params);
+    const translatedParams = Object.keys(message.params || {}).reduce((acc, key) => {
+      acc[key] = this.translateService.instant(message.params[key]);
+      return acc;
+    }, {});
+
+    if (message.response) {
+      const { status } = message.response;
+      const { code, payload } = message.response.json().message;
+
+      // TODO(d.maltsev): interpolate payload properly (maybe convert to object?)
+      const translatedMessageKey = `errors.server.${code}`;
+      const translatedMessage = this.translateService.instant(translatedMessageKey, payload);
+      if (translatedMessage !== translatedMessageKey) {
+        return translatedMessage;
+      }
+
+      const translatedFallbackMessageKey = `${message.text}.${status}`;
+      const translatedFallbackMessage = this.translateService.instant(translatedFallbackMessageKey, translatedParams);
+      if (translatedFallbackMessage !== translatedFallbackMessageKey) {
+        return translatedFallbackMessage;
+      }
+
+      return this.translateService.instant(`${message.text}.*`, translatedParams);
+    }
+
+    return this.translateService.instant(message.text, translatedParams);
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
