@@ -147,7 +147,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
         if (hasPermission) {
           this.display = true;
         } else {
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_edit', param: { permission } });
+          this.notificationsService.error('roles.permissions.messages.no_edit', { permission });
         }
       });
   }

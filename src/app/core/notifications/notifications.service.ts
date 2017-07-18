@@ -3,12 +3,10 @@ import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import * as R from 'ramda';
 
 import { IAppState } from '../state/state.interface';
 import {
   IFilters,
-  IMessage,
   INotification,
   INotificationActionType,
   INotificationActionPayload,
@@ -64,39 +62,39 @@ export class NotificationsService implements OnDestroy {
       .distinctUntilChanged();
   }
 
-  createDebugAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.DEBUG, message, showAlert);
+  createDebugAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.DEBUG, message, params, showAlert);
   }
 
-  createErrorAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.ERROR, message, showAlert);
+  createErrorAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.ERROR, message, params, showAlert);
   }
 
-  createWarningAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.WARNING, message, showAlert);
+  createWarningAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.WARNING, message, params, showAlert);
   }
 
-  createInfoAction(message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
-    return this.createPushAction(NotificationTypeEnum.INFO, message, showAlert);
+  createInfoAction(message: string | ResponseError, params: object = {}, showAlert: boolean = true): Action {
+    return this.createPushAction(NotificationTypeEnum.INFO, message, params, showAlert);
   }
 
-  debug(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
-    const action = this.createDebugAction(message, showAlert);
+  debug(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
+    const action = this.createDebugAction(message, params, showAlert);
     this.store.dispatch(action);
   }
 
-  error(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
-    const action = this.createErrorAction(message, showAlert);
+  error(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
+    const action = this.createErrorAction(message, params, showAlert);
     this.store.dispatch(action);
   }
 
-  warning(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
-    const action = this.createWarningAction(message, showAlert);
+  warning(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
+    const action = this.createWarningAction(message, params, showAlert);
     this.store.dispatch(action);
   }
 
-  info(message: string | IMessage | ResponseError, showAlert: boolean = true): void {
-    const action = this.createInfoAction(message, showAlert);
+  info(message: string | ResponseError, params: object = {}, showAlert: boolean = true): void {
+    const action = this.createInfoAction(message, params, showAlert);
     this.store.dispatch(action);
   }
 
@@ -117,9 +115,18 @@ export class NotificationsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
-  private createPushAction(type: NotificationTypeEnum, message: string | IMessage | ResponseError, showAlert: boolean = true): Action {
-    // TODO(d.maltsev): refactor this mess
-    let translatedMessage;
+  private createPushAction(type: NotificationTypeEnum, message: string | ResponseError, params: object, showAlert: boolean = true): Action {
+    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
+      notification: {
+        type,
+        message: this.translateMessage(message, params),
+        created: new Date(),
+        showAlert
+      }
+    });
+  }
+
+  private translateMessage(message: string | ResponseError, params: object): string {
     if (message instanceof ResponseError) {
       const messages = [
         `errors.server.${message.message}`,
@@ -127,30 +134,16 @@ export class NotificationsService implements OnDestroy {
         `errors.default.generic.${message.status}`
       ];
       const translations = this.translateService.instant(messages);
-      translatedMessage = (() => {
+      return (() => {
         for (const m of messages) {
           if (m !== translations[m]) {
             return translations[m];
           }
         }
       })();
-    } else {
-      const translate = R.ifElse(
-        R.has('message'),
-        ({ message: key, param }) => this.translateService.instant(key, param),
-        key => this.translateService.instant(key)
-      );
-      translatedMessage = translate(message);
     }
 
-    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
-      notification: {
-        type,
-        message: translatedMessage,
-        created: new Date(),
-        showAlert
-      }
-    });
+    return this.translateService.instant(message, params);
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
