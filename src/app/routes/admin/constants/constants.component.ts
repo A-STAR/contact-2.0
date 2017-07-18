@@ -91,18 +91,16 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
-    this.constantsService.fetch();
-
-    // this.permissionSub = this.hasViewPermission$
-    //   .filter(hasPermission => hasPermission !== undefined)
-    //   .subscribe(hasPermission => {
-    //     if (!hasPermission) {
-    //       this.constantsService.clear();
-    //       this.notificationsService.error('constants.errors.view');
-    //     } else {
-    //       this.constantsService.fetch();
-    //     }
-    //   });
+    this.permissionSub = this.hasViewPermission$
+      .filter(hasPermission => hasPermission !== undefined)
+      .subscribe(hasPermission => {
+        if (!hasPermission) {
+          this.constantsService.clear();
+          this.notificationsService.error('errors.default.read.403', { entity: 'constants.entity.plural' });
+        } else {
+          this.constantsService.fetch();
+        }
+      });
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
   }

@@ -100,25 +100,15 @@ export class NotificationsService implements OnDestroy {
   }
 
   responseError(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Observable<{}> {
-    const translatedParams = {
-      ...params,
-      entity: this.translateService.instant(params['entity'])
-    };
-
     return (error: Response) => {
-      this.error(new ResponseError(error, action), translatedParams, showAlert);
+      this.error(new ResponseError(error, action), params, showAlert);
       return Observable.empty();
     };
   }
 
   createResponseErrorAction(action: string, params: object = {}, showAlert: boolean = true): (error: Response) => Array<Action> {
-    const translatedParams = {
-      ...params,
-      entity: this.translateService.instant(params['entity'])
-    };
-
     return (error: Response) => [
-      this.createErrorAction(new ResponseError(error, action), translatedParams, showAlert)
+      this.createErrorAction(new ResponseError(error, action), params, showAlert)
     ];
   }
 
@@ -140,10 +130,15 @@ export class NotificationsService implements OnDestroy {
   }
 
   private createPushAction(type: NotificationTypeEnum, message: string | ResponseError, params: object, showAlert: boolean = true): Action {
+    const translatedParams = Object.keys(params).reduce((acc, key) => {
+      acc[key] = this.translateService.instant(params[key]);
+      return acc;
+    }, {});
+
     return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
       notification: {
         type,
-        message: this.translateMessage(message, params),
+        message: this.translateMessage(message, translatedParams),
         created: new Date(),
         showAlert
       }
