@@ -8,6 +8,7 @@ export interface IUser {
   comment: string;
   email: string;
   password: string;
+  ldapLogin: string;
   workPhone: string;
   mobPhone: string;
   intPhone: string;
@@ -24,14 +25,14 @@ export interface IUsersResponse {
   users: Array<IUser>;
 }
 
-export enum IUserDialogActionEnum {
-  USER_ADD,
-  USER_EDIT
+export interface IUserEditPermissions {
+  canEditUser: boolean;
+  canEditRole: boolean;
+  canEditLdap: boolean;
 }
 
 export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
-  dialogAction: IUserDialogActionEnum;
   displayBlocked: boolean;
 }

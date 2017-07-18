@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",
         "USERS": "Пользователи",
+        "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Словари",
@@ -79,6 +80,7 @@
     "fieldDigits": "Это поле должно содержать хотя бы одну цифру",
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
+    "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
     "login": {
       "INVALID_CREDENTIALS": "Неверный логин или пароль"
     }
@@ -210,6 +212,7 @@
       "blocked": "Блокирован",
       "login": "Логин",
       "password": "Пароль",
+      "ldapLogin": "LDAP-логин",
       "role": "Роль",
       "position": "Должность",
       "startWorkDate": "Дата начала работы",
@@ -244,6 +247,23 @@
       "intPhone": "Внутренний номер",
       "email": "Эл. почта",
       "languageId": "Язык"
+    },
+    "ldap": {
+      "title": "Пользователи домена",
+      "groups": {
+        "grid": {
+          "name": "Имя",
+          "comment": "Комментарий"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "ФИО",
+          "login": "Логин",
+          "isBlocked": "Блокирован",
+          "comment": "Комментарий"
+        }
+      }
     },
     "messages": {
       "errors": {
@@ -754,6 +774,7 @@
       "dictionary": "Словарь"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Сохранить",
       "cancel": "Отменить",
       "remove": "Удалить",
@@ -762,25 +783,43 @@
       "search": "Искать",
       "add": "Добавить",
       "change": "Изменить",
-      "excel": "Экспорт в Excel",
-      "back": "Назад"
+      "back": "Назад",
+      "excel": "Экспорт в Excel"
     },
     "dateTimeRage": {
       "from": "Начало",
       "to": "Окончание"
     },
     "grid": {
-      "empty": "Нет данных",
+      "empty": "Нет данных для отображения",
       "filter": {
         "title": "Фильтр",
-        "showOnlyLines": "Показать только те строки, значения которых:",
+        "showOnlyLines": "Показать только...",
         "and": "И",
         "or": "Или"
       },
       "groupDndTitle": "Группировка",
       "groupColumn": "Группировка",
       "loading": "Загрузка данных...",
-      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего"
+      "selectedCounts": "{{ selected }} выбрано / {{ length }} всего",
+      "localeText": {
+        "noRowsToShow": "Нет данных для отображения",
+        "equals": "равно",
+        "notEqual": "не равно",
+        "lessThan": "меньше",
+        "lessThanOrEqual": "меньше или равно",
+        "greaterThan": "больше",
+        "greaterThanOrEqual": "больше или равно",
+        "inRange": "диапазон",
+        "contains": "содержит",
+        "notContains": "не содержит",
+        "startsWith": "начинается с",
+        "endsWith": "заканчивается на",
+        "selectAll": "Все",
+        "copy": "копировать",
+        "copyWithHeaders": "копировать c заголовками",
+        "toolPanel": "Панель инструментов"
+      }
     },
     "filter": {
       "value": "Значение",

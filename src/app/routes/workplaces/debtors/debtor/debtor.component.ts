@@ -1,9 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtor, IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from './debtor.interface';
 import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 
-import { ObservableHelper } from '../../../../core/observable/ObservableHelper';
 import { DebtorService } from './debtor.service';
 
 import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
@@ -14,24 +14,26 @@ import { EntityBaseComponent } from '../../../../shared/components/entity/edit/e
   styleUrls: ['./debtor.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DebtorComponent extends EntityBaseComponent<IDebtor> {
+export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
   debtor: IDebtor;
   generalInformation: IDebtorGeneralInformation;
   generalInformationPhones: IDebtorGeneralInformationPhone [];
+  selectedDebtorSub: Subscription;
 
   constructor(private debtorService: DebtorService) {
     super();
 
-    ObservableHelper.subscribe(
-      debtorService.selectedDebtor.subscribe(debtor => {
+      this.selectedDebtorSub = debtorService.selectedDebtor.subscribe(debtor => {
         this.debtor = debtor;
         this.generalInformation = debtor ? debtor.generalInformation : null;
         this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
-      }),
-      this
-    );
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.selectedDebtorSub.unsubscribe();
   }
 
   protected getControls(): IDynamicFormGroup[] {

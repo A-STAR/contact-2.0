@@ -29,5 +29,4 @@ const routes: Routes = [
     ActionsLogService,
   ]
 })
-export class ActionsLogModule {
-}
+export class ActionsLogModule {}

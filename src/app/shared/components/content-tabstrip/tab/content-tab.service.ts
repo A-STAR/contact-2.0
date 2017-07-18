@@ -8,7 +8,7 @@ export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   get tabs(): ITab[] {
     return this._tabs;

@@ -27,8 +27,8 @@ export interface IGridColumn {
    * ag-grid
    */
   filter?: string;
-  filterValues?: { [key: number]: string }|number[]|string[];
-  filterOptionsDictionaryId?: number;
+  filterValues?: Array<any>;
+  filterDictionaryId?: number;
   suppressMenu?: boolean;
   suppressSizeToFit?: boolean;
   hidden?: boolean;

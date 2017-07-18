@@ -14,3 +14,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+:host(.ng-invalid) .image-container {
+  border-color: red;
+}

@@ -19,13 +19,6 @@ export class UsersEffects {
     type: UsersService.USERS_FETCH
   };
 
-  private closeDialogAction = {
-    type: UsersService.USER_DIALOG_ACTION,
-    payload: {
-      dialogAction: null
-    }
-  };
-
   @Effect()
   fetchUsers$ = this.actions
     .ofType(UsersService.USERS_FETCH)
@@ -45,11 +38,25 @@ export class UsersEffects {
             }
           }
         ])
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.fetch')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
+    });
+
+  @Effect()
+  fetchUser$ = this.actions
+    .ofType(UsersService.USER_FETCH)
+    .switchMap((action: Action) => {
+      return this.readUser(action.payload.userId)
+        .map(response => ({
+          type: UsersService.USER_FETCH_SUCCESS,
+          payload: {
+            user: response.users[0]
+          }
+        }))
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.fetch')
+        ]);
     });
 
   @Effect()
@@ -61,7 +68,9 @@ export class UsersEffects {
         .mergeMap(response => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
@@ -71,39 +80,35 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.create')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.create')
+        ]);
     });
 
   @Effect()
   updateUser$ = this.actions
     .ofType(UsersService.USER_UPDATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [ action, store ]: [Action, IAppState] = data;
-      const { user, photo } = action.payload;
-      return this.updateUser(store.users.selectedUserId, user)
+    .switchMap((action: Action) => {
+      const { user, photo, userId } = action.payload;
+      return this.updateUser(userId, user)
         .mergeMap(() => {
           const actions = [
             this.fetchAction,
-            this.closeDialogAction,
+            {
+              type: UsersService.USER_UPDATE_SUCCESS
+            }
           ];
           return !photo && photo !== false ? actions : [{
             type: UsersService.USER_UPDATE_PHOTO,
             payload: {
-              userId: store.users.selectedUserId,
+              userId,
               photo
             }
           }, ...actions];
         })
-        .catch(() => {
-          return [
-            this.notificationsService.createErrorAction('users.messages.errors.update')
-          ];
-        });
+        .catch(() => [
+          this.notificationsService.createErrorAction('users.messages.errors.update')
+        ]);
     });
 
   @Effect()
@@ -113,16 +118,15 @@ export class UsersEffects {
       const { userId, photo } = data.payload;
       return this.updatePhoto(userId, photo)
         .mergeMap(() => [
-          this.closeDialogAction
+          {
+            type: UsersService.USER_UPDATE_SUCCESS
+          }
         ])
         .catch(error => {
-          console.log(error);
-          console.log(error.code);
           const message = photo ?
             error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
             'users.messages.errors.deletePhoto';
           return [
-            this.closeDialogAction,
             this.notificationsService.createErrorAction(message)
           ];
         });
@@ -137,6 +141,10 @@ export class UsersEffects {
 
   private readUsers(): Observable<any> {
     return this.dataService.read('/users');
+  }
+
+  private readUser(id: number): Observable<any> {
+    return this.dataService.read('/users/{id}', { id });
   }
 
   private createUser(user: IUser): Observable<any> {

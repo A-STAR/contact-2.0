@@ -11,12 +11,9 @@
       [columnDefs]="columnDefs"
       [gridOptions]="gridOptions"
       [ngStyle]="styles"
-      [overlayNoRowsTemplate]="'default.grid.empty' | translate"
-      [overlayLoadingTemplate]="'default.grid.empty' | translate"
       [rowSelection]="rowSelection"
       (dragStarted)="dragStarted()"
       (dragStopped)="dragStopped()"
-      (rowSelected)="rowSelected($event)"
       (rowDoubleClicked)="rowDoubleClicked()"
     >
     </ag-grid-angular>

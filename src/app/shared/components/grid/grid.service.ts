@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IGrid2ColumnSorter, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -23,31 +23,20 @@ export class GridService {
     private translateService: TranslateService,
   ) {}
 
+  /**
+   * Builds request parameters necessary to talk to the BE
+   *
+   * @param {IGrid2RequestParams} params
+   * @param {FilterObject} filters
+   * @returns {IGrid2Request}
+   */
   buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
     const request: IGrid2Request = {};
     const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
 
     if (sorters) {
-      R.values(sorters)
-        .forEach(sorter => {
-          const { filter: f } = sorter;
-          if (f) {
-            filter.addFilter(FilterObject.create(f));
-          }
-        });
-
-      request.sorting = R.values(R.mapObjIndexed(
-        (columnSettings: IGrid2ColumnSorter, columnId: string) => ({
-          direction: columnSettings.sortDirection,
-          field: columnId,
-          order: columnSettings.sortOrder,
-        }),
-        sorters
-      ))
-      .filter(Boolean)
-      .sort((s1, s2) => s1.order > s2.order ? 1 : -1)
-      .map(R.omit(['order']));
+      request.sorting = sorters;
     }
 
     if (filters) {
@@ -73,8 +62,8 @@ export class GridService {
   }
 
   /**
-   * Build column defs from server metadata
-   * Use only once during ngOnInit phase
+   * Builds column defs from server metadata
+   * To be used only once during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {Observable<IGridColumn[]>} columns Initial column descriptions
@@ -111,14 +100,11 @@ export class GridService {
                   }
                 }
               }
-              // Filters
-              if (!!column.filterOptionsDictionaryId) {
-                const dictTypes = dictionaries[column.filterOptionsDictionaryId];
+              // Dictionary filters
+              if (column.filterDictionaryId) {
+                const dictTypes = dictionaries[column.filterDictionaryId];
                 if (Array.isArray(dictTypes)) {
-                  column.filterValues = dictTypes.reduce((acc, item) => {
-                    acc[item.code] = item.name;
-                    return acc;
-                  }, {});
+                  column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
                 }
               }
             }
@@ -128,12 +114,13 @@ export class GridService {
 
       return Observable.combineLatest(
         this.metadataService.metadata.map(metadata => metadata[metadataKey]),
-        this.dictionariesService.dictionariesByCode
-      ).map(mapColumns);
+        this.dictionariesService.dictionariesByCode,
+      )
+      .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
-    return columns.map((column: IGridColumn) => {
+    return columns.map(column => {
       const renderer = renderers[column.prop];
       return renderer ? this.setRenderer(column, renderer) : column;
     });

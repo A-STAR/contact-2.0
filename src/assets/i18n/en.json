@@ -26,6 +26,7 @@
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and Permissions",
         "USERS": "Users",
+        "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Dictionaries",
@@ -76,9 +77,10 @@
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
     "fieldRequired": "This field is required",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
-    "fieldDigits": "This field should contain at least one digit",
-    "fieldLowerCase": "This field should contain at least one lower case character",
-    "fieldUpperCase": "This field should contain at least one upper case character",
+    "fieldDigits": "This field must contain at least one digit",
+    "fieldLowerCase": "This field must contain at least one lower case character",
+    "fieldUpperCase": "This field must contain at least one upper case character",
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
     "login": {
       "INVALID_CREDENTIALS": "Incorrect login or password"
     }
@@ -210,6 +212,7 @@
       "blocked": "Blocked",
       "login": "Login",
       "password": "Password",
+      "ldapLogin": "LDAP login",
       "role": "Role",
       "position": "Position",
       "startWorkDate": "Start date",
@@ -244,6 +247,23 @@
       "intPhone": "Extension",
       "email": "Email",
       "languageId": "Language"
+    },
+    "ldap": {
+      "title": "Domain users",
+      "groups": {
+        "grid": {
+          "name": "Name",
+          "comment": "Comment"
+        }
+      },
+      "users": {
+        "grid": {
+          "name": "Full name",
+          "login": "Login",
+          "isBlocked": "Blocked",
+          "comment": "Comment"
+        }
+      }
     },
     "messages": {
       "errors": {
@@ -755,6 +775,7 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
+      "ok": "OK",
       "save": "Save",
       "cancel": "Cancel",
       "remove": "Remove",
@@ -763,7 +784,7 @@
       "search": "Search",
       "add": "Add",
       "change": "Change",
-      "excel": "Export as Excel",
+      "excel": "Export to Excel",
       "back": "Back"
     },
     "dateTimeRage": {
@@ -781,7 +802,25 @@
       "groupColumn": "Row groups",
       "groupDndTitle": "Drag here to set row groups",
       "loading": "Loading data...",
-      "selectedCounts": "{{ selected }} selected / {{ length }} total"
+      "selectedCounts": "{{ selected }} selected / {{ length }} total",
+      "localeText": {
+        "noRowsToShow": "No data to display",
+        "equals": "equals",
+        "notEqual": "not equal",
+        "lessThan": "less than",
+        "lessThanOrEqual": "less than or equal",
+        "greaterThan": "greater than",
+        "greaterThanOrEqual": "greater than or equal",
+        "inRange": "in range",
+        "contains": "contains",
+        "notContains": "not contains",
+        "startsWith": "starts with",
+        "endsWith": "ends with",
+        "selectAll": "All",
+        "copy": "copy",
+        "copyWithHeaders": "copy with headers",
+        "toolPanel": "Tool panel"
+      }
     },
     "filter": {
       "value": "Value",

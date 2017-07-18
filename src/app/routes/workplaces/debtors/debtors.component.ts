@@ -1,17 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtor } from './debtor/debtor.interface';
-import {
-  IGridColumn,
-  IRenderer
-} from '../../../shared/components/grid/grid.interface';
-import {
-  IToolbarItem,
-  ToolbarItemTypeEnum
-} from '../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtorsService } from './debtors.service';
-import { ObservableHelper } from '../../../core/observable/ObservableHelper';
 import { toFullName } from '../../../core/utils';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
@@ -19,12 +13,13 @@ import { GridService } from '../../../shared/components/grid/grid.service';
   selector: 'app-debtors',
   templateUrl: './debtors.component.html',
 })
-export class DebtorsComponent {
+export class DebtorsComponent implements OnDestroy {
   static COMPONENT_NAME = 'DebtorsComponent';
 
   private selectedDebtor: IDebtor;
 
   debtors: IDebtor[];
+  debtorsSub: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', maxWidth: 80 },
@@ -57,11 +52,11 @@ export class DebtorsComponent {
     private gridService: GridService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.debtorsSub = debtorsService.debtors.subscribe(debtors => this.debtors = debtors);
+  }
 
-    ObservableHelper.subscribe(
-      debtorsService.debtors.subscribe(debtors => this.debtors = debtors),
-      this
-    );
+  ngOnDestroy(): void {
+    this.debtorsSub.unsubscribe();
   }
 
   onDblClick(debtor: IDebtor): void {

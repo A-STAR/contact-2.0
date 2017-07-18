@@ -192,10 +192,6 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     this._action = 'actionTypes';
   }
 
-  onControlsStatusChanges(): void {
-    this.toolbarActions[0].visible = this.form.valid;
-  }
-
   onSearch(): void {
     this.search.emit();
   }

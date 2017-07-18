@@ -1,16 +1,23 @@
-<app-dialog (displayChange)="onDisplayChange($event)">
-  <div dialog-header>
-    <h3>{{ title | translate:editedEntity }}</h3>
-  </div>
+<app-action-dialog
+  *ngIf="isLdapUserBeingSelected"
+  titleTranslationKey="users.ldap.title"
+  actionTranslationKey="default.buttons.ok"
+  [canSubmit]="!!ldapDialog.selectedUser"
+  [styles]="{ width: '80%', 'max-width': '80%' }"
+  (action)="onLdapDialogAction(ldapDialog.selectedUser.login)"
+  (cancel)="onLdapDialogClose()"
+>
+  <app-user-ldap-dialog #ldapDialog>
+  </app-user-ldap-dialog>
+</app-action-dialog>
 
-  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
+<div>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+  <button class="btn btn-default" (click)="onClose()">
+    <i class="fa fa-remove"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+</div>
 
-  <div dialog-footer>
-    <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
-  </div>
-</app-dialog>
+<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>

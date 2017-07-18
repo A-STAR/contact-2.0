@@ -16,9 +16,9 @@ import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, 
 })
 export class DynamicFormComponent implements OnInit, OnChanges {
 
-  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
+  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
   form: FormGroup;
 
@@ -27,8 +27,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.form = this.createForm();
     this.populateForm();
-
-    this.form.statusChanges.subscribe(() => this.onControlsStatusChanges());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -45,9 +43,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     return this.form.getRawValue();
   }
 
-  onControlsStatusChanges(): void {
-  }
-
   onSelectItems(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
   }
@@ -59,10 +54,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
           disabled: control.disabled,
           value: ''
         };
-        const validators = Validators.compose([
-          ...control.validators || [],
-          control.required ? Validators.required : undefined
-        ]);
+        const validators = control.required
+          ? Validators.compose([ ...control.validators || [], Validators.required ])
+          : control.validators;
         acc[control.controlName] = new FormControl(options, validators);
         return acc;
       }, {} as IControls);
@@ -78,7 +72,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         ...acc,
         ...controls
       ];
-    }, [] as Array<IDynamicFormControl>);
+    }, []);
   }
 
   private populateForm(): void {

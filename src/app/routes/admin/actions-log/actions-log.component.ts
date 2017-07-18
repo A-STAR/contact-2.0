@@ -7,7 +7,7 @@ import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interfa
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2Sorters, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IGrid2Sorter, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -30,13 +30,14 @@ export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IGridColumn[] = [
-    { prop: 'id', minWidth: 60, type: 'id', filter: 'number' },
+    { prop: 'id', minWidth: 60, type: 'primary', filter: 'number' },
     { prop: 'fullName', minWidth: 200, filter: 'text' },
     { prop: 'position', minWidth: 100, filter: 'text' },
-    { prop: 'createDateTime', minWidth: 130, suppressSizeToFit: true, type: 'date', filter: 'date' },
+    { prop: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
     { prop: 'guiObject', minWidth: 150, filter: 'text' },
     { prop: 'typeCode', minWidth: 150, filter: 'set',
-      filterOptionsDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES },
+      filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+    },
     { prop: 'dsc', minWidth: 200, filter: 'text' },
     { prop: 'machine', minWidth: 120, filter: 'text' },
     { prop: 'duration', minWidth: 100, type: 'number', filter: 'number' }
@@ -53,7 +54,7 @@ export class ActionsLogComponent {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogSorters: Observable<IGrid2Sorters>;
+  actionsLogSorters: Observable<IGrid2Sorter[]>;
   actionsLogSelected: Observable<IDictionaryItem[]>;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
@@ -90,9 +91,9 @@ export class ActionsLogComponent {
     this.actionsLogService.fetch(filters);
   }
 
-  onColumnAction(payload: IGrid2EventPayload): void {
-    this.store.dispatch(payload);
-  }
+  // onColumnAction(payload: IGrid2EventPayload): void {
+  //   this.store.dispatch(payload);
+  // }
 
   onSelect(payload: IGrid2EventPayload): void {
     this.store.dispatch(payload);

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -16,7 +16,8 @@ import { DataService } from '../../../../core/data/data.service';
       useExisting: forwardRef(() => ImageUploadComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   @Input() height = null as number;
@@ -29,6 +30,7 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   private propagateChange: Function = () => {};
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private sanitizer: DomSanitizer,
   ) {}
@@ -38,7 +40,10 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
       this.dataService
       .readBlob(this.url)
       .take(1)
-      .subscribe(image => this.image = image);
+      .subscribe(image => {
+        this.image = image;
+        this.changeDetectorRef.markForCheck();
+      });
     }
   }
 
