@@ -85,10 +85,10 @@ export class NotificationActionBuilder {
     if (message.response) {
       const { status } = message.response;
       const { code, payload } = message.response.json().message;
+      const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
 
-      // TODO(d.maltsev): interpolate payload properly (maybe convert to object?)
       const translatedMessageKey = `errors.server.${code}`;
-      const translatedMessage = this.translateService.instant(translatedMessageKey, payload);
+      const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
       if (translatedMessage !== translatedMessageKey) {
         return translatedMessage;
       }
