@@ -187,7 +187,8 @@ export class EmployeesComponent implements OnDestroy {
   onEditSubmit(data: IEmployeeUser): void {
     this.organizationsService.updateEmployee({
       roleCode: data.roleCode[0].value,
-      comment: data.comment
+      comment: data.comment,
+      isMain: Number(data.isMain),
     });
   }
 
