@@ -17,10 +17,10 @@
 <app-grid2
   columnTranslationKey="actionsLog"
   [columns]="columnDefs | async"
-  [sorters]="actionsLogSorters | async"
   [ngClass]="'actions-log-grid'"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"
+  persistenceKey="actionsLog"
   [rows]="(actionsLogData | async).data"
   [rowCount]="(actionsLogData | async)?.total"
   [selected]="actionsLogSelected | async"

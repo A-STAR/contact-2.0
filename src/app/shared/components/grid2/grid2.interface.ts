@@ -1,14 +1,41 @@
-import { RowNode } from 'ag-grid';
+import { RowNode, ColDef } from 'ag-grid';
 
 import { FilterObject } from './filter/grid2-filter';
 
-export type Grid2SortingType = 'asc' | 'desc' | null;
+export type AGridSortType = 'asc' | 'desc' | null;
 export type IGrid2ColumnPositions = string[];
 export type IGrid2Groups  = string[];
 export type IGrid2Selected = Array<any>;
 
+export interface IAGridColumn {
+  colId: string;
+  disabled?: boolean;
+  filter?: string;
+  filterValues?: Array<any>;
+  filterDictionaryId?: number;
+  hide?: boolean;
+  localized?: boolean;
+  maxWidth?: number;
+  minWidth?: number;
+  renderer?: Function;
+  sort?: AGridSortType;
+  type?: string;
+  width?: number;
+}
+
+// The sortModel has no native interface defined
+export interface IAGridSortModel {
+  colId: string;
+  sort: string;
+}
+
+export interface IAGridSettings {
+  sortModel: IAGridSortModel[];
+  colDefs: ColDef[];
+}
+
 export interface IGrid2Sorter {
-  direction: Grid2SortingType;
+  direction: AGridSortType;
   field: string;
 }
 

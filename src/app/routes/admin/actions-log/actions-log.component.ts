@@ -6,8 +6,8 @@ import { Store } from '@ngrx/store';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
-import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IGrid2Sorter, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IAGridColumn, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -29,21 +29,21 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 export class ActionsLogComponent {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
-  columns: IGridColumn[] = [
-    { prop: 'id', minWidth: 60, type: 'primary', filter: 'number' },
-    { prop: 'fullName', minWidth: 200, filter: 'text' },
-    { prop: 'position', minWidth: 100, filter: 'text' },
-    { prop: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
-    { prop: 'guiObject', minWidth: 150, filter: 'text' },
-    { prop: 'typeCode', minWidth: 150, filter: 'set',
+  columns: IAGridColumn[] = [
+    { colId: 'id', minWidth: 60, type: 'primary', filter: 'number' },
+    { colId: 'fullName', minWidth: 200, filter: 'text' },
+    { colId: 'position', minWidth: 100, filter: 'text' },
+    { colId: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
+    { colId: 'guiObject', minWidth: 150, filter: 'text', localized: true },
+    { colId: 'typeCode', minWidth: 150, filter: 'set',
       filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
     },
-    { prop: 'dsc', minWidth: 200, filter: 'text' },
-    { prop: 'machine', minWidth: 120, filter: 'text' },
-    { prop: 'duration', minWidth: 100, type: 'number', filter: 'number' }
+    { colId: 'dsc', minWidth: 200, filter: 'text' },
+    { colId: 'machine', minWidth: 120, filter: 'text' },
+    { colId: 'duration', minWidth: 100, type: 'number', filter: 'number' }
   ];
 
-  columnDefs: Observable<IGridColumn[]>;
+  columnDefs: Observable<IAGridColumn[]>;
 
   renderers: IRenderer = {
     fullName: toFullName,
@@ -54,7 +54,6 @@ export class ActionsLogComponent {
   actionsLogData: Observable<IActionsLogData>;
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
-  actionsLogSorters: Observable<IGrid2Sorter[]>;
   actionsLogSelected: Observable<IDictionaryItem[]>;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
@@ -73,7 +72,6 @@ export class ActionsLogComponent {
     this.actionsLogData = this.actionsLogService.actionsLogRows;
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
-    this.actionsLogSorters = this.actionsLogService.actionsLogSorters;
     this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
   }
 
