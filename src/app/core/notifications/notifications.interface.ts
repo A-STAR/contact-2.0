@@ -41,13 +41,15 @@ export interface INotificationAction {
   payload?: INotificationActionPayload;
 }
 
+export interface IMessageParams {
+  [key: string]: string;
+}
+
 export interface IMessageOptions {
   prefix?: string;
   response?: Response;
   // text and params act as fallback options in case there no response is passed
   text?: string;
-  params?: {
-    [key: string]: string;
-  };
+  params?: IMessageParams;
   alert?: boolean;
 }

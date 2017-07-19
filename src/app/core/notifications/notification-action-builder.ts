@@ -3,14 +3,20 @@ import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IAppState } from '../state/state.interface';
-import { IMessageOptions, INotificationActionType, INotificationActionPayload, NotificationTypeEnum } from './notifications.interface';
+import {
+  IMessageOptions,
+  IMessageParams,
+  INotificationActionType,
+  INotificationActionPayload,
+  NotificationTypeEnum
+} from './notifications.interface';
 
 import { NotificationsService } from '../notifications/notifications.service';
 
 export class NotificationActionBuilder {
   private _prefix: string;
   private _response: Response;
-  private _params: { [key: string]: string } = {};
+  private _params: IMessageParams = {};
   private _alert = true;
 
   constructor(
@@ -35,7 +41,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  params(params: { [key: string]: string }): NotificationActionBuilder {
+  params(params: IMessageParams): NotificationActionBuilder {
     this._params = params;
     return this;
   }
@@ -68,7 +74,7 @@ export class NotificationActionBuilder {
     this.store.dispatch(this.action());
   }
 
-  callback(): any {
+  callback(): (response: Response) => Array<Action> {
     return (response: Response) => [ this.response(response).action() ];
   }
 
