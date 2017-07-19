@@ -40,7 +40,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   get value(): any {
-    return this.form.getRawValue();
+    const value = this.form.getRawValue();
+    return Object.keys(value).reduce((acc, key) => {
+      acc[key] = value[key] === '' ? null : value[key];
+      return acc;
+    }, {});
   }
 
   onSelectItems(event: ISelectItemsPayload): void {
