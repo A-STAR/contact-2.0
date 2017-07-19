@@ -24,7 +24,7 @@ export class ConstantsEffects {
             payload: response.constants
           };
         })
-        .catch(this.notificationService.error('errors.default.read').entity('constants.entity.plural').callback());
+        .catch(this.notificationService.error('errors.default.read').entity('entities.constants.gen.plural').callback());
     });
 
   constructor(

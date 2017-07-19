@@ -96,7 +96,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error('errors.default.read.403').entity('constants.entity.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
         } else {
           this.constantsService.fetch();
         }

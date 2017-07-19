@@ -140,12 +140,6 @@
       "value": "Value",
       "dsc": "Comments"
     },
-    "api": {
-      "errors": {
-        "fetch": "Could not fetch the constants",
-        "update": "Could not update the constant"
-      }
-    },
     "errors": {
       "view": "Access to constants list denied"
     }
@@ -183,12 +177,6 @@
       "dsc": "Description",
       "machine": "Machine",
       "duration": "Duration"
-    },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch operator action log",
-        "download": "Could not download operator action log"
-      }
     }
   },
   "users": {
@@ -262,16 +250,6 @@
         }
       }
     },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch users",
-        "create": "Could not create user",
-        "update": "Could not update user",
-        "updatePhoto": "Could not update user photo",
-        "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
-        "deletePhoto": "Could not delete user photo"
-      }
-    },
     "errors": {
       "view": "Access to users list denied"
     }
@@ -317,14 +295,6 @@
         "translation": "Select language"
       }
     },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch dictionaries",
-        "create": "Could not create dictionary",
-        "update": "Could not update dictionary",
-        "delete": "Could not remove dictionary"
-      }
-    },
     "errors": {
       "view": "Access to dictionaries list denied"
     }
@@ -354,14 +324,6 @@
     "remove": {
       "title": "Remove term",
       "confirmMessage": "Do you really want to remove the term {{ name }}?"
-    },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch dictionary terms",
-        "create": "Could not create dictionary term",
-        "update": "Could not update dictionary term",
-        "delete": "Could not remove dictionary term"
-      }
     },
     "errors": {
       "view": "Access to dictionary terms list denied"
@@ -580,14 +542,6 @@
         "title": "Delete company",
         "confirmMessage": "Are you sure you want to delete company?"
       },
-      "messages": {
-        "errors": {
-          "fetch": "Could not load organizations list",
-          "create": "Could not add organization",
-          "update": "Could not update organization",
-          "delete": "Could not delete organization"
-        }
-      },
       "errors": {
         "view": "Access to organizations list denied"
       }
@@ -616,14 +570,6 @@
         "roleCode": "Role code",
         "isBlocked": "Blocked"
       },
-      "messages": {
-        "errors": {
-          "fetch": "Could not load the list of employees",
-          "create": "Could not add the employee",
-          "update": "Could not update the employee",
-          "delete": "Could not delete the employee"
-        }
-      },
       "errors": {
         "view": "Access to employees list denied"
       }
@@ -650,13 +596,7 @@
         "comment": "Comment"
       },
       "messages": {
-        "accessDenied": "Access to managers list denied",
-        "errors": {
-          "fetch": "Could not fetch managers list",
-          "create": "Could not create manager",
-          "update": "Could not update manager",
-          "delete": "Could not delete manager"
-        }
+        "accessDenied": "Access to managers list denied"
       }
     },
     "remove": {
@@ -675,13 +615,7 @@
       "comment": "Comment"
     },
     "messages": {
-      "accessDenied": "Access to contractors list denied",
-      "errors": {
-        "fetch": "Could not fetch contractors list",
-        "create": "Could not create contractor",
-        "update": "Could not update contractor",
-        "delete": "Could not delete contractor"
-      }
+      "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
       "managers": "Managers"
@@ -704,16 +638,6 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
-    },
-    "messages": {
-      "accessDenied": "Access to portfolios list denied",
-      "errors": {
-        "fetch": "Could not fetch portfolios list",
-        "create": "Could not create portfolio",
-        "update": "Could not update portfolio",
-        "move": "Could not move portfolio",
-        "delete": "Could not delete portfolio"
-      }
     }
   },
   "notifications": {
@@ -725,20 +649,61 @@
       "info": "Info"
     }
   },
-  "user": {
-    "constants": {
-      "errors": {
-        "fetch": "Could not load user constants"
-      }
-    },
-    "languages": {
-      "errors": {
-        "fetch": "Could not load user languages"
-      }
+  "entities": {
+    "roles": {
+      "gen": { "singular": "role", "plural": "roles list" }
     },
     "permissions": {
-      "errors": {
-        "fetch": "Could not load user permissions"
+      "gen": { "singular": "permit", "plural": "permits list" }
+    },
+    "guiObjects": {
+      "gen": { "singular": "GUI object", "plural": "GUI objects list" }
+    },
+    "users": {
+      "gen": { "singular": "user", "plural": "users list" }
+    },
+    "actionsLog": {
+      "gen": { "singular": "actions log entry", "plural": "actions log" }
+    },
+    "constants": {
+      "gen": { "singular": "constant", "plural": "constants list" }
+    },
+    "dictionaries": {
+      "gen": { "singular": "dictionary", "plural": "dictionaries list" }
+    },
+    "terms": {
+      "gen": { "singular": "dictionary term", "plural": "dictionary terms list" }
+    },
+    "contractors": {
+      "gen": { "singular": "contractor", "plural": "contractors list" }
+    },
+    "managers": {
+      "gen": { "singular": "manager", "plural": "managers list" }
+    },
+    "portfolios": {
+      "gen": { "singular": "portfolio", "plural": "portfolios list" }
+    },
+    "organizations": {
+      "gen": { "singular": "organization", "plural": "organizations list" }
+    },
+    "employees": {
+      "gen": { "singular": "employee", "plural": "employees list" }
+    },
+    "debtors": {
+      "gen": { "singular": "debtor", "plural": "debtors list" }
+    },
+    "user": {
+      "constants": {
+        "gen": { "singular": "user constant", "plural": "user constants list" }
+      },
+      "languages": {
+        "gen": { "singular": "user language", "plural": "user languages list" }
+      },
+      "permissions": {
+        "gen": { "singular": "user permit", "plural": "user permits list" }
+      },
+      "dictionaries": {
+        "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
       }
     }
   },
@@ -770,6 +735,10 @@
       "delete": {
         "403": "You don't have permissions to delete {{ entity }}",
         "*": "Could not delete {{ entity }}"
+      },
+      "download": {
+        "403": "You don't have permissions to download {{ entity }}",
+        "*": "Could not download {{ entity }}"
       },
       "*": "An unknown error has occurred"
     }
@@ -848,7 +817,7 @@
     },
     "sex": {
       "m": "m",
-      "w": "w"
+      "f": "f"
     },
     "date": {
       "days": {

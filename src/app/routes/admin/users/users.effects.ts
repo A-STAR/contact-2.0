@@ -115,9 +115,7 @@ export class UsersEffects {
           }
         ])
         .catch(error => {
-          const message = photo ?
-            error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
-            'users.messages.errors.deletePhoto';
+          const message = photo ? 'errors.default.upload' : 'errors.default.delete';
           return [ this.notificationsService.error(message).entity('users.photo.entity.singular').response(error).action() ];
         });
     });

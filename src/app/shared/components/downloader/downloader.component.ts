@@ -10,7 +10,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloaderComponent {
-  @Input() errorTranslationKey: string;
+  @Input() entityTranslationKey: string;
   @Input() name: string;
   @Input() url: string;
 
@@ -31,7 +31,7 @@ export class DownloaderComponent {
         URL.revokeObjectURL(href);
       })
       .catch(error => {
-        this.notificationsService.error(this.errorTranslationKey).response(error).dispatch();
+        this.notificationsService.error('errors.default.download').entity(this.entityTranslationKey).response(error).dispatch();
         return Observable.empty();
       })
       .subscribe();
