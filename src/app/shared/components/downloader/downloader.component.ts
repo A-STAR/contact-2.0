@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Renderer2 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -29,7 +30,10 @@ export class DownloaderComponent {
         this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
         URL.revokeObjectURL(href);
       })
-      .catch(this.notificationsService.error(this.errorTranslationKey).callback())
+      .catch(error => {
+        this.notificationsService.error(this.errorTranslationKey).response(error).dispatch();
+        return Observable.empty();
+      })
       .subscribe();
   }
 
