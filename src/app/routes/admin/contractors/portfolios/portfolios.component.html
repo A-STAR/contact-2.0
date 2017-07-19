@@ -1,17 +1,18 @@
 <app-dialog-action
-  *ngIf="isPortfolioBeingDeleted"
+  *ngIf="isPortfolioBeingDeleted$ | async"
   titleTranslationKey="portfolios.remove.title"
   actionTranslationKey="portfolios.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedPortfolio$ | async"
+  [messageParams]="selectedPortfolio"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-portfolio-move
-  *ngIf="isPortfolioBeingMoved"
-  [portfolio]="selectedPortfolio$ | async"
+  *ngIf="isPortfolioBeingMoved$ | async"
+  [contractor]="selectedContractor"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onCloseDialog()">
 </app-portfolio-move>
@@ -28,6 +29,6 @@
   [columns]="columns"
   [rows]="portfolios$ | async"
   [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

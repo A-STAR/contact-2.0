@@ -1,5 +1,16 @@
+<app-dialog-action
+  *ngIf="isManagerBeingRemoved"
+  titleTranslationKey="contractors.managers.remove.title"
+  actionTranslationKey="contractors.managers.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedManager$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
 <div>
-  <button class="btn btn-default" (click)="onClose()">
+  <button class="btn btn-default" (click)="onBack()">
     <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
   </button>
 </div>
@@ -18,7 +29,7 @@
   [columns]="columns"
   [rows]="managers$ | async"
   [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>
 

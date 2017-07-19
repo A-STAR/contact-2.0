@@ -91,10 +91,6 @@ export class ActionsLogComponent {
     this.actionsLogService.fetch(filters);
   }
 
-  onColumnAction(payload: IGrid2EventPayload): void {
-    this.store.dispatch(payload);
-  }
-
   onSelect(payload: IGrid2EventPayload): void {
     this.store.dispatch(payload);
   }
@@ -111,8 +107,8 @@ export class ActionsLogComponent {
     filters.addFilter(this.grid.getFilters());
     const sorters = this.grid.getSorters();
     const { pageSize, page: currentPage } = this.grid;
-    const gridRequestPayload = { currentPage, pageSize, sorters };
-    const request = this.gridService.buildRequest(gridRequestPayload, filters);
+    const gridRequestParams = { currentPage, pageSize, sorters };
+    const request = this.gridService.buildRequest(gridRequestParams, filters);
     const columns = this.grid.getExportableColumns();
     const body = { columns, ...request };
 

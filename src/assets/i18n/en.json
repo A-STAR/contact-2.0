@@ -651,6 +651,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Delete manager",
+        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+      },
       "grid": {
         "fullName": "Full name",
         "firstName": "First name",
@@ -727,6 +731,7 @@
         "fetch": "Could not fetch portfolios list",
         "create": "Could not create portfolio",
         "update": "Could not update portfolio",
+        "move": "Could not move portfolio",
         "delete": "Could not delete portfolio"
       }
     }
@@ -810,7 +815,26 @@
       "groupColumn": "Row groups",
       "groupDndTitle": "Drag here to set row groups",
       "loading": "Loading data...",
-      "selectedCounts": "{{ selected }} selected / {{ length }} total"
+      "selectedCounts": "{{ selected }} selected / {{ length }} total",
+      "localeText": {
+        "noRowsToShow": "No data to display",
+        "equals": "equals",
+        "notEqual": "not equal",
+        "lessThan": "less than",
+        "lessThanOrEqual": "less than or equal",
+        "greaterThan": "greater than",
+        "greaterThanOrEqual": "greater than or equal",
+        "inRange": "in range",
+        "contains": "contains",
+        "notContains": "not contains",
+        "startsWith": "starts with",
+        "endsWith": "ends with",
+        "selectAll": "All",
+        "copy": "copy",
+        "copyWithHeaders": "copy with headers",
+        "toolPanel": "Tool panel",
+        "applyFilter": "Apply filter"
+      }
     },
     "filter": {
       "value": "Value",
