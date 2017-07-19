@@ -75,7 +75,7 @@ export class AuthService implements CanActivate {
       .catch(error => {
         this.authenticated = false;
         this.dispatchResetAction();
-        this.notificationsService.error({ response: error });
+        this.notificationsService.error().response(error).dispatch();
         return Observable.empty();
       })
       .map(resp => true);

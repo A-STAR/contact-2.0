@@ -8,13 +8,14 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '../state/state.interface';
 import {
   IFilters,
-  IMessageOptions,
   INotification,
   INotificationActionType,
   INotificationActionPayload,
   INotificationServiceState,
   NotificationTypeEnum,
 } from './notifications.interface';
+
+import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -62,46 +63,20 @@ export class NotificationsService implements OnDestroy {
       .distinctUntilChanged();
   }
 
-  createDebugAction(message: string | IMessageOptions): Action {
-    return this.createPushAction(NotificationTypeEnum.DEBUG, message);
+  error(text: string = null): NotificationActionBuilder {
+    return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.ERROR, text);
   }
 
-  createErrorAction(message: string | IMessageOptions): Action {
-    return this.createPushAction(NotificationTypeEnum.ERROR, message);
+  warning(text: string = null): NotificationActionBuilder {
+    return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.WARNING, text);
   }
 
-  createWarningAction(message: string | IMessageOptions): Action {
-    return this.createPushAction(NotificationTypeEnum.WARNING, message);
+  info(text: string = null): NotificationActionBuilder {
+    return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.INFO, text);
   }
 
-  createInfoAction(message: string | IMessageOptions): Action {
-    return this.createPushAction(NotificationTypeEnum.INFO, message);
-  }
-
-  debug(message: string | IMessageOptions): void {
-    const action = this.createDebugAction(message);
-    this.store.dispatch(action);
-  }
-
-  error(message: string | IMessageOptions): void {
-    const action = this.createErrorAction(message);
-    this.store.dispatch(action);
-  }
-
-  warning(message: string | IMessageOptions): void {
-    const action = this.createWarningAction(message);
-    this.store.dispatch(action);
-  }
-
-  info(message: string | IMessageOptions): void {
-    const action = this.createInfoAction(message);
-    this.store.dispatch(action);
-  }
-
-  createResponseErrorAction(text: string, params: any = {}): (error: Response) => Array<Action> {
-    return (response: Response) => [
-      this.createErrorAction({ text, params, response })
-    ];
+  debug(text: string = null): NotificationActionBuilder {
+    return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.DEBUG, text);
   }
 
   reset(): void {
@@ -119,50 +94,6 @@ export class NotificationsService implements OnDestroy {
   remove(index: number): void {
     const action = this.createAction(NotificationsService.NOTIFICATION_DELETE, { index });
     this.store.dispatch(action);
-  }
-
-  private createPushAction(type: NotificationTypeEnum, message: string | IMessageOptions): Action {
-    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
-      notification: {
-        type,
-        message: this.translateMessage(message),
-        created: new Date(),
-        showAlert: (message as IMessageOptions).alert !== false
-      }
-    });
-  }
-
-  private translateMessage(message: string | IMessageOptions): string {
-    if (message instanceof String) {
-      return this.translateService.instant(message);
-    }
-
-    const translatedParams = Object.keys(message.params || {}).reduce((acc, key) => {
-      acc[key] = this.translateService.instant(message.params[key]);
-      return acc;
-    }, {});
-
-    if (message.response) {
-      const { status } = message.response;
-      const { code, payload } = message.response.json().message;
-
-      // TODO(d.maltsev): interpolate payload properly (maybe convert to object?)
-      const translatedMessageKey = `errors.server.${code}`;
-      const translatedMessage = this.translateService.instant(translatedMessageKey, payload);
-      if (translatedMessage !== translatedMessageKey) {
-        return translatedMessage;
-      }
-
-      const translatedFallbackMessageKey = `${message.text}.${status}`;
-      const translatedFallbackMessage = this.translateService.instant(translatedFallbackMessageKey, translatedParams);
-      if (translatedFallbackMessage !== translatedFallbackMessageKey) {
-        return translatedFallbackMessage;
-      }
-
-      return this.translateService.instant(`${message.text}.*`, translatedParams);
-    }
-
-    return this.translateService.instant(message.text, translatedParams);
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {

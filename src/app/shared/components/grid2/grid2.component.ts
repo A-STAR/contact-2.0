@@ -135,7 +135,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             this.translateColumns(translation[this.columnTranslationKey].grid);
           }
         },
-        error => this.notificationService.warning({ text: error, alert: false })
+        // TODO(d.maltsev): make sure `error` is a string
+        error => this.notificationService.warning(error).noAlert().dispatch()
       );
 
     this.langSubscription = this.translate.onLangChange
@@ -173,14 +174,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     switch (action.type) {
       case ToolbarActionTypeEnum.GO_BACKWARD:
         if (this.page === 1) {
-          this.notificationService.info({ text: `Can't fetch page no ${this.page}`, alert: false });
+          this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
         this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
         if (this.page === this.getPageCount()) {
-          this.notificationService.info({ text: `No more data can be loaded`, alert: false });
+          this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
         this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });

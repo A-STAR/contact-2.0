@@ -38,9 +38,7 @@ export class UsersEffects {
             }
           }
         ])
-        .catch(() => [
-          this.notificationsService.createErrorAction('users.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('users.entity.plural').callback());
     });
 
   @Effect()
@@ -54,9 +52,7 @@ export class UsersEffects {
             user: response.users[0]
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('users.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('users.entity.singular').callback());
     });
 
   @Effect()
@@ -80,9 +76,7 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => [
-          this.notificationsService.createErrorAction('users.messages.errors.create')
-        ]);
+        .catch(this.notificationsService.error('errors.default.create').entity('users.entity.singular').callback());
     });
 
   @Effect()
@@ -106,9 +100,7 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(() => [
-          this.notificationsService.createErrorAction('users.messages.errors.update')
-        ]);
+        .catch(this.notificationsService.error('errors.default.update').entity('users.entity.singular').callback());
     });
 
   @Effect()
@@ -126,9 +118,7 @@ export class UsersEffects {
           const message = photo ?
             error.status === 413 ? 'users.messages.errors.updatePhotoMaxSizeExceeded' : 'users.messages.errors.updatePhoto' :
             'users.messages.errors.deletePhoto';
-          return [
-            this.notificationsService.createErrorAction(message)
-          ];
+          return [ this.notificationsService.error(message).entity('users.photo.entity.singular').response(error).action() ];
         });
     });
 

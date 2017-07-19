@@ -30,7 +30,7 @@ export class UserLanguagesEffects {
             {
               type: UserLanguagesService.USER_LANGUAGES_FETCH_FAILURE
             },
-            this.notificationService.createErrorAction('user.languages.errors.fetch')
+            this.notificationService.error('errors.default.read').entity('user.languages.entity.plural').action()
           ];
         });
     });

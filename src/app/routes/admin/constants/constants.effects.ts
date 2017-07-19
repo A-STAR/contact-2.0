@@ -24,7 +24,7 @@ export class ConstantsEffects {
             payload: response.constants
           };
         })
-        .catch(this.notificationService.createResponseErrorAction('errors.default.read', { entity: 'constants.entity.plural' }));
+        .catch(this.notificationService.error('errors.default.read').entity('constants.entity.plural').callback());
     });
 
   constructor(

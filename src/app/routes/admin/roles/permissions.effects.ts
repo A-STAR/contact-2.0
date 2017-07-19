@@ -37,7 +37,7 @@ export class PermissionsEffects {
           type: PermissionsService.ROLE_FETCH_SUCCESS,
           payload: response.roles
         }))
-        .catch(this.notifications.createResponseErrorAction('errors.default.read', { entity: 'roles.entity.plural' }));
+        .catch(this.notifications.error('errors.default.read').entity('roles.entity.plural').callback());
     });
 
   @Effect()
@@ -49,7 +49,7 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.hideDialogAction,
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.create', { entity: 'roles.entity.singular' }));
+        .catch(this.notifications.error('errors.default.create').entity('roles.entity.singular').callback());
     });
 
   @Effect()
@@ -61,7 +61,7 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.hideDialogAction,
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.copy', { entity: 'roles.entity.singular' }));
+        .catch(this.notifications.error('errors.default.copy').entity('roles.entity.singular').callback());
     });
 
   @Effect()
@@ -76,7 +76,7 @@ export class PermissionsEffects {
           this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.update', { entity: 'roles.entity.singular' }));
+        .catch(this.notifications.error('errors.default.update').entity('roles.entity.singular').callback());
     });
 
   @Effect()
@@ -91,7 +91,7 @@ export class PermissionsEffects {
           this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.delete', { entity: 'roles.entity.singular' }));
+        .catch(this.notifications.error('errors.default.delete').entity('roles.entity.singular').callback());
     });
 
   @Effect()
@@ -107,7 +107,7 @@ export class PermissionsEffects {
             permissions: response.permits
           }
         }))
-        .catch(this.notifications.createResponseErrorAction('errors.default.read', { entity: 'permissions.entity.plural' }));
+        .catch(this.notifications.error('errors.default.read').entity('permissions.entity.plural').callback());
     });
 
   @Effect()
@@ -122,7 +122,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.create', { entity: 'permissions.entity.singular' }));
+        .catch(this.notifications.error('errors.default.create').entity('permissions.entity.singular').callback());
     });
 
   @Effect()
@@ -137,7 +137,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.update', { entity: 'permissions.entity.singular' }));
+        .catch(this.notifications.error('errors.default.update').entity('permissions.entity.singular').callback());
     });
 
   @Effect()
@@ -152,7 +152,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
         ])
-        .catch(this.notifications.createResponseErrorAction('errors.default.delete', { entity: 'permissions.entity.singular' }));
+        .catch(this.notifications.error('errors.default.delete').entity('permissions.entity.singular').callback());
     });
 
   constructor(

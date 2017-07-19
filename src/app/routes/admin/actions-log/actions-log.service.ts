@@ -53,7 +53,7 @@ export class ActionsLogService {
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
           })
-          .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
+          .catch(this.notifications.error('errors.default.read').entity('actionsLog.entity.plural').callback());
       }
     );
 

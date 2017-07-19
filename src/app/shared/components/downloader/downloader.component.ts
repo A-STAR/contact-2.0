@@ -29,11 +29,7 @@ export class DownloaderComponent {
         this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
         URL.revokeObjectURL(href);
       })
-      // TODO(d.maltsev): refactor once we are able to handle server error messages
-      .catch(error => {
-        this.notificationsService.error(this.errorTranslationKey);
-        throw error;
-      })
+      .catch(this.notificationsService.error(this.errorTranslationKey).callback())
       .subscribe();
   }
 

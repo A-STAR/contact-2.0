@@ -133,9 +133,7 @@ export class UsersComponent implements OnDestroy {
         state => {
           this.displayBlockedUsers = state.displayBlocked;
           this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
-        },
-        // TODO: notifications
-        error => console.error(error)
+        }
       );
 
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');

@@ -753,6 +753,44 @@
       }
     }
   },
+  "entities": {
+    "roles": {
+
+    },
+    "permissions": {
+
+    },
+    "guiObjects": {
+
+    },
+    "users": {
+
+    },
+    "constants": {
+
+    },
+    "dictionaries": {
+
+    },
+    "terms": {
+
+    },
+    "contractors": {
+
+    },
+    "managers": {
+
+    },
+    "portfolios": {
+
+    },
+    "organizations": {
+
+    },
+    "employees": {
+
+    }
+  },
   "errors": {
     "server": {
       "login.invalidCredentials": "Неверный логин или пароль"
