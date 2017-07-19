@@ -24,16 +24,11 @@ export class ConstantsEffects {
             payload: response.constants
           };
         })
-        .catch(() => {
-          return [
-            this.notificationService.createErrorAction('constants.api.errors.fetch')
-          ];
-        });
+        .catch(this.notificationService.error('errors.default.read').entity('entities.constants.gen.plural').callback());
     });
 
   constructor(
     private actions: Actions,
-    // private store: Store<IAppState>,
     private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}

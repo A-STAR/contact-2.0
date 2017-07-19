@@ -24,12 +24,12 @@ export class MetadataEffects {
             payload: response
           };
         })
-        .catch(() => {
+        .catch(error => {
           return [
             {
               type: MetadataService.METADATA_FETCH_FAILURE
             },
-            this.notificationService.createErrorAction('metadata.errors.fetch')
+            this.notificationService.error().response(error).action()
           ];
         });
     });

@@ -43,8 +43,7 @@ export class LookupEffects {
           {
             type: LookupService.LOOKUP_ROLES_FETCH_FAILURE
           },
-          // TODO(d.maltsev): i18n
-          this.notificationService.createErrorAction('lookup.roles.errors.fetch')
+          this.notificationService.error('errors.default.read').entity('entities.lookup.roles.gen.plural').action()
         ]);
     });
 
@@ -64,8 +63,7 @@ export class LookupEffects {
           {
             type: LookupService.LOOKUP_USERS_FETCH_FAILURE
           },
-          // TODO(d.maltsev): i18n
-          this.notificationService.createErrorAction('lookup.users.errors.fetch')
+          this.notificationService.error('errors.default.read').entity('entities.lookup.users.gen.plural').action()
         ]);
     });
 

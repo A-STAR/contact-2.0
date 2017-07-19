@@ -33,9 +33,7 @@ export class ContractorsAndPortfoliosEffects {
             contractors: response.contractors
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.contractors.gen.plural').callback());
     });
 
   @Effect()
@@ -49,9 +47,7 @@ export class ContractorsAndPortfoliosEffects {
             contractor: response.contractors[0]
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -62,9 +58,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.messages.errors.create')
-        ]);
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -76,9 +70,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.messages.errors.update')
-        ]);
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -92,9 +84,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
           { type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS }
         ])
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.messages.errors.delete')
-        ]);
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -108,9 +98,7 @@ export class ContractorsAndPortfoliosEffects {
             managers: response.managers
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.managers.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.managers.gen.plural').callback());
     });
 
   @Effect()
@@ -124,9 +112,7 @@ export class ContractorsAndPortfoliosEffects {
             manager: response.managers[0]
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.managers.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -138,9 +124,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.managers.messages.errors.create')
-        ]);
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -152,9 +136,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.managers.messages.errors.update')
-        ]);
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -168,9 +150,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
           { type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS }
         ])
-        .catch(() => [
-          this.notificationsService.createErrorAction('contractors.managers.messages.errors.delete')
-        ]);
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -186,9 +166,7 @@ export class ContractorsAndPortfoliosEffects {
             portfolios: response.portfolios
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.portfolios.gen.plural').callback());
     });
 
   @Effect()
@@ -203,9 +181,7 @@ export class ContractorsAndPortfoliosEffects {
             portfolio: response.portfolios[0]
           }
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.fetch')
-        ]);
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -217,9 +193,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.create')
-        ]);
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -231,9 +205,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
         }))
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.update')
-        ]);
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -246,9 +218,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.PORTFOLIO_MOVE_SUCCESS },
           { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH }
         ])
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.move')
-        ]);
+        .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -262,9 +232,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH },
           { type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS }
         ])
-        .catch(() => [
-          this.notificationsService.createErrorAction('portfolios.messages.errors.delete')
-        ]);
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.portfolios.entity.singular').callback());
     });
 
   constructor(

@@ -24,14 +24,12 @@ export class AuthEffects {
           payload: { token }
         }))
         .catch(error => {
-          const code = error instanceof Response ? error.json().message.code : null;
-          const message = code ? `auth.errors.${code}` : 'auth.errors.login';
           return [
             {
               type: AuthService.AUTH_DESTROY_SESSION,
               payload: { redirectToLogin: false }
             },
-            this.notificationService.createErrorAction(message),
+            this.notificationService.error('auth.errors.login').response(error).action(),
           ];
         });
     });
@@ -45,11 +43,11 @@ export class AuthEffects {
           type: AuthService.AUTH_CREATE_SESSION,
           payload: { token, redirectAfterLogin: false }
         }))
-        .catch(() => [
+        .catch(error => [
           {
             type: AuthService.AUTH_DESTROY_SESSION
           },
-          this.notificationService.createErrorAction('auth.errors.refresh'),
+          this.notificationService.error('auth.errors.refresh').response(error).action(),
         ]);
     });
 
@@ -61,11 +59,11 @@ export class AuthEffects {
         .map(() => ({
           type: AuthService.AUTH_DESTROY_SESSION
         }))
-        .catch(() => [
+        .catch(error => [
           {
             type: AuthService.AUTH_DESTROY_SESSION
           },
-          this.notificationService.createErrorAction('auth.errors.logout')
+          this.notificationService.error('auth.errors.logout').response(error).action(),
         ]);
     });
 

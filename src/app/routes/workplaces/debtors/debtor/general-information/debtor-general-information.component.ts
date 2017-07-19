@@ -65,7 +65,7 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
                 label: 'debtor.generalInformationTab.sex',
                 controlName: 'sex',
                 type: 'select',
-                options: [ { value: 1, label: 'default.sex.m' }, { value: 2, label: 'default.sex.w' } ]
+                options: [ { value: 1, label: 'default.sex.m' }, { value: 2, label: 'default.sex.f' } ]
               },
               {
                 label: 'debtor.generalInformationTab.importance',

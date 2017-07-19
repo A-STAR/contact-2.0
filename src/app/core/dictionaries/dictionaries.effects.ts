@@ -31,9 +31,7 @@ export class DictionariesEffects {
             dictionaries: response.dictNames
           }
         }))
-        .catch(() => ([
-          this.notificationsService.createErrorAction('dictionaries.messages.errors.fetch')
-        ]));
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.dictionaries.gen.plural').callback());
     });
 
   @Effect()
@@ -62,9 +60,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('dictionaries.messages.errors.create')
-        ]));
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -87,9 +83,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('dictionaries.messages.errors.update')
-        ]));
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -110,9 +104,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('dictionaries.messages.errors.delete')
-        ]));
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -211,7 +203,6 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
-
       return store.dictionaries.selectedDictionary
         ? this.readTerms(store.dictionaries.selectedDictionary.code)
           .map((response: any) => {
@@ -220,9 +211,7 @@ export class DictionariesEffects {
               payload: response.terms
             };
           })
-          .catch(() => ([
-            this.notificationsService.createErrorAction('terms.messages.errors.fetch')
-          ]))
+          .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback())
         : Observable.empty();
     });
 
@@ -252,9 +241,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('terms.messages.errors.create')
-        ]));
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -278,9 +265,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('term.messages.errors.update')
-        ]));
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -301,10 +286,8 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(() => ([
-          this.notificationsService.createErrorAction('terms.messages.errors.delete')
-        ]));
-    });
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.terms.gen.singular').callback());
+      });
 
   constructor(
     private actions: Actions,
