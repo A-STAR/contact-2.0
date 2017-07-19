@@ -557,7 +557,8 @@
       },
       "edit": {
         "title": "Employee",
-        "fullName": "Full name"
+        "fullName": "Full name",
+        "isMain": "Main branch"
       },
       "remove": {
         "title": "Delete employee",
