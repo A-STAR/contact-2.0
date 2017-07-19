@@ -44,14 +44,7 @@ export class LoginComponent {
 
     if (this.form.valid) {
       const { login, password } = value;
-      this.authService
-        .authenticate(login, password)
-        .subscribe(
-          success => {
-            const redirectUrl = this.authService.redirectUrl || '/home';
-            this.router.navigate([redirectUrl]);
-          }
-        );
+      this.authService.dispatchLoginAction(login, password);
     }
   }
 

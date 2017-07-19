@@ -70,53 +70,52 @@ export class GridService {
    * @param {object} renderers Column renderers, esentially getters
    * @returns {Observable<IGridColumn[]>} Column defininitions
    */
-  getColumnDefs(
-    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
-      const mapColumns = ([metadata, dictionaries]) =>
-        this.setRenderers(columns.filter(column =>
-          !!metadata.find(metadataColumn => {
-            const isInMeta = column.prop === metadataColumn.name;
-            if (isInMeta) {
-              if (!column.renderer) {
-                const currentDictTypes = dictionaries[metadataColumn.dictCode];
-                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
-                  column.renderer = (item: ITypeCodeItem) => {
-                    const typeDescription = currentDictTypes.find(
-                      dictionaryItem => dictionaryItem.code === item.typeCode
-                    );
-                    return typeDescription ? typeDescription.name : item.typeCode;
-                  };
-                } else {
-                  // Data types
-                  switch (metadataColumn.dataType) {
-                    case 2:
-                      // Date
-                      column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
-                      break;
-                    case 7:
-                      // Datetime
-                      column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
-                      break;
-                  }
-                }
-              }
-              // Dictionary filters
-              if (column.filterDictionaryId) {
-                const dictTypes = dictionaries[column.filterDictionaryId];
-                if (Array.isArray(dictTypes)) {
-                  column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
+  getColumnDefs(metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+    const mapColumns = ([metadata, dictionaries]) =>
+      this.setRenderers(columns.filter(column =>
+        !!metadata.find(metadataColumn => {
+          const isInMeta = column.prop === metadataColumn.name;
+          if (isInMeta) {
+            if (!column.renderer) {
+              const currentDictTypes = dictionaries[metadataColumn.dictCode];
+              if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                column.renderer = (item: ITypeCodeItem) => {
+                  const typeDescription = currentDictTypes.find(
+                    dictionaryItem => dictionaryItem.code === item.typeCode
+                  );
+                  return typeDescription ? typeDescription.name : item.typeCode;
+                };
+              } else {
+                // Data types
+                switch (metadataColumn.dataType) {
+                  case 2:
+                    // Date
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
+                    break;
+                  case 7:
+                    // Datetime
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
+                    break;
                 }
               }
             }
-            return isInMeta;
-          })
-        ), renderers);
+            // Dictionary filters
+            if (column.filterDictionaryId) {
+              const dictTypes = dictionaries[column.filterDictionaryId];
+              if (Array.isArray(dictTypes)) {
+                column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
+              }
+            }
+          }
+          return isInMeta;
+        })
+      ), renderers);
 
-      return Observable.combineLatest(
-        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
-        this.dictionariesService.dictionariesByCode,
-      )
-      .map(mapColumns);
+    return Observable.combineLatest(
+      this.metadataService.metadata.map(metadata => metadata ? metadata[metadataKey] : []),
+      this.dictionariesService.dictionariesByCode,
+    )
+    .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {

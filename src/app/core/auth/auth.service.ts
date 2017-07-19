@@ -1,178 +1,145 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Response } from '@angular/http';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { JwtHelper } from 'angular2-jwt';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngrx/store';
+import { JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/catch';
 
 import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
-import { NotificationsService } from '../notifications/notifications.service';
-
-const TOKEN_NAME = 'auth/token';
-const LANGUAGE_TOKEN = 'user/language';
-
-export const getToken = () => localStorage.getItem(TOKEN_NAME);
-
-const setToken = (token: string) => localStorage.setItem(TOKEN_NAME, token);
-
-const removeToken = () => localStorage.removeItem(TOKEN_NAME);
 
 @Injectable()
 export class AuthService implements CanActivate {
-  static GLOBAL_RESET = 'GLOBAL_RESET';
+  static TOKEN_NAME = 'auth/token';
+  static LANGUAGE_TOKEN = 'user/language';
+
+  static URL_DEFAULT = '/';
+  static URL_LOGIN   = '/login';
 
   static JWT_EXPIRATION_THRESHOLD = 60e3;
-  static JWT_TIMER_INTERVAL = 10e3;
+  static JWT_TIMER_INTERVAL       = 10e3;
 
-  // store the URL so we can redirect after logging in
-  public redirectUrl: string;
-  private authenticated = false;
+  static AUTH_LOGIN           = 'AUTH_LOGIN';
+  static AUTH_REFRESH         = 'AUTH_REFRESH';
+  static AUTH_LOGOUT          = 'AUTH_LOGOUT';
+  static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
+  static AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
+  static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
+
   private tokenTimer = null;
+  private url: string = null;
 
   constructor(
     private dataService: DataService,
-    private router: Router,
     private jwtHelper: JwtHelper,
-    private notificationsService: NotificationsService,
+    private router: Router,
     private store: Store<IAppState>,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
-    const token = getToken();
-    if (this.isTokenValid(token)) {
-      this.initTokenTimer(token);
-    }
-  }
-
-  get isAuthenticated(): boolean {
-    return this.authenticated;
-  }
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const url: string = state.url;
-
-    if (this.checkLogin(url)) {
-      return true;
-    }
-
-    this.redirectToLogin(url);
-    return false;
-  }
-
-  authenticate(login: string, password: string): Observable<boolean> {
-    return this.dataService.post('/auth/login', {}, { login, password })
-      .map((resp: Response) => resp.headers.get('X-Auth-Token'))
-      .do((token: string) => {
-        this.saveToken(token);
-        this.setLanguage(token);
-        this.authenticated = true;
+    this.token$
+      .do(token => {
+        if (this.isTokenValid(token)) {
+          this.initTokenTimer(token);
+        }
       })
-      .catch(error => {
-        this.authenticated = false;
-        this.dispatchResetAction();
-        this.notificationsService.error().response(error).dispatch();
-        return Observable.empty();
-      })
-      .map(resp => true);
+      .subscribe();
   }
 
-  logout(): Observable<boolean> {
-    return this.dataService.get('/auth/logout', {})
-      .do(() => this.logoutHandler())
-      .map(resp => true)
-      .catch(error => {
-        this.logoutHandler();
-        return Observable.of(false);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.token$
+      .map(token => this.isTokenValid(token))
+      .do(isTokenValid => {
+        if (!isTokenValid) {
+          this.dispatchResetAction();
+        }
       });
   }
 
-  private logoutHandler(): void {
-    removeToken();
-    this.authenticated = false;
-    this.redirectToLogin();
-    this.dispatchResetAction();
+  dispatchLoginAction(login: string, password: string): void {
+    const action = this.createAction(AuthService.AUTH_LOGIN, { login, password });
+    this.store.dispatch(action);
+  }
+
+  dispatchLogoutAction(): void {
+    const action = this.createAction(AuthService.AUTH_LOGOUT);
+    this.store.dispatch(action);
+  }
+
+  dispatchRefreshAction(): void {
+    const action = this.createAction(AuthService.AUTH_REFRESH);
+    this.store.dispatch(action);
+  }
+
+  dispatchResetAction(): void {
+    const action = this.createAction(AuthService.AUTH_DESTROY_SESSION);
+    this.store.dispatch(action);
   }
 
   redirectToLogin(url: string = null): void {
-    this.clearTokenTimer();
-    this.redirectUrl = url || this.router.url || '/home';
-    this.router.navigate(['/login']);
+    this.url = url || this.router.url;
+    this.router.navigate([AuthService.URL_LOGIN]);
   }
 
-  private dispatchResetAction(): void {
-    this.store.dispatch({ type: AuthService.GLOBAL_RESET });
+  redirectAfterLogin(): void {
+    this.router.navigate([this.url || AuthService.URL_DEFAULT]);
+    this.url = null;
+  }
+
+  saveToken(token: string): void {
+    localStorage.setItem(AuthService.TOKEN_NAME, token);
+  }
+
+  removeToken(): void {
+    localStorage.removeItem(AuthService.TOKEN_NAME);
+  }
+
+  saveLanguage(token: string): void {
+    const { language } = this.jwtHelper.decodeToken(token);
+    this.translateService.setDefaultLang(language || 'en');
+    this.translateService.use(language).subscribe();
+    localStorage.setItem(AuthService.LANGUAGE_TOKEN, language);
+  }
+
+  initTokenTimer(token: string): void {
+    this.zone.runOutsideAngular(() => {
+      this.tokenTimer = setInterval(() => this.onTimer(token), AuthService.JWT_TIMER_INTERVAL);
+    });
+  }
+
+  clearTokenTimer(): void {
+    if (this.tokenTimer) {
+      clearInterval(this.tokenTimer);
+    }
+  }
+
+  private onTimer(token: string): void {
+    const timeUntilExpiration = this.jwtHelper.getTokenExpirationDate(token).getTime() - Date.now();
+    if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
+      this.zone.run(() => {
+        if (this.isTokenValid(token)) {
+          this.dispatchRefreshAction();
+        } else {
+          this.dispatchResetAction();
+        }
+      });
+    }
+  }
+
+  private createAction(type: string, payload: object = {}): Action {
+    return { type, payload };
   }
 
   private isTokenValid(token: string): boolean {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
-  private checkLogin(url: string): boolean {
-    if (this.isAuthenticated) {
-      return true;
-    }
-
-    const token = getToken();
-    if (this.isTokenValid(token)) {
-      return this.authenticated = true;
-    }
-
-    this.dispatchResetAction();
-    return this.authenticated = false;
-  }
-
-  private refreshToken(): void {
-    this.dataService.get('/api/refresh', {}, {})
-      .map((resp: Response) => resp.headers.get('X-Auth-Token'))
-      .subscribe(
-        token => {
-          this.saveToken(token);
-          this.setLanguage(token);
-        },
-        () => this.redirectToLogin()
-      );
-  }
-
-  private saveToken(token: string): void {
-    this.initTokenTimer(token);
-    setToken(token);
-  }
-
-  private initTokenTimer(token: string): void {
-    this.zone.runOutsideAngular(() => {
-      const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
-
-      this.clearTokenTimer();
-      this.tokenTimer = setInterval(() => {
-        const timeUntilExpiration = expirationDate.getTime() - Date.now();
-        if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
-          this.zone.run(() => {
-            if (this.isTokenValid(token)) {
-              this.refreshToken();
-            } else {
-              this.redirectToLogin();
-            }
-          });
-        }
-      }, AuthService.JWT_TIMER_INTERVAL);
-    });
-  }
-
-  private clearTokenTimer(): void {
-    if (this.tokenTimer) {
-      clearInterval(this.tokenTimer);
-    }
-  }
-
-  private setLanguage(token: string): void {
-    const { language } = this.jwtHelper.decodeToken(token);
-    this.translateService.setDefaultLang(language || 'en');
-    this.translateService.use(language).subscribe();
-    localStorage.setItem(LANGUAGE_TOKEN, language);
+  private get token$(): Observable<string> {
+    return this.store
+      .select(state => state.auth)
+      .map(state => state.token)
+      .distinctUntilChanged();
   }
 }
