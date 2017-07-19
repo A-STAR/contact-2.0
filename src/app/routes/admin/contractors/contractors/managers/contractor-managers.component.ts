@@ -96,7 +96,7 @@ export class ContractorManagersComponent implements OnDestroy {
         this.contractorsAndPortfoliosService.fetchManagers(this.contractorId);
       } else {
         this.contractorsAndPortfoliosService.clearManagers();
-        this.notificationsService.error('errors.default.read.403').entity('contractors.managers.entity.plural').dispatch();
+        this.notificationsService.error('errors.default.read.403').entity('entities.managers.gen.plural').dispatch();
       }
     });
 

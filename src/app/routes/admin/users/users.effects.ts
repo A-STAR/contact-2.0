@@ -38,7 +38,7 @@ export class UsersEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.read').entity('users.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
     });
 
   @Effect()
@@ -52,7 +52,7 @@ export class UsersEffects {
             user: response.users[0]
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('users.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.singular').callback());
     });
 
   @Effect()
@@ -76,7 +76,7 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(this.notificationsService.error('errors.default.create').entity('users.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.users.gen.singular').callback());
     });
 
   @Effect()
@@ -100,7 +100,7 @@ export class UsersEffects {
             }
           }, ...actions];
         })
-        .catch(this.notificationsService.error('errors.default.update').entity('users.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.users.gen.singular').callback());
     });
 
   @Effect()
@@ -116,7 +116,7 @@ export class UsersEffects {
         ])
         .catch(error => {
           const message = photo ? 'errors.default.upload' : 'errors.default.delete';
-          return [ this.notificationsService.error(message).entity('users.photo.entity.singular').response(error).action() ];
+          return [ this.notificationsService.error(message).entity('entities.users.photos.gen.singular').response(error).action() ];
         });
     });
 

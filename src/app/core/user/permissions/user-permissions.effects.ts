@@ -33,7 +33,7 @@ export class UserPermissionsEffects {
             {
               type: UserPermissionsService.USER_PERMISSIONS_FETCH_FAILURE
             },
-            this.notificationService.error('errors.default.read').entity('user.permissions.entity.plural').action()
+            this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').action()
           ];
         });
     });

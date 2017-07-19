@@ -660,7 +660,10 @@
       "gen": { "singular": "GUI object", "plural": "GUI objects list" }
     },
     "users": {
-      "gen": { "singular": "user", "plural": "users list" }
+      "gen": { "singular": "user", "plural": "users list" },
+      "photos": {
+        "gen": { "singular": "user photo" }
+      }
     },
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "actions log" }
@@ -690,7 +693,13 @@
       "gen": { "singular": "employee", "plural": "employees list" }
     },
     "debtors": {
-      "gen": { "singular": "debtor", "plural": "debtors list" }
+      "gen": { "singular": "debtor", "plural": "debtors list" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      },
+      "phones": {
+        "gen": { "plural": "debtors phones list" }
+      }
     },
     "user": {
       "constants": {
@@ -704,6 +713,14 @@
       },
       "dictionaries": {
         "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
+      }
+    },
+    "lookup": {
+      "roles": {
+        "gen": { "plural": "roles lookup data" }
+      },
+      "users": {
+        "gen": { "plural": "users lookup data" }
       }
     }
   },

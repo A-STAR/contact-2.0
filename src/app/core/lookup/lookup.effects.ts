@@ -43,7 +43,7 @@ export class LookupEffects {
           {
             type: LookupService.LOOKUP_ROLES_FETCH_FAILURE
           },
-          this.notificationService.error('errors.default.read').entity('lookup.roles.entity.plural').action()
+          this.notificationService.error('errors.default.read').entity('entities.lookup.roles.gen.plural').action()
         ]);
     });
 
@@ -63,7 +63,7 @@ export class LookupEffects {
           {
             type: LookupService.LOOKUP_USERS_FETCH_FAILURE
           },
-          this.notificationService.error('errors.default.read').entity('lookup.users.entity.plural').action()
+          this.notificationService.error('errors.default.read').entity('entities.lookup.users.gen.plural').action()
         ]);
     });
 

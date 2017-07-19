@@ -133,7 +133,7 @@ export class PortfoliosComponent implements OnDestroy {
       } else {
         this.contractorsAndPortfoliosService.clearPortfolios();
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('portfolios.entity.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
         }
       }
     });

@@ -24,7 +24,7 @@ export class DebtorCardEffects {
           type: DebtorService.DEBTOR_FETCH_SUCCESS,
           payload: response.debtor
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('debtors.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.debtors.gen.singular').callback());
     });
 
   @Effect()
@@ -36,7 +36,7 @@ export class DebtorCardEffects {
           type: DebtorService.DEBTOR_GENERAL_INFORMATION_FETCH_SUCCESS,
           payload: response.data
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('debtors.info.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.debtors.info.gen.plural').callback());
     });
 
   @Effect()
@@ -48,7 +48,7 @@ export class DebtorCardEffects {
           type: DebtorService.DEBTOR_GENERAL_INFORMATION_PHONES_FETCH_SUCCESS,
           payload: response.data
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('debtors.phones.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.debtors.phones.gen.plural').callback());
     });
 
   constructor(

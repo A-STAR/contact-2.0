@@ -20,7 +20,7 @@ export class DebtorsEffects {
           type: DebtorsService.DEBTORS_FETCH_SUCCESS,
           payload: response.debtors
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('debtors.info.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.debtors.info.gen.plural').callback());
     });
 
   constructor(

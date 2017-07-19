@@ -38,7 +38,7 @@ export class OrganizationsEffects {
             )
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('organizations.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.organizations.gen.plural').callback());
     });
 
   @Effect()
@@ -71,7 +71,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('organizations.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -92,7 +92,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('organizations.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -110,7 +110,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('organizations.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -137,7 +137,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('organizations.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -153,7 +153,7 @@ export class OrganizationsEffects {
             employees: response.users
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('employees.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
 
   @Effect()
@@ -179,7 +179,7 @@ export class OrganizationsEffects {
             employees: response.users
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('employees.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
 
   @Effect()
@@ -200,7 +200,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('employees.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
     });
 
   @Effect()
@@ -225,7 +225,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('employees.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
     });
 
   @Effect()
@@ -246,7 +246,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('employees.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.employees.gen.singular').callback());
     });
 
   constructor(

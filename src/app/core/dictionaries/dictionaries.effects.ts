@@ -31,7 +31,7 @@ export class DictionariesEffects {
             dictionaries: response.dictNames
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('dictionaries.entity.plural').callback());
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.dictionaries.gen.plural').callback());
     });
 
   @Effect()
@@ -60,7 +60,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('dictionaries.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -83,7 +83,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('dictionaries.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -104,7 +104,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('dictionaries.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -211,7 +211,7 @@ export class DictionariesEffects {
               payload: response.terms
             };
           })
-          .catch(this.notificationsService.error('errors.default.read').entity('terms.entity.plural').callback())
+          .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback())
         : Observable.empty();
     });
 
@@ -241,7 +241,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('terms.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -265,7 +265,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('terms.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -286,7 +286,7 @@ export class DictionariesEffects {
             }
           }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('terms.entity.singular').callback());
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.terms.gen.singular').callback());
       });
 
   constructor(
