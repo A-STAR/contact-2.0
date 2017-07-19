@@ -1,3 +1,5 @@
+import { Response } from '@angular/http';
+
 export enum NotificationTypeEnum {
   INFO,
   WARNING,
@@ -14,11 +16,6 @@ export interface INotification {
 
 export interface IFilters {
   [key: string]: boolean;
-}
-
-export interface IMessage {
-  message: string;
-  param: Object;
 }
 
 export interface INotificationServiceState {
@@ -42,4 +39,17 @@ export interface INotificationActionPayload {
 export interface INotificationAction {
   type: INotificationActionType;
   payload?: INotificationActionPayload;
+}
+
+export interface IMessageParams {
+  [key: string]: string;
+}
+
+export interface IMessageOptions {
+  prefix?: string;
+  response?: Response;
+  // text and params act as fallback options in case there no response is passed
+  text?: string;
+  params?: IMessageParams;
+  alert?: boolean;
 }

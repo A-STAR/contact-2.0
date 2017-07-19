@@ -96,7 +96,7 @@ export class ContractorsComponent implements OnDestroy {
         this.contractorsAndPortfoliosService.fetchContractors();
       } else {
         this.contractorsAndPortfoliosService.clearContractors();
-        this.notificationsService.error('contractors.messages.accessDenied');
+        this.notificationsService.error('errors.default.read.403').entity('entities.contractors.gen.plural').dispatch();
       }
     });
 

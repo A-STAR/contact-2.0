@@ -35,7 +35,7 @@ export class UserDictionariesEffects {
                 dictionaryId
               }
             },
-            this.notificationService.createErrorAction('user.dictionaries.errors.fetch')
+            this.notificationService.error('errors.default.read').entity('entities.user.dictionaries.gen.plural').action()
           ];
         });
     });

@@ -83,8 +83,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.constantsService.fetch();
-
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
@@ -98,7 +96,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error('constants.errors.view');
+          this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
         } else {
           this.constantsService.fetch();
         }
@@ -137,7 +135,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
           this.userConstantsService.refresh();
           this.onCancel();
         },
-        error => this.notificationsService.error('constants.api.errors.update')
+        error => this.notificationsService.error('constants.api.errors.update').dispatch()
       );
   }
 
@@ -149,7 +147,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
         if (hasPermission) {
           this.display = true;
         } else {
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_edit', param: { permission } });
+          this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
         }
       });
   }

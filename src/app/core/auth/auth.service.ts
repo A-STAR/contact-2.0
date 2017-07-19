@@ -11,6 +11,7 @@ import 'rxjs/add/operator/catch';
 import { IAppState } from '../state/state.interface';
 
 import { DataService } from '../data/data.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 const TOKEN_NAME = 'auth/token';
 const LANGUAGE_TOKEN = 'user/language';
@@ -37,6 +38,7 @@ export class AuthService implements CanActivate {
     private dataService: DataService,
     private router: Router,
     private jwtHelper: JwtHelper,
+    private notificationsService: NotificationsService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
     private zone: NgZone,
@@ -73,8 +75,8 @@ export class AuthService implements CanActivate {
       .catch(error => {
         this.authenticated = false;
         this.dispatchResetAction();
-        const { message } = error.json();
-        throw new Error(this.getErrorMessage(message));
+        this.notificationsService.error().response(error).dispatch();
+        return Observable.empty();
       })
       .map(resp => true);
   }
@@ -104,15 +106,6 @@ export class AuthService implements CanActivate {
 
   private dispatchResetAction(): void {
     this.store.dispatch({ type: AuthService.GLOBAL_RESET });
-  }
-
-  private getErrorMessage(message: any = null): string {
-    switch (message.code) {
-      case 'login.invalidCredentials':
-        return 'validation.login.INVALID_CREDENTIALS';
-      default:
-        return 'validation.DEFAULT_ERROR_MESSAGE';
-    }
   }
 
   private isTokenValid(token: string): boolean {

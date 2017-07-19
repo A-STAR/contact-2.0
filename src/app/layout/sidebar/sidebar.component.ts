@@ -28,7 +28,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ) {
     this.routeDataSubscription = this.route.data.subscribe(
       data => this.menuItems = data.menu,
-      () => notificationsService.error('sidebar.messages.loadError')
+      () => this.notificationsService.error('sidebar.messages.loadError').dispatch()
     );
   }
 

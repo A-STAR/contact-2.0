@@ -15,7 +15,6 @@ export class LoginComponent {
   static LOGIN_KEY = 'auth/login';
 
   form: FormGroup;
-  error: string = null;
 
   constructor(
     public settings: SettingsService,
@@ -32,14 +31,11 @@ export class LoginComponent {
       'password': [ null, Validators.required ],
       'remember_login': [remember],
     });
-
-    this.form.valueChanges.subscribe(() => this.error = null);
   }
 
   submitForm(event: UIEvent, value: any): void {
     event.preventDefault();
 
-    this.error = null;
     this.login = value.remember_login ? value.login : null;
 
     [].forEach.call(this.form.controls, ctrl => {
@@ -54,8 +50,7 @@ export class LoginComponent {
           success => {
             const redirectUrl = this.authService.redirectUrl || '/home';
             this.router.navigate([redirectUrl]);
-          },
-          error => this.error = error.message
+          }
         );
     }
   }
