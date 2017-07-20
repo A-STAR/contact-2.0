@@ -18,6 +18,7 @@ import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { GuiObjectsEffects } from './menu/gui-objects.effects';
 import { LookupEffects } from './lookup/lookup.effects';
 import { LookupService } from './lookup/lookup.service';
 import { MenuService } from './menu/menu.service';
@@ -45,6 +46,7 @@ import { rootReducer } from './state/root.reducer';
     StoreModule.provideStore(rootReducer),
     EffectsModule.run(AuthEffects),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(GuiObjectsEffects),
     EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(UserConstantsEffects),

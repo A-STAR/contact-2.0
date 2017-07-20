@@ -1,35 +1,29 @@
 import { Injectable } from '@angular/core';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
-import { Headers } from '@angular/http';
+// import { Headers } from '@angular/http';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-import { IMenuItem, IMenuApiResponseItem } from './menu.interface';
+import { IAppState } from '../state/state.interface';
+import { IGuiObjectsState, IMenuItem, IMenuApiResponseItem } from './menu.interface';
 
 import { DataService } from '../data/data.service';
 
 import { menuConfig } from '../../routes/menu-config';
 
-const ADDITIONAL_MENU_ITEMS: Array<IMenuApiResponseItem> = [
-  { id: 0, name: 'menuItemHome' },
-];
-
 @Injectable()
 export class MenuService {
+  static GUI_OBJECTS_FETCH         = 'GUI_OBJECTS_FETCH';
+  static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
+  static GUI_OBJECTS_FETCH_FAILURE = 'GUI_OBJECTS_FETCH_FAILURE';
+
   private lastNavigationStartTimestamp: number = null;
-
-  private guiObjects$: Observable<Array<IMenuItem>>;
-
-  private guiObjectIds: { [key: string]: number };
 
   constructor(
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private store: Store<IAppState>,
   ) {
-    this.guiObjects$ = this.dataService.read('/guiconfigurations')
-      .map(response => response.appGuiObjects)
-      .do(data => this.guiObjectIds = this.flattenGuiObjectIds(data))
-      .map(data => this.prepareMenu(data));
-
     this.onSectionLoadStart();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
@@ -40,8 +34,34 @@ export class MenuService {
     });
   }
 
-  get guiObjects(): Observable<Array<IMenuItem>> {
-    return this.guiObjects$;
+  get menuItems$(): Observable<Array<IMenuItem>> {
+    return this.state.map(state => state.guiObjects)
+      .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
+      .distinctUntilChanged();
+  }
+
+  get isResolved(): Observable<boolean> {
+    return this.state
+      .map(state => state.isResolved)
+      .filter(isResolved => isResolved !== null)
+      .take(1);
+  }
+
+  createRefreshGuiObjectsAction(): Action {
+    return { type: MenuService.GUI_OBJECTS_FETCH };
+  }
+
+  refreshGuiObjects(): void {
+    const action = this.createRefreshGuiObjectsAction();
+    this.store.dispatch(action);
+  }
+
+  private prepareGuiObject(guiObject: IMenuApiResponseItem): IMenuItem {
+    const children = guiObject.children;
+    return {
+      ...menuConfig[guiObject.name],
+      children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
+    };
   }
 
   private onSectionLoadStart(): void {
@@ -57,38 +77,26 @@ export class MenuService {
   }
 
   private logAction(name: string, delay: number): void {
-    const data = {
-      typeCode: 1,
-      duration: delay
-    };
-    const headers = new Headers({
-      'X-Gui-Object': this.guiObjectIds[name]
-    });
+    // const data = {
+    //   typeCode: 1,
+    //   duration: delay
+    // };
+    // const headers = new Headers({
+    //   'X-Gui-Object': this.guiObjectIds[name]
+    // });
 
-    this.dataService
-      .create('/actions', {}, data, { headers })
-      .take(1)
-      .subscribe();
+    // this.dataService.create('/actions', {}, data, { headers }).subscribe();
   }
 
-  private prepareMenu(appGuiObjects: Array<IMenuApiResponseItem>): Array<IMenuItem> {
-    return ADDITIONAL_MENU_ITEMS
-      .concat(appGuiObjects)
-      .map(item => this.prepareMenuNode(item));
-  }
+  // private flattenGuiObjectIds(appGuiObjects: Array<IMenuApiResponseItem>): any {
+  //   return appGuiObjects.reduce((acc, guiObject) => ({
+  //     ...acc,
+  //     ...this.flattenGuiObjectIds(guiObject.children),
+  //     [guiObject.name]: guiObject.id
+  //   }), {});
+  // }
 
-  private prepareMenuNode(node: IMenuApiResponseItem): IMenuItem {
-    return {
-      ...menuConfig[node.name],
-      children: node.children && node.children.length ? node.children.map(child => this.prepareMenuNode(child)) : undefined
-    };
-  }
-
-  private flattenGuiObjectIds(appGuiObjects: Array<IMenuApiResponseItem>): any {
-    return appGuiObjects.reduce((acc, guiObject) => ({
-      ...acc,
-      ...this.flattenGuiObjectIds(guiObject.children),
-      [guiObject.name]: guiObject.id
-    }), {});
+  private get state(): Observable<IGuiObjectsState> {
+    return this.store.select(state => state.guiObjects);
   }
 }

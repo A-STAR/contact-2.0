@@ -4,6 +4,7 @@ import { IConstantsState } from '../../routes/admin/constants/constants.interfac
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
+import { IGuiObjectsState } from '../menu/menu.interface';
 import { ILookupState } from '../lookup/lookup.interface';
 import { INotificationServiceState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
@@ -21,6 +22,7 @@ export interface IAppState {
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
   readonly dictionaries: IDictionariesState;
+  readonly guiObjects: IGuiObjectsState;
   readonly lookup: ILookupState;
   // TODO(d.maltsev): rename notificationService -> notifications
   readonly notifications: INotificationServiceState;
