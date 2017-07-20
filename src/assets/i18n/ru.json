@@ -917,6 +917,17 @@
       "datePicker": {
         "placeholder": "Выберите дату"
       }
+    },
+    "colors": {
+      "transparent": "Прозрачный",
+      "azure": "Голубой",
+      "violet": "Фиолетовый",
+      "olive": "Оливковый",
+      "lime": "Зеленый",
+      "fuchsia": "Фуксия",
+      "orange": "Оранжевый",
+      "pink": "Розовый",
+      "yellow": "Желтый"
     }
   }
 }

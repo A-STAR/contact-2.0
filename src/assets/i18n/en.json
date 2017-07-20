@@ -917,6 +917,17 @@
       "datePicker": {
         "placeholder": "Select a date"
       }
+    },
+    "colors": {
+      "transparent": "Transparent",
+      "azure": "Azure",
+      "violet": "Violet",
+      "olive": "Olive",
+      "lime": "Lime",
+      "fuchsia": "Fuchsia",
+      "orange": "Orange",
+      "pink": "Pink",
+      "yellow": "Yellow"
     }
   }
 }

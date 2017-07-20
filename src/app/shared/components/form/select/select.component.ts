@@ -39,6 +39,7 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() filterEnabled = false;
   @Input() options: ILabeledValue[] = [];
   @Input() actions: Array<ISelectionAction> = [];
+  @Input() renderer: any;
 
   @Input() styles: CSSStyleDeclaration;
 
@@ -200,18 +201,15 @@ export class SelectComponent implements ControlValueAccessor {
     let displayValue: string;
 
     if (item.label) {
-      displayValue = item.label;
+      displayValue = this.translateService.instant(item.label);
     } else {
       const option = this.lookupAtOptions(item.value);
       if (option) {
-        displayValue = option.label;
+        displayValue = this.translateService.instant(option.label);
       }
     }
-    return this.sanitizer.bypassSecurityTrustHtml(
-      displayValue
-        ? this.translateService.instant(displayValue)
-        : item.value
-    );
+
+    return this.sanitizer.bypassSecurityTrustHtml(this.renderer ? this.renderer(displayValue, item) : (displayValue || item.value));
   }
 
   clickedOutside(): void {
