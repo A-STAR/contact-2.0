@@ -27,7 +27,7 @@ export class UserDictionariesEffects {
             }
           };
         })
-        .catch(() => {
+        .catch(error => {
           return [
             {
               type: UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE,
@@ -35,7 +35,7 @@ export class UserDictionariesEffects {
                 dictionaryId
               }
             },
-            this.notificationService.error('errors.default.read').entity('entities.user.dictionaries.gen.plural').action()
+            this.notificationService.error('errors.default.read').entity('entities.user.dictionaries.gen.plural').response(error).action()
           ];
         });
     });

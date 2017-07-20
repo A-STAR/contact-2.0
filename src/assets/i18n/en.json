@@ -709,6 +709,9 @@
         "gen": { "plural": "debtors phones list" }
       }
     },
+    "metadata": {
+      "gen": { "plural": "metadata" }
+    },
     "user": {
       "constants": {
         "gen": { "singular": "user constant", "plural": "user constants list" }
