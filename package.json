@@ -30,7 +30,7 @@
     "@ngrx/store": "^2.2.2",
     "@ngx-translate/core": "^6.0.1",
     "@ngx-translate/http-loader": "0.0.3",
-    "@swimlane/ngx-datatable": "^8.2.1",
+    "@swimlane/ngx-datatable": "^9.3.1",
     "ag-grid": "^11.0.0",
     "ag-grid-angular": "^11.0.0",
     "ag-grid-enterprise": "^11.0.0",

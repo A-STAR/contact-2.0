@@ -44,7 +44,8 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> im
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'users.edit.role', controlName: 'roleCode', type: 'select', required: true, disabled: !this.canEdit,
           options: this.employeeRoleOptions },
-      { label: 'users.edit.comment', controlName: 'comment', type: 'text', disabled: !this.canEdit }
+      { label: 'users.edit.comment', controlName: 'comment', type: 'text', disabled: !this.canEdit },
+      { label: 'organizations.employees.edit.isMain', controlName: 'isMain', type: 'checkbox', disabled: false },
     ] as Array<IDynamicFormControl>).map((control: IDynamicFormControl) => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : true

@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -43,10 +43,6 @@ export class GridService {
       filter.addFilter(filters);
     }
 
-    // console.log('params', params);
-    // console.log('filters', filters);
-    // console.log('request filter', filter);
-
     if (filter.hasFilter() || filter.hasValues()) {
       request.filtering = filter;
     }
@@ -66,15 +62,15 @@ export class GridService {
    * To be used only once during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
-   * @param {Observable<IGridColumn[]>} columns Initial column descriptions
-   * @param {object} renderers Column renderers, esentially getters
-   * @returns {Observable<IGridColumn[]>} Column defininitions
+   * @param {Observable<IAGridColumn[]>} columns Initial column descriptions
+   * @param {object} renderers Column renderers, i.e. getters
+   * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnDefs(metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
+  getColumnDefs(metadataKey: string, columns: IAGridColumn[], renderers: object): Observable<IAGridColumn[]> {
     const mapColumns = ([metadata, dictionaries]) =>
-      this.setRenderers(columns.filter(column =>
+      this.setValueGetters(columns.filter(column =>
         !!metadata.find(metadataColumn => {
-          const isInMeta = column.prop === metadataColumn.name;
+          const isInMeta = column.colId === metadataColumn.name;
           if (isInMeta) {
             if (!column.renderer) {
               const currentDictTypes = dictionaries[metadataColumn.dictCode];
@@ -90,11 +86,11 @@ export class GridService {
                 switch (metadataColumn.dataType) {
                   case 2:
                     // Date
-                    column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
                     break;
                   case 7:
                     // Datetime
-                    column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
                     break;
                 }
               }
@@ -125,11 +121,7 @@ export class GridService {
     });
   }
 
-  private setRenderer(
-      column: IGridColumn,
-      rendererFn: Function | IRenderer
-  ): IGridColumn {
-
+  private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {
     const isArray = Array.isArray(rendererFn);
     const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
 
@@ -152,6 +144,38 @@ export class GridService {
     // NOTE: for compatibility between grid & grid2
     // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
+    return column;
+  }
+
+  // NOTE: ag-grid only
+  setValueGetters(columns: IAGridColumn[], renderers: object): IAGridColumn[] {
+    return columns.map(column => {
+      const renderer = renderers[column.colId];
+      return renderer ? this.setValueGetter(column, renderer) : column;
+    });
+  }
+
+  private setValueGetter(column: IAGridColumn, getterFn: Function | IRenderer): IAGridColumn {
+    const isArray = Array.isArray(getterFn);
+    const entities: ILabeledValue[] = isArray ? [].concat(getterFn) : [];
+
+    column.renderer = (entity: any, fieldName: string) => {
+      const value: any = Reflect.get(entity, fieldName);
+
+      if (isArray) {
+        const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.colId]);
+        return labeledValue
+          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
+          : entity[column.colId];
+
+      } else {
+
+        const displayValue = String((getterFn as Function)(entity, value));
+        return column.localized
+          ? this.translateService.instant(displayValue)
+          : displayValue;
+      }
+    };
     return column;
   }
 }

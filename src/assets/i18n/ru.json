@@ -557,7 +557,8 @@
       },
       "edit": {
         "title": "Сотрудник",
-        "fullName": "ФИО"
+        "fullName": "ФИО",
+        "isMain": "Основное подразделение"
       },
       "remove": {
         "title": "Удаление сотрудника",
@@ -882,10 +883,12 @@
         "startsWith": "начинается с",
         "endsWith": "заканчивается на",
         "selectAll": "Все",
-        "copy": "копировать",
-        "copyWithHeaders": "копировать c заголовками",
+        "copy": "Копировать",
+        "copyWithHeaders": "Копировать c заголовками",
+        "paste": "Вставить",
         "toolPanel": "Панель инструментов",
-        "applyFilter": "Применить"
+        "applyFilter": "Применить",
+        "filterOoo": "фильтр..."
       }
     },
     "filter": {

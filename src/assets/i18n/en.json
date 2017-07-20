@@ -557,7 +557,8 @@
       },
       "edit": {
         "title": "Employee",
-        "fullName": "Full name"
+        "fullName": "Full name",
+        "isMain": "Main branch"
       },
       "remove": {
         "title": "Delete employee",
@@ -882,10 +883,12 @@
         "startsWith": "starts with",
         "endsWith": "ends with",
         "selectAll": "All",
-        "copy": "copy",
-        "copyWithHeaders": "copy with headers",
+        "copy": "Copy",
+        "copyWithHeaders": "Copy with headers",
+        "paste": "Paste",
         "toolPanel": "Tool panel",
-        "applyFilter": "Apply filter"
+        "applyFilter": "Apply filter",
+        "filterOoo": "filter..."
       }
     },
     "filter": {

@@ -16,6 +16,7 @@ export interface IEmployee {
   userId: number;
   roleCode: number;
   comment: string;
+  isMain: boolean;
 }
 
 export interface IEmployeesResponse {
@@ -31,6 +32,7 @@ export interface IEmployeeCreateRequest {
 export interface IEmployeeUpdateRequest {
   roleCode: number;
   comment: string;
+  isMain: number;
 }
 
 export enum IOrganizationDialogActionEnum {
