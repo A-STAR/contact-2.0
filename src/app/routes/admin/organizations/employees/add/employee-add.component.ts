@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
 
@@ -35,11 +35,6 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
   renderers: IRenderer = {
     fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
     isBlocked: ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'),
-  };
-
-  dataSource: IDataSource = {
-    read: '/api/organizations/{id}/users/notadded',
-    dataKey: 'users'
   };
 
   get formData(): any {
