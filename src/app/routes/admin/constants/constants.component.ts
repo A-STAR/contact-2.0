@@ -6,7 +6,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IConstant } from './constants.interface';
-import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ConstantsService } from './constants.service';
@@ -58,12 +58,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
   };
 
-  dataSource: IDataSource = {
-    read: '/constants',
-    update: '/constants/{id}',
-    dataKey: 'constants',
-  };
-
   permissionSub: Subscription;
 
   rows$: Observable<Array<IConstant>>;
@@ -83,8 +77,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.constantsService.fetch();
-
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
@@ -98,7 +90,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.constantsService.clear();
-          this.notificationsService.error('constants.errors.view');
+          this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
         } else {
           this.constantsService.fetch();
         }
@@ -129,7 +121,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     }
 
     this.dataService
-      .update(this.dataSource.update, { id }, body)
+      .update('/constants/{id}', { id }, body)
       .take(1)
       .subscribe(
         () => {
@@ -137,7 +129,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
           this.userConstantsService.refresh();
           this.onCancel();
         },
-        error => this.notificationsService.error('constants.api.errors.update')
+        error => this.notificationsService.error('constants.api.errors.update').dispatch()
       );
   }
 
@@ -149,7 +141,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
         if (hasPermission) {
           this.display = true;
         } else {
-          this.notificationsService.error({ message: 'roles.permissions.messages.no_edit', param: { permission } });
+          this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
         }
       });
   }

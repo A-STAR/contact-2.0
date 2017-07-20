@@ -15,7 +15,7 @@ import {
 } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IGrid2Sorter } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridSortModel } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -53,7 +53,7 @@ export class ActionsLogService {
               type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
             };
           })
-          .catch(() => [ this.notifications.createErrorAction('actionsLog.messages.errors.fetch') ]);
+          .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
       }
     );
 
@@ -78,7 +78,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionsLogSorters(): Observable<IGrid2Sorter[]> {
+  get actionsLogSorters(): Observable<IAGridSortModel[]> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.sorters)
       .distinctUntilChanged();

@@ -38,10 +38,7 @@ export class OrganizationsEffects {
             )
           }
         }))
-        .catch(() => {
-          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.organizations.gen.plural').callback());
     });
 
   @Effect()
@@ -74,10 +71,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -98,10 +92,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -119,10 +110,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -149,10 +137,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.organizations.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
     });
 
   @Effect()
@@ -168,10 +153,7 @@ export class OrganizationsEffects {
             employees: response.users
           }
         }))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
 
   @Effect()
@@ -197,10 +179,7 @@ export class OrganizationsEffects {
             employees: response.users
           }
         }))
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.fetch');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
 
   @Effect()
@@ -221,10 +200,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.create');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
     });
 
   @Effect()
@@ -249,10 +225,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.update');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
     });
 
   @Effect()
@@ -273,10 +246,7 @@ export class OrganizationsEffects {
             }
           }
         ])
-        .catch(() => {
-          this.notificationsService.error('organizations.employees.messages.errors.delete');
-          return null;
-        });
+        .catch(this.notificationsService.error('errors.default.delete').entity('entities.employees.gen.singular').callback());
     });
 
   constructor(

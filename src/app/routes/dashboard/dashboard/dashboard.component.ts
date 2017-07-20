@@ -102,7 +102,7 @@ export class DashboardComponent implements OnInit {
       .take(1)
       .subscribe(
         data => this.splineData = data,
-        () => this.notificationsService.error('dashboard.messages.chartLoadError')
+        () => this.notificationsService.error('dashboard.messages.chartLoadError').dispatch()
       );
   }
 

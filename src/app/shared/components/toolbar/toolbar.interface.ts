@@ -34,7 +34,7 @@ export interface IToolbarAction {
   visible?: boolean;
 }
 
-export interface IToolbarActionSelectPayload {
+export interface IToolbarActionSelect {
   action: IToolbarAction;
   value: ILabeledValue[];
 }

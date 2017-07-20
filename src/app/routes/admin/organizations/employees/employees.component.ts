@@ -114,9 +114,7 @@ export class EmployeesComponent implements OnDestroy {
         state => {
           this.action = state.dialogAction;
           this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
-        },
-        // TODO: notifications
-        error => console.error(error)
+        }
       );
 
     this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
@@ -189,7 +187,8 @@ export class EmployeesComponent implements OnDestroy {
   onEditSubmit(data: IEmployeeUser): void {
     this.organizationsService.updateEmployee({
       roleCode: data.roleCode[0].value,
-      comment: data.comment
+      comment: data.comment,
+      isMain: Number(data.isMain),
     });
   }
 

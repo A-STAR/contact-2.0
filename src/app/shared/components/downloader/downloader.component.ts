@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Renderer2 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -9,7 +10,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloaderComponent {
-  @Input() errorTranslationKey: string;
+  @Input() entityTranslationKey: string;
   @Input() name: string;
   @Input() url: string;
 
@@ -29,10 +30,9 @@ export class DownloaderComponent {
         this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
         URL.revokeObjectURL(href);
       })
-      // TODO(d.maltsev): refactor once we are able to handle server error messages
       .catch(error => {
-        this.notificationsService.error(this.errorTranslationKey);
-        throw error;
+        this.notificationsService.error('errors.default.download').entity(this.entityTranslationKey).response(error).dispatch();
+        return Observable.empty();
       })
       .subscribe();
   }

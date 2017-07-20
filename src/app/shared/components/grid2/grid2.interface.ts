@@ -1,57 +1,80 @@
-import { RowNode } from 'ag-grid';
+import { RowNode, ColDef } from 'ag-grid';
 
 import { FilterObject } from './filter/grid2-filter';
 
-export type Grid2SortingType = 'asc' | 'desc' | null;
-export type IGrid2ColumnPositions = string[];
-export type IGrid2Groups  = string[];
-export type IGrid2Selected = Array<any>;
+export type AGridSortType = 'asc' | 'desc' | null;
+export type IAGridGroups  = string[];
+export type IAGridSelected = Array<any>;
 
-export interface IGrid2Sorter {
-  direction: Grid2SortingType;
+export interface IAGridColumn {
+  colId: string;
+  disabled?: boolean;
+  filter?: string;
+  filterValues?: Array<any>;
+  filterDictionaryId?: number;
+  hide?: boolean;
+  maxWidth?: number;
+  minWidth?: number;
+  renderer?: Function;
+  sort?: string;
+  type?: string;
+  width?: number;
+}
+
+// The sortModel has no native interface defined
+export interface IAGridSortModel {
+  colId: string;
+  sort: string;
+}
+
+export interface IAGridSettings {
+  sortModel: IAGridSortModel[];
+  colDefs: ColDef[];
+}
+
+export interface IAGridSorter {
+  direction: string;
   field: string;
 }
 
-export interface IGrid2Filter {
+export interface IAGridFilter {
   columnId: string;
   filter: FilterObject;
 }
 
-export interface IGrid2ExportableColumn {
+export interface IAGridExportableColumn {
   field: string;
   name: string;
 }
 
-export interface IGrid2RequestParams {
+export interface IAGridRequestParams {
   currentPage?: number;
   pageSize?: number;
-  sorters?: IGrid2Sorter[];
+  sorters?: IAGridSortModel[];
 }
 
-export interface IGrid2State extends IGrid2RequestParams {
-  positions: IGrid2ColumnPositions;
+export interface IAGridState extends IAGridRequestParams {
   groups: string[];
   selectedRows: any[];
 }
 
-export interface IGrid2Request {
+export interface IAGridRequest {
   paging?: {
     pageNumber: number,
     resultsPerPage: number
   };
-  sorting?: IGrid2Sorter[];
+  sorting?: IAGridSorter[];
   filtering?: FilterObject;
 }
 
-export interface IGrid2EventPayload {
+export interface IAGridEventPayload {
   type: string;
   payload?:
     number
-    |IGrid2Filter
-    |IGrid2ColumnPositions
-    |IGrid2Groups
-    |IGrid2Selected
-    |IGrid2Sorter[]
+    |IAGridFilter
+    |IAGridGroups
+    |IAGridSelected
+    |IAGridSortModel[]
     ;
 }
 

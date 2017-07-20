@@ -80,10 +80,7 @@
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
-    "login": {
-      "INVALID_CREDENTIALS": "Incorrect login or password"
-    }
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"
@@ -143,12 +140,6 @@
       "value": "Value",
       "dsc": "Comments"
     },
-    "api": {
-      "errors": {
-        "fetch": "Could not fetch the constants",
-        "update": "Could not update the constant"
-      }
-    },
     "errors": {
       "view": "Access to constants list denied"
     }
@@ -186,12 +177,6 @@
       "dsc": "Description",
       "machine": "Machine",
       "duration": "Duration"
-    },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch operator action log",
-        "download": "Could not download operator action log"
-      }
     }
   },
   "users": {
@@ -265,16 +250,6 @@
         }
       }
     },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch users",
-        "create": "Could not create user",
-        "update": "Could not update user",
-        "updatePhoto": "Could not update user photo",
-        "updatePhotoMaxSizeExceeded": "Could not update user photo: exceeded maximum photo size",
-        "deletePhoto": "Could not delete user photo"
-      }
-    },
     "errors": {
       "view": "Access to users list denied"
     }
@@ -320,14 +295,6 @@
         "translation": "Select language"
       }
     },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch dictionaries",
-        "create": "Could not create dictionary",
-        "update": "Could not update dictionary",
-        "delete": "Could not remove dictionary"
-      }
-    },
     "errors": {
       "view": "Access to dictionaries list denied"
     }
@@ -357,14 +324,6 @@
     "remove": {
       "title": "Remove term",
       "confirmMessage": "Do you really want to remove the term {{ name }}?"
-    },
-    "messages": {
-      "errors": {
-        "fetch": "Could not fetch dictionary terms",
-        "create": "Could not create dictionary term",
-        "update": "Could not update dictionary term",
-        "delete": "Could not remove dictionary term"
-      }
     },
     "errors": {
       "view": "Access to dictionary terms list denied"
@@ -397,15 +356,6 @@
         "id": "Id",
         "name": "Name",
         "comment": "Comments"
-      },
-      "api": {
-        "errors": {
-          "fetch": "Could not fetch roles",
-          "add": "Could not add role",
-          "copy": "Could not copy role",
-          "update": "Could not update role",
-          "delete": "Could not delete role"
-        }
       },
       "errors": {
         "view": "Access to roles list denied"
@@ -446,14 +396,6 @@
         "value": "Value",
         "dsc": "Description",
         "comment": "Comments"
-      },
-      "api": {
-        "errors": {
-          "fetch": "Could not fetch permissions",
-          "add": "Could not add the permission",
-          "update": "Could not update the permission",
-          "delete": "Could not remove the permission"
-        }
       },
       "messages": {
         "no_view": "You do not have the rights '{{ permission }}' for viewing records",
@@ -600,14 +542,6 @@
         "title": "Delete company",
         "confirmMessage": "Are you sure you want to delete company?"
       },
-      "messages": {
-        "errors": {
-          "fetch": "Could not load organizations list",
-          "create": "Could not add organization",
-          "update": "Could not update organization",
-          "delete": "Could not delete organization"
-        }
-      },
       "errors": {
         "view": "Access to organizations list denied"
       }
@@ -623,7 +557,8 @@
       },
       "edit": {
         "title": "Employee",
-        "fullName": "Full name"
+        "fullName": "Full name",
+        "isMain": "Main branch"
       },
       "remove": {
         "title": "Delete employee",
@@ -636,14 +571,6 @@
         "roleCode": "Role code",
         "isBlocked": "Blocked"
       },
-      "messages": {
-        "errors": {
-          "fetch": "Could not load the list of employees",
-          "create": "Could not add the employee",
-          "update": "Could not update the employee",
-          "delete": "Could not delete the employee"
-        }
-      },
       "errors": {
         "view": "Access to employees list denied"
       }
@@ -651,6 +578,10 @@
   },
   "contractors": {
     "managers": {
+      "remove": {
+        "title": "Delete manager",
+        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+      },
       "grid": {
         "fullName": "Full name",
         "firstName": "First name",
@@ -666,13 +597,7 @@
         "comment": "Comment"
       },
       "messages": {
-        "accessDenied": "Access to managers list denied",
-        "errors": {
-          "fetch": "Could not fetch managers list",
-          "create": "Could not create manager",
-          "update": "Could not update manager",
-          "delete": "Could not delete manager"
-        }
+        "accessDenied": "Access to managers list denied"
       }
     },
     "remove": {
@@ -691,13 +616,7 @@
       "comment": "Comment"
     },
     "messages": {
-      "accessDenied": "Access to contractors list denied",
-      "errors": {
-        "fetch": "Could not fetch contractors list",
-        "create": "Could not create contractor",
-        "update": "Could not update contractor",
-        "delete": "Could not delete contractor"
-      }
+      "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
       "managers": "Managers"
@@ -720,15 +639,6 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
-    },
-    "messages": {
-      "accessDenied": "Access to portfolios list denied",
-      "errors": {
-        "fetch": "Could not fetch portfolios list",
-        "create": "Could not create portfolio",
-        "update": "Could not update portfolio",
-        "delete": "Could not delete portfolio"
-      }
     }
   },
   "notifications": {
@@ -740,21 +650,177 @@
       "info": "Info"
     }
   },
-  "user": {
-    "constants": {
-      "errors": {
-        "fetch": "Could not load user constants"
-      }
-    },
-    "languages": {
-      "errors": {
-        "fetch": "Could not load user languages"
-      }
+  "auth": {
+    "errors": {
+      "login": "Could not log in",
+      "logout": "Could not log out",
+      "refresh": "Could not refresh session"
+    }
+  },
+  "entities": {
+    "roles": {
+      "gen": { "singular": "role", "plural": "roles list" }
     },
     "permissions": {
-      "errors": {
-        "fetch": "Could not load user permissions"
+      "gen": { "singular": "permit", "plural": "permits list" }
+    },
+    "guiObjects": {
+      "gen": { "singular": "GUI object", "plural": "GUI objects list" }
+    },
+    "users": {
+      "gen": { "singular": "user", "plural": "users list" },
+      "photos": {
+        "gen": { "singular": "user photo" }
       }
+    },
+    "actionsLog": {
+      "gen": { "singular": "actions log entry", "plural": "actions log" }
+    },
+    "constants": {
+      "gen": { "singular": "constant", "plural": "constants list" }
+    },
+    "dictionaries": {
+      "gen": { "singular": "dictionary", "plural": "dictionaries list" }
+    },
+    "terms": {
+      "gen": { "singular": "dictionary term", "plural": "dictionary terms list" }
+    },
+    "contractors": {
+      "gen": { "singular": "contractor", "plural": "contractors list" }
+    },
+    "managers": {
+      "gen": { "singular": "manager", "plural": "managers list" }
+    },
+    "portfolios": {
+      "gen": { "singular": "portfolio", "plural": "portfolios list" }
+    },
+    "organizations": {
+      "gen": { "singular": "organization", "plural": "organizations list" }
+    },
+    "employees": {
+      "gen": { "singular": "employee", "plural": "employees list" }
+    },
+    "debtors": {
+      "gen": { "singular": "debtor", "plural": "debtors list" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      },
+      "phones": {
+        "gen": { "plural": "debtors phones list" }
+      }
+    },
+    "user": {
+      "constants": {
+        "gen": { "singular": "user constant", "plural": "user constants list" }
+      },
+      "languages": {
+        "gen": { "singular": "user language", "plural": "user languages list" }
+      },
+      "permissions": {
+        "gen": { "singular": "user permit", "plural": "user permits list" }
+      },
+      "dictionaries": {
+        "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
+      }
+    },
+    "lookup": {
+      "roles": {
+        "gen": { "plural": "roles lookup data" }
+      },
+      "users": {
+        "gen": { "plural": "users lookup data" }
+      }
+    }
+  },
+  "errors": {
+    "server": {
+      "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "constantNotFound": "Запрашиваемая константа не найдена",
+      "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
+      "dictTermAlreadyExists": "Словарный термин уже существует",
+      "dictionaryAlreadyExists": "Словарь термин уже существует",
+      "dictionaryNotFound": "Словарь не найден",
+      "dictionaryTermNotFound": "Словарный термин не найден",
+      "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
+      "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
+      "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
+      "fieldSizeMustBeBetween": "Длина поля {{ $1 }} должна быть в диапазоне от {{ $2 }} до {{ $3 }} символов",
+      "fileExtentionIsRequired": "В имени сохраняемого файла отсутствует расширение",
+      "fileFailedAVCheck": "Загружаемый файл не прошел проверку антивирусом",
+      "filterOperatorNotAllowedForDataType": "Для заданного типа данных не поддерживается оператор, переданный в фильтре",
+      "guiIdNotFound": "Не найден запрошенный по ID объект интерфейса",
+      "guiNameNotFound": "Не найден запрошенный по имени объект интерфейса",
+      "incorrectContentType": "Недопустимый content-type {{ $1 }} загружаемого файла",
+      "incorrectNullValueOperator": "Некорректный оператор {{ $1 }} для значения NULL в фильтре",
+      "incorrectValuesForConstTypeBoolean": "Значение для константы булевого типа не соответствует формату",
+      "incorrectValuesForConstTypeDate": "Значение для константы типа 'дата' не соответствует формату",
+      "incorrectValuesForConstTypeNumber": "Значение для константы числового типа не соответствует формату",
+      "incorrectValuesForConstTypeString": "Значение для константы строкового типа не соответствует формату",
+      "incorrectValuesForPermitRoleTypeBoolean": "Некорректное значение булевого параметра доступа",
+      "incorrectValuesForPermitRoleTypeNumber": "Некорректное значение числового параметра доступа",
+      "incorrectValuesForPermitRoleTypeString": "Некорректное значение строкового параметра доступа",
+      "invalidDateFormat": "Некорректный формат даты {{ $1 }}",
+      "invalidDateTimeFormat": "Некорректный формат даты и времени {{ $1 }}",
+      "invalidDoubleFormat": "Некорректный формат дробного числового параметра {{ $1 }}",
+      "invalidInputFileStream": "Ошибка при обработке и/или преобразовании входного бинарного потока",
+      "invalidInputModel": "Некорректная/пустая входная модель данных",
+      "invalidIntegerFormat": "Некорректный формат целочисленного числового параметра {{ $1 }}",
+      "invalidPortfolioDirection": "Некорректное направление портфеля",
+      "invalidPortfolioStatusCode": "Некорректный статус портфеля",
+      "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
+      "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
+      "login.invalidCredentials": "Invalid login or password",
+      "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
+      "other.unknownError": "Произошла неизвестная ошибка",
+      "organizationIdNotFound": "Не найдена запрошенная по ID организация",
+      "organizationRootDeleteAttempt": "Запрошено удаление организации, членом которой является инициатор запроса",
+      "organizationUserAlreadyExists": "Запрошенная к созданию по ID пользователя организация уже существует",
+      "organizationUserLinkNotFound": "Не найдена организация, запрошенная по ID пользователя",
+      "organizationUserLinksExistForOrganization": "Невозможно удалить организацию, на которую есть ссылки из таблицы organization_user_links",
+      "parentUnderChildAttempt": "В структуре предприятия обнаружены циклические связи родитель-подчиненные",
+      "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
+      "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
+      "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
+      "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
+      "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
+      "tokenInvalid": "Неверный токен сессии",
+      "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
+      "unknownNotNullValueOperator": "Неизвестный (неподдерживаемый) оператор {{ $1 }}",
+      "userNotFound": "Не найден пользователь, запрошенный по ID",
+      "userNotFoundWithName": "Не найден пользователь с логином {{ $1 }}",
+      "userRoleNotFound": "Не найдена роль пользователя",
+      "wrongCustomerId": "Не совпадают организация инициатора операции (запроса) и запрошенной сущности"
+    },
+    "default": {
+      "read": {
+        "403": "You don't have permissions to load {{ entity }}",
+        "*": "Could not load {{ entity }}"
+      },
+      "create": {
+        "403": "You don't have permissions to create {{ entity }}",
+        "*": "Could not create {{ entity }}"
+      },
+      "copy": {
+        "403": "You don't have permissions to copy {{ entity }}",
+        "*": "Could not copy {{ entity }}"
+      },
+      "move": {
+        "403": "You don't have permissions to move {{ entity }}",
+        "*": "Could not move {{ entity }}"
+      },
+      "update": {
+        "403": "You don't have permissions to update {{ entity }}",
+        "*": "Could not update {{ entity }}"
+      },
+      "delete": {
+        "403": "You don't have permissions to delete {{ entity }}",
+        "*": "Could not delete {{ entity }}"
+      },
+      "download": {
+        "403": "You don't have permissions to download {{ entity }}",
+        "*": "Could not download {{ entity }}"
+      },
+      "*": "An unknown error has occurred"
     }
   },
   "default": {
@@ -817,9 +883,12 @@
         "startsWith": "starts with",
         "endsWith": "ends with",
         "selectAll": "All",
-        "copy": "copy",
-        "copyWithHeaders": "copy with headers",
-        "toolPanel": "Tool panel"
+        "copy": "Copy",
+        "copyWithHeaders": "Copy with headers",
+        "paste": "Paste",
+        "toolPanel": "Tool panel",
+        "applyFilter": "Apply filter",
+        "filterOoo": "filter..."
       }
     },
     "filter": {
@@ -830,7 +899,7 @@
     },
     "sex": {
       "m": "m",
-      "w": "w"
+      "f": "f"
     },
     "date": {
       "days": {

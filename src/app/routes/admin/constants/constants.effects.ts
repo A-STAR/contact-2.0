@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IConstantsResponse } from './constants.interface';
@@ -17,28 +16,19 @@ export class ConstantsEffects {
   fetchConstants$ = this.actions
     .ofType(ConstantsService.CONSTANT_FETCH)
     .switchMap((action: Action) => {
-      return this.read()
+      return this.dataService.read('/constants')
         .map((response: IConstantsResponse) => {
           return {
             type: ConstantsService.CONSTANT_FETCH_SUCCESS,
             payload: response.constants
           };
         })
-        .catch(() => {
-          return [
-            this.notificationService.createErrorAction('constants.api.errors.fetch')
-          ];
-        });
+        .catch(this.notificationService.error('errors.default.read').entity('entities.constants.gen.plural').callback());
     });
 
   constructor(
     private actions: Actions,
-    // private store: Store<IAppState>,
     private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
-
-  private read(): Observable<IConstantsResponse> {
-    return this.dataService.read('/constants');
-  }
 }

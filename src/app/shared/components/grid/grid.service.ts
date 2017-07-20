@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -26,26 +26,24 @@ export class GridService {
   /**
    * Builds request parameters necessary to talk to the BE
    *
-   * @param {IGrid2RequestParams} params
+   * @param {IAGridRequestParams} params
    * @param {FilterObject} filters
-   * @returns {IGrid2Request}
+   * @returns {IAGridRequest}
    */
-  buildRequest(params: IGrid2RequestParams, filters: FilterObject): IGrid2Request {
-    const request: IGrid2Request = {};
+  buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
+    const request: IAGridRequest = {};
     const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
 
     if (sorters) {
-      request.sorting = sorters;
+      request.sorting = sorters.map(col => {
+        return { field: col.colId, direction: col.sort } as IAGridSorter;
+      });
     }
 
     if (filters) {
       filter.addFilter(filters);
     }
-
-    // console.log('params', params);
-    // console.log('filters', filters);
-    // console.log('request filter', filter);
 
     if (filter.hasFilter() || filter.hasValues()) {
       request.filtering = filter;
@@ -66,57 +64,56 @@ export class GridService {
    * To be used only once during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
-   * @param {Observable<IGridColumn[]>} columns Initial column descriptions
-   * @param {object} renderers Column renderers, esentially getters
-   * @returns {Observable<IGridColumn[]>} Column defininitions
+   * @param {Observable<IAGridColumn[]>} columns Initial column descriptions
+   * @param {object} renderers Column renderers, i.e. getters
+   * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnDefs(
-    metadataKey: string, columns: IGridColumn[], renderers: object): Observable<IGridColumn[]> {
-      const mapColumns = ([metadata, dictionaries]) =>
-        this.setRenderers(columns.filter(column =>
-          !!metadata.find(metadataColumn => {
-            const isInMeta = column.prop === metadataColumn.name;
-            if (isInMeta) {
-              if (!column.renderer) {
-                const currentDictTypes = dictionaries[metadataColumn.dictCode];
-                if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
-                  column.renderer = (item: ITypeCodeItem) => {
-                    const typeDescription = currentDictTypes.find(
-                      dictionaryItem => dictionaryItem.code === item.typeCode
-                    );
-                    return typeDescription ? typeDescription.name : item.typeCode;
-                  };
-                } else {
-                  // Data types
-                  switch (metadataColumn.dataType) {
-                    case 2:
-                      // Date
-                      column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.prop]);
-                      break;
-                    case 7:
-                      // Datetime
-                      column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.prop]);
-                      break;
-                  }
-                }
-              }
-              // Dictionary filters
-              if (column.filterDictionaryId) {
-                const dictTypes = dictionaries[column.filterDictionaryId];
-                if (Array.isArray(dictTypes)) {
-                  column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
+  getColumnDefs(metadataKey: string, columns: IAGridColumn[], renderers: object): Observable<IAGridColumn[]> {
+    const mapColumns = ([metadata, dictionaries]) =>
+      this.setValueGetters(columns.filter(column =>
+        !!metadata.find(metadataColumn => {
+          const isInMeta = column.colId === metadataColumn.name;
+          if (isInMeta) {
+            if (!column.renderer) {
+              const currentDictTypes = dictionaries[metadataColumn.dictCode];
+              if (Array.isArray(currentDictTypes) && currentDictTypes.length) {
+                column.renderer = (item: ITypeCodeItem) => {
+                  const typeDescription = currentDictTypes.find(
+                    dictionaryItem => dictionaryItem.code === item.typeCode
+                  );
+                  return typeDescription ? typeDescription.name : item.typeCode;
+                };
+              } else {
+                // Data types
+                switch (metadataColumn.dataType) {
+                  case 2:
+                    // Date
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
+                    break;
+                  case 7:
+                    // Datetime
+                    column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
+                    break;
                 }
               }
             }
-            return isInMeta;
-          })
-        ), renderers);
+            // Dictionary filters
+            if (column.filterDictionaryId) {
+              const dictTypes = dictionaries[column.filterDictionaryId];
+              if (Array.isArray(dictTypes)) {
+                column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
+              }
+            }
+          }
+          return isInMeta;
+        })
+      ), renderers);
 
-      return Observable.combineLatest(
-        this.metadataService.metadata.map(metadata => metadata[metadataKey]),
-        this.dictionariesService.dictionariesByCode,
-      )
-      .map(mapColumns);
+    return Observable.combineLatest(
+      this.metadataService.metadata.map(metadata => metadata ? metadata[metadataKey] : []),
+      this.dictionariesService.dictionariesByCode,
+    )
+    .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
@@ -126,11 +123,7 @@ export class GridService {
     });
   }
 
-  private setRenderer(
-      column: IGridColumn,
-      rendererFn: Function | IRenderer
-  ): IGridColumn {
-
+  private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {
     const isArray = Array.isArray(rendererFn);
     const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
 
@@ -153,6 +146,32 @@ export class GridService {
     // NOTE: for compatibility between grid & grid2
     // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
+    return column;
+  }
+
+  // NOTE: ag-grid only
+  setValueGetters(columns: IAGridColumn[], renderers: object): IAGridColumn[] {
+    return columns.map(column => {
+      const renderer = renderers[column.colId];
+      return renderer ? this.setValueGetter(column, renderer) : column;
+    });
+  }
+
+  private setValueGetter(column: IAGridColumn, getterFn: Function | IRenderer): IAGridColumn {
+    const isArray = Array.isArray(getterFn);
+    const entities: ILabeledValue[] = isArray ? [].concat(getterFn) : [];
+
+    column.renderer = (entity: any, fieldName: string) => {
+      const value: any = Reflect.get(entity, fieldName);
+
+      if (isArray) {
+        const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.colId]);
+        return labeledValue ? labeledValue.label : entity[column.colId];
+
+      } else {
+        return String((getterFn as Function)(entity, value));
+      }
+    };
     return column;
   }
 }

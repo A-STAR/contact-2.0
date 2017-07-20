@@ -20,7 +20,9 @@ const routes: Routes = [
   { path: 'create', component: ContractorEditComponent },
   { path: ':id', component: ContractorEditComponent },
   { path: ':id/managers', component: ContractorManagersComponent },
+  { path: ':id/managers/create', component: ContractorManagerEditComponent },
   { path: ':id/managers/:managerId', component: ContractorManagerEditComponent },
+  { path: ':id/portfolios/create', component: PortfolioEditComponent },
   { path: ':id/portfolios/:portfolioId', component: PortfolioEditComponent },
 ];
 

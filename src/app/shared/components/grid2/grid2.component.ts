@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,12 +21,13 @@ import {
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
   IToolbarAction,
-  IToolbarActionSelectPayload,
+  IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
-import { IGrid2ColumnPositions, IGrid2Sorter, IGrid2EventPayload, IGrid2ExportableColumn } from './grid2.interface';
-import { IGridColumn } from '../grid/grid.interface';
+import {
+  IAGridEventPayload, IAGridExportableColumn,
+  IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
 import { FilterObject } from './filter/grid2-filter';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -54,15 +56,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static NEXT_PAGE          = 'GRID2_NEXT_PAGE';
   static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
   static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
-  static SORTING_DIRECTION  = 'GRID2_SORTING_DIRECTION';
-  static COLUMNS_POSITIONS  = 'GRID2_COLUMNS_POSITIONS';
-  static GROUPING_COLUMNS   = 'GRID2_GROUPING_COLUMNS';
+  static SORT_COLUMNS       = 'GRID2_SORT_COLUMNS';
+  static GROUP_COLUMNS      = 'GRID2_GROUP_COLUMNS';
   static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
-  static APPLY_FILTER       = 'GRID2_APPLY_FILTER';
-  static MOVING_COLUMN      = 'GRID2_MOVING_COLUMN';
   static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
 
-  @Input() columns: IGridColumn[] = [];
+  @Input() columns: IAGridColumn[] = [];
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
   @Input() headerHeight = 25;
@@ -80,43 +79,48 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rowSelection = 'multiple';
   // selected rows
   @Input() selected: any[] = [];
+  @Input() persistenceKey: string;
   @Input() showDndGroupPanel = false;
-  @Input() sorters = null as IGrid2Sorter[];
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onDragStopped: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onDragStarted: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onColumnMove: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onColumnGroup: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
-  @Output() onPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onPageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onSort: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onPageSize: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onSort: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onSelect: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
 
   columnDefs: ColDef[];
   paginationPanel: IToolbarAction[] = [];
   gridOptions: GridOptions = {};
 
-  private langSubscription: EventEmitter<any>;
+  private gridSettings: IAGridSettings;
   private initialized = false;
+  private langSubscription: EventEmitter<any>;
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
     private notificationService: NotificationsService,
     private translate: TranslateService,
     private valueConverter: ValueConverterService,
   ) {}
 
-  get allGridColumns(): Column[] {
+  get allColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
   }
 
   ngOnInit(): void {
     this.viewportDatasource = new ViewPortDatasource(this);
-    this.columnDefs = this.setColumnDefs();
+    if (!this.persistenceKey) {
+      console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
+    }
+    const { colDefs } = this.restoreGridSettings();
+    this.columnDefs = this.setColumnDefs(colDefs);
     this.setGridOptions();
     this.setPagination();
 
@@ -133,7 +137,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             this.translateColumns(translation[this.columnTranslationKey].grid);
           }
         },
-        error => this.notificationService.warning(error, false)
+        // TODO(d.maltsev): make sure `error` is a string
+        error => this.notificationService.warning(error).noAlert().dispatch()
       );
 
     this.langSubscription = this.translate.onLangChange
@@ -148,7 +153,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
-        this.clearAllSelections();
+        this.clearRangeSelections();
       }
       if (rowCount) {
         this.viewportDatasource.params.setRowCount(rowCount.currentValue);
@@ -164,6 +169,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.saveGridSettings();
     this.langSubscription.unsubscribe();
   }
 
@@ -171,14 +177,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     switch (action.type) {
       case ToolbarActionTypeEnum.GO_BACKWARD:
         if (this.page === 1) {
-          this.notificationService.info(`Can't fetch page no ${this.page}`, false);
+          this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
         this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
         if (this.page === this.getPageCount()) {
-          this.notificationService.info(`No more data can be loaded`, false);
+          this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
         this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
@@ -192,22 +198,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onPageSizeChange(payload: IToolbarActionSelectPayload): void {
+  onPageSizeChange(payload: IToolbarActionSelect): void {
     this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
   }
 
   dragStarted(): void {
-    // does really nothing, good for debugging
-    this.onDragStarted.emit({ type: Grid2Component.MOVING_COLUMN });
+    // does nothing, for debugging only
+    this.onDragStarted.emit();
   }
 
   dragStopped(): void {
-    this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
-    // TODO(a.tymchuk): this is hacky, to be refactored
-    if (this.rowCount) {
-      const payload: IGrid2ColumnPositions = this.allGridColumns.map(column => column.getColDef().field);
-      this.onColumnMove.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
-    }
+    this.onDragStopped.emit();
   }
 
   onSelectionChanged(): void {
@@ -228,7 +229,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   getFilters(): FilterObject {
     const filterModel = this.gridOptions.api.getFilterModel();
-    console.log('filter model', filterModel);
     const filters = Object.keys(filterModel)
       .map(key => {
         const filter: any = { name: key };
@@ -237,7 +237,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         switch (model.filterType || 'set') {
           case 'set':
             filter.operator = 'IN';
-            const column = this.columns.find(col => col.prop === key);
+            const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
@@ -326,19 +326,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSortChanged(): void {
-    const sorters = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter[] });
+    this.calculateGridSettings();
+    const sorters: IAGridSortModel[] = this.getSorters();
+    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
   }
 
   getSorters(): any {
-    return this.gridOptions.api.getSortModel()
-      .map(col => {
-        return { field: col.colId, direction: col.sort };
-      });
+    return this.gridOptions.api.getSortModel();
   }
 
-  getExportableColumns(): IGrid2ExportableColumn[] {
-    return this.allGridColumns
+  getExportableColumns(): IAGridExportableColumn[] {
+    return this.allColumns
       .filter(column => column.isVisible())
       .map(column => {
         const { field, headerName: name } = column.getColDef();
@@ -369,13 +367,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private refreshRowCount(): void {
-    const count = this.translate.instant(
+    const countText = this.translate.instant(
       'default.grid.selectedCounts',
       { length: this.rowCount, selected: this.selected.length }
     );
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       if (i === 0) {
-        btn.text = count;
+        btn.text = countText;
       }
       return btn;
     });
@@ -425,23 +423,23 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
 
-    this.translateGridOptionsMessages();
+    this.translateOptionsMessages();
     this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
-    // translate column names
     if (this.columnTranslationKey) {
-      // IMPORTANT: the key 'grid' should be present in translation files for every grid component
-      const columnTranslations = this.columnTranslationKey.split('.').reduce((acc, prop) => acc[prop], translations).grid;
+      // NOTE: the key 'grid' should be present in translation files for every grid component
+      // or this will throw
+      const columnTranslations = this.columnTranslationKey
+        .split('.')
+        .reduce((acc, prop) => acc[prop], translations)
+        .grid;
       this.translateColumns(columnTranslations);
     }
 
-    // See ag-grid's BorderLayout
-    // Array.from(this.elRef.nativeElement.querySelectorAll('.ag-overlay-wrapper'))
-    //   .forEach((el: Element) => el.innerHTML = this.gridOptions.localeText.noRowsToShow);
-    // this.gridOptions.api.doLayout();
+    this.cdRef.markForCheck();
   }
 
-  private translateGridOptionsMessages(): any {
+  private translateOptionsMessages(): any {
     return Object.assign(
       this.gridOptions.localeText,
       { rowGroupColumnsEmptyMessage: this.translate.instant('default.grid.groupDndTitle') },
@@ -449,13 +447,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private clearAllSelections(): void {
+  private clearRangeSelections(): void {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
 
-  private getColumnByName(field: string): IGridColumn {
-    return this.columns.find(column => column.prop === field);
+  private getColumnByName(field: string): IAGridColumn {
+    return this.columns.find(column => column.colId === field);
   }
 
   private getRendererByName(field: string): Function {
@@ -484,12 +482,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return R.propOr('text', name)(filterMap);
   }
 
-  private getCustomFilterParams(column: IGridColumn): any {
-    // if (column.filter === 'date') {
-    //   return {
-    //     filterOptions: [ 'equals', 'notEqual', 'lessThanOrEqual', 'greaterThanOrEqual' ]
-    //   };
-    // } else
+  private getCustomFilterParams(column: IAGridColumn): any {
     if (column.filter === 'set' && column.filterValues) {
       return {
         values: column.filterValues.map(item => item.name),
@@ -501,30 +494,35 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
-  private setColumnDefs(): ColDef[] {
+  private setColumnDefs(colDefs: ColDef[]): ColDef[] {
     return this.columns.map(column => {
+      // need indices to sort the columns
+      let index;
       const colDef: ColDef = {
-        colId: column.prop,
-        field: column.prop,
+        colId: column.colId,
+        field: column.colId,
         filter: this.getCustomFilter(column.filter),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.prop,
-        hide: !!column.hidden,
-        /* to set the menu tabs for a column */
-        // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
-        menuTabs: ['filterMenuTab', 'columnsMenuTab'],
+        headerName: column.colId,
+        hide: column.hide,
         // maxWidth: column.maxWidth,
         minWidth: column.minWidth,
-        // suppressFilter: !column.filter,
-        // suppressMenu: !!column.suppressMenu,
-        suppressMenu: true,
         width: column.width || column.minWidth,
       };
+      // Merge persisted column settings, if any
+      if (colDefs) {
+        index = colDefs.findIndex(col => col.colId === column.colId);
+        // tslint:disable-next-line:no-bitwise
+        if (!!~index) {
+          Object.assign(colDef, colDefs[index]);
+        }
+      } else {
+        index = -1;
+      }
 
       switch (column.type) {
         case 'primary':
           colDef.cellClass = 'ag-cell-number';
-          // colDef.floatingFilterComponentParams = { suppressFilterButton: true };
           break;
         case 'date':
           colDef.floatingFilterComponentParams = { suppressFilterButton: true };
@@ -538,8 +536,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       if (column.filter === 'set') {
         colDef.keyCreator = (params) => params.value.code;
       }
-      return colDef;
-    });
+      return { column: colDef, index };
+    })
+    .filter(item => item.index !== -1)
+    .sort((a, b) => {
+      return a.index > b.index ? 1 : -1;
+    })
+    .map(item => item.column);
   }
 
   private setGridOptions(): void {
@@ -577,7 +580,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         headerComponentParams: {
           headerHeight: this.headerHeight,
           enableMenu: false,
-        }
+        },
+        icons: {
+          sortAscending: '<i class="fa fa-sort-amount-asc"/>',
+          sortDescending: '<i class="fa fa-sort-amount-desc"/>'
+        },
+        /* to set the menu tabs for a column */
+        // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
+        menuTabs: ['filterMenuTab', 'columnsMenuTab'],
+        suppressMenu: true,
       },
       enableColResize: true,
       enableRangeSelection: true,
@@ -589,7 +600,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
       headerHeight: this.headerHeight,
-      // NOTE: There is a huge translation under `localeText`
+      // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
       overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
@@ -605,10 +616,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
       viewportDatasource: this.viewportDatasource,
-      getRowNodeId: (row) => {
-        // console.log('get row node id', row.id);
-        return row.id;
-      },
+      getRowNodeId: (row) => { return row.id; },
       rowSelection: this.rowSelection,
       showToolPanel: false,
       suppressMenuHide: true,
@@ -623,20 +631,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => this.filterEnabled,
       doesExternalFilterPass: (node: RowNode) => true,
-      // onGridReady: () => this.onColumnEverythingChanged(),
-      onGridSizeChanged: (params) => this.fitGridSize(),
-      onColumnEverythingChanged: () => this.onColumnEverythingChanged(),
-      onSelectionChanged: this.onSelectionChanged.bind(this),
-      onSortChanged: this.onSortChanged.bind(this),
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: this.onFilterChanged.bind(this),
+      onGridReady: () => this.setSortModel(),
+      // onGridSizeChanged: (params) => this.fitGridSize(),
+      onColumnResized: () => this.calculateGridSettings(),
+      onColumnVisible: () => this.calculateGridSettings(),
+      onColumnMoved: () => this.calculateGridSettings(),
+      onSelectionChanged: this.onSelectionChanged.bind(this),
+      onSortChanged: this.onSortChanged.bind(this),
     };
 
-    this.translateGridOptionsMessages();
-  }
-
-  private onColumnEverythingChanged(): void {
-    this.fitGridSize();
+    this.translateOptionsMessages();
   }
 
   private postProcessPopup(params: PostProcessPopupParams): void {
@@ -668,9 +674,32 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
     this.fitGridSize();
-
     this.onColumnGroup.emit({
-      type: Grid2Component.GROUPING_COLUMNS, payload: event.getColumns().map(column => column.getColId())
+      type: Grid2Component.GROUP_COLUMNS, payload: event.getColumns().map(column => column.getColId())
     });
+  }
+
+  private calculateGridSettings(): void {
+    const sortModel = this.gridOptions.api.getSortModel();
+    const colDefs: ColDef[] = this.allColumns.map(column => (
+      { width: column.getActualWidth(), hide: !column.isVisible(), colId: column.getColId() }
+    ));
+    this.gridSettings = { sortModel, colDefs };
+  }
+
+  private saveGridSettings(): void {
+    if (this.persistenceKey) {
+      localStorage.setItem(this.persistenceKey, JSON.stringify(this.gridSettings));
+    }
+  }
+
+  private restoreGridSettings(): IAGridSettings {
+    this.gridSettings = JSON.parse(localStorage.getItem(this.persistenceKey) || '{}');
+    return this.gridSettings;
+  }
+
+  private setSortModel(): void {
+    const { sortModel } = this.gridSettings || this.restoreGridSettings();
+    this.gridOptions.api.setSortModel(sortModel);
   }
 }
