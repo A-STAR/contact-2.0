@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IAGridColumn, IGrid2Request, IGrid2RequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IGrid2Request, IGrid2RequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -36,7 +36,9 @@ export class GridService {
     const { sorters, currentPage, pageSize } = params;
 
     if (sorters) {
-      request.sorting = sorters;
+      request.sorting = sorters.map(col => {
+        return { field: col.colId, direction: col.sort } as IAGridSorter;
+      });
     }
 
     if (filters) {
@@ -164,16 +166,10 @@ export class GridService {
 
       if (isArray) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.colId]);
-        return labeledValue
-          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
-          : entity[column.colId];
+        return labeledValue ? labeledValue.label : entity[column.colId];
 
       } else {
-
-        const displayValue = String((getterFn as Function)(entity, value));
-        return column.localized
-          ? this.translateService.instant(displayValue)
-          : displayValue;
+        return String((getterFn as Function)(entity, value));
       }
     };
     return column;

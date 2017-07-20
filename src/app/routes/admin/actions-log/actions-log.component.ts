@@ -34,7 +34,7 @@ export class ActionsLogComponent {
     { colId: 'fullName', minWidth: 200, filter: 'text' },
     { colId: 'position', minWidth: 100, filter: 'text' },
     { colId: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
-    { colId: 'guiObject', minWidth: 150, filter: 'text', localized: true },
+    { colId: 'guiObject', minWidth: 150, filter: 'text' },
     { colId: 'typeCode', minWidth: 150, filter: 'set',
       filterDictionaryId: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
     },

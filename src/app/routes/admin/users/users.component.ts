@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDataSource, IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
 import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
@@ -47,12 +47,6 @@ export class UsersComponent implements OnDestroy {
     roleId: [],
     isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
     languageId: [],
-  };
-
-  dataSource: IDataSource = {
-    read: '/api/users',
-    update: '/api/users/{id}',
-    dataKey: 'users',
   };
 
   displayBlockedUsers: boolean;
