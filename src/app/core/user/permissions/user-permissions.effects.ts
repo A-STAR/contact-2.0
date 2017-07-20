@@ -28,12 +28,12 @@ export class UserPermissionsEffects {
             }
           };
         })
-        .catch(() => {
+        .catch(error => {
           return [
             {
               type: UserPermissionsService.USER_PERMISSIONS_FETCH_FAILURE
             },
-            this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').action()
+            this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').response(error).action()
           ];
         });
     });

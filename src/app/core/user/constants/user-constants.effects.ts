@@ -25,12 +25,12 @@ export class UserConstantsEffects {
             }
           };
         })
-        .catch(() => {
+        .catch(error => {
           return [
             {
               type: UserConstantsService.USER_CONSTANTS_FETCH_FAILURE
             },
-            this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').action()
+            this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').response(error).action()
           ];
         });
     });

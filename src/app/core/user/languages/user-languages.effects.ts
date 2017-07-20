@@ -25,12 +25,12 @@ export class UserLanguagesEffects {
             }
           };
         })
-        .catch(() => {
+        .catch(error => {
           return [
             {
               type: UserLanguagesService.USER_LANGUAGES_FETCH_FAILURE
             },
-            this.notificationService.error('errors.default.read').entity('entities.user.languages.gen.plural').action()
+            this.notificationService.error('errors.default.read').entity('entities.user.languages.gen.plural').response(error).action()
           ];
         });
     });
