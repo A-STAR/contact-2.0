@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { MenuService } from './menu.service';
+import { GuiObjectsService } from './gui-objects.service';
 
 @Injectable()
-export class MenuResolver implements Resolve<boolean> {
+export class GuiObjectsResolver implements Resolve<boolean> {
   constructor(
-    private menuService: MenuService,
+    private menuService: GuiObjectsService,
     private router: Router,
   ) {}
 

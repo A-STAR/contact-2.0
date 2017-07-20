@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { MenuService } from '../../core/menu/menu.service';
+import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 
@@ -20,7 +20,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private menuService: MenuService,
+    private menuService: GuiObjectsService,
     private notificationsService: NotificationsService,
     private router: Router,
     public settings: SettingsService,

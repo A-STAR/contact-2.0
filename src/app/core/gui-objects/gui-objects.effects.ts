@@ -5,21 +5,21 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IMenuApiResponse } from './menu.interface';
+import { IGuiObjectsResponse } from './gui-objects.interface';
 
 import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data/data.service';
-import { MenuService } from './menu.service';
+import { GuiObjectsService } from './gui-objects.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class GuiObjectsEffects {
   @Effect()
   fetchGuiObjects$ = this.actions
-    .ofType(MenuService.GUI_OBJECTS_FETCH)
+    .ofType(GuiObjectsService.GUI_OBJECTS_FETCH)
     .switchMap((action: Action) => {
       return this.readGuiObjects()
-        .map(response => ({ type: MenuService.GUI_OBJECTS_FETCH_SUCCESS, payload: response }))
+        .map(response => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: response }))
         .catch(error => {
           if (error.status === 401) {
             this.authService.redirectToLogin();
@@ -27,7 +27,7 @@ export class GuiObjectsEffects {
             this.router.navigate(['/connection-error']);
           }
           return [
-            { type: MenuService.GUI_OBJECTS_FETCH_FAILURE },
+            { type: GuiObjectsService.GUI_OBJECTS_FETCH_FAILURE },
             this.notificationService.error('errors.default.read').entity('entities.guiObjects.gen.plural').response(error).action()
           ];
         });
@@ -41,7 +41,7 @@ export class GuiObjectsEffects {
     private router: Router,
   ) {}
 
-  private readGuiObjects(): Observable<IMenuApiResponse> {
+  private readGuiObjects(): Observable<IGuiObjectsResponse> {
     return this.dataService.read('/guiconfigurations');
   }
 }

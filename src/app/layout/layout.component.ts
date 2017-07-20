@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { MenuService } from '../core/menu/menu.service';
-import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
-
 import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.interface';
+
+import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-layout',
@@ -31,7 +30,6 @@ export class LayoutComponent {
   };
 
   constructor(
-    private menuService: MenuService,
     private router: Router,
     private tabService: ContentTabService,
   ) {}

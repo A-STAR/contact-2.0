@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
-import { IGuiObjectsState } from './menu.interface';
+import { IGuiObjectsState } from './gui-objects.interface';
 
-import { MenuService } from './menu.service';
+import { GuiObjectsService } from './gui-objects.service';
 
 const defaultState: IGuiObjectsState = {
   guiObjects: [],
@@ -11,7 +11,7 @@ const defaultState: IGuiObjectsState = {
 
 export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action: Action): IGuiObjectsState {
   switch (action.type) {
-    case MenuService.GUI_OBJECTS_FETCH_SUCCESS:
+    case GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS:
       return {
         ...state,
         guiObjects: [
@@ -20,7 +20,7 @@ export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action
         ],
         isResolved: true
       };
-    case MenuService.GUI_OBJECTS_FETCH_FAILURE:
+    case GuiObjectsService.GUI_OBJECTS_FETCH_FAILURE:
       return {
         ...state,
         guiObjects: [],

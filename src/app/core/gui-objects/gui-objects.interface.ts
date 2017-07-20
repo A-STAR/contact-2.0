@@ -1,12 +1,12 @@
-export interface IMenuApiResponseItem {
+export interface IGuiObject {
   id: number;
   name: string;
-  children?: Array<IMenuApiResponseItem>;
+  children?: Array<IGuiObject>;
 }
 
-export interface IMenuApiResponse {
+export interface IGuiObjectsResponse {
   success: boolean;
-  appGuiObjects: Array<IMenuApiResponseItem>;
+  appGuiObjects: Array<IGuiObject>;
 };
 
 export interface IMenuItem {
@@ -17,6 +17,6 @@ export interface IMenuItem {
 };
 
 export interface IGuiObjectsState {
-  guiObjects: Array<IMenuApiResponseItem>;
+  guiObjects: Array<IGuiObject>;
   isResolved: boolean;
 }
