@@ -158,6 +158,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       if (rowCount) {
         this.viewportDatasource.params.setRowCount(rowCount.currentValue);
         this.refreshRowCount();
+        if (rowCount.currentValue) {
+          this.gridOptions.api.hideOverlay();
+        } else {
+          this.gridOptions.api.showNoRowsOverlay();
+        }
       }
       if (rows) {
         this.viewportDatasource.params.setRowData(this.rows);
@@ -517,7 +522,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           Object.assign(colDef, colDefs[index]);
         }
       } else {
-        index = -1;
+        index = 0;
       }
 
       switch (column.type) {
@@ -538,9 +543,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       }
       return { column: colDef, index };
     })
-    .filter(item => item.index !== -1)
     .sort((a, b) => {
-      return a.index > b.index ? 1 : -1;
+      return a.index > b.index ? 1 : (a.index === b.index ? 0 : -1);
     })
     .map(item => item.column);
   }
@@ -581,10 +585,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           headerHeight: this.headerHeight,
           enableMenu: false,
         },
-        icons: {
-          sortAscending: '<i class="fa fa-sort-amount-asc"/>',
-          sortDescending: '<i class="fa fa-sort-amount-desc"/>'
-        },
+        // icons: {
+        //   sortAscending: '<i class="fa fa-sort-amount-asc"/>',
+        //   sortDescending: '<i class="fa fa-sort-amount-desc"/>'
+        // },
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
@@ -602,14 +606,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       headerHeight: this.headerHeight,
       // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
-      overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
+      // overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
       paginationAutoPageSize: false,
       paginationPageSize: this.pageSize,
-      /**
-       * Reposition the popup to appear right below the button
-       * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
-       */
       postProcessPopup: this.postProcessPopup,
       rowDeselection: true,
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
@@ -645,6 +645,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  /**
+   * Reposition the popup to appear right below the button
+   * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
+   */
   private postProcessPopup(params: PostProcessPopupParams): void {
     if (params.type !== 'columnMenu') {
       return;
