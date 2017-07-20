@@ -23,24 +23,8 @@ export class MenuResolver implements Resolve<boolean> {
   }
 
   private handleError(): void {
-    // TODO(d.maltsev): redirect to '/connection-error' on error
     if (this.router.navigated) {
       throw new Error('Could not resolve GUI objects.');
-    } else {
-      this.router.navigate(['/']);
     }
   }
 }
-
-//   resolve(): Observable<Array<IMenuApiResponseItem>> {
-//     return this.menuService.guiObjects
-//       // TODO: make this reusable
-//       .catch(error => {
-//         if ([401, 403].find(status => error.status === status)) {
-//           this.authService.redirectToLogin();
-//         } else {
-//           this.router.navigate(['/connection-error']);
-//         }
-//         throw error;
-//       });
-//   }

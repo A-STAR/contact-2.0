@@ -18,7 +18,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver
+      menuResolved: MenuResolver
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [
@@ -31,7 +31,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver,
+      menuResolved: MenuResolver,
       lookupDataResolved: LookupResolver,
       userConstantsResolved: UserConstantsResolver,
       userLanguagesResolved: UserLanguagesResolver,
@@ -56,7 +56,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver,
+      menuResolved: MenuResolver,
       userPermissionsResolved: UserPermissionsResolver,
       metadataResolved: MetadataResolver,
     },
