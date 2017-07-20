@@ -3,8 +3,8 @@ import { RowNode, ColDef } from 'ag-grid';
 import { FilterObject } from './filter/grid2-filter';
 
 export type AGridSortType = 'asc' | 'desc' | null;
-export type IGrid2Groups  = string[];
-export type IGrid2Selected = Array<any>;
+export type IAGridGroups  = string[];
+export type IAGridSelected = Array<any>;
 
 export interface IAGridColumn {
   colId: string;
@@ -37,28 +37,28 @@ export interface IAGridSorter {
   field: string;
 }
 
-export interface IGrid2Filter {
+export interface IAGridFilter {
   columnId: string;
   filter: FilterObject;
 }
 
-export interface IGrid2ExportableColumn {
+export interface IAGridExportableColumn {
   field: string;
   name: string;
 }
 
-export interface IGrid2RequestParams {
+export interface IAGridRequestParams {
   currentPage?: number;
   pageSize?: number;
   sorters?: IAGridSortModel[];
 }
 
-export interface IGrid2State extends IGrid2RequestParams {
+export interface IAGridState extends IAGridRequestParams {
   groups: string[];
   selectedRows: any[];
 }
 
-export interface IGrid2Request {
+export interface IAGridRequest {
   paging?: {
     pageNumber: number,
     resultsPerPage: number
@@ -67,13 +67,13 @@ export interface IGrid2Request {
   filtering?: FilterObject;
 }
 
-export interface IGrid2EventPayload {
+export interface IAGridEventPayload {
   type: string;
   payload?:
     number
-    |IGrid2Filter
-    |IGrid2Groups
-    |IGrid2Selected
+    |IAGridFilter
+    |IAGridGroups
+    |IAGridSelected
     |IAGridSortModel[]
     ;
 }

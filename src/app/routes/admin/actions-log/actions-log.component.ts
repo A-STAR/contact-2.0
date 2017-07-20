@@ -7,7 +7,7 @@ import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interfa
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 import { IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IAGridColumn, IGrid2EventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -82,14 +82,16 @@ export class ActionsLogComponent {
     this.actionsLogService.filter(filters);
   }
 
-  onRequestData(payload: IGrid2EventPayload): void {
+  onRequestData(payload: IAGridEventPayload): void {
     const filters = this.filter.getFilters();
     filters.addFilter(this.grid.getFilters());
     this.store.dispatch(payload);
-    this.actionsLogService.fetch(filters);
+    if (this.grid.rowCount) {
+      this.actionsLogService.fetch(filters);
+    }
   }
 
-  onSelect(payload: IGrid2EventPayload): void {
+  onSelect(payload: IAGridEventPayload): void {
     this.store.dispatch(payload);
   }
 

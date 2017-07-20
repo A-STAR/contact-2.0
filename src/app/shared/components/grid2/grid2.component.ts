@@ -26,7 +26,7 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IGrid2EventPayload, IGrid2ExportableColumn,
+  IAGridEventPayload, IAGridExportableColumn,
   IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
 import { FilterObject } from './filter/grid2-filter';
 
@@ -56,10 +56,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static NEXT_PAGE          = 'GRID2_NEXT_PAGE';
   static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
   static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
-  static SORTING_DIRECTION  = 'GRID2_SORTING_DIRECTION';
-  static GROUPING_COLUMNS   = 'GRID2_GROUPING_COLUMNS';
+  static SORT_COLUMNS       = 'GRID2_SORT_COLUMNS';
+  static GROUP_COLUMNS      = 'GRID2_GROUP_COLUMNS';
   static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
-  static MOVING_COLUMN      = 'GRID2_MOVING_COLUMN';
   static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
 
   @Input() columns: IAGridColumn[] = [];
@@ -84,15 +83,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onDragStarted: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onDragStopped: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onColumnGroup: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
-  @Output() onPage: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onPageSize: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onSort: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onSelect: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onPageSize: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onSort: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onSelect: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
 
   columnDefs: ColDef[];
   paginationPanel: IToolbarAction[] = [];
@@ -205,11 +204,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   dragStarted(): void {
     // does nothing, for debugging only
-    this.onDragStarted.emit({ type: Grid2Component.MOVING_COLUMN });
+    this.onDragStarted.emit();
   }
 
   dragStopped(): void {
-    this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
+    this.onDragStopped.emit();
   }
 
   onSelectionChanged(): void {
@@ -329,14 +328,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   onSortChanged(): void {
     this.calculateGridSettings();
     const sorters: IAGridSortModel[] = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters });
+    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
   }
 
   getSorters(): any {
     return this.gridOptions.api.getSortModel();
   }
 
-  getExportableColumns(): IGrid2ExportableColumn[] {
+  getExportableColumns(): IAGridExportableColumn[] {
     return this.allColumns
       .filter(column => column.isVisible())
       .map(column => {
@@ -676,7 +675,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
     this.fitGridSize();
     this.onColumnGroup.emit({
-      type: Grid2Component.GROUPING_COLUMNS, payload: event.getColumns().map(column => column.getColId())
+      type: Grid2Component.GROUP_COLUMNS, payload: event.getColumns().map(column => column.getColId())
     });
   }
 

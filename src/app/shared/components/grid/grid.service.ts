@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
-import { IAGridColumn, IGrid2Request, IGrid2RequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -26,12 +26,12 @@ export class GridService {
   /**
    * Builds request parameters necessary to talk to the BE
    *
-   * @param {IGrid2RequestParams} params
+   * @param {IAGridRequestParams} params
    * @param {FilterObject} filters
-   * @returns {IGrid2Request}
+   * @returns {IAGridRequest}
    */
-  buildRequest(params: IGrid2RequestParams, filters?: FilterObject): IGrid2Request {
-    const request: IGrid2Request = {};
+  buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
+    const request: IAGridRequest = {};
     const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
 
