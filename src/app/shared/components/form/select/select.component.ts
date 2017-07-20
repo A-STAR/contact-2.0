@@ -204,7 +204,7 @@ export class SelectComponent implements ControlValueAccessor {
       displayValue = this.translateService.instant(item.label);
     } else {
       const option = this.lookupAtOptions(item.value);
-      if (option) {
+      if (option && option.label) {
         displayValue = this.translateService.instant(option.label);
       }
     }
