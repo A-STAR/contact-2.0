@@ -12,7 +12,6 @@ import { IClickableComponent, IClickableComponentPlugin } from '../tree.interfac
 })
 export class TreeNodeComponent implements OnDestroy, IClickableComponent {
   static DEFAULT_BG_COLOR = '#fff';
-  static DEFAULT_SELECTED_BG_COLOR = '#def';
 
   @Input() collapseAdjacentNodes = false;
   @Input() expandNodeOnClick = false;
@@ -38,9 +37,7 @@ export class TreeNodeComponent implements OnDestroy, IClickableComponent {
   }
 
   getBgColor(): string {
-    return this.isSelected() ?
-      this.node.selectedBgColor || TreeNodeComponent.DEFAULT_SELECTED_BG_COLOR :
-      this.node.bgColor || TreeNodeComponent.DEFAULT_BG_COLOR;
+    return this.node.bgColor || TreeNodeComponent.DEFAULT_BG_COLOR;
   }
 
   isLeaf(): boolean {

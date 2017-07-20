@@ -81,7 +81,7 @@
               class="app-treenode-content ui-state-default ui-corner-all"
               [attr.nodeid]="node.id"
               [ngStyle]="{ 'background-color': getBgColor() }"
-              [ngClass]="{ 'ui-treenode-selectable': tree.selectionMode }"
+              [ngClass]="{ 'ui-treenode-selectable': tree.selectionMode, 'selected': isSelected() }"
               (click)="delegateClick($event)"
               (dblclick)="delegateClick($event)"
             >
