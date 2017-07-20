@@ -7,6 +7,7 @@ import { IPermissionsTreeNode } from './permissions-tree.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../../core/data/data.service';
+import { MenuService } from '../../../../core/menu/menu.service';
 
 import { menuConfig } from '../../../menu-config';
 
@@ -15,6 +16,7 @@ export class PermissionsTreeService {
 
   constructor(
     private dataService: DataService,
+    private menuService: MenuService,
     private translateService: TranslateService
   ) {}
 
@@ -30,7 +32,10 @@ export class PermissionsTreeService {
         .concat(
           this.filterAndConvertToIds(added).map((id: number) => this.updatePermissions(currentRole, id, true))
         )
-    );
+    )
+    .do(() => {
+      this.menuService.refreshGuiObjects();
+    });
   }
 
   getDiff(nodes: ITreeNode[], nodes2: ITreeNode[]): ITreeNode[] {

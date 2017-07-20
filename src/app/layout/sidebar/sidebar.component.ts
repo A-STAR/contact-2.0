@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -19,12 +19,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private menuSubscription: Subscription;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private menuService: MenuService,
     private notificationsService: NotificationsService,
     private router: Router,
     public settings: SettingsService,
   ) {
-    this.menuSubscription = this.menuService.menuItems.subscribe(items => this.menuItems = items);
+    this.menuSubscription = this.menuService.menuItems.subscribe(items => {
+      this.menuItems = items;
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   ngOnInit(): void {
