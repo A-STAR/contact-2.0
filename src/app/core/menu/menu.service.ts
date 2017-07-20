@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
-// import { Headers } from '@angular/http';
+import { Headers } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -34,9 +34,17 @@ export class MenuService {
     });
   }
 
-  get menuItems$(): Observable<Array<IMenuItem>> {
+  get menuItems(): Observable<Array<IMenuItem>> {
     return this.state.map(state => state.guiObjects)
+      .filter(guiObjects => guiObjects.length > 0)
       .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
+      .distinctUntilChanged();
+  }
+
+  get menuItemIds(): Observable<any> {
+    return this.state.map(state => state.guiObjects)
+      .filter(guiObjects => guiObjects.length > 0)
+      .map(guiObjects => this.flattenGuiObjectIds(guiObjects))
       .distinctUntilChanged();
   }
 
@@ -77,24 +85,24 @@ export class MenuService {
   }
 
   private logAction(name: string, delay: number): void {
-    // const data = {
-    //   typeCode: 1,
-    //   duration: delay
-    // };
-    // const headers = new Headers({
-    //   'X-Gui-Object': this.guiObjectIds[name]
-    // });
-
-    // this.dataService.create('/actions', {}, data, { headers }).subscribe();
+    this.menuItemIds
+      .take(1)
+      .subscribe(menuItemIds => {
+        const data = { typeCode: 1, duration: delay };
+        const headers = new Headers({
+          'X-Gui-Object': menuItemIds[name]
+        });
+        this.dataService.create('/actions', {}, data, { headers }).subscribe();
+      });
   }
 
-  // private flattenGuiObjectIds(appGuiObjects: Array<IMenuApiResponseItem>): any {
-  //   return appGuiObjects.reduce((acc, guiObject) => ({
-  //     ...acc,
-  //     ...this.flattenGuiObjectIds(guiObject.children),
-  //     [guiObject.name]: guiObject.id
-  //   }), {});
-  // }
+  private flattenGuiObjectIds(appGuiObjects: Array<IMenuApiResponseItem>): any {
+    return appGuiObjects.reduce((acc, guiObject) => ({
+      ...acc,
+      ...this.flattenGuiObjectIds(guiObject.children),
+      [guiObject.name]: guiObject.id
+    }), {});
+  }
 
   private get state(): Observable<IGuiObjectsState> {
     return this.store.select(state => state.guiObjects);

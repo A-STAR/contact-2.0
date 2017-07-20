@@ -24,10 +24,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     public settings: SettingsService,
   ) {
-    this.menuSubscription = this.menuService.menuItems$.subscribe(items => {
-      console.log(items);
-      this.menuItems = items;
-    });
+    this.menuSubscription = this.menuService.menuItems.subscribe(items => this.menuItems = items);
   }
 
   ngOnInit(): void {
