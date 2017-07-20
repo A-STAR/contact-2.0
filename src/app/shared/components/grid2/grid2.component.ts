@@ -26,8 +26,8 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IGrid2ColumnPositions, IGrid2Sorter, IGrid2EventPayload, IGrid2ExportableColumn,
-  IAGridColumn, IAGridSettings } from './grid2.interface';
+  IGrid2EventPayload, IGrid2ExportableColumn,
+  IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
 import { FilterObject } from './filter/grid2-filter';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -57,10 +57,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
   static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
   static SORTING_DIRECTION  = 'GRID2_SORTING_DIRECTION';
-  static COLUMNS_POSITIONS  = 'GRID2_COLUMNS_POSITIONS';
   static GROUPING_COLUMNS   = 'GRID2_GROUPING_COLUMNS';
   static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
-  static APPLY_FILTER       = 'GRID2_APPLY_FILTER';
   static MOVING_COLUMN      = 'GRID2_MOVING_COLUMN';
   static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
 
@@ -86,9 +84,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onDragStopped: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onDragStarted: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
-  @Output() onColumnMove: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
+  @Output() onDragStopped: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onColumnGroup: EventEmitter<IGrid2EventPayload> = new EventEmitter<IGrid2EventPayload>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
@@ -213,10 +210,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   dragStopped(): void {
     this.onDragStopped.emit({ type: Grid2Component.MOVING_COLUMN });
-    if (this.rowCount) {
-      const payload: IGrid2ColumnPositions = this.allColumns.map(column => column.getColDef().field);
-      this.onColumnMove.emit({ type: Grid2Component.COLUMNS_POSITIONS, payload });
-    }
   }
 
   onSelectionChanged(): void {
@@ -335,15 +328,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onSortChanged(): void {
     this.calculateGridSettings();
-    const sorters = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters as IGrid2Sorter[] });
+    const sorters: IAGridSortModel[] = this.getSorters();
+    this.onSort.emit({ type: Grid2Component.SORTING_DIRECTION, payload: sorters });
   }
 
   getSorters(): any {
-    return this.gridOptions.api.getSortModel()
-      .map(col => {
-        return { field: col.colId, direction: col.sort };
-      });
+    return this.gridOptions.api.getSortModel();
   }
 
   getExportableColumns(): IGrid2ExportableColumn[] {
