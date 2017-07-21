@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
