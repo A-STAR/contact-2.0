@@ -1,8 +1,6 @@
 import { ColDef } from 'ag-grid';
 
-import { FilterOperatorType } from '../grid2/filter/grid2-filter';
-
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterOperatorType, FilterObject } from '../grid2/filter/grid-filter';
 
 export interface IQuery {
   columns: Array<ColDef>;

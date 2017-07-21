@@ -8,12 +8,10 @@
     <button class="btn btn-xs btn-default" (click)="addCondition()">Add condition</button>
     <button class="btn btn-xs btn-danger" (click)="remove()"><i class="fa fa-close"></i></button>
   </div>
-  <div class="group-content">
-    <ng-container *ngFor="let f of filter.filters; index as i">
-      <app-qbuilder2-group *ngIf="f.filters; else condition" [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-group>
-      <ng-template #condition>
-        <app-qbuilder2-condition [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-condition>
-      </ng-template>
-    </ng-container>
+  <div class="group-child" *ngFor="let f of filter.filters; index as i">
+    <app-qbuilder2-group *ngIf="f.filters; else condition" [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-group>
+    <ng-template #condition>
+      <app-qbuilder2-condition [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-condition>
+    </ng-template>
   </div>
 </div>
