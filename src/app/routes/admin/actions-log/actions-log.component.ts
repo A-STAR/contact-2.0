@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Store } from '@ngrx/store';
 
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
-import { IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IGroup } from '../../../shared/components/qbuilder/qbuilder.interface';
+import { IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -18,6 +19,8 @@ import { toFullName } from '../../../core/utils';
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Component({
   selector: 'app-actions-log',
@@ -55,6 +58,13 @@ export class ActionsLogComponent {
   actionsLogCurrentPage: Observable<number>;
   actionsLogCurrentPageSize: Observable<number>;
   actionsLogSelected: Observable<IDictionaryItem[]>;
+
+  isQueryBuilderOpen$ = new BehaviorSubject<boolean>(false);
+
+  group: IGroup = {
+    operator: null,
+    rules: []
+  };
 
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
@@ -115,4 +125,11 @@ export class ActionsLogComponent {
     this.downloader.download(body);
   }
 
+  openQueryBuilder(): void {
+    this.isQueryBuilderOpen$.next(true);
+  }
+
+  closeQueryBuilder(): void {
+    this.isQueryBuilderOpen$.next(false);
+  }
 }

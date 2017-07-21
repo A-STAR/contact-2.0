@@ -4,8 +4,19 @@
   [actionTypesRows]="actionTypesRows"
   (export)="doExport()"
   (search)="doSearch()"
+  (queryBuilderOpen)="openQueryBuilder()"
 >
 </app-actions-log-filter>
+
+<app-dialog *ngIf="isQueryBuilderOpen$ | async" (onClose)="closeQueryBuilder()">
+  <div dialog-header>
+    <!-- TODO(d.maltsev): i18n -->
+    <h3>Query builder</h3>
+  </div>
+  <div>
+    <app-qbuilder [(group)]="group"></app-qbuilder>
+  </div>
+</app-dialog>
 
 <app-downloader
   #downloader
