@@ -1,6 +1,6 @@
 import { RowNode, ColDef } from 'ag-grid';
 
-import { FilterObject } from './filter/grid2-filter';
+import { FilterObject } from './filter/grid-filter';
 
 export type AGridSortType = 'asc' | 'desc' | null;
 export type IAGridGroups  = string[];
@@ -40,6 +40,11 @@ export interface IAGridSorter {
 export interface IAGridFilter {
   columnId: string;
   filter: FilterObject;
+}
+
+export interface IAGridFilterRequest {
+  filters: FilterObject;
+  currentPage?: number;
 }
 
 export interface IAGridExportableColumn {

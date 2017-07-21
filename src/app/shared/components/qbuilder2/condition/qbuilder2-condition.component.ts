@@ -6,7 +6,7 @@ import { IOption } from '../../../../core/converter/value/value-converter.interf
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
-import { FilterObject } from '../../grid2/filter/grid2-filter';
+import { FilterObject } from '../../grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-qbuilder2-condition',

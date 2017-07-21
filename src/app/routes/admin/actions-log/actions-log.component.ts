@@ -5,11 +5,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Store } from '@ngrx/store';
 
 import { IActionsLogData, IEmployee } from './actions-log.interface';
+
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { IRenderer } from '../../../shared/components/grid/grid.interface';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 import { ActionsLogService } from './actions-log.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
@@ -19,8 +21,6 @@ import { toFullName } from '../../../core/utils';
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
-
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
 
 @Component({
   selector: 'app-actions-log',

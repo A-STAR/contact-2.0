@@ -7,20 +7,14 @@ import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
-import {
-  IActionLog,
-  IActionsLogData,
-  IActionsLogPayload,
-  IEmployee
-} from './actions-log.interface';
+import { IActionLog, IActionsLogData, IActionsLogPayload, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IActionsLogFilterRequest } from './filter/actions-log-filter.interface';
-import { IAGridSortModel } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridSortModel, IAGridFilterRequest } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
@@ -38,11 +32,9 @@ export class ActionsLogService {
     .switchMap(
       (payload): Observable<IActionsLogPayload> => {
         const [action, store]: [Action, IAppState] = payload;
-        const filterRequest: IActionsLogFilterRequest = action.payload;
+        const filterRequest: IAGridFilterRequest = action.payload;
         const { currentPage, pageSize, sorters } = store.actionsLog.actionsLogGrid;
         const gridRequestPayload = { currentPage, pageSize, sorters };
-        // console.log('filter request', filterRequest);
-
         const request = this.gridService.buildRequest(gridRequestPayload, filterRequest.filters);
 
         return this.dataService.create('/list?name=actions', {}, request)

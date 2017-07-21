@@ -48,15 +48,15 @@
             class="col-md-12"
             [value]="selectedEmployees"
             [placeholder]="employeesControl.placeholder"
-            (action)="onEmployeesSelect()"
+            (action)="setDialog('employees')"
           >
           </app-popup-input>
           <app-action-dialog
-            *ngIf="isEmployeesBeingSelected"
+            *ngIf="isDialog('employees')"
             [titleTranslationKey]="employeesControl.label"
             [autoWidth]="false"
             (action)="onSaveEmployeesChanges()"
-            (cancel)="onCloseActionDialog()"
+            (cancel)="setDialog(null)"
           >
             <app-multi-select
               #employees
@@ -70,10 +70,10 @@
               [columnsFrom]="employeesColumnsFrom"
               [columnsTo]="employeesColumnsTo">
             </app-multi-select>
-            <div class="checkbox">
+            <div class="checkbox mb0">
               <label>
-                <input type="checkbox" [formControlName]="blockingEmployeesControl.controlName"/>
-                {{ blockingEmployeesControl.label | translate }}
+                <input type="checkbox" [formControlName]="blockedEmployeesControl.controlName"/>
+                {{ blockedEmployeesControl.label | translate }}
               </label>
             </div>
           </app-action-dialog>
@@ -88,15 +88,15 @@
             class="col-md-12"
             [value]="selectedActionTypes"
             [placeholder]="actionTypesControl.placeholder"
-            (action)="onActionTypesSelect()"
+            (action)="setDialog('actionTypes')"
           >
           </app-popup-input>
           <app-action-dialog
-            *ngIf="isActionTypesBeingSelected"
+            *ngIf="isDialog('actionTypes')"
             [autoWidth]="false"
             [titleTranslationKey]="actionTypesControl.label"
             (action)="onSaveActionTypesChanges()"
-            (cancel)="onCloseActionDialog()"
+            (cancel)="setDialog()"
           >
             <app-multi-select
               #actionTypes
@@ -118,12 +118,12 @@
             &nbsp;
           </label>
           <div class="col-md-12 align-right pl0">
-          <button class="btn btn-default search-button" (click)="onSearch()">
-            <i class="fa fa-search" aria-hidden="true"></i>
-            <span>
-              {{ 'default.buttons.search' | translate }}
-            </span>
-          </button>
+            <button class="btn btn-default search-button" (click)="onSearch()">
+              <i class="fa fa-search" aria-hidden="true"></i>
+              <span>
+                {{ 'default.buttons.search' | translate }}
+              </span>
+            </button>
           </div>
         </div>
       </div>

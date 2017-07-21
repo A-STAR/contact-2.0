@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ColDef } from 'ag-grid';
 
-import { FilterConditionType, FilterOperatorType } from '../../grid2/filter/grid2-filter';
-
-import { FilterObject } from '../../grid2/filter/grid2-filter';
+import { FilterConditionType, FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-qbuilder2-group',
