@@ -4,9 +4,7 @@ import { ColDef } from 'ag-grid';
 import { IFilterType, IOperator } from '../qbuilder2.interface';
 import { IOption } from '../../../../core/converter/value/value-converter.interface';
 
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
-
-import { FilterObject } from '../../grid2/filter/grid-filter';
+import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-qbuilder2-condition',
@@ -18,6 +16,9 @@ export class QBuilder2ConditionComponent {
   @Input() filter: FilterObject;
 
   @Output() onRemove = new EventEmitter<void>();
+
+  controlType: IFilterType;
+  operator: FilterOperatorType;
 
   private _operators: Array<IOperator> = [
     { name: '==' },
@@ -36,15 +37,16 @@ export class QBuilder2ConditionComponent {
     { name: 'NOT LIKE', filters: [ 'text' ] },
   ];
 
-  private filterType: IFilterType;
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private valueConverterService: ValueConverterService,
-  ) {}
+  get nControls(): number {
+    if (this.operator === 'IN' || this.operator === 'NOT IN') { return 0; }
+    if (this.operator === 'BETWEEN' || this.operator === 'NOT BETWEEN') { return 2; }
+    return 1;
+  }
 
   get operators(): Array<IOperator> {
-    return this._operators.filter(operator => operator.filters === undefined || operator.filters.includes(this.filterType));
+    return this._operators.filter(operator => operator.filters === undefined || operator.filters.includes(this.controlType));
   }
 
   get fieldOptions(): Array<IOption> {
@@ -56,12 +58,13 @@ export class QBuilder2ConditionComponent {
 
   onFieldChange(event: Event): void {
     const column = this.columns.find(c => c.field === (event.target as HTMLInputElement).value);
-    this.filterType = column.filter as IFilterType;
+    this.controlType = column.filter as IFilterType;
     this.changeDetectorRef.markForCheck();
   }
 
-  toDate(date: string): Date {
-    return this.valueConverterService.fromISO(date);
+  onOperatorChange(event: Event): void {
+    this.operator = (event.target as HTMLInputElement).value as FilterOperatorType;
+    this.changeDetectorRef.markForCheck();
   }
 
   remove(): void {

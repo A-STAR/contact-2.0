@@ -1,0 +1,19 @@
+<span class="value">
+  <span *ngIf="displayAsArray">(</span>
+
+  <ng-container *ngFor="let v of value; let i = index; let last = last">
+    <ng-container [ngSwitch]="controlType">
+      <app-input-datepicker *ngSwitchCase="'date'" [ngModel]="toDate(value)"></app-input-datepicker>
+      <span *ngSwitchCase="'set'">Dropdown for set</span>
+      <input *ngSwitchDefault type="text" class="form-control input-sm" [ngModel]="v" (change)="onValueChange($event, i)">
+    </ng-container>
+    <span *ngIf="!last && displayAsArray">,&nbsp;</span>
+  </ng-container>
+
+  <span *ngIf="displayAsArray">)</span>
+
+  <ng-container *ngIf="displayButtons">
+    <button class="btn btn-xs btn-default" (click)="addValue()">+</button>
+    <button class="btn btn-xs btn-default" (click)="removeValue()">-</button>
+  </ng-container>
+<span>

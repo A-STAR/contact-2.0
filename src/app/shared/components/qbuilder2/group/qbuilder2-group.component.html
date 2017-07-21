@@ -1,8 +1,8 @@
 <div>
   <div class="form-inline">
-    <select class="form-control input-sm" [value]="filter.condition">
-      <option [value]="'AND'">AND</option>
-      <option [value]="'OR'">OR</option>
+    <select class="form-control input-sm" [(ngModel)]="filter.condition">
+      <option value="AND">AND</option>
+      <option value="OR">OR</option>
     </select>
     <button class="btn btn-xs btn-default" (click)="addGroup()">Add group</button>
     <button class="btn btn-xs btn-default" (click)="addCondition()">Add condition</button>

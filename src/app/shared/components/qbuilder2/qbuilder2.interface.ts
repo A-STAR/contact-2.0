@@ -7,10 +7,9 @@ export interface IQuery {
   filters: FilterObject;
 }
 
-export type IFilterType = 'text';
+export type IFilterType = 'text' | 'number' | 'set' | 'date';
 
 export interface IOperator {
-  // TODO(d.maltsev): stronger typing
   name: FilterOperatorType;
   filters?: Array<IFilterType>;
 }

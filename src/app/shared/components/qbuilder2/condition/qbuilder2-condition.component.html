@@ -1,22 +1,10 @@
 <div class="form-inline">
-  <select class="form-control input-sm" [ngModel]="filter.name" (change)="onFieldChange($event)">
+  <select class="form-control input-sm" [(ngModel)]="filter.name" (change)="onFieldChange($event)">
     <option *ngFor="let option of fieldOptions" [value]="option.value">{{ option.label }}</option>
   </select>
-  <select class="form-control input-sm" [ngModel]="filter.operator">
+  <select class="form-control input-sm" [(ngModel)]="filter.operator" (change)="onOperatorChange($event)">
     <option *ngFor="let operator of operators" [value]="operator.name">{{ operator.name }}</option>
   </select>
-  <ng-container *ngFor="let value of filter.values">
-    <ng-container [ngSwitch]="filterType">
-      <ng-container *ngSwitchCase="'date'">
-        <app-input-datepicker [ngModel]="toDate(value)"></app-input-datepicker>
-      </ng-container>
-      <ng-container *ngSwitchCase="'set'">
-        Set
-      </ng-container>
-      <ng-container *ngSwitchDefault>
-        <input class="form-control input-sm" [ngModel]="value">
-      </ng-container>
-    </ng-container>
-  </ng-container>
+  <app-qbuilder2-value [controlType]="controlType" [nControls]="nControls" [(ngModel)]="filter.values"></app-qbuilder2-value>
   <button class="btn btn-xs btn-danger" (click)="remove()"><i class="fa fa-close"></i></button>
 </div>
