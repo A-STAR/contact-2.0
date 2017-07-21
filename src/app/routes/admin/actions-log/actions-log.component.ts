@@ -8,7 +8,7 @@ import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
-import { IGroup } from '../../../shared/components/qbuilder/qbuilder.interface';
+import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { IRenderer } from '../../../shared/components/grid/grid.interface';
 
 import { ActionsLogService } from './actions-log.service';
@@ -59,12 +59,7 @@ export class ActionsLogComponent {
   actionsLogCurrentPageSize: Observable<number>;
   actionsLogSelected: Observable<IDictionaryItem[]>;
 
-  isQueryBuilderOpen$ = new BehaviorSubject<boolean>(false);
-
-  group: IGroup = {
-    operator: null,
-    rules: []
-  };
+  query$ = new BehaviorSubject<IQuery>(null);
 
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
@@ -83,6 +78,10 @@ export class ActionsLogComponent {
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
     this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
+  }
+
+  get queryBuilderOpen$(): Observable<boolean> {
+    return this.query$.map(query => query !== null);
   }
 
   onFilter(gridFilters: FilterObject): void {
@@ -126,10 +125,12 @@ export class ActionsLogComponent {
   }
 
   openQueryBuilder(): void {
-    this.isQueryBuilderOpen$.next(true);
+    const filters = this.filter.getFilters();
+    filters.addFilter(this.grid.getFilters());
+    this.query$.next({ filters, columns: this.grid.columnDefs });
   }
 
   closeQueryBuilder(): void {
-    this.isQueryBuilderOpen$.next(false);
+    this.query$.next(null);
   }
 }

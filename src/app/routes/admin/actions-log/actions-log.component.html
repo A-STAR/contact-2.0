@@ -8,13 +8,13 @@
 >
 </app-actions-log-filter>
 
-<app-dialog *ngIf="isQueryBuilderOpen$ | async" (onClose)="closeQueryBuilder()">
+<app-dialog *ngIf="queryBuilderOpen$ | async" [styles]="{ width: '80%', 'max-width': '80%' }" (onClose)="closeQueryBuilder()">
   <div dialog-header>
     <!-- TODO(d.maltsev): i18n -->
     <h3>Query builder</h3>
   </div>
   <div>
-    <app-qbuilder [(group)]="group"></app-qbuilder>
+    <app-qbuilder-2 [query]="query$ | async"></app-qbuilder-2>
   </div>
 </app-dialog>
 

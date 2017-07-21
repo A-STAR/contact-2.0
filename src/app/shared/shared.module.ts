@@ -38,6 +38,7 @@ import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
+import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
@@ -80,6 +81,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     MomentModule,
     PopupInputModule,
     ProgressbarModule,
+    QBuilder2Module,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -144,6 +146,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     PopupInputModule,
     ProgressbarModule,
     QBuilderComponent,
+    QBuilder2Module,
     RouterOutlet2Directive,
     TabComponent,
     TabstripComponent,
