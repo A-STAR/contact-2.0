@@ -19,7 +19,7 @@ import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.inte
 import { GridService } from '../../../../shared/components/grid/grid.service';
 
 import { toFullName, timeToHourMinSec } from '../../../../core/utils';
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
@@ -39,7 +39,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
   employeesControl: IDynamicFormControl;
-  blockingEmployeesControl: IDynamicFormControl;
+  blockedEmployeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
   endDateControl: IDynamicFormControl;
@@ -74,10 +74,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
-  private _action: string;
+  private _dialog: string;
 
   get employeesRowsFilter(): Function {
-    return this.value[this.blockingEmployeesControl.controlName]
+    return this.value[this.blockedEmployeesControl.controlName]
       ? () => true
       : (record: IEmployee) => !record.isBlocked;
   };
@@ -100,9 +100,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         required: true,
         type: 'multiselect',
       },
-      this.blockingEmployeesControl = {
+      this.blockedEmployeesControl = {
         controlName: 'blockingEmployees',
-        label: 'actionsLog.filter.employees.blocking',
+        label: 'actionsLog.filter.employees.blocked',
         type: 'checkbox',
       },
       this.actionTypesControl = {
@@ -162,34 +162,22 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return '';
   }
 
-  get isEmployeesBeingSelected(): boolean {
-    return this._action === 'employees';
+  isDialog(type: string): boolean {
+    return this._dialog === type;
   }
 
-  get isActionTypesBeingSelected(): boolean {
-    return this._action === 'actionTypes';
+  setDialog(type: string = null): void {
+    this._dialog = type;
   }
 
   onSaveEmployeesChanges(): void {
     this.employeesComponent.syncChanges();
-    this.onCloseActionDialog();
+    this.setDialog();
   }
 
   onSaveActionTypesChanges(): void {
     this.actionTypesComponent.syncChanges();
-    this.onCloseActionDialog();
-  }
-
-  onCloseActionDialog(): void {
-    this._action = null;
-  }
-
-  onEmployeesSelect(): void {
-    this._action = 'employees';
-  }
-
-  onActionTypesSelect(): void {
-    this._action = 'actionTypes';
+    this.setDialog();
   }
 
   onSearch(): void {

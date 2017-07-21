@@ -150,7 +150,7 @@
       "employees": {
         "title": "Operators",
         "placeholder": "Select operator(s)",
-        "blocking": "Show blocked operators",
+        "blocked": "Show blocked",
         "grid": {
           "id": "Id",
           "position": "Position",

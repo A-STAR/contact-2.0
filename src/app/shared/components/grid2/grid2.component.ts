@@ -15,8 +15,8 @@ import {
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnChangeEvent,
-  GridOptions, ICellRendererParams, RowNode,
+  ColDef, Column, ColumnChangeEvent, GetContextMenuItemsParams,
+  GridOptions, ICellRendererParams, MenuItemDef, RowNode,
 } from 'ag-grid/main';
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
@@ -28,7 +28,7 @@ import {
 import {
   IAGridEventPayload, IAGridExportableColumn,
   IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
-import { FilterObject } from './filter/grid2-filter';
+import { FilterObject } from './filter/grid-filter';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
@@ -599,6 +599,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       enableServerSideFilter: true,
       enableServerSideSorting: true,
       floatingFilter: true,
+      getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
@@ -645,6 +646,46 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
+    return [
+      {
+        name: 'Alert value',
+        action: () => { window.alert('Alerting about ' + params.value); },
+      },
+      {
+        name: 'Always disabled',
+        disabled: true,
+        tooltip: 'Just to test what the tooltip can show'
+      },
+      {
+        name: 'Person',
+        subMenu: [
+          {name: 'Niall', action: () => {console.log('Niall was pressed'); } },
+          {name: 'Sean', action: () => {console.log('Sean was pressed'); } },
+          {name: 'John', action: () => {console.log('John was pressed'); } },
+          {name: 'Alberto', action: () => {console.log('Alberto was pressed'); } },
+          {name: 'Tony', action: () => {console.log('Tony was pressed'); } },
+          {name: 'Andrew', action: () => {console.log('Andrew was pressed'); } },
+          {name: 'Lola', action: () => {console.log('Lola was pressed'); } },
+        ]
+      },
+      'separator',
+      {
+        name: 'Checked',
+        checked: true,
+        action: () => { console.log('Checked Selected'); }
+      },
+      'copy',
+      'copyWithHeaders',
+      'separator',
+      {
+        name: 'Reset columns',
+        action: () => this.resetGridSettings(),
+        shortcut: 'Alt+R'
+      }
+    ];
+  }
+
   /**
    * Reposition the popup to appear right below the button
    * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
@@ -689,6 +730,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       { width: column.getActualWidth(), hide: !column.isVisible(), colId: column.getColId() }
     ));
     this.gridSettings = { sortModel, colDefs };
+  }
+
+  private resetGridSettings(): void {
+    if (this.persistenceKey) {
+      this.gridSettings = { sortModel: [], colDefs: [] };
+    }
+    this.saveGridSettings();
+    this.gridOptions.api.setSortModel(null);
+    this.gridOptions.api.setFilterModel(null);
+    this.gridOptions.columnApi.resetColumnState();
   }
 
   private saveGridSettings(): void {

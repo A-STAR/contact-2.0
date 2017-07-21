@@ -12,7 +12,7 @@ import { DictionariesService } from '../../../core/dictionaries/dictionaries.ser
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
-import { FilterObject } from '../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class GridService {
