@@ -8,7 +8,6 @@ import { SelectModule } from '../form/select/select.module';
 import { QBuilder2Component } from './qbuilder2.component';
 import { QBuilder2ConditionComponent } from './condition/qbuilder2-condition.component';
 import { QBuilder2GroupComponent } from './group/qbuilder2-group.component';
-import { QBuilder2InputComponent } from './input/qbuilder2-input.component';
 import { QBuilder2ValueComponent } from './value/qbuilder2-value.component';
 
 @NgModule({
@@ -23,14 +22,12 @@ import { QBuilder2ValueComponent } from './value/qbuilder2-value.component';
     QBuilder2Component,
     QBuilder2ConditionComponent,
     QBuilder2GroupComponent,
-    QBuilder2InputComponent,
     QBuilder2ValueComponent,
   ],
   declarations: [
     QBuilder2Component,
     QBuilder2ConditionComponent,
     QBuilder2GroupComponent,
-    QBuilder2InputComponent,
     QBuilder2ValueComponent,
   ],
   providers: [],

@@ -78,7 +78,27 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
     this.value.pop();
   }
 
-  updateValue(value: Date | string | number, i: number): void {
+  onValueChange(event: Event, i: number): void {
+    this.updateValue((event.target as HTMLInputElement).value, i);
+  }
+
+  onSetValueChange(options: Array<{ value: string }>, i: number): void {
+    this.updateValue(options[0].value, i);
+  }
+
+  onDateValueChange(date: Date, i: number): void {
+    this.updateValue(this.valueConverterService.toISO(date), i);
+  }
+
+  toDate(date: string): Date {
+    return this.valueConverterService.fromISO(date);
+  }
+
+  trackByIndex(i: number): number {
+    return i;
+  }
+
+  private updateValue(value: Date | string | number, i: number): void {
     this.value[i] = value;
     this.propagateChange(this.value);
   }
