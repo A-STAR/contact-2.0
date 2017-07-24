@@ -42,6 +42,7 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() renderer: any;
 
   @Input() styles: CSSStyleDeclaration;
+  @Input() inputClass = 'form-control';
 
   @Output() onSelect: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
   @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter<ISelectionAction>();
