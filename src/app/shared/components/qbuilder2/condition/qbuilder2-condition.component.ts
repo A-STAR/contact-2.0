@@ -47,7 +47,8 @@ export class QBuilder2ConditionComponent {
   }
 
   get nControls(): number {
-    if (this.operator === 'IN' || this.operator === 'NOT IN') { return 0; }
+    if (this.operator === 'IN' || this.operator === 'NOT IN') { return -1; }
+    if (this.operator === 'EMPTY' || this.operator === 'NOT EMPTY') { return 0; }
     if (this.operator === 'BETWEEN' || this.operator === 'NOT BETWEEN') { return 2; }
     return 1;
   }

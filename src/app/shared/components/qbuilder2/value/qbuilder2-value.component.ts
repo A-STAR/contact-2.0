@@ -21,7 +21,7 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 })
 export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges {
 
-  // nControls = 0 for any number
+  // nControls = -1 for any number
   @Input() nControls: number;
   @Input() column: ColDef;
 
@@ -37,7 +37,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   ngOnChanges(changes: SimpleChanges): void {
     const { column, nControls } = changes;
 
-    if (this.value.length && nControls && nControls.currentValue) {
+    if (nControls && nControls.currentValue !== -1) {
       this.value = this.value.concat([ null, null ]).slice(0, nControls.currentValue);
     }
 
@@ -49,11 +49,11 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   }
 
   get displayAsArray(): boolean {
-    return this.nControls !== 1;
+    return this.nControls !== 0 && this.nControls !== 1;
   }
 
   get displayButtons(): boolean {
-    return this.nControls === 0;
+    return this.nControls === -1;
   }
 
   get filterType(): IFilterType {
