@@ -15,9 +15,8 @@
 </app-downloader>
 
 <app-grid2
-  *ngIf="!!columnDefs"
   columnTranslationKey="actionsLog"
-  [columns]="columnDefs"
+  [columns]="columns"
   [ngClass]="'actions-log-grid'"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"

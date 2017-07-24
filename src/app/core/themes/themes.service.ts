@@ -12,57 +12,57 @@ const themeH = require('../../shared/styles/themes/theme-h.scss');
 @Injectable()
 export class ThemesService {
 
-    styleTag: any;
-    defaultTheme: 'A';
+  styleTag: any;
+  defaultTheme: 'A';
 
-    constructor() {
-        this.createStyle();
-        this.setTheme(this.defaultTheme);
-    }
+  constructor() {
+    this.createStyle();
+    this.setTheme(this.defaultTheme);
+  }
 
-    private createStyle(): void {
-        const head = document.head || document.getElementsByTagName('head')[0];
-        this.styleTag = document.createElement('style');
-        this.styleTag.type = 'text/css';
-        this.styleTag.id = 'appthemes';
-        head.appendChild(this.styleTag);
+  setTheme(name: string): void {
+    switch (name) {
+      case 'A':
+        this.injectStylesheet(themeA);
+        break;
+      case 'B':
+        this.injectStylesheet(themeB);
+        break;
+      case 'C':
+        this.injectStylesheet(themeC);
+        break;
+      case 'D':
+        this.injectStylesheet(themeD);
+        break;
+      case 'E':
+        this.injectStylesheet(themeE);
+        break;
+      case 'F':
+        this.injectStylesheet(themeF);
+        break;
+      case 'G':
+        this.injectStylesheet(themeG);
+        break;
+      case 'H':
+        this.injectStylesheet(themeH);
+        break;
     }
+  }
 
-    setTheme(name: string): void {
-        switch (name) {
-            case 'A':
-                this.injectStylesheet(themeA);
-                break;
-            case 'B':
-                this.injectStylesheet(themeB);
-                break;
-            case 'C':
-                this.injectStylesheet(themeC);
-                break;
-            case 'D':
-                this.injectStylesheet(themeD);
-                break;
-            case 'E':
-                this.injectStylesheet(themeE);
-                break;
-            case 'F':
-                this.injectStylesheet(themeF);
-                break;
-            case 'G':
-                this.injectStylesheet(themeG);
-                break;
-            case 'H':
-                this.injectStylesheet(themeH);
-                break;
-        }
-    }
+  injectStylesheet(css: string): void {
+    this.styleTag.innerHTML = css;
+  }
 
-    injectStylesheet(css: string): void {
-        this.styleTag.innerHTML = css;
-    }
+  getDefaultTheme(): string {
+    return this.defaultTheme;
+  }
 
-    getDefaultTheme(): string {
-        return this.defaultTheme;
-    }
+  private createStyle(): void {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    this.styleTag = document.createElement('style');
+    this.styleTag.type = 'text/css';
+    this.styleTag.id = 'appthemes';
+    head.appendChild(this.styleTag);
+  }
 
 }

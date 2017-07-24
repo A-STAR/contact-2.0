@@ -43,32 +43,10 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     private config: IDragAndDropConfig,
     private dragulaService: DragulaService,
     private domHelper: DragAndDropDomHelper,
-  ) {
-  }
+  ) {}
 
   get dragulaOptions(): any {
     return { copy: true };
-  }
-
-  private onMouseMove(event: MouseEvent): void {
-    this._clientX = event.clientX;
-    this._clientY = event.clientY;
-
-    this.removeAllActiveElements();
-
-    const intersectedByTargetElements = this.intersectedByTargetElements;
-    const firstNode = intersectedByTargetElements[0];
-    const secondNode = intersectedByTargetElements[1];
-
-    if (this.canMove(intersectedByTargetElements)) {
-      this._activeElements = [firstNode];
-      this.renderer.addClass(firstNode, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
-
-    } else if (this.canSwap(intersectedByTargetElements)) {
-      this._activeElements = [firstNode, secondNode];
-      intersectedByTargetElements.forEach(value =>
-        this.renderer.addClass(value, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS));
-    }
   }
 
   ngOnInit(): void {
@@ -119,6 +97,27 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     this._dragSubscription.unsubscribe();
     this.clearCache();
     this.removeMouseMoveListener();
+  }
+
+  private onMouseMove(event: MouseEvent): void {
+    this._clientX = event.clientX;
+    this._clientY = event.clientY;
+
+    this.removeAllActiveElements();
+
+    const intersectedByTargetElements = this.intersectedByTargetElements;
+    const firstNode = intersectedByTargetElements[0];
+    const secondNode = intersectedByTargetElements[1];
+
+    if (this.canMove(intersectedByTargetElements)) {
+      this._activeElements = [firstNode];
+      this.renderer.addClass(firstNode, DragAndDropComponentPlugin.DND_ACTIVE_CLS);
+
+    } else if (this.canSwap(intersectedByTargetElements)) {
+      this._activeElements = [firstNode, secondNode];
+      intersectedByTargetElements.forEach(value =>
+        this.renderer.addClass(value, DragAndDropComponentPlugin.DND_SWAPPED_ACTIVE_CLS));
+    }
   }
 
   private addMouseMoveListener(): void {

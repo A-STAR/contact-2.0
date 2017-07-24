@@ -27,8 +27,6 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
 
   private isDisabled = false;
 
-  private propagateChange: Function = () => {};
-
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -96,4 +94,7 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     this.image = false;
     this.propagateChange(this.image);
   }
+
+  private propagateChange: Function = () => {};
+
 }

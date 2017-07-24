@@ -93,6 +93,39 @@ export class UserEditComponent {
     });
   }
 
+  onLdapDialogAction(ldapLogin: string): void {
+    const { form } = this.form;
+    form.patchValue({ ldapLogin });
+    form.markAsDirty();
+    this.onLdapDialogClose();
+  }
+
+  onLdapDialogClose(): void {
+    this.isLdapUserBeingSelected = false;
+  }
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onSubmit(): void {
+    if (!this.form) {
+      return;
+    }
+
+    const { image, ...user } = this.toSubmittedValues(this.form.value);
+
+    if (this.userId) {
+      this.usersService.update(user, image, this.userId);
+    } else {
+      this.usersService.create(user, image);
+    }
+  }
+
+  onClose(): void {
+    this.contentTabService.navigate('/admin/users');
+  }
+
   private getFormControls(
     languages: IOption[],
     roles: IOption[],
@@ -162,39 +195,6 @@ export class UserEditComponent {
       roleId: 1,
       languageId: 1
     };
-  }
-
-  onLdapDialogAction(ldapLogin: string): void {
-    const { form } = this.form;
-    form.patchValue({ ldapLogin });
-    form.markAsDirty();
-    this.onLdapDialogClose();
-  }
-
-  onLdapDialogClose(): void {
-    this.isLdapUserBeingSelected = false;
-  }
-
-  canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
-  }
-
-  onSubmit(): void {
-    if (!this.form) {
-      return;
-    }
-
-    const { image, ...user } = this.toSubmittedValues(this.form.value);
-
-    if (this.userId) {
-      this.usersService.update(user, image, this.userId);
-    } else {
-      this.usersService.create(user, image);
-    }
-  }
-
-  onClose(): void {
-    this.contentTabService.navigate('/admin/users');
   }
 
   private toSubmittedValues(value: IUser): any {

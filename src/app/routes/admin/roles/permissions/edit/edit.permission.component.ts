@@ -25,6 +25,27 @@ export class EditPermissionComponent implements OnInit {
     this.data = this.getData();
   }
 
+  getData(): any {
+    return {
+      ...this.record,
+      value: String(this.record.value)
+    };
+  }
+
+  onDisplayChange(event: boolean): void {
+    if (!event) {
+      this.onCancel();
+    }
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  onSave(): void {
+    this.save.emit(this.form.value);
+  }
+
   private getControls(): Array<IDynamicFormControl> {
     return [
       {
@@ -67,24 +88,4 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  getData(): any {
-    return {
-      ...this.record,
-      value: String(this.record.value)
-    };
-  }
-
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.onCancel();
-    }
-  }
-
-  onCancel(): void {
-    this.cancel.emit();
-  }
-
-  onSave(): void {
-    this.save.emit(this.form.value);
-  }
 }

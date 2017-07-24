@@ -62,10 +62,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   selected: Array<any> = [];
   subscription: Subscription;
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
-  }
-
   constructor(
     private dataService: DataService,
     public settings: SettingsService,
@@ -83,6 +79,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
+  }
+
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
   }
 
   get filteredRows(): Array<any> {

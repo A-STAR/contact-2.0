@@ -70,7 +70,7 @@ export class GridService {
    * @param {object} renderers Column renderers, i.e. getters
    * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnDefs(metadataKey: string, columns: IAGridColumn[], renderers: object): Observable<IAGridColumn[]> {
+  getColumnMeta(metadataKey: string, columns: IAGridColumn[], renderers: object): Observable<IAGridColumn[]> {
     const mapColumns = ([metadata, dictionaries]) => {
 
       // const dictionaryIds = columns.filter(column =>
@@ -125,8 +125,30 @@ export class GridService {
       this.metadataService.metadata.map(metadata => metadata ? metadata[metadataKey] : []),
       this.getAllDictionaries([4]),
     )
-    .map(mapColumns)
-    .do((result) => console.log(`result:`, result));
+    .map(mapColumns);
+  }
+
+  // private getAllDictionaries(Ids: number[]): Observable<{ [index: number]: Array<any> }> {
+  //   return Observable.combineLatest(
+  //     this.userDictionariesService.getAllDictionaries(),
+  //   ).map(([usersActionsTypes]) => {
+  //     return { [UserDictionariesService.DICTIONARY_ACTION_TYPES]: usersActionsTypes };
+  //   }).distinctUntilChanged();
+  // }
+
+  setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
+    return columns.map(column => {
+      const renderer = renderers[column.prop];
+      return renderer ? this.setRenderer(column, renderer) : column;
+    });
+  }
+
+  // NOTE: ag-grid only
+  setValueGetters(columns: IAGridColumn[], renderers: object): IAGridColumn[] {
+    return columns.map(column => {
+      const renderer = renderers[column.colId];
+      return renderer ? this.setValueGetter(column, renderer) : column;
+    });
   }
 
   private getAllDictionaries(Ids: number[]): Observable<{ [index: number]: Array<any> }> {
@@ -145,21 +167,6 @@ export class GridService {
           }, {});
         }
       );
-  }
-
-  // private getAllDictionaries(Ids: number[]): Observable<{ [index: number]: Array<any> }> {
-  //   return Observable.combineLatest(
-  //     this.userDictionariesService.getAllDictionaries(),
-  //   ).map(([usersActionsTypes]) => {
-  //     return { [UserDictionariesService.DICTIONARY_ACTION_TYPES]: usersActionsTypes };
-  //   }).distinctUntilChanged();
-  // }
-
-  setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
-    return columns.map(column => {
-      const renderer = renderers[column.prop];
-      return renderer ? this.setRenderer(column, renderer) : column;
-    });
   }
 
   private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {
@@ -186,14 +193,6 @@ export class GridService {
     // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
     return column;
-  }
-
-  // NOTE: ag-grid only
-  setValueGetters(columns: IAGridColumn[], renderers: object): IAGridColumn[] {
-    return columns.map(column => {
-      const renderer = renderers[column.colId];
-      return renderer ? this.setValueGetter(column, renderer) : column;
-    });
   }
 
   private setValueGetter(column: IAGridColumn, getterFn: Function | IRenderer): IAGridColumn {

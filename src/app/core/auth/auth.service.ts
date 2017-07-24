@@ -8,8 +8,6 @@ import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
 
-import { DataService } from '../data/data.service';
-
 @Injectable()
 export class AuthService implements CanActivate {
   static TOKEN_NAME = 'auth/token';
@@ -32,7 +30,6 @@ export class AuthService implements CanActivate {
   private url: string = null;
 
   constructor(
-    private dataService: DataService,
     private jwtHelper: JwtHelper,
     private router: Router,
     private store: Store<IAppState>,
