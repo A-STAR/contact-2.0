@@ -29,7 +29,7 @@ export class MetadataResolver implements Resolve<boolean> {
   }
 
   private handleError(): void {
-    // TODO(a.poterenko) Navigate to error page
+    // TODO(a.maltsev) Navigate to error page
   }
 
   private get state(): Observable<IMetadataState> {

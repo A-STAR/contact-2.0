@@ -57,7 +57,7 @@ export class DebtorCardEffects {
   ) {}
 
   private readDebtor(id: number): Observable<IDebtorFetchResponse> {
-    // TODO(a.poterenko) STUB
+    // TODO(a.tymchuk) STUB
     return new Observable(observer => {
       setTimeout(() => {
         observer.next(
@@ -79,7 +79,7 @@ export class DebtorCardEffects {
   }
 
   private readDebtorGeneralInformation(id: number): Observable<IDebtorGeneralInformationResponse> {
-    // TODO(a.poterenko) STUB
+    // TODO(a.tymchuk) STUB
     return new Observable(observer => {
       setTimeout(() => {
         observer.next(
@@ -112,7 +112,7 @@ export class DebtorCardEffects {
   }
 
   private readDebtorGeneralInformationPhones(id: number): Observable<IDebtorGeneralInformationPhonesResponse> {
-    // TODO(a.poterenko) STUB
+    // TODO(a.tymchuk) STUB
     return new Observable(observer => {
       setTimeout(() => {
         observer.next(

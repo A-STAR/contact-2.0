@@ -33,7 +33,7 @@ export class DebtorsComponent implements OnDestroy {
   renderers: IRenderer = {
     fullName: toFullName,
     type: [
-      // TODO(a.poterenko) STUB
+      // TODO(a.tymchuk) STUB
       { value: 1, label: 'Physical person' },
       { value: 2, label: 'Juridical person' },
     ]

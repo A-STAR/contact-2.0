@@ -203,11 +203,11 @@ export class UserEditComponent {
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       ldapLogin: value.ldapLogin || null,
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
       endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
 
