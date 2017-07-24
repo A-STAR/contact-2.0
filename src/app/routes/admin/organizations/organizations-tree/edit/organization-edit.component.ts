@@ -13,6 +13,13 @@ export class OrganizationEditComponent extends EntityBaseComponent<IOrganization
     return this.editedEntity ? 'organizations.organizations.edit.title' : 'organizations.organizations.create.title';
   }
 
+  toSubmittedValues(organization: any): IOrganization {
+    return {
+      ...organization,
+      boxColor: Array.isArray(organization.boxColor) ? organization.boxColor[0].value : organization.boxColor
+    };
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
     const colorOptions = {
       options: [
@@ -37,12 +44,5 @@ export class OrganizationEditComponent extends EntityBaseComponent<IOrganization
       { label: 'organizations.organizations.edit.comment', controlName: 'comment', type: 'text' },
       { label: 'organizations.organizations.edit.boxColor', controlName: 'boxColor', type: 'select', ...colorOptions },
     ];
-  }
-
-  toSubmittedValues(organization: any): IOrganization {
-    return {
-      ...organization,
-      boxColor: Array.isArray(organization.boxColor) ? organization.boxColor[0].value : organization.boxColor
-    };
   }
 }

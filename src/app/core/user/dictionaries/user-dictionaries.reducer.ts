@@ -19,6 +19,8 @@ export function userDictionariesReducer(state: IUserDictionariesState = defaultS
           [dictionaryId]: terms
         }
       };
+    // TODO(d.maltsev): not a very good solution from UX perspective, since some values may dissappear
+    // Better use retry for several times
     case UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE:
       return {
         ...state,

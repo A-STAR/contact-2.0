@@ -13,7 +13,7 @@ import { IAGridSortModel, IAGridFilterRequest } from '../../../shared/components
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
@@ -137,7 +137,7 @@ export class ActionsLogService {
 
   getActionTypes(): Observable<IDictionaryItem[]> {
     return this.dataService.read('/dictionaries/{code}/terms', {
-      code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+      code: UserDictionariesService.DICTIONARY_ACTION_TYPES
     }).map(data => data.terms);
   }
 

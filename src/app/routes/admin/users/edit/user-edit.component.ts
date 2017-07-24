@@ -93,6 +93,39 @@ export class UserEditComponent {
     });
   }
 
+  onLdapDialogAction(ldapLogin: string): void {
+    const { form } = this.form;
+    form.patchValue({ ldapLogin });
+    form.markAsDirty();
+    this.onLdapDialogClose();
+  }
+
+  onLdapDialogClose(): void {
+    this.isLdapUserBeingSelected = false;
+  }
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onSubmit(): void {
+    if (!this.form) {
+      return;
+    }
+
+    const { image, ...user } = this.toSubmittedValues(this.form.value);
+
+    if (this.userId) {
+      this.usersService.update(user, image, this.userId);
+    } else {
+      this.usersService.create(user, image);
+    }
+  }
+
+  onClose(): void {
+    this.contentTabService.navigate('/admin/users');
+  }
+
   private getFormControls(
     languages: IOption[],
     roles: IOption[],
@@ -164,50 +197,17 @@ export class UserEditComponent {
     };
   }
 
-  onLdapDialogAction(ldapLogin: string): void {
-    const { form } = this.form;
-    form.patchValue({ ldapLogin });
-    form.markAsDirty();
-    this.onLdapDialogClose();
-  }
-
-  onLdapDialogClose(): void {
-    this.isLdapUserBeingSelected = false;
-  }
-
-  canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
-  }
-
-  onSubmit(): void {
-    if (!this.form) {
-      return;
-    }
-
-    const { image, ...user } = this.toSubmittedValues(this.form.value);
-
-    if (this.userId) {
-      this.usersService.update(user, image, this.userId);
-    } else {
-      this.usersService.create(user, image);
-    }
-  }
-
-  onClose(): void {
-    this.contentTabService.navigate('/admin/users');
-  }
-
   private toSubmittedValues(value: IUser): any {
     const submittedValue = {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       ldapLogin: value.ldapLogin || null,
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
       endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
 

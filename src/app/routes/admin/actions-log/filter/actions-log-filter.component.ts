@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable'
 import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -30,9 +31,8 @@ import { MultiSelectComponent } from '../../../../shared/components/form/multi-s
   templateUrl: './actions-log-filter.component.html',
 })
 export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
-
-  @Input() employeesRows;
-  @Input() actionTypesRows;
+  @Input() employeesRows: Observable<any>;
+  @Input() actionTypesRows: Observable<any>;
   @Output() export = new EventEmitter<void>();
   @Output() search = new EventEmitter<void>();
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
@@ -170,12 +170,12 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     this._dialog = type;
   }
 
-  onSaveEmployeesChanges(): void {
+  onSetEmployees(): void {
     this.employeesComponent.syncChanges();
     this.setDialog();
   }
 
-  onSaveActionTypesChanges(): void {
+  onSetActionTypes(): void {
     this.actionTypesComponent.syncChanges();
     this.setDialog();
   }
@@ -219,6 +219,5 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
           .inOperator()
           .setValues(employees)
       );
-
   }
 }

@@ -1,12 +1,6 @@
 <div class="grid grid-default">
-    <!--<app-toolbar-2
-      *ngIf="toolbarActions"
-      class="app-toolbar"
-      [actions]="toolbarActions"
-      (actionClick)="onActionClick($event)"
-    >
-    </app-toolbar-2>-->
     <ag-grid-angular
+      *ngIf="columnDefs"
       class="app-grid2 ag-contact2"
       [columnDefs]="columnDefs"
       [gridOptions]="gridOptions"
@@ -19,7 +13,6 @@
     </ag-grid-angular>
 </div>
 <app-toolbar
-  *ngIf="pagination"
   class="app-toolbar"
   [actions]="paginationPanel"
   (actionClick)="onPageChange($event)"

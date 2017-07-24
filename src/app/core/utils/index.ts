@@ -8,3 +8,10 @@ export const timeToHourMinSec = (str: string): { hour: number; minute: number; s
   const [ hour, minute, second ] = str.split(':').map(Number);
   return { hour, minute, second };
 };
+
+export const arrayToObject = (key: string) => (arr: Array<any>) => {
+  return arr.reduce((acc, item) => {
+    acc[item[key]] = item;
+    return acc;
+  }, {});
+};
