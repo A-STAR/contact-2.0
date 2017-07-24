@@ -1,8 +1,8 @@
 <div class="form-inline">
-  <select class="form-control input-sm" [(ngModel)]="filter.name" (change)="onFieldChange($event)">
+  <select class="form-control input-sm" [(ngModel)]="filter.name">
     <option *ngFor="let option of fieldOptions" [value]="option.value">{{ option.label }}</option>
   </select>
-  <select class="form-control input-sm" [(ngModel)]="filter.operator" (change)="onOperatorChange($event)">
+  <select class="form-control input-sm" [(ngModel)]="filter.operator">
     <option *ngFor="let operator of operators" [value]="operator.name">{{ operator.name }}</option>
   </select>
   <app-qbuilder2-value [controlType]="controlType" [nControls]="nControls" [(ngModel)]="filter.values"></app-qbuilder2-value>

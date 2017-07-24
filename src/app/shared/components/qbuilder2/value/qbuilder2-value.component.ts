@@ -21,8 +21,8 @@ import { ValueConverterService } from '../../../../core/converter/value/value-co
 export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges {
 
   // nControls = 0 for any number
-  @Input() nControls = 1;
-  @Input() controlType = 'text' as ControlTypes;
+  @Input() nControls: number;
+  @Input() controlType: ControlTypes;
 
   value: Array<Date | string | number> = [];
 
@@ -34,7 +34,6 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // TODO(d.maltsev): find out why parent doesn't update immediately
     const { nControls } = changes;
     if (this.value.length && nControls && nControls.currentValue) {
       this.value = this.value.concat(null).slice(0, nControls.currentValue);

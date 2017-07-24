@@ -17,9 +17,6 @@ export class QBuilder2ConditionComponent {
 
   @Output() onRemove = new EventEmitter<void>();
 
-  controlType: IFilterType;
-  operator: FilterOperatorType;
-
   private _operators: Array<IOperator> = [
     { name: '==' },
     { name: '!=' },
@@ -39,6 +36,14 @@ export class QBuilder2ConditionComponent {
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
+  get controlType(): IFilterType {
+    return this.columns.find(c => c.field === this.filter.name).filter as IFilterType;
+  }
+
+  get operator(): FilterOperatorType {
+    return this.filter.operator;
+  }
+
   get nControls(): number {
     if (this.operator === 'IN' || this.operator === 'NOT IN') { return 0; }
     if (this.operator === 'BETWEEN' || this.operator === 'NOT BETWEEN') { return 2; }
@@ -54,17 +59,6 @@ export class QBuilder2ConditionComponent {
       value: column.field,
       label: column.headerName
     }));
-  }
-
-  onFieldChange(event: Event): void {
-    const column = this.columns.find(c => c.field === (event.target as HTMLInputElement).value);
-    this.controlType = column.filter as IFilterType;
-    this.changeDetectorRef.markForCheck();
-  }
-
-  onOperatorChange(event: Event): void {
-    this.operator = (event.target as HTMLInputElement).value as FilterOperatorType;
-    this.changeDetectorRef.markForCheck();
   }
 
   remove(): void {
