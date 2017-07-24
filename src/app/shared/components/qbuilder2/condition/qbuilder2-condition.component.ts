@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ColDef } from 'ag-grid';
 
 import { IFilterType, IOperator } from '../qbuilder2.interface';
@@ -33,8 +33,6 @@ export class QBuilder2ConditionComponent {
     { name: 'LIKE', filters: [ 'text' ] },
     { name: 'NOT LIKE', filters: [ 'text' ] },
   ];
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   get column(): ColDef {
     return this.columns.find(c => c.field === this.filter.name);
