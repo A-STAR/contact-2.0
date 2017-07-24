@@ -51,17 +51,17 @@ import { ViewPortDatasource } from './data/viewport-data-source';
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;
 
-  static FIRST_PAGE         = 'GRID2_FIRST_PAGE';
-  static LAST_PAGE          = 'GRID2_LAST_PAGE';
-  static NEXT_PAGE          = 'GRID2_NEXT_PAGE';
-  static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
-  static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
-  static SORT_COLUMNS       = 'GRID2_SORT_COLUMNS';
-  static GROUP_COLUMNS      = 'GRID2_GROUP_COLUMNS';
-  static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
-  static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
+  static FIRST_PAGE         = 'AGRID_FIRST_PAGE';
+  static LAST_PAGE          = 'AGRID_LAST_PAGE';
+  static NEXT_PAGE          = 'AGRID_NEXT_PAGE';
+  static PREVIOUS_PAGE      = 'AGRID_PREVIOUS_PAGE';
+  static PAGE_SIZE          = 'AGRID_PAGE_SIZE';
+  static SORT_COLUMNS       = 'AGRID_SORT_COLUMNS';
+  static GROUP_COLUMNS      = 'AGRID_GROUP_COLUMNS';
+  static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
+  static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
-  @Input() columns: IAGridColumn[] = [];
+  @Input() columns: IAGridColumn[];
   @Input() columnTranslationKey: string;
   @Input() filterEnabled = true;
   @Input() headerHeight = 25;
@@ -78,7 +78,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
   // selected rows
-  @Input() selected: any[] = [];
+  @Input() selected: RowNode[] = [];
   @Input() persistenceKey: string;
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
@@ -86,6 +86,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  // NOTE: emits the `.data` property of RowNode
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
   @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
@@ -120,6 +121,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
     const { colDefs } = this.restoreGridSettings();
+    console.log('cols onInit', this.columns);
     this.columnDefs = this.setColumnDefs(colDefs);
     this.setGridOptions();
     this.setPagination();
@@ -150,7 +152,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
+      const { columns, rowCount, rows, currentPage, currentPageSize, selected } = changes;
       if (rows || currentPage || currentPageSize) {
         this.refreshPagination();
         this.clearRangeSelections();
@@ -238,9 +240,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .map(key => {
         const filter: any = { name: key };
         const model = filterModel[key];
-        // NOTE: `set` filter doesn't return the `filterType` => WTF?
-        switch (model.filterType || 'set') {
+        switch (model.filterType) {
+          case 'date':
+            filter.operator = 'BETWEEN';
+            filter.values = this.valueConverter.makeRangeFromLocalDate(model.dateFrom);
+            break;
+          case 'text':
+            Object.assign(filter, this.getTextFilter(model));
+            break;
+          case 'number':
+            Object.assign(filter, this.getNumberFilter(model));
+            break;
+          // NOTE: `set` filter doesn't return the `filterType` => WTF?
           case 'set':
+          default:
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
@@ -253,20 +266,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
               filter.operator = '==';
               filter.values = null;
             }
-            break;
-          case 'date':
-            filter.operator = 'BETWEEN';
-            filter.values = this.valueConverter.makeRangeFromLocalDate(model.dateFrom);
-            break;
-          case 'text':
-            Object.assign(filter, this.getTextFilter(model));
-            break;
-          case 'number':
-            Object.assign(filter, this.getNumberFilter(model));
-            break;
-          default:
-            filter.operator = 'LIKE';
-            filter.values = [`%${model}%`];
             break;
         }
         return filter;

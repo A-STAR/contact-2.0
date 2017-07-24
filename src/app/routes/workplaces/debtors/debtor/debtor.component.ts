@@ -72,7 +72,7 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
             controlName: 'type',
             type: 'select',
             options: [
-              // TODO(a.poterenko) STUB
+              // TODO(a.tymchuk) STUB
               { value: 1, label: 'Physical person' },
               { value: 2, label: 'Juridical person' },
             ]

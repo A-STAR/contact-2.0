@@ -77,7 +77,7 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
                 controlName: 'maritalStatus',
                 type: 'select',
                 options: [
-                  // TODO(a.poterenko) STUB
+                  // TODO(a.tymchuk) STUB
                   { value: 1, label: 'Single' },
                   { value: 2, label: 'Divorced' },
                   { value: 3, label: 'Civil marriage' },
@@ -88,7 +88,7 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
                 controlName: 'education',
                 type: 'select',
                 options: [
-                  // TODO(a.poterenko) STUB
+                  // TODO(a.tymchuk) STUB
                   { value: 1, label: 'Elementary' },
                   { value: 2, label: 'Secondary' },
                   { value: 3, label: 'Higher' },
@@ -110,7 +110,7 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
                 type: 'select',
                 disabled: true,
                 options: [
-                  // TODO(a.poterenko) STUB
+                  // TODO(a.tymchuk) STUB
                   { value: 1, label: 'Soft' },
                 ]
               },

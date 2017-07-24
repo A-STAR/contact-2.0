@@ -6,27 +6,23 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
 import {
+  DictionariesDialogActionEnum,
   IDictionary,
   IDictionariesState,
-  DictionariesDialogActionEnum,
   ITerm,
-  IDictionaryItem
 } from './dictionaries.interface';
 
 @Injectable()
 export class DictionariesService {
-  static DICTIONARY_CODES = {
-    DICTIONARY_TERM_TYPES: 5,
-    USERS_ACTIONS_TYPES: 4
-  };
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
   static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
   static DICTIONARIES_CLEAR         = 'DICTIONARIES_CLEAR';
-  static DICTIONARY_TRANSLATIONS_CLEAR = 'DICTIONARY_TRANSLATIONS_CLEAR';
+  static DICTIONARY_DIALOG_ACTION   = 'DICTIONARY_DIALOG_ACTION';
   static DICTIONARY_CREATE          = 'DICTIONARY_CREATE';
   static DICTIONARY_UPDATE          = 'DICTIONARY_UPDATE';
   static DICTIONARY_DELETE          = 'DICTIONARY_DELETE';
   static DICTIONARY_SELECT          = 'DICTIONARY_SELECT';
+  static DICTIONARY_TRANSLATIONS_CLEAR = 'DICTIONARY_TRANSLATIONS_CLEAR';
   static TRANSLATIONS_FETCH         = 'TRANSLATIONS_FETCH';
   static TERM_TRANSLATIONS_FETCH    = 'TERM_TRANSLATIONS_FETCH';
   static TERM_TRANSLATIONS_CLEAR    = 'TERM_TRANSLATIONS_CLEAR';
@@ -41,23 +37,9 @@ export class DictionariesService {
   static TERM_UPDATE                = 'TERM_UPDATE';
   static TERM_DELETE                = 'TERM_DELETE';
   static TERM_SELECT                = 'TERM_SELECT';
-  static DICTIONARY_DIALOG_ACTION   = 'DICTIONARY_DIALOG_ACTION';
   static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
   constructor(private store: Store<IAppState>) {}
-
-  get dictionariesByCode(): Observable<{ [index: number]: IDictionaryItem[] }> {
-    return Observable.combineLatest(
-      this.store.select(state => state.actionsLog.actionTypes),
-      // TODO(a.poterenko) Need to fill
-    ).map(([
-             usersActionsTypes
-    ]) => {
-      return {
-        [DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES]: usersActionsTypes
-      };
-    }).distinctUntilChanged();
-  }
 
   get state(): Observable<IDictionariesState> {
     return this.store

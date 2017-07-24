@@ -135,7 +135,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   onBeforeEdit(): void {
     const permission = 'CONST_VALUE_EDIT';
-    this.userPermissionsService.has('CONST_VALUE_EDIT')
+    this.userPermissionsService.has(permission)
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
