@@ -1,11 +1,9 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  OnDestroy, OnInit, ViewChild, ViewEncapsulation
+  AfterViewInit, ChangeDetectionStrategy,
+  Component, OnDestroy, ViewChild, ViewEncapsulation
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 import { Store } from '@ngrx/store';
 
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
@@ -21,7 +19,6 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { toFullName } from '../../../core/utils';
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
@@ -34,7 +31,7 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
   styleUrls: ['./actions-log.component.scss'],
   templateUrl: './actions-log.component.html',
 })
-export class ActionsLogComponent implements AfterViewInit, OnDestroy, OnInit {
+export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   columns: IAGridColumn[] = [
@@ -51,12 +48,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy, OnInit {
     { colId: 'duration', minWidth: 100, type: 'number', filter: 'number' }
   ];
 
-  // columnDefs: Observable<IAGridColumn[]>;
-  columnDefs: IAGridColumn[];
-
-  renderers: IRenderer = {
-    fullName: toFullName,
-  };
   // filter
   actionTypesRows: Observable<IDictionaryItem[]>;
   employeesRows: Observable<IEmployee[]>;
@@ -74,11 +65,9 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(
     private actionsLogService: ActionsLogService,
-    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
-    private translateService: TranslateService,
     private userPermissionsService: UserPermissionsService,
   ) {
     // filter
@@ -89,23 +78,10 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy, OnInit {
     this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
     this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
-    // this.columnDefs = Observable.combineLatest(this.gridService
-    //   .getColumnDefs('actions', this.columns, this.renderers))
-    //   .map(([columns]) => columns);
-  }
-
-  ngOnInit(): void {
-    this.gridService
-      .getColumnDefs('actions', this.columns, this.renderers)
-      .take(1)
-      .subscribe(
-        (columns) => { this.columnDefs = columns; this.cdRef.markForCheck(); }
-      );
+    this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
   }
 
   ngAfterViewInit(): void {
-    this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
-
     this.permissionSub = this.hasViewPermission$
       .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {

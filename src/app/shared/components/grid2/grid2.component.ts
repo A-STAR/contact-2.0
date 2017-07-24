@@ -12,6 +12,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -30,6 +31,7 @@ import {
   IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
@@ -90,6 +92,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
   @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onInit: EventEmitter<void> = new EventEmitter<void>();
   @Output() onPageSize: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onSort: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onSelect: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
@@ -106,6 +109,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
+    private gridService: GridService,
     private notificationService: NotificationsService,
     private translate: TranslateService,
     private valueConverter: ValueConverterService,
@@ -120,58 +124,68 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
-    const { colDefs } = this.restoreGridSettings();
-    console.log('cols onInit', this.columns);
-    this.columnDefs = this.setColumnDefs(colDefs);
-    this.setGridOptions();
-    this.setPagination();
 
-    const translationKeys = ['grid.messages'];
+    this.gridService
+      .getColumnMeta('actions', this.columns, {})
+      .subscribe(columns => {
 
-    if (this.columnTranslationKey) {
-      translationKeys.push(this.columnTranslationKey);
-    }
-    this.translate.get(translationKeys)
-      .take(1)
-      .subscribe(
-        (translation) => {
-          if (this.columnTranslationKey) {
-            this.translateColumns(translation[this.columnTranslationKey].grid);
-          }
-        },
-        // TODO(d.maltsev): make sure `error` is a string
-        error => this.notificationService.warning(error).noAlert().dispatch()
-      );
+        const { colDefs } = this.restoreGridSettings();
+        this.columns = columns.slice();
 
-    this.langSubscription = this.translate.onLangChange
-      .subscribe((translations: { translations: { [index: string]: string } }) =>
-        this.refreshTranslations(translations.translations));
+        this.columnDefs = this.setColumnDefs(colDefs);
+        this.setGridOptions();
+        this.setPagination();
 
-    this.initialized = true;
+        const translationKeys = ['grid.messages'];
+
+        if (this.columnTranslationKey) {
+          translationKeys.push(this.columnTranslationKey);
+        }
+        this.translate.get(translationKeys)
+          .take(1)
+          .subscribe(
+            (translation) => {
+              if (this.columnTranslationKey) {
+                this.translateColumns(translation[this.columnTranslationKey].grid);
+              }
+            },
+            // TODO(d.maltsev): make sure `error` is a string
+            error => this.notificationService.warning(error).noAlert().dispatch()
+          );
+
+        this.langSubscription = this.translate.onLangChange
+          .subscribe((translations: { translations: { [index: string]: string } }) =>
+            this.refreshTranslations(translations.translations));
+
+        this.initialized = true;
+        this.cdRef.markForCheck();
+        this.onInit.emit();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.initialized) {
-      const { columns, rowCount, rows, currentPage, currentPageSize, selected } = changes;
-      if (rows || currentPage || currentPageSize) {
-        this.refreshPagination();
-        this.clearRangeSelections();
+    if (!this.initialized) {
+      return;
+    }
+    const { columns, rowCount, rows, currentPage, currentPageSize, selected } = changes;
+    if (rows || currentPage || currentPageSize) {
+      this.refreshPagination();
+      this.clearRangeSelections();
+    }
+    if (rowCount) {
+      this.viewportDatasource.params.setRowCount(rowCount.currentValue);
+      this.refreshRowCount();
+      if (rowCount.currentValue) {
+        this.gridOptions.api.hideOverlay();
+      } else {
+        this.gridOptions.api.showNoRowsOverlay();
       }
-      if (rowCount) {
-        this.viewportDatasource.params.setRowCount(rowCount.currentValue);
-        this.refreshRowCount();
-        if (rowCount.currentValue) {
-          this.gridOptions.api.hideOverlay();
-        } else {
-          this.gridOptions.api.showNoRowsOverlay();
-        }
-      }
-      if (rows) {
-        this.viewportDatasource.params.setRowData(this.rows);
-      }
-      if (selected) {
-        this.refreshRowCount();
-      }
+    }
+    if (rows) {
+      this.viewportDatasource.params.setRowData(this.rows);
+    }
+    if (selected) {
+      this.refreshRowCount();
     }
   }
 
@@ -277,6 +291,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .addFilters(filters);
   }
 
+  onSortChanged(): void {
+    this.calculateGridSettings();
+    const sorters: IAGridSortModel[] = this.getSorters();
+    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
+  }
+
+  getSorters(): any {
+    return this.gridOptions.api.getSortModel();
+  }
+
+  getExportableColumns(): IAGridExportableColumn[] {
+    return this.allColumns
+      .filter(column => column.isVisible())
+      .map(column => {
+        const { field, headerName: name } = column.getColDef();
+        return { field, name };
+      });
+  }
+
   private getTextFilter(model: any): any {
     const { filter, type } = model;
     const operators = {
@@ -327,25 +360,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       result.values = [filter];
     }
     return result;
-  }
-
-  onSortChanged(): void {
-    this.calculateGridSettings();
-    const sorters: IAGridSortModel[] = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
-  }
-
-  getSorters(): any {
-    return this.gridOptions.api.getSortModel();
-  }
-
-  getExportableColumns(): IAGridExportableColumn[] {
-    return this.allColumns
-      .filter(column => column.isVisible())
-      .map(column => {
-        const { field, headerName: name } = column.getColDef();
-        return { field, name };
-      });
   }
 
   private setPagination(): void {
@@ -542,9 +556,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       }
       return { column: colDef, index };
     })
-    .sort((a, b) => {
-      return a.index > b.index ? 1 : (a.index === b.index ? 0 : -1);
-    })
+    .sort((a, b) => a.index > b.index ? 1 : (a.index === b.index ? 0 : -1))
     .map(item => item.column);
   }
 

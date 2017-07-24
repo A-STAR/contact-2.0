@@ -1,5 +1,6 @@
 <div class="grid grid-default">
     <ag-grid-angular
+      *ngIf="columnDefs"
       class="app-grid2 ag-contact2"
       [columnDefs]="columnDefs"
       [gridOptions]="gridOptions"

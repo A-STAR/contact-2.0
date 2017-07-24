@@ -46,8 +46,6 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   private _rowDoubleSelectFromSubscription;
   private _rowDoubleSelectToSubscription;
   private _active: any[] = [];
-  private onChange: Function = () => {};
-  private onTouched: Function = () => {};
 
   constructor(private changeDetector: ChangeDetectorRef) {}
 
@@ -119,9 +117,13 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
     this.updateState();
   }
 
-  public syncChanges(): void {
+  syncChanges(): void {
     this.syncActiveChanges();
   }
+
+  private onChange: Function = () => {};
+
+  private onTouched: Function = () => {};
 
   private updateState(): void {
     this.gridTo.selected = [];
