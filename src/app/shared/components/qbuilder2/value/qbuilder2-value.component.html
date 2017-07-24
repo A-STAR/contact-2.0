@@ -9,7 +9,8 @@
         <app-input-datepicker
           buttonClass="btn btn-sm btn-default"
           inputClass="form-control input-sm"
-          [ngModel]="toDate(v)">
+          [ngModel]="toDate(v)"
+          (ngModelChange)="onDateValueChange(i, $event)">
         </app-input-datepicker>
       </ng-container>
 
@@ -18,7 +19,8 @@
         <app-select
           inputClass="form-control input-sm"
           [ngModel]="v"
-          [options]="options">
+          [options]="options"
+          (onSelect)="onSetValueChange(i, $event)">
         </app-select>
       </ng-container>
 
@@ -28,7 +30,7 @@
           type="text"
           class="form-control input-sm"
           [ngModel]="v"
-          (change)="onValueChange($event, i)"
+          (change)="onValueChange(i, $event)"
         />
       </ng-container>
     </ng-container>

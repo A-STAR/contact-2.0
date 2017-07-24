@@ -67,11 +67,6 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   registerOnTouched(fn: Function): void {
   }
 
-  onValueChange(event: Event, i: number): void {
-    this.value[i] = (event.target as HTMLInputElement).value;
-    this.propagateChange(this.value);
-  }
-
   addValue(): void {
     this.value.push(null);
   }
@@ -82,5 +77,22 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   toDate(date: string): Date {
     return this.valueConverterService.fromISO(date);
+  }
+
+  onValueChange(i: number, event: Event): void {
+    this.updateValue(i, (event.target as HTMLInputElement).value);
+  }
+
+  onSetValueChange(i: number, options: Array<{ value: string }>): void {
+    this.updateValue(i, options[0].value);
+  }
+
+  onDateValueChange(i: number, date: Date): void {
+    this.updateValue(i, this.valueConverterService.toISO(date));
+  }
+
+  private updateValue(i: number, value: Date | string | number): void {
+    this.value[i] = value;
+    this.propagateChange(this.value);
   }
 }
