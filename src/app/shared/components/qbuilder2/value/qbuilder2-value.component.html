@@ -2,38 +2,7 @@
   <span *ngIf="displayAsArray">(</span>
 
   <ng-container *ngFor="let v of value; let i = index; let last = last">
-    <ng-container [ngSwitch]="controlType">
-
-      <!-- Datepicker -->
-      <ng-container *ngSwitchCase="'date'">
-        <app-input-datepicker
-          buttonClass="btn btn-sm btn-default"
-          inputClass="form-control input-sm"
-          [ngModel]="toDate(v)"
-          (ngModelChange)="onDateValueChange(i, $event)">
-        </app-input-datepicker>
-      </ng-container>
-
-      <!-- Dropdown -->
-      <ng-container *ngSwitchCase="'set'">
-        <app-select
-          inputClass="form-control input-sm"
-          [ngModel]="v"
-          [options]="options"
-          (onSelect)="onSetValueChange(i, $event)">
-        </app-select>
-      </ng-container>
-
-      <!-- Default input -->
-      <ng-container *ngSwitchDefault>
-        <input
-          type="text"
-          class="form-control input-sm"
-          [ngModel]="v"
-          (change)="onValueChange(i, $event)"
-        />
-      </ng-container>
-    </ng-container>
+    <app-qbuilder2-input [filterType]="column.filter" [value]="v" (onChange)="updateValue($event, i)"></app-qbuilder2-input>
     <span *ngIf="!last && displayAsArray">,&nbsp;</span>
   </ng-container>
 

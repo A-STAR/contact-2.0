@@ -36,10 +36,6 @@ export class QBuilder2ConditionComponent {
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
-  get controlType(): IFilterType {
-    return this.column ? this.column.filter as IFilterType : 'text';
-  }
-
   get column(): ColDef {
     return this.columns.find(c => c.field === this.filter.name);
   }
@@ -55,7 +51,8 @@ export class QBuilder2ConditionComponent {
   }
 
   get operators(): Array<IOperator> {
-    return this._operators.filter(operator => operator.filters === undefined || operator.filters.includes(this.controlType));
+    return this._operators
+      .filter(operator => operator.filters === undefined || operator.filters.includes(this.column.filter as IFilterType));
   }
 
   get fieldOptions(): Array<IOption> {

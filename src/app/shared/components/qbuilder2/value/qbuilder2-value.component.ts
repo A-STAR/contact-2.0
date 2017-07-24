@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ColDef } from 'ag-grid';
 
-import { ControlTypes } from '../../form/dynamic-form/dynamic-form-control.interface';
-
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -23,7 +21,6 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   // nControls = 0 for any number
   @Input() nControls: number;
-  @Input() controlType: ControlTypes;
   @Input() column: ColDef;
 
   value: Array<Date | string | number> = [];
@@ -36,11 +33,17 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    const { nControls } = changes;
+    const { column, nControls } = changes;
+
     if (this.value.length && nControls && nControls.currentValue) {
       this.value = this.value.concat([ null, null ]).slice(0, nControls.currentValue);
-      this.propagateChange(this.value);
     }
+
+    if (column) {
+      this.value = this.value.fill(null);
+    }
+
+    this.propagateChange(this.value);
   }
 
   get displayAsArray(): boolean {
@@ -75,23 +78,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
     this.value.pop();
   }
 
-  toDate(date: string): Date {
-    return this.valueConverterService.fromISO(date);
-  }
-
-  onValueChange(i: number, event: Event): void {
-    this.updateValue(i, (event.target as HTMLInputElement).value);
-  }
-
-  onSetValueChange(i: number, options: Array<{ value: string }>): void {
-    this.updateValue(i, options[0].value);
-  }
-
-  onDateValueChange(i: number, date: Date): void {
-    this.updateValue(i, this.valueConverterService.toISO(date));
-  }
-
-  private updateValue(i: number, value: Date | string | number): void {
+  updateValue(value: Date | string | number, i: number): void {
     this.value[i] = value;
     this.propagateChange(this.value);
   }
