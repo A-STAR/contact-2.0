@@ -10,11 +10,13 @@
 
 <app-dialog *ngIf="queryBuilderOpen$ | async" [styles]="{ width: '80%', 'max-width': '80%' }" (onClose)="closeQueryBuilder()">
   <div dialog-header>
-    <!-- TODO(d.maltsev): i18n -->
-    <h3>Query builder</h3>
+    <h3>{{ 'queryBuilder.title' | translate }}</h3>
   </div>
   <div>
     <app-qbuilder-2 [query]="query$ | async"></app-qbuilder-2>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-default" (click)="closeQueryBuilder()">OK</button>
   </div>
 </app-dialog>
 
