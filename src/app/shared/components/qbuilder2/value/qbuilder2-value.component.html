@@ -2,7 +2,7 @@
   <span *ngIf="displayAsArray">(</span>
 
   <ng-container *ngFor="let v of value; let i = index; let last = last; trackBy: trackByIndex">
-    <ng-container [ngSwitch]="column.filter">
+    <ng-container [ngSwitch]="filterType">
 
       <!-- Datepicker -->
       <ng-container *ngSwitchCase="'date'">

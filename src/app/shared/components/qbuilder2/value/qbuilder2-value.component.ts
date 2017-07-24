@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ColDef } from 'ag-grid';
 
+import { IFilterType } from '../qbuilder2.interface';
+
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
 @Component({
@@ -52,6 +54,10 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   get displayButtons(): boolean {
     return this.nControls === 0;
+  }
+
+  get filterType(): IFilterType {
+    return this.column ? this.column.filter as IFilterType : 'text';
   }
 
   get options(): Array<any> {

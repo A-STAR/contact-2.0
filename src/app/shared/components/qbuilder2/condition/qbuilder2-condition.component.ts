@@ -40,6 +40,10 @@ export class QBuilder2ConditionComponent {
     return this.columns.find(c => c.field === this.filter.name);
   }
 
+  get filterType(): IFilterType {
+    return this.column ? this.column.filter as IFilterType : 'text';
+  }
+
   get operator(): FilterOperatorType {
     return this.filter.operator;
   }
@@ -51,8 +55,7 @@ export class QBuilder2ConditionComponent {
   }
 
   get operators(): Array<IOperator> {
-    return this._operators
-      .filter(operator => operator.filters === undefined || operator.filters.includes(this.column.filter as IFilterType));
+    return this._operators.filter(operator => operator.filters === undefined || operator.filters.includes(this.filterType));
   }
 
   get fieldOptions(): Array<IOption> {
