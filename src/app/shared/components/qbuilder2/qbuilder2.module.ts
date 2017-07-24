@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DatePickerModule } from '../form/datepicker/datepicker.module';
+import { SelectModule } from '../form/select/select.module';
 
 import { QBuilder2Component } from './qbuilder2.component';
 import { QBuilder2ConditionComponent } from './condition/qbuilder2-condition.component';
@@ -15,6 +16,7 @@ import { QBuilder2ValueComponent } from './value/qbuilder2-value.component';
     DatePickerModule,
     FormsModule,
     ReactiveFormsModule,
+    SelectModule,
   ],
   exports: [
     QBuilder2Component,

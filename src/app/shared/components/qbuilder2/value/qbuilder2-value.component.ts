@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ColDef } from 'ag-grid';
 
 import { ControlTypes } from '../../form/dynamic-form/dynamic-form-control.interface';
 
@@ -23,6 +24,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   // nControls = 0 for any number
   @Input() nControls: number;
   @Input() controlType: ControlTypes;
+  @Input() column: ColDef;
 
   value: Array<Date | string | number> = [];
 
@@ -47,6 +49,10 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   get displayButtons(): boolean {
     return this.nControls === 0;
+  }
+
+  get options(): Array<any> {
+    return (this.column.filterParams.values || []).map((label, value) => ({ label, value }));
   }
 
   writeValue(value: Array<Date | string | number>): void {

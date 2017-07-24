@@ -3,9 +3,33 @@
 
   <ng-container *ngFor="let v of value; let i = index; let last = last">
     <ng-container [ngSwitch]="controlType">
-      <app-input-datepicker *ngSwitchCase="'date'" buttonClass="btn btn-sm btn-default" inputClass="form-control input-sm" [ngModel]="toDate(v)"></app-input-datepicker>
-      <span *ngSwitchCase="'set'">Dropdown for set</span>
-      <input *ngSwitchDefault type="text" class="form-control input-sm" [ngModel]="v" (change)="onValueChange($event, i)">
+
+      <!-- Datepicker -->
+      <ng-container *ngSwitchCase="'date'">
+        <app-input-datepicker
+          buttonClass="btn btn-sm btn-default"
+          inputClass="form-control input-sm"
+          [ngModel]="toDate(v)">
+        </app-input-datepicker>
+      </ng-container>
+
+      <!-- Dropdown -->
+      <ng-container *ngSwitchCase="'set'">
+        <app-select
+          [ngModel]="v"
+          [options]="options">
+        </app-select>
+      </ng-container>
+
+      <!-- Default input -->
+      <ng-container *ngSwitchDefault>
+        <input
+          type="text"
+          class="form-control input-sm"
+          [ngModel]="v"
+          (change)="onValueChange($event, i)"
+        />
+      </ng-container>
     </ng-container>
     <span *ngIf="!last && displayAsArray">,&nbsp;</span>
   </ng-container>
