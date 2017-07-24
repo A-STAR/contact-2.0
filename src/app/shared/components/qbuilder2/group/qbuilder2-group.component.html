@@ -6,7 +6,9 @@
     </select>
     <button class="btn btn-sm btn-default" (click)="addGroup()">{{ 'queryBuilder.buttons.addGroup' | translate }}</button>
     <button class="btn btn-sm btn-default" (click)="addCondition()">{{ 'queryBuilder.buttons.addCondition' | translate }}</button>
-    <button class="btn btn-xs btn-danger" [title]="'queryBuilder.buttons.removeGroup' | translate" (click)="remove()"><i class="fa fa-close"></i></button>
+    <span class="remove-button">
+      <button class="btn btn-xs btn-danger" [title]="'queryBuilder.buttons.removeGroup' | translate" (click)="remove()">&#10006;</button>
+    </span>
   </div>
   <div class="group-child" *ngFor="let f of filter.filters; index as i">
     <app-qbuilder2-group *ngIf="f.filters; else condition" [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-group>

@@ -9,7 +9,7 @@ import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter
 @Component({
   selector: 'app-qbuilder2-condition',
   templateUrl: './qbuilder2-condition.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QBuilder2ConditionComponent {
   @Input() columns: Array<ColDef>;

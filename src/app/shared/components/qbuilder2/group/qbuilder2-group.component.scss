@@ -3,3 +3,8 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+:host /deep/ .remove-button {
+  display: inline-block;
+  margin-left: 20px;
+}

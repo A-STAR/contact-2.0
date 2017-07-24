@@ -7,7 +7,7 @@ import { FilterConditionType, FilterOperatorType, FilterObject } from '../../gri
   selector: 'app-qbuilder2-group',
   templateUrl: './qbuilder2-group.component.html',
   styleUrls: [ './qbuilder2-group.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QBuilder2GroupComponent {
   static DEFAULT_CONDITION: FilterConditionType = 'AND';
