@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
@@ -51,7 +52,9 @@ export class UserEditComponent {
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.usersService.fetchOne(this.userId);
+    if (this.userId) {
+      this.usersService.fetchOne(this.userId);
+    }
 
     this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
       .take(1)
@@ -67,7 +70,9 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPhoto.MaxSize'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.lookupService.roleOptions,
-      this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user),
+      this.userId
+        ? this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user)
+        : Observable.of(null),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user) =>
         ({ canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user })
     )
