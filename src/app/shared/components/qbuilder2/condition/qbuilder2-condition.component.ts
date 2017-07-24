@@ -37,7 +37,8 @@ export class QBuilder2ConditionComponent {
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   get controlType(): IFilterType {
-    return this.columns.find(c => c.field === this.filter.name).filter as IFilterType;
+    const column = this.columns.find(c => c.field === this.filter.name);
+    return column ? column.filter as IFilterType : 'text';
   }
 
   get operator(): FilterOperatorType {
