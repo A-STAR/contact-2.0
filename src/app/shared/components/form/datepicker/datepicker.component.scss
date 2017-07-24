@@ -1,5 +1,9 @@
 @import "../../../styles/app/variables.scss";
 
+.datepicker {
+  display: inline-block;
+}
+
 .dropdown {
   position: fixed;
   padding: 1px 0;
