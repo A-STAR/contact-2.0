@@ -40,7 +40,7 @@
   <span *ngIf="displayAsArray">)</span>
 
   <ng-container *ngIf="displayButtons">
-    <button class="btn btn-xs btn-default" (click)="addValue()">+</button>
-    <button class="btn btn-xs btn-default" (click)="removeValue()">-</button>
+    <button class="btn btn-xs btn-default" [title]="'queryBuilder.buttons.addValue' | translate" (click)="addValue()">+</button>
+    <button class="btn btn-xs btn-default" [title]="'queryBuilder.buttons.removeValue' | translate" (click)="removeValue()">-</button>
   </ng-container>
 <span>

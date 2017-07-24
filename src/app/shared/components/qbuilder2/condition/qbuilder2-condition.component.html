@@ -6,5 +6,5 @@
     <option *ngFor="let operator of operators" [value]="operator.name">{{ operator.name }}</option>
   </select>
   <app-qbuilder2-value [column]="column" [nControls]="nControls" [(ngModel)]="filter.values"></app-qbuilder2-value>
-  <button class="btn btn-xs btn-danger" (click)="remove()"><i class="fa fa-close"></i></button>
+  <button class="btn btn-xs btn-danger" [title]="'queryBuilder.buttons.removeCondition' | translate" (click)="remove()"><i class="fa fa-close"></i></button>
 </div>
