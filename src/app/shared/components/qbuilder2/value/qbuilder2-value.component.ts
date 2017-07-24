@@ -36,7 +36,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   ngOnChanges(changes: SimpleChanges): void {
     const { nControls } = changes;
     if (this.value.length && nControls && nControls.currentValue) {
-      this.value = this.value.concat(null).slice(0, nControls.currentValue);
+      this.value = this.value.concat([ null, null ]).slice(0, nControls.currentValue);
       this.propagateChange(this.value);
     }
   }

@@ -46,6 +46,7 @@ export class QBuilder2GroupComponent {
   private createCondition(): FilterObject {
     const filter = new FilterObject();
     filter.setOperator(QBuilder2GroupComponent.DEFAULT_OPERATOR);
+    filter.setValues([ null ]);
     return filter;
   }
 }
