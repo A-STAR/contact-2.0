@@ -7,8 +7,6 @@ import 'rxjs/add/operator/filter';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { DataService } from '../../../core/data/data.service';
-
 @Injectable()
 export class UsersService {
   static USERS_FETCH         = 'USERS_FETCH';
@@ -24,7 +22,6 @@ export class UsersService {
   static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
 
   constructor(
-    private dataService: DataService,
     private store: Store<IAppState>,
   ) {}
 
@@ -63,9 +60,6 @@ export class UsersService {
   }
 
   private dispatchAction(type: string, payload: object = {}): void {
-    return this.store.dispatch({
-      type,
-      payload
-    });
+    return this.store.dispatch({ type, payload });
   }
 }

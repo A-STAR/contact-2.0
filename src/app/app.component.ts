@@ -56,8 +56,8 @@ export class AppComponent {
     const language = localStorage.getItem(AppComponent.USER_LANGUAGE) || 'en';
     // NOTE: the default language is then taken from the user profile
     // and reset after successful authentication
-    translateService.setDefaultLang(language);
-    translateService.use(language).subscribe();
+    this.translateService.setDefaultLang(language);
+    this.translateService.use(language).subscribe();
 
     this._isLoading$ = Observable.combineLatest(
       this.dataService.isLoading$,

@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -20,13 +18,11 @@ export class LoginComponent {
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private translateService: TranslateService,
-    private router: Router,
   ) {
     const login = this.login;
     const remember = !!login;
 
-    this.form = fb.group({
+    this.form = this.fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
       'password': [ null, Validators.required ],
       'remember_login': [remember],

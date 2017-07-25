@@ -33,10 +33,7 @@ export class ToolbarComponent {
   }
 
   onSelect(action: IToolbarAction, activeValues: ILabeledValue[]): void {
-    this.actionSelect.emit({
-      action: action,
-      value: activeValues
-    });
+    this.actionSelect.emit({ action: action, value: activeValues } as IToolbarActionSelect);
   }
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {

@@ -22,7 +22,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
-import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
@@ -63,7 +62,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   subscription: Subscription;
 
   constructor(
-    private dataService: DataService,
     public settings: SettingsService,
     private translate: TranslateService,
     private changeDetector: ChangeDetectorRef,

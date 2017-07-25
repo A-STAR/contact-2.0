@@ -15,7 +15,7 @@ export class SparklineDirective implements OnInit, OnDestroy {
     private element: ElementRef,
     private renderer: Renderer2,
   ) {
-    this.$element = $(element.nativeElement);
+    this.$element = $(this.element.nativeElement);
   }
 
   ngOnInit(): void {

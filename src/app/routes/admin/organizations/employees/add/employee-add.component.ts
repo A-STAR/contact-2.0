@@ -8,7 +8,6 @@ import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizatio
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../../organizations.service';
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
@@ -49,7 +48,6 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     private gridService: GridService,
     private organizationsService: OrganizationsService,
     private translateService: TranslateService,
-    private valueConverterService: ValueConverterService,
   ) {
     super();
     this.organizationsService.fetchNotAddedEmployees();
