@@ -108,13 +108,14 @@
     }
   },
   "queryBuilder": {
-    "TITLE": "Query builder",
-    "ADD_CONDITION": "Add condition",
-    "ADD_GROUP": "Add group",
-    "REMOVE_GROUP": "Remove group",
+    "title": "Query Builder",
     "buttons": {
-      "GET_QUERY": "Build the query",
-      "BACK": "Back"
+      "addCondition": "Add condition",
+      "removeCondition": "Remove contition",
+      "addGroup": "Add group",
+      "removeGroup": "Remove group",
+      "addValue": "Add value",
+      "removeValue": "Remove value"
     }
   },
   "login": {

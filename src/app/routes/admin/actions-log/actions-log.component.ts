@@ -3,15 +3,17 @@ import {
   Component, OnDestroy, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IActionsLogData, IEmployee } from './actions-log.interface';
-import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
-import { IRenderer } from '../../../shared/components/grid/grid.interface';
+
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
+import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 import { ActionsLogService } from './actions-log.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
@@ -59,6 +61,8 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
 
+  query$ = new BehaviorSubject<IQuery>(null);
+
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
@@ -79,6 +83,10 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
     this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
     this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
+  }
+
+  get queryBuilderOpen$(): Observable<boolean> {
+    return this.query$.map(query => query !== null);
   }
 
   ngAfterViewInit(): void {
@@ -154,9 +162,19 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.downloader.download(body);
   }
 
+  openQueryBuilder(): void {
+    this.query$.next({
+      filters: this.getCombinedFilters(),
+      columns: this.grid.columns.map((column, i) => ({ ...column, name: this.grid.columnDefs[i].headerName }))
+    });
+  }
+
+  closeQueryBuilder(): void {
+    this.query$.next(null);
+  }
+
   private getCombinedFilters(): FilterObject {
     const filters = this.filter.getFilters();
     return filters.addFilter(this.grid.getFilters());
   }
-
 }

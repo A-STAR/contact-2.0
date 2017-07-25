@@ -81,10 +81,12 @@ import { rootReducer } from './state/root.reducer';
     UserLanguagesService,
     UserPermissionsService,
     ValueConverterService,
-    {
-      provide: ErrorHandler,
-      useClass: ErrorHandlerService
-    }
+    environment.production
+      ? {
+          provide: ErrorHandler,
+          useClass: ErrorHandlerService
+        }
+      : []
   ],
 })
 export class CoreModule {

@@ -1,6 +1,6 @@
-type FilterConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
+export type FilterConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
-type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
+export type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
   | 'EMPTY'
   | 'NOT EMPTY'
   | 'IN'
