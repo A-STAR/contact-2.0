@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
-
 import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.interface';
+
+import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-layout',

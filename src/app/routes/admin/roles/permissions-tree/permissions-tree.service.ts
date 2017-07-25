@@ -7,6 +7,7 @@ import { IPermissionsTreeNode } from './permissions-tree.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../../core/data/data.service';
+import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
 
 import { menuConfig } from '../../../menu-config';
 
@@ -15,6 +16,7 @@ export class PermissionsTreeService {
 
   constructor(
     private dataService: DataService,
+    private menuService: GuiObjectsService,
     private translateService: TranslateService
   ) {}
 

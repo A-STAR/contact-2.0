@@ -7,7 +7,7 @@ import { HttpModule, Http } from '@angular/http';
 import { createTranslateLoader } from '../../app.module';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { MenuService } from '../../core/menu/menu.service';
+import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
 
 import { SidebarComponent } from './sidebar.component';
@@ -42,14 +42,14 @@ describe('Component: Sidebar', () => {
           provide: JwtHelper,
           useValue: new JwtHelper
         },
-        MenuService,
+        GuiObjectsService,
         SettingsService,
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
   });
 
-  it('should create an instance', async(inject([MenuService, SettingsService, Router], (menuService, settingsService, router) => {
+  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router], (menuService, settingsService, router) => {
     const component = new SidebarComponent(menuService, settingsService, router);
     expect(component).toBeTruthy();
   })));

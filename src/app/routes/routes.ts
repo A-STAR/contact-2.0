@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
 import { LookupResolver } from '../core/lookup/lookup.resolver';
-import { MenuResolver } from '../core/menu/menu-resolver.service';
+import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
 import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
 import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
@@ -18,7 +18,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver
+      guiObjectsResolved: GuiObjectsResolver
     },
     runGuardsAndResolvers: 'paramsChange',
     children: [
@@ -31,7 +31,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver,
+      guiObjectsResolved: GuiObjectsResolver,
       lookupDataResolved: LookupResolver,
       userConstantsResolved: UserConstantsResolver,
       userLanguagesResolved: UserLanguagesResolver,
@@ -56,7 +56,7 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      menu: MenuResolver,
+      guiObjectsResolved: GuiObjectsResolver,
       userPermissionsResolved: UserPermissionsResolver,
       metadataResolved: MetadataResolver,
     },
