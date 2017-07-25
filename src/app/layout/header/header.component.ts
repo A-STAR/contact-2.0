@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -7,6 +7,9 @@ import { IFilters, INotification } from '../../core/notifications/notifications.
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { StateService } from '../../core/state/state.service';
+
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +17,8 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
+
   isNavSearchVisible: boolean;
 
   isLicenseVisible = false;
@@ -27,6 +32,7 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
+    private stateService: StateService,
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
@@ -86,7 +92,8 @@ export class HeaderComponent implements OnInit {
 
   resetSettings(event: UIEvent): void {
     event.preventDefault();
-    console.log('resetting');
+    this.stateService.clear();
+    this.accountDropdown.close();
   }
 
   logout(event: UIEvent): void {

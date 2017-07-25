@@ -5,6 +5,7 @@ import { IAuthState } from './auth.interface';
 
 import { AuthService } from './auth.service';
 
+// TODO(d.maltsev): use state service
 const defaultState: IAuthState = {
   token: localStorage.getItem(AuthService.TOKEN_NAME) || null
 };
@@ -28,6 +29,6 @@ export function authReducer(state: IAuthState = defaultState, action: Action): I
 
 export function resetReducer(reducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
   return (state: IAppState, action: Action): IAppState => {
-    return reducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
+    return reducer(action.type === AuthService.AUTH_GLOBAL_RESET ? action.payload || null : state, action);
   };
 }

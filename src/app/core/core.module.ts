@@ -26,6 +26,7 @@ import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
 import { SettingsService } from './settings/settings.service';
+import { StateService } from './state/state.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { MetadataEffects } from './metadata/metadata.effects';
@@ -74,6 +75,7 @@ import { rootReducer } from './state/root.reducer';
     MetadataService,
     NotificationsService,
     SettingsService,
+    StateService,
     ThemesService,
     TranslateService,
     UserConstantsService,

@@ -14,6 +14,8 @@ import {
   NotificationTypeEnum,
 } from './notifications.interface';
 
+import { StateService } from '../state/state.service';
+
 import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
@@ -23,16 +25,16 @@ export class NotificationsService implements OnDestroy {
   static NOTIFICATION_FILTER: INotificationActionType = 'NOTIFICATION_FILTER';
   static NOTIFICATION_DELETE: INotificationActionType = 'NOTIFICATION_DELETE';
 
-  static STORAGE_KEY = 'state/notifications';
-
   private notificationsStateSubscription: Subscription;
 
   constructor(
     private store: Store<IAppState>,
+    private stateService: StateService,
     private translateService: TranslateService,
   ) {
-    this.notificationsStateSubscription = this.state.subscribe(state => {
-      localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state));
+    // TODO(d.maltsev): can we optimize this?
+    this.notificationsStateSubscription = this.state.subscribe(() => {
+      this.stateService.saveState(state => ({ notifications: state.notifications }));
     });
   }
 

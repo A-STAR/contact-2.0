@@ -8,6 +8,7 @@ import 'rxjs/add/operator/debounceTime';
 
 import { DataService } from './core/data/data.service';
 import { SettingsService } from './core/settings/settings.service';
+import { StateService } from './core/state/state.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ import { SettingsService } from './core/settings/settings.service';
   ]
 })
 export class AppComponent {
-  static USER_LANGUAGE = 'user/language';
+  static USER_LANGUAGE = 'auth/language';
 
   static LOADER_DEBOUNCE_INTERVAL = 200;
 
@@ -50,6 +51,7 @@ export class AppComponent {
     private dataService: DataService,
     private router: Router,
     public settings: SettingsService,
+    private stateService: StateService,
     private translateService: TranslateService
   ) {
     // set default to 'en' if no language is found
@@ -66,5 +68,7 @@ export class AppComponent {
     )
     .distinctUntilChanged()
     .debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL);
+
+    this.stateService.initState();
   }
 }

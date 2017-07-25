@@ -11,7 +11,7 @@ import { IAppState } from '../state/state.interface';
 @Injectable()
 export class AuthService implements CanActivate {
   static TOKEN_NAME = 'auth/token';
-  static LANGUAGE_TOKEN = 'user/language';
+  static LANGUAGE_TOKEN = 'auth/language';
 
   static URL_DEFAULT = '/';
   static URL_LOGIN   = '/login';
