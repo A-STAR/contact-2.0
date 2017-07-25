@@ -31,6 +31,16 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> imp
     });
   }
 
+  get formData(): any {
+    return {
+      originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.rolesSubscription.unsubscribe();
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
     return [
       {
@@ -58,13 +68,4 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> imp
     ];
   }
 
-  get formData(): any {
-    return {
-      originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
-    };
-  }
-
-  ngOnDestroy(): void {
-    this.rolesSubscription.unsubscribe();
-  }
 }

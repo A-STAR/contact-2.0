@@ -24,33 +24,27 @@ export class PermissionsTreeService {
   }
 
   save(currentRole: IPermissionRole, removed: ITreeNode[], added: ITreeNode[]): Observable<any> {
-    return Observable.forkJoin(
-      this.filterAndConvertToIds(removed)
-        .map((id: number) => this.updatePermissions(currentRole, id, false))
-        .concat(
-          this.filterAndConvertToIds(added).map((id: number) => this.updatePermissions(currentRole, id, true))
-        )
-    );
+    const data = {
+      objects: [
+        ...added.map(node => ({ id: node.id, value: true })),
+        ...removed.map(node => ({ id: node.id, value: false }))
+      ]
+    };
+    return this.update(currentRole, data);
   }
 
   getDiff(nodes: ITreeNode[], nodes2: ITreeNode[]): ITreeNode[] {
-    return nodes
-      .filter((node: ITreeNode) => !node.children && !nodes2.find((node2: ITreeNode) => node2 === node));
+    return nodes.filter(node1 => !node1.children && !nodes2.find(node2 => node1 === node2));
   }
 
-  private updatePermissions(currentRole: IPermissionRole, id: number, add: boolean): Observable<any> {
-    return this.dataService.update(`/roles/{id}/guiobjects/${id}`, currentRole, { value: add });
-  }
-
-  private filterAndConvertToIds(nodes: ITreeNode[]): number[] {
-    return nodes
-      .map((ITreeNode: ITreeNode) => ITreeNode.id);
+  private update(currentRole: IPermissionRole, data: object): Observable<any> {
+    return this.dataService.update('/roles/{id}/guiobjects', currentRole, data);
   }
 
   private convertToTreeNodes(permissions: IPermissionsTreeNode[], selection: ITreeNode[]): ITreeNode[] {
     return permissions
-      .map((permission: IPermissionsTreeNode) => {
-        const node: ITreeNode = this.convertToTreeNode(permission, selection);
+      .map(permission => {
+        const node = this.convertToTreeNode(permission, selection);
         if (permission.value) {
           selection.push(node);
         }
@@ -59,7 +53,7 @@ export class PermissionsTreeService {
   }
 
   private convertToTreeNode(permission: IPermissionsTreeNode, selection: ITreeNode[]): ITreeNode {
-    const hasChildren: boolean = permission.children && permission.children.length > 0;
+    const hasChildren = permission.children && permission.children.length > 0;
     const cfg = menuConfig.hasOwnProperty(permission.name) ? menuConfig[permission.name] : null;
 
     return {

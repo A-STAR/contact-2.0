@@ -25,7 +25,7 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
   constructor(private debtorService: DebtorService) {
     super();
 
-      this.selectedDebtorSub = debtorService.selectedDebtor.subscribe(debtor => {
+      this.selectedDebtorSub = this.debtorService.selectedDebtor.subscribe(debtor => {
         this.debtor = debtor;
         this.generalInformation = debtor ? debtor.generalInformation : null;
         this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
@@ -72,7 +72,7 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
             controlName: 'type',
             type: 'select',
             options: [
-              // TODO(a.poterenko) STUB
+              // TODO(a.tymchuk) STUB
               { value: 1, label: 'Physical person' },
               { value: 2, label: 'Juridical person' },
             ]

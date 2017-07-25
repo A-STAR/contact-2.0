@@ -22,7 +22,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
-import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
@@ -62,12 +61,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   selected: Array<any> = [];
   subscription: Subscription;
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
-  }
-
   constructor(
-    private dataService: DataService,
     public settings: SettingsService,
     private translate: TranslateService,
     private changeDetector: ChangeDetectorRef,
@@ -83,6 +77,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
+  }
+
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
   }
 
   get filteredRows(): Array<any> {

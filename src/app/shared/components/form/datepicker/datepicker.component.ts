@@ -35,10 +35,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   private locale = {};
   private subscription: Subscription;
-
   private wheelListener: Function;
-
-  private propagateChange: Function = () => {};
 
   constructor(
     private renderer: Renderer2,
@@ -125,6 +122,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
       this.removeWheelListener();
     }
   }
+
+  private propagateChange: Function = () => {};
 
   private positionDropdown(): void {
     const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();

@@ -4,13 +4,10 @@ import { Directive, Input, ElementRef, Renderer2, AfterViewInit } from '@angular
   selector: '[appAlignment]'
 })
 export class AlignmentDirective implements AfterViewInit {
-
   @Input() alignTarget: Element;
   @Input() autoAlignEnabled: boolean;
 
-  constructor(private element: ElementRef,
-              private renderer2: Renderer2) {
-  }
+  constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     if (this.autoAlignEnabled) {
@@ -19,10 +16,10 @@ export class AlignmentDirective implements AfterViewInit {
   }
 
   private updateElementStyles(): void {
-
-    const height: number = this.getElementHeight(this.element.nativeElement) + 12; // TODO(a.poterenko): 12 height?
-    this.renderer2.setStyle(this.element.nativeElement, 'position', 'absolute');
-    this.renderer2.setStyle(this.element.nativeElement, 'top', `-${height}px`);
+    // TODO(a.tymchuk): 12 height?
+    const height: number = this.getElementHeight(this.element.nativeElement) + 12;
+    this.renderer.setStyle(this.element.nativeElement, 'position', 'absolute');
+    this.renderer.setStyle(this.element.nativeElement, 'top', `-${height}px`);
   }
 
   private getElementHeight(element: Element): number {

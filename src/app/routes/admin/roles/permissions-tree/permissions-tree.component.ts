@@ -69,6 +69,9 @@ export class PermissionsTreeComponent implements OnDestroy {
   }
 
   onSelectionChange(selection: ITreeNode[]): void {
+
+    console.log(this.value, this.selection);
+
     this.selection = selection;
     this.changes.next(!!this.getRemovedItems.length || !!this.getAddedItems.length);
   }

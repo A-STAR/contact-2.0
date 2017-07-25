@@ -6,13 +6,13 @@
           *ngIf="!item.children"
           [routerLink]="item.link"
           [attr.route]="item.link"
-          [title]="(item.text | translate) || item.name"
+          [title]="item.text | translate"
         >
           <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
         </a>
         <a
           *ngIf="item.children"
-          [title]="(item.text | translate) || item.name"
+          [title]="item.text | translate"
           (click)="toggleSubmenuClick($event)"
           (mouseenter)="toggleSubmenuHover($event)"
         >

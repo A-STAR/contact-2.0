@@ -90,13 +90,17 @@ export class NotificationActionBuilder {
 
     if (message.response) {
       const { status } = message.response;
-      const { code, payload } = message.response.json().message;
-      const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
 
-      const translatedMessageKey = `errors.server.${code}`;
-      const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
-      if (translatedMessage !== translatedMessageKey) {
-        return translatedMessage;
+      const json = message.response.json();
+      if (json.message) {
+        const { code, payload } = json.message;
+        const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
+
+        const translatedMessageKey = `errors.server.${code}`;
+        const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
+        if (translatedMessage !== translatedMessageKey) {
+          return translatedMessage;
+        }
       }
 
       const translatedFallbackMessageKey = `${message.text}.${status}`;

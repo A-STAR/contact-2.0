@@ -11,8 +11,7 @@ export class EntityTranslationsService {
 
   private API = '/api/entityAttributes/{entityAttributesId}/entities/{entitiesId}';
 
-  constructor(private dataService: DataService) {
-  }
+  constructor(private dataService: DataService) {}
 
   readDictNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_DICT_NAME);
@@ -29,40 +28,5 @@ export class EntityTranslationsService {
         entitiesId: entityId
       })
       .map(data => data.translations);
-  }
-
-  saveDictNameTranslations(entityId: string | number, translations: IEntityTranslation[]): Observable<any> {
-    return this.saveTranslations(entityId, translations, EntityTranslationsConstants.SPEC_DICT_NAME);
-  }
-
-  saveTermNameTranslations(entityId: string | number, translations: IEntityTranslation[]): Observable<any> {
-    return this.saveTranslations(entityId, translations, EntityTranslationsConstants.SPEC_TERM_NAME);
-  }
-
-  private saveTranslations(entityId: string | number, translations: IEntityTranslation[], entityAttributesId: number): Observable<any> {
-    return this.dataService.update(this.API, {
-      entityAttributesId: entityAttributesId,
-      entitiesId: entityId
-    }, {
-      translations: translations
-    });
-  }
-
-  deleteDictNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
-    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_DICT_NAME);
-  }
-
-  deleteTermNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
-    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_TERM_NAME);
-  }
-
-  private deleteTranslation(entityId: string|number, languageId: number | Array<number>, entityAttributesId: number): Observable<any> {
-    const languageIds = Array.isArray(languageId) ? languageId : [ languageId ];
-
-    return this.dataService.delete('/api/entityAttributes/{entityAttributesId}/entities/{entityId}/languages/?id={languageIds}', {
-      entityAttributesId: entityAttributesId,
-      entityId,
-      languageIds: languageIds.join(',')
-    });
   }
 }

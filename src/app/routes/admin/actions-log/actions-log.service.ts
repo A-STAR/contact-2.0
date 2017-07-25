@@ -13,7 +13,7 @@ import { IAGridSortModel, IAGridFilterRequest } from '../../../shared/components
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { DictionariesService } from '../../../core/dictionaries/dictionaries.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
@@ -55,7 +55,6 @@ export class ActionsLogService {
     private gridService: GridService,
     private notifications: NotificationsService,
     private store: Store<IAppState>,
-    private valueConverterService: ValueConverterService,
   ) {}
 
   get actionsLogCurrentPage(): Observable<number> {
@@ -134,13 +133,14 @@ export class ActionsLogService {
   destroy(): void {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
-
+  // TODO(a.tymchuk): use the dictionary API
   getActionTypes(): Observable<IDictionaryItem[]> {
     return this.dataService.read('/dictionaries/{code}/terms', {
-      code: DictionariesService.DICTIONARY_CODES.USERS_ACTIONS_TYPES
+      code: UserDictionariesService.DICTIONARY_ACTION_TYPES
     }).map(data => data.terms);
   }
 
+  // TODO(a.tymchuk): use the user API
   getEmployees(): Observable<IEmployee[]> {
     return this.dataService.read('/users').map(data => data.users);
   }

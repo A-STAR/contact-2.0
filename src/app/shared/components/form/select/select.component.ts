@@ -62,8 +62,6 @@ export class SelectComponent implements ControlValueAccessor {
   private _autoAlignEnabled = false;
   private selectionToolsPlugin: SelectionToolsPlugin;
 
-  private onChange: Function = () => {};
-
   @Input()
   set closableSelectedItem(value: boolean) {
     this._closableSelectedItem = this.nvl(value, this._closableSelectedItem);
@@ -267,15 +265,6 @@ export class SelectComponent implements ControlValueAccessor {
     return !!this._active.find(v => v.value === option.value && !v.removed);
   }
 
-  private open(): void {
-    this.optionsOpened = true;
-  }
-
-  private hideOptions(): void {
-    this._inputMode = false;
-    this.optionsOpened = false;
-  }
-
   onSelectMatch($event: Event, option: ILabeledValue): void {
     this.stopEvent($event);
 
@@ -298,6 +287,17 @@ export class SelectComponent implements ControlValueAccessor {
     this.emitSelectActive();
 
     this.hideOptions();
+  }
+
+  private onChange: Function = () => {};
+
+  private open(): void {
+    this.optionsOpened = true;
+  }
+
+  private hideOptions(): void {
+    this._inputMode = false;
+    this.optionsOpened = false;
   }
 
   private stopEvent($event: Event): void {

@@ -29,7 +29,7 @@ export class DebtorsEffects {
   ) {}
 
   private readDebtors(): Observable<IDebtorsFetchResponse> {
-    // TODO(a.poterenko) STUB
+    // TODO(a.tymchuk) STUB
     return new Observable(observer => {
       setTimeout(() => {
         observer.next(

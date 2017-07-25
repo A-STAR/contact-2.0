@@ -55,7 +55,7 @@
             *ngIf="isDialog('employees')"
             [titleTranslationKey]="employeesControl.label"
             [autoWidth]="false"
-            (action)="onSaveEmployeesChanges()"
+            (action)="onSetEmployees()"
             (cancel)="setDialog(null)"
           >
             <app-multi-select
@@ -95,7 +95,7 @@
             *ngIf="isDialog('actionTypes')"
             [autoWidth]="false"
             [titleTranslationKey]="actionTypesControl.label"
-            (action)="onSaveActionTypesChanges()"
+            (action)="onSetActionTypes()"
             (cancel)="setDialog()"
           >
             <app-multi-select

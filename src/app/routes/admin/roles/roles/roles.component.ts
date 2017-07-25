@@ -7,7 +7,6 @@ import { IPermissionsDialogEnum } from '../permissions.interface';
 import { IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -75,7 +74,6 @@ export class RolesComponent implements OnDestroy {
   private hasViewPermissionSubscription: Subscription;
 
   constructor(
-    private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
   ) {

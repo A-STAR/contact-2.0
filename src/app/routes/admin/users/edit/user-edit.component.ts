@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
@@ -51,7 +52,9 @@ export class UserEditComponent {
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.usersService.fetchOne(this.userId);
+    if (this.userId) {
+      this.usersService.fetchOne(this.userId);
+    }
 
     this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
       .take(1)
@@ -67,7 +70,9 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPhoto.MaxSize'),
       this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
       this.lookupService.roleOptions,
-      this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user),
+      this.userId
+        ? this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user)
+        : Observable.of(null),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user) =>
         ({ canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user })
     )
@@ -86,6 +91,39 @@ export class UserEditComponent {
       this.formData = this.getFormData(data.user);
       this.changeDetectorRef.markForCheck();
     });
+  }
+
+  onLdapDialogAction(ldapLogin: string): void {
+    const { form } = this.form;
+    form.patchValue({ ldapLogin });
+    form.markAsDirty();
+    this.onLdapDialogClose();
+  }
+
+  onLdapDialogClose(): void {
+    this.isLdapUserBeingSelected = false;
+  }
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onSubmit(): void {
+    if (!this.form) {
+      return;
+    }
+
+    const { image, ...user } = this.toSubmittedValues(this.form.value);
+
+    if (this.userId) {
+      this.usersService.update(user, image, this.userId);
+    } else {
+      this.usersService.create(user, image);
+    }
+  }
+
+  onClose(): void {
+    this.contentTabService.navigate('/admin/users');
   }
 
   private getFormControls(
@@ -159,50 +197,17 @@ export class UserEditComponent {
     };
   }
 
-  onLdapDialogAction(ldapLogin: string): void {
-    const { form } = this.form;
-    form.patchValue({ ldapLogin });
-    form.markAsDirty();
-    this.onLdapDialogClose();
-  }
-
-  onLdapDialogClose(): void {
-    this.isLdapUserBeingSelected = false;
-  }
-
-  canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
-  }
-
-  onSubmit(): void {
-    if (!this.form) {
-      return;
-    }
-
-    const { image, ...user } = this.toSubmittedValues(this.form.value);
-
-    if (this.userId) {
-      this.usersService.update(user, image, this.userId);
-    } else {
-      this.usersService.create(user, image);
-    }
-  }
-
-  onClose(): void {
-    this.contentTabService.navigate('/admin/users');
-  }
-
   private toSubmittedValues(value: IUser): any {
     const submittedValue = {
       ...value,
       isBlocked: value.isBlocked ? 1 : 0,
       password: value.password || undefined,
       ldapLogin: value.ldapLogin || null,
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
       startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
       endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
-      // TODO(a.poterenko): fix this in select control?
+      // TODO(a.tymchuk): fix this in select control?
       languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
     };
 
