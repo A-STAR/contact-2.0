@@ -159,7 +159,6 @@ export class PermissionsEffects {
     private actions: Actions,
     private store: Store<IAppState>,
     private dataService: DataService,
-    private permissionsService: PermissionsService,
     private notifications: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {}

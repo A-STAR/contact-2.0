@@ -551,9 +551,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.renderer(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }
-      if (column.filter === 'set') {
-        colDef.keyCreator = (params) => params.value.code;
-      }
+      // if (column.filter === 'set') {
+      //   colDef.keyCreator = (params) => params.value.code;
+      // }
       return { column: colDef, index };
     })
     .sort((a, b) => a.index > b.index ? 1 : (a.index === b.index ? 0 : -1))

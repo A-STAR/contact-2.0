@@ -13,6 +13,23 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, ChildrenOutletContexts, PRIMARY_OUTLET } from '@angular/router';
 
+class OutletInjector implements Injector {
+  constructor(
+    private route: ActivatedRoute, private childContexts: ChildrenOutletContexts, private parent: Injector) {}
+
+  get(token: any, notFoundValue?: any): any {
+    if (token === ActivatedRoute) {
+      return this.route;
+    }
+
+    if (token === ChildrenOutletContexts) {
+      return this.childContexts;
+    }
+
+    return this.parent.get(token, notFoundValue);
+  }
+}
+
 // tslint:disable-next-line
 @Directive({selector: 'app-router-outlet'})
 export class RouterOutlet2Directive implements OnDestroy, OnInit {
@@ -145,22 +162,5 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
 
     this.activateEvents.emit({ component, factory, injector });
     // this.activateEvents.emit(this.activated.instance);
-  }
-}
-
-class OutletInjector implements Injector {
-  constructor(
-    private route: ActivatedRoute, private childContexts: ChildrenOutletContexts, private parent: Injector) {}
-
-  get(token: any, notFoundValue?: any): any {
-    if (token === ActivatedRoute) {
-      return this.route;
-    }
-
-    if (token === ChildrenOutletContexts) {
-      return this.childContexts;
-    }
-
-    return this.parent.get(token, notFoundValue);
   }
 }

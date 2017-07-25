@@ -7,7 +7,7 @@ import { Directive, ElementRef } from '@angular/core';
 export class CheckallDirective {
 
   constructor(private el: ElementRef) {
-    const $element = $(el.nativeElement);
+    const $element = $(this.el.nativeElement);
 
     $element.on('change', function(): void {
       const index = $element.index() + 1;

@@ -10,7 +10,7 @@ import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface
 
 import { DataService } from '../../../core/data/data.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
+// import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
@@ -22,7 +22,7 @@ export class GridService {
     private dataService: DataService,
     private metadataService: MetadataService,
     private translateService: TranslateService,
-    private userDictionariesService: UserDictionariesService,
+    // private userDictionariesService: UserDictionariesService,
   ) {}
 
   /**
@@ -160,8 +160,7 @@ export class GridService {
         Dictionaries,
         Ids,
         (dictionaries, ids) => {
-          return dictionaries.reduce((acc, dictionary, i) => {
-            const id = Ids[i];
+          return dictionaries.reduce((acc, dictionary) => {
             acc[ids] = dictionary;
             return acc;
           }, {});

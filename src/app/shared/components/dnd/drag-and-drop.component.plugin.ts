@@ -6,19 +6,6 @@ import { DragulaService } from 'ng2-dragula';
 import { DragAndDropDomHelper } from './drag-and-drop.dom-helper';
 import { IDragAndDropConfig, IDragAndDropView, INodeOffset } from './drag-and-drop.interface';
 
-@Injectable()
-export class DragAndDropComponentPluginFactory {
-
-  constructor(
-    private dragulaService: DragulaService,
-    private domHelper: DragAndDropDomHelper
-  ) {}
-
-  attachTo(view: IDragAndDropView, config: IDragAndDropConfig): DragAndDropComponentPlugin {
-    return new DragAndDropComponentPlugin(view, config, this.dragulaService, this.domHelper);
-  }
-}
-
 export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
 
   private static SWAPPED_NODES_COUNT = 2;
@@ -178,5 +165,18 @@ export class DragAndDropComponentPlugin implements OnInit, OnDestroy {
     return mirrorEl
       ? this._draggedElementPosition = this.domHelper.getOffset(mirrorEl)
       : this._draggedElementPosition;
+  }
+}
+
+@Injectable()
+export class DragAndDropComponentPluginFactory {
+
+  constructor(
+    private dragulaService: DragulaService,
+    private domHelper: DragAndDropDomHelper
+  ) {}
+
+  attachTo(view: IDragAndDropView, config: IDragAndDropConfig): DragAndDropComponentPlugin {
+    return new DragAndDropComponentPlugin(view, config, this.dragulaService, this.domHelper);
   }
 }
