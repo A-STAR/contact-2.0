@@ -25,7 +25,7 @@ export interface IActionLog {
   userId: number;
 }
 
-export interface IActionsLogServiceState {
+export interface IActionsLogState {
   actionsLog: IActionsLogData;
   employees: IEmployee[];
   actionTypes: IDictionaryItem[];
