@@ -26,7 +26,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   value: Array<Date | string | number> = [];
 
-  private propagateChange: Function = () => {};
+  private propagateChange: Function;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
