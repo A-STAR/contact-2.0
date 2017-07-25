@@ -1,11 +1,16 @@
 {
   "header": {
     "search": {
-      "PLACEHOLDER": "Type and hit enter..."
+      "placeholder": "Type and hit enter..."
     },
     "license": {
       "title": "License",
       "info": "Your license number is"
+    },
+    "account": {
+      "title": "Account",
+      "logout": "Log Out",
+      "reset": "Reset Settings"
     }
   },
   "offsidebar": {

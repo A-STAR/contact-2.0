@@ -84,6 +84,11 @@ export class HeaderComponent implements OnInit {
     this.translateService.use(nextLang).take(1).subscribe();
   }
 
+  resetSettings(event: UIEvent): void {
+    event.preventDefault();
+    console.log('resetting');
+  }
+
   logout(event: UIEvent): void {
     event.preventDefault();
     this.authService.dispatchLogoutAction();

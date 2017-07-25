@@ -35,7 +35,7 @@
       </li>
 
       <li>
-        <app-dropdown #dropdown class="menu-item" [enabled]="hasNotifications$ | async">
+        <app-dropdown #notificationsDropdown class="menu-item" [enabled]="hasNotifications$ | async">
           <a trigger title="Messages">
             <i class="icon-bell"></i>
             <div *ngIf="hasNotifications$ | async" class="label label-danger">
@@ -45,7 +45,7 @@
           <app-notifications
             [filters]="filters$ | async"
             [notifications]="notifications$ | async"
-            (onClose)="dropdown.close()"
+            (onClose)="notificationsDropdown.close()"
           >
           </app-notifications>
         </app-dropdown>
@@ -58,16 +58,25 @@
       </li>
 
       <li>
-        <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
-        <a title="Settings" (click)="toggleUserSettings($event)">
-          <i class="icon-user"></i>
-        </a>
-      </li>
-
-      <li>
-        <a title="Logout" (click)="logout($event)">
-          <i class="icon-lock"></i>
-        </a>
+        <app-dropdown class="menu-item">
+          <a trigger [title]="'header.account.title' | translate">
+            <i class="icon-user"></i>
+          </a>
+          <div class="dropdown-content">
+            <ul class="list-group mb0">
+              <li class="list-group-item p0 b0">
+                <a class="text-nowrap" (click)="resetSettings($event)">
+                  <i class="icon-settings"></i> {{ 'header.account.reset' | translate }}
+                </a>
+              </li>
+              <li class="list-group-item p0 b0">
+                <a class="text-nowrap" (click)="logout($event)">
+                  <i class="icon-lock"></i> {{ 'header.account.logout' | translate }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </app-dropdown>
       </li>
     </ul>
   </div>
