@@ -1,11 +1,3 @@
-export interface IDataSource {
-  create?: string;
-  read?: string;
-  update?: string;
-  delete?: string;
-  dataKey: string;
-}
-
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export interface IGridColumn {
@@ -17,21 +9,9 @@ export interface IGridColumn {
   prop: string;
   renderer?: Function;
   type?: string;
-  width?: number;
-  /*
-  ** For compatibility with @swimlane/ngx-datatable
-  ** Do NOT use, prefer renderer
-  */
+  // technical use only by grid.service.ts
   $$valueGetter?: Function;
-  /**
-   * ag-grid
-   */
-  filter?: string;
-  filterValues?: Array<any>;
-  filterDictionaryId?: number;
-  suppressMenu?: boolean;
-  suppressSizeToFit?: boolean;
-  hidden?: boolean;
+  width?: number;
 }
 
 export interface IRenderer {

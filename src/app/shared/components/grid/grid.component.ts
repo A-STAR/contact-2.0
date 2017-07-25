@@ -20,7 +20,7 @@ import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDataSource, IMessages, TSelectionType, IGridColumn } from './grid.interface';
+import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -37,7 +37,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() footerHeight = 50;
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
-  @Input() dataSource: IDataSource;
   @Input() emptyMessage: string = null;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
@@ -63,10 +62,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   selected: Array<any> = [];
   subscription: Subscription;
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
-  }
-
   constructor(
     private dataService: DataService,
     public settings: SettingsService,
@@ -84,6 +79,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
+  }
+
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
   }
 
   get filteredRows(): Array<any> {
@@ -113,8 +112,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           return acc;
         }, {}))
     ).subscribe(translations => {
-      // TODO(d.maltsev):
-      // Why `this.messages = translations[gridMessagesKey]` doesn't work?
       this.messages = { ...translations[gridMessagesKey] };
       if (this.columnTranslationKey) {
         this.translateColumns(translations[this.columnTranslationKey].grid);
@@ -156,8 +153,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
-  update(routeParams: object, body: object): Observable<any> {
-    return this.dataService.update(this.dataSource.update, routeParams, body);
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.debouncerSub.unsubscribe();
   }
 
   onActionClick(event: any): void {
@@ -181,11 +179,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   getRowHeight(row: any): number {
     return row.height;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.debouncerSub.unsubscribe();
   }
 
   private translateColumns(columnTranslations: object): void {

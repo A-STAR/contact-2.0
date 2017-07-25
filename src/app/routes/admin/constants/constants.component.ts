@@ -6,7 +6,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IConstant } from './constants.interface';
-import { IDataSource, IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ConstantsService } from './constants.service';
@@ -56,12 +56,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   renderers = {
     value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
-  };
-
-  dataSource: IDataSource = {
-    read: '/constants',
-    update: '/constants/{id}',
-    dataKey: 'constants',
   };
 
   permissionSub: Subscription;
@@ -127,7 +121,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     }
 
     this.dataService
-      .update(this.dataSource.update, { id }, body)
+      .update('/constants/{id}', { id }, body)
       .take(1)
       .subscribe(
         () => {
@@ -141,7 +135,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   onBeforeEdit(): void {
     const permission = 'CONST_VALUE_EDIT';
-    this.userPermissionsService.has('CONST_VALUE_EDIT')
+    this.userPermissionsService.has(permission)
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {

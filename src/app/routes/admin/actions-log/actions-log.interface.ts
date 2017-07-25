@@ -1,4 +1,4 @@
-import { IGrid2State } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridState } from '../../../shared/components/grid2/grid2.interface';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 
 export interface IEmployee {
@@ -29,7 +29,7 @@ export interface IActionsLogServiceState {
   actionsLog: IActionsLogData;
   employees: IEmployee[];
   actionTypes: IDictionaryItem[];
-  actionsLogGrid: IGrid2State;
+  actionsLogGrid: IAGridState;
 }
 
 export interface IActionsLogPayload {

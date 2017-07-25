@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
-
 import { IPermissionModel, IPermissionsResponse } from '../../permissions.interface';
-import { IDataSource } from '../../../../../shared/components/grid/grid.interface';
+
+import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
@@ -26,11 +25,6 @@ export class AddPermissionComponent {
     { prop: 'name', minWidth: 200, maxWidth: 350 },
     { prop: 'dsc', minWidth: 70 },
   ];
-
-  dataSource: IDataSource = {
-    read: '/roles/{id}/permits/notadded',
-    dataKey: 'permits'
-  };
 
   constructor(private valueConverterService: ValueConverterService) { }
 

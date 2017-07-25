@@ -21,28 +21,6 @@ export class GridTextFilter implements IFilter {
     return this.gui;
   }
 
-  // TODO(a.tymchuk): how do we remove the listener, if `destroy` doesn't get called ?
-  private setupGui(params: IFilterParams): void {
-    const that = this;
-    function listener(event: Event): void {
-      const { target } = event;
-      that.filterText = (target as HTMLInputElement).value;
-      params.filterChangedCallback();
-    }
-
-    this.gui = document.createElement('div');
-    this.gui.innerHTML = this.template;
-
-    this.elFilterText = this.gui.querySelector('.ag-custom-filter-text');
-    // this.elFilterText.addEventListener('change', listener);
-    // this.elFilterText.addEventListener('paste', listener);
-    this.elFilterText.addEventListener('input', listener);
-    // IE doesn't fire changed for special keys (eg delete, backspace), so need to
-    // listen for this further ones
-    // this.elFilterText.addEventListener('keydown', listener);
-    // this.elFilterText.addEventListener('keyup', listener);
-  }
-
   doesFilterPass(params: IDoesFilterPassParams): boolean {
     // make sure each separate word passes separately
     // p.e. `Rebecca Show` could be filtered as `re sh`
@@ -74,6 +52,28 @@ export class GridTextFilter implements IFilter {
   destroy(): void {
     // this.elFilterText.removeEventListener('input', this.onFilterChanged);
     console.log('filter destroyed');
+  }
+
+  // TODO(a.tymchuk): how do we remove the listener, if `destroy` doesn't get called ?
+  private setupGui(params: IFilterParams): void {
+    const that = this;
+    function listener(event: Event): void {
+      const { target } = event;
+      that.filterText = (target as HTMLInputElement).value;
+      params.filterChangedCallback();
+    }
+
+    this.gui = document.createElement('div');
+    this.gui.innerHTML = this.template;
+
+    this.elFilterText = this.gui.querySelector('.ag-custom-filter-text');
+    // this.elFilterText.addEventListener('change', listener);
+    // this.elFilterText.addEventListener('paste', listener);
+    this.elFilterText.addEventListener('input', listener);
+    // IE doesn't fire changed for special keys (eg delete, backspace), so need to
+    // listen for this further ones
+    // this.elFilterText.addEventListener('keydown', listener);
+    // this.elFilterText.addEventListener('keyup', listener);
   }
 
 }

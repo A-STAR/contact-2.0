@@ -22,14 +22,14 @@ export class DropdownComponent {
 
   @ViewChild('trigger') trigger: ElementRef;
 
+  constructor(private element: ElementRef) {}
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.containsTarget(this.element, event) && !this.containsTarget(this.trigger, event)) {
       this.setIsOpen(false);
     }
   };
-
-  constructor(private element: ElementRef) {}
 
   get isOpen(): boolean {
     return this._isOpen;

@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
+import { arrayToObject } from '../../utils';
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value/value-converter.interface';
-import { IUserDictionariesState, IUserDictionary } from './user-dictionaries.interface';
+import { IUserDictionariesState, IUserDictionary, IUserTerm } from './user-dictionaries.interface';
 
 @Injectable()
 export class UserDictionariesService {
   static DICTIONARY_VARIABLE_TYPE       =  1;
+  static DICTIONARY_ACTION_TYPES        =  4;
+  static DICTIONARY_TERM_TYPES          =  5;
   static DICTIONARY_BRANCHES            =  6;
   static DICTIONARY_EMPLOYEE_ROLE       =  8;
   static DICTIONARY_GENDER              = 13;
@@ -47,17 +50,26 @@ export class UserDictionariesService {
     this.store.dispatch(action);
   }
 
-  getDictionary(dictionaryId: number): Observable<IUserDictionary> {
+  getDictionaryAsArray(dictionaryId: number): Observable<IUserTerm[]> {
     return this.state
       .map(state => state.dictionaries[dictionaryId] || [])
-      .map(terms => terms.reduce((acc, term) => {
-        acc[term.code] = term;
-        return acc;
-      }, {}))
       .distinctUntilChanged();
   }
 
-  getDictionaryOptions(dictionaryId: number): Observable<Array<IOption>> {
+  getAllDictionaries(): Observable<{[key: number]: IUserTerm[]}> {
+    return this.state
+      .map(state => state.dictionaries)
+      .distinctUntilChanged();
+  }
+
+  getDictionary(dictionaryId: number): Observable<IUserDictionary> {
+    return this.state
+      .map(state => state.dictionaries[dictionaryId] || [])
+      .map(arrayToObject('code'))
+      .distinctUntilChanged();
+  }
+
+  getDictionaryOptions(dictionaryId: number): Observable<IOption[]> {
     // TODO(d.maltsev): remove this when the db has correct data
     switch (dictionaryId) {
       case UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE:

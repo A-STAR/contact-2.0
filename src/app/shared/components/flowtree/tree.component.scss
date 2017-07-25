@@ -5,6 +5,10 @@
   &.dnd-active {
     background-color: #99e5a9 !important;
   }
+  &.selected {
+    outline: #0af solid 2px;
+    outline-offset: -1px;
+  }
 }
 
 .app-tree-container {

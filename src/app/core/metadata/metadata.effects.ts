@@ -29,7 +29,7 @@ export class MetadataEffects {
             {
               type: MetadataService.METADATA_FETCH_FAILURE
             },
-            this.notificationService.error().response(error).action()
+            this.notificationService.error('errors.default.read').entity('entities.metadata.gen.plural').response(error).action()
           ];
         });
     });

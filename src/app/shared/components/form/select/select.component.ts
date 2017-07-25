@@ -39,6 +39,7 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() filterEnabled = false;
   @Input() options: ILabeledValue[] = [];
   @Input() actions: Array<ISelectionAction> = [];
+  @Input() renderer: any;
 
   @Input() styles: CSSStyleDeclaration;
 
@@ -59,8 +60,6 @@ export class SelectComponent implements ControlValueAccessor {
   private _active: ILabeledValue[];
   private _autoAlignEnabled = false;
   private selectionToolsPlugin: SelectionToolsPlugin;
-
-  private onChange: Function = () => {};
 
   @Input()
   set closableSelectedItem(value: boolean) {
@@ -200,18 +199,15 @@ export class SelectComponent implements ControlValueAccessor {
     let displayValue: string;
 
     if (item.label) {
-      displayValue = item.label;
+      displayValue = this.translateService.instant(item.label);
     } else {
       const option = this.lookupAtOptions(item.value);
-      if (option) {
-        displayValue = option.label;
+      if (option && option.label) {
+        displayValue = this.translateService.instant(option.label);
       }
     }
-    return this.sanitizer.bypassSecurityTrustHtml(
-      displayValue
-        ? this.translateService.instant(displayValue)
-        : item.value
-    );
+
+    return this.sanitizer.bypassSecurityTrustHtml(this.renderer ? this.renderer(displayValue, item) : (displayValue || item.value));
   }
 
   clickedOutside(): void {
@@ -268,15 +264,6 @@ export class SelectComponent implements ControlValueAccessor {
     return !!this._active.find(v => v.value === option.value && !v.removed);
   }
 
-  private open(): void {
-    this.optionsOpened = true;
-  }
-
-  private hideOptions(): void {
-    this._inputMode = false;
-    this.optionsOpened = false;
-  }
-
   onSelectMatch($event: Event, option: ILabeledValue): void {
     this.stopEvent($event);
 
@@ -299,6 +286,17 @@ export class SelectComponent implements ControlValueAccessor {
     this.emitSelectActive();
 
     this.hideOptions();
+  }
+
+  private onChange: Function = () => {};
+
+  private open(): void {
+    this.optionsOpened = true;
+  }
+
+  private hideOptions(): void {
+    this._inputMode = false;
+    this.optionsOpened = false;
   }
 
   private stopEvent($event: Event): void {

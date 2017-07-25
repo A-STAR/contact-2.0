@@ -30,6 +30,7 @@ export interface IDynamicFormControl {
   closableSelectedItem?: boolean;
   options?: ILabeledValue[];
   optionsActions?: Array<ISelectionAction>;
+  optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // number of rows for textarea
   rows?: number;
   validators?: Array<ValidatorFn>;

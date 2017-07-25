@@ -22,21 +22,21 @@ export class EntityTranslationsService {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_TERM_NAME);
   }
 
-  private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
-    return this.dataService
-      .read(this.API, {
-        entityAttributesId: entityAttributesId,
-        entitiesId: entityId
-      })
-      .map(data => data.translations);
-  }
-
   saveDictNameTranslations(entityId: string | number, translations: IEntityTranslation[]): Observable<any> {
     return this.saveTranslations(entityId, translations, EntityTranslationsConstants.SPEC_DICT_NAME);
   }
 
   saveTermNameTranslations(entityId: string | number, translations: IEntityTranslation[]): Observable<any> {
     return this.saveTranslations(entityId, translations, EntityTranslationsConstants.SPEC_TERM_NAME);
+  }
+
+
+  deleteDictNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
+    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_DICT_NAME);
+  }
+
+  deleteTermNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
+    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_TERM_NAME);
   }
 
   private saveTranslations(entityId: string | number, translations: IEntityTranslation[], entityAttributesId: number): Observable<any> {
@@ -48,12 +48,13 @@ export class EntityTranslationsService {
     });
   }
 
-  deleteDictNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
-    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_DICT_NAME);
-  }
-
-  deleteTermNameTranslation(entityId: string|number, languageId: number | Array<number>): Observable<any> {
-    return this.deleteTranslation(entityId, languageId, EntityTranslationsConstants.SPEC_TERM_NAME);
+  private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
+    return this.dataService
+      .read(this.API, {
+        entityAttributesId: entityAttributesId,
+        entitiesId: entityId
+      })
+      .map(data => data.translations);
   }
 
   private deleteTranslation(entityId: string|number, languageId: number | Array<number>, entityAttributesId: number): Observable<any> {

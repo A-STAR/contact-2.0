@@ -58,10 +58,6 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
       extension.onSelectItems(payload));
   }
 
-  private close(): void {
-    this.cancel.emit();
-  }
-
   canSubmit(): boolean {
     return this.dynamicForm.canSubmit;
   }
@@ -71,6 +67,11 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
   }
 
   protected abstract getControls(): Array<IDynamicFormItem>;
+
+  private close(): void {
+    this.cancel.emit();
+  }
+
 }
 
 export interface IEntityBaseComponentExtension<T> {
@@ -102,18 +103,6 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     }
   }
 
-  // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
-  private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
-    // TODO: item type
-    return formControls.reduce((acc, control: any) => {
-      const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
-      return [
-        ...acc,
-        ...controls
-      ];
-    }, [] as Array<IDynamicFormControl>);
-  }
-
   onAfterInit(): void {
     this.patchDisplayControlValue();
   }
@@ -140,6 +129,18 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     }
     this.patchDisplayControlValue();
     this.translatedControl.markAsDirty();
+  }
+
+  // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
+  private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
+    // TODO: item type
+    return formControls.reduce((acc, control: any) => {
+      const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
+      return [
+        ...acc,
+        ...controls
+      ];
+    }, [] as Array<IDynamicFormControl>);
   }
 
   private patchDisplayControlValue(): void {
