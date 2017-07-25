@@ -18,9 +18,10 @@ import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { GuiObjectsEffects } from './gui-objects/gui-objects.effects';
+import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupEffects } from './lookup/lookup.effects';
 import { LookupService } from './lookup/lookup.service';
-import { MenuService } from './menu/menu.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
@@ -45,6 +46,7 @@ import { rootReducer } from './state/root.reducer';
     StoreModule.provideStore(rootReducer),
     EffectsModule.run(AuthEffects),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(GuiObjectsEffects),
     EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
     EffectsModule.run(UserConstantsEffects),
@@ -68,7 +70,7 @@ import { rootReducer } from './state/root.reducer';
     DataService,
     JwtHelper,
     LookupService,
-    MenuService,
+    GuiObjectsService,
     MetadataService,
     NotificationsService,
     SettingsService,
