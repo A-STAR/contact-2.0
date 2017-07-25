@@ -5,8 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant, IConstantsState } from './constants.interface';
 
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
-
 @Injectable()
 export class ConstantsService {
   static STORAGE_KEY = 'state/constants';
@@ -18,7 +16,6 @@ export class ConstantsService {
 
   constructor(
     private store: Store<IAppState>,
-    private valueConverterService: ValueConverterService
   ) {}
 
   get state(): Observable<IConstantsState> {

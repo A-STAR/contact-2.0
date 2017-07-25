@@ -11,7 +11,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
@@ -88,7 +87,6 @@ export class PermissionsComponent implements OnDestroy {
   constructor(
     private dataService: DataService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService

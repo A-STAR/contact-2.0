@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IMenuItem } from '../../core/menu/menu.interface';
 
-import { MenuService } from '../../core/menu/menu.service';
 import { SettingsService } from '../../core/settings/settings.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 
@@ -20,7 +19,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private routeDataSubscription: Subscription;
 
   constructor(
-    private menuService: MenuService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,

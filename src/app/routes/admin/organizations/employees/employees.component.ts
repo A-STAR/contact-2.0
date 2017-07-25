@@ -10,7 +10,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -101,7 +100,6 @@ export class EmployeesComponent implements OnDestroy {
 
   constructor(
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,

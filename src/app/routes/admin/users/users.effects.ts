@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -124,7 +124,6 @@ export class UsersEffects {
     private actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private store: Store<IAppState>,
   ) {}
 
   private readUsers(): Observable<any> {
