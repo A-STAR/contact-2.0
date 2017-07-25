@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ColDef } from 'ag-grid';
 
-import { IFilterType, IOperator } from '../qbuilder2.interface';
+import { IColumn, IFilterType, IOperator } from '../qbuilder2.interface';
 import { IOption } from '../../../../core/converter/value/value-converter.interface';
 
 import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';
@@ -12,7 +11,7 @@ import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QBuilder2ConditionComponent {
-  @Input() columns: Array<ColDef>;
+  @Input() columns: Array<IColumn>;
   @Input() filter: FilterObject;
 
   @Output() onRemove = new EventEmitter<void>();
@@ -34,8 +33,8 @@ export class QBuilder2ConditionComponent {
     { name: 'NOT LIKE', filters: [ 'text' ] },
   ];
 
-  get column(): ColDef {
-    return this.columns.find(c => c.field === this.filter.name);
+  get column(): IColumn {
+    return this.columns.find(c => c.colId === this.filter.name);
   }
 
   get filterType(): IFilterType {
@@ -59,8 +58,8 @@ export class QBuilder2ConditionComponent {
 
   get fieldOptions(): Array<IOption> {
     return this.columns.map(column => ({
-      value: column.field,
-      label: column.headerName
+      value: column.colId,
+      label: column.name
     }));
   }
 

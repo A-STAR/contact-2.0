@@ -9,7 +9,7 @@ import { IActionsLogData, IEmployee } from './actions-log.interface';
 import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
-import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
+import { IColumn, IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { IRenderer } from '../../../shared/components/grid/grid.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
@@ -127,7 +127,10 @@ export class ActionsLogComponent {
   openQueryBuilder(): void {
     const filters = this.filter.getFilters();
     filters.addFilter(this.grid.getFilters());
-    this.query$.next({ filters, columns: this.grid.columnDefs });
+    this.query$.next({
+      filters,
+      columns: this.grid.columns.map((column, i) => ({ ...column, name: this.grid.columnDefs[i].headerName }))
+    });
   }
 
   closeQueryBuilder(): void {

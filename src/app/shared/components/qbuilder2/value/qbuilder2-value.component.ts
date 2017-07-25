@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ColDef } from 'ag-grid';
 
-import { IFilterType } from '../qbuilder2.interface';
+import { IColumn, IFilterType } from '../qbuilder2.interface';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -23,7 +22,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   // nControls = -1 for any number
   @Input() nControls: number;
-  @Input() column: ColDef;
+  @Input() column: IColumn;
 
   value: Array<Date | string | number> = [];
 
@@ -61,7 +60,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
   }
 
   get options(): Array<any> {
-    return (this.column.filterParams.values || []).map((label, value) => ({ label, value }));
+    return (this.column.filterValues || []).map(value => ({ label: value.name, value: value.code }));
   }
 
   writeValue(value: Array<Date | string | number>): void {
