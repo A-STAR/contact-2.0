@@ -18,7 +18,7 @@ export interface IFilters {
   [key: string]: boolean;
 }
 
-export interface INotificationServiceState {
+export interface INotificationsState {
   filters: IFilters;
   notifications: Array<INotification>;
 }
