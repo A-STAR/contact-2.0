@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { ILookupRolesResponse, ILookupUsersResponse } from './lookup.interface';
 
-import { DataService } from '../data/data.service';
+// import { DataService } from '../data/data.service';
 import { LookupService } from './lookup.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -69,7 +69,7 @@ export class LookupEffects {
 
   constructor(
     private actions: Actions,
-    private dataService: DataService,
+    // private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
 

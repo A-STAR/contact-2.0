@@ -10,7 +10,7 @@ import {
   INotification,
   INotificationActionType,
   INotificationActionPayload,
-  INotificationServiceState,
+  INotificationsState,
   NotificationTypeEnum,
 } from './notifications.interface';
 
@@ -40,7 +40,7 @@ export class NotificationsService implements OnDestroy {
     this.notificationsStateSubscription.unsubscribe();
   }
 
-  get state(): Observable<INotificationServiceState> {
+  get state(): Observable<INotificationsState> {
     return this.store.select(state => state.notifications);
   }
 

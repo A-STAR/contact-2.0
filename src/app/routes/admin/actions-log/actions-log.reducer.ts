@@ -1,7 +1,7 @@
 import {
   IActionsLogData,
   IActionsLogPayload,
-  IActionsLogServiceState,
+  IActionsLogState,
   IEmployee
 } from './actions-log.interface';
 
@@ -10,14 +10,14 @@ import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interfa
 import { combineWithAGridReducer, AGRID_DEFAULT_STATE } from '../../../shared/components/grid2/grid2.reducer';
 import { ActionsLogService } from './actions-log.service';
 
-const defaultState: IActionsLogServiceState = {
+const defaultState: IActionsLogState = {
   actionsLog: { data: [], total: 0 },
   employees: [],
   actionTypes: [],
   actionsLogGrid: AGRID_DEFAULT_STATE,
 };
 
-const ownReducer = (ownState: IActionsLogServiceState, ownAction: IActionsLogPayload): IActionsLogServiceState => {
+const ownReducer = (ownState: IActionsLogState, ownAction: IActionsLogPayload): IActionsLogState => {
   switch (ownAction.type) {
     case ActionsLogService.ACTIONS_LOG_DESTROY:
       return { ...defaultState };
@@ -44,6 +44,6 @@ const ownReducer = (ownState: IActionsLogServiceState, ownAction: IActionsLogPay
   }
 };
 
-export function actionsLogReducer(state: IActionsLogServiceState = defaultState, action: IActionsLogPayload): IActionsLogServiceState {
+export function actionsLogReducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
   return combineWithAGridReducer('actionsLogGrid', ownReducer)(state, action);
 }

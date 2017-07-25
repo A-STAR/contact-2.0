@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,15 +18,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private menuSubscription: Subscription;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     private menuService: GuiObjectsService,
-    private notificationsService: NotificationsService,
     private router: Router,
     public settings: SettingsService,
   ) {
     this.menuSubscription = this.menuService.menuItems.subscribe(items => {
       this.menuItems = items;
-      this.changeDetectorRef.markForCheck();
+      this.cdRef.markForCheck();
     });
   }
 

@@ -240,7 +240,6 @@ export class ContractorsAndPortfoliosEffects {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
-    private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
   ) {}
 
   private readContractors(): Observable<IContractorsResponse> {

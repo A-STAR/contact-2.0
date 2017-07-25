@@ -11,7 +11,7 @@
       <input
         appFocus
         type="text"
-        class="form-control app-select-search"
+        [ngClass]="[ inputClass, 'app-select-search' ]"
         [(ngModel)]="filterValue"
       >
     </li>
@@ -57,7 +57,7 @@
     class="ui-select-match"
   >
     <span
-      class="form-control app-select-unselectable"
+      [ngClass]="[ inputClass, 'app-select-unselectable' ]"
       (click)="onMatchClick($event)"
     >
       <span
@@ -74,8 +74,7 @@
     *ngIf="inputMode"
     autocomplete="false"
     [attr.readonly]="readonly"
-    [ngClass]="{ hidden: !isInputVisible()}"
-    class="form-control app-select-search app-select-unselectable"
+    [ngClass]="{ inputClass: true, hidden: !isInputVisible(), 'app-select-search app-select-unselectable': true }"
     (click)="onInputClick($event)"
     [placeholder]="displayPlaceholder"
   >
@@ -114,9 +113,9 @@
     (click)="onMatchClick($event)"
     [attr.readonly]="readonly"
     [ngClass]="{ hidden: !isInputVisible() }"
+    [ngClass]="{ inputClass: true, hidden: !isInputVisible(), 'app-select-search app-select-unselectable': true }"
     autocomplete="false"
     [placeholder]="displayPlaceholder"
-    class="form-control app-select-search app-select-unselectable"
   >
   <ng-container *ngTemplateOutlet="optionsTemplate">
   </ng-container>

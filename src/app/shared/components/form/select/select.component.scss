@@ -23,7 +23,7 @@
 .app-select-caret {
   position: absolute;
   top: 45%;
-  right: 15px;
+  right: 10px;
   cursor: pointer;
 }
 
@@ -73,7 +73,11 @@
 }
 
 .ui-select-container {
+  display: inline-block;
   font-weight: normal;
+  > .ui-select-match > .form-control {
+    padding-right: 24px;
+  }
 }
 
 .ui-select-container[disabled] * {

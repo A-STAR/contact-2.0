@@ -10,9 +10,7 @@ import { IUserLanguageOption } from '../../../core/user/languages/user-languages
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PermissionsService } from '../roles/permissions.service';
-import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
@@ -97,15 +95,13 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private contentTabService: ContentTabService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
-    private userConstantsService: UserConstantsService,
     private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.roleOptions$ = this.permissionsService.roles.map(valueConverterService.valuesToOptions);
+    this.roleOptions$ = this.permissionsService.roles.map(this.valueConverterService.valuesToOptions);
 
     this.languageOptions$ = this.userLanguagesService.languageOptions;
 
