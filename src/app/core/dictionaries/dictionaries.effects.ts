@@ -69,9 +69,9 @@ export class DictionariesEffects {
     .withLatestFrom(this.store)
     .switchMap(data => {
       const [action, store]: [Action, IAppState] = data;
-      const { code, id } = store.dictionaries.selectedDictionary;
+      const { code } = store.dictionaries.selectedDictionary;
       const { dictionary, updatedTranslations, deletedTranslations } = action.payload;
-      return this.updateDictionary(code, id, dictionary, deletedTranslations, updatedTranslations)
+      return this.updateDictionary(code, dictionary, deletedTranslations, updatedTranslations)
         .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
@@ -308,22 +308,18 @@ export class DictionariesEffects {
 
   private updateDictionary(
     dictionaryCode: number,
-    dictionaryId: number,
     dictionary: IDictionary,
     deletedTranslations: Array<number>,
     updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
-    return Observable.forkJoin([
-      this.dataService.update('/dictionaries/{dictionaryCode}', {dictionaryCode}, dictionary)
-    ].concat(
-      updatedTranslations.length
-        ? this.entityTranslationsService.saveDictNameTranslations(dictionaryId, updatedTranslations)
-        : []
-    ).concat(
-      deletedTranslations.length
-        ? this.entityTranslationsService.deleteDictNameTranslation(dictionaryId, deletedTranslations)
-        : []
-    ));
+    const data = {
+      ...dictionary,
+      name: [
+        ...updatedTranslations.map(translation => ({ languageId: translation.languageId, value: translation.value })),
+        ...deletedTranslations.map(translation => ({ languageId: translation, value: null }))
+      ]
+    };
+    return this.dataService.update('/dictionaries/{dictionaryCode}', { dictionaryCode }, data);
   }
 
   private deleteDictionary(code: number): Observable<any> {
@@ -345,17 +341,14 @@ export class DictionariesEffects {
     deletedTranslations: Array<number>,
     updatedTranslations: Array<IEntityTranslation>,
   ): Observable<any> {
-    return Observable.forkJoin([
-      this.dataService.update('/dictionaries/{dictionaryCode}/terms/{termId}', {dictionaryCode, termId}, term)
-    ].concat(
-      updatedTranslations.length
-        ? this.entityTranslationsService.saveTermNameTranslations(termId, updatedTranslations)
-        : []
-    ).concat(
-      deletedTranslations.length
-        ? this.entityTranslationsService.deleteTermNameTranslation(termId, deletedTranslations)
-        : []
-    ));
+    const data = {
+      ...term,
+      name: [
+        ...updatedTranslations.map(translation => ({ languageId: translation.languageId, value: translation.value })),
+        ...deletedTranslations.map(translation => ({ languageId: translation, value: null }))
+      ]
+    };
+    return this.dataService.update('/dictionaries/{dictionaryCode}/terms/{termId}', { dictionaryCode, termId }, data);
   }
 
   private deleteTerm(code: number, termId: number): Observable<any> {
