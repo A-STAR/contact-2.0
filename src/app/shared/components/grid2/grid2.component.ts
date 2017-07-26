@@ -63,7 +63,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
-  @Input() columnTranslationKey: string;
+  @Input() metadataKey: string;
   @Input() filterEnabled = true;
   @Input() headerHeight = 25;
   @Input() groupColumnMinWidth = 120;
@@ -125,9 +125,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
+    if (!this.metadataKey) {
+      throw new Error(`Can't initialiase since no [metadataKey] key provided.`);
+    }
 
     this.gridService
-      .getColumnMeta('actions', {})
+      .getColumnMeta(this.metadataKey, {})
       .take(1)
       .subscribe(columns => {
 
@@ -449,7 +452,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
     this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
-    if (this.columnTranslationKey) {
+    // if (this.columnTranslationKey) {
       // NOTE: the key 'grid' should be present in translation files for every grid component
       // or this will throw
       // const columnTranslations = this.columnTranslationKey
@@ -457,8 +460,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   .reduce((acc, prop) => acc[prop], translations)
       //   .grid;
       // this.translateColumns(columnTranslations);
-    }
-
+    // }
+      // const columnTranslations = this.columnTranslationKey
+      //   .split('.')
+      //   .reduce((acc, prop) => acc[prop], translations)
+      //   .grid;
+      // this.translateColumns(columnTranslations);
+    // }
     this.cdRef.markForCheck();
   }
 
