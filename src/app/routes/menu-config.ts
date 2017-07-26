@@ -131,7 +131,7 @@ export const menuConfig: IMenuConfig = {
   },
   debts: {
     text: 'sidebar.nav.menu.DEBTS',
-    link: '/workplaces/debts',
+    link: '/workplaces/debt-processing',
     icon: 'icon-fire'
   },
   contactProtocol: {
