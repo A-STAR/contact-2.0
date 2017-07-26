@@ -84,6 +84,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
 
+  @Input() rowIdKey = 'id';
+
   @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
@@ -132,7 +134,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridService
       .getColumnMeta(this.metadataKey, {})
       .then(columns => {
-
         const { colDefs } = this.restoreGridSettings();
 
         this.columns = columns.slice();
@@ -222,12 +223,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   onSelectionChanged(): void {
     const selected = this.gridOptions.api.getSelectedRows();
     this.onSelect.emit({
-      type: Grid2Component.SELECTED_ROWS, payload: selected.map(row => row.id)
+      type: Grid2Component.SELECTED_ROWS,
+      payload: selected.map(row => row[this.rowIdKey])
     });
   }
 
   rowDoubleClicked(): void {
-    this.onDblClick.emit(this.selected.map(node => node.data));
+    this.onDblClick.emit(this.selected);
   }
 
   onFilterChanged(): void {
@@ -596,7 +598,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
       viewportDatasource: this.viewportDatasource,
-      getRowNodeId: (row) => { return row.id; },
+      getRowNodeId: row => row[this.rowIdKey],
       rowSelection: this.rowSelection,
       showToolPanel: false,
       suppressMenuHide: true,

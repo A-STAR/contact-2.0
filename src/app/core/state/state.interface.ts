@@ -3,6 +3,7 @@ import { IAuthState } from '../auth/auth.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
+import { IDebtProcessingState } from '../../routes/workplaces/debt-processing/debt-processing.interface';
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
 import { ILookupState } from '../lookup/lookup.interface';
@@ -21,9 +22,12 @@ export interface IAppState {
   readonly auth: IAuthState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
+  readonly debtors: IDebtorsState;
+  readonly debtProcessing: IDebtProcessingState;
   readonly dictionaries: IDictionariesState;
   readonly guiObjects: IGuiObjectsState;
   readonly lookup: ILookupState;
+  readonly metadata: IMetadataState;
   readonly notifications: INotificationsState;
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
@@ -31,7 +35,5 @@ export interface IAppState {
   readonly userDictionaries: IUserDictionariesState;
   readonly userLanguages: IUserLanguagesState;
   readonly userPermissions: IUserPermissionsState;
-  readonly metadata: IMetadataState;
   readonly users: IUsersState;
-  readonly debtors: IDebtorsState;
 }

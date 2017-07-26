@@ -12,21 +12,22 @@ import { ContentTabService } from '../shared/components/content-tabstrip/tab/con
 })
 export class LayoutComponent {
   titles = {
+    ActionsLogComponent: 'ACTIONS_LOG',
     ConstantsComponent: 'CONSTANTS',
-    DashboardComponent: 'HOME',
-    DictAndTermsComponent: 'DICTIONARIES',
-    OrganizationsComponent: 'DEPARTMENTS',
-    RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     ContractorsAndPortfoliosComponent: 'BANKS',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
-    UsersComponent: 'USERS',
-    UserEditComponent: 'USER_EDIT',
-    HelpComponent: 'HELP',
-    ActionsLogComponent: 'ACTIONS_LOG',
+    DashboardComponent: 'HOME',
     DebtorComponent: 'DEBTOR_CARD',
     DebtorsComponent: 'DEBT_LIST',
+    DebtProcessingComponent: 'DEBTS',
+    DictAndTermsComponent: 'DICTIONARIES',
+    HelpComponent: 'HELP',
+    OrganizationsComponent: 'DEPARTMENTS',
+    RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
+    UsersComponent: 'USERS',
+    UserEditComponent: 'USER_EDIT',
   };
 
   constructor(
