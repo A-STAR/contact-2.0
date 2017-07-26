@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Observable } from 'rxjs/Observable';
 
 import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
-import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 
 import { IconsService } from '../../icons/icons.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';

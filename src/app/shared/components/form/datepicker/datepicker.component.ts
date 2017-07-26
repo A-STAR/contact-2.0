@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-input-datepicker',

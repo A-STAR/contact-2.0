@@ -1,4 +1,4 @@
-import { IValueEntity } from '../../../core/converter/value/value-converter.interface';
+import { IValueEntity } from '../../../core/converter/value-converter.interface';
 
 export { IValueEntity };
 

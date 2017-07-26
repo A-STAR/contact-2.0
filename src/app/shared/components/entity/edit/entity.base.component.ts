@@ -1,7 +1,7 @@
 import { AfterViewInit, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import {
   IDynamicFormControl,
   IDynamicFormItem,

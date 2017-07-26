@@ -6,7 +6,7 @@ import { EntityBaseComponent } from '../../../../shared/components/entity/edit/e
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IConstant } from '../constants.interface';
 
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-constant-edit',

@@ -13,7 +13,7 @@ import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-permissions',

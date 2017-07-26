@@ -1,4 +1,4 @@
-import { ILabeledValue } from '../converter/value/value-converter.interface';
+import { ILabeledValue } from '../converter/value-converter.interface';
 
 export type IDictionaryValue = number | Array<ILabeledValue>;
 

@@ -5,9 +5,9 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
 import { ILookupState, ILookupRole, ILookupUser } from './lookup.interface';
-import { IOption } from '../converter/value/value-converter.interface';
+import { IOption } from '../converter/value-converter.interface';
 
-import { ValueConverterService } from '../converter/value/value-converter.service';
+import { ValueConverterService } from '../converter/value-converter.service';
 
 @Injectable()
 export class LookupService {

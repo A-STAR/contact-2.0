@@ -33,7 +33,7 @@ import { FilterObject } from './filter/grid-filter';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';

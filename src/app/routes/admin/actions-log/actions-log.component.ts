@@ -95,19 +95,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  // onBeforeEdit(): void {
-  //   const permission = 'ACTION_LOG_VIEW';
-  //   this.userPermissionsService.has(permission)
-  //     .take(1)
-  //     .subscribe(hasPermission => {
-  //       if (hasPermission) {
-  //         this.display = true;
-  //       } else {
-  //         this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
-  //       }
-  //     });
-  // }
-
   ngOnDestroy(): void {
     this.permissionSub.unsubscribe();
   }

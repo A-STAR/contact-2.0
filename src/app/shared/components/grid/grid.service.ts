@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
-import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
@@ -13,7 +13,7 @@ import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictiona
 
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
