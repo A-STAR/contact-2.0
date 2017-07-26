@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -13,7 +13,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 
 @Component({

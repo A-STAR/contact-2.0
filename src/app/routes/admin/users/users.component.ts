@@ -14,7 +14,7 @@ import { PermissionsService } from '../roles/permissions.service';
 import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-users',

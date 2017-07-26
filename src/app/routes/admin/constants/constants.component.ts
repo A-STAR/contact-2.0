@@ -15,7 +15,7 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 

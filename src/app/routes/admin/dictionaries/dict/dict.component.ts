@@ -8,11 +8,11 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';

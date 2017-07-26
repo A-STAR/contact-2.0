@@ -6,12 +6,12 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IOption } from '../../../../../core/converter/value/value-converter.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 

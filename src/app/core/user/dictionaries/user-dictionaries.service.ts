@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { arrayToObject } from '../../utils';
 
 import { IAppState } from '../../state/state.interface';
-import { IOption } from '../../converter/value/value-converter.interface';
+import { IOption } from '../../converter/value-converter.interface';
 import { IUserDictionariesState, IUserDictionary, IUserTerm, IUserDictionaries } from './user-dictionaries.interface';
 
 import { DataService } from '../../data/data.service';

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { IFilterType, IOperator } from '../qbuilder2.interface';
-import { IOption } from '../../../../core/converter/value/value-converter.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 import { IAGridColumn } from '../../grid2/grid2.interface';
 
 import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';

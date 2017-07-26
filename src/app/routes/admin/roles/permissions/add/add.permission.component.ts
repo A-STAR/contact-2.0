@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrat
 
 import { IPermissionModel, IPermissionsResponse } from '../../permissions.interface';
 
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 

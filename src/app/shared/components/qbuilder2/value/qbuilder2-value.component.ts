@@ -4,7 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IFilterType } from '../qbuilder2.interface';
 import { IAGridColumn } from '../../grid2/grid2.interface';
 
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-qbuilder2-value',

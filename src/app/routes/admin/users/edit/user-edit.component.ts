@@ -7,7 +7,7 @@ import 'rxjs/add/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
-import { IOption } from '../../../../core/converter/value/value-converter.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
@@ -15,7 +15,7 @@ import { UserConstantsService } from '../../../../core/user/constants/user-const
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UsersService } from '../users.service';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 

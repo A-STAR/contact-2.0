@@ -13,7 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ISelectionAction } from './select-interfaces';
 
 import { SelectionToolsPlugin } from './selection-tools.plugin';

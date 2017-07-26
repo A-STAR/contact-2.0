@@ -1,7 +1,7 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { ISelectionAction } from '../select/select-interfaces';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 
 export interface IValidationMessages {
   [key: string]: string;
