@@ -12,7 +12,6 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid-filte
 export class DebtProcessingService {
   static DEBT_PROCESSING_FETCH         = 'DEBT_PROCESSING_FETCH';
   static DEBT_PROCESSING_FETCH_SUCCESS = 'DEBT_PROCESSING_FETCH_SUCCESS';
-  static DEBT_PROCESSING_DESTROY       = 'DEBT_PROCESSING_DESTROY';
 
   constructor(private store: Store<IAppState>) {}
 
@@ -42,10 +41,6 @@ export class DebtProcessingService {
 
   filter(filters: FilterObject): void {
     this.dispatch(DebtProcessingService.DEBT_PROCESSING_FETCH, { currentPage: 1, filters });
-  }
-
-  destroy(): void {
-    this.dispatch(DebtProcessingService.DEBT_PROCESSING_DESTROY);
   }
 
   dispatch(type: string, payload: number | object = null): void {

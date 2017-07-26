@@ -12,10 +12,6 @@ const defaultState: IDebtProcessingState = {
 
 const ownReducer = (ownState: IDebtProcessingState, ownAction: Action): IDebtProcessingState => {
   switch (ownAction.type) {
-    case DebtProcessingService.DEBT_PROCESSING_DESTROY:
-      return {
-        ...defaultState
-      };
     case DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS:
       return {
         ...ownState,
