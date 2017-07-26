@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IColumn, IFilterType } from '../qbuilder2.interface';
+import { IFilterType } from '../qbuilder2.interface';
+import { IAGridColumn } from '../../grid2/grid2.interface';
 
 import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
 
@@ -22,7 +23,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
 
   // nControls = -1 for any number
   @Input() nControls: number;
-  @Input() column: IColumn;
+  @Input() column: IAGridColumn;
 
   value: Array<Date | string | number> = [];
 

@@ -8,13 +8,16 @@ export type IAGridSelected = Array<any>;
 
 export interface IAGridColumn {
   colId: string;
+  dataType: number;
+  dictCode?: number;
   disabled?: boolean;
   filter?: string;
   filterValues?: Array<any>;
-  filterDictionaryId?: number;
-  hide?: boolean;
+  hidden?: boolean;
+  label?: string;
   maxWidth?: number;
   minWidth?: number;
+  name?: string;
   renderer?: Function;
   sort?: string;
   type?: string;
