@@ -35,5 +35,3 @@ export interface IAppState {
   readonly users: IUsersState;
   readonly debtors: IDebtorsState;
 }
-
-export type ISliceCallback = (state: IAppState) => Partial<IAppState>;

@@ -7,7 +7,7 @@ import { IFilters, INotification } from '../../core/notifications/notifications.
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { StateService } from '../../core/state/state.service';
+import { PersistenceService } from '../../core/persistence/persistence.service';
 
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 
@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
-    private stateService: StateService,
+    private persistenceService: PersistenceService,
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
@@ -92,7 +92,7 @@ export class HeaderComponent implements OnInit {
 
   resetSettings(event: UIEvent): void {
     event.preventDefault();
-    this.stateService.clear();
+    this.persistenceService.clear();
     this.accountDropdown.close();
   }
 
