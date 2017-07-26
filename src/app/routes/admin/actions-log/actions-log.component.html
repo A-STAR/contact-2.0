@@ -28,8 +28,8 @@
 </app-downloader>
 
 <app-grid2
+  ngClass="actions-log-grid"
   metadataKey="actions"
-  [ngClass]="'actions-log-grid'"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"
   persistenceKey="actionsLog"

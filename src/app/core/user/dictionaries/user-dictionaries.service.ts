@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
 
 import { arrayToObject } from '../../utils';
+
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value/value-converter.interface';
-import { IUserDictionariesState, IUserDictionary, IUserTerm } from './user-dictionaries.interface';
+import { IUserDictionariesState, IUserDictionary, IUserTerm, IUserDictionaries } from './user-dictionaries.interface';
+
+import { DataService } from '../../data/data.service';
 
 @Injectable()
 export class UserDictionariesService {
@@ -24,7 +28,7 @@ export class UserDictionariesService {
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(private store: Store<IAppState>, private dataService: DataService) {}
 
   createRefreshAction(dictionaryId: number): Action {
     return {
@@ -56,10 +60,20 @@ export class UserDictionariesService {
       .distinctUntilChanged();
   }
 
-  getAllDictionaries(): Observable<{[key: number]: IUserTerm[]}> {
-    return this.state
-      .map(state => state.dictionaries)
-      .distinctUntilChanged();
+  getDictionaries(Ids: number[]): Promise<IUserDictionaries> {
+    const mapDictionary = id => this.dataService
+      .read('/dictionaries/{id}/userterms', { id })
+      .toPromise()
+      .then(resp => ({ id, terms: resp.userTerms }));
+
+    const allDictionaries = Ids.map(mapDictionary);
+
+    return Promise.all(allDictionaries).then(dictionaries => {
+      return dictionaries.reduce((acc, dictionary) => {
+            acc[dictionary.id] = dictionary.terms;
+            return acc;
+          }, {});
+    });
   }
 
   getDictionary(dictionaryId: number): Observable<IUserDictionary> {

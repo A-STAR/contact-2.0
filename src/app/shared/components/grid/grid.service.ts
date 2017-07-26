@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/toPromise';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value/value-converter.interface';
 import { IGridColumn, IRenderer } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
+import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
-import { DataService } from '../../../core/data/data.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
-// import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
@@ -20,10 +21,9 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid-filte
 export class GridService {
   constructor(
     private converterService: ValueConverterService,
-    private dataService: DataService,
     private metadataService: MetadataService,
     private translateService: TranslateService,
-    // private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
   /**
@@ -67,27 +67,18 @@ export class GridService {
    * To be used only once during ngOnInit phase
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
-   * @param {Observable<IAGridColumn[]>} columns Initial column descriptions
    * @param {object} renderers Column renderers, i.e. getters
-   * @returns {Observable<IAGridColumn[]>} Column defininitions
+   * @returns {Promise<IAGridColumn[]>} Column defininitions
    */
-  getColumnMeta(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
-    const mapColumns = ([metadata, dictionaries]) => {
-
-      // const dictionaryIds = columns.filter(column =>
-      //   !!metadata.find(metaColumn => metaColumn.name === column.colId)
-      // )
-      // .map(column => Object.assign(column, { meta: metadata.find(metaColumn => metaColumn.name === column.colId) }))
-      // .filter(column => column.filterDictionaryId && column.filterDictionaryId === column.meta.dictCode)
-      // .map(column => column.filterDictionaryId);
-      // console.log('dictionaries', dictionaries);
+  getColumnMeta(metadataKey: string, renderers: object): Promise<IAGridColumn[]> {
+    const mapColumns = ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
 
       const columns: IAGridColumn[] = metadata
-        .map((column: IAGridColumn) => {
-          column.colId = column.name;
+        .map(metaColumn => {
+          const column: IAGridColumn = Object.assign({}, metaColumn, { colId: metaColumn.name });
           return column;
         })
-        .map((column: IAGridColumn) => {
+        .map(column => {
           // Data types
           switch (column.dataType) {
             case 2:
@@ -96,13 +87,14 @@ export class GridService {
               break;
             case 6:
             // Dictionary
+              console.log('dict', dictionaries);
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 column.renderer = (row: ITypeCodeItem) => {
                   const typeDescription = dictionary.find(item => item.code === row.typeCode);
                   return typeDescription ? typeDescription.name : row.typeCode;
                 };
-                column.filterValues = dictionary.map(item => ({ id: item.id, code: item.code, name: item.name }));
+                column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
               break;
             case 7:
@@ -121,20 +113,19 @@ export class GridService {
       return result;
     };
 
-    return Observable.combineLatest(
-      this.metadataService.metadata.map(metadata => metadata ? metadata[metadataKey] : []),
-      this.getAllDictionaries([4]),
-    )
-    .map(mapColumns);
-  }
+    return this.metadataService.metadata
+        .map(metadata => metadata ? metadata[metadataKey] : [])
+        .take(1)
+        .toPromise()
+        .then(metadata => {
+          const dictionaryIds = metadata
+            .filter(column => !!column.dictCode)
+            .map(column => column.dictCode);
 
-  // private getAllDictionaries(Ids: number[]): Observable<{ [index: number]: Array<any> }> {
-  //   return Observable.combineLatest(
-  //     this.userDictionariesService.getAllDictionaries(),
-  //   ).map(([usersActionsTypes]) => {
-  //     return { [UserDictionariesService.DICTIONARY_ACTION_TYPES]: usersActionsTypes };
-  //   }).distinctUntilChanged();
-  // }
+          return Promise.all([metadata, this.userDictionariesService.getDictionaries(dictionaryIds)]);
+        })
+        .then(mapColumns);
+  }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
     return columns.map(column => {
@@ -149,23 +140,6 @@ export class GridService {
       const renderer = renderers[column.colId];
       return renderer ? this.setValueGetter(column, renderer) : column;
     });
-  }
-
-  private getAllDictionaries(Ids: number[]): Observable<{ [index: number]: Array<any> }> {
-    const Dictionaries = Observable
-      .forkJoin(Ids.slice().map(id => this.dataService.read('/dictionaries/{id}/userterms', { id })
-      .map(resp => resp.userTerms)));
-
-      return Observable.zip(
-        Dictionaries,
-        Ids,
-        (dictionaries, ids) => {
-          return dictionaries.reduce((acc, dictionary) => {
-            acc[ids] = dictionary;
-            return acc;
-          }, {});
-        }
-      );
   }
 
   private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {

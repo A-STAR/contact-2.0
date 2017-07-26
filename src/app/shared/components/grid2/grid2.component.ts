@@ -126,40 +126,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
     if (!this.metadataKey) {
-      throw new Error(`Can't initialiase since no [metadataKey] key provided.`);
+      throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
-      .take(1)
-      .subscribe(columns => {
+      .then(columns => {
 
         const { colDefs } = this.restoreGridSettings();
 
-        // console.log('restored columns', colDefs);
         this.columns = columns.slice();
-        // console.log('columns', this.columns);
-
         this.columnDefs = this.setColumnDefs(colDefs);
-        // console.log('colDefs', this.columnDefs);
         this.setGridOptions();
         this.setPagination();
-
-        // const translationKeys = ['grid.messages'];
-
-        // if (this.columnTranslationKey) {
-        //   translationKeys.push(this.columnTranslationKey);
-        // }
-        // this.translate.get(translationKeys)
-        //   .take(1)
-        //   .subscribe(
-        //     (translation) => {
-        //       if (this.columnTranslationKey) {
-        //         this.translateColumns(translation[this.columnTranslationKey].grid);
-        //       }
-        //     },
-        //     error => this.notificationService.warning(error).noAlert().dispatch()
-        //   );
 
         this.langSubscription = this.translate.onLangChange
           .subscribe((translations: { translations: { [index: string]: string } }) =>
@@ -448,25 +427,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
-
     this.translateOptionsMessages();
     this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
-    // if (this.columnTranslationKey) {
-      // NOTE: the key 'grid' should be present in translation files for every grid component
-      // or this will throw
-      // const columnTranslations = this.columnTranslationKey
-      //   .split('.')
-      //   .reduce((acc, prop) => acc[prop], translations)
-      //   .grid;
-      // this.translateColumns(columnTranslations);
-    // }
-      // const columnTranslations = this.columnTranslationKey
-      //   .split('.')
-      //   .reduce((acc, prop) => acc[prop], translations)
-      //   .grid;
-      // this.translateColumns(columnTranslations);
-    // }
     this.cdRef.markForCheck();
   }
 
@@ -486,13 +449,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private getRendererByName(field: string): Function {
     return this.columns.find(column => column.colId === field).renderer;
   }
-
-  // private translateColumns(columnTranslations: object): void {
-  //   this.columnDefs = this.columnDefs.map(col => {
-  //     col.headerName = columnTranslations[col.field];
-  //     return col;
-  //   });
-  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);
@@ -521,7 +477,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
-  private setColumnDefs(colDefs: ColDef[]): ColDef[] {
+  private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
     const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
@@ -537,11 +493,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         width: column.width || column.minWidth || column.maxWidth,
       };
       // Merge persisted column settings, if any
-      if (colDefs) {
-        index = colDefs.findIndex(col => col.colId === column.colId);
+      if (savedColDefs) {
+        index = savedColDefs.findIndex(col => col.colId === column.colId);
         // tslint:disable-next-line:no-bitwise
         if (!!~index) {
-          Object.assign(colDef, colDefs[index]);
+          Object.assign(colDef, savedColDefs[index]);
         }
       } else {
         index = 0;
@@ -560,9 +516,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         colDef.cellRenderer = (params: ICellRendererParams) => column.renderer(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }
-      // if (column.filter === 'set') {
-      //   colDef.keyCreator = (params) => params.value.code;
-      // }
+
       return { column: colDef, index, originalIndex };
     };
 

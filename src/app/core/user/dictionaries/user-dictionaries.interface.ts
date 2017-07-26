@@ -6,15 +6,19 @@ export interface IUserTerm {
 
 export interface IUserTermsResponse {
   success: boolean;
-  userTerms: Array<IUserTerm>;
+  userTerms: IUserTerm[];
 }
 
 export interface IUserDictionary {
   [key: number]: IUserTerm;
 }
 
+export interface IUserDictionaries {
+  [key: number]: IUserTerm[];
+}
+
 export interface IUserDictionariesState {
   dictionaries: {
-    [key: number]: Array<IUserTerm>;
+    [key: number]: IUserTerm[];
   };
 }
