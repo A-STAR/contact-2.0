@@ -123,6 +123,14 @@ export class SelectComponent implements ControlValueAccessor {
     return this._active;
   }
 
+  get inputNgClass(): object {
+    return {
+      [this.inputClass]: true,
+      'app-select-search app-select-unselectable': true,
+      hidden: !this.isInputVisible(),
+    };
+  }
+
   @Input()
   set active(activeValue: SelectInputValueType) {
     this._active = activeValue as ILabeledValue[] || [];
