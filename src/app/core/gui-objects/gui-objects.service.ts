@@ -88,6 +88,9 @@ export class GuiObjectsService {
     this.menuItemIds
       .take(1)
       .subscribe(menuItemIds => {
+        if (menuItemIds[name] === 0) {
+          return;
+        }
         const data = { typeCode: 1, duration: delay };
         const headers = new Headers({
           'X-Gui-Object': menuItemIds[name]
