@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -24,7 +25,10 @@ export class DebtProcessingComponent {
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
-  constructor(private debtProcessingService: DebtProcessingService) {}
+  constructor(
+    private debtProcessingService: DebtProcessingService,
+    private router: Router,
+  ) {}
 
   get currentPage$(): Observable<number> {
     return this.debtProcessingService.currentPage$;
@@ -61,7 +65,7 @@ export class DebtProcessingComponent {
   }
 
   onDblClick([id]: Array<number>): void {
-    console.log(id);
+    this.router.navigate([ `/workplaces/debt-list/${id}` ]);
   }
 
   getRowNodeId(debt: IDebt): number {
