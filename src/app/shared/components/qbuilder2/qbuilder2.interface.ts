@@ -1,10 +1,8 @@
 import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { FilterOperatorType, FilterObject } from '../grid2/filter/grid-filter';
 
-export type IColumn = { name: string } & IAGridColumn;
-
 export interface IQuery {
-  columns: Array<IColumn>;
+  columns: Array<IAGridColumn>;
   filters: FilterObject;
 }
 

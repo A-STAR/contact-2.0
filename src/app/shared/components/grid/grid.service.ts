@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/concat';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
@@ -70,7 +71,7 @@ export class GridService {
    * @param {object} renderers Column renderers, i.e. getters
    * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnMeta(metadataKey: string, columns: IAGridColumn[], renderers: object): Observable<IAGridColumn[]> {
+  getColumnMeta(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
     const mapColumns = ([metadata, dictionaries]) => {
 
       // const dictionaryIds = columns.filter(column =>
@@ -81,43 +82,42 @@ export class GridService {
       // .map(column => column.filterDictionaryId);
       // console.log('dictionaries', dictionaries);
 
-      const result = this.setValueGetters(columns.filter(column =>
-        !!metadata.find(metaColumn => {
-          const isInMeta = column.colId === metaColumn.name;
-          if (isInMeta) {
-            if (!column.renderer) {
-              const dictionary = dictionaries[metaColumn.dictCode];
-              if (Array.isArray(dictionary)) {
+      const columns: IAGridColumn[] = metadata
+        .map((column: IAGridColumn) => {
+          column.colId = column.name;
+          return column;
+        })
+        .map((column: IAGridColumn) => {
+          // Data types
+          switch (column.dataType) {
+            case 2:
+              // Date
+              column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
+              break;
+            case 6:
+            // Dictionary
+              const dictionary = dictionaries[column.dictCode];
+              if (dictionary) {
                 column.renderer = (row: ITypeCodeItem) => {
                   const typeDescription = dictionary.find(item => item.code === row.typeCode);
                   return typeDescription ? typeDescription.name : row.typeCode;
                 };
-              } else {
-                // Data types
-                switch (metaColumn.dataType) {
-                  case 2:
-                    // Date
-                    column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
-                    break;
-                  case 7:
-                    // Datetime
-                    column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
-                    break;
-                }
+                column.filterValues = dictionary.map(item => ({ id: item.id, code: item.code, name: item.name }));
               }
-            }
-            // Dictionary filters
-            if (column.filterDictionaryId) {
-              const dictTypes = dictionaries[column.filterDictionaryId];
-              if (Array.isArray(dictTypes)) {
-                column.filterValues = dictTypes.map(item => ({ id: item.id, code: item.code, name: item.name }));
-              }
-            }
+              break;
+            case 7:
+              // Datetime
+              column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
+              break;
+            case 1:
+              // Number
+            case 3:
+              // String
+            default:
           }
-          return isInMeta;
-        })
-      ), renderers);
-
+          return column;
+      });
+      const result = this.setValueGetters(columns, renderers);
       return result;
     };
 

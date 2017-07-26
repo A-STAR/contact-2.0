@@ -133,6 +133,7 @@ export class ActionsLogService {
   destroy(): void {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
+
   // TODO(a.tymchuk): use the dictionary API
   getActionTypes(): Observable<IDictionaryItem[]> {
     return this.dataService.read('/dictionaries/{code}/terms', {

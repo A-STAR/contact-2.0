@@ -28,8 +28,7 @@
 </app-downloader>
 
 <app-grid2
-  columnTranslationKey="actionsLog"
-  [columns]="columns"
+  metadataKey="actions"
   [ngClass]="'actions-log-grid'"
   [page]="actionsLogCurrentPage | async"
   [pageSize]="actionsLogCurrentPageSize | async"
