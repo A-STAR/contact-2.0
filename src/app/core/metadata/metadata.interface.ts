@@ -1,11 +1,16 @@
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
 export interface IMetadataColumn {
-  name: string;
+  actions: string[];
+  aggregate: MetadataAggregateType;
   dataType: number;
   dictCode: number;
-  aggregate: MetadataAggregateType;
-  actions: string[];
+  hidden?: boolean;
+  maxWidth?: number;
+  minWidth?: number;
+  label?: string;
+  name: string;
+  width?: number;
 }
 
 export interface IMetadata {
