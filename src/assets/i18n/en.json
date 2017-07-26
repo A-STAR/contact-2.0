@@ -9,7 +9,7 @@
     },
     "account": {
       "title": "Account",
-      "logout": "Log Out",
+      "logout": "Logout",
       "reset": "Reset Settings"
     }
   },
