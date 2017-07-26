@@ -16,7 +16,6 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Injectable()
 export class ActionsLogService {

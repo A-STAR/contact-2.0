@@ -1,8 +1,8 @@
 <app-grid2
-  metadataKey="debtProcessing"
-  persistenceKey="debtProcessing"
+  metadataKey="debtsprocessingall"
+  persistenceKey="debtsprocessingall"
   [ngClass]="'debt-processing-grid'"
-  [page]="page$ | async"
+  [page]="currentPage$ | async"
   [pageSize]="pageSize$ | async"
   [rows]="rows$ | async"
   [rowCount]="rowCount$ | async"

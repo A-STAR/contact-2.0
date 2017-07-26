@@ -1,6 +1,17 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+
+import { IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IAppState } from '../../../core/state/state.interface';
+import { IDebt } from './debt-processing.interface';
+
+import { DebtProcessingService } from './debt-processing.service';
+
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+
+import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-debt-processing',
@@ -12,21 +23,52 @@ import 'rxjs/add/observable/of';
 export class DebtProcessingComponent {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
-  page$ = Observable.of(1);
-  pageSize$ = Observable.of(100);
-  rows$ = Observable.of([{ debtId: 1 }]);
-  rowCount$ = this.rows$.map(rows => rows.length);
-  selected$ = Observable.of([]);
+  @ViewChild(Grid2Component) grid: Grid2Component;
 
-  onRequestData(event: any): void {
-    console.log('onRequestData');
+  constructor(
+    private debtProcessingService: DebtProcessingService,
+    private store: Store<IAppState>
+  ) {}
+
+  get currentPage$(): Observable<number> {
+    return this.debtProcessingService.currentPage$;
   }
 
-  onFilter(event: any): void {
-    console.log('onFilter');
+  get pageSize$(): Observable<number> {
+    return this.debtProcessingService.pageSize$;
   }
 
-  onSelect(event: any): void {
-    console.log('onSelect');
+  get rows$(): Observable<Array<IDebt>> {
+    return this.debtProcessingService.debts$;
+  }
+
+  get rowCount$(): Observable<number> {
+    return this.debtProcessingService.debts$.map(debts => debts.length);
+  }
+
+  get selected$(): Observable<Array<IDebt>> {
+    return this.debtProcessingService.selected$;
+  }
+
+  onRequestData(action: IAGridEventPayload): void {
+    this.dispatch(action);
+    this.debtProcessingService.fetch(this.getFilter());
+  }
+
+  onFilter(gridFilters: any): void {
+    this.dispatch({ type: Grid2Component.FIRST_PAGE });
+    this.debtProcessingService.filter(this.getFilter());
+  }
+
+  onSelect(action: IAGridEventPayload): void {
+    this.dispatch(action);
+  }
+
+  private dispatch(action: Action): void {
+    this.debtProcessingService.dispatch(action.type, action.payload);
+  }
+
+  private getFilter(): FilterObject {
+    return this.grid.getFilters();
   }
 }
