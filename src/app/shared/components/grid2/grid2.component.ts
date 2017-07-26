@@ -84,6 +84,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
 
+  @Input() getRowNodeId = (row: RowNode) => row.id;
+
   @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
   @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
@@ -243,12 +245,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   onSelectionChanged(): void {
     const selected = this.gridOptions.api.getSelectedRows();
     this.onSelect.emit({
-      type: Grid2Component.SELECTED_ROWS, payload: selected.map(row => row.id)
+      type: Grid2Component.SELECTED_ROWS,
+      payload: selected.map(row => this.getRowNodeId(row))
     });
   }
 
   rowDoubleClicked(): void {
-    this.onDblClick.emit(this.selected.map(node => node.data));
+    this.onDblClick.emit(this.selected);
   }
 
   onFilterChanged(): void {

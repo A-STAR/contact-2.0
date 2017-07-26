@@ -7,9 +7,11 @@
   [rows]="rows$ | async"
   [rowCount]="rowCount$ | async"
   [selected]="selected$ | async"
+  [getRowNodeId]="getRowNodeId"
   (onPage)="onRequestData($event)"
   (onPageSize)="onRequestData($event)"
   (onSort)="onRequestData($event)"
   (onFilter)="onFilter($event)"
-  (onSelect)="onSelect($event)">
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onDblClick($event)">
 </app-grid2>

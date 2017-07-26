@@ -60,6 +60,14 @@ export class DebtProcessingComponent {
     this.dispatch(action);
   }
 
+  onDblClick([id]: Array<number>): void {
+    console.log(id);
+  }
+
+  getRowNodeId(debt: IDebt): number {
+    return debt.debtId;
+  }
+
   private dispatch(action: Action): void {
     this.debtProcessingService.dispatch(action.type, action.payload);
   }
