@@ -12,7 +12,6 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -33,6 +32,7 @@ import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
@@ -111,6 +111,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private elRef: ElementRef,
     private gridService: GridService,
     private notificationService: NotificationsService,
+    private persistenceService: PersistenceService,
     private translate: TranslateService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -755,12 +756,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private saveGridSettings(): void {
     if (this.persistenceKey) {
-      localStorage.setItem(this.persistenceKey, JSON.stringify(this.gridSettings));
+      this.persistenceService.set(this.persistenceKey, this.gridSettings);
     }
   }
 
   private restoreGridSettings(): IAGridSettings {
-    this.gridSettings = JSON.parse(localStorage.getItem(this.persistenceKey) || '{}');
+    this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
     return this.gridSettings;
   }
 

@@ -6,7 +6,6 @@ export class PersistenceService {
     try {
       return JSON.parse(localStorage.getItem(key));
     } catch (error) {
-      // TODO(d.maltsev): notification
       return null;
     }
   }
@@ -15,7 +14,8 @@ export class PersistenceService {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      // TODO(d.maltsev): notification
+      // TODO(d.maltsev): show notification?
+      console.error(error);
     }
   }
 

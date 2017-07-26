@@ -14,6 +14,8 @@ import {
   NotificationTypeEnum,
 } from './notifications.interface';
 
+import { PersistenceService } from '../persistence/persistence.service';
+
 import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
@@ -28,12 +30,13 @@ export class NotificationsService implements OnDestroy {
   private notificationsStateSubscription: Subscription;
 
   constructor(
+    private persistenceService: PersistenceService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
   ) {
     // TODO(d.maltsev): can we optimize this?
     this.notificationsStateSubscription = this.state.subscribe(state => {
-      localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state));
+      this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
     });
   }
 
