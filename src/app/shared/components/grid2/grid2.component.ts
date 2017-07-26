@@ -145,7 +145,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.setGridOptions();
         this.setPagination();
 
-        const translationKeys = ['grid.messages'];
+        // const translationKeys = ['grid.messages'];
 
         // if (this.columnTranslationKey) {
         //   translationKeys.push(this.columnTranslationKey);
@@ -175,7 +175,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.initialized) {
       return;
     }
-    const { columns, rowCount, rows, currentPage, currentPageSize, selected } = changes;
+    const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
     if (rows || currentPage || currentPageSize) {
       this.refreshPagination();
       this.clearRangeSelections();
@@ -522,7 +522,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private setColumnDefs(colDefs: ColDef[]): ColDef[] {
-    const mapColumns = (column: IAGridColumn) => {
+    const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
@@ -563,13 +563,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       // if (column.filter === 'set') {
       //   colDef.keyCreator = (params) => params.value.code;
       // }
-      return { column: colDef, index };
+      return { column: colDef, index, originalIndex };
     };
 
     return this.columns
       .filter(column => !!column.label)
       .map(mapColumns)
-      .sort((a, b) => a.index - b.index)
+      // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
+      .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
       .map(item => item.column);
   }
 
