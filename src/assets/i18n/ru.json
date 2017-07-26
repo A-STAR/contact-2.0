@@ -23,7 +23,6 @@
       "HEADER": "Меню"
     },
     "nav": {
-      "SINGLEVIEW": "Single View",
       "menu": {
         "HOME": "Главная",
         "WORKFLOW": "Процесс",

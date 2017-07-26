@@ -8,6 +8,8 @@ import { createTranslateLoader } from '../../app.module';
 
 import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { NotificationsService } from '../../core/notifications/notifications.service';
+import { PersistenceService } from '../../core/persistence/persistence.service';
 
 import { HeaderComponent } from './header.component';
 
@@ -41,8 +43,10 @@ describe('Component: Header', () => {
           provide: JwtHelper,
           useValue: new JwtHelper
         },
-        SettingsService,
         AuthService,
+        NotificationsService,
+        PersistenceService,
+        SettingsService,
         TranslateService,
         {
           provide: Router,
@@ -53,9 +57,9 @@ describe('Component: Header', () => {
   });
 
   it('should create an instance', async(inject(
-    [SettingsService, AuthService, TranslateService],
-    (settingsService, authService, translateService) => {
-      const component = new HeaderComponent(settingsService, authService, translateService);
+    [SettingsService, AuthService, TranslateService, NotificationsService, PersistenceService],
+    (settingsService, authService, translateService, notificationsService, persistenceService) => {
+      const component = new HeaderComponent(authService, notificationsService, settingsService, persistenceService, translateService);
       expect(component).toBeTruthy();
   })));
 });

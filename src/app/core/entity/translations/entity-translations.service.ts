@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
 
 import { EntityTranslationsConstants, IEntityTranslation } from './entity-translations.interface';
 
@@ -8,8 +7,6 @@ import { DataService } from '../../data/data.service';
 
 @Injectable()
 export class EntityTranslationsService {
-
-  private API = '/api/entityAttributes/{entityAttributesId}/entities/{entitiesId}';
 
   constructor(private dataService: DataService) {}
 
@@ -23,7 +20,7 @@ export class EntityTranslationsService {
 
   private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
     return this.dataService
-      .read(this.API, {
+      .read('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
         entityAttributesId: entityAttributesId,
         entitiesId: entityId
       })

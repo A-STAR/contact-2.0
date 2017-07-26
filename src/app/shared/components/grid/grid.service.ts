@@ -87,7 +87,6 @@ export class GridService {
               break;
             case 6:
             // Dictionary
-              console.log('dict', dictionaries);
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 column.renderer = (row: ITypeCodeItem) => {

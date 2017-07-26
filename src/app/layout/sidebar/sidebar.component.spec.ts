@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AuthHttp, AuthConfig, JwtHelper } from 'angular2-jwt';
@@ -49,8 +50,10 @@ describe('Component: Sidebar', () => {
     }).compileComponents();
   });
 
-  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router], (menuService, settingsService, router) => {
-    const component = new SidebarComponent(menuService, settingsService, router);
-    expect(component).toBeTruthy();
-  })));
+  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router, ChangeDetectorRef],
+    (cdRef, menuService, settingsService, router) => {
+      const component = new SidebarComponent(cdRef, menuService, settingsService, router);
+      expect(component).toBeTruthy();
+    }))
+  );
 });

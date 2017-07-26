@@ -23,7 +23,6 @@
       "HEADER": "Menu Heading"
     },
     "nav": {
-      "SINGLEVIEW": "Single View",
       "menu": {
         "HOME": "Home",
         "WORKFLOW": "Workflow",
