@@ -14,6 +14,7 @@ import {
 } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
+import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
 import { PermissionsTreeService } from './permissions-tree.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -45,6 +46,7 @@ export class PermissionsTreeComponent implements OnDestroy {
   private permissionsServiceSub: Subscription;
 
   constructor(
+    private guiObjectsService: GuiObjectsService,
     private permissionsTreeService: PermissionsTreeService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService
@@ -64,14 +66,12 @@ export class PermissionsTreeComponent implements OnDestroy {
   onSaveChanges(): void {
     this.permissionsTreeService.save(this.currentRole, this.getRemovedItems, this.getAddedItems)
       .subscribe(() => {
+        this.guiObjectsService.refreshGuiObjects();
         this.initSelectionCopy();
       });
   }
 
   onSelectionChange(selection: ITreeNode[]): void {
-
-    console.log(this.value, this.selection);
-
     this.selection = selection;
     this.changes.next(!!this.getRemovedItems.length || !!this.getAddedItems.length);
   }
