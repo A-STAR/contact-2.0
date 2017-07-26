@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
 import { IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
-import { IAppState } from '../../../core/state/state.interface';
 import { IDebt } from './debt-processing.interface';
 
 import { DebtProcessingService } from './debt-processing.service';
@@ -25,10 +24,7 @@ export class DebtProcessingComponent {
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
-  constructor(
-    private debtProcessingService: DebtProcessingService,
-    private store: Store<IAppState>
-  ) {}
+  constructor(private debtProcessingService: DebtProcessingService) {}
 
   get currentPage$(): Observable<number> {
     return this.debtProcessingService.currentPage$;
