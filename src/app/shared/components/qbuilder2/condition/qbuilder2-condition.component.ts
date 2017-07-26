@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { IColumn, IFilterType, IOperator } from '../qbuilder2.interface';
+import { IFilterType, IOperator } from '../qbuilder2.interface';
 import { IOption } from '../../../../core/converter/value/value-converter.interface';
+import { IAGridColumn } from '../../grid2/grid2.interface';
 
 import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';
 
@@ -11,7 +12,7 @@ import { FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QBuilder2ConditionComponent {
-  @Input() columns: Array<IColumn>;
+  @Input() columns: Array<IAGridColumn>;
   @Input() filter: FilterObject;
 
   @Output() onRemove = new EventEmitter<void>();
@@ -33,7 +34,7 @@ export class QBuilder2ConditionComponent {
     { name: 'NOT LIKE', filters: [ 'text' ] },
   ];
 
-  get column(): IColumn {
+  get column(): IAGridColumn {
     return this.columns.find(c => c.colId === this.filter.name);
   }
 
@@ -46,9 +47,9 @@ export class QBuilder2ConditionComponent {
   }
 
   get nControls(): number {
-    if (this.operator === 'IN' || this.operator === 'NOT IN') { return -1; }
-    if (this.operator === 'EMPTY' || this.operator === 'NOT EMPTY') { return 0; }
-    if (this.operator === 'BETWEEN' || this.operator === 'NOT BETWEEN') { return 2; }
+    if (['IN', 'NOT IN'].includes(this.operator)) { return -1; }
+    if (['EMPTY', 'NOT EMPTY'].includes(this.operator)) { return 0; }
+    if (['BETWEEN', 'NOT BETWEEN'].includes(this.operator)) { return 2; }
     return 1;
   }
 

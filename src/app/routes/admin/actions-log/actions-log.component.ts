@@ -36,20 +36,6 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
-  columns: IAGridColumn[] = [
-    { colId: 'id', minWidth: 60, type: 'primary', filter: 'number' },
-    { colId: 'fullName', minWidth: 200, filter: 'text' },
-    { colId: 'position', minWidth: 100, filter: 'text' },
-    { colId: 'createDateTime', minWidth: 130, type: 'date', filter: 'date' },
-    { colId: 'guiObject', minWidth: 150, filter: 'text' },
-    { colId: 'typeCode', minWidth: 150, filter: 'set',
-      filterDictionaryId: UserDictionariesService.DICTIONARY_ACTION_TYPES
-    },
-    { colId: 'dsc', minWidth: 200, filter: 'text' },
-    { colId: 'machine', minWidth: 120, filter: 'text' },
-    { colId: 'duration', minWidth: 100, type: 'number', filter: 'number' }
-  ];
-
   // filter
   actionTypesRows: Observable<IDictionaryItem[]>;
   employeesRows: Observable<IEmployee[]>;
@@ -127,7 +113,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   }
 
   onFilter(gridFilters: any): void {
-    const filters = this.getCombinedFilters().addFilters(gridFilters);
+    const filters = this.getCombinedFilters();
     this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
     this.actionsLogService.filter(filters);
   }
@@ -165,7 +151,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   openQueryBuilder(): void {
     this.query$.next({
       filters: this.getCombinedFilters(),
-      columns: this.grid.columns.map((column, i) => ({ ...column, name: this.grid.columnDefs[i].headerName }))
+      columns: [].concat(this.grid.columns)
     });
   }
 

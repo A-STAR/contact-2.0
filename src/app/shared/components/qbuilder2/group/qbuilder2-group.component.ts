@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { IColumn } from '../qbuilder2.interface';
+import { IAGridColumn } from '../../grid2/grid2.interface';
 import { FilterConditionType, FilterOperatorType, FilterObject } from '../../grid2/filter/grid-filter';
 
 @Component({
@@ -13,7 +13,7 @@ export class QBuilder2GroupComponent {
   static DEFAULT_CONDITION: FilterConditionType = 'AND';
   static DEFAULT_OPERATOR: FilterOperatorType = '==';
 
-  @Input() columns: Array<IColumn>;
+  @Input() columns: Array<IAGridColumn>;
   @Input() filter: FilterObject;
 
   @Output() onAddGroup = new EventEmitter<void>();
