@@ -1,1 +1,15 @@
-DEBT PROCESSING
+<app-grid2
+  metadataKey="debtProcessing"
+  persistenceKey="debtProcessing"
+  [ngClass]="'debt-processing-grid'"
+  [page]="page$ | async"
+  [pageSize]="pageSize$ | async"
+  [rows]="rows$ | async"
+  [rowCount]="rowCount$ | async"
+  [selected]="selected$ | async"
+  (onPage)="onRequestData($event)"
+  (onPageSize)="onRequestData($event)"
+  (onSort)="onRequestData($event)"
+  (onFilter)="onFilter($event)"
+  (onSelect)="onSelect($event)">
+</app-grid2>
