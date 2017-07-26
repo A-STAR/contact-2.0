@@ -1,5 +1,6 @@
 import { Http, RequestOptions } from '@angular/http';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
+import * as R from 'ramda';
 
 import { AuthService } from './auth.service';
 
@@ -9,7 +10,7 @@ import { AuthService } from './auth.service';
  */
 export function authHttpServiceFactory(http: Http, options: RequestOptions): AuthHttp {
   return new AuthHttp(new AuthConfig({
-    tokenGetter: () => localStorage.getItem(AuthService.TOKEN_NAME),
+    tokenGetter: () => R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME)),
     noJwtError: true
   }), http, options);
 }
