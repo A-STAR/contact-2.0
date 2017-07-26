@@ -8,10 +8,12 @@ import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
 
+import { PersistenceService } from '../persistence/persistence.service';
+
 @Injectable()
 export class AuthService implements CanActivate {
   static TOKEN_NAME = 'auth/token';
-  static LANGUAGE_TOKEN = 'user/language';
+  static LANGUAGE_TOKEN = 'auth/language';
 
   static URL_DEFAULT = '/';
   static URL_LOGIN   = '/login';
@@ -33,6 +35,7 @@ export class AuthService implements CanActivate {
     private jwtHelper: JwtHelper,
     private router: Router,
     private store: Store<IAppState>,
+    private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
@@ -86,18 +89,18 @@ export class AuthService implements CanActivate {
   }
 
   saveToken(token: string): void {
-    localStorage.setItem(AuthService.TOKEN_NAME, token);
+    this.persistenceService.set(AuthService.TOKEN_NAME, token);
   }
 
   removeToken(): void {
-    localStorage.removeItem(AuthService.TOKEN_NAME);
+    this.persistenceService.remove(AuthService.TOKEN_NAME);
   }
 
   saveLanguage(token: string): void {
     const { language } = this.jwtHelper.decodeToken(token);
     this.translateService.setDefaultLang(language || 'en');
     this.translateService.use(language).subscribe();
-    localStorage.setItem(AuthService.LANGUAGE_TOKEN, language);
+    this.persistenceService.set(AuthService.LANGUAGE_TOKEN, language);
   }
 
   initTokenTimer(token: string): void {

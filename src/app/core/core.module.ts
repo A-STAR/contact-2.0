@@ -25,6 +25,7 @@ import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
+import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
@@ -73,6 +74,7 @@ import { rootReducer } from './state/root.reducer';
     GuiObjectsService,
     MetadataService,
     NotificationsService,
+    PersistenceService,
     SettingsService,
     ThemesService,
     TranslateService,

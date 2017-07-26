@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent {
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
+    private persistenceService: PersistenceService,
   ) {
     const login = this.login;
     const remember = !!login;
@@ -45,14 +47,14 @@ export class LoginComponent {
   }
 
   private get login(): string {
-    return localStorage.getItem(LoginComponent.LOGIN_KEY);
+    return this.persistenceService.get(LoginComponent.LOGIN_KEY);
   }
 
   private set login(login: string) {
     if (login) {
-      localStorage.setItem(LoginComponent.LOGIN_KEY, login);
+      this.persistenceService.set(LoginComponent.LOGIN_KEY, login);
     } else {
-      localStorage.removeItem(LoginComponent.LOGIN_KEY);
+      this.persistenceService.remove(LoginComponent.LOGIN_KEY);
     }
   }
 }

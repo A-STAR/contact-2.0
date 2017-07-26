@@ -6,7 +6,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/debounceTime';
 
+import { AuthService } from './core/auth/auth.service';
 import { DataService } from './core/data/data.service';
+import { PersistenceService } from './core/persistence/persistence.service';
 import { SettingsService } from './core/settings/settings.service';
 
 @Component({
@@ -25,8 +27,6 @@ import { SettingsService } from './core/settings/settings.service';
   ]
 })
 export class AppComponent {
-  static USER_LANGUAGE = 'user/language';
-
   static LOADER_DEBOUNCE_INTERVAL = 200;
 
   toasterConfig = new ToasterConfig({
@@ -49,11 +49,12 @@ export class AppComponent {
   constructor(
     private dataService: DataService,
     private router: Router,
+    private persistenceService: PersistenceService,
     public settings: SettingsService,
     private translateService: TranslateService
   ) {
     // set default to 'en' if no language is found
-    const language = localStorage.getItem(AppComponent.USER_LANGUAGE) || 'en';
+    const language = this.persistenceService.get(AuthService.LANGUAGE_TOKEN) || 'en';
     // NOTE: the default language is then taken from the user profile
     // and reset after successful authentication
     this.translateService.setDefaultLang(language);
