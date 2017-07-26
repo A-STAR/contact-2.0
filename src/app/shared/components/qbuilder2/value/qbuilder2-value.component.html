@@ -1,4 +1,4 @@
-<span class="value">
+<span class="form-inline value">
   <span *ngIf="displayAsArray">(</span>
 
   <ng-container *ngFor="let v of value; let i = index; let last = last; trackBy: trackByIndex">
@@ -18,6 +18,7 @@
       <ng-container *ngSwitchCase="'set'">
         <app-select
           inputClass="form-control input-sm"
+          class="inline"
           [ngModel]="v"
           [options]="options"
           (onSelect)="onSetValueChange($event, i)">

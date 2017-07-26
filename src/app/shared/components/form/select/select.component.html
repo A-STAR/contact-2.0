@@ -74,7 +74,7 @@
     *ngIf="inputMode"
     autocomplete="false"
     [attr.readonly]="readonly"
-    [ngClass]="{ inputClass: true, hidden: !isInputVisible(), 'app-select-search app-select-unselectable': true }"
+    [ngClass]="inputNgClass"
     (click)="onInputClick($event)"
     [placeholder]="displayPlaceholder"
   >
@@ -112,8 +112,7 @@
     type="text"
     (click)="onMatchClick($event)"
     [attr.readonly]="readonly"
-    [ngClass]="{ hidden: !isInputVisible() }"
-    [ngClass]="{ inputClass: true, hidden: !isInputVisible(), 'app-select-search app-select-unselectable': true }"
+    [ngClass]="inputNgClass"
     autocomplete="false"
     [placeholder]="displayPlaceholder"
   >
