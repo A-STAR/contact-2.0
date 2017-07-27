@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MomentModule } from 'angular2-moment';
 import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
@@ -79,7 +78,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     GuiObjectsModule,
     ImageUploadModule,
     InfoDialogModule,
-    MomentModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
@@ -142,7 +140,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     GuiObjectsModule,
     ImageUploadModule,
     InfoDialogModule,
-    MomentModule,
     MultiSelectModule,
     NumericInputComponent,
     PopupInputModule,

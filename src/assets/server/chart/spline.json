@@ -1,5 +1,5 @@
 [{
-  "label": "Uniques",
+  "label": "Soft",
   "color": "#768294",
   "data": [
     ["Mar", 70],
@@ -11,7 +11,7 @@
     ["Sep", 60]
   ]
 }, {
-  "label": "Recurrent",
+  "label": "Hard",
   "color": "#1f92fe",
   "data": [
     ["Mar", 21],

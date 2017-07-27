@@ -6,27 +6,29 @@
         <div class="panel widget bg-primary">
             <div class="row row-table">
                 <div class="col-xs-4 text-center bg-primary-dark pv-lg">
-                    <em class="icon-cloud-upload fa-3x"></em>
+                    <em class="icon-globe fa-2x"></em>
                 </div>
                 <div class="col-xs-8 pv-lg">
-                    <div class="h2 mt0">1700</div>
-                    <div class="text-uppercase">Uploads</div>
+                    <div class="h2 m0">1700
+                        <small>KEUR</small>
+                    </div>
+                    <div class="text-uppercase">PORTFOLIO</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-sm-6">
         <!-- START widget-->
-        <div class="panel widget bg-purple">
+        <div class="panel widget bg-purple-light">
             <div class="row row-table">
-                <div class="col-xs-4 text-center bg-purple-dark pv-lg">
-                    <em class="icon-globe fa-3x"></em>
+                <div class="col-xs-4 text-center bg-purple pv-lg">
+                    <em class="icon-call-out fa-2x"></em>
                 </div>
                 <div class="col-xs-8 pv-lg">
-                    <div class="h2 mt0">700
-                        <small>GB</small>
+                    <div class="h2 m0">700
+                        <small>KEUR</small>
                     </div>
-                    <div class="text-uppercase">Quota</div>
+                    <div class="text-uppercase">Plan</div>
                 </div>
             </div>
         </div>
@@ -36,11 +38,13 @@
         <div class="panel widget bg-green">
             <div class="row row-table">
                 <div class="col-xs-4 text-center bg-green-dark pv-lg">
-                    <em class="icon-bubbles fa-3x"></em>
+                    <em class="icon-call-in fa-2x"></em>
                 </div>
                 <div class="col-xs-8 pv-lg">
-                    <div class="h2 mt0">500</div>
-                    <div class="text-uppercase">Reviews</div>
+                    <div class="h2 m0">500
+                        <small>KEUR</small>
+                    </div>
+                    <div class="text-uppercase">Actual</div>
                 </div>
             </div>
         </div>
@@ -76,7 +80,7 @@
                 <!-- START widget-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">Inbound visitor statistics</div>
+                        <div class="panel-title">Collection statistics</div>
                     </div>
                     <div class="panel-body">
                         <div appFlot [dataset]="splineData" [options]="splineOptions" height="260"></div>
@@ -285,22 +289,21 @@
         <!-- START loader widget-->
         <div class="panel panel-default">
             <div class="panel-body">
-                <a class="text-muted pull-right" href="">
+                <a class="text-muted pull-right">
                     <em class="fa fa-arrow-right"></em>
                 </a>
-                <div class="text-info">Average Monthly Uploads</div>
+                <div class="text-info">Average Monthly Collection</div>
                 <div class="text-center pv-xl">
                     <div class="easypie-chart easypie-chart-lg" easypiechart [options]="pieOptions" [percent]="easyPiePercent">
                         <span>{{easyPiePercent}}%</span>
                     </div>
                 </div>
-                <div class="text-center" [sparkline]="sparkOptions1"  values="5,4,8,7,8,5,4,6,5,5,9,4,6,3,4,7,5,4,7"></div>
+                <div class="text-center" [sparkline]="sparkOptions1" values="5,4,8,7,8,5,4,6,5,5,9,4,6,3,4,7,5,4,7"></div>
             </div>
             <div class="panel-footer">
                 <p class="text-muted">
-                    <em class="fa fa-upload fa-fw"></em>
-                    <span>This Month</span>
-                    <span class="text-dark">1000 Gb</span>
+                    <span appNow class="text-sm" format="MMM YYYY"></span>
+                    <span class="text-dark">350,000 EUR</span>
                 </p>
             </div>
         </div>
