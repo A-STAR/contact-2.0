@@ -9,7 +9,8 @@ import { DebtorService } from './debtor.service';
 import { DebtorComponent } from './debtor.component';
 import { DebtorDocumentsComponent } from './documents/debtor-documents.component';
 import { DebtorGeneralInformationComponent } from './general-information/debtor-general-information.component';
-import { DebtorGeneralInformationPhonesComponent } from './general-information/phones/debtor-general-information-phones.component';
+import { PhoneGridComponent } from './general-information/phones/phone.component';
+import { IdentityGridComponent } from './general-information/identity/identity.component';
 
 @NgModule({
   imports: [
@@ -20,12 +21,12 @@ import { DebtorGeneralInformationPhonesComponent } from './general-information/p
     DebtorComponent,
     DebtorDocumentsComponent,
     DebtorGeneralInformationComponent,
-    DebtorGeneralInformationPhonesComponent,
+    PhoneGridComponent,
+    IdentityGridComponent,
   ],
   providers: [
     DebtorResolver,
     DebtorService,
   ]
 })
-export class DebtorModule {
-}
+export class DebtorModule { }

@@ -25,7 +25,7 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
     const controls = [
       {
         title: 'debtor.generalInformationTab.generalInformation',
-        width: 6,
+        width: 12,
         children: [
           {
             width: 4,
@@ -128,44 +128,44 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
           }
         ]
       },
-      {
-        title: 'debtor.generalInformationTab.passport',
-        width: 6,
-        children: [
-          {
-            children: [
-              {
-                width: 4,
-                label: 'debtor.generalInformationTab.series',
-                controlName: 'series',
-                type: 'text'
-              },
-              {
-                width: 4,
-                label: 'debtor.generalInformationTab.number',
-                controlName: 'number',
-                type: 'text'
-              },
-              {
-                width: 4,
-                label: 'debtor.generalInformationTab.issueDate',
-                controlName: 'issueDate',
-                type: 'datepicker'
-              }
-            ]
-          },
-          {
-            label: 'debtor.generalInformationTab.issuedBy',
-            controlName: 'issuedBy',
-            type: 'text'
-          },
-          {
-            label: 'debtor.generalInformationTab.birthPlace',
-            controlName: 'birthPlace',
-            type: 'text'
-          }
-        ]
-      }
+      // {
+      //   title: 'debtor.generalInformationTab.passport',
+      //   width: 6,
+      //   children: [
+      //     {
+      //       children: [
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.series',
+      //           controlName: 'series',
+      //           type: 'text'
+      //         },
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.number',
+      //           controlName: 'number',
+      //           type: 'text'
+      //         },
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.issueDate',
+      //           controlName: 'issueDate',
+      //           type: 'datepicker'
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       label: 'debtor.generalInformationTab.issuedBy',
+      //       controlName: 'issuedBy',
+      //       type: 'text'
+      //     },
+      //     {
+      //       label: 'debtor.generalInformationTab.birthPlace',
+      //       controlName: 'birthPlace',
+      //       type: 'text'
+      //     }
+      //   ]
+      // }
     ];
 
     return controls as IDynamicFormGroup[];

@@ -75,8 +75,7 @@ export class GridService {
 
       const columns: IAGridColumn[] = metadata
         .map(metaColumn => {
-          const column: IAGridColumn = Object.assign({}, metaColumn, { colId: metaColumn.name });
-          return column;
+          return Object.assign({}, metaColumn, { colId: metaColumn.name }) as IAGridColumn;
         })
         .map(column => {
           // Data types
@@ -108,8 +107,7 @@ export class GridService {
           }
           return column;
       });
-      const result = this.setValueGetters(columns, renderers);
-      return result;
+      return this.setValueGetters(columns, renderers);
     };
 
     return this.metadataService.metadata
