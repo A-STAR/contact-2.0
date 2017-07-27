@@ -33,6 +33,7 @@ import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
+import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
@@ -73,15 +74,16 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DownloaderModule,
     DropdownModule,
     DynamicFormModule,
-    ImageUploadModule,
-    InfoDialogModule,
     GridModule,
     Grid2Module,
-    SpinnerModule,
+    GuiObjectsModule,
+    ImageUploadModule,
+    InfoDialogModule,
     MomentModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
+    SpinnerModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -135,11 +137,11 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     DropdownModule,
     DynamicFormModule,
     DialogModule,
-    ImageUploadModule,
-    InfoDialogModule,
     GridModule,
     Grid2Module,
-    SpinnerModule,
+    GuiObjectsModule,
+    ImageUploadModule,
+    InfoDialogModule,
     MomentModule,
     MultiSelectModule,
     NumericInputComponent,
@@ -148,6 +150,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     QBuilderComponent,
     QBuilder2Module,
     RouterOutlet2Directive,
+    SpinnerModule,
     TabComponent,
     TabstripComponent,
     ToolbarModule,
