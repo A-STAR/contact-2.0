@@ -25,11 +25,11 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
   constructor(private debtorService: DebtorService) {
     super();
 
-      this.selectedDebtorSub = this.debtorService.selectedDebtor.subscribe(debtor => {
-        this.debtor = debtor;
-        this.generalInformation = debtor ? debtor.generalInformation : null;
-        this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
-      });
+    this.selectedDebtorSub = this.debtorService.selectedDebtor.subscribe(debtor => {
+      this.debtor = debtor;
+      this.generalInformation = debtor ? debtor.generalInformation : null;
+      this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
+    });
   }
 
   ngOnDestroy(): void {
