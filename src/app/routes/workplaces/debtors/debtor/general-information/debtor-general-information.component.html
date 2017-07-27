@@ -1,14 +1,21 @@
-<app-dynamic-form
-  [controls]="controls"
-  [data]="data">
-</app-dynamic-form>
-
+<div class="row">
+  <div class="col-md-6 col-xs-12">
+    <app-dynamic-form
+      [controls]="controls"
+      [data]="data">
+    </app-dynamic-form>
+  </div>
+  <div class="col-md-6 col-xs-12">
+    <app-identity-grid [rows]="phones"></app-identity-grid>
+  </div>
+</div>
+<!-- -->
 <app-tabstrip>
   <app-tab title="debtor.generalInformationTab.addressesTab.title" [closable]="false">
     <app-address-grid [personId]="1"></app-address-grid>
   </app-tab>
   <app-tab title="debtor.generalInformationTab.phonesTab.title" [closable]="false">
-    <app-debtor-general-information-phones [rows]="phones"></app-debtor-general-information-phones>
+    <app-phone-grid [rows]="phones"></app-phone-grid>
   </app-tab>
   <app-tab title="debtor.generalInformationTab.emailTab.title" [closable]="false">
   </app-tab>

@@ -1,22 +1,16 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
-import {
-  IToolbarItem,
-  ToolbarItemTypeEnum
-} from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 
 @Component({
-  selector: 'app-debtor-general-information-phones',
-  templateUrl: './debtor-general-information-phones.component.html',
+  selector: 'app-identity-grid',
+  templateUrl: './identity.component.html',
 })
-export class DebtorGeneralInformationPhonesComponent {
+export class IdentityGridComponent {
 
   @Input() rows;
 

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IAddress } from '../address.interface';
 

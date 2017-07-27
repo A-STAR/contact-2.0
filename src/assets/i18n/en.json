@@ -438,12 +438,14 @@
       "maritalStatus": "Marital status",
       "education": "Education",
       "email": "Email",
-      "passport": "Passport",
-      "series": "Series",
-      "number": "No",
-      "issueDate": "Issue date",
-      "issuedBy": "Issued by",
-      "birthPlace": "Place of birth",
+      "identityDocs": {
+        "passport": "Passport",
+        "series": "Series",
+        "number": "No",
+        "issueDate": "Issue date",
+        "issuedBy": "Issued by",
+        "birthPlace": "Place of birth"
+      },
       "phonesTab": {
         "title": "Phones",
         "contactsVerification": "Verification of contacts",
