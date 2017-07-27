@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AddressesModule } from './addresses/addresses.module';
+import { AddressModule } from './address/address.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    AddressesModule,
+    AddressModule,
   ],
   exports: [
-    AddressesModule,
+    AddressModule,
   ]
 })
 export class GuiObjectsModule { }
