@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 
 import { IAddress } from '../address.interface';
 
-import { AddressService } from '../address.service';
+import { AddressGridService } from './address-grid.service';
 
 @Component({
   selector: 'app-address-grid',
@@ -18,11 +18,11 @@ export class AddressGridComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private guiAddressesService: AddressService,
+    private addressGridService: AddressGridService,
   ) {}
 
   ngOnInit(): void {
-    this.guiAddressesService.fetch(this.personId)
+    this.addressGridService.fetch(this.personId)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.changeDetectorRef.markForCheck();

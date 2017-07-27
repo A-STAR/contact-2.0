@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { GridModule } from '../../../components/grid/grid.module';
 
+import { AddressGridService } from './address-grid.service';
+
 import { AddressGridComponent } from './address-grid.component';
 
 @NgModule({
@@ -15,6 +17,9 @@ import { AddressGridComponent } from './address-grid.component';
   ],
   declarations: [
     AddressGridComponent,
+  ],
+  providers: [
+    AddressGridService,
   ]
 })
 export class AddressGridModule { }
