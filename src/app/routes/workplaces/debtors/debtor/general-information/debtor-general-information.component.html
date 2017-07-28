@@ -12,7 +12,7 @@
 <!-- -->
 <app-tabstrip>
   <app-tab title="debtor.generalInformationTab.addressesTab.title" [closable]="false">
-    <app-address-grid [personId]="1"></app-address-grid>
+    <app-container [node]="node"></app-container>
   </app-tab>
   <app-tab title="debtor.generalInformationTab.phonesTab.title" [closable]="false">
     <app-phone-grid [rows]="phones"></app-phone-grid>

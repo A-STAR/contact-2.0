@@ -7,9 +7,6 @@ import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
 export class AddressGridService {
-  static ADDRESS_GRID_FETCH         = 'ADDRESS_GRID_FETCH';
-  static ADDRESS_GRID_FETCH_SUCCESS = 'ADDRESS_GRID_FETCH_SUCCESS';
-
   constructor(private dataService: DataService) {}
 
   fetch(personId: number): Observable<Array<IAddress>> {

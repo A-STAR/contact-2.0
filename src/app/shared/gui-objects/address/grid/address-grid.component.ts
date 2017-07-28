@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 
 import { IAddress } from '../address.interface';
 
@@ -10,19 +10,22 @@ import { AddressGridService } from './address-grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit {
-  @Input() personId: number;
-
   columns = [];
 
   private _addresses: Array<IAddress>;
+  private _key: string;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     private addressGridService: AddressGridService,
-  ) {}
+    private changeDetectorRef: ChangeDetectorRef,
+    private injector: Injector,
+  ) {
+    this._key = this.injector.get('key');
+  }
 
   ngOnInit(): void {
-    this.addressGridService.fetch(this.personId)
+    // TODO(d.maltsev): pass person id
+    this.addressGridService.fetch(1)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.changeDetectorRef.markForCheck();

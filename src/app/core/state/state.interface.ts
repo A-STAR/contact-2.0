@@ -36,4 +36,13 @@ export interface IAppState {
   readonly userLanguages: IUserLanguagesState;
   readonly userPermissions: IUserPermissionsState;
   readonly users: IUsersState;
+  readonly modules: {
+    [key: string]: any;
+  }
+}
+
+export interface IModuleAction<T> {
+  type: T;
+  payload: any;
+  key: number;
 }

@@ -20,6 +20,9 @@ import { AddressGridComponent } from './address-grid.component';
   ],
   providers: [
     AddressGridService,
+  ],
+  entryComponents: [
+    AddressGridComponent,
   ]
 })
 export class AddressGridModule { }
