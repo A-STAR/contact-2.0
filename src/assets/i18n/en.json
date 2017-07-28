@@ -413,6 +413,17 @@
       }
     }
   },
+  "identityDocs": {
+    "grid": {
+      "docTypeCode": "Type",
+      "docNumber": "No",
+      "issueDate": "Issue date",
+      "issuePlace": "Issue place",
+      "expiryDate": "Expiry date",
+      "citizenship": "Citizenship",
+      "isMain": "Is main?"
+    }
+  },
   "debtor": {
     "title": "Debtor",
     "id": "Id",
@@ -438,14 +449,6 @@
       "maritalStatus": "Marital status",
       "education": "Education",
       "email": "Email",
-      "identityDocs": {
-        "passport": "Passport",
-        "series": "Series",
-        "number": "No",
-        "issueDate": "Issue date",
-        "issuedBy": "Issued by",
-        "birthPlace": "Place of birth"
-      },
       "phonesTab": {
         "title": "Phones",
         "contactsVerification": "Verification of contacts",

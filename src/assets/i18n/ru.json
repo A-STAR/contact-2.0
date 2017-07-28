@@ -413,6 +413,17 @@
       }
     }
   },
+  "identityDocs": {
+    "grid": {
+      "docTypeCode": "Тип",
+      "docNumber": "№",
+      "issueDate": "Дата выдачи",
+      "issuePlace": "Где выдан",
+      "expiryDate": "Дата окончания",
+      "citizenship": "Гражданство",
+      "isMain": "Основной"
+    }
+  },
   "debtor": {
     "title": "Карточка должника",
     "id": "Ид",
@@ -438,14 +449,6 @@
       "maritalStatus": "Семейное положение",
       "education": "Образование",
       "email": "Эл. почта",
-      "identityDocs": {
-        "passport": "Паспорт",
-        "series": "Серия",
-        "number": "№",
-        "issueDate": "Дата выдачи",
-        "issuedBy": "Кем выдан",
-        "birthPlace": "Место рождения"
-      },
       "phonesTab": {
         "title": "Телефоны",
         "contactsVerification": "Верификация контактных данных",

@@ -38,7 +38,7 @@ export class DebtorsService {
   }
 
   showDebtor(id: number): void {
-    this.router.navigate([`/workplaces/debt-list/${id}`]);
+    this.router.navigate([`/workplaces/debts/${id}`]);
   }
 
   get selectedDebtor(): Observable<IDebtor> {

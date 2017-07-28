@@ -7,7 +7,7 @@
 <app-tabstrip
   [scrollerEnabled]="true"
 >
-  <app-tab title="debtor.generalInformationTab.title">
+  <app-tab [title]="'debtor.generalInformationTab.title'">
     <app-debtor-general-information
       [phones]="generalInformationPhones"
       [data]="generalInformation"
@@ -42,8 +42,7 @@
     title="debtor.documentationTab.title"
     [closable]="false"
   >
-    <app-debtor-documents>
-    </app-debtor-documents>
+    <app-debtor-documents></app-debtor-documents>
   </app-tab>
   <app-tab
     title="debtor.accountsTab.title"

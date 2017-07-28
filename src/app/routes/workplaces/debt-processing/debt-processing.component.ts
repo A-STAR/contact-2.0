@@ -65,7 +65,7 @@ export class DebtProcessingComponent {
   }
 
   onDblClick([id]: Array<number>): void {
-    this.router.navigate([ `/workplaces/debt-list/${id}` ]);
+    this.router.navigate([ `/workplaces/debts/${id}` ]);
   }
 
   getRowNodeId(debt: IDebt): number {

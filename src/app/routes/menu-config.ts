@@ -121,7 +121,7 @@ export const menuConfig: IMenuConfig = {
   },
   debtList: {
     text: 'sidebar.nav.menu.DEBT_LIST',
-    link: '/workplaces/debt-list',
+    link: '/workplaces/debts',
     icon: 'icon-wallet'
   },
   tasks: {

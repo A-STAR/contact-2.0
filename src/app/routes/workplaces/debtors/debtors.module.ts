@@ -4,20 +4,17 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../../shared/shared.module';
 
-import { DebtorsResolver } from './debtors.resolver';
 import { DebtorsEffects } from './debtors.effects';
 import { DebtorsService } from './debtors.service';
 
 import { DebtorsComponent } from './debtors.component';
 import { DebtorModule } from './debtor/debtor.module';
 
-import { DebtorResolver } from './debtor/debtor.resolver';
-
 import { DebtorComponent } from './debtor/debtor.component';
 
 const routes: Routes = [
-  { path: '', component: DebtorsComponent, resolve: { debtor: DebtorsResolver } },
-  { path: ':id', component: DebtorComponent, resolve: { debtor: DebtorResolver } },
+  { path: '', component: DebtorsComponent },
+  { path: ':id', component: DebtorComponent },
 ];
 
 @NgModule({
@@ -31,9 +28,7 @@ const routes: Routes = [
     DebtorsComponent,
   ],
   providers: [
-    DebtorsResolver,
     DebtorsService,
   ]
 })
-export class DebtorsModule {
-}
+export class DebtorsModule {}
