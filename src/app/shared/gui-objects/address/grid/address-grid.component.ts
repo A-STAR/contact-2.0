@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 
 import { IAddress } from '../address.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 
 import { AddressGridService } from './address-grid.service';
 
@@ -10,7 +11,16 @@ import { AddressGridService } from './address-grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit {
-  columns = [];
+  columns: Array<IGridColumn> = [
+    { prop: 'typeCode' },
+    { prop: 'fullAddress' },
+    { prop: 'statusCode' },
+    { prop: 'isResidence' },
+    { prop: 'isBlocked' },
+    { prop: 'blockReasonCode' },
+    { prop: 'blockDateTime' },
+    { prop: 'comment' },
+  ];
 
   private _addresses: Array<IAddress>;
   private _key: string;
