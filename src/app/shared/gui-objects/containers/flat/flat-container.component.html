@@ -1,5 +1,0 @@
-<ng-container *ngIf="node.children; else container">
-  <app-flat-container [node]="node" *ngFor="let node of node.children"></app-flat-container>
-</ng-container>
-
-<ng-template #container></ng-template>

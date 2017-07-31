@@ -40,6 +40,7 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
+import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
@@ -50,8 +51,6 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
-import { TabComponent } from './components/tabstrip/tab.component';
-import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -82,6 +81,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ProgressbarModule,
     QBuilder2Module,
     SpinnerModule,
+    TabstripModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -103,8 +103,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ScrollableDirective,
     // app declarations
     RouterOutlet2Directive,
-    TabComponent,
-    TabstripComponent,
     NumericInputComponent,
     QBuilderComponent
   ],
@@ -148,8 +146,7 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     QBuilder2Module,
     RouterOutlet2Directive,
     SpinnerModule,
-    TabComponent,
-    TabstripComponent,
+    TabstripModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,

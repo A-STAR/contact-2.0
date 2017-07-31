@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from '../debtor.interface';
 
 import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { INode } from '../../../../../shared/gui-objects/containers/flat/flat-container.interface';
+import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
@@ -18,8 +18,14 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
   @Input() data: IDebtorGeneralInformation;
 
   node: INode = {
-    key: 'debtorAddressGrid',
-    component: AddressGridComponent
+    container: 'tabs',
+    children: [
+      {
+        component: AddressGridComponent,
+        key: 'debtorAddressGrid',
+        title: 'debtorAddressGridTitle'
+      }
+    ]
   };
 
   constructor() {

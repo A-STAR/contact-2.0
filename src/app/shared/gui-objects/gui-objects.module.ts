@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ContainersModule } from './containers/containers.module';
+import { ContainerModule } from './container/container.module';
 import { WidgetsModule } from './widgets/widgets.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    ContainersModule,
+    ContainerModule,
     WidgetsModule,
   ],
   exports: [
-    ContainersModule,
+    ContainerModule,
     WidgetsModule,
   ]
 })
