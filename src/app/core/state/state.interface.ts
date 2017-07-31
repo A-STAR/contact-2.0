@@ -37,3 +37,4 @@ export interface IAppState {
   readonly userPermissions: IUserPermissionsState;
   readonly users: IUsersState;
 }
+

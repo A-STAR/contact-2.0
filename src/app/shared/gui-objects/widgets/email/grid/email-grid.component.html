@@ -1,0 +1,11 @@
+<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="debtor.information.email"
+  selectionType="single"
+  [styles]="{height: '200px'}"
+  [columns]="columns"
+  [rows]="emails"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

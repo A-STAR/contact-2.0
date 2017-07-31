@@ -433,6 +433,46 @@
     "type": "Type",
     "responsible": "Manager",
     "reward": "Remuneration",
+    "information": {
+      "address": {
+        "title": "Addresses",
+        "grid": {
+          "fullAddress": "Address",
+          "typeCode": "Type",
+          "statusCode": "Status",
+          "isResidence": "Residence",
+          "isBlocked": "Blocked",
+          "blockReasonCode": "Reason for blocking",
+          "blockDateTime": "Date of blocking",
+          "comment": "Comment"
+        }
+      },
+      "email": {
+        "title": "Emails",
+        "grid": {
+          "email": "Email",
+          "typeCode": "Type",
+          "isBlocked": "Blocked",
+          "blockReasonCode": "Reason for blocking",
+          "blockDateTime": "Date of blocking"
+        }
+      },
+      "phone": {
+        "title": "Телефоны",
+        "toolbar": {
+          "verification": "Верификация контактных данных"
+        },
+        "grid": {
+          "phoneNumber": "Number",
+          "typeCode": "Type",
+          "statusCode": "Status",
+          "isBlocked": "Blocked",
+          "blockReasonCode": "Reason for blocking",
+          "blockDateTime": "Date of blocking",
+          "comment": "Comment"
+        }
+      }
+    },
     "generalInformationTab": {
       "title": "General",
       "generalInformation": "General information",
@@ -449,31 +489,13 @@
       "maritalStatus": "Marital status",
       "education": "Education",
       "email": "Email",
-      "phonesTab": {
-        "title": "Phones",
-        "contactsVerification": "Verification of contacts",
-        "grid": {
-          "type": "Type",
-          "number": "Number",
-          "status": "Status",
-          "lastCall": "Last call",
-          "contactPerson": "Contact person",
-          "comment": "Comments",
-          "region": "Region",
-          "active": "Active",
-          "qualityCode": "Quality code",
-          "numberExists": "Number exists",
-          "qualityCodeByDataQ": "DataQ code quality",
-          "verified": "Verified",
-          "blockingDate": "Blocking date",
-          "blockingReason": "Blocking reason"
-        }
-      },
-      "addressesTab": {
-        "title": "Addresses"
-      },
-      "emailTab": {
-        "title": "Email"
+      "identityDocs": {
+        "passport": "Passport",
+        "series": "Series",
+        "number": "No",
+        "issueDate": "Issue date",
+        "issuedBy": "Issued by",
+        "birthPlace": "Place of birth"
       }
     },
     "debtsTab": {

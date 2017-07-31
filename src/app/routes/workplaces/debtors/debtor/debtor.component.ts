@@ -32,17 +32,17 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
   ) {
     super();
 
-      this.debtorService.fetch(this.selectedDebtorId);
-      this.selectedDebtorSub = this.debtorService.selectedDebtor
-        .filter(Boolean)
-        .filter(debtor => !!debtor.id)
-        .filter(debtor => !!debtor.generalInformation.id)
-        .subscribe(debtor => {
-          this.debtor = debtor;
-          this.generalInformation = debtor ? debtor.generalInformation : null;
-          this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
-          this.cdRef.markForCheck();
-        });
+    this.debtorService.fetch(this.selectedDebtorId);
+    this.selectedDebtorSub = this.debtorService.selectedDebtor
+      .filter(Boolean)
+      .filter(debtor => !!debtor.id)
+      .filter(debtor => !!debtor.generalInformation.id)
+      .subscribe(debtor => {
+        this.debtor = debtor;
+        this.generalInformation = debtor ? debtor.generalInformation : null;
+        this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {

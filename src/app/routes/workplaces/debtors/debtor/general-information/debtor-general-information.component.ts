@@ -1,11 +1,14 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 import { IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from '../debtor.interface';
-import {
-  IDynamicFormGroup
-} from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+
+import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
+import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +19,27 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
 
   @Input() data: IDebtorGeneralInformation;
   @Input() phones: IDebtorGeneralInformationPhone[];
+
+  node: INode = {
+    container: 'tabs',
+    children: [
+      {
+        component: PhoneGridComponent,
+        key: 'debtorPhoneGrid',
+        title: 'debtor.information.phone.title'
+      },
+      {
+        component: AddressGridComponent,
+        key: 'debtorAddressGrid',
+        title: 'debtor.information.address.title'
+      },
+      {
+        component: EmailGridComponent,
+        key: 'debtorEmailGrid',
+        title: 'debtor.information.email.title'
+      },
+    ]
+  };
 
   constructor() {
     super();
