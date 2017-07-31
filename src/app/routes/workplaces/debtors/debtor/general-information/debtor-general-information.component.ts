@@ -25,17 +25,17 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
       {
         component: AddressGridComponent,
         key: 'debtorAddressGrid',
-        title: 'debtorAddressGridTitle'
+        title: 'debtor.information.address.title'
       },
       {
         component: EmailGridComponent,
         key: 'debtorEmailGrid',
-        title: 'debtorEmailGridTitle'
+        title: 'debtor.information.email.title'
       },
       {
         component: PhoneGridComponent,
         key: 'debtorPhoneGrid',
-        title: 'debtorPhoneGridTitle'
+        title: 'debtor.information.phone.title'
       }
     ]
   };
