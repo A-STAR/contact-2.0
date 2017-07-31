@@ -1,6 +1,6 @@
 <app-dialog (onClose)="onCloseHandle()">
   <div dialog-header>
-    <h3>Block address</h3>
+    <h3>{{ 'widgets.address.dialogs.block.title' | translate }}</h3>
   </div>
   <div>
     <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>

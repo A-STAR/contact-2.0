@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Output, OnDestroy, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form-control.interface';
-import { IOption } from '../../../../../../../core/converter/value-converter.interface';
 
 import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -21,15 +20,21 @@ export class AddressGridBlockDialogComponent {
   data: any;
 
   constructor(private userDictionariesService: UserDictionariesService) {
-    userDictionariesService
+    this.userDictionariesService
       .getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING)
       .take(1)
       .subscribe(options => {
         this.controls = [
-          { label: 'widgets.address.dialogs.block.blockReason', controlName: 'blockReason', type: 'select', required: true, options }
+          {
+            label: 'widgets.address.dialogs.block.blockReasonCode',
+            controlName: 'blockReasonCode',
+            type: 'select',
+            required: true,
+            options
+          }
         ];
         this.data = {
-          blockReason: options[0].value
+          blockReasonCode: options[0].value
         };
       });
 
@@ -41,6 +46,6 @@ export class AddressGridBlockDialogComponent {
   }
 
   onSubmitHandle(): void {
-    this.onSubmit.emit(this.form.value.blockReason);
+    this.onSubmit.emit(this.form.value.blockReasonCode);
   }
 }

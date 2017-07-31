@@ -35,31 +35,28 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       action: () => {}
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
+        .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
+      action: () => this.setDialog(1)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
+        .map(([ canUnblock, address ]) => canUnblock && !!address && address.isBlocked),
+      action: () => this.setDialog(2)
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: Observable.combineLatest(this.canDelete$, this.selectedAddress$)
         .map(([ canDelete, address ]) => canDelete && !!address),
-      action: () => {}
+      action: () => this.setDialog(3)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
     },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
-        .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
-      action: () => {
-        this._dialog = 1;
-        this.cdRef.markForCheck();
-      }
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && address.isBlocked),
-      action: () => { console.log('unblock!') }
-    }
   ];
 
   columns: Array<IGridColumn> = [];
@@ -145,11 +142,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(blockReasonCode: number): void {
     console.log(blockReasonCode);
-    this._dialog = null;
+    this.setDialog(null);
   }
 
   onDialogClose(): void {
-    this._dialog = null;
+    this.setDialog(null);
   }
 
   get selectedAddress$(): Observable<IAddress> {
@@ -192,5 +189,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this._addresses = addresses;
         this.cdRef.markForCheck();
       });
+  }
+
+  private setDialog(dialog: number): void {
+    this._dialog = dialog;
+    this.cdRef.markForCheck();
   }
 }

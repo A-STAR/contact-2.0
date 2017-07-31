@@ -4,6 +4,28 @@
   (onClose)="onDialogClose()">
 </app-address-grid-block-dialog>
 
+<app-dialog-action
+  *ngIf="dialog === 2"
+  titleTranslationKey="widgets.address.dialogs.unblock.title"
+  actionTranslationKey="widgets.address.dialogs.unblock.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onUnblockDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-dialog-action
+  *ngIf="dialog === 3"
+  titleTranslationKey="widgets.address.dialogs.delete.title"
+  actionTranslationKey="widgets.address.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onRemoveDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid

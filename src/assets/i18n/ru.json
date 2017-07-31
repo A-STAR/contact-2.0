@@ -691,6 +691,24 @@
       "refresh": "Не удалось обновить сессию"
     }
   },
+  "widgets": {
+    "address": {
+      "dialogs": {
+        "block": {
+          "title": "Блокировать адрес",
+          "blockReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать адрес",
+          "confirmMessage": "Вы действительно хотите разблокировать адрес {{ fullAddress }}?"
+        },
+        "delete": {
+          "title": "Удалить адрес",
+          "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        }
+      }
+    }
+  },
   "entities": {
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
