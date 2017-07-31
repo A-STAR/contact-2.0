@@ -43,7 +43,7 @@ export class UserEditComponent {
   constructor(
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private userConstantsService: UserConstantsService,
@@ -89,7 +89,7 @@ export class UserEditComponent {
 
       this.controls = this.getFormControls(data.languages, data.roles, passwordValidator, photoValidator);
       this.formData = this.getFormData(data.user);
-      this.changeDetectorRef.markForCheck();
+      this.cdRef.markForCheck();
     });
   }
 

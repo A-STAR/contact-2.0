@@ -9,9 +9,9 @@ import { DataService } from '../../../../../core/data/data.service';
 export class AddressGridService {
   constructor(private dataService: DataService) {}
 
-  fetch(personId: number): Observable<Array<IAddress>> {
+  fetch(entityTypeId: number, personId: number): Observable<Array<IAddress>> {
     return this.dataService
-      .read('/api/persons/{personId}/addresses', { personId })
+      .read('/entityTypes/{entityTypeId}/entities/{personId}/addresses', { entityTypeId, personId })
       .map((response: IAddressesResponse) => response.addresses);
   }
 }

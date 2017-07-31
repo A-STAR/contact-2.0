@@ -37,8 +37,8 @@ export class DataService {
   /**
    * NOTE: route params have to be enclosed in curly braces
    * Example:
-   *  url = '/api/roles/{id}/permits', params = { id: 5 }
-   *  route = '/api/roles/5/permits
+   *  url = '/roles/{id}/permits', params = { id: 5 }
+   *  route = '/roles/5/permits
    */
   read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
     if (this._localRequest) {

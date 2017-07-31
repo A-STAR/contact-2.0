@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
@@ -53,18 +54,20 @@ export class AddressGridComponent implements OnInit {
 
   constructor(
     private addressGridService: AddressGridService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
     private injector: Injector,
   ) {
     this._key = this.injector.get('key');
   }
 
   ngOnInit(): void {
-    // TODO(d.maltsev): pass person id
-    this.addressGridService.fetch(1)
+    // TODO(d.maltsev): pass entityTypeId id
+    const parentId = Number((this.route.params as any).value.id) || null;
+    this.addressGridService.fetch(1, parentId)
       .subscribe(addresses => {
         this._addresses = addresses;
-        this.changeDetectorRef.markForCheck();
+        this.cdRef.markForCheck();
       });
   }
 
