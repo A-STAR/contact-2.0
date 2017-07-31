@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/delay';
 
 import {
   IDebtorFetchResponse,
@@ -58,9 +59,7 @@ export class DebtorCardEffects {
 
   private readDebtor(id: number): Observable<IDebtorFetchResponse> {
     // TODO(a.tymchuk) STUB
-    return new Observable(observer => {
-      setTimeout(() => {
-        observer.next(
+    return Observable.of(
           {
             success: true,
             debtor: {
@@ -68,14 +67,13 @@ export class DebtorCardEffects {
               firstName: 'Pavel',
               middleName: 'Sergeevich',
               lastName: 'Smirnov',
-              type: 1,
+              product: 'Test product',
               responsible: 'System administrator',
-              reward: '3180.78'
+              reward: 3180.78,
+              type: 1,
             }
           }
-        );
-      }, 1000);
-    });
+    ).delay(1000);
   }
 
   private readDebtorGeneralInformation(id: number): Observable<IDebtorGeneralInformationResponse> {
@@ -103,7 +101,7 @@ export class DebtorCardEffects {
               issuedBy: 'Passport office No 122',
               email: 'p.smirnov@gmail.com',
               citizenship: 'Russia',
-              income: 23000.11
+              income: 23000.11,
             }
           }
         );
@@ -113,46 +111,43 @@ export class DebtorCardEffects {
 
   private readDebtorGeneralInformationPhones(id: number): Observable<IDebtorGeneralInformationPhonesResponse> {
     // TODO(a.tymchuk) STUB
-    return new Observable(observer => {
-      setTimeout(() => {
-        observer.next(
-          {
-            success: true,
-            data: {
-              id: id,
-              data: [
-                {
-                  type: 1,
-                  number: '8-495-000-342',
-                  status: 1,
-                  comment: 'Has been imported by data loader',
-                  active: 1,
-                  numberExists: 1,
-                  verified: 1
-                },
-                {
-                  type: 2,
-                  number: '8-495-889-165',
-                  status: 1,
-                  comment: 'Has been imported by data loader',
-                  active: 1,
-                  numberExists: 1,
-                  verified: 1
-                },
-                {
-                  type: 3,
-                  number: '8-964-5638-890',
-                  status: 1,
-                  comment: 'Has been imported by data loader',
-                  active: 1,
-                  numberExists: 1,
-                  verified: 1
-                }
-              ]
+    return Observable.of(
+      {
+        success: true,
+        data: {
+          id: id,
+          data: [
+            {
+              active: 1,
+              comment: 'Has been imported by data loader',
+              number: '8-495-000-342',
+              numberExists: 1,
+              status: 1,
+              type: 1,
+              verified: 1,
+            },
+            {
+              active: 1,
+              comment: 'Has been imported by data loader',
+              number: '8-495-889-165',
+              numberExists: 1,
+              status: 1,
+              type: 2,
+              verified: 1,
+            },
+            {
+              active: 1,
+              comment: 'Has been imported by data loader',
+              number: '8-964-5638-890',
+              numberExists: 1,
+              status: 1,
+              type: 3,
+              verified: 1,
             }
-          }
-        );
-      }, 500);
-    });
+          ]
+        }
+      }
+    );
   }
+
 }

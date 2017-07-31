@@ -35,7 +35,7 @@ export class DebtorsComponent implements OnDestroy {
     type: [
       // TODO(a.tymchuk) STUB
       { value: 1, label: 'Physical person' },
-      { value: 2, label: 'Juridical person' },
+      { value: 2, label: 'Legal entity' },
     ]
   };
 
@@ -52,6 +52,7 @@ export class DebtorsComponent implements OnDestroy {
     private gridService: GridService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.debtorsService.fetchDebtors();
     this.debtorsSub = debtorsService.debtors.subscribe(debtors => this.debtors = debtors);
   }
 

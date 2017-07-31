@@ -413,6 +413,17 @@
       }
     }
   },
+  "identityDocs": {
+    "grid": {
+      "docTypeCode": "Type",
+      "docNumber": "No",
+      "issueDate": "Issue date",
+      "issuePlace": "Issue place",
+      "expiryDate": "Expiry date",
+      "citizenship": "Citizenship",
+      "isMain": "Is main?"
+    }
+  },
   "debtor": {
     "title": "Debtor",
     "id": "Id",

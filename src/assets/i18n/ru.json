@@ -413,6 +413,17 @@
       }
     }
   },
+  "identityDocs": {
+    "grid": {
+      "docTypeCode": "Тип",
+      "docNumber": "№",
+      "issueDate": "Дата выдачи",
+      "issuePlace": "Где выдан",
+      "expiryDate": "Дата окончания",
+      "citizenship": "Гражданство",
+      "isMain": "Основной"
+    }
+  },
   "debtor": {
     "title": "Карточка должника",
     "id": "Ид",

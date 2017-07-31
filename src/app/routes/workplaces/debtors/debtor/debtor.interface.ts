@@ -1,3 +1,5 @@
+import { IIdentityDoc } from './general-information/identity/identity.interface';
+
 export interface IDebtorGeneralInformationResponse {
   success: boolean;
   data: IDebtorGeneralInformation;
@@ -6,6 +8,11 @@ export interface IDebtorGeneralInformationResponse {
 export interface IDebtorGeneralInformationPhonesPayload {
   id: number;
   data: IDebtorGeneralInformationPhone[];
+}
+
+export interface IIdentityPayload {
+  id: number;
+  identityDocs: IIdentityDoc[];
 }
 
 export interface IDebtorGeneralInformationPhonesResponse {
@@ -19,20 +26,20 @@ export interface IDebtorFetchResponse {
 }
 
 export interface IDebtorGeneralInformationPhone {
-  type: number;
-  number: string;
-  status: number;
-  lastCall?: string;
-  contactPerson?: string;
-  comment: string;
-  region?: string;
   active: number;
-  qualityCode?: string;
-  numberExists: number;
-  qualityCodeByDataQ?: string;
-  verified: number;
   blockingDate?: Date;
   blockingReason?: string;
+  contactPerson?: string;
+  comment: string;
+  lastCall?: string;
+  number: string;
+  numberExists: number;
+  region?: string;
+  qualityCode?: string;
+  qualityCodeByDataQ?: string;
+  verified: number;
+  status: number;
+  type: number;
 }
 
 export interface IDebtorGeneralInformation {
@@ -63,9 +70,11 @@ export interface IDebtor {
   firstName: string;
   middleName: string;
   lastName: string;
-  type: number;
+  generalInformation?: IDebtorGeneralInformation;
+  identityDocs?: IIdentityDoc[];
+  product: string;
   responsible: string;
   reward: number;
-  product: string;
-  generalInformation: IDebtorGeneralInformation;
+  type: number;
 }
+

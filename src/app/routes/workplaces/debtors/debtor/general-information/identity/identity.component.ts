@@ -1,34 +1,71 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IIdentityDoc } from './identity.interface';
 
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
+import { IdentityService } from './identity.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-identity-grid',
   templateUrl: './identity.component.html',
 })
-export class IdentityGridComponent {
+export class IdentityGridComponent implements AfterViewInit {
+  private _parentId: number;
 
-  @Input() rows;
+  rows: IIdentityDoc[] = [];
 
   columns: Array<IGridColumn> = [
-    { prop: 'type' },
-    { prop: 'number' },
-    { prop: 'status' },
-    { prop: 'lastCall' },
-    { prop: 'contactPerson' },
-    { prop: 'comment' },
-    { prop: 'region' },
-    { prop: 'active' },
-    { prop: 'qualityCode' },
-    { prop: 'numberExists' },
-    { prop: 'verified' },
-    { prop: 'blockingDate' },
-    { prop: 'blockingReason' },
+    { prop: 'docTypeCode', maxWidth: 50, type: 'number' },
+    { prop: 'docNumber', type: 'number', maxWidth: 70 },
+    { prop: 'issueDate', type: 'date' },
+    { prop: 'issuePlace', type: 'string' },
+    { prop: 'expiryDate', type: 'date' },
+    { prop: 'citizenship', type: 'string' },
+    { prop: 'isMain', localized: true, maxWidth: 70 },
   ];
+
+      // {
+      //   title: 'debtor.generalInformationTab.passport',
+      //   width: 6,
+      //   children: [
+      //     {
+      //       children: [
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.series',
+      //           controlName: 'series',
+      //           type: 'text'
+      //         },
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.number',
+      //           controlName: 'number',
+      //           type: 'text'
+      //         },
+      //         {
+      //           width: 4,
+      //           label: 'debtor.generalInformationTab.issueDate',
+      //           controlName: 'issueDate',
+      //           type: 'datepicker'
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       label: 'debtor.generalInformationTab.issuedBy',
+      //       controlName: 'issuedBy',
+      //       type: 'text'
+      //     },
+      //     {
+      //       label: 'debtor.generalInformationTab.birthPlace',
+      //       controlName: 'birthPlace',
+      //       type: 'text'
+      //     }
+      //   ]
+      // }
 
   renderers: IRenderer = {
     type: [
@@ -45,9 +82,7 @@ export class IdentityGridComponent {
     numberExists: [
       { label: 'TRUE', value: 1 },
     ],
-    verified: [
-      { label: 'TRUE', value: 1 },
-    ],
+    isMain: ({ isMain }) => isMain ? 'default.yesNo.Yes' : 'default.yesNo.No',
   };
 
   toolbarItems: Array<IToolbarItem> = [
@@ -76,15 +111,33 @@ export class IdentityGridComponent {
       enabled: Observable.of(true),
       action: () => {}
     },
-    {
-      type: ToolbarItemTypeEnum.CHECKBOX,
-      label: 'debtor.generalInformationTab.phonesTab.contactsVerification',
-      enabled: Observable.of(true),
-      action: () => {}
-    }
+    // {
+    //   type: ToolbarItemTypeEnum.CHECKBOX,
+    //   label: 'debtor.generalInformationTab.phonesTab.contactsVerification',
+    //   enabled: Observable.of(true),
+    //   action: () => {}
+    // }
   ];
 
-  constructor(private gridService: GridService) {
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private identityService: IdentityService,
+    private gridService: GridService,
+  ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+  }
+
+  ngAfterViewInit(): void {
+    this.setParentId(23);
+    this.identityService
+      .fetch(this._parentId)
+      .subscribe(identities => {
+        this.rows = identities;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  setParentId(id: number): void {
+    this._parentId = id;
   }
 }
