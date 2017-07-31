@@ -1,17 +1,31 @@
-import { Component, ComponentFactoryResolver, Input, OnInit, ReflectiveInjector, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  Input,
+  OnInit,
+  ReflectiveInjector,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 
 import { INode } from './container.interface';
 
 @Component({
   selector: 'app-container',
-  templateUrl: './container.component.html'
+  templateUrl: './container.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContainerComponent implements OnInit {
   @Input() node: INode;
 
   @ViewChild('container', { read: ViewContainerRef }) container: ViewContainerRef;
 
-  constructor(private resolver: ComponentFactoryResolver) { }
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private resolver: ComponentFactoryResolver,
+  ) { }
 
   ngOnInit(): void {
     if (this.node.children) {
@@ -25,5 +39,7 @@ export class ContainerComponent implements OnInit {
 
     const component = this.resolver.resolveComponentFactory(this.node.component).create(injector);
     this.container.insert(component.hostView);
+
+    this.changeDetectorRef.markForCheck();
   }
 }

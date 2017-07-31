@@ -7,6 +7,8 @@ import { INode } from '../../../../../shared/gui-objects/container/container.int
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
+import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
 
 @Component({
   selector: 'app-debtor-general-information',
@@ -24,6 +26,16 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
         component: AddressGridComponent,
         key: 'debtorAddressGrid',
         title: 'debtorAddressGridTitle'
+      },
+      {
+        component: EmailGridComponent,
+        key: 'debtorEmailGrid',
+        title: 'debtorEmailGridTitle'
+      },
+      {
+        component: PhoneGridComponent,
+        key: 'debtorPhoneGrid',
+        title: 'debtorPhoneGridTitle'
       }
     ]
   };
