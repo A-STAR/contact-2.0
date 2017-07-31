@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -17,7 +18,7 @@ import { INode } from './container.interface';
   templateUrl: './container.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerComponent implements OnInit {
+export class ContainerComponent implements OnInit, AfterViewInit {
   @Input() node: INode;
 
   @ViewChild('container', { read: ViewContainerRef }) container: ViewContainerRef;
@@ -39,7 +40,9 @@ export class ContainerComponent implements OnInit {
 
     const component = this.resolver.resolveComponentFactory(this.node.component).create(injector);
     this.container.insert(component.hostView);
+  }
 
+  ngAfterViewInit(): void {
     this.changeDetectorRef.markForCheck();
   }
 }
