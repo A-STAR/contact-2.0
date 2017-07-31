@@ -10,13 +10,10 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 export class EmailGridComponent implements OnInit {
   columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
-    { prop: 'fullAddress' },
-    { prop: 'statusCode' },
-    { prop: 'isResidence' },
+    { prop: 'email' },
     { prop: 'isBlocked' },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
-    { prop: 'comment' },
   ];
 
   private _emails: Array<any>;

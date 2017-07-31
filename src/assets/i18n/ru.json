@@ -422,6 +422,46 @@
     "type": "Тип",
     "responsible": "Ответственный",
     "reward": "Размер вознаграждения",
+    "information": {
+      "address": {
+        "title": "Адреса",
+        "grid": {
+          "fullAddress": "Адрес",
+          "typeCode": "Тип",
+          "statusCode": "Статус",
+          "isResidence": "Проживает",
+          "isBlocked": "Блокирован",
+          "blockReasonCode": "Причина блокировки",
+          "blockDateTime": "Дата блокировки",
+          "comment": "Комментарий"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "email": "Email",
+          "typeCode": "Тип",
+          "isBlocked": "Блокирован",
+          "blockReasonCode": "Причина блокировки",
+          "blockDateTime": "Дата блокировки"
+        }
+      },
+      "phone": {
+        "title": "Телефоны",
+        "toolbar": {
+          "verification": "Верификация контактных данных"
+        },
+        "grid": {
+          "fullAddress": "Номер",
+          "typeCode": "Тип",
+          "statusCode": "Статус",
+          "isBlocked": "Блокирован",
+          "blockReasonCode": "Причина блокировки",
+          "blockDateTime": "Дата блокировки",
+          "comment": "Комментарий"
+        }
+      }
+    },
     "generalInformationTab": {
       "title": "Общая",
       "generalInformation": "Общая информация",
@@ -445,32 +485,6 @@
         "issueDate": "Дата выдачи",
         "issuedBy": "Кем выдан",
         "birthPlace": "Место рождения"
-      },
-      "phonesTab": {
-        "title": "Телефоны",
-        "contactsVerification": "Верификация контактных данных",
-        "grid": {
-          "type": "Тип",
-          "number": "Номер",
-          "status": "Статус",
-          "lastCall": "Посл. звонок",
-          "contactPerson": "Контактное лицо",
-          "comment": "Комментарий",
-          "region": "Регион",
-          "active": "Активен",
-          "qualityCode": "Код качества",
-          "numberExists": "Номер существует",
-          "qualityCodeByDataQ": "Код качества по DataQ",
-          "verified": "Верифицирован",
-          "blockingDate": "Дата блокировки",
-          "blockingReason": "Причина блокировки"
-        }
-      },
-      "addressesTab": {
-        "title": "Адреса"
-      },
-      "emailTab": {
-        "title": "Эл. почта"
       }
     },
     "debtsTab": {

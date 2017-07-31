@@ -10,9 +10,8 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 export class PhoneGridComponent implements OnInit {
   columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
-    { prop: 'fullAddress' },
+    { prop: 'phoneNumber' },
     { prop: 'statusCode' },
-    { prop: 'isResidence' },
     { prop: 'isBlocked' },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
