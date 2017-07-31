@@ -9,7 +9,6 @@ import { DebtorService } from './debtor.service';
 import { DebtorComponent } from './debtor.component';
 import { DebtorDocumentsComponent } from './documents/debtor-documents.component';
 import { DebtorGeneralInformationComponent } from './general-information/debtor-general-information.component';
-import { PhoneGridComponent } from './general-information/phones/phone.component';
 import { IdentityGridComponent } from './general-information/identity/identity.component';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { IdentityGridComponent } from './general-information/identity/identity.c
     DebtorComponent,
     DebtorDocumentsComponent,
     DebtorGeneralInformationComponent,
-    PhoneGridComponent,
     IdentityGridComponent,
   ],
   providers: [

@@ -452,7 +452,7 @@
           "verification": "Верификация контактных данных"
         },
         "grid": {
-          "fullAddress": "Number",
+          "phoneNumber": "Number",
           "typeCode": "Type",
           "statusCode": "Status",
           "isBlocked": "Blocked",
