@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AddressModule } from './address/address.module';
-import { ContainerModule } from './container/container.module';
+import { ContainersModule } from './containers/containers.module';
+import { WidgetsModule } from './widgets/widgets.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    AddressModule,
-    ContainerModule,
+    ContainersModule,
+    WidgetsModule,
   ],
   exports: [
-    AddressModule,
-    ContainerModule,
+    ContainersModule,
+    WidgetsModule,
   ]
 })
 export class GuiObjectsModule { }

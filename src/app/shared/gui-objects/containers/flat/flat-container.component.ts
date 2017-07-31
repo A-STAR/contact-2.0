@@ -1,12 +1,12 @@
 import { Component, ComponentFactoryResolver, Input, OnInit, ReflectiveInjector, ViewChild, ViewContainerRef } from '@angular/core';
 
-import { INode } from './container.interface';
+import { INode } from './flat-container.interface';
 
 @Component({
-  selector: 'app-container',
-  templateUrl: './container.component.html'
+  selector: 'app-flat-container',
+  templateUrl: './flat-container.component.html'
 })
-export class ContainerComponent implements OnInit {
+export class FlatContainerComponent implements OnInit {
   @Input() node: INode;
 
   @ViewChild('container', { read: ViewContainerRef }) container: ViewContainerRef;

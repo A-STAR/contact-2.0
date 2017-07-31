@@ -3,10 +3,10 @@ import { Component, Input } from '@angular/core';
 import { IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from '../debtor.interface';
 
 import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
+import { INode } from '../../../../../shared/gui-objects/containers/flat/flat-container.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
-import { AddressGridComponent } from '../../../../../shared/gui-objects/address/grid/address-grid.component';
+import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
 
 @Component({
   selector: 'app-debtor-general-information',

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 
 import { IAddress } from '../address.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { AddressGridService } from './address-grid.service';
 

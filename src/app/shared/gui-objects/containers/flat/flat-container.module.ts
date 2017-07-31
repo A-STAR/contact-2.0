@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ContainerComponent } from './container.component';
+import { FlatContainerComponent } from './flat-container.component';
 
 @NgModule({
   imports: [
     CommonModule,
   ],
   exports: [
-    ContainerComponent,
+    FlatContainerComponent,
   ],
   declarations: [
-    ContainerComponent,
+    FlatContainerComponent,
   ]
 })
-export class ContainerModule { }
+export class FlatContainerModule { }

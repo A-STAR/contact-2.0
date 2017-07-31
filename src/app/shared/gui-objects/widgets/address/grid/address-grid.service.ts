@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAddress, IAddressesResponse } from '../address.interface';
 
-import { DataService } from '../../../../core/data/data.service';
+import { DataService } from '../../../../../core/data/data.service';
 
 @Injectable()
 export class AddressGridService {
