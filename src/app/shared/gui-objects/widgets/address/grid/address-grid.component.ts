@@ -49,7 +49,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
         .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
-      action: () => { console.log('block!') }
+      action: () => {
+        this._dialog = 1;
+        this.cdRef.markForCheck();
+      }
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
@@ -64,7 +67,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _addresses: Array<IAddress> = [];
   private _key: string;
 
-  private permissionsSubscription: Subscription;
+  private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: []
@@ -81,9 +84,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'comment' },
   ];
 
+  private _dialog = null;
+
   constructor(
     private addressGridService: AddressGridService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private injector: Injector,
     private userDictionariesService: UserDictionariesService,
@@ -91,7 +96,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ) {
     this._key = this.injector.get('key');
 
-    this.permissionsSubscription = Observable.combineLatest(
+    this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING),
@@ -101,8 +106,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.renderers.typeCode = [].concat(typeCodeOptions);
       this.renderers.statusCode = [].concat(statusCodeOptions);
       this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
-      // FIXME(d.maltsev)
-      const columns = this._columns.filter(column => canViewBlock ? true : column.prop.includes('lock'));
+      const columns = this._columns.filter(column => {
+        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+      });
       this.columns = this.gridService.setRenderers(columns, this.renderers);
     });
 
@@ -118,11 +124,15 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.permissionsSubscription.unsubscribe();
+    this.gridSubscription.unsubscribe();
   }
 
   get addresses(): Array<IAddress> {
     return this._addresses;
+  }
+
+  get dialog(): number {
+    return this._dialog;
   }
 
   onDoubleClick(event: any): void {
@@ -131,6 +141,15 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onSelect(address: IAddress): void {
     this.selectedAddressId$.next(address.id);
+  }
+
+  onBlockDialogSubmit(blockReasonCode: number): void {
+    console.log(blockReasonCode);
+    this._dialog = null;
+  }
+
+  onDialogClose(): void {
+    this._dialog = null;
   }
 
   get selectedAddress$(): Observable<IAddress> {
@@ -166,11 +185,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): pass person id
-    this.addressGridService.fetch(1)
+    // TODO(d.maltsev): persist selection
+    // TODO(d.maltsev): pass entity type & id
+    this.addressGridService.fetch(18, 1)
       .subscribe(addresses => {
         this._addresses = addresses;
-        this.changeDetectorRef.markForCheck();
+        this.cdRef.markForCheck();
       });
   }
 }

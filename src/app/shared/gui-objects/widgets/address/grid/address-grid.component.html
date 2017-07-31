@@ -1,3 +1,9 @@
+<app-address-grid-block-dialog
+  *ngIf="dialog === 1"
+  (onSubmit)="onBlockDialogSubmit($event)"
+  (onClose)="onDialogClose()">
+</app-address-grid-block-dialog>
+
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
