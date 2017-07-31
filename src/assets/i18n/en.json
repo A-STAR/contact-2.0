@@ -108,7 +108,9 @@
       "sms": "Send SMS",
       "move": "Move",
       "download": "Download",
-      "upload": "Upload"
+      "upload": "Upload",
+      "block": "Block",
+      "unblock": "Unblock"
     }
   },
   "queryBuilder": {

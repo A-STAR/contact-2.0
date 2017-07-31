@@ -13,16 +13,22 @@ import { DataService } from '../../data/data.service';
 
 @Injectable()
 export class UserDictionariesService {
-  static DICTIONARY_VARIABLE_TYPE       =  1;
-  static DICTIONARY_ACTION_TYPES        =  4;
-  static DICTIONARY_TERM_TYPES          =  5;
-  static DICTIONARY_BRANCHES            =  6;
-  static DICTIONARY_EMPLOYEE_ROLE       =  8;
-  static DICTIONARY_GENDER              = 13;
-  static DICTIONARY_CONTRACTOR_TYPE     = 28;
-  static DICTIONARY_PORTFOLIO_DIRECTION = 29;
-  static DICTIONARY_PORTFOLIO_STATUS    = 30;
-  static DICTIONARY_PORTFOLIO_STAGE     = 31;
+  static DICTIONARY_VARIABLE_TYPE               =  1;
+  static DICTIONARY_ACTION_TYPES                =  4;
+  static DICTIONARY_TERM_TYPES                  =  5;
+  static DICTIONARY_BRANCHES                    =  6;
+  static DICTIONARY_EMPLOYEE_ROLE               =  8;
+  static DICTIONARY_GENDER                      = 13;
+  static DICTIONARY_PHONE_TYPE                  = 17;
+  static DICTIONARY_PHONE_STATUS                = 18;
+  static DICTIONARY_PHONE_REASON_FOR_BLOCKING   = 20;
+  static DICTIONARY_ADDRESS_TYPE                = 21;
+  static DICTIONARY_ADDRESS_STATUS              = 22;
+  static DICTIONARY_ADDRESS_REASON_FOR_BLOCKING = 23;
+  static DICTIONARY_CONTRACTOR_TYPE             = 28;
+  static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
+  static DICTIONARY_PORTFOLIO_STATUS            = 30;
+  static DICTIONARY_PORTFOLIO_STAGE             = 31;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
@@ -120,6 +126,34 @@ export class UserDictionariesService {
           { value: 8, label: 'Окончание работ' },
           { value: 9, label: 'Архивный' },
           { value: 10, label: 'Архивный' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PHONE_TYPE:
+        return Observable.of([
+          { value: 1, label: 'Мобильный' },
+          { value: 2, label: 'Домашний' },
+          { value: 3, label: 'Рабочий' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PHONE_STATUS:
+        return Observable.of([
+          { value: 1, label: 'Не звонили ни разу' },
+        ]);
+      case UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING:
+        return Observable.of([
+          { value: 1, label: '-' },
+        ]);
+      case UserDictionariesService.DICTIONARY_ADDRESS_TYPE:
+        return Observable.of([
+          { value: 1, label: 'Регистрация' },
+          { value: 2, label: 'Фактический' },
+          { value: 3, label: 'Рабочий' },
+        ]);
+      case UserDictionariesService.DICTIONARY_ADDRESS_STATUS:
+        return Observable.of([
+          { value: 1, label: 'Не выезжали ни разу' },
+        ]);
+      case UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING:
+        return Observable.of([
+          { value: 1, label: '-' },
         ]);
     }
 

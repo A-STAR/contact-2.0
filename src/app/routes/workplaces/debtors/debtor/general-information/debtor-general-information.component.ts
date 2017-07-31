@@ -24,14 +24,14 @@ export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebt
     container: 'tabs',
     children: [
       {
-        component: PhoneGridComponent,
-        key: 'debtorPhoneGrid',
-        title: 'debtor.information.phone.title'
-      },
-      {
         component: AddressGridComponent,
         key: 'debtorAddressGrid',
         title: 'debtor.information.address.title'
+      },
+      {
+        component: PhoneGridComponent,
+        key: 'debtorPhoneGrid',
+        title: 'debtor.information.phone.title'
       },
       {
         component: EmailGridComponent,
