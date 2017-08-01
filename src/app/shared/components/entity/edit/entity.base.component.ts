@@ -54,12 +54,11 @@ export abstract class EntityBaseComponent<T> implements OnInit, AfterViewInit {
   }
 
   onSelectItems(payload: ISelectItemsPayload): void {
-    this.extensions.forEach((extension: IEntityBaseComponentExtension<T>) =>
-      extension.onSelectItems(payload));
+    this.extensions.forEach(extension => extension.onSelectItems(payload));
   }
 
   canSubmit(): boolean {
-    return this.dynamicForm.canSubmit;
+    return this.dynamicForm && this.dynamicForm.canSubmit;
   }
 
   protected isEditMode(): boolean {
