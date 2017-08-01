@@ -425,6 +425,7 @@
       "issuePlace": "Где выдан",
       "expiryDate": "Дата окончания",
       "citizenship": "Гражданство",
+      "comment": "Комментарий",
       "isMain": "Основной"
     }
   },

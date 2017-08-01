@@ -17,6 +17,7 @@ import { IdentityService } from './identity.service';
 export class IdentityGridComponent implements AfterViewInit {
   private _parentId: number;
   private dialog: string;
+  private selected: IIdentityDoc[];
 
   rows: IIdentityDoc[] = [];
 
@@ -53,7 +54,7 @@ export class IdentityGridComponent implements AfterViewInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: Observable.of(true),
-      action: () => {}
+      action: () => this.load()
     },
   ];
 
@@ -76,6 +77,14 @@ export class IdentityGridComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.parentId = Number((this.route.params as any).value.id) || null;
+    this.load();
+  }
+
+  isDialog(dialog: string): boolean {
+    return this.dialog === dialog;
+  }
+
+  load(): void {
     if (this.parentId) {
       this.identityService
         .fetch(this.parentId)
@@ -86,15 +95,20 @@ export class IdentityGridComponent implements AfterViewInit {
     }
   }
 
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  onAddDocument(): void {
-    this.dialog = null;
+  onAddDocument(doc: IIdentityDoc): void {
+    this.identityService.create(this.parentId, doc)
+      .subscribe(result => {
+        this.dialog = null;
+        this.cdRef.markForCheck();
+        this.load();
+      });
   }
 
   onCancel(): void {
     this.dialog = null;
+  }
+
+  onSelect(row: IIdentityDoc): void {
+    console.log('rows', row);
   }
 }

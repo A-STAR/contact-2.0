@@ -425,6 +425,7 @@
       "issuePlace": "Issue place",
       "expiryDate": "Expiry date",
       "citizenship": "Citizenship",
+      "comment": "Comment",
       "isMain": "Is main?"
     }
   },
