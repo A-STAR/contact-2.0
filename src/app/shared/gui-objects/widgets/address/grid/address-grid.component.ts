@@ -10,7 +10,7 @@ import { IAddress } from '../address.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { AddressGridService } from './address-grid.service';
+import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -84,7 +84,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _dialog = null;
 
   constructor(
-    private addressGridService: AddressGridService,
+    private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private injector: Injector,
@@ -183,7 +183,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type & id
-    this.addressGridService.fetch(18, 1)
+    this.addressService.fetchAll(18, 1)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();
