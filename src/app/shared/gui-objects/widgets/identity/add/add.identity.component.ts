@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
+// import { TranslateService } from '@ngx-translate/core';
+// import { Subscription } from 'rxjs/Subscription';
 
-import { IIDentityResponse, IIdentityDoc } from '../identity.interface';
+import { IIdentityDoc } from '../identity.interface';
+// import { IIDentityResponse, IIdentityDoc } from '../identity.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+// import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { EntityBaseComponent } from '../../../../components/entity/edit/entity.base.component';
 
@@ -21,9 +22,9 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @Output() add: EventEmitter<IIdentityDoc> = new EventEmitter<IIdentityDoc>();
 
-  private selected: IIdentityDoc[];
-  private localizedOptions: any;
-  private langSub: Subscription;
+  // private selected: IIdentityDoc[];
+  // private localizedOptions: any;
+  // private langSub: Subscription;
 
   columns: Array<any> = [
     { prop: 'name', minWidth: 200, maxWidth: 350 },
@@ -32,7 +33,9 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
 
   formData: IIdentityDoc;
 
-  constructor(private valueConverterService: ValueConverterService) {
+  constructor(
+    // private valueConverterService: ValueConverterService
+  ) {
     super();
    }
 
@@ -89,6 +92,11 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
         controlName: 'issuePlace',
         type: 'text',
         required: true,
+      },
+      {
+        label: 'identityDocs.grid.expiryDate',
+        controlName: 'expiryDate',
+        type: 'datepicker',
       },
       {
         label: 'identityDocs.grid.isMain',
