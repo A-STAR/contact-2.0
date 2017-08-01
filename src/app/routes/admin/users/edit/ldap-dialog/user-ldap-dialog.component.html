@@ -18,7 +18,8 @@
       [footerHeight]="false"
       [rows]="users$ | async"
       [styles]="{ height: '200px' }"
-      (onSelect)="onUserSelect($event)">
+      (onSelect)="onUserSelect($event)"
+      (onDblClick)="onSubmit($event)">
     </app-grid>
   </div>
 </div>
