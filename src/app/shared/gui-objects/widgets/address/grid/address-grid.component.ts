@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -89,14 +89,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private injector: Injector,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     // TODO(d.maltsev): uis there a better way to get route params?
-    this.id = (route.params as any).value.id || null;
+    this.id = (this.route.params as any).value.id || null;
 
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
