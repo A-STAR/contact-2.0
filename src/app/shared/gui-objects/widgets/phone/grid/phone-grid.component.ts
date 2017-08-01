@@ -56,17 +56,13 @@ export class PhoneGridComponent implements OnInit {
   ];
 
   private _phones: Array<any>;
-  private _key: string;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private injector: Injector,
-  ) {
-    this._key = this.injector.get('key');
-  }
+  ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): pass person id
     this.changeDetectorRef.markForCheck();
   }
 

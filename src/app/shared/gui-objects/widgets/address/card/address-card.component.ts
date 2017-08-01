@@ -1,4 +1,5 @@
 import { Component, Injector } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
@@ -9,16 +10,17 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent {
-  private id: number;
+  private addressId: number;
 
   controls: Array<IDynamicFormItem> = null;
   data: any;
 
   constructor(
     private injector: Injector,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {
-    this.id = this.injector.get('id');
+    this.addressId = (route.params as any).value.addressId || null;
 
     this.userDictionariesService
       .getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE)

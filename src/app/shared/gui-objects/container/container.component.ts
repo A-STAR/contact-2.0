@@ -33,14 +33,11 @@ export class ContainerComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const inputs = Object.keys({
-      ...this.node.inject,
-      key: this.node.key
-    })
-    .map(key => ({
-      provide: key,
-      useValue: this.node.inject[key]
-    }));
+    const inputs = Object.keys(this.node.inject || {})
+      .map(key => ({
+        provide: key,
+        useValue: this.node.inject[key]
+      }));
 
     const injector = ReflectiveInjector.fromResolvedProviders(ReflectiveInjector.resolve(inputs), this.container.parentInjector);
 

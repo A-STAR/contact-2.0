@@ -63,7 +63,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   columns: Array<IGridColumn> = [];
 
   private _addresses: Array<IAddress> = [];
-  private _key: string;
 
   private gridSubscription: Subscription;
 
@@ -93,8 +92,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this._key = this.injector.get('key');
-
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
