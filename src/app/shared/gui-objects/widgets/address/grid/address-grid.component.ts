@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -88,6 +89,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private injector: Injector,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -133,7 +135,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(event: any): void {
-    //
+    this.router.navigate([ `${this.router.url}/address/1` ]);
   }
 
   onSelect(address: IAddress): void {
