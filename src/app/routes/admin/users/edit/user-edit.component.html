@@ -7,7 +7,7 @@
   (action)="onLdapDialogAction(ldapDialog.selectedUser.login)"
   (cancel)="onLdapDialogClose()"
 >
-  <app-user-ldap-dialog #ldapDialog>
+  <app-user-ldap-dialog #ldapDialog (submit)="onLdapDialogAction($event)">
   </app-user-ldap-dialog>
 </app-action-dialog>
 
