@@ -1,0 +1,15 @@
+<app-add-identity
+  *ngIf="isDialog('addIdentityComponent')"
+  (add)="onAddDocument($event)"
+  (cancel)="onCancel()"
+>
+</app-add-identity>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+<app-grid
+  [columns]="columns"
+  columnTranslationKey="identityDocs"
+  [rows]="rows"
+  [styles]="{height: '320px'}"
+>
+</app-grid>

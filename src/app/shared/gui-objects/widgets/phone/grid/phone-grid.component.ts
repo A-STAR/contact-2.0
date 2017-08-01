@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '../../../../components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 @Component({
   selector: 'app-phone-grid',
@@ -59,7 +58,7 @@ export class PhoneGridComponent implements OnInit {
   private _key: string;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     private injector: Injector,
   ) {
     this._key = this.injector.get('key');
@@ -67,7 +66,7 @@ export class PhoneGridComponent implements OnInit {
 
   ngOnInit(): void {
     // TODO(d.maltsev): pass person id
-    this.changeDetectorRef.markForCheck();
+    this.cdRef.markForCheck();
   }
 
   get phones(): Array<any> {

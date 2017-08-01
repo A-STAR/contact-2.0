@@ -15,6 +15,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
+import { isClosedRenderer } from '../../../../core/utils/index';
 
 @Component({
   selector: 'app-terms',
@@ -68,7 +69,7 @@ export class TermsComponent implements OnDestroy {
       { label: 'dictionaries.types.client', value: 2 }
     ],
     parentCodeName: (term: ITerm) => term.parentCodeName || term.parentCode || '',
-    isClosed: (term: ITerm) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : ''
+    isClosed: isClosedRenderer,
   };
 
   rows = [];

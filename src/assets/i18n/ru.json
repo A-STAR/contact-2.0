@@ -414,7 +414,11 @@
     }
   },
   "identityDocs": {
+    "add": {
+      "title": "Новый документ"
+    },
     "grid": {
+      "id": "Ид",
       "docTypeCode": "Тип",
       "docNumber": "№",
       "issueDate": "Дата выдачи",

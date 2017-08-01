@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { DataService } from '../../../../../../core/data/data.service';
+import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
 export class IdentityService {
