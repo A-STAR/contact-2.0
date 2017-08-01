@@ -693,6 +693,22 @@
   },
   "widgets": {
     "address": {
+      "card": {
+        "postalCode": "Индекс",
+        "country": "Страна",
+        "region": "Регион",
+        "area": "Район в регионе",
+        "city": "Город",
+        "settlement": "Населенный пункт",
+        "cityDistrict": "Район города",
+        "street": "Улица",
+        "house": "Дом",
+        "building": "Корпус",
+        "flat": "Квартира",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "isResidence": "Проживает по данному адресу"
+      },
       "dialogs": {
         "block": {
           "title": "Блокировать адрес",

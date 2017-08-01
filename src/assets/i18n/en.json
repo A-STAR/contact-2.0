@@ -693,6 +693,22 @@
   },
   "widgets": {
     "address": {
+      "card": {
+        "postalCode": "Postal code",
+        "country": "Country",
+        "region": "Region",
+        "area": "Region area",
+        "city": "City",
+        "settlement": "Settlement",
+        "cityDistrict": "City district",
+        "street": "Street",
+        "house": "House",
+        "building": "Building",
+        "flat": "Flat",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "isResidence": "Is current residence"
+      },
       "dialogs": {
         "block": {
           "title": "Block address",
