@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
@@ -9,10 +9,17 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent {
+  private id: number;
+
   controls: Array<IDynamicFormItem> = null;
   data: any;
 
-  constructor(private userDictionariesService: UserDictionariesService) {
+  constructor(
+    private injector: Injector,
+    private userDictionariesService: UserDictionariesService,
+  ) {
+    this.id = this.injector.get('id');
+
     this.userDictionariesService
       .getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE)
       .take(1)

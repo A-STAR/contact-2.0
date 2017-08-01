@@ -4,5 +4,5 @@ export interface INode {
   container?: 'tabs' | 'flat'
   key?: string;
   title?: string;
-  // TODO(d.maltsev): keys of linked nodes
+  inject?: object;
 }

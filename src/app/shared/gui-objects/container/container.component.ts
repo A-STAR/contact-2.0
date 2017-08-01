@@ -33,10 +33,16 @@ export class ContainerComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const injector = ReflectiveInjector.fromResolvedProviders(
-      ReflectiveInjector.resolve([{ provide: 'key', useValue: this.node.key }]),
-      this.container.parentInjector
-    );
+    const inputs = Object.keys({
+      ...this.node.inject,
+      key: this.node.key
+    })
+    .map(key => ({
+      provide: key,
+      useValue: this.node.inject[key]
+    }));
+
+    const injector = ReflectiveInjector.fromResolvedProviders(ReflectiveInjector.resolve(inputs), this.container.parentInjector);
 
     const component = this.resolver.resolveComponentFactory(this.node.component).create(injector);
     this.container.insert(component.hostView);
