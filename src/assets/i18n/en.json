@@ -922,7 +922,8 @@
       "add": "Add",
       "change": "Change",
       "excel": "Export to Excel",
-      "back": "Back"
+      "back": "Back",
+      "block": "Block"
     },
     "dateTimeRage": {
       "from": "From",

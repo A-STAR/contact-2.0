@@ -32,10 +32,15 @@ export class AddressService {
   }
 
   block(entityType: number, entityId: number, addressId: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isBlocked: true });
+    return this.update(entityType, entityId, addressId, { isBlocked: 1 });
   }
 
   unblock(entityType: number, entityId: number, addressId: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isBlocked: false });
+    return this.update(entityType, entityId, addressId, { isBlocked: 0 });
+  }
+
+  delete(entityType: number, entityId: number, addressId: number): Observable<void> {
+    return this.dataService
+      .delete('/api/entityTypes/{entityType}/entities/{entityId}/addresses/{addressId}', { entityType, entityId, addressId });
   }
 }

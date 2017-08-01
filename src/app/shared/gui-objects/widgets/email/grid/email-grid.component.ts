@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
@@ -10,7 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
   templateUrl: './email-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmailGridComponent implements OnInit {
+export class EmailGridComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -43,15 +43,6 @@ export class EmailGridComponent implements OnInit {
   ];
 
   private _emails: Array<any>;
-
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private injector: Injector,
-  ) {}
-
-  ngOnInit(): void {
-    this.changeDetectorRef.markForCheck();
-  }
 
   get emails(): Array<any> {
     return this._emails;

@@ -8,8 +8,8 @@
   *ngIf="dialog === 2"
   titleTranslationKey="widgets.address.dialogs.unblock.title"
   actionTranslationKey="widgets.address.dialogs.unblock.confirmMessage"
-  actionMessage="default.buttons.remove"
-  actionMode="danger"
+  actionMessage="default.yesNo.Yes"
+  actionMode="success"
   [messageParams]="selectedAddress$ | async"
   (action)="onUnblockDialogSubmit($event)"
   (cancel)="onDialogClose()">

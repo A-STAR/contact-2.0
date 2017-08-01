@@ -4,7 +4,7 @@ export interface IAddress {
   typeCode: number;
   postalCode: string;
   statusCode: number;
-  isBlocked: boolean;
+  isBlocked: boolean | number;
   blockReasonCode: number;
   blockDateTime: Date | string;
   fullAddress: string;
@@ -18,8 +18,8 @@ export interface IAddress {
   house: string;
   building: string;
   flat: string;
-  isText: boolean;
-  isResidence: boolean;
+  isText: boolean | number;
+  isResidence: boolean | number;
   comment: string;
 }
 

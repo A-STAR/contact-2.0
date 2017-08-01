@@ -31,9 +31,9 @@ export class AddressCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // TODO(d.maltsev): uis there a better way to get route params?
-    this.id = (route.params as any).value.id || null;
-    this.addressId = (route.params as any).value.addressId || null;
+    // TODO(d.maltsev): is there a better way to get route params?
+    this.id = (this.route.params as any).value.id || null;
+    this.addressId = (this.route.params as any).value.addressId || null;
 
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
@@ -43,7 +43,7 @@ export class AddressCardComponent {
       this.addressService.fetch(18, this.id, this.addressId)
     )
     .take(1)
-    .subscribe(([ opts, canEdit, canEditComment, address ]) => {
+    .subscribe(([ options, canEdit, canEditComment, address ]) => {
       this.controls = [
         {
           width: 6,
@@ -64,10 +64,10 @@ export class AddressCardComponent {
         {
           width: 6,
           children: [
-            { label: 'widgets.address.card.typeCode', controlName: 'typeCode', type: 'select', required: true, opts, disabled: !canEdit },
+            { label: 'widgets.address.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options },
             { label: 'widgets.address.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
-            { label: 'widgets.address.card.isResidence', controlName: 'isResidence', type: 'checkbox', disabled: !canEdit },
-          ] as Array<IDynamicFormItem>
+            { label: 'widgets.address.card.isResidence', controlName: 'isResidence', type: 'checkbox' },
+          ].map(control => control.hasOwnProperty('disabled') ? control : { ...control, disabled: !canEdit }) as Array<IDynamicFormItem>
         },
       ];
       this.address = address;

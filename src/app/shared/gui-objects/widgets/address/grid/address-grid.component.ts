@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -83,15 +83,21 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
+  private id: number;
+
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private injector: Injector,
+    private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // TODO(d.maltsev): uis there a better way to get route params?
+    this.id = (route.params as any).value.id || null;
+
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
@@ -131,8 +137,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
-  onDoubleClick(event: any): void {
-    this.router.navigate([ `${this.router.url}/address/1` ]);
+  onDoubleClick(address: IAddress): void {
+    this.router.navigate([ `${this.router.url}/address/${address.id}` ]);
   }
 
   onSelect(address: IAddress): void {
@@ -141,7 +147,27 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(blockReasonCode: number): void {
     console.log(blockReasonCode);
-    this.setDialog(null);
+    this.addressService.block(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onUnblockDialogSubmit(blockReasonCode: number): void {
+    this.addressService.unblock(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onRemoveDialogSubmit(): void {
+    this.addressService.delete(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
   }
 
   onDialogClose(): void {
@@ -182,8 +208,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private fetch(): void {
     // TODO(d.maltsev): persist selection
-    // TODO(d.maltsev): pass entity type & id
-    this.addressService.fetchAll(18, 1)
+    // TODO(d.maltsev): pass entity type
+    this.addressService.fetchAll(18, this.id)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();

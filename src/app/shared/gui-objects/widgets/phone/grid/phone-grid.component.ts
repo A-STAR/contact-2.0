@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
@@ -10,7 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
   templateUrl: './phone-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneGridComponent implements OnInit {
+export class PhoneGridComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -56,15 +56,6 @@ export class PhoneGridComponent implements OnInit {
   ];
 
   private _phones: Array<any>;
-
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private injector: Injector,
-  ) {}
-
-  ngOnInit(): void {
-    this.changeDetectorRef.markForCheck();
-  }
 
   get phones(): Array<any> {
     return this._phones;

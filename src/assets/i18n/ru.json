@@ -922,7 +922,8 @@
       "add": "Добавить",
       "change": "Изменить",
       "back": "Назад",
-      "excel": "Экспорт в Excel"
+      "excel": "Экспорт в Excel",
+      "block": "Блокировать"
     },
     "dateTimeRage": {
       "from": "Начало",
