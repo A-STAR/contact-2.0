@@ -6,6 +6,7 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
 import { AddressService } from '../address.service';
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -27,6 +28,7 @@ export class AddressCardComponent {
 
   constructor(
     private addressService: AddressService,
+    private contentTabService: ContentTabService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -76,15 +78,16 @@ export class AddressCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
     }
-    if (this.addressId) {
-      this.addressService.update(18, this.id, this.addressId, data).subscribe();
-    } else {
-      this.addressService.create(18, this.id, data).subscribe();
-    }
+
+    const action = this.addressId
+      ? this.addressService.update(18, this.id, this.addressId, data)
+      : this.addressService.create(18, this.id, data);
+
+    action.subscribe(() => this.onBack());
   }
 
   public onBack(): void {
-    console.log('back');
+    this.contentTabService.back();
   }
 
   public get canSubmit(): boolean {

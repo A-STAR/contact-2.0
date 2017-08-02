@@ -4,11 +4,11 @@ interface Dialog {
   setDialog(dialog: string): void;
 }
 
-const dlg = {
-  dialog: null,
-  isDialog: (dialog: string) => this.dialog === dialog,
-  setDialog: (dialog: string) => this.dialog = dialog,
-}
+// const dlg = {
+//   dialog: null,
+//   isDialog: (dialog: string) => this.dialog === dialog,
+//   setDialog: (dialog: string) => this.dialog = dialog,
+// }
 
 // interface DialogDecorator {
 //   (obj: Dialog): TypeDecorator;

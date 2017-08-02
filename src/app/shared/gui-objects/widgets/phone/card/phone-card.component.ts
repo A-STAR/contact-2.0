@@ -5,6 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -26,6 +27,7 @@ export class PhoneCardComponent {
   phone: any;
 
   constructor(
+    private contentTabService: ContentTabService,
     private phoneService: PhoneService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -57,15 +59,16 @@ export class PhoneCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
     }
-    if (this.phoneId) {
-      this.phoneService.update(18, this.id, this.phoneId, data).subscribe();
-    } else {
-      this.phoneService.create(18, this.id, data).subscribe();
-    }
+
+    const action = this.phoneId
+      ? this.phoneService.update(18, this.id, this.phoneId, data)
+      : this.phoneService.create(18, this.id, data);
+
+    action.subscribe(() => this.onBack());
   }
 
   public onBack(): void {
-    console.log('back');
+    this.contentTabService.back();
   }
 
   public get canSubmit(): boolean {
