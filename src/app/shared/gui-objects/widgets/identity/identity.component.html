@@ -1,14 +1,34 @@
 <app-add-identity
-  *ngIf="isDialog('addIdentityComponent')"
+  *ngIf="isDialog('addIdentity')"
   (add)="onAddDocument($event)"
   (cancel)="onCancel()"
 >
 </app-add-identity>
 
+<app-edit-identity
+  *ngIf="isDialog('editIdentity')"
+  [identityDoc]="identityDoc"
+  (edit)="onEditDocument($event)"
+  (cancel)="onCancel()"
+>
+</app-edit-identity>
+
+<app-dialog-action
+  *ngIf="isDialog('removeIdentity')"
+  actionMode="danger"
+  actionTranslationKey="debtor.identityDocs.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  [messageParams]="selectedEntity | async"
+  titleTranslationKey="debtor.identityDocs.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 <app-grid
   [columns]="columns"
-  columnTranslationKey="identityDocs"
+  columnTranslationKey="debtor.identityDocs"
   [rows]="rows"
   [styles]="{height: '320px'}"
   (onSelect)="onSelect($event)"

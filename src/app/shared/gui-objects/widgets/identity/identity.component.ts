@@ -1,13 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, AfterViewInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../components/toolbar-2/toolbar-2.interface';
 import { IIdentityDoc } from './identity.interface';
 
+// import { Dialog } from '../../../../core/decorators/dialog';
 import { GridService } from '../../../components/grid/grid.service';
 import { IdentityService } from './identity.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+
+import { GridComponent } from '../../../components/grid/grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,10 +22,13 @@ import { IdentityService } from './identity.service';
   templateUrl: './identity.component.html',
 })
 export class IdentityGridComponent implements AfterViewInit {
-  private _parentId: number;
-  private dialog: string;
-  // private selected: IIdentityDoc[];
+  @ViewChild(GridComponent) grid: GridComponent;
 
+  private parentId: number;
+  private dialog: string;
+  private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
+
+  identityDoc: IIdentityDoc;
   rows: IIdentityDoc[] = [];
 
   columns: Array<IGridColumn> = [
@@ -32,28 +42,32 @@ export class IdentityGridComponent implements AfterViewInit {
   ];
 
   renderers: IRenderer = {
+    expiryDate: ({ expiryDate }) => this.valueConverterService.ISOToLocalDateTime(expiryDate) || '',
+    issueDate: ({ issueDate }) => this.valueConverterService.ISOToLocalDateTime(issueDate) || '',
     isMain: ({ isMain }) => isMain ? 'default.yesNo.Yes' : 'default.yesNo.No',
   };
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: Observable.of(true),
-      action: () => this.dialog = 'addIdentityComponent'
+      enabled: this.canAdd$,
+      action: () => this.setDialog('addIdentity')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.of(true),
-      action: () => {}
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedRows$)
+        .map(([canDelete, selected]) => canDelete && selected.length === 1),
+      action: () => this.setDialog('editIdentity')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.of(true),
-      action: () => {}
+      enabled: Observable.combineLatest(this.canDelete$, this.selectedRows$)
+        .map(([canDelete, selected]) => canDelete && !!selected.length),
+      action: () => this.setDialog('removeIdentity')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: Observable.of(true),
+      enabled: this.canView$,
       action: () => this.load()
     },
   ];
@@ -63,16 +77,10 @@ export class IdentityGridComponent implements AfterViewInit {
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private gridService: GridService,
+    private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-  }
-
-  get parentId(): number {
-    return this._parentId;
-  }
-
-  set parentId(id: number) {
-    this._parentId = id;
   }
 
   ngAfterViewInit(): void {
@@ -82,6 +90,10 @@ export class IdentityGridComponent implements AfterViewInit {
 
   isDialog(dialog: string): boolean {
     return this.dialog === dialog;
+  }
+
+  setDialog(dialog: string): void {
+    this.dialog = dialog;
   }
 
   load(): void {
@@ -98,17 +110,42 @@ export class IdentityGridComponent implements AfterViewInit {
   onAddDocument(doc: IIdentityDoc): void {
     this.identityService.create(this.parentId, doc)
       .subscribe(result => {
-        this.dialog = null;
+        this.setDialog(null);
         this.cdRef.markForCheck();
         this.load();
       });
   }
 
   onCancel(): void {
-    this.dialog = null;
+    this.setDialog(null);
+  }
+
+  onRemove(): void {
+    this.setDialog(null);
+    this.identityService.delete(this.parentId, this.grid.selected[0].id)
+      .subscribe(result => {
+        if (result) { this.load(); }
+      });
   }
 
   onSelect(row: IIdentityDoc): void {
-    console.log('rows', row);
+    this.identityDoc = row;
+    this.selectedRows$.next(this.grid.selected);
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('IDENTITY_DOCUMENT_VIEW').distinctUntilChanged();
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD').distinctUntilChanged();
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT').distinctUntilChanged();
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('IDENTITY_DOCUMENT_DELETE').distinctUntilChanged();
   }
 }

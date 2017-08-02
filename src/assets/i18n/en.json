@@ -415,22 +415,6 @@
       }
     }
   },
-  "identityDocs": {
-    "add": {
-      "title": "Add an identity doc"
-    },
-    "grid": {
-      "id": "Id",
-      "docTypeCode": "Type",
-      "docNumber": "No",
-      "issueDate": "Issue date",
-      "issuePlace": "Issue place",
-      "expiryDate": "Expiry date",
-      "citizenship": "Citizenship",
-      "comment": "Comment",
-      "isMain": "Is main?"
-    }
-  },
   "debtor": {
     "title": "Debtor",
     "id": "Id",
@@ -440,6 +424,26 @@
     "type": "Type",
     "responsible": "Manager",
     "reward": "Remuneration",
+    "identityDocs": {
+      "add": {
+        "title": "Add an identity doc"
+      },
+      "remove": {
+        "title": "Delete the document",
+        "confirmMessage": "Do you really want to delete the document {{ name }}?"
+      },
+      "grid": {
+        "id": "Id",
+        "docTypeCode": "Type",
+        "docNumber": "No",
+        "issueDate": "Issue date",
+        "issuePlace": "Issue place",
+        "expiryDate": "Expiry date",
+        "citizenship": "Citizenship",
+        "comment": "Comment",
+        "isMain": "Is main?"
+      }
+    },
     "information": {
       "address": {
         "title": "Addresses",

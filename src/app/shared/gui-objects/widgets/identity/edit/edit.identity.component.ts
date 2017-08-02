@@ -8,13 +8,13 @@ import { EntityBaseComponent } from '../../../../components/entity/edit/entity.b
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-add-identity',
-  templateUrl: './add.identity.component.html',
+  selector: 'app-edit-identity',
+  templateUrl: './edit.identity.component.html',
 })
 
-export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> implements OnInit {
-  @Input() identityDoc: IIdentityDoc[];
-  @Output() add = new EventEmitter<IIdentityDoc>();
+export class EditIdentityComponent extends EntityBaseComponent<IIdentityDoc> implements OnInit {
+  @Input() identityDoc: IIdentityDoc;
+  @Output() edit = new EventEmitter<IIdentityDoc>();
 
   formData: IIdentityDoc;
 
@@ -23,11 +23,7 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
   }
 
   ngOnInit(): void {
-    this.formData = {
-      isMain: 0,
-      docNumber: null,
-      docTypeCode: null,
-    };
+    this.formData = Object.assign({}, this.identityDoc);
     super.ngOnInit();
   }
 
@@ -35,16 +31,16 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
     return {
       ...values,
       docTypeCode: Array.isArray(values.docTypeCode) && values.docTypeCode[0].value,
-      issueDate: values.issueDate && this.valueService.toISO(values.issueDate as Date) || null,
-      expiryDate: values.expiryDate && this.valueService.toISO(values.expiryDate as Date) || null,
       citizenship: R.prop('value')(values.citizenship[0]) as string,
+      expiryDate: values.expiryDate && this.valueService.toISO(values.expiryDate as Date) || null,
+      issueDate: values.issueDate && this.valueService.toISO(values.issueDate as Date) || null,
       isMain: Number(values.isMain || null),
     };
   }
 
   onSave(): void {
     const serialized = this.toSubmittedValues(this.dynamicForm.value);
-    this.add.emit(serialized);
+    this.edit.emit(serialized);
   }
 
   protected getControls(): Array<IDynamicFormControl> {

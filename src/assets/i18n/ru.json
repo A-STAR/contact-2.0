@@ -415,22 +415,6 @@
       }
     }
   },
-  "identityDocs": {
-    "add": {
-      "title": "Новый документ"
-    },
-    "grid": {
-      "id": "Ид",
-      "docTypeCode": "Тип",
-      "docNumber": "№",
-      "issueDate": "Дата выдачи",
-      "issuePlace": "Где выдан",
-      "expiryDate": "Дата окончания",
-      "citizenship": "Гражданство",
-      "comment": "Комментарий",
-      "isMain": "Основной"
-    }
-  },
   "debtor": {
     "title": "Карточка должника",
     "id": "Ид",
@@ -440,6 +424,26 @@
     "type": "Тип",
     "responsible": "Ответственный",
     "reward": "Размер вознаграждения",
+    "identityDocs": {
+      "add": {
+        "title": "Новый документ"
+      },
+      "remove": {
+        "title": "Удалить документ",
+        "confirmMessage": "Вы действительно хотите удалить документ {{ name }}?"
+      },
+      "grid": {
+        "id": "Ид",
+        "docTypeCode": "Тип",
+        "docNumber": "№",
+        "issueDate": "Дата выдачи",
+        "issuePlace": "Где выдан",
+        "expiryDate": "Дата окончания",
+        "citizenship": "Гражданство",
+        "comment": "Комментарий",
+        "isMain": "Основной"
+      }
+    },
     "information": {
       "address": {
         "title": "Адреса",

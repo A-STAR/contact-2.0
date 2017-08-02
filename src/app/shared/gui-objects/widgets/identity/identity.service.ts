@@ -22,4 +22,8 @@ export class IdentityService {
   create(id: number, doc: IIdentityDoc): Observable<boolean> {
     return this.dataService.create('/persons/{id}/identitydocuments', { id }, doc);
   }
+
+  delete(personId: number, docId: number): Observable<boolean> {
+    return this.dataService.delete('/persons/{personId}/identitydocuments/{docId}', { personId, docId });
+  }
 }
