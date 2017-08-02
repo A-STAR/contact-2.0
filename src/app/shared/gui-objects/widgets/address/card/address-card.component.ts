@@ -36,7 +36,7 @@ export class AddressCardComponent {
       this.userPermissionsService.has('ADDRESS_EDIT'),
       this.userPermissionsService.has('ADDRESS_COMMENT_EDIT'),
       // TODO(d.maltsev): pass entity type
-      this.addressService.fetch(18, this.id, this.addressId)
+      this.addressId ? this.addressService.fetch(18, this.id, this.addressId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, address ]) => {
@@ -76,7 +76,11 @@ export class AddressCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
     }
-    this.addressService.update(18, this.id, this.addressId, data).subscribe();
+    if (this.addressId) {
+      this.addressService.update(18, this.id, this.addressId, data).subscribe();
+    } else {
+      this.addressService.create(18, this.id, data).subscribe();
+    }
   }
 
   public onBack(): void {

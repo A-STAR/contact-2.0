@@ -27,13 +27,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedAddress$)
         .map(([ canEdit, address ]) => canEdit && !!address),
-      action: () => {}
+      action: () => this.onEdit(this.selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -141,7 +141,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(address: IAddress): void {
-    this.router.navigate([ `${this.router.url}/address/${address.id}` ]);
+    this.onEdit(address.id);
   }
 
   onSelect(address: IAddress): void {
@@ -206,6 +206,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('ADDRESS_UNBLOCK').distinctUntilChanged();
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/address/create` ]);
+  }
+
+  private onEdit(addressId: number): void {
+    this.router.navigate([ `${this.router.url}/address/${addressId}` ]);
   }
 
   private fetch(): void {

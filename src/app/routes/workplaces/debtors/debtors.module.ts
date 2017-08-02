@@ -16,6 +16,7 @@ import { DebtorAddressComponent } from './debtor/address/address.component';
 const routes: Routes = [
   { path: '', component: DebtorsComponent },
   { path: ':id', component: DebtorComponent },
+  { path: ':id/address/create', component: DebtorAddressComponent },
   { path: ':id/address/:addressId', component: DebtorAddressComponent }
 ];
 
