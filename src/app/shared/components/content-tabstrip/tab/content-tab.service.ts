@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { ITab } from './content-tab.interface';
@@ -8,7 +9,10 @@ export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
 
-  constructor(private router: Router) {}
+  constructor(
+    private location: Location,
+    private router: Router,
+  ) {}
 
   get tabs(): ITab[] {
     return this._tabs;
@@ -62,5 +66,11 @@ export class ContentTabService {
     const i = this._activeIndex;
     this.router.navigate([url])
       .then(() => this.removeTab(i));
+  }
+
+  back(): void {
+    const i = this._activeIndex;
+    this.location.back();
+    this.removeTab(i);
   }
 }
