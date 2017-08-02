@@ -25,6 +25,8 @@ export class UserDictionariesService {
   static DICTIONARY_ADDRESS_TYPE                = 21;
   static DICTIONARY_ADDRESS_STATUS              = 22;
   static DICTIONARY_ADDRESS_REASON_FOR_BLOCKING = 23;
+  static DICTIONARY_EMAIL_TYPE                  = 24;
+  static DICTIONARY_EMAIL_REASON_FOR_BLOCKING   = 25;
   static DICTIONARY_CONTRACTOR_TYPE             = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;

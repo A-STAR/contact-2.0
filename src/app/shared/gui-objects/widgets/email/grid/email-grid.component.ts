@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
 import { IEmail } from '../email.interface';
@@ -58,15 +59,24 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<IGridColumn> = [];
+
+  private _emails: Array<any> = [];
+
+  private gridSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    typeCode: [],
+    blockReasonCode: []
+  };
+
+  private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'email' },
     { prop: 'isBlocked' },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
   ];
-
-  private _emails: Array<any> = [];
 
   private _dialog = null;
 
@@ -81,14 +91,33 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING),
+      this.canViewBlock$,
+    )
+    .subscribe(([ typeCodeOptions, blockReasonCodeOptions, canViewBlock ]) => {
+      this.renderers.typeCode = [].concat(typeCodeOptions);
+      this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
+      const columns = this._columns.filter(column => {
+        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+      });
+      this.columns = this.gridService.setRenderers(columns, this.renderers);
+    });
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_EMAIL_TYPE,
+      UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING,
+    ]);
+  }
 
   ngOnInit(): void {
     this.fetch();
   }
 
   ngOnDestroy(): void {
-    // this.gridSubscription.unsubscribe();
+    this.gridSubscription.unsubscribe();
   }
 
   get emails(): Array<IEmail> {

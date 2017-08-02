@@ -67,7 +67,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
-    typeCode: []
+    typeCode: [],
+    statusCode: [],
+    blockReasonCode: [],
   };
 
   private _columns: Array<IGridColumn> = [
@@ -112,9 +114,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     });
 
     this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
-      UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
       UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
+      UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
+      UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
     ]);
   }
 

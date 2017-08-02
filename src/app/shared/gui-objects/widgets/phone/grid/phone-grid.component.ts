@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
 import { IPhone } from '../phone.interface';
@@ -58,7 +59,19 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<IGridColumn> = [];
+
+  private _phones: Array<any> = [];
+
+  private gridSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    typeCode: [],
+    statusCode: [],
+    blockReasonCode: [],
+  };
+
+  private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'phoneNumber' },
     { prop: 'statusCode' },
@@ -67,8 +80,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     { prop: 'blockDateTime' },
     { prop: 'comment' },
   ];
-
-  private _phones: Array<any> = [];
 
   private _dialog = null;
 
@@ -83,14 +94,36 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_STATUS),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING),
+      this.canViewBlock$,
+    )
+    .subscribe(([ typeCodeOptions, statusCodeOptions, blockReasonCodeOptions, canViewBlock ]) => {
+      this.renderers.typeCode = [].concat(typeCodeOptions);
+      this.renderers.statusCode = [].concat(statusCodeOptions);
+      this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
+      const columns = this._columns.filter(column => {
+        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+      });
+      this.columns = this.gridService.setRenderers(columns, this.renderers);
+    });
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_PHONE_TYPE,
+      UserDictionariesService.DICTIONARY_PHONE_STATUS,
+      UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING,
+    ]);
+  }
 
   ngOnInit(): void {
     this.fetch();
   }
 
   ngOnDestroy(): void {
-    // this.gridSubscription.unsubscribe();
+    this.gridSubscription.unsubscribe();
   }
 
   get phones(): Array<IPhone> {
