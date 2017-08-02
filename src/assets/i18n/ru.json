@@ -850,6 +850,15 @@
       "users": {
         "gen": { "plural": "lookup данных пользователей" }
       }
+    },
+    "addresses": {
+      "gen": { "singular": "адреса", "plural": "списка адресов" }
+    },
+    "emails": {
+      "gen": { "singular": "email-адреса", "plural": "списка email-адресов " }
+    },
+    "phones": {
+      "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     }
   },
   "errors": {

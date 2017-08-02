@@ -1,6 +1,8 @@
 import { Response } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 
 import { IAppState } from '../state/state.interface';
 import {
@@ -76,6 +78,13 @@ export class NotificationActionBuilder {
 
   callback(): (response: Response) => Array<Action> {
     return (response: Response) => [ this.response(response).action() ];
+  }
+
+  dispatchCallback(): (response: Response) => Observable<null> {
+    return (response: Response) => {
+      this.response(response).dispatch();
+      return Observable.throw(response);
+    };
   }
 
   private translateMessage(message: string | IMessageOptions): string {
