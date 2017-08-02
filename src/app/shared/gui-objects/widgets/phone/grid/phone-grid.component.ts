@@ -13,6 +13,7 @@ import { PhoneService } from '../phone.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-phone-grid',
@@ -69,6 +70,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     typeCode: [],
     statusCode: [],
     blockReasonCode: [],
+    blockDateTime: (_, date) => this.valueConverterService.ISOToLocalDateTime(date) || '',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -94,6 +96,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
