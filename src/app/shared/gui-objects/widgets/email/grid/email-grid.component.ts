@@ -11,8 +11,10 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { EmailService } from '../email.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-email-grid',
@@ -26,13 +28,13 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedEmail$)
         .map(([ canEdit, email ]) => canEdit && !!email),
-      action: () => {}
+      action: () => this.onEdit(this.selectedEmailId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -64,16 +66,19 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   private _emails: Array<any> = [];
 
   private gridSubscription: Subscription;
+  private canViewSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
-    blockReasonCode: []
+    blockReasonCode: [],
+    blockDateTime: ({ blockDateTime }) => this.valueConverterService.ISOToLocalDateTime(blockDateTime) || '',
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
   };
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'email' },
-    { prop: 'isBlocked' },
+    { prop: 'isBlocked', localized: true },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
   ];
@@ -87,10 +92,12 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     private emailService: EmailService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
@@ -113,11 +120,21 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.emails.gen.plural').dispatch();
+          this.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.canViewSubscription.unsubscribe();
   }
 
   get blockDialogDictionaryId(): number {
@@ -132,8 +149,12 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (email: IEmail) => ({ blocked: !!email.isBlocked });
+  }
+
   onDoubleClick(email: IEmail): void {
-    this.router.navigate([ `${this.router.url}/email/${email.id}` ]);
+    this.onEdit(email.id);
   }
 
   onSelect(email: IEmail): void {
@@ -200,6 +221,14 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('EMAIL_UNBLOCK').distinctUntilChanged();
   }
 
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/email/create` ]);
+  }
+
+  private onEdit(emailId: number): void {
+    this.router.navigate([ `${this.router.url}/email/${emailId}` ]);
+  }
+
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
@@ -208,6 +237,11 @@ export class EmailGridComponent implements OnInit, OnDestroy {
         this._emails = emails;
         this.cdRef.markForCheck();
       });
+  }
+
+  private clear(): void {
+    this._emails = [];
+    this.cdRef.markForCheck();
   }
 
   private setDialog(dialog: number): void {

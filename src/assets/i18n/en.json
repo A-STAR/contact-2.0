@@ -721,11 +721,55 @@
         },
         "unblock": {
           "title": "Unblock address",
-          "confirmMessage": "Are you sure you want to block address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to unblock address {{ fullAddress }}?"
         },
         "delete": {
-          "title": "Удалить адрес",
-          "confirmMessage": "Are you sure you want to delete address {{ fullAddress }}?"
+          "title": "Remove address",
+          "confirmMessage": "Are you sure you want to remove address {{ fullAddress }}?"
+        }
+      }
+    },
+    "email": {
+      "card": {
+        "typeCode": "Type",
+        "email": "Email",
+        "comment": "Comment"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block email",
+          "blockReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock email",
+          "confirmMessage": "Are you sure you want to unblock email {{ email }}?"
+        },
+        "delete": {
+          "title": "Remove email",
+          "confirmMessage": "Are you sure you want to remove email {{ email }}?"
+        }
+      }
+    },
+    "phone": {
+      "card": {
+        "typeCode": "Type",
+        "phoneNumber": "Phone number",
+        "stopAutoSms": "Stop automatic SMS",
+        "stopAutoInfo": "Stop automatic voicemail",
+        "comment": "Comment"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block phone number",
+          "blockReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock phone number",
+          "confirmMessage": "Are you sure you want to unblock phone number {{ phone }}?"
+        },
+        "delete": {
+          "title": "Remove phone number",
+          "confirmMessage": "Are you sure you want to remove phone number {{ phone }}?"
         }
       }
     }
@@ -806,6 +850,15 @@
       "users": {
         "gen": { "plural": "users lookup data" }
       }
+    },
+    "addresses": {
+      "gen": { "singular": "address", "plural": "addresses list" }
+    },
+    "emails": {
+      "gen": { "singular": "email", "plural": "emails list" }
+    },
+    "phones": {
+      "gen": { "singular": "phone number", "plural": "phone numbers list" }
     }
   },
   "errors": {

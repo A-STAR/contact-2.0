@@ -728,6 +728,50 @@
           "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
         }
       }
+    },
+    "email": {
+      "card": {
+        "typeCode": "Тип",
+        "email": "Email",
+        "comment": "Комментарий"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать email",
+          "blockReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать email",
+          "confirmMessage": "Вы действительно хотите разблокировать email {{ email }}?"
+        },
+        "delete": {
+          "title": "Удалить email",
+          "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        }
+      }
+    },
+    "phone": {
+      "card": {
+        "typeCode": "Тип",
+        "phoneNumber": "Номер телефона",
+        "stopAutoSms": "Не отправлять автоматические SMS",
+        "stopAutoInfo": "Запретить голосовое информирование",
+        "comment": "Комментарий"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать телефон",
+          "blockReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать телефон",
+          "confirmMessage": "Вы действительно хотите разблокировать телефон {{ phone }}?"
+        },
+        "delete": {
+          "title": "Удалить телефон",
+          "confirmMessage": "Вы действительно хотите удалить телефон {{ phone }}?"
+        }
+      }
     }
   },
   "entities": {
@@ -806,6 +850,15 @@
       "users": {
         "gen": { "plural": "lookup данных пользователей" }
       }
+    },
+    "addresses": {
+      "gen": { "singular": "адреса", "plural": "списка адресов" }
+    },
+    "emails": {
+      "gen": { "singular": "email-адреса", "plural": "списка email-адресов " }
+    },
+    "phones": {
+      "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     }
   },
   "errors": {

@@ -79,6 +79,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       });
   }
 
+  @Input() rowClass = () => undefined;
+
   @Input() filter(data: Array<any>): Array<any> {
     return data;
   }

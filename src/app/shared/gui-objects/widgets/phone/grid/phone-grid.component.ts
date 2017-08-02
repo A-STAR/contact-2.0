@@ -11,8 +11,10 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PhoneService } from '../phone.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-phone-grid',
@@ -26,13 +28,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedPhone$)
         .map(([ canEdit, phone ]) => canEdit && !!phone),
-      action: () => {}
+      action: () => this.onEdit(this.selectedPhoneId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -64,18 +66,21 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private _phones: Array<any> = [];
 
   private gridSubscription: Subscription;
+  private canViewSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
     statusCode: [],
     blockReasonCode: [],
+    blockDateTime: ({ blockDateTime }) => this.valueConverterService.ISOToLocalDateTime(blockDateTime) || '',
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
   };
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'phoneNumber' },
     { prop: 'statusCode' },
-    { prop: 'isBlocked' },
+    { prop: 'isBlocked', localized: true },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
@@ -90,10 +95,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private phoneService: PhoneService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
@@ -119,11 +126,21 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
+          this.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.canViewSubscription.unsubscribe();
   }
 
   get blockDialogDictionaryId(): number {
@@ -138,8 +155,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (phone: IPhone) => ({ blocked: !!phone.isBlocked });
+  }
+
   onDoubleClick(phone: IPhone): void {
-    this.router.navigate([ `${this.router.url}/phone/${phone.id}` ]);
+    this.onEdit(phone.id);
   }
 
   onSelect(phone: IPhone): void {
@@ -206,6 +227,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('PHONE_UNBLOCK').distinctUntilChanged();
   }
 
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/phone/create` ]);
+  }
+
+  private onEdit(phoneId: number): void {
+    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ]);
+  }
+
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
@@ -214,6 +243,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this._phones = phones;
         this.cdRef.markForCheck();
       });
+  }
+
+  private clear(): void {
+    this._phones = [];
+    this.cdRef.markForCheck();
   }
 
   private setDialog(dialog: number): void {

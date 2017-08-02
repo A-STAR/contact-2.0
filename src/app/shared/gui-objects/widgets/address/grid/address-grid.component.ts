@@ -12,8 +12,10 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-address-grid',
@@ -27,13 +29,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedAddress$)
         .map(([ canEdit, address ]) => canEdit && !!address),
-      action: () => {}
+      action: () => this.onEdit(this.selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -65,11 +67,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _addresses: Array<IAddress> = [];
 
   private gridSubscription: Subscription;
+  private canViewSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
     statusCode: [],
     blockReasonCode: [],
+    blockDateTime: ({ blockDateTime }) => this.valueConverterService.ISOToLocalDateTime(blockDateTime) || '',
+    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -77,7 +82,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'fullAddress' },
     { prop: 'statusCode' },
     { prop: 'isResidence' },
-    { prop: 'isBlocked' },
+    { prop: 'isBlocked', localized: true },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
@@ -92,10 +97,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
@@ -121,11 +128,21 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
+          this.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.canViewSubscription.unsubscribe();
   }
 
   get blockDialogDictionaryId(): number {
@@ -140,8 +157,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (address: IAddress) => ({ blocked: !!address.isBlocked });
+  }
+
   onDoubleClick(address: IAddress): void {
-    this.router.navigate([ `${this.router.url}/address/${address.id}` ]);
+    this.onEdit(address.id);
   }
 
   onSelect(address: IAddress): void {
@@ -208,6 +229,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('ADDRESS_UNBLOCK').distinctUntilChanged();
   }
 
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/address/create` ]);
+  }
+
+  private onEdit(addressId: number): void {
+    this.router.navigate([ `${this.router.url}/address/${addressId}` ]);
+  }
+
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
@@ -216,6 +245,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this._addresses = addresses;
         this.cdRef.markForCheck();
       });
+  }
+
+  private clear(): void {
+    this._addresses = [];
+    this.cdRef.markForCheck();
   }
 
   private setDialog(dialog: number): void {

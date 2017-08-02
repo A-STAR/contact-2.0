@@ -1,5 +1,7 @@
 <app-block-dialog
   *ngIf="dialog === 1"
+  titleTranslationKey="widgets.email.dialogs.block.title"
+  labelTranslationKey="widgets.email.dialogs.block.blockReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
   (close)="onDialogClose()">
@@ -34,6 +36,7 @@
   selectionType="single"
   [styles]="{height: '200px'}"
   [columns]="columns"
+  [rowClass]="getRowClass()"
   [rows]="emails"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
