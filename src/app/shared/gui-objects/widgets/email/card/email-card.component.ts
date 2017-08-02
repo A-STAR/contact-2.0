@@ -20,53 +20,32 @@ export class EmailCardComponent {
 
   // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
-  private addressId = (this.route.params as any).value.addressId || null;
+  private emailId = (this.route.params as any).value.emailId || null;
 
   controls: Array<IDynamicFormItem> = null;
-  address: any;
+  email: any;
 
   constructor(
-    private addressService: EmailService,
+    private emailService: EmailService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
-      this.userPermissionsService.has('ADDRESS_EDIT'),
-      this.userPermissionsService.has('ADDRESS_COMMENT_EDIT'),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+      this.userPermissionsService.has('EMAIL_EDIT'),
+      this.userPermissionsService.has('EMAIL_COMMENT_EDIT'),
       // TODO(d.maltsev): pass entity type
-      this.addressId ? this.addressService.fetch(18, this.id, this.addressId) : Observable.of(null)
+      this.emailId ? this.emailService.fetch(18, this.id, this.emailId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, canEdit, canEditComment, address ]) => {
+    .subscribe(([ options, canEdit, canEditComment, email ]) => {
       this.controls = [
-        {
-          width: 6,
-          children: [
-            { label: 'widgets.address.card.postalCode', controlName: 'postalCode', type: 'text' },
-            { label: 'widgets.address.card.country', controlName: 'country', type: 'text' },
-            { label: 'widgets.address.card.region', controlName: 'region', type: 'text' },
-            { label: 'widgets.address.card.area', controlName: 'area', type: 'text' },
-            { label: 'widgets.address.card.city', controlName: 'city', type: 'text' },
-            { label: 'widgets.address.card.settlement', controlName: 'settlement', type: 'text' },
-            { label: 'widgets.address.card.cityDistrict', controlName: 'cityDistrict', type: 'text' },
-            { label: 'widgets.address.card.street', controlName: 'street', type: 'text' },
-            { label: 'widgets.address.card.house', controlName: 'house', type: 'text' },
-            { label: 'widgets.address.card.building', controlName: 'building', type: 'text' },
-            { label: 'widgets.address.card.flat', controlName: 'flat', type: 'text' },
-          ].map(control => canEdit ? control : { ...control, disabled: true }) as Array<IDynamicFormItem>
-        },
-        {
-          width: 6,
-          children: [
-            { label: 'widgets.address.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options },
-            { label: 'widgets.address.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
-            { label: 'widgets.address.card.isResidence', controlName: 'isResidence', type: 'checkbox' },
-          ].map(control => control.hasOwnProperty('disabled') ? control : { ...control, disabled: !canEdit }) as Array<IDynamicFormItem>
-        },
+        { label: 'widgets.email.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
+        { label: 'widgets.email.card.email', controlName: 'email', type: 'text', required: true, disabled: !canEdit },
+        { label: 'widgets.email.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
-      this.address = address;
+      this.email = email;
     });
   }
 
@@ -76,10 +55,10 @@ export class EmailCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
     }
-    if (this.addressId) {
-      this.addressService.update(18, this.id, this.addressId, data).subscribe();
+    if (this.emailId) {
+      this.emailService.update(18, this.id, this.emailId, data).subscribe();
     } else {
-      this.addressService.create(18, this.id, data).subscribe();
+      this.emailService.create(18, this.id, data).subscribe();
     }
   }
 
