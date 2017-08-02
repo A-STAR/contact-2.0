@@ -12,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
@@ -66,6 +67,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _addresses: Array<IAddress> = [];
 
   private gridSubscription: Subscription;
+  private canViewSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
@@ -95,6 +97,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -125,11 +128,21 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
+          this.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.canViewSubscription.unsubscribe();
   }
 
   get blockDialogDictionaryId(): number {
@@ -232,6 +245,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this._addresses = addresses;
         this.cdRef.markForCheck();
       });
+  }
+
+  private clear(): void {
+    this._addresses = [];
+    this.cdRef.markForCheck();
   }
 
   private setDialog(dialog: number): void {
