@@ -1,5 +1,5 @@
 export interface IIdentityDoc {
-  id: number;
+  id?: number;
   citizenship?: string;
   comment?: string;
   docNumber: string;

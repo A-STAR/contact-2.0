@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IIdentityDoc } from './identity.interface';
+
 import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
@@ -15,5 +17,9 @@ export class IdentityService {
   fetch(id: number): Observable<any> {
     return this.dataService.read('/persons/{id}/identitydocuments', { id })
       .map(response => response.identityDocuments);
+  }
+
+  create(id: number, doc: IIdentityDoc): Observable<boolean> {
+    return this.dataService.create('/persons/{id}/identitydocuments', { id }, doc);
   }
 }
