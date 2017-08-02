@@ -5,6 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmailService } from '../email.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -26,6 +27,7 @@ export class EmailCardComponent {
   email: any;
 
   constructor(
+    private contentTabService: ContentTabService,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -55,15 +57,16 @@ export class EmailCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
     }
-    if (this.emailId) {
-      this.emailService.update(18, this.id, this.emailId, data).subscribe();
-    } else {
-      this.emailService.create(18, this.id, data).subscribe();
-    }
+
+    const action = this.emailId
+      ? this.emailService.update(18, this.id, this.emailId, data)
+      : this.emailService.create(18, this.id, data);
+
+    action.subscribe(() => this.onBack());
   }
 
   public onBack(): void {
-    console.log('back');
+    this.contentTabService.back();
   }
 
   public get canSubmit(): boolean {
