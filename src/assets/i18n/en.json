@@ -108,7 +108,9 @@
       "sms": "Send SMS",
       "move": "Move",
       "download": "Download",
-      "upload": "Upload"
+      "upload": "Upload",
+      "block": "Block",
+      "unblock": "Unblock"
     }
   },
   "queryBuilder": {
@@ -694,6 +696,40 @@
       "refresh": "Could not refresh session"
     }
   },
+  "widgets": {
+    "address": {
+      "card": {
+        "postalCode": "Postal code",
+        "country": "Country",
+        "region": "Region",
+        "area": "Region area",
+        "city": "City",
+        "settlement": "Settlement",
+        "cityDistrict": "City district",
+        "street": "Street",
+        "house": "House",
+        "building": "Building",
+        "flat": "Flat",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "isResidence": "Is current residence"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block address",
+          "blockReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock address",
+          "confirmMessage": "Are you sure you want to block address {{ fullAddress }}?"
+        },
+        "delete": {
+          "title": "Удалить адрес",
+          "confirmMessage": "Are you sure you want to delete address {{ fullAddress }}?"
+        }
+      }
+    }
+  },
   "entities": {
     "roles": {
       "gen": { "singular": "role", "plural": "roles list" }
@@ -891,7 +927,8 @@
       "add": "Add",
       "change": "Change",
       "excel": "Export to Excel",
-      "back": "Back"
+      "back": "Back",
+      "block": "Block"
     },
     "dateTimeRage": {
       "from": "From",

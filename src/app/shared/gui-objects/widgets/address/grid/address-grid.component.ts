@@ -1,44 +1,78 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { AddressGridService } from './address-grid.service';
+import { AddressService } from '../address.service';
+import { GridService } from '../../../../components/grid/grid.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-address-grid',
   templateUrl: './address-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressGridComponent implements OnInit {
+export class AddressGridComponent implements OnInit, OnDestroy {
+  private selectedAddressId$ = new BehaviorSubject<number>(null);
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: Observable.of(true),
+      enabled: this.canAdd$,
       action: () => {}
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.of(true),
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedAddress$)
+        .map(([ canEdit, address ]) => canEdit && !!address),
       action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
+        .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
+      action: () => this.setDialog(1)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
+        .map(([ canUnblock, address ]) => canUnblock && !!address && address.isBlocked),
+      action: () => this.setDialog(2)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.of(true),
-      action: () => {}
+      enabled: Observable.combineLatest(this.canDelete$, this.selectedAddress$)
+        .map(([ canDelete, address ]) => canDelete && !!address),
+      action: () => this.setDialog(3)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: Observable.of(true),
-      action: () => {}
-    }
+      enabled: this.canView$,
+      action: () => this.fetch()
+    },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<IGridColumn> = [];
+
+  private _addresses: Array<IAddress> = [];
+
+  private gridSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    typeCode: [],
+    statusCode: [],
+    blockReasonCode: [],
+  };
+
+  private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'fullAddress' },
     { prop: 'statusCode' },
@@ -49,37 +83,143 @@ export class AddressGridComponent implements OnInit {
     { prop: 'comment' },
   ];
 
-  private _addresses: Array<IAddress>;
-  private _key: string;
+  private _dialog = null;
+
+  // TODO(d.maltsev): is there a better way to get route params?
+  private id = (this.route.params as any).value.id || null;
 
   constructor(
-    private addressGridService: AddressGridService,
-    private route: ActivatedRoute,
+    private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    private injector: Injector,
+    private gridService: GridService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {
-    this._key = this.injector.get('key');
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING),
+      this.canViewBlock$,
+    )
+    .subscribe(([ typeCodeOptions, statusCodeOptions, blockReasonCodeOptions, canViewBlock ]) => {
+      this.renderers.typeCode = [].concat(typeCodeOptions);
+      this.renderers.statusCode = [].concat(statusCodeOptions);
+      this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
+      const columns = this._columns.filter(column => {
+        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+      });
+      this.columns = this.gridService.setRenderers(columns, this.renderers);
+    });
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
+      UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
+      UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
+    ]);
   }
 
   ngOnInit(): void {
-    // TODO(d.maltsev): pass entityTypeId id
-    const parentId = Number((this.route.params as any).value.id) || null;
-    this.addressGridService.fetch(1, parentId)
-      .subscribe(addresses => {
-        this._addresses = addresses;
-        this.cdRef.markForCheck();
-      });
+    this.fetch();
+  }
+
+  ngOnDestroy(): void {
+    this.gridSubscription.unsubscribe();
+  }
+
+  get blockDialogDictionaryId(): number {
+    return UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING;
   }
 
   get addresses(): Array<IAddress> {
     return this._addresses;
   }
 
-  onDoubleClick(event: any): void {
-    //
+  get dialog(): number {
+    return this._dialog;
   }
 
-  onSelect(event: any): void {
-    //
+  onDoubleClick(address: IAddress): void {
+    this.router.navigate([ `${this.router.url}/address/${address.id}` ]);
+  }
+
+  onSelect(address: IAddress): void {
+    this.selectedAddressId$.next(address.id);
+  }
+
+  onBlockDialogSubmit(blockReasonCode: number): void {
+    this.addressService.block(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onUnblockDialogSubmit(blockReasonCode: number): void {
+    this.addressService.unblock(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onRemoveDialogSubmit(): void {
+    this.addressService.delete(18, this.id, this.selectedAddressId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onDialogClose(): void {
+    this.setDialog(null);
+  }
+
+  get selectedAddress$(): Observable<IAddress> {
+    return this.selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_VIEW').distinctUntilChanged();
+  }
+
+  get canViewBlock$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_BLOCK_VIEW').distinctUntilChanged();
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_ADD').distinctUntilChanged();
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]).distinctUntilChanged();
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_DELETE').distinctUntilChanged();
+  }
+
+  get canBlock$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_BLOCK').distinctUntilChanged();
+  }
+
+  get canUnblock$(): Observable<boolean> {
+    return this.userPermissionsService.has('ADDRESS_UNBLOCK').distinctUntilChanged();
+  }
+
+  private fetch(): void {
+    // TODO(d.maltsev): persist selection
+    // TODO(d.maltsev): pass entity type
+    this.addressService.fetchAll(18, this.id)
+      .subscribe(addresses => {
+        this._addresses = addresses;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  private setDialog(dialog: number): void {
+    this._dialog = dialog;
+    this.cdRef.markForCheck();
   }
 }

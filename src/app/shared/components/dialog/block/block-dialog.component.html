@@ -1,0 +1,16 @@
+<app-dialog (onClose)="onCloseHandle()">
+  <div dialog-header>
+    <h3>{{ 'widgets.address.dialogs.block.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-success" (click)="onSubmitHandle()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.block' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCloseHandle()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

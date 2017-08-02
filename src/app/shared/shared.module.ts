@@ -23,6 +23,7 @@ import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.dire
 // App modules
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { AttachmentsModule } from './components/attachments/attachments.module';
+import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
@@ -66,6 +67,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // app modules
     ActionDialogModule,
     AttachmentsModule,
+    BlockDialogModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
@@ -126,6 +128,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // App exports
     ActionDialogModule,
     AttachmentsModule,
+    BlockDialogModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,

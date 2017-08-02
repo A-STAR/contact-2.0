@@ -4,6 +4,8 @@ import { EffectsModule } from '@ngrx/effects';
 // import { IdentityModule } from '../../../../shared/gui-objects/widgets/identity/identity.module';
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { DebtorAddressModule } from './address/address.module';
+
 import { DebtorCardEffects } from './debtor.effects';
 import { DebtorService } from './debtor.service';
 
@@ -13,6 +15,7 @@ import { DebtorGeneralInformationComponent } from './general-information/debtor-
 
 @NgModule({
   imports: [
+    DebtorAddressModule,
     EffectsModule.run(DebtorCardEffects),
     SharedModule,
     // IdentityModule,

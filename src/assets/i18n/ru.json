@@ -108,7 +108,9 @@
       "sms": "Отправить SMS",
       "move": "Переместить",
       "download": "Скачать",
-      "upload": "Загрузить"
+      "upload": "Загрузить",
+      "block": "Заблокировать",
+      "unblock": "Разблокировать"
     }
   },
   "queryBuilder": {
@@ -694,6 +696,40 @@
       "refresh": "Не удалось обновить сессию"
     }
   },
+  "widgets": {
+    "address": {
+      "card": {
+        "postalCode": "Индекс",
+        "country": "Страна",
+        "region": "Регион",
+        "area": "Район в регионе",
+        "city": "Город",
+        "settlement": "Населенный пункт",
+        "cityDistrict": "Район города",
+        "street": "Улица",
+        "house": "Дом",
+        "building": "Корпус",
+        "flat": "Квартира",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "isResidence": "Проживает по данному адресу"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать адрес",
+          "blockReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать адрес",
+          "confirmMessage": "Вы действительно хотите разблокировать адрес {{ fullAddress }}?"
+        },
+        "delete": {
+          "title": "Удалить адрес",
+          "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        }
+      }
+    }
+  },
   "entities": {
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
@@ -891,7 +927,8 @@
       "add": "Добавить",
       "change": "Изменить",
       "back": "Назад",
-      "excel": "Экспорт в Excel"
+      "excel": "Экспорт в Excel",
+      "block": "Блокировать"
     },
     "dateTimeRage": {
       "from": "Начало",

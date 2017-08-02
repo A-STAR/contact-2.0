@@ -51,6 +51,14 @@ export class Toolbar2Component {
       label: 'toolbar.action.upload',
       icon: 'fa fa-cloud-upload',
     },
+    [ToolbarItemTypeEnum.BUTTON_BLOCK]: {
+      label: 'toolbar.action.block',
+      icon: 'fa fa-close',
+    },
+    [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: {
+      label: 'toolbar.action.unblock',
+      icon: 'fa fa-check',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -64,6 +72,8 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_MOVE,
     ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
     ToolbarItemTypeEnum.BUTTON_UPLOAD,
+    ToolbarItemTypeEnum.BUTTON_BLOCK,
+    ToolbarItemTypeEnum.BUTTON_UNBLOCK,
   ];
 
   constructor(

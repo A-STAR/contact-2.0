@@ -1,50 +1,77 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/of';
 
-import { IGridColumn } from '../../../../components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IPhone } from '../phone.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { PhoneService } from '../phone.service';
+import { GridService } from '../../../../components/grid/grid.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-phone-grid',
   templateUrl: './phone-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneGridComponent implements OnInit {
+export class PhoneGridComponent implements OnInit, OnDestroy {
+  private selectedPhoneId$ = new BehaviorSubject<number>(null);
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: Observable.of(true),
+      enabled: this.canAdd$,
       action: () => {}
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.of(true),
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedPhone$)
+        .map(([ canEdit, phone ]) => canEdit && !!phone),
       action: () => {}
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      enabled: Observable.combineLatest(this.canBlock$, this.selectedPhone$)
+        .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isBlocked),
+      action: () => this.setDialog(1)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
+        .map(([ canUnblock, phone ]) => canUnblock && !!phone && phone.isBlocked),
+      action: () => this.setDialog(2)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.of(true),
-      action: () => {}
+      enabled: Observable.combineLatest(this.canDelete$, this.selectedPhone$)
+        .map(([ canDelete, phone ]) => canDelete && !!phone),
+      action: () => this.setDialog(3)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: Observable.of(true),
-      action: () => {}
+      enabled: this.canView$,
+      action: () => this.fetch()
     },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_SMS,
-      enabled: Observable.of(true),
-      action: () => {}
-    },
-    {
-      type: ToolbarItemTypeEnum.CHECKBOX,
-      label: 'debtor.information.phone.toolbar.verification',
-      enabled: Observable.of(true),
-      action: () => {}
-    }
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<IGridColumn> = [];
+
+  private _phones: Array<any> = [];
+
+  private gridSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    typeCode: [],
+    statusCode: [],
+    blockReasonCode: [],
+  };
+
+  private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'phoneNumber' },
     { prop: 'statusCode' },
@@ -54,30 +81,143 @@ export class PhoneGridComponent implements OnInit {
     { prop: 'comment' },
   ];
 
-  private _phones: Array<any>;
-  private _key: string;
+  private _dialog = null;
+
+  // TODO(d.maltsev): is there a better way to get route params?
+  private id = (this.route.params as any).value.id || null;
 
   constructor(
+    private phoneService: PhoneService,
     private cdRef: ChangeDetectorRef,
-    private injector: Injector,
+    private gridService: GridService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {
-    this._key = this.injector.get('key');
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_STATUS),
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING),
+      this.canViewBlock$,
+    )
+    .subscribe(([ typeCodeOptions, statusCodeOptions, blockReasonCodeOptions, canViewBlock ]) => {
+      this.renderers.typeCode = [].concat(typeCodeOptions);
+      this.renderers.statusCode = [].concat(statusCodeOptions);
+      this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
+      const columns = this._columns.filter(column => {
+        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+      });
+      this.columns = this.gridService.setRenderers(columns, this.renderers);
+    });
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_PHONE_TYPE,
+      UserDictionariesService.DICTIONARY_PHONE_STATUS,
+      UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING,
+    ]);
   }
 
   ngOnInit(): void {
-    // TODO(d.maltsev): pass person id
-    this.cdRef.markForCheck();
+    this.fetch();
   }
 
-  get phones(): Array<any> {
+  ngOnDestroy(): void {
+    this.gridSubscription.unsubscribe();
+  }
+
+  get blockDialogDictionaryId(): number {
+    return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
+  }
+
+  get phones(): Array<IPhone> {
     return this._phones;
   }
 
-  onDoubleClick(event: any): void {
-    //
+  get dialog(): number {
+    return this._dialog;
   }
 
-  onSelect(event: any): void {
-    //
+  onDoubleClick(phone: IPhone): void {
+    this.router.navigate([ `${this.router.url}/phone/${phone.id}` ]);
+  }
+
+  onSelect(phone: IPhone): void {
+    this.selectedPhoneId$.next(phone.id);
+  }
+
+  onBlockDialogSubmit(blockReasonCode: number): void {
+    this.phoneService.block(18, this.id, this.selectedPhoneId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onUnblockDialogSubmit(blockReasonCode: number): void {
+    this.phoneService.unblock(18, this.id, this.selectedPhoneId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onRemoveDialogSubmit(): void {
+    this.phoneService.delete(18, this.id, this.selectedPhoneId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+      });
+  }
+
+  onDialogClose(): void {
+    this.setDialog(null);
+  }
+
+  get selectedPhone$(): Observable<IPhone> {
+    return this.selectedPhoneId$.map(id => this._phones.find(phone => phone.id === id));
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_VIEW').distinctUntilChanged();
+  }
+
+  get canViewBlock$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_BLOCK_VIEW').distinctUntilChanged();
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_ADD').distinctUntilChanged();
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.hasOne([ 'PHONE_EDIT', 'PHONE_COMMENT_EDIT' ]).distinctUntilChanged();
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_DELETE').distinctUntilChanged();
+  }
+
+  get canBlock$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_BLOCK').distinctUntilChanged();
+  }
+
+  get canUnblock$(): Observable<boolean> {
+    return this.userPermissionsService.has('PHONE_UNBLOCK').distinctUntilChanged();
+  }
+
+  private fetch(): void {
+    // TODO(d.maltsev): persist selection
+    // TODO(d.maltsev): pass entity type
+    this.phoneService.fetchAll(18, this.id)
+      .subscribe(phones => {
+        this._phones = phones;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  private setDialog(dialog: number): void {
+    this._dialog = dialog;
+    this.cdRef.markForCheck();
   }
 }

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { PhoneGridModule } from './grid/phone-grid.module';
 
+import { PhoneService } from './phone.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -10,6 +12,9 @@ import { PhoneGridModule } from './grid/phone-grid.module';
   ],
   exports: [
     PhoneGridModule,
+  ],
+  providers: [
+    PhoneService,
   ]
 })
 export class PhoneModule { }
