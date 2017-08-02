@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 
-import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-address-grid-block-dialog',

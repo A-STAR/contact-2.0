@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
 
-import { AddressGridBlockDialogComponent } from './block/block-dialog.component';
+import { AddressGridBlockDialogComponent } from './block-dialog.component';
 
 @NgModule({
   imports: [
@@ -21,4 +21,4 @@ import { AddressGridBlockDialogComponent } from './block/block-dialog.component'
     AddressGridBlockDialogComponent,
   ]
 })
-export class AddressGridDialogsModule { }
+export class AddressGridBlockDialogsModule { }
