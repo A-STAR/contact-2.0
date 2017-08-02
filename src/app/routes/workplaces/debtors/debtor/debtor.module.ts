@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 
+// import { IdentityModule } from '../../../../shared/gui-objects/widgets/identity/identity.module';
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { IdentityModule } from './general-information/identity/identity.module';
 import { DebtorAddressModule } from './address/address.module';
 
 import { DebtorCardEffects } from './debtor.effects';
@@ -18,7 +18,7 @@ import { DebtorGeneralInformationComponent } from './general-information/debtor-
     DebtorAddressModule,
     EffectsModule.run(DebtorCardEffects),
     SharedModule,
-    IdentityModule,
+    // IdentityModule,
   ],
   declarations: [
     DebtorComponent,

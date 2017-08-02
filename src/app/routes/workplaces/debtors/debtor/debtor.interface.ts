@@ -1,4 +1,4 @@
-import { IIdentityDoc } from './general-information/identity/identity.interface';
+import { IIdentityDoc } from '../../../../shared/gui-objects/widgets/identity/identity.interface';
 
 export interface IDebtorGeneralInformationResponse {
   success: boolean;

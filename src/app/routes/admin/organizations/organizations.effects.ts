@@ -259,38 +259,38 @@ export class OrganizationsEffects {
   ) {}
 
   private readOrganizations(): Observable<any> {
-    return this.dataService.read('/api/organizations');
+    return this.dataService.read('/organizations');
   }
 
   private createOrganization(parentId: number, organization: any): Observable<any> {
-    return this.dataService.create('/api/organizations', {}, { ...organization, parentId });
+    return this.dataService.create('/organizations', {}, { ...organization, parentId });
   }
 
   private updateOrganization(organizationId: number, organization: any): Observable<any> {
-    return this.dataService.update('/api/organizations/{organizationId}', { organizationId }, organization);
+    return this.dataService.update('/organizations/{organizationId}', { organizationId }, organization);
   }
 
   private deleteOrganization(organizationId: number): Observable<any> {
-    return this.dataService.delete('/api/organizations/{organizationId}', { organizationId });
+    return this.dataService.delete('/organizations/{organizationId}', { organizationId });
   }
 
   private readEmployees(organizationId: number): Observable<any> {
-    return this.dataService.read('/api/organizations/{organizationId}/users', { organizationId });
+    return this.dataService.read('/organizations/{organizationId}/users', { organizationId });
   }
 
   private readNotAddedEmployees(organizationId: number): Observable<any> {
-    return this.dataService.read('/api/organizations/{organizationId}/users/notadded', { organizationId });
+    return this.dataService.read('/organizations/{organizationId}/users/notadded', { organizationId });
   }
 
   private createEmployee(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {
-    return this.dataService.create('/api/organizations/{organizationId}/users', { organizationId }, employee);
+    return this.dataService.create('/organizations/{organizationId}/users', { organizationId }, employee);
   }
 
   private updateEmployee(organizationId: number, userId: number, employee: IEmployeeUpdateRequest): Observable<any> {
-    return this.dataService.update('/api/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
+    return this.dataService.update('/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
   }
 
   private deleteEmployee(organizationId: number, userId: number): Observable<any> {
-    return this.dataService.delete('/api/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
+    return this.dataService.delete('/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
   }
 }

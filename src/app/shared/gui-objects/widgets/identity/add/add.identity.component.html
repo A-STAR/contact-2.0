@@ -1,12 +1,12 @@
 <app-dialog (displayChange)="onDisplayChange($event)">
   <div dialog-header>
-    <h3>{{ title | translate }}</h3>
+    <h3>{{ 'identityDocs.add.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="editedEntity"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
 
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!canSubmit()" (click)="onSubmit()">
+    <button class="btn btn-success" [disabled]="!canSave()" (click)="onSave()">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onCancel()">

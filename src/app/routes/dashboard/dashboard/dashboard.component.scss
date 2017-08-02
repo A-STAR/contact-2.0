@@ -1,3 +1,7 @@
 .dashboard-list {
   height: 180px;
 }
+
+:host /deep/ .legendLabel {
+  padding-left: 6px;
+}

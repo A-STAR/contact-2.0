@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
@@ -13,6 +13,8 @@ import { UserLdapDialogService } from './user-ldap-dialog.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserLdapDialogComponent {
+  @Output() submit = new EventEmitter<string>();
+
   groupsColumns: Array<IGridColumn> = [
     { prop: 'name' },
     { prop: 'comment' },
@@ -54,5 +56,9 @@ export class UserLdapDialogComponent {
 
   onUserSelect(user: ILdapUser): void {
     this._selectedUser = user;
+  }
+
+  onSubmit(user: ILdapUser): void {
+    this.submit.emit(user.login);
   }
 }

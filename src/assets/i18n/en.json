@@ -416,7 +416,11 @@
     }
   },
   "identityDocs": {
+    "add": {
+      "title": "Add an identity doc"
+    },
     "grid": {
+      "id": "Id",
       "docTypeCode": "Type",
       "docNumber": "No",
       "issueDate": "Issue date",
