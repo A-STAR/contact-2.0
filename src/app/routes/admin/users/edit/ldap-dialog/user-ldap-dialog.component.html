@@ -6,7 +6,7 @@
       [columns]="groupsColumns"
       [footerHeight]="false"
       [rows]="groups$ | async"
-      [styles]="{ height: '200px' }"
+      [styles]="{ height: '250px' }"
       (onSelect)="onGroupSelect($event)">
     </app-grid>
   </div>
@@ -17,7 +17,7 @@
       [columns]="usersColumns"
       [footerHeight]="false"
       [rows]="users$ | async"
-      [styles]="{ height: '200px' }"
+      [styles]="{ height: '250px' }"
       (onSelect)="onUserSelect($event)"
       (onDblClick)="onSubmit($event)">
     </app-grid>
