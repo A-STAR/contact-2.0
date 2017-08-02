@@ -83,7 +83,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  private id: number;
+  // TODO(d.maltsev): is there a better way to get route params?
+  private id = (this.route.params as any).value.id || null;
 
   constructor(
     private addressService: AddressService,
@@ -94,9 +95,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // TODO(d.maltsev): uis there a better way to get route params?
-    this.id = (this.route.params as any).value.id || null;
-
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
@@ -145,7 +143,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    console.log(blockReasonCode);
     this.addressService.block(18, this.id, this.selectedAddressId$.value)
       .subscribe(() => {
         this.fetch();

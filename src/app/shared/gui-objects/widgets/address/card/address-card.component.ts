@@ -18,8 +18,9 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 export class AddressCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private id: number;
-  private addressId: number;
+  // TODO(d.maltsev): is there a better way to get route params?
+  private id = (this.route.params as any).value.id || null;
+  private addressId = (this.route.params as any).value.addressId || null;
 
   controls: Array<IDynamicFormItem> = null;
   address: any;
@@ -30,10 +31,6 @@ export class AddressCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // TODO(d.maltsev): is there a better way to get route params?
-    this.id = (this.route.params as any).value.id || null;
-    this.addressId = (this.route.params as any).value.addressId || null;
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userPermissionsService.has('ADDRESS_EDIT'),

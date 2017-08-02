@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { EmailGridModule } from './grid/email-grid.module';
 
+import { EmailService } from './email.service';
+
 @NgModule({
   imports: [
     EmailGridModule,
@@ -10,6 +12,9 @@ import { EmailGridModule } from './grid/email-grid.module';
   ],
   exports: [
     EmailGridModule,
+  ],
+  providers: [
+    EmailService,
   ]
 })
 export class EmailModule { }
