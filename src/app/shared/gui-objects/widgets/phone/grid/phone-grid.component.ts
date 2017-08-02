@@ -26,13 +26,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedPhone$)
         .map(([ canEdit, phone ]) => canEdit && !!phone),
-      action: () => {}
+      action: () => this.onEdit(this.selectedPhoneId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -139,7 +139,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.router.navigate([ `${this.router.url}/phone/${phone.id}` ]);
+    this.onEdit(phone.id);
   }
 
   onSelect(phone: IPhone): void {
@@ -204,6 +204,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('PHONE_UNBLOCK').distinctUntilChanged();
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/phone/create` ]);
+  }
+
+  private onEdit(phoneId: number): void {
+    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ]);
   }
 
   private fetch(): void {

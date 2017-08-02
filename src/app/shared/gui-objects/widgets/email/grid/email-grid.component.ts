@@ -26,13 +26,13 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => {}
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedEmail$)
         .map(([ canEdit, email ]) => canEdit && !!email),
-      action: () => {}
+      action: () => this.onEdit(this.selectedEmailId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -133,7 +133,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(email: IEmail): void {
-    this.router.navigate([ `${this.router.url}/email/${email.id}` ]);
+    this.onEdit(email.id);
   }
 
   onSelect(email: IEmail): void {
@@ -198,6 +198,14 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('EMAIL_UNBLOCK').distinctUntilChanged();
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/email/create` ]);
+  }
+
+  private onEdit(emailId: number): void {
+    this.router.navigate([ `${this.router.url}/email/${emailId}` ]);
   }
 
   private fetch(): void {
