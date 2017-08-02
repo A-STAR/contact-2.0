@@ -1,5 +1,7 @@
 <app-block-dialog
   *ngIf="dialog === 1"
+  titleTranslationKey="widgets.email.dialogs.block.title"
+  labelTranslationKey="widgets.email.dialogs.block.blockReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
   (close)="onDialogClose()">

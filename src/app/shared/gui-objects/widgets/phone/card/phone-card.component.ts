@@ -44,7 +44,7 @@ export class PhoneCardComponent {
         { label: 'widgets.phone.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
         { label: 'widgets.phone.card.phoneNumber', controlName: 'phone', type: 'text', required: true, disabled: !canEdit },
         { label: 'widgets.phone.card.stopAutoSms', controlName: 'stopAutoSms', type: 'checkbox' },
-        { label: 'widgets.phone.card.stopAucommenttoInfo', controlName: 'stopAucommenttoInfo', type: 'checkbox' },
+        { label: 'widgets.phone.card.stopAutoInfo', controlName: 'stopAutoInfo', type: 'checkbox' },
         { label: 'widgets.phone.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
       this.phone = phone;

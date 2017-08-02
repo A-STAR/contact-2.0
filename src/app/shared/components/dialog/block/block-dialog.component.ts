@@ -12,6 +12,8 @@ import { DynamicFormComponent } from '../../../components/form/dynamic-form/dyna
 })
 export class BlockDialogComponent implements OnInit {
   @Input() dictionaryId: number;
+  @Input() titleTranslationKey: string;
+  @Input() labelTranslationKey: string;
 
   @Output() close = new EventEmitter<void>();
   @Output() action = new EventEmitter<number>();
@@ -29,7 +31,7 @@ export class BlockDialogComponent implements OnInit {
       .take(1)
       .subscribe(options => {
         this.controls = [
-          { label: 'dialog.block.blockReasonCode', controlName: 'blockReasonCode', type: 'select', required: true, options }
+          { label: this.labelTranslationKey, controlName: 'blockReasonCode', type: 'select', required: true, options }
         ];
         this.data = {
           blockReasonCode: options[0].value
