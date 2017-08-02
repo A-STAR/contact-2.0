@@ -120,6 +120,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     this.gridSubscription.unsubscribe();
   }
 
+  get blockDialogDictionaryId(): number {
+    return UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING;
+  }
+
   get emails(): Array<IEmail> {
     return this._emails;
   }

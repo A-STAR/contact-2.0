@@ -126,6 +126,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.gridSubscription.unsubscribe();
   }
 
+  get blockDialogDictionaryId(): number {
+    return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
+  }
+
   get phones(): Array<IPhone> {
     return this._phones;
   }

@@ -1,3 +1,32 @@
+<app-block-dialog
+  *ngIf="dialog === 1"
+  [dictionaryId]="blockDialogDictionaryId"
+  (action)="onBlockDialogSubmit($event)"
+  (close)="onDialogClose()">
+</app-block-dialog>
+
+<app-dialog-action
+  *ngIf="dialog === 2"
+  titleTranslationKey="widgets.email.dialogs.unblock.title"
+  actionTranslationKey="widgets.email.dialogs.unblock.confirmMessage"
+  actionMessage="default.yesNo.Yes"
+  actionMode="success"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onUnblockDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-dialog-action
+  *ngIf="dialog === 3"
+  titleTranslationKey="widgets.email.dialogs.delete.title"
+  actionTranslationKey="widgets.email.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onRemoveDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
