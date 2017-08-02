@@ -132,6 +132,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (email: IEmail) => ({ blocked: !!email.isBlocked });
+  }
+
   onDoubleClick(email: IEmail): void {
     this.onEdit(email.id);
   }

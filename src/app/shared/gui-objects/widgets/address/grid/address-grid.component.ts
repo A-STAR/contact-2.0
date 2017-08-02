@@ -140,6 +140,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (address: IAddress) => ({ blocked: !!address.isBlocked });
+  }
+
   onDoubleClick(address: IAddress): void {
     this.onEdit(address.id);
   }

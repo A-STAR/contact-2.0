@@ -138,6 +138,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
+  getRowClass(): any {
+    return (phone: IPhone) => ({ blocked: !!phone.isBlocked });
+  }
+
   onDoubleClick(phone: IPhone): void {
     this.onEdit(phone.id);
   }
