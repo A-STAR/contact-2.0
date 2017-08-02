@@ -128,6 +128,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.gridSubscription.unsubscribe();
   }
 
+  get blockDialogDictionaryId(): number {
+    return UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING;
+  }
+
   get addresses(): Array<IAddress> {
     return this._addresses;
   }

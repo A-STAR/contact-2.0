@@ -1,8 +1,9 @@
-<app-address-grid-block-dialog
+<app-block-dialog
   *ngIf="dialog === 1"
-  (onSubmit)="onBlockDialogSubmit($event)"
-  (onClose)="onDialogClose()">
-</app-address-grid-block-dialog>
+  [dictionaryId]="blockDialogDictionaryId"
+  (action)="onBlockDialogSubmit($event)"
+  (close)="onDialogClose()">
+</app-block-dialog>
 
 <app-dialog-action
   *ngIf="dialog === 2"
