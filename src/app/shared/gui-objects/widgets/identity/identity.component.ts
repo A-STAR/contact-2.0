@@ -17,7 +17,7 @@ import { IdentityService } from './identity.service';
 export class IdentityGridComponent implements AfterViewInit {
   private _parentId: number;
   private dialog: string;
-  private selected: IIdentityDoc[];
+  // private selected: IIdentityDoc[];
 
   rows: IIdentityDoc[] = [];
 
