@@ -3,7 +3,7 @@
     <ul class="nav">
       <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
         <a
-          *ngIf="!item.children"
+          *ngIf="item.text && !item.children"
           [routerLink]="item.link"
           [attr.route]="item.link"
           [title]="item.text | translate"
@@ -11,7 +11,7 @@
           <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
         </a>
         <a
-          *ngIf="item.children"
+          *ngIf="item.text && item.children"
           [title]="item.text | translate"
           (click)="toggleSubmenuClick($event)"
           (mouseenter)="toggleSubmenuHover($event)"
@@ -22,7 +22,7 @@
           <li class="sidebar-subnav-header">{{ (item.text | translate) || item.name }}</li>
           <li *ngFor='let subitem of item.children' [routerLinkActive]="['active']">
             <a
-              *ngIf="!subitem.children"
+              *ngIf="subitem.text && !subitem.children"
               [routerLink]="subitem.link"
               [attr.route]="subitem.link"
               [title]="subitem.text | translate"
