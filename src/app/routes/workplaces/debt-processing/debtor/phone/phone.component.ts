@@ -9,6 +9,8 @@ import { PhoneCardComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './phone.component.html'
 })
 export class DebtorPhoneComponent {
+  static COMPONENT_NAME = 'DebtorPhoneComponent';
+
   get node(): INode {
     return {
       component: PhoneCardComponent
