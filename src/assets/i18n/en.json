@@ -648,6 +648,7 @@
       "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
     },
     "grid": {
+      "id": "Id",
       "name": "Short name",
       "fullName": "Full name",
       "smsName": "Name fot SMS",
@@ -667,6 +668,7 @@
   },
   "portfolios": {
     "grid": {
+      "id": "Id",
       "name": "Name",
       "directionCode": "Direction",
       "stageCode": "Stage",
