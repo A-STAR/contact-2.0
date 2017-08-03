@@ -1,12 +1,13 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
   Input,
   Output,
-  EventEmitter,
-  ElementRef,
-  forwardRef,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -149,6 +150,7 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     public element: ElementRef,
     private sanitizer: DomSanitizer,
     private translateService: TranslateService,
@@ -160,6 +162,7 @@ export class SelectComponent implements ControlValueAccessor {
 
   writeValue(value: any): void {
     this.active = value;
+    this.cdRef.markForCheck();
   }
 
   registerOnChange(fn: Function): void {
