@@ -85,12 +85,13 @@ export class GridService {
               column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
               break;
             case 6:
-            // Dictionary
+              // Dictionary
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 column.renderer = (row: ITypeCodeItem) => {
-                  const typeDescription = dictionary.find(item => item.code === row.typeCode);
-                  return typeDescription ? typeDescription.name : row.typeCode;
+                  const cellValue = row[column.name];
+                  const typeDescription = dictionary.find(item => item.code === cellValue);
+                  return typeDescription ? typeDescription.name : cellValue;
                 };
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
