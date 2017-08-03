@@ -20,6 +20,8 @@ export class OrganizationEditComponent extends EntityBaseComponent<IOrganization
   ngOnInit(): void {
     this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES)
       .subscribe(options => this.controls = this.buildControls(options));
+
+    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_BRANCHES ]);
   }
 
   get title(): string {
