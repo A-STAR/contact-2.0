@@ -15,7 +15,7 @@ export class UserDictionariesEffects {
   @Effect()
   fetchDictionary$ = this.actions
     .ofType(UserDictionariesService.USER_DICTIONARY_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       const { dictionaryId } = action.payload;
       return this.read(dictionaryId)
         .map((response: IUserTermsResponse) => {

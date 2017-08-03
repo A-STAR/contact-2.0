@@ -104,68 +104,9 @@ export class UserDictionariesService {
   getDictionaryOptions(dictionaryId: number): Observable<IOption[]> {
     // TODO(d.maltsev): remove this when the db has correct data
     switch (dictionaryId) {
-      case UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE:
-        return Observable.of([
-          { value: 1, label: 'Системный' },
-        ]);
-      case UserDictionariesService.DICTIONARY_BRANCHES:
-        return Observable.of([
-          { value: 1, label: 'Филиал по умолчанию' }
-        ]);
-      case UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION:
-        return Observable.of([
-          { value: 1, label: 'Входящий' },
-          { value: 2, label: 'Исходящий' },
-        ]);
-      case UserDictionariesService.DICTIONARY_GENDER:
-        return Observable.of([
-          { value: 1, label: 'Мужской' },
-          { value: 2, label: 'Женский' },
-        ]);
       case UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE:
         return Observable.of([
           { value: 1, label: 'Системный' },
-        ]);
-      case UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS:
-        return Observable.of([
-          { value: 1, label: 'Загружается' },
-          { value: 2, label: 'В работе' },
-          { value: 3, label: 'Закрыт' },
-          { value: 4, label: 'Новый' },
-          { value: 5, label: 'Сформирован' },
-          { value: 6, label: 'Передан' },
-          { value: 7, label: 'Отозван' },
-          { value: 8, label: 'Окончание работ' },
-          { value: 9, label: 'Архивный' },
-          { value: 10, label: 'Архивный' },
-        ]);
-      case UserDictionariesService.DICTIONARY_PHONE_TYPE:
-        return Observable.of([
-          { value: 1, label: 'Мобильный' },
-          { value: 2, label: 'Домашний' },
-          { value: 3, label: 'Рабочий' },
-        ]);
-      case UserDictionariesService.DICTIONARY_PHONE_STATUS:
-        return Observable.of([
-          { value: 1, label: 'Не звонили ни разу' },
-        ]);
-      case UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING:
-        return Observable.of([
-          { value: 1, label: '-' },
-        ]);
-      case UserDictionariesService.DICTIONARY_ADDRESS_TYPE:
-        return Observable.of([
-          { value: 1, label: 'Регистрация' },
-          { value: 2, label: 'Фактический' },
-          { value: 3, label: 'Рабочий' },
-        ]);
-      case UserDictionariesService.DICTIONARY_ADDRESS_STATUS:
-        return Observable.of([
-          { value: 1, label: 'Не выезжали ни разу' },
-        ]);
-      case UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING:
-        return Observable.of([
-          { value: 1, label: '-' },
         ]);
     }
 
