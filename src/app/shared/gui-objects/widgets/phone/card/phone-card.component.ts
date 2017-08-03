@@ -57,7 +57,9 @@ export class PhoneCardComponent {
     const { value } = this.form;
     const data = {
       ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
+      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
+      stopAutoInfo: Number(value.stopAutoInfo),
+      stopAutoSms: Number(value.stopAutoSms),
     }
 
     const action = this.phoneId

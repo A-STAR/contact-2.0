@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -26,7 +26,6 @@ export class DebtProcessingComponent {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   constructor(
-    private route: ActivatedRoute,
     private debtProcessingService: DebtProcessingService,
     private router: Router,
   ) {}
