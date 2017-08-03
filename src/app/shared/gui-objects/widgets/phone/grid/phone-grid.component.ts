@@ -78,7 +78,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
-    { prop: 'phoneNumber' },
+    { prop: 'phone' },
     { prop: 'statusCode' },
     { prop: 'isBlocked', localized: true },
     { prop: 'blockReasonCode' },
