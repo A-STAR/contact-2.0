@@ -4,10 +4,10 @@ import { IDebtorsState } from './debtors.interface';
 import {
   IDebtorGeneralInformation,
   IDebtorGeneralInformationPhonesPayload,
-} from './debtor/debtor.interface';
+} from '../debt-processing/debtor/debtor.interface';
 
 import { DebtorsService } from './debtors.service';
-import { DebtorService } from './debtor/debtor.service';
+import { DebtorService } from '../debt-processing/debtor/debtor.service';
 
 const DEFAULT_STATE: IDebtorsState = {
   debtors: [],

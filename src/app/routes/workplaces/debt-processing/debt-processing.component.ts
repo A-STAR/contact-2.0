@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -26,6 +26,7 @@ export class DebtProcessingComponent {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   constructor(
+    private route: ActivatedRoute,
     private debtProcessingService: DebtProcessingService,
     private router: Router,
   ) {}
@@ -65,7 +66,9 @@ export class DebtProcessingComponent {
   }
 
   onDblClick([id]: Array<number>): void {
-    this.router.navigate([ `/workplaces/debts/${id}` ]);
+    this.router.navigate([ `${this.router.url}/${id}` ]);
+    // Why this wouldn't work??? Or better: why does it fire only once?
+    // this.router.navigate([ `./${id}` ], { relativeTo: this.route });
   }
 
   getRowNodeId(debt: IDebt): number {

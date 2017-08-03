@@ -1,4 +1,4 @@
-import { IDebtor } from './debtor/debtor.interface';
+import { IDebtor } from '../debt-processing/debtor/debtor.interface';
 
 export interface ISelectedDebtors {
   [index: number]: IDebtor;

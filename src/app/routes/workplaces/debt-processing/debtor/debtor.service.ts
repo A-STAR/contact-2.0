@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { ISelectedDebtors } from '../debtors.interface';
+import { ISelectedDebtors } from '../../debtors/debtors.interface';
 import { IDebtor } from './debtor.interface';
 
 @Injectable()

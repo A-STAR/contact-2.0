@@ -31,7 +31,6 @@ export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnD
     private debtorService: DebtorService,
   ) {
     super();
-
     this.debtorService.fetch(this.selectedDebtorId);
     this.selectedDebtorSub = this.debtorService.selectedDebtor
       .filter(Boolean)

@@ -14,11 +14,21 @@ import { DataService } from '../../data/data.service';
 @Injectable()
 export class UserDictionariesService {
   static DICTIONARY_VARIABLE_TYPE               =  1;
+  static DICTIONARY_BOOLEAN_TYPE                =  2;
+  static DICTIONARY_PRODUCT_TYPE                =  3; // NOT READY
   static DICTIONARY_ACTION_TYPES                =  4;
   static DICTIONARY_TERM_TYPES                  =  5;
-  static DICTIONARY_BRANCHES                    =  6;
+  static DICTIONARY_BRANCHES                    =  6; // NOT READY
+  static DICTIONARY_DEBT_STATUS                 =  7; // NOT READY
   static DICTIONARY_EMPLOYEE_ROLE               =  8;
+  static DICTIONARY_DICTIONARY_TYPE             =  9;
+  static DICTIONARY_DICTIONARY_TERM_TYPE        = 10;
+  static DICTIONARY_DEBT_ORIGINATION_REASON     = 11; // NOT READY
+  static DICTIONARY_PERSON_TYPE                 = 12;
   static DICTIONARY_GENDER                      = 13;
+  static DICTIONARY_MARITAL_STATUS              = 14; // NOT READY
+  static DICTIONARY_EDUCATION                   = 15; // NOT READY
+  static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;
   static DICTIONARY_PHONE_STATUS                = 18;
   static DICTIONARY_PHONE_REASON_FOR_BLOCKING   = 20;

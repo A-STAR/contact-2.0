@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IDebtor } from './debtor/debtor.interface';
+import { IDebtor } from '../debt-processing/debtor/debtor.interface';
 
 @Injectable()
 export class DebtorsService {

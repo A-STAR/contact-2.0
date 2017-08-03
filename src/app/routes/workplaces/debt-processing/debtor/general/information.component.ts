@@ -12,10 +12,10 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-debtor-general-information',
-  templateUrl: './debtor-general-information.component.html',
+  selector: 'app-debtor-information',
+  templateUrl: './information.component.html',
 })
-export class DebtorGeneralInformationComponent extends EntityBaseComponent<IDebtorGeneralInformation> {
+export class DebtorInformationComponent extends EntityBaseComponent<IDebtorGeneralInformation> {
 
   @Input() data: IDebtorGeneralInformation;
   @Input() phones: IDebtorGeneralInformationPhone[];

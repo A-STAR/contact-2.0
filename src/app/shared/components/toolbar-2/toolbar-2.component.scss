@@ -13,6 +13,11 @@ $checkbox-size: 15px;
   border-bottom: none;
 }
 
+:host(.bh) > .toolbar {
+  border-left: 1px solid #d5d5d5;
+  border-right: 1px solid #d5d5d5;
+}
+
 .toolbar-item {
   display: inline-block;
   &:not(:last-child) {

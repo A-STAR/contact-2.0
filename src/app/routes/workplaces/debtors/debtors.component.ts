@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebtor } from './debtor/debtor.interface';
+import { IDebtor } from '../debt-processing/debtor/debtor.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
