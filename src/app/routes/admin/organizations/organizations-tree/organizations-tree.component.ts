@@ -107,7 +107,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   onNodeEdit(node: ITreeNode): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT, node);
+    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT, { selectedOrganization: node });
   }
 
   cancelAction(): void {

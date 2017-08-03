@@ -168,12 +168,13 @@ export class EmployeesComponent implements OnDestroy {
     }
   }
 
-  onEdit(): void {
+  onEdit(employee: IEmployee): void {
     this.userPermissionsService.has('ORGANIZATION_EDIT')
       .take(1)
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
-          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+          const selectedEmployeeUserId = employee.userId;
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT, { selectedEmployeeUserId });
         }
       });
   }
