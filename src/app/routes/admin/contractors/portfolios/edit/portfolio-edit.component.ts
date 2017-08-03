@@ -108,7 +108,7 @@ export class PortfolioEditComponent {
       { label: 'portfolios.grid.name', controlName: 'name', type: 'text', required: true },
       { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,
           disabled: !!portfolio, options: directionOptions },
-      { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select', options: stageOptions },
+      { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select', required: true, options: stageOptions },
       { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true,
           disabled: portfolio && portfolio.directionCode === 2, options: statusOptions },
       { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'datepicker' },
