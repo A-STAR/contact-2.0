@@ -66,8 +66,10 @@ export class DebtProcessingComponent {
 
   onDblClick([id]: Array<number>): void {
     this.router.navigate([ `${this.router.url}/${id}` ]);
-    // Why this wouldn't work??? Or better: why does it fire only once?
-    // this.router.navigate([ `./${id}` ], { relativeTo: this.route });
+    const { innerHeight: height, innerWidth: width} = window;
+    const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
+    const win = window.open(`${this.router.url}/${id}`, '_blank', winConfig);
+    if (win.focus) { win.focus() };
   }
 
   getRowNodeId(debt: IDebt): number {

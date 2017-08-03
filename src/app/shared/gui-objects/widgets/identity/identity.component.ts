@@ -128,9 +128,13 @@ export class IdentityGridComponent implements AfterViewInit {
       });
   }
 
-  onSelect(row: IIdentityDoc): void {
-    this.identityDoc = row;
+  onSelect(doc: IIdentityDoc): void {
+    this.identityDoc = doc;
     this.selectedRows$.next(this.grid.selected);
+  }
+
+  onDoubleClick(doc: IIdentityDoc): void {
+    this.setDialog('editIdentity');
   }
 
   get canView$(): Observable<boolean> {
