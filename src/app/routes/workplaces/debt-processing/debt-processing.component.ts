@@ -65,7 +65,6 @@ export class DebtProcessingComponent {
   }
 
   onDblClick([id]: Array<number>): void {
-    // this.router.navigate([ `${this.router.url}/${id}` ]);
     const { innerHeight: height, innerWidth: width} = window;
     const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
     const win = window.open(`${this.router.url}/${id}`, '_blank', winConfig);
