@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -38,7 +37,6 @@ export class DebtorInformationComponent implements OnDestroy {
   private personSubscription: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
