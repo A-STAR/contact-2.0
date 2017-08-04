@@ -114,13 +114,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.canViewBlock$,
     )
     .subscribe(([ options, canViewBlock ]) => {
-      this.renderers.typeCode = [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE]);
-      this.renderers.statusCode = [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS]);
-      this.renderers.blockReasonCode = [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING]);
+      this.renderers = {
+        ...this.renderers,
+        typeCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE]),
+        statusCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS]),
+        blockReasonCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING]),
+      }
       const columns = this._columns.filter(column => {
         return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
+
       this.columns = this.gridService.setRenderers(columns, this.renderers);
+      this.cdRef.markForCheck();
     });
   }
 
@@ -140,6 +145,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+  }
+
+  get canDisplayGrid(): boolean {
+    return this.columns.length > 0;
   }
 
   get blockDialogDictionaryId(): number {
