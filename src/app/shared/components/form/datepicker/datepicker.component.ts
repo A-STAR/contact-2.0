@@ -28,12 +28,12 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
+  locale = {};
   isDisabled = false;
   isExpanded = false;
   value: Date = null;
   style$ = new BehaviorSubject<{ top: string; left: string; }>(null);
 
-  private locale = {};
   private subscription: Subscription;
   private wheelListener: Function;
 

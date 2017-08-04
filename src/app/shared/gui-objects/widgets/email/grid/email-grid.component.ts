@@ -15,7 +15,6 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-email-grid',
@@ -72,14 +71,14 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   private renderers: IRenderer = {
     typeCode: [],
     blockReasonCode: [],
-    blockDateTime: ({ blockDateTime }) => this.valueConverterService.ISOToLocalDateTime(blockDateTime) || '',
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
+    blockDateTime: 'dateTimeRenderer',
+    isBlocked: 'yesNoRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'email' },
-    { prop: 'isBlocked', localized: true },
+    { prop: 'isBlocked', localized: true, maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
   ];
@@ -98,7 +97,6 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([

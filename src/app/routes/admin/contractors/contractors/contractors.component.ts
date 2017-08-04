@@ -62,14 +62,14 @@ export class ContractorsComponent implements OnDestroy {
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
+  selectedContractor: IContractor;
+
   private dialogAction: ContractorActionEnum;
 
   private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
   private contractorsSubscription: Subscription;
   private dictionariesSubscription: Subscription;
-
-  private selectedContractor: IContractor;
 
   private renderers: IRenderer = {
     typeCode: []

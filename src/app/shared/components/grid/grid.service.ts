@@ -16,15 +16,21 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
+import { renderers as gridRenderers } from '../../../core/utils/index';
 
 @Injectable()
 export class GridService {
+  predefinedRenderers: object;
+
   constructor(
     private converterService: ValueConverterService,
     private metadataService: MetadataService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
-  ) {}
+  ) {
+    const dateTimeRenderer = (key: string) => ({ [key]: value }) => value ? this.converterService.ISOToLocalDateTime(value) : '';
+    this.predefinedRenderers = { ...gridRenderers, dateTimeRenderer };
+  }
 
   /**
    * Builds request parameters necessary to talk to the BE
@@ -75,7 +81,7 @@ export class GridService {
 
       const columns: IAGridColumn[] = metadata
         .map(metaColumn => {
-          return Object.assign({}, metaColumn, { colId: metaColumn.name }) as IAGridColumn;
+          return { ...metaColumn, colId: metaColumn.name } as IAGridColumn;
         })
         .map(column => {
           // Data types
@@ -128,6 +134,11 @@ export class GridService {
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
     return columns.map(column => {
       const renderer = renderers[column.prop];
+      if (Object.prototype.toString.call(renderer) === '[object String]') {
+        // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
+        const renderFn: Function = this.predefinedRenderers[renderer];
+        return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
+      }
       return renderer ? this.setRenderer(column, renderer) : column;
     });
   }

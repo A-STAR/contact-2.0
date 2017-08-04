@@ -23,11 +23,16 @@ export class EditIdentityComponent extends EntityBaseComponent<IIdentityDoc> imp
   }
 
   ngOnInit(): void {
-    this.formData = Object.assign({}, this.identityDoc);
+    this.formData = Object.assign({}, this.identityDoc, {
+      expiryDate: this.identityDoc.expiryDate ? this.valueService.fromISO(this.identityDoc.expiryDate as string) : null,
+      issueDate: this.identityDoc.expiryDate ? this.valueService.fromISO(this.identityDoc.issueDate as string) : null,
+      docTypeCode: Number(this.identityDoc.docTypeCode),
+    });
     super.ngOnInit();
   }
 
   toSubmittedValues(values: IIdentityDoc): IIdentityDoc {
+    console.log('docTypeCode', values);
     return {
       ...values,
       docTypeCode: Array.isArray(values.docTypeCode) && values.docTypeCode[0].value,

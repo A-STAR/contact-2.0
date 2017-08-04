@@ -79,7 +79,7 @@ export class PermissionsComponent implements OnDestroy {
 
   dialog: IPermissionsDialogEnum;
 
-  private currentPermission: IPermissionModel;
+  currentPermission: IPermissionModel;
   private currentRole: IPermissionRole;
   private permissionsSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
