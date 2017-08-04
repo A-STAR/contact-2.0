@@ -22,3 +22,5 @@ export interface IUserDictionariesState {
     [key: number]: IUserTerm[];
   };
 }
+
+export type ITransformCallback<T> = (dictionary: IUserTerm) => T

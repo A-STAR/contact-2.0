@@ -34,6 +34,7 @@ import { UserConstantsEffects } from './user/constants/user-constants.effects';
 import { UserConstantsService } from './user/constants/user-constants.service';
 import { UserDictionariesEffects } from './user/dictionaries/user-dictionaries.effects';
 import { UserDictionariesService } from './user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from './user/dictionaries/user-dictionaries-2.service';
 import { UserLanguagesEffects } from './user/languages/user-languages.effects';
 import { UserLanguagesService } from './user/languages/user-languages.service';
 import { UserPermissionsEffects } from './user/permissions/user-permissions.effects';
@@ -80,6 +81,7 @@ import { rootReducer } from './state/root.reducer';
     TranslateService,
     UserConstantsService,
     UserDictionariesService,
+    UserDictionaries2Service,
     UserLanguagesService,
     UserPermissionsService,
     ValueConverterService,
