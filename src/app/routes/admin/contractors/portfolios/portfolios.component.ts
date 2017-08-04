@@ -67,6 +67,7 @@ export class PortfoliosComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
+    { prop: 'id' },
     { prop: 'name' },
     { prop: 'directionCode' },
     { prop: 'stageCode' },

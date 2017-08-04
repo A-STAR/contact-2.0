@@ -51,6 +51,7 @@ export class ContractorsComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
+    { prop: 'id' },
     { prop: 'name' },
     { prop: 'fullName' },
     { prop: 'smsName' },
