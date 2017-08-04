@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -12,7 +12,9 @@ import { IIdentityDoc } from './identity.interface';
 // import { Dialog } from '../../../../core/decorators/dialog';
 import { GridService } from '../../../components/grid/grid.service';
 import { IdentityService } from './identity.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../components/grid/grid.component';
@@ -22,7 +24,7 @@ import { GridComponent } from '../../../components/grid/grid.component';
   selector: 'app-identity-grid',
   templateUrl: './identity.component.html',
 })
-export class IdentityGridComponent implements OnDestroy {
+export class IdentityGridComponent implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
   private parentId: number;
@@ -30,6 +32,8 @@ export class IdentityGridComponent implements OnDestroy {
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
   gridSubscription: Subscription;
+  canViewSubscription: Subscription;
+
   identityDoc: IIdentityDoc;
   rows: IIdentityDoc[] = [];
 
@@ -58,7 +62,7 @@ export class IdentityGridComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedRows$)
-        .map(([canDelete, selected]) => canDelete && selected.length === 1),
+        .map(([canEdit, selected]) => canEdit && selected.length === 1),
       action: () => this.setDialog('editIdentity')
     },
     {
@@ -79,35 +83,42 @@ export class IdentityGridComponent implements OnDestroy {
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private gridService: GridService,
-    private userDictionariesService: UserDictionariesService,
+    private notificationsService: NotificationsService,
+    private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
   ) {
 
     this.parentId = Number((this.route.params as any).value.id) || null;
+    this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
     this.gridSubscription = Observable.combineLatest(
       this.canView$,
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
     )
     .subscribe(([ canView, identityOptions ]) => {
+      console.log('identityOptions', identityOptions);
       this.renderers.docTypeCode = [].concat(identityOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      if (canView) {
-        this.fetch();
-      } else {
-        this.clear();
-      }
+      this.cdRef.markForCheck();
     });
+  }
 
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_IDENTITY_TYPE,
-    ]);
+  ngOnInit(): void {
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+          this.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.selectedRows$.complete();
   }
 
   isDialog(dialog: string): boolean {
@@ -124,6 +135,7 @@ export class IdentityGridComponent implements OnDestroy {
         .fetch(this.parentId)
         .subscribe(identities => {
           this.rows = identities;
+          this.selectedRows$.next([]);
           this.cdRef.markForCheck();
         });
     }
