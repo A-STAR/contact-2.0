@@ -9,6 +9,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { environment } from '../../environments/environment';
 
+import { UserModule } from './user/user.module';
+
 import { AuthEffects } from './auth/auth.effects';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
@@ -30,15 +32,6 @@ import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { MetadataEffects } from './metadata/metadata.effects';
-import { UserConstantsEffects } from './user/constants/user-constants.effects';
-import { UserConstantsService } from './user/constants/user-constants.service';
-import { UserDictionariesEffects } from './user/dictionaries/user-dictionaries.effects';
-import { UserDictionariesService } from './user/dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from './user/dictionaries/user-dictionaries-2.service';
-import { UserLanguagesEffects } from './user/languages/user-languages.effects';
-import { UserLanguagesService } from './user/languages/user-languages.service';
-import { UserPermissionsEffects } from './user/permissions/user-permissions.effects';
-import { UserPermissionsService } from './user/permissions/user-permissions.service';
 import { ValueConverterService } from './converter/value-converter.service';
 
 import { rootReducer } from './state/root.reducer';
@@ -51,11 +44,8 @@ import { rootReducer } from './state/root.reducer';
     EffectsModule.run(GuiObjectsEffects),
     EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
-    EffectsModule.run(UserConstantsEffects),
-    EffectsModule.run(UserDictionariesEffects),
-    EffectsModule.run(UserLanguagesEffects),
-    EffectsModule.run(UserPermissionsEffects),
     EffectsModule.run(MetadataEffects),
+    UserModule,
     environment.production
       ? []
       : StoreDevtoolsModule.instrumentOnlyWithExtension({
@@ -79,11 +69,6 @@ import { rootReducer } from './state/root.reducer';
     SettingsService,
     ThemesService,
     TranslateService,
-    UserConstantsService,
-    UserDictionariesService,
-    UserDictionaries2Service,
-    UserLanguagesService,
-    UserPermissionsService,
     ValueConverterService,
     environment.production
       ? {
