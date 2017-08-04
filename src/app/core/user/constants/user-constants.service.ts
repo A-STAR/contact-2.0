@@ -10,13 +10,11 @@ import { IUserConstant, IUserConstantsState } from './user-constants.interface';
 export class UserConstantsService {
   static USER_CONSTANTS_FETCH         = 'USER_CONSTANTS_FETCH';
   static USER_CONSTANTS_FETCH_SUCCESS = 'USER_CONSTANTS_FETCH_SUCCESS';
-  static USER_CONSTANTS_FETCH_FAILURE = 'USER_CONSTANTS_FETCH_FAILURE';
 
-  constructor(private store: Store<IAppState>) {}
+  private state: IUserConstantsState;
 
-  get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved)
-      .filter(isResolved => isResolved !== null);
+  constructor(private store: Store<IAppState>) {
+    this.state$.subscribe(state => this.state = state);
   }
 
   createRefreshAction(): Action {
@@ -31,10 +29,17 @@ export class UserConstantsService {
   }
 
   get(constantName: string): Observable<IUserConstant> {
-    return this.state.map(state => state.constants.find(constant => constant.name === constantName));
+    if (!this.state.constants) {
+      this.refresh();
+    }
+
+    return this.state$
+      .map(state => state.constants)
+      .filter(Boolean)
+      .map(constants => constants.find(constant => constant.name === constantName));
   }
 
-  private get state(): Observable<IUserConstantsState> {
+  private get state$(): Observable<IUserConstantsState> {
     return this.store.select(state => state.userConstants);
   }
 }
