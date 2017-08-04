@@ -448,6 +448,7 @@
       }
     },
     "information": {
+      "title": "General information",
       "address": {
         "title": "Addresses",
         "grid": {
@@ -485,31 +486,6 @@
           "blockDateTime": "Date of blocking",
           "comment": "Comment"
         }
-      }
-    },
-    "generalInformationTab": {
-      "title": "General",
-      "generalInformation": "General information",
-      "birthDate": "Date of birth",
-      "company": "Company",
-      "position": "Position",
-      "income": "Income",
-      "citizenship": "Citizenship",
-      "sex": "Sex",
-      "workplaceChecked": "Employment verified",
-      "importance": "Importance",
-      "stage": "Stage",
-      "decency": "Decency",
-      "maritalStatus": "Marital status",
-      "education": "Education",
-      "email": "Email",
-      "identityDocs": {
-        "passport": "Passport",
-        "series": "Series",
-        "number": "No",
-        "issueDate": "Issue date",
-        "issuedBy": "Issued by",
-        "birthPlace": "Place of birth"
       }
     },
     "debtsTab": {
@@ -560,6 +536,14 @@
     "extrasDebtInfoTab": {
       "title": "Debt info"
     }
+  },
+  "person": {
+    "gender": "Gender",
+    "birthDate": "Birthdate",
+    "birthPlace": "Birthplace",
+    "familyStatusCode": "Marital status",
+    "educationCode": "Education",
+    "comment": "Comment"
   },
   "debtors": {
     "grid": {

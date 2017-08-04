@@ -1,9 +1,6 @@
 <div class="row">
   <div class="col-md-6 col-xs-12">
-    <app-dynamic-form
-      [controls]="controls"
-      [data]="data">
-    </app-dynamic-form>
+    <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"> </app-dynamic-form>
   </div>
   <div class="col-md-6 col-xs-12 pv-lg">
     <app-identity-grid></app-identity-grid>
