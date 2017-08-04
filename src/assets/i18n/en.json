@@ -429,7 +429,10 @@
     "reward": "Remuneration",
     "identityDocs": {
       "add": {
-        "title": "Add an identity doc"
+        "title": "Add an identity"
+      },
+      "edit": {
+        "title": "Edit identity"
       },
       "remove": {
         "title": "Delete the document",
@@ -852,6 +855,9 @@
     },
     "phones": {
       "gen": { "singular": "phone number", "plural": "phone numbers list" }
+    },
+    "identityDocs": {
+      "gen": { "singular": "identity document", "plural": "identity document list" }
     }
   },
   "errors": {
