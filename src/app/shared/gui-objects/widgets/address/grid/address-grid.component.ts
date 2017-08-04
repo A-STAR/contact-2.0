@@ -116,9 +116,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     .subscribe(([ options, canViewBlock ]) => {
       this.renderers = {
         ...this.renderers,
-        typeCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE]),
-        statusCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS]),
-        blockReasonCode: [].concat(options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING]),
+        typeCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE] ],
+        statusCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS] ],
+        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
         return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
@@ -176,27 +176,15 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.block(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.block(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.unblock(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.unblock(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.delete(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -241,6 +229,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private onEdit(addressId: number): void {
     this.router.navigate([ `${this.router.url}/address/${addressId}` ]);
+  }
+
+  private onSubmitSuccess(): void {
+    this.fetch();
+    this.setDialog(null);
   }
 
   private fetch(): void {
