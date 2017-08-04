@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IDebtor } from '../debt-processing/debtor/debtor.interface';
+import { IPerson } from '../debt-processing/debtor/debtor.interface';
 
 @Injectable()
 export class DebtorsService {
@@ -30,7 +30,7 @@ export class DebtorsService {
     return this.debtors.filter(Boolean);
   }
 
-  selectDebtor(debtor: IDebtor): void {
+  selectDebtor(debtor: IPerson): void {
     this.store.dispatch({
       type: DebtorsService.DEBTOR_SELECT,
       payload: debtor
@@ -41,12 +41,12 @@ export class DebtorsService {
     this.router.navigate([`/workplaces/debts/${id}`]);
   }
 
-  get selectedDebtor(): Observable<IDebtor> {
+  get selectedDebtor(): Observable<IPerson> {
     return this.store.select(state => state.debtors.selectedDebtor)
       .distinctUntilChanged();
   }
 
-  get debtors(): Observable<IDebtor[]> {
+  get debtors(): Observable<IPerson[]> {
     return this.store.select(state => state.debtors.debtors)
       .distinctUntilChanged();
   }

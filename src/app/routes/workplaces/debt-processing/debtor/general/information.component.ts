@@ -1,7 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
-import { IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from '../debtor.interface';
-
 import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
@@ -15,10 +13,10 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   selector: 'app-debtor-information',
   templateUrl: './information.component.html',
 })
-export class DebtorInformationComponent extends EntityBaseComponent<IDebtorGeneralInformation> {
+export class DebtorInformationComponent extends EntityBaseComponent<any> {
 
-  @Input() data: IDebtorGeneralInformation;
-  @Input() phones: IDebtorGeneralInformationPhone[];
+  @Input() data: any;
+  @Input() phones: any[];
 
   node: INode = {
     container: 'tabs',
