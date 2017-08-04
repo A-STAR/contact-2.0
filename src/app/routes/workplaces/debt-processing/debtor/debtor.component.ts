@@ -12,6 +12,7 @@ import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ export class DebtorComponent implements OnDestroy {
     private debtorService: DebtorService,
     private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
@@ -42,7 +44,10 @@ export class DebtorComponent implements OnDestroy {
       this.debtorService.fetch(this.personId)
     )
     .subscribe(([ personTypeOptions, canEdit, person ]) => {
-      this.person$.next(person);
+      this.person$.next({
+        ...person,
+        birthDate: this.valueConverterService.fromISO(person.birthDate as string)
+      });
       this.controls = this.getControls(canEdit, personTypeOptions);
       this.cdRef.markForCheck();
     });

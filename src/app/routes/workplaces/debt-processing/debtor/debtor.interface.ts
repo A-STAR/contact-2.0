@@ -1,5 +1,6 @@
 export interface IPerson {
   id: number;
+  birthDate: string | Date;
 }
 
 export interface IPersonsResponse {
