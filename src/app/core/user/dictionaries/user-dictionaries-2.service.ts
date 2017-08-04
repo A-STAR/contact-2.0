@@ -3,23 +3,17 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
-import { arrayToObject } from '../../utils';
-
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
-import { IUserDictionariesState, IUserDictionary, IUserTerm, IUserDictionaries } from './user-dictionaries.interface';
+import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserDictionary, IUserTerm } from './user-dictionaries.interface';
 
-import { DataService } from '../../data/data.service';
 import { UserDictionariesService } from './user-dictionaries.service';
 
 @Injectable()
 export class UserDictionaries2Service {
   private state: IUserDictionariesState;
 
-  constructor(
-    private dataService: DataService,
-    private store: Store<IAppState>,
-  ) {
+  constructor(private store: Store<IAppState>) {
     this.state$.subscribe(state => this.state = state);
   }
 
@@ -30,23 +24,23 @@ export class UserDictionaries2Service {
     };
   }
 
-  getDictionaries(ids: Array<number>): Observable<any> {
-    return this.loadDictionaries(ids, term => term);
-  }
-
-  getDictionary(id: number): Observable<any> {
+  getDictionary(id: number): Observable<IUserDictionary> {
     return this.loadDictionaries([ id ], term => term).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionaryAsOptions(id: number): Observable<any> {
+  getDictionaries(ids: Array<number>): Observable<IUserDictionaries> {
+    return this.loadDictionaries(ids, term => term);
+  }
+
+  getDictionaryAsOptions(id: number): Observable<Array<IOption>> {
     return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionariesAsOptions(ids: Array<number>): Observable<any> {
+  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: Array<IOption> }> {
     return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
   }
 
-  private loadDictionaries(ids: Array<number>, transform: Function): Observable<any> {
+  private loadDictionaries<T>(ids: Array<number>, transform: ITransformCallback<T>): Observable<{ [key: number]: Array<T> }> {
     ids.forEach(id => {
       if (!this.state.dictionaries[id]) {
         const action = this.createRefreshAction(id);
@@ -59,7 +53,7 @@ export class UserDictionaries2Service {
         const dictionary = state.dictionaries[id];
         return {
           ...acc,
-          [id]: dictionary ? dictionary.map(transform as any) : null
+          [id]: dictionary ? dictionary.map(transform) : null
         };
       }, {}))
       .filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true))
