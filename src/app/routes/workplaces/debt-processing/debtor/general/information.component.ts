@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
+import { IPerson } from '../debtor.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
@@ -21,6 +22,8 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './information.component.html',
 })
 export class DebtorInformationComponent implements OnDestroy {
+  @Input() person$: Observable<IPerson>;
+
   node: INode = {
     container: 'tabs',
     children: [
@@ -31,7 +34,6 @@ export class DebtorInformationComponent implements OnDestroy {
   };
 
   controls: Array<IDynamicFormGroup>;
-  data = null;
 
   private personSubscription: Subscription;
 
