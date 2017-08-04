@@ -1,6 +1,7 @@
 export interface ILookupLanguage {
   id: number;
   name: string;
+  isMain: boolean;
 }
 
 export interface ILookupLanguagesResponse {

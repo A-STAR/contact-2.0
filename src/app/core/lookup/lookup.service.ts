@@ -50,7 +50,7 @@ export class LookupService {
 
   get languageOptions(): Observable<Array<IOption>> {
     return this.getLanguages()
-      .map(roles => this.valueConverterService.valuesToOptions(roles))
+      .map(languages => this.valueConverterService.valuesToOptions(languages))
       .distinctUntilChanged();
   }
 
@@ -94,17 +94,17 @@ export class LookupService {
   }
 
   private getLanguages(): Observable<Array<ILookupRole>> {
-    if (!this._roles) {
-      this.refreshRoles();
-    }
-    return this.state.map(state => state.roles).filter(Boolean).distinctUntilChanged();
-  }
-
-  private getRoles(): Observable<Array<ILookupLanguage>> {
     if (!this._languages) {
       this.refreshLanguages();
     }
     return this.state.map(state => state.languages).filter(Boolean).distinctUntilChanged();
+  }
+
+  private getRoles(): Observable<Array<ILookupLanguage>> {
+    if (!this._roles) {
+      this.refreshRoles();
+    }
+    return this.state.map(state => state.roles).filter(Boolean).distinctUntilChanged();
   }
 
   private getUsers(): Observable<Array<ILookupUser>> {

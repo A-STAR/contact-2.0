@@ -15,7 +15,7 @@ export class LookupEffects {
   @Effect()
   fetchLanguages$ = this.actions
     .ofType(LookupService.LOOKUP_LANGUAGES_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       return this.readLookupLanguages()
         .map(response => ({
           type: LookupService.LOOKUP_LANGUAGES_FETCH_SUCCESS,
@@ -27,7 +27,7 @@ export class LookupEffects {
   @Effect()
   fetchRoles$ = this.actions
     .ofType(LookupService.LOOKUP_ROLES_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       return this.readLookupRoles()
         .map(response => ({
           type: LookupService.LOOKUP_ROLES_FETCH_SUCCESS,
@@ -39,7 +39,7 @@ export class LookupEffects {
   @Effect()
   fetchUsers$ = this.actions
     .ofType(LookupService.LOOKUP_USERS_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       return this.readLookupUsers()
         .map(response => ({
           type: LookupService.LOOKUP_USERS_FETCH_SUCCESS,
