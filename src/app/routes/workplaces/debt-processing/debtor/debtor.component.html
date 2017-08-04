@@ -1,4 +1,11 @@
+<div class="pb-lg">
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
 <app-dynamic-form
+  #form
   *ngIf="controls"
   [ngClass]="'app-debtor-container'"
   [controls]="controls"
@@ -9,7 +16,9 @@
   [scrollerEnabled]="true"
 >
   <app-tab [title]="'debtor.information.title'">
-    <app-debtor-information [person$]="person$">
+    <app-debtor-information
+      #information
+      [person$]="person$">
     </app-debtor-information>
   </app-tab>
   <app-tab

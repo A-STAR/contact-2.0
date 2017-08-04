@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -14,6 +14,9 @@ import { UserDictionaries2Service } from '../../../../core/user/dictionaries/use
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
+import { DebtorInformationComponent } from './general/information.component';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -23,6 +26,9 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 })
 export class DebtorComponent implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
+
+  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild('information') information: DebtorInformationComponent;
 
   person$ = new Subject<IPerson>();
   controls: Array<IDynamicFormGroup>;
@@ -57,7 +63,23 @@ export class DebtorComponent implements OnDestroy {
     this.personSubscription.unsubscribe();
   }
 
-  protected getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {
+  get canSubmit(): boolean {
+    const formGeneral = this.form && this.form.form;
+    const formInformation = this.information.form && this.information.form.form;
+    return formGeneral && formInformation && formGeneral.valid && formInformation.valid && (formGeneral.dirty || formInformation.dirty);
+  }
+
+  onSubmit(): void {
+    const value = {
+      ...this.form.value,
+      ...this.information.form.value,
+      birthDate: this.valueConverterService.toISO(this.information.form.value.birthDate)
+    }
+
+    this.debtorService.update(this.personId, value).subscribe();
+  }
+
+  private getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {
     return [
       {
         children: [

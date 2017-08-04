@@ -19,4 +19,10 @@ export class DebtorService {
       .map((response: IPersonsResponse) => response.persons[0])
       .catch(this.notificationsService.error('errors.default.read').entity('entities.persons.gen.singular').dispatchCallback());
   }
+
+  update(personId: number, person: IPerson): Observable<void> {
+    return this.dataService
+      .update('/persons/{personId}', { personId }, person)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.persons.gen.singular').dispatchCallback());
+  }
 }

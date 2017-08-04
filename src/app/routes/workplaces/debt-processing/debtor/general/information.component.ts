@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,6 +12,7 @@ import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
 
@@ -22,6 +23,8 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
 })
 export class DebtorInformationComponent implements OnDestroy {
   @Input() person$: Observable<IPerson>;
+
+  @ViewChild('form') form: DynamicFormComponent;
 
   node: INode = {
     container: 'tabs',
