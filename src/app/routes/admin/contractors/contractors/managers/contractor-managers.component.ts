@@ -54,17 +54,17 @@ export class ContractorManagersComponent implements OnDestroy {
 
   columns: Array<IGridColumn> = [
     // { prop: 'fullName' },
-    { prop: 'lastName' },
-    { prop: 'firstName' },
-    { prop: 'middleName' },
-    { prop: 'genderCode' },
-    { prop: 'position' },
-    { prop: 'branchCode' },
-    { prop: 'mobPhone' },
-    { prop: 'workPhone' },
-    { prop: 'intPhone' },
-    { prop: 'workAddress' },
-    { prop: 'comment' },
+    { prop: 'lastName', minWidth: 120, maxWidth: 200 },
+    { prop: 'firstName', minWidth: 120, maxWidth: 200 },
+    { prop: 'middleName', minWidth: 120, maxWidth: 200 },
+    { prop: 'genderCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'position', minWidth: 100, maxWidth: 150 },
+    { prop: 'branchCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'mobPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'workPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'intPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'workAddress', minWidth: 100, maxWidth: 250 },
+    { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
   private contractorId = Number((this.activatedRoute.params as any).value.id);

@@ -67,15 +67,15 @@ export class PortfoliosComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'id' },
-    { prop: 'name' },
-    { prop: 'directionCode' },
-    { prop: 'stageCode' },
-    { prop: 'statusCode' },
-    { prop: 'signDate' },
-    { prop: 'startWorkDate' },
-    { prop: 'endWorkDate' },
-    { prop: 'comment' },
+    { prop: 'id', minWidth: 50, maxWidth: 50 },
+    { prop: 'name', minWidth: 120, maxWidth: 200 },
+    { prop: 'directionCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'stageCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'statusCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'signDate', minWidth: 100, maxWidth: 150 },
+    { prop: 'startWorkDate', minWidth: 100, maxWidth: 150 },
+    { prop: 'endWorkDate', minWidth: 100, maxWidth: 150 },
+    { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
   private renderers: IRenderer = {

@@ -51,15 +51,15 @@ export class ContractorsComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'id' },
-    { prop: 'name' },
-    { prop: 'fullName' },
-    { prop: 'smsName' },
-    { prop: 'responsibleName' },
-    { prop: 'typeCode' },
-    { prop: 'phone' },
-    { prop: 'address' },
-    { prop: 'comment' },
+    { prop: 'id', minWidth: 50, maxWidth: 50 },
+    { prop: 'name', minWidth: 120, maxWidth: 200 },
+    { prop: 'fullName', minWidth: 120, maxWidth: 200 },
+    { prop: 'smsName', minWidth: 120, maxWidth: 200 },
+    { prop: 'responsibleName', minWidth: 100, maxWidth: 150 },
+    { prop: 'typeCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'phone', minWidth: 100, maxWidth: 150 },
+    { prop: 'address', minWidth: 100, maxWidth: 250 },
+    { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
   private dialogAction: ContractorActionEnum;
