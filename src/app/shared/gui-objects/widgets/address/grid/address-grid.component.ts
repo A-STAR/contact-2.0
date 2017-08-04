@@ -14,6 +14,7 @@ import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
@@ -100,31 +101,32 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_STATUS),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING),
+      this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
+        UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
+        UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
+      ]),
       this.canViewBlock$,
     )
-    .subscribe(([ typeCodeOptions, statusCodeOptions, blockReasonCodeOptions, canViewBlock ]) => {
-      this.renderers.typeCode = [].concat(typeCodeOptions);
-      this.renderers.statusCode = [].concat(statusCodeOptions);
-      this.renderers.blockReasonCode = [].concat(blockReasonCodeOptions);
+    .subscribe(([ options, canViewBlock ]) => {
+      this.renderers = {
+        ...this.renderers,
+        typeCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE] ],
+        statusCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS] ],
+        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
+      }
       const columns = this._columns.filter(column => {
         return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
-      this.columns = this.gridService.setRenderers(columns, this.renderers);
-    });
 
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
-      UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
-      UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
-    ]);
+      this.columns = this.gridService.setRenderers(columns, this.renderers);
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnInit(): void {
@@ -143,6 +145,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+  }
+
+  get canDisplayGrid(): boolean {
+    return this.columns.length > 0;
   }
 
   get blockDialogDictionaryId(): number {
@@ -170,27 +176,15 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.block(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.block(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.unblock(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.unblock(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.id, this.selectedAddressId$.value)
-      .subscribe(() => {
-        this.fetch();
-        this.setDialog(null);
-      });
+    this.addressService.delete(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -235,6 +229,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private onEdit(addressId: number): void {
     this.router.navigate([ `${this.router.url}/address/${addressId}` ]);
+  }
+
+  private onSubmitSuccess(): void {
+    this.fetch();
+    this.setDialog(null);
   }
 
   private fetch(): void {
