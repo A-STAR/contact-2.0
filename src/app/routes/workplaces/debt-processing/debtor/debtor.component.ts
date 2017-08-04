@@ -1,9 +1,10 @@
 import { Component, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebtor, IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from './debtor.interface';
 import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IPerson } from './debtor.interface';
 
 import { DebtorService } from './debtor.service';
 
@@ -16,95 +17,60 @@ import { EntityBaseComponent } from '../../../../shared/components/entity/edit/e
   templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
 })
-export class DebtorComponent extends EntityBaseComponent<IDebtor> implements OnDestroy {
+export class DebtorComponent implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
-  debtor: IDebtor;
-  generalInformation: IDebtorGeneralInformation;
-  generalInformationPhones: IDebtorGeneralInformationPhone [];
-  selectedDebtorId: number = Number((this.activatedRoute.params as any).value.id);
-  selectedDebtorSub: Subscription;
+  person: IPerson;
+
+  private personId = (this.route.params as any).value.id || null;
+
+  // selectedDebtorSub: Subscription;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
   ) {
-    super();
-    this.debtorService.fetch(this.selectedDebtorId);
-    this.selectedDebtorSub = this.debtorService.selectedDebtor
-      .filter(Boolean)
-      .filter(debtor => !!debtor.id)
-      .filter(debtor => !!debtor.generalInformation.id)
-      .subscribe(debtor => {
-        this.debtor = debtor;
-        this.generalInformation = debtor ? debtor.generalInformation : null;
-        this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
-        this.cdRef.markForCheck();
-      });
+    // Observable.combineLatest(
+    //   this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
+    //   this.userPermissionsService.has('ADDRESS_EDIT'),
+    //   this.userPermissionsService.has('ADDRESS_COMMENT_EDIT'),
+    //   // TODO(d.maltsev): pass entity type
+    //   this.addressId ? this.addressService.fetch(18, this.id, this.addressId) : Observable.of(null)
+    // )
+
+    // this.debtorService.fetch(this.selectedDebtorId);
+    // this.selectedDebtorSub = this.debtorService.selectedDebtor
+    //   .filter(Boolean)
+    //   .filter(debtor => !!debtor.id)
+    //   .filter(debtor => !!debtor.generalInformation.id)
+    //   .subscribe(debtor => {
+    //     this.debtor = debtor;
+    //     this.generalInformation = debtor ? debtor.generalInformation : null;
+    //     this.generalInformationPhones = this.generalInformation ? this.generalInformation.phones : null;
+    //     this.cdRef.markForCheck();
+    //   });
   }
 
   ngOnDestroy(): void {
-    this.selectedDebtorSub.unsubscribe();
+    // this.selectedDebtorSub.unsubscribe();
   }
 
   protected getControls(): IDynamicFormGroup[] {
-    const controls = [
+    // TODO(d.maltsev): use dictionary service
+    const typeOptions = [ { value: 1, label: 'Physical person' }, { value: 2, label: 'Legal entity' } ];
+    return [
       {
         children: [
-          {
-            width: 1,
-            label: 'debtor.id',
-            controlName: 'id',
-            type: 'number',
-            required: true,
-            disabled: true
-          },
-          {
-            width: 2,
-            label: 'debtor.lastName',
-            controlName: 'lastName',
-            type: 'text',
-          },
-          {
-            width: 2,
-            label: 'debtor.firstName',
-            controlName: 'firstName',
-            type: 'text',
-          },
-          {
-            width: 2,
-            label: 'debtor.middleName',
-            controlName: 'middleName',
-            type: 'text',
-          },
-          {
-            width: 2,
-            label: 'debtor.type',
-            controlName: 'type',
-            type: 'select',
-            options: [
-              // TODO(a.tymchuk) STUB
-              { value: 1, label: 'Physical person' },
-              { value: 2, label: 'Legal entity' },
-            ]
-          },
-          {
-            width: 2,
-            label: 'debtor.responsible',
-            controlName: 'responsible',
-            type: 'text',
-          },
-          {
-            width: 1,
-            label: 'debtor.reward',
-            controlName: 'reward',
-            type: 'number',
-          },
+          { width: 1, label: 'debtor.id', controlName: 'id', type: 'number', required: true, disabled: true },
+          { width: 2, label: 'debtor.lastName', controlName: 'lastName', type: 'text' },
+          { width: 2, label: 'debtor.firstName', controlName: 'firstName', type: 'text' },
+          { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text' },
+          { width: 2, label: 'debtor.type', controlName: 'type', type: 'select', options: typeOptions },
+          { width: 2, label: 'debtor.responsible', controlName: 'responsible', type: 'text' },
+          { width: 1, label: 'debtor.reward', controlName: 'reward', type: 'number' },
         ]
       }
     ];
-
-    return controls as IDynamicFormGroup[];
   }
 }
