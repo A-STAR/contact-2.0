@@ -9,6 +9,8 @@ import { AddressCardComponent } from '../../../../../shared/gui-objects/widgets/
   templateUrl: './address.component.html'
 })
 export class DebtorAddressComponent {
+  static COMPONENT_NAME = 'DebtorAddressComponent';
+
   get node(): INode {
     return {
       component: AddressCardComponent
