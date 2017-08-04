@@ -124,7 +124,7 @@ export class TermsComponent implements OnDestroy {
   };
 
   get languages(): Observable<IUserLanguage[]> {
-    return this.userLanguagesService.userLanguages;
+    return this.userLanguagesService.languages;
   }
 
   get terms(): Observable<ITerm[]> {

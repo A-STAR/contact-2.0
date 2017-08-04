@@ -106,7 +106,7 @@ export class DictComponent implements OnDestroy {
   }
 
   get languages(): Observable<IUserLanguage[]> {
-    return this.userLanguagesService.userLanguages;
+    return this.userLanguagesService.languages;
   }
 
   get dictionaryTermTypes(): Observable<ITerm[]> {

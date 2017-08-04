@@ -11,13 +11,11 @@ import { IUserLanguage, IUserLanguageOption, IUserLanguagesState } from './user-
 export class UserLanguagesService {
   static USER_LANGUAGES_FETCH         = 'USER_LANGUAGES_FETCH';
   static USER_LANGUAGES_FETCH_SUCCESS = 'USER_LANGUAGES_FETCH_SUCCESS';
-  static USER_LANGUAGES_FETCH_FAILURE = 'USER_LANGUAGES_FETCH_FAILURE';
 
-  constructor(private store: Store<IAppState>) {}
+  private _languages: Array<IUserLanguage>;
 
-  get isResolved(): Observable<boolean> {
-    return this.state.map(state => state.isResolved)
-      .filter(isResolved => isResolved !== null);
+  constructor(private store: Store<IAppState>) {
+    this.languages$.subscribe(languages => this._languages = languages);
   }
 
   createRefreshAction(): Action {
@@ -32,24 +30,24 @@ export class UserLanguagesService {
   }
 
   get languages(): Observable<Array<IUserLanguage>> {
-    return this.state.map(state => state.languages);
+    return this.getLanguages();
   }
 
   get languageOptions(): Observable<Array<IUserLanguageOption>> {
-    return this.languages
-      .map(languages => languages.map(language => ({
-        label: language.name,
-        value: language.id
-      })));
+    return this.getLanguages().map(languages => languages.map(language => ({ label: language.name, value: language.id })));
   }
 
-  get userLanguages(): Observable<IUserLanguage[]> {
-    return this.store
-      .select((state: IAppState) => state.userLanguages.languages)
+  private getLanguages(): Observable<Array<IUserLanguage>> {
+    if (!this._languages) {
+      this.refresh();
+    }
+
+    return this.languages$
+      .filter(Boolean)
       .distinctUntilChanged();
   }
 
-  private get state(): Observable<IUserLanguagesState> {
-    return this.store.select(state => state.userLanguages);
+  private get languages$(): Observable<Array<IUserLanguage>> {
+    return this.store.select(state => state.userLanguages.languages);
   }
 }

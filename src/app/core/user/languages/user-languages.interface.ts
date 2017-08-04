@@ -17,5 +17,4 @@ export interface IUserLanguagesResponse {
 
 export interface IUserLanguagesState {
   languages: Array<IUserLanguage>;
-  isResolved: boolean;
 }

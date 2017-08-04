@@ -3,7 +3,6 @@ import { Route } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
 import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
-import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
@@ -32,7 +31,6 @@ export const routes: Route[] = [
     resolve: {
       guiObjectsResolved: GuiObjectsResolver,
       lookupDataResolved: LookupResolver,
-      userLanguagesResolved: UserLanguagesResolver,
       userPermissionsResolved: UserPermissionsResolver,
       metadataResolved: MetadataResolver,
     },

@@ -10,7 +10,6 @@ import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
 import { PermissionsService } from './admin/roles/permissions.service';
-import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
 import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
 
 import { routes } from './routes';
@@ -27,7 +26,6 @@ import { routes } from './routes';
     LookupResolver,
     MetadataResolver,
     PermissionsService,
-    UserLanguagesResolver,
     UserPermissionsResolver,
   ],
   exports: [

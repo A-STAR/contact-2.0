@@ -15,24 +15,15 @@ export class UserLanguagesEffects {
   @Effect()
   fetchLanguages$ = this.actions
     .ofType(UserLanguagesService.USER_LANGUAGES_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       return this.read()
-        .map((response: IUserLanguagesResponse) => {
-          return {
-            type: UserLanguagesService.USER_LANGUAGES_FETCH_SUCCESS,
-            payload: {
-              data: response.languages
-            }
-          };
-        })
-        .catch(error => {
-          return [
-            {
-              type: UserLanguagesService.USER_LANGUAGES_FETCH_FAILURE
-            },
-            this.notificationService.error('errors.default.read').entity('entities.user.languages.gen.plural').response(error).action()
-          ];
-        });
+        .map((response: IUserLanguagesResponse) => ({
+          type: UserLanguagesService.USER_LANGUAGES_FETCH_SUCCESS,
+          payload: {
+            data: response.languages
+          }
+        }))
+        .catch(this.notificationService.error('errors.default.read').entity('entities.user.languages.gen.plural').callback());
     });
 
   constructor(
