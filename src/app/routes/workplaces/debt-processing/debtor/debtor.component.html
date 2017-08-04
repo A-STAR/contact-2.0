@@ -1,17 +1,15 @@
 <app-dynamic-form
+  *ngIf="controls"
   [ngClass]="'app-debtor-container'"
   [controls]="controls"
-  [data]="debtor">
+  [data]="person$ | async">
 </app-dynamic-form>
 
 <app-tabstrip
   [scrollerEnabled]="true"
 >
-  <app-tab [title]="'debtor.generalInformationTab.title'">
-    <app-debtor-information
-      [phones]="generalInformationPhones"
-      [data]="generalInformation"
-    >
+  <app-tab [title]="'debtor.information.title'">
+    <app-debtor-information [person$]="person$">
     </app-debtor-information>
   </app-tab>
   <app-tab

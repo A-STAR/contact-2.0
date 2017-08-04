@@ -1,11 +1,16 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-
-import { IDebtorGeneralInformation, IDebtorGeneralInformationPhone } from '../debtor.interface';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
+import { IPerson } from '../debtor.interface';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
@@ -15,144 +20,74 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   selector: 'app-debtor-information',
   templateUrl: './information.component.html',
 })
-export class DebtorInformationComponent extends EntityBaseComponent<IDebtorGeneralInformation> {
-
-  @Input() data: IDebtorGeneralInformation;
-  @Input() phones: IDebtorGeneralInformationPhone[];
+export class DebtorInformationComponent implements OnDestroy {
+  @Input() person$: Observable<IPerson>;
 
   node: INode = {
     container: 'tabs',
     children: [
-      {
-        component: AddressGridComponent,
-        title: 'debtor.information.address.title'
-      },
-      {
-        component: PhoneGridComponent,
-        title: 'debtor.information.phone.title'
-      },
-      {
-        component: EmailGridComponent,
-        title: 'debtor.information.email.title'
-      },
+      { component: AddressGridComponent, title: 'debtor.information.address.title' },
+      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
+      { component: EmailGridComponent, title: 'debtor.information.email.title' },
     ]
   };
 
-  constructor() {
-    super();
+  controls: Array<IDynamicFormGroup>;
+
+  private personSubscription: Subscription;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private userDictionariesService: UserDictionaries2Service,
+    private userPermissionsService: UserPermissionsService,
+  ) {
+    this.personSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_GENDER,
+        UserDictionariesService.DICTIONARY_MARITAL_STATUS,
+        UserDictionariesService.DICTIONARY_EDUCATION,
+      ]),
+      this.userPermissionsService.has('PERSON_INFO_EDIT'),
+      this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
+    )
+    .subscribe(([ options, canEdit, canEditComment ]) => {
+      this.controls = this.getControls(options, canEdit, canEditComment);
+      this.cdRef.markForCheck();
+    });
   }
 
-  protected getControls(): IDynamicFormGroup[] {
-    const controls = [
+  ngOnDestroy(): void {
+    this.personSubscription.unsubscribe();
+  }
+
+  protected getControls(options: { [key: number]: Array<IOption> }, canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {
+    const genderOptions        = options[UserDictionariesService.DICTIONARY_GENDER];
+    const maritalStatusOptions = options[UserDictionariesService.DICTIONARY_MARITAL_STATUS];
+    const educationOptions     = options[UserDictionariesService.DICTIONARY_EDUCATION];
+    return [
       {
-        title: 'debtor.generalInformationTab.generalInformation',
-        width: 12,
+        title: 'debtor.information.title',
         children: [
           {
-            width: 4,
+            width: 6,
             children: [
-              {
-                label: 'debtor.generalInformationTab.birthDate',
-                controlName: 'birthDate',
-                type: 'datepicker',
-                required: true
-              },
-              {
-                label: 'debtor.generalInformationTab.company',
-                controlName: 'company',
-                type: 'text'
-              },
-              {
-                label: 'debtor.generalInformationTab.position',
-                controlName: 'position',
-                type: 'select'
-              },
-              {
-                label: 'debtor.generalInformationTab.income',
-                controlName: 'income',
-                type: 'number'
-              },
-              {
-                label: 'debtor.generalInformationTab.citizenship',
-                controlName: 'citizenship',
-                type: 'text'
-              }
+              { label: 'person.gender', controlName: 'genderCode', type: 'select', options: genderOptions, disabled: !canEdit },
+              { label: 'person.birthDate', controlName: 'birthDate', type: 'datepicker', disabled: !canEdit },
+              { label: 'person.birthPlace', controlName: 'birthPlace', type: 'text', disabled: !canEdit },
             ]
           },
           {
-            width: 4,
+            width: 6,
             children: [
-              {
-                label: 'debtor.generalInformationTab.sex',
-                controlName: 'sex',
-                type: 'select',
-                options: [ { value: 1, label: 'default.sex.m' }, { value: 2, label: 'default.sex.f' } ]
-              },
-              {
-                label: 'debtor.generalInformationTab.importance',
-                controlName: 'importance',
-                type: 'number'
-              },
-              {
-                label: 'debtor.generalInformationTab.maritalStatus',
-                controlName: 'maritalStatus',
-                type: 'select',
-                options: [
-                  // TODO(a.tymchuk) STUB
-                  { value: 1, label: 'Single' },
-                  { value: 2, label: 'Divorced' },
-                  { value: 3, label: 'Civil marriage' },
-                ]
-              },
-              {
-                label: 'debtor.generalInformationTab.education',
-                controlName: 'education',
-                type: 'select',
-                options: [
-                  // TODO(a.tymchuk) STUB
-                  { value: 1, label: 'Elementary' },
-                  { value: 2, label: 'Secondary' },
-                  { value: 3, label: 'Higher' },
-                ]
-              },
-              {
-                label: 'debtor.generalInformationTab.email',
-                controlName: 'email',
-                type: 'text'
-              },
-            ]
-          },
-          {
-            width: 4,
-            children: [
-              {
-                label: 'debtor.generalInformationTab.stage',
-                controlName: 'stage',
-                type: 'select',
-                disabled: true,
-                options: [
-                  // TODO(a.tymchuk) STUB
-                  { value: 1, label: 'Soft' },
-                  { value: 2, label: 'Hard' },
-                ]
-              },
-              {
-                label: 'debtor.generalInformationTab.decency',
-                controlName: 'decency',
-                type: 'number'
-              },
-              {
-                label: 'debtor.generalInformationTab.workplaceChecked',
-                controlName: 'workplaceChecked',
-                type: 'checkbox'
-              }
+              { label: 'person.familyStatusCode', controlName: 'familyStatusCode', type: 'select', options: maritalStatusOptions,
+                  disabled: !canEdit },
+              { label: 'person.educationCode', controlName: 'educationCode', type: 'select', options: educationOptions,
+                  disabled: !canEdit },
+              { label: 'person.comment', controlName: 'comment', type: 'textarea', disabled: !canEditComment },
             ]
           }
         ]
       },
     ];
-
-    return controls as IDynamicFormGroup[];
   }
 }
-

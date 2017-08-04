@@ -448,6 +448,7 @@
       }
     },
     "information": {
+      "title": "Общая информация",
       "address": {
         "title": "Адреса",
         "grid": {
@@ -485,31 +486,6 @@
           "blockDateTime": "Дата блокировки",
           "comment": "Комментарий"
         }
-      }
-    },
-    "generalInformationTab": {
-      "title": "Общая",
-      "generalInformation": "Общая информация",
-      "birthDate": "Дата рождения",
-      "company": "Компания",
-      "position": "Должность",
-      "income": "Доход",
-      "citizenship": "Гражданство",
-      "sex": "Пол",
-      "workplaceChecked": "Место работы проверено",
-      "importance": "Важность",
-      "stage": "Стадия",
-      "decency": "Порядочность",
-      "maritalStatus": "Семейное положение",
-      "education": "Образование",
-      "email": "Эл. почта",
-      "identityDocs": {
-        "passport": "Паспорт",
-        "series": "Серия",
-        "number": "№",
-        "issueDate": "Дата выдачи",
-        "issuedBy": "Кем выдан",
-        "birthPlace": "Место рождения"
       }
     },
     "debtsTab": {
@@ -560,6 +536,14 @@
     "extrasDebtInfoTab": {
       "title": "Доп. инфо о долге"
     }
+  },
+  "person": {
+    "gender": "Пол",
+    "birthDate": "Дата рождения",
+    "birthPlace": "Место рождения",
+    "familyStatusCode": "Семейное положение",
+    "educationCode": "Образование",
+    "comment": "Комментарий"
   },
   "debtors": {
     "grid": {
