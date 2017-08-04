@@ -33,6 +33,6 @@ export class UserLanguagesEffects {
   ) {}
 
   private read(): Observable<IUserLanguagesResponse> {
-    return this.dataService.read('/userlanguages');
+    return this.dataService.read('/lookup/languages');
   }
 }
