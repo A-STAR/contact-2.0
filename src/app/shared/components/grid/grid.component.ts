@@ -69,7 +69,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.clickDebouncer = new Subject();
     this.debouncerSub = this.clickDebouncer
-      .debounceTime(150)
+      .debounceTime(100)
       .subscribe(({ type, row }: {type: string; row: any}) => {
         if (type === 'click') {
           this.onSelect.emit(row);

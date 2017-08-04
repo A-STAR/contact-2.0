@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, AfterViewInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../components/grid/grid.interface';
@@ -11,8 +12,8 @@ import { IIdentityDoc } from './identity.interface';
 // import { Dialog } from '../../../../core/decorators/dialog';
 import { GridService } from '../../../components/grid/grid.service';
 import { IdentityService } from './identity.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../components/grid/grid.component';
 
@@ -21,18 +22,19 @@ import { GridComponent } from '../../../components/grid/grid.component';
   selector: 'app-identity-grid',
   templateUrl: './identity.component.html',
 })
-export class IdentityGridComponent implements AfterViewInit {
+export class IdentityGridComponent implements OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
   private parentId: number;
   private dialog: string;
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
+  gridSubscription: Subscription;
   identityDoc: IIdentityDoc;
   rows: IIdentityDoc[] = [];
 
   columns: Array<IGridColumn> = [
-    { prop: 'docTypeCode', maxWidth: 50, type: 'number' },
+    { prop: 'docTypeCode', minWidth: 70, type: 'number' },
     { prop: 'docNumber', type: 'string', maxWidth: 70 },
     { prop: 'issueDate', type: 'date' },
     { prop: 'issuePlace', type: 'string' },
@@ -42,9 +44,9 @@ export class IdentityGridComponent implements AfterViewInit {
   ];
 
   renderers: IRenderer = {
-    expiryDate: ({ expiryDate }) => this.valueConverterService.ISOToLocalDateTime(expiryDate) || '',
-    issueDate: ({ issueDate }) => this.valueConverterService.ISOToLocalDateTime(issueDate) || '',
-    isMain: ({ isMain }) => isMain ? 'default.yesNo.Yes' : 'default.yesNo.No',
+    expiryDate: 'dateTimeRenderer',
+    issueDate: 'dateTimeRenderer',
+    isMain: 'yesNoRenderer',
   };
 
   toolbarItems: Array<IToolbarItem> = [
@@ -62,13 +64,13 @@ export class IdentityGridComponent implements AfterViewInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: Observable.combineLatest(this.canDelete$, this.selectedRows$)
-        .map(([canDelete, selected]) => canDelete && !!selected.length),
+        .map(([canDelete, selected]) => canDelete && selected.length === 1),
       action: () => this.setDialog('removeIdentity')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.canView$,
-      action: () => this.load()
+      action: () => this.fetch()
     },
   ];
 
@@ -77,15 +79,35 @@ export class IdentityGridComponent implements AfterViewInit {
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private gridService: GridService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
+
+    this.parentId = Number((this.route.params as any).value.id) || null;
+
+    this.gridSubscription = Observable.combineLatest(
+      this.canView$,
+      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
+    )
+    .subscribe(([ canView, identityOptions ]) => {
+      this.renderers.docTypeCode = [].concat(identityOptions);
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      if (canView) {
+        this.fetch();
+      } else {
+        this.clear();
+      }
+    });
+
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+
+    this.userDictionariesService.preload([
+      UserDictionariesService.DICTIONARY_IDENTITY_TYPE,
+    ]);
   }
 
-  ngAfterViewInit(): void {
-    this.parentId = Number((this.route.params as any).value.id) || null;
-    this.load();
+  ngOnDestroy(): void {
+    this.gridSubscription.unsubscribe();
   }
 
   isDialog(dialog: string): boolean {
@@ -96,7 +118,7 @@ export class IdentityGridComponent implements AfterViewInit {
     this.dialog = dialog;
   }
 
-  load(): void {
+  fetch(): void {
     if (this.parentId) {
       this.identityService
         .fetch(this.parentId)
@@ -109,23 +131,21 @@ export class IdentityGridComponent implements AfterViewInit {
 
   onAddDocument(doc: IIdentityDoc): void {
     this.identityService.create(this.parentId, doc)
-      .subscribe(result => {
-        this.setDialog(null);
-        this.cdRef.markForCheck();
-        this.load();
-      });
+      .subscribe(this.onSubmitSuccess);
   }
+
+  onEditDocument(doc: IIdentityDoc): void {
+    this.identityService.update(this.parentId, this.grid.selected[0].id, doc)
+      .subscribe(this.onSubmitSuccess);
+}
 
   onCancel(): void {
     this.setDialog(null);
   }
 
   onRemove(): void {
-    this.setDialog(null);
     this.identityService.delete(this.parentId, this.grid.selected[0].id)
-      .subscribe(result => {
-        if (result) { this.load(); }
-      });
+      .subscribe(this.onSubmitSuccess);
   }
 
   onSelect(doc: IIdentityDoc): void {
@@ -152,4 +172,17 @@ export class IdentityGridComponent implements AfterViewInit {
   get canDelete$(): Observable<boolean> {
     return this.userPermissionsService.has('IDENTITY_DOCUMENT_DELETE').distinctUntilChanged();
   }
+
+  private clear(): void {
+    this.rows = [];
+    this.cdRef.markForCheck();
+  }
+
+  private onSubmitSuccess(result: boolean): void {
+    if (result) {
+      this.fetch();
+      this.setDialog(null);
+    }
+  }
+
 }

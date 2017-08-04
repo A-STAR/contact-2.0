@@ -3,7 +3,6 @@
  * Description: exports small utility functions to be used across different components
  */
 
-
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {
   return [ person.lastName, person.firstName, person.middleName ]
     .filter(Boolean).join(' ');
@@ -22,4 +21,29 @@ export const arrayToObject = (key: string) => (arr: Array<any>) => {
   }, {});
 };
 
-export const isClosedRenderer = (term: any) => term.isClosed ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : '';
+export const checkboxRenderer = (key: string) => ({ [key]: truthy }) => truthy
+  ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : '';
+
+export const yesNoRenderer = (key: string) => ({ [key]: truthy }) => truthy ? 'default.yesNo.Yes' : 'default.yesNo.No';
+
+const reverseString = (str: string) => str.split('').reverse().join('');
+
+export const phoneRenderer = (key: string) => ({ [key]: phone }) => (phone || '')
+    .trim()
+    .split('')
+    .reverse()
+    .join('')
+    .replace(/^(\d{4})?(\d{1,3})?(\d{1,3})?(\d{1,3})?/, (str, p1, p2, p3, p4) => {
+      const [t1, t2, t3, t4] = [p1, p2, p3, p4]
+        .map(p => p || '')
+        .map(reverseString)
+        .reverse();
+      return `${t1 ? '+' + t1 + ' ' : ''}${t2 ? '(' + t2 + ') ' : ''}${t3}-${t4}`;
+  });
+
+
+export const renderers = {
+  checkboxRenderer,
+  phoneRenderer,
+  yesNoRenderer
+};

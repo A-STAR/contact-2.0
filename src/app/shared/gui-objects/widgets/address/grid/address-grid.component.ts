@@ -16,7 +16,6 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-address-grid',
@@ -74,8 +73,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     typeCode: [],
     statusCode: [],
     blockReasonCode: [],
-    blockDateTime: ({ blockDateTime }) => this.valueConverterService.ISOToLocalDateTime(blockDateTime) || '',
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
+    blockDateTime: 'dateTimeRenderer',
+    isBlocked: 'yesNoRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -83,7 +82,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'fullAddress' },
     { prop: 'statusCode' },
     { prop: 'isResidence' },
-    { prop: 'isBlocked', localized: true },
+    { prop: 'isBlocked', localized: true, maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
@@ -103,7 +102,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([

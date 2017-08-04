@@ -1,5 +1,11 @@
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
+export type TRendererType = Function | Array<any>
+  | 'checkboxRenderer'
+  | 'dateTimeRenderer'
+  | 'phoneRenderer'
+  | 'yesNoRenderer';
+
 export interface IGridColumn {
   disabled?: boolean;
   localized?: boolean;
@@ -9,13 +15,13 @@ export interface IGridColumn {
   prop: string;
   renderer?: Function;
   type?: string;
-  // technical use only by grid.service.ts
+  // NOTE: technical use only by grid.service.ts, pls do NOT use directly
   $$valueGetter?: Function;
   width?: number;
 }
 
 export interface IRenderer {
-  [key: string]: Function | Array<any>;
+  [key: string]: TRendererType;
 }
 
 export interface IMessages {

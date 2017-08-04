@@ -95,8 +95,8 @@ export class PortfoliosComponent implements OnDestroy {
   private dictionariesSubscription: Subscription;
   private portfoliosSubscription: Subscription;
 
-  private selectedContractor: IContractor;
-  private selectedPortfolio: IPortfolio;
+  selectedContractor: IContractor;
+  selectedPortfolio: IPortfolio;
 
   constructor(
     private actions: Actions,
