@@ -13,7 +13,6 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-users',
@@ -97,7 +96,6 @@ export class UsersComponent implements OnDestroy {
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
-    private valueConverterService: ValueConverterService,
   ) {
     this.roleOptions$ = this.lookupService.roleOptions;
     this.languageOptions$ = this.lookupService.languageOptions;
