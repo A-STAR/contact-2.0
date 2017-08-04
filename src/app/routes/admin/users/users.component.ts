@@ -4,14 +4,13 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IOption } from '../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
-import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { PermissionsService } from '../roles/permissions.service';
-import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
+import { LookupService } from '../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
@@ -80,7 +79,7 @@ export class UsersComponent implements OnDestroy {
 
   // TODO(d.maltsev): role options type
   roleOptions$: Observable<any>;
-  languageOptions$: Observable<Array<IUserLanguageOption>>;
+  languageOptions$: Observable<Array<IOption>>;
 
   users$: Observable<Array<IUser>>;
 
@@ -95,19 +94,13 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private contentTabService: ContentTabService,
     private gridService: GridService,
-    private permissionsService: PermissionsService,
-    private userLanguagesService: UserLanguagesService,
+    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.roleOptions$ = this.permissionsService.roles.map(this.valueConverterService.valuesToOptions);
-
-    this.languageOptions$ = this.userLanguagesService.languageOptions;
-
-    // TODO(d.maltsev):
-    // Remove when UserRolesService is ready (currently waiting for spec & API)
-    this.permissionsService.fetchRoles();
+    this.roleOptions$ = this.lookupService.roleOptions;
+    this.languageOptions$ = this.lookupService.languageOptions;
 
     this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
       .subscribe(([ roleOptions, languageOptions ]) => {

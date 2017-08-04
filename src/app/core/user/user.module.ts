@@ -7,8 +7,6 @@ import { UserConstantsService } from './constants/user-constants.service';
 import { UserDictionariesEffects } from './dictionaries/user-dictionaries.effects';
 import { UserDictionariesService } from './dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from './dictionaries/user-dictionaries-2.service';
-import { UserLanguagesEffects } from './languages/user-languages.effects';
-import { UserLanguagesService } from './languages/user-languages.service';
 import { UserPermissionsEffects } from './permissions/user-permissions.effects';
 import { UserPermissionsService } from './permissions/user-permissions.service';
 
@@ -17,14 +15,12 @@ import { UserPermissionsService } from './permissions/user-permissions.service';
     CommonModule,
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserDictionariesEffects),
-    EffectsModule.run(UserLanguagesEffects),
     EffectsModule.run(UserPermissionsEffects),
   ],
   providers: [
     UserConstantsService,
     UserDictionariesService,
     UserDictionaries2Service,
-    UserLanguagesService,
     UserPermissionsService,
   ]
 })

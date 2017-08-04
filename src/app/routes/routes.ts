@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
-import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
@@ -29,7 +28,6 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     resolve: {
       guiObjectsResolved: GuiObjectsResolver,
-      lookupDataResolved: LookupResolver,
       metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',
