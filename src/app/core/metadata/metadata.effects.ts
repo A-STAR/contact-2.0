@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IMetadataListsState, IMetadataResponse } from './metadata.interface';
+import { IMetadataResponse } from './metadata.interface';
 
 import { DataService } from '../data/data.service';
 import { MetadataService } from './metadata.service';

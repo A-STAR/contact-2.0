@@ -30,10 +30,6 @@ export interface IMetadataState {
   };
 }
 
-export interface IMetadataListsState {
-  [key: string]: IMetadataColumn[];
-}
-
 export enum MetadataListStatusEnum {
   PENDING,
   LOADED,

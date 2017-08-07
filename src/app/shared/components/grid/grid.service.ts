@@ -118,7 +118,6 @@ export class GridService {
     };
 
     return this.metadataService.getMetadata(metadataKey)
-        // .map(metadata => metadata ? metadata[metadataKey] : [])
         .take(1)
         .toPromise()
         .then(metadata => {

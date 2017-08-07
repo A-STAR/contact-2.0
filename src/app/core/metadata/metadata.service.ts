@@ -5,7 +5,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../state/state.interface';
-import { IMetadataColumn, IMetadataListsState, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
+import { IMetadataColumn, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
 
 @Injectable()
 export class MetadataService {
@@ -27,7 +27,7 @@ export class MetadataService {
     return this.state$
       .map(state => state[key])
       .filter(list => list && list.status === MetadataListStatusEnum.LOADED)
-      .map(list => list.columns);
+      .map(list => list.columns || []);
   }
 
   refresh(key: string): void {
