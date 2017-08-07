@@ -2,7 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpModule } from '@angular/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ToasterModule } from 'angular2-toaster';
@@ -14,8 +16,8 @@ import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 
 // https://github.com/ocombe/ng2-translate/issues/218
-export function createTranslateLoader(http: Http): TranslateHttpLoader {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -26,6 +28,7 @@ export function createTranslateLoader(http: Http): TranslateHttpLoader {
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
     HttpModule,
     CoreModule,
     LayoutModule,
@@ -35,8 +38,8 @@ export function createTranslateLoader(http: Http): TranslateHttpLoader {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [Http]
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
       }
     })
   ],
