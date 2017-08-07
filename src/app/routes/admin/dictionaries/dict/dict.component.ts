@@ -15,6 +15,7 @@ import { DictionariesService } from '../../../../core/dictionaries/dictionaries.
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 @Component({
@@ -56,17 +57,11 @@ export class DictComponent implements OnDestroy {
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    { prop: 'typeCode', dictCode: 9 },
-    { prop: 'termTypeCode', dictCode: 5 },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
+    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
   ];
 
-  renderers: IRenderer = {
-    parentCode: [],
-    // typeCode: [
-    //   { label: 'dictionaries.types.system', value: 1 },
-    //   { label: 'dictionaries.types.client', value: 2 }
-    // ]
-  };
+  renderers: IRenderer = {};
 
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;

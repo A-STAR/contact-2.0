@@ -10,7 +10,7 @@ import { IOption } from '../../../../../../core/converter/value-converter.interf
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -34,7 +34,7 @@ export class ContractorManagerEditComponent {
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
   ) {
     // TODO(d.maltsev): stronger typing
     const { value } = this.activatedRoute.params as any;
@@ -46,8 +46,8 @@ export class ContractorManagerEditComponent {
     }
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_BRANCHES),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_GENDER),
       this.contractorId && this.managerId ?
         this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS).map(action => action.payload.manager) :
         Observable.of(null)
@@ -58,11 +58,6 @@ export class ContractorManagerEditComponent {
       this.initFormControls(branchesOptions, genderOptions);
       this.formData = manager;
     });
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_BRANCHES,
-      UserDictionariesService.DICTIONARY_GENDER
-    ]);
 
     this.actions.ofType(
       ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS,

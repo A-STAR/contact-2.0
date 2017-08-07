@@ -12,6 +12,7 @@ import { ContentTabService } from '../../../../../shared/components/content-tabs
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -35,14 +36,14 @@ export class ContractorEditComponent {
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
   ) {
     if (this.contractorId) {
       this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
     }
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
       this.contractorId ?
         this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS).map(action => action.payload.contractor) :
@@ -54,8 +55,6 @@ export class ContractorEditComponent {
       this.initFormControls(contractorTypeOptions, userOptions);
       this.formData = contractor;
     });
-
-    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
 
     this.actions.ofType(
       ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
