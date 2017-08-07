@@ -44,6 +44,7 @@ export class ContentTabService {
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);
+      this.lastTabEvent.stage = TabEventStageEnum.TAB_OPEN;
     } else {
       this.setActiveIndex(found);
     }
@@ -99,10 +100,12 @@ export class ContentTabService {
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {
-    const delay = Date.now() - this.lastTabEvent.timestamp;
-    const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
-    if (name) {
-      this.logAction(name, delay);
+    if (this.lastTabEvent.stage === TabEventStageEnum.TAB_OPEN) {
+      const delay = Date.now() - this.lastTabEvent.timestamp;
+      const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
+      if (name) {
+        this.logAction(name, delay);
+      }
     }
   }
 
