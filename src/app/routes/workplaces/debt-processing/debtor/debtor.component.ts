@@ -30,7 +30,7 @@ export class DebtorComponent implements OnDestroy {
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
-  person$ = new Subject<IPerson>();
+  person: IPerson;
   controls: Array<IDynamicFormGroup>;
 
   private personId = (this.route.params as any).value.id || null;
@@ -50,10 +50,10 @@ export class DebtorComponent implements OnDestroy {
       this.debtorService.fetch(this.personId)
     )
     .subscribe(([ personTypeOptions, canEdit, person ]) => {
-      this.person$.next({
+      this.person = {
         ...person,
         birthDate: this.valueConverterService.fromISO(person.birthDate as string)
-      });
+      };
       this.controls = this.getControls(canEdit, personTypeOptions);
       this.cdRef.markForCheck();
     });

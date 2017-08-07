@@ -22,7 +22,7 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './information.component.html',
 })
 export class DebtorInformationComponent implements OnDestroy {
-  @Input() person$: Observable<IPerson>;
+  @Input() person: IPerson;
 
   @ViewChild('form') form: DynamicFormComponent;
 
