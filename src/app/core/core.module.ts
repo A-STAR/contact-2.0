@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 
 import { UserModule } from './user/user.module';
 
+import { ActionsLogService } from './actions-log/actions-log.service';
 import { AuthEffects } from './auth/auth.effects';
 import { AuthHttpService } from './auth/auth-http.service';
 import { AuthService } from './auth/auth.service';
@@ -53,6 +54,7 @@ import { rootReducer } from './state/root.reducer';
         })
   ],
   providers: [
+    ActionsLogService,
     AuthHttpService,
     AuthService,
     ContentTabService,

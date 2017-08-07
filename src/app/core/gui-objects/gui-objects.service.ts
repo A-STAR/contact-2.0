@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../state/state.interface';
 import { IGuiObjectsState, IMenuItem, IGuiObject } from './gui-objects.interface';
 
-import { DataService } from '../data/data.service';
+import { ActionsLogService } from '../actions-log/actions-log.service';
 
 import { menuConfig } from '../../routes/menu-config';
 
@@ -20,7 +20,7 @@ export class GuiObjectsService {
   private lastNavigationStartTimestamp: number = null;
 
   constructor(
-    private dataService: DataService,
+    private actionsLogService: ActionsLogService,
     private router: Router,
     private store: Store<IAppState>,
   ) {
@@ -80,14 +80,9 @@ export class GuiObjectsService {
     this.menuItemIds
       .take(1)
       .subscribe(menuItemIds => {
-        if (menuItemIds[name] === 0) {
-          return;
+        if (menuItemIds[name] > 0) {
+          this.actionsLogService.log(name, delay, menuItemIds[name]);
         }
-        const data = { typeCode: 1, duration: delay };
-        const headers = new Headers({
-          'X-Gui-Object': menuItemIds[name]
-        });
-        this.dataService.create('/actions', {}, data, { headers }).subscribe();
       });
   }
 
