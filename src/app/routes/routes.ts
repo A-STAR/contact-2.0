@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
-import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
@@ -13,10 +12,6 @@ export const routes: Route[] = [
     path: '',
     component: LayoutComponent,
     canActivate: [ AuthService ],
-    resolve: {
-      guiObjectsResolved: GuiObjectsResolver
-    },
-    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: './dashboard/dashboard.module#DashboardModule' },
@@ -27,7 +22,6 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      guiObjectsResolved: GuiObjectsResolver,
       metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',
@@ -48,7 +42,6 @@ export const routes: Route[] = [
     component: LayoutComponent,
     canActivate: [ AuthService ],
     resolve: {
-      guiObjectsResolved: GuiObjectsResolver,
       metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',

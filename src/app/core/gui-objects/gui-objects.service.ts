@@ -15,8 +15,8 @@ import { menuConfig } from '../../routes/menu-config';
 export class GuiObjectsService {
   static GUI_OBJECTS_FETCH         = 'GUI_OBJECTS_FETCH';
   static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
-  static GUI_OBJECTS_FETCH_FAILURE = 'GUI_OBJECTS_FETCH_FAILURE';
 
+  private _guiObjects: Array<IGuiObject>;
   private lastNavigationStartTimestamp: number = null;
 
   constructor(
@@ -32,27 +32,19 @@ export class GuiObjectsService {
         this.onSectionLoadEnd(event);
       }
     });
+    this.state$.subscribe(state => this._guiObjects = state.data);
   }
 
   get menuItems(): Observable<Array<IMenuItem>> {
-    return this.state.map(state => state.guiObjects)
-      .filter(guiObjects => guiObjects.length > 0)
+    return this.getGuiObjects()
       .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
       .distinctUntilChanged();
   }
 
   get menuItemIds(): Observable<any> {
-    return this.state.map(state => state.guiObjects)
-      .filter(guiObjects => guiObjects.length > 0)
+    return this.getGuiObjects()
       .map(guiObjects => this.flattenGuiObjectIds(guiObjects))
       .distinctUntilChanged();
-  }
-
-  get isResolved(): Observable<boolean> {
-    return this.state
-      .map(state => state.isResolved)
-      .filter(isResolved => isResolved !== null)
-      .take(1);
   }
 
   createRefreshGuiObjectsAction(): Action {
@@ -107,7 +99,14 @@ export class GuiObjectsService {
     }), {});
   }
 
-  private get state(): Observable<IGuiObjectsState> {
+  private getGuiObjects(): Observable<Array<IGuiObject>> {
+    if (!this._guiObjects) {
+      this.refreshGuiObjects();
+    }
+    return this.state$.map(state => state.data).filter(Boolean).distinctUntilChanged();
+  }
+
+  private get state$(): Observable<IGuiObjectsState> {
     return this.store.select(state => state.guiObjects);
   }
 }
