@@ -118,7 +118,7 @@ export class EmployeesComponent implements OnDestroy {
     this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
     this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
 
-    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_EDIT');
+    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
     this.viewPermissionSubscription = Observable.combineLatest(
       this.hasViewPermission$,
