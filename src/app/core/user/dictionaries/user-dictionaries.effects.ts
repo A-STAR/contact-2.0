@@ -47,6 +47,6 @@ export class UserDictionariesEffects {
   ) {}
 
   private read(dictionaryId: number): Observable<IUserTermsResponse> {
-    return this.dataService.read('/dictionaries/{dictionaryId}/userterms', { dictionaryId });
+    return this.dataService.read('/lookup/dictionaries/{dictionaryId}/terms', { dictionaryId });
   }
 }

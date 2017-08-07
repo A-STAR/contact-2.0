@@ -13,12 +13,12 @@ import { IEntityTranslation } from '../../../../core/entity/translations/entity-
 import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
+import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 
 @Component({
   selector: 'app-dict',
@@ -79,9 +79,9 @@ export class DictComponent implements OnDestroy {
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
+    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
       this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
@@ -105,8 +105,8 @@ export class DictComponent implements OnDestroy {
     return this.dictionariesService.dictionaries;
   }
 
-  get languages(): Observable<IUserLanguage[]> {
-    return this.userLanguagesService.userLanguages;
+  get languages(): Observable<ILookupLanguage[]> {
+    return this.lookupService.languages;
   }
 
   get dictionaryTermTypes(): Observable<ITerm[]> {

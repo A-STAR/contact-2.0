@@ -1,11 +1,7 @@
 import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
-import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
-import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
-import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
-import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
@@ -32,10 +28,6 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     resolve: {
       guiObjectsResolved: GuiObjectsResolver,
-      lookupDataResolved: LookupResolver,
-      userConstantsResolved: UserConstantsResolver,
-      userLanguagesResolved: UserLanguagesResolver,
-      userPermissionsResolved: UserPermissionsResolver,
       metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',
@@ -57,7 +49,6 @@ export const routes: Route[] = [
     canActivate: [ AuthService ],
     resolve: {
       guiObjectsResolved: GuiObjectsResolver,
-      userPermissionsResolved: UserPermissionsResolver,
       metadataResolved: MetadataResolver,
     },
     runGuardsAndResolvers: 'paramsChange',

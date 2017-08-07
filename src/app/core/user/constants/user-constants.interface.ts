@@ -14,5 +14,4 @@ export interface IUserConstantsResponse {
 
 export interface IUserConstantsState {
   constants: Array<IUserConstant>;
-  isResolved: boolean;
 }

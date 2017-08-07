@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import * as R from 'ramda';
 
 import { IIdentityDoc } from '../identity.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';

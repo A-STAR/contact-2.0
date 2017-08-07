@@ -5,8 +5,7 @@ import { IUserPermissionsState } from './user-permissions.interface';
 import { UserPermissionsService } from './user-permissions.service';
 
 const defaultState: IUserPermissionsState = {
-  permissions: {},
-  isResolved: null
+  permissions: null
 };
 
 export function userPermissionsReducer(state: IUserPermissionsState = defaultState, action: Action): IUserPermissionsState {
@@ -15,12 +14,6 @@ export function userPermissionsReducer(state: IUserPermissionsState = defaultSta
       return {
         ...state,
         permissions: action.payload.data,
-        isResolved: true
-      };
-    case UserPermissionsService.USER_PERMISSIONS_FETCH_FAILURE:
-      return {
-        ...state,
-        isResolved: false
       };
     default:
       return state;

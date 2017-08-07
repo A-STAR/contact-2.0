@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -30,7 +29,7 @@ export class DebtorComponent implements OnDestroy {
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
-  person$ = new Subject<IPerson>();
+  person: IPerson;
   controls: Array<IDynamicFormGroup>;
 
   private personId = (this.route.params as any).value.id || null;
@@ -50,10 +49,10 @@ export class DebtorComponent implements OnDestroy {
       this.debtorService.fetch(this.personId)
     )
     .subscribe(([ personTypeOptions, canEdit, person ]) => {
-      this.person$.next({
+      this.person = {
         ...person,
         birthDate: this.valueConverterService.fromISO(person.birthDate as string)
-      });
+      };
       this.controls = this.getControls(canEdit, personTypeOptions);
       this.cdRef.markForCheck();
     });

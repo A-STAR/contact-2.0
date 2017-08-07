@@ -8,7 +8,7 @@ import {
 import { IDictionary, ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
+import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 
 import { EntityBaseComponent, TranslationFieldsExtension } from '../../../../../shared/components/entity/edit/entity.base.component';
 
@@ -23,7 +23,7 @@ const NAME_CONTROL_NAME = 'name';
 })
 export class DictEditComponent extends EntityBaseComponent<IDictionary> implements OnInit {
 
-  @Input() languages: IUserLanguage[];
+  @Input() languages: ILookupLanguage[];
   @Input() dictionaries: IDictionary[];
   @Input() dictionaryTermTypes: ITerm[];
 

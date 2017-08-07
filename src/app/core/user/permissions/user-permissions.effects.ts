@@ -17,25 +17,13 @@ export class UserPermissionsEffects {
     .ofType(UserPermissionsService.USER_PERMISSIONS_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map((response: IUserPermissionsResponse) => {
-          return {
-            type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,
-            payload: {
-              data: response.userPermits.reduce((acc, permission) => {
-                acc[permission.name] = permission;
-                return acc;
-              }, {})
-            }
-          };
-        })
-        .catch(error => {
-          return [
-            {
-              type: UserPermissionsService.USER_PERMISSIONS_FETCH_FAILURE
-            },
-            this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').response(error).action()
-          ];
-        });
+        .map((response: IUserPermissionsResponse) => ({
+          type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,
+          payload: {
+            data: response.userPermits.reduce((acc, permission) => ({ ...acc, [permission.name]: permission }), {})
+          }
+        }))
+        .catch(this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').callback());
     });
 
   constructor(

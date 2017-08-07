@@ -8,7 +8,7 @@ import {
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
-import { IUserLanguage } from '../../../../../core/user/languages/user-languages.interface';
+import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 
 import {
   EntityBaseComponent,
@@ -26,7 +26,7 @@ const NAME_CONTROL_NAME = 'name';
 })
 export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnInit {
 
-  @Input() languages: IUserLanguage[];
+  @Input() languages: ILookupLanguage[];
   @Input() terms: ITerm[];
 
   constructor() {

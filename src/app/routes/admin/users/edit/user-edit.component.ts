@@ -12,7 +12,6 @@ import { IOption } from '../../../../core/converter/value-converter.interface';
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
-import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UsersService } from '../users.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
@@ -47,7 +46,6 @@ export class UserEditComponent {
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private userConstantsService: UserConstantsService,
-    private userLanguagesService: UserLanguagesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
@@ -68,7 +66,7 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPassword.MinLength'),
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userConstantsService.get('UserPhoto.MaxSize'),
-      this.userLanguagesService.languages.map(this.valueConverterService.valuesToOptions),
+      this.lookupService.languageOptions,
       this.lookupService.roleOptions,
       this.userId
         ? this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user)

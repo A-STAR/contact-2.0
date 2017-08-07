@@ -15,24 +15,15 @@ export class UserConstantsEffects {
   @Effect()
   fetchConstants$ = this.actions
     .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
-    .switchMap((action: Action) => {
+    .mergeMap((action: Action) => {
       return this.read()
-        .map((response: IUserConstantsResponse) => {
-          return {
-            type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
-            payload: {
-              data: response.data
-            }
-          };
-        })
-        .catch(error => {
-          return [
-            {
-              type: UserConstantsService.USER_CONSTANTS_FETCH_FAILURE
-            },
-            this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').response(error).action()
-          ];
-        });
+        .map((response: IUserConstantsResponse) => ({
+          type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
+          payload: {
+            data: response.data
+          }
+        }))
+        .catch(this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback());
     });
 
   constructor(

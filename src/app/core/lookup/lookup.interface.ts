@@ -1,3 +1,14 @@
+export interface ILookupLanguage {
+  id: number;
+  name: string;
+  isMain: boolean;
+}
+
+export interface ILookupLanguagesResponse {
+  success: boolean;
+  languages: Array<ILookupLanguage>;
+}
+
 export interface ILookupUser {
   id: number;
   name: string;
@@ -19,8 +30,7 @@ export interface ILookupRolesResponse {
 }
 
 export interface ILookupState {
+  languages: Array<ILookupLanguage>;
   roles: Array<ILookupRole>;
-  rolesResolved: boolean;
   users: Array<ILookupUser>;
-  usersResolved: boolean;
 }
