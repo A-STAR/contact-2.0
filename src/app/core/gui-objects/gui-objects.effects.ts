@@ -27,7 +27,6 @@ export class GuiObjectsEffects {
             this.router.navigate(['/connection-error']);
           }
           return [
-            { type: GuiObjectsService.GUI_OBJECTS_FETCH_FAILURE },
             this.notificationService.error('errors.default.read').entity('entities.guiObjects.gen.plural').response(error).action()
           ];
         });

@@ -17,6 +17,5 @@ export interface IMenuItem {
 };
 
 export interface IGuiObjectsState {
-  guiObjects: Array<IGuiObject>;
-  isResolved: boolean;
+  data: Array<IGuiObject>;
 }

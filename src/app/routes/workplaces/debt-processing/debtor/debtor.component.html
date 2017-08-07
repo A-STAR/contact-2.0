@@ -6,10 +6,10 @@
 
 <app-dynamic-form
   #form
-  *ngIf="controls"
+  *ngIf="controls && person"
   [ngClass]="'app-debtor-container'"
   [controls]="controls"
-  [data]="person$ | async">
+  [data]="person">
 </app-dynamic-form>
 
 <app-tabstrip
@@ -18,7 +18,7 @@
   <app-tab [title]="'debtor.information.title'">
     <app-debtor-information
       #information
-      [person$]="person$">
+      [person]="person">
     </app-debtor-information>
   </app-tab>
   <app-tab

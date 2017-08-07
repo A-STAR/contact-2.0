@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
+import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
@@ -14,7 +14,7 @@ import { DictionariesService } from '../../../../core/dictionaries/dictionaries.
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { checkboxRenderer } from '../../../../core/utils';
 
 @Component({
@@ -89,9 +89,9 @@ export class TermsComponent implements OnDestroy {
   constructor(
     private dictionariesService: DictionariesService,
     private gridService: GridService,
+    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private userLanguagesService: UserLanguagesService,
   ) {
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
@@ -123,8 +123,8 @@ export class TermsComponent implements OnDestroy {
     return this.dictionariesService.selectedTerm;
   };
 
-  get languages(): Observable<IUserLanguage[]> {
-    return this.userLanguagesService.userLanguages;
+  get languages(): Observable<ILookupLanguage[]> {
+    return this.lookupService.languages;
   }
 
   get terms(): Observable<ITerm[]> {

@@ -12,7 +12,6 @@ import { IOrganizationsState } from '../../routes/admin/organizations/organizati
 import { IPermissionsState } from '../../routes/admin/roles/permissions.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.interface';
-import { IUserLanguagesState } from '../user/languages/user-languages.interface';
 import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 import { IMetadataState } from '../metadata/metadata.interface';
@@ -33,8 +32,6 @@ export interface IAppState {
   readonly permissions: IPermissionsState;
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;
-  readonly userLanguages: IUserLanguagesState;
   readonly userPermissions: IUserPermissionsState;
   readonly users: IUsersState;
 }
-

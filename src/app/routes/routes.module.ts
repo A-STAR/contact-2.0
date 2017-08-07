@@ -5,14 +5,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '../shared/shared.module';
 import { PagesModule } from './pages/pages.module';
 
-import { GuiObjectsResolver } from '../core/gui-objects/gui-objects.resolver';
-import { LookupResolver } from '../core/lookup/lookup.resolver';
 import { MetadataResolver } from '../core/metadata/metadata.resolver';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
 import { PermissionsService } from './admin/roles/permissions.service';
-import { UserConstantsResolver } from '../core/user/constants/user-constants.resolver';
-import { UserLanguagesResolver } from '../core/user/languages/user-languages.resolver';
-import { UserPermissionsResolver } from '../core/user/permissions/user-permissions.resolver';
 
 import { routes } from './routes';
 
@@ -24,13 +19,8 @@ import { routes } from './routes';
     PagesModule,
   ],
   providers: [
-    GuiObjectsResolver,
-    LookupResolver,
     MetadataResolver,
     PermissionsService,
-    UserConstantsResolver,
-    UserLanguagesResolver,
-    UserPermissionsResolver,
   ],
   exports: [
     RouterModule
