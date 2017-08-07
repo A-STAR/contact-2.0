@@ -24,6 +24,7 @@ import { GuiObjectsEffects } from './gui-objects/gui-objects.effects';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupEffects } from './lookup/lookup.effects';
 import { LookupService } from './lookup/lookup.service';
+import { MetadataEffects } from './metadata/metadata.effects';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
 import { NotificationsService } from './notifications/notifications.service';
@@ -31,7 +32,6 @@ import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { MetadataEffects } from './metadata/metadata.effects';
 import { ValueConverterService } from './converter/value-converter.service';
 
 import { rootReducer } from './state/root.reducer';

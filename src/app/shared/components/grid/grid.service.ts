@@ -117,8 +117,8 @@ export class GridService {
       return this.setValueGetters(columns, renderers);
     };
 
-    return this.metadataService.metadata
-        .map(metadata => metadata ? metadata[metadataKey] : [])
+    return this.metadataService.getMetadata(metadataKey)
+        // .map(metadata => metadata ? metadata[metadataKey] : [])
         .take(1)
         .toPromise()
         .then(metadata => {

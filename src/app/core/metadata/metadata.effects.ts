@@ -17,18 +17,15 @@ export class MetadataEffects {
   fetchMetadata$ = this.actions
     .ofType(MetadataService.METADATA_FETCH)
     .switchMap((action: Action) => {
-      return this.read()
-        .map((response: IMetadataListsState) => {
-          return {
-            type: MetadataService.METADATA_FETCH_SUCCESS,
-            payload: response
-          };
-        })
+      return this.read(action.payload.key)
+        .map(response => response.lists[0])
+        .map(list => ({
+          type: MetadataService.METADATA_FETCH_SUCCESS,
+          payload: list
+        }))
         .catch(error => {
           return [
-            {
-              type: MetadataService.METADATA_FETCH_FAILURE
-            },
+            { type: MetadataService.METADATA_FETCH_FAILURE },
             this.notificationService.error('errors.default.read').entity('entities.metadata.gen.plural').response(error).action()
           ];
         });
@@ -38,14 +35,9 @@ export class MetadataEffects {
     private actions: Actions,
     private dataService: DataService,
     private notificationService: NotificationsService
-  ) {
-  }
+  ) {}
 
-  private read(): Observable<IMetadataListsState> {
-    return this.dataService.read('/list')
-      .map((response: IMetadataResponse) => response.lists.reduce((acc, metadata) => {
-        acc[metadata.name] = metadata.data;
-        return acc;
-      }, {}));
+  private read(key: string): Observable<IMetadataResponse> {
+    return this.dataService.read(`/list?name=${key}`);
   }
 }

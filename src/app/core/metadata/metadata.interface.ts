@@ -24,9 +24,18 @@ export interface IMetadataResponse {
 }
 
 export interface IMetadataState {
-  lists: IMetadataListsState;
+  [key: string]: {
+    columns: Array<IMetadataColumn>,
+    status: MetadataListStatusEnum
+  };
 }
 
 export interface IMetadataListsState {
   [key: string]: IMetadataColumn[];
+}
+
+export enum MetadataListStatusEnum {
+  PENDING,
+  LOADED,
+  ERROR,
 }

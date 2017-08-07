@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 
 import { AuthService } from '../core/auth/auth.service';
-import { MetadataResolver } from '../core/metadata/metadata.resolver';
 
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -21,10 +20,6 @@ export const routes: Route[] = [
     path: 'admin',
     component: LayoutComponent,
     canActivate: [ AuthService ],
-    resolve: {
-      metadataResolved: MetadataResolver,
-    },
-    runGuardsAndResolvers: 'paramsChange',
     children: [
       { path: '', redirectTo: '../home', pathMatch: 'full' },
       { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
@@ -41,10 +36,6 @@ export const routes: Route[] = [
     path: 'workplaces',
     component: LayoutComponent,
     canActivate: [ AuthService ],
-    resolve: {
-      metadataResolved: MetadataResolver,
-    },
-    runGuardsAndResolvers: 'paramsChange',
     children: [
       // { path: 'debts', loadChildren: './workplaces/debtors/debtors.module#DebtorsModule' },
       { path: 'debt-processing', loadChildren: './workplaces/debt-processing/debt-processing.module#DebtProcessingModule' },
