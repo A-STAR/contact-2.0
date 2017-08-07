@@ -46,7 +46,7 @@ export const menuConfig: IMenuConfig = {
     icon: 'icon-book-open'
   },
   clients: {
-    text: 'sidebar.nav.menu.BANKS',
+    text: 'sidebar.nav.menu.PORTFOLIOS',
     link: '/admin/contractors',
     icon: 'icon-briefcase'
   },
