@@ -55,9 +55,9 @@ export class OrganizationsTreeComponent implements OnDestroy {
     private organizationsService: OrganizationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-      this.permissionSub = this.userPermissionsService.has('ORGANIZATION_VIEW').subscribe(hasViewPermission => hasViewPermission
-        ? this.organizationsService.fetchOrganizations()
-        : this.organizationsService.clearOrganizations()
+    this.permissionSub = this.canViewOrganization.subscribe(hasViewPermission => hasViewPermission
+      ? this.organizationsService.fetchOrganizations()
+      : this.organizationsService.clearOrganizations()
     );
   }
 
@@ -88,6 +88,10 @@ export class OrganizationsTreeComponent implements OnDestroy {
 
   get isEntityBeingRemoved(): Observable<boolean> {
     return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
+  }
+
+  get canViewOrganization(): Observable<boolean> {
+    return this.userPermissionsService.has('ORGANIZATION_VIEW');
   }
 
   get canEditOrganization(): Observable<boolean> {
