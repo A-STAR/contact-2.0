@@ -14,6 +14,6 @@ export enum TabEventStageEnum {
 }
 
 export interface ITabEvent {
-  time: Date;
+  timestamp: number;
   stage: TabEventStageEnum;
 }

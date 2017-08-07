@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 
-import { ITab } from './content-tab.interface';
+import { ITab, ITabEvent, TabEventStageEnum } from './content-tab.interface';
 
 import { ActionsLogService } from '../../../../core/actions-log/actions-log.service';
 import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
@@ -13,7 +13,7 @@ import { menuConfig } from '../../../../routes/menu-config';
 export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
-  private lastNavigationStartTimestamp: number = null;
+  private lastTabEvent: ITabEvent = null;
 
   constructor(
     private actionsLogService: ActionsLogService,
@@ -92,11 +92,14 @@ export class ContentTabService {
   }
 
   private onSectionLoadStart(): void {
-    this.lastNavigationStartTimestamp = Date.now();
+    this.lastTabEvent = {
+      timestamp: Date.now(),
+      stage: TabEventStageEnum.NAVIGATION_START
+    }
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {
-    const delay = Date.now() - this.lastNavigationStartTimestamp;
+    const delay = Date.now() - this.lastTabEvent.timestamp;
     const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
     if (name) {
       this.logAction(name, delay);
