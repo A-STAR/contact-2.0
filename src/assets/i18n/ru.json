@@ -695,6 +695,7 @@
   "widgets": {
     "address": {
       "card": {
+        "fullAddress": "Адрес",
         "postalCode": "Индекс",
         "country": "Страна",
         "region": "Регион",
