@@ -19,8 +19,13 @@ export class LookupService {
   static LOOKUP_USERS_FETCH_SUCCESS     = 'LOOKUP_USERS_FETCH_SUCCESS';
 
   private _languages: Array<ILookupLanguage>;
+  private _languagesRequestSent = false;
+
   private _roles: Array<ILookupRole>;
+  private _rolesRequestSent = false;
+
   private _users: Array<ILookupUser>;
+  private _usersRequestSent = false;
 
   constructor(
     private store: Store<IAppState>,
@@ -94,21 +99,24 @@ export class LookupService {
   }
 
   private getLanguages(): Observable<Array<ILookupRole>> {
-    if (!this._languages) {
+    if (!this._languages && !this._languagesRequestSent) {
+      this._languagesRequestSent = true;
       this.refreshLanguages();
     }
     return this.state.map(state => state.languages).filter(Boolean).distinctUntilChanged();
   }
 
   private getRoles(): Observable<Array<ILookupLanguage>> {
-    if (!this._roles) {
+    if (!this._roles && !this._rolesRequestSent) {
+      this._rolesRequestSent = true;
       this.refreshRoles();
     }
     return this.state.map(state => state.roles).filter(Boolean).distinctUntilChanged();
   }
 
   private getUsers(): Observable<Array<ILookupUser>> {
-    if (!this._users) {
+    if (!this._users && !this._usersRequestSent) {
+      this._usersRequestSent = true;
       this.refreshUsers();
     }
     return this.state.map(state => state.users).filter(Boolean).distinctUntilChanged();
