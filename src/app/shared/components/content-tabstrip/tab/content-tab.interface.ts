@@ -7,3 +7,13 @@ export interface ITab {
   factory: any;
   injector: any;
 }
+
+export enum TabEventStageEnum {
+  NAVIGATION_START,
+  TAB_OPEN,
+}
+
+export interface ITabEvent {
+  time: Date;
+  stage: TabEventStageEnum;
+}
