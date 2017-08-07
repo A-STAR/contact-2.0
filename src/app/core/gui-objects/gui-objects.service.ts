@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
