@@ -56,7 +56,7 @@ export class TermsComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'code', minWidth: 100, maxWidth: 150 },
+    { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 400 },
     { prop: 'typeCode', localized: true },
     { prop: 'parentCodeName' },
