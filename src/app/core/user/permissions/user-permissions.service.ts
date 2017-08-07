@@ -13,6 +13,7 @@ export class UserPermissionsService {
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
 
   private permissions: IUserPermissions;
+  private isInitialized = false;
 
   constructor(private store: Store<IAppState>) {
     this.permissions$.subscribe(permissions => this.permissions = permissions);
@@ -51,7 +52,8 @@ export class UserPermissionsService {
   }
 
   private getPermissions(): Observable<IUserPermissions> {
-    if (!this.permissions) {
+    if (!this.permissions && !this.isInitialized) {
+      this.isInitialized = true;
       this.refresh();
     }
 
