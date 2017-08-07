@@ -2,7 +2,7 @@ import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AuthHttp, AuthConfig, JwtHelper } from 'angular2-jwt';
 import { Router } from '@angular/router';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { createTranslateLoader } from '../../app.module';
 
@@ -21,13 +21,13 @@ describe('Component: Header', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule,
+        HttpClientModule,
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
             useFactory: createTranslateLoader,
             deps: [
-              Http
+              HttpClient
             ]
           }
         })
