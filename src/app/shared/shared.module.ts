@@ -30,6 +30,7 @@ import { DialogModule } from './components/dialog/dialog.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
+import { DropdownInputModule } from './components/form/dropdown-input/dropdown-input.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
@@ -73,6 +74,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DialogActionModule,
     DownloaderModule,
     DropdownModule,
+    DropdownInputModule,
     DynamicFormModule,
     GridModule,
     Grid2Module,
@@ -134,6 +136,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DialogActionModule,
     DownloaderModule,
     DropdownModule,
+    DropdownInputModule,
     DynamicFormModule,
     DialogModule,
     GridModule,
