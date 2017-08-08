@@ -773,7 +773,19 @@
     },
     "debt": {
       "grid": {
-        "id": "Ид"
+        "id": "Ид долга",
+        "creditTypeCode": "Тип продукта",
+        "creditName": "Название продукта",
+        "contract": "Номер договора",
+        "statusCode": "Статус",
+        "creditStartDate": "Дата выдачи",
+        "currencyId": "Валюта",
+        "debtSum": "Сумма просроченного долга",
+        "totalSum": "Общая сумма кредита",
+        "dpd": "Кол-во дней просрочки",
+        "portfolio": "Портфель",
+        "bank": "Банк",
+        "debtReasonCode": "Причина"
       }
     }
   },

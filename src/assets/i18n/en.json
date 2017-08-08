@@ -773,7 +773,19 @@
     },
     "debt": {
       "grid": {
-        "id": "Id"
+        "id": "Id",
+        "creditTypeCode": "Credit type",
+        "creditName": "Credit name",
+        "contract": "Contract #",
+        "statusCode": "Status",
+        "creditStartDate": "Start date",
+        "currencyId": "Currency",
+        "debtSum": "Debt amount",
+        "totalSum": "Total amount",
+        "dpd": "DPD",
+        "portfolio": "Portfolio",
+        "bank": "Bank",
+        "debtReasonCode": "Reason"
       }
     }
   },
