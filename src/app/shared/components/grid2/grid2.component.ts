@@ -26,7 +26,7 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridEventPayload, IAGridExportableColumn,
+  IAGridEventPayload, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
@@ -78,25 +78,23 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rowHeight = 25;
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
-  // selected rows
-  @Input() selected: RowNode[] = [];
   @Input() persistenceKey: string;
   @Input() showDndGroupPanel = false;
   @Input() styles: CSSStyleDeclaration;
 
   @Input() rowIdKey = 'id';
 
-  @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onDragStarted = new EventEmitter<null>();
+  @Output() onDragStopped = new EventEmitter<null>();
+  @Output() onColumnGroup = new EventEmitter<IAGridGroups>();
   // NOTE: emits the `.data` property of RowNode
-  @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
-  @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onInit: EventEmitter<void> = new EventEmitter<void>();
-  @Output() onPageSize: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onSort: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onSelect: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onDblClick = new EventEmitter<RowNode[]>();
+  @Output() onFilter = new EventEmitter<FilterObject>();
+  @Output() onPage = new EventEmitter<number>();
+  @Output() onInit = new EventEmitter<void>();
+  @Output() onPageSize = new EventEmitter<number>();
+  @Output() onSort = new EventEmitter< IAGridSortModel[]>();
+  @Output() onSelect = new EventEmitter<IAGridSelected>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -120,6 +118,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   get allColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
+  }
+
+  // selected rows
+  get selected(): RowNode[] {
+    return this.gridOptions.api.getSelectedRows();
   }
 
   ngOnInit(): void {
@@ -155,7 +158,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.initialized) {
       return;
     }
-    const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
+    const { rowCount, rows, currentPage, currentPageSize } = changes;
     if (rows || currentPage || currentPageSize) {
       this.refreshPagination();
       this.clearRangeSelections();
@@ -172,9 +175,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (rows) {
       this.viewportDatasource.params.setRowData(this.rows);
     }
-    if (selected) {
-      this.refreshRowCount();
-    }
   }
 
   ngOnDestroy(): void {
@@ -189,26 +189,26 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
+        this.onPage.emit(this.page - 1);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
         if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
+        this.onPage.emit(this.page + 1);
         break;
       case ToolbarActionTypeEnum.GO_FIRST:
-        this.onPage.emit({ type: Grid2Component.FIRST_PAGE });
+        this.onPage.emit(1);
         break;
       case ToolbarActionTypeEnum.GO_LAST:
-        this.onPage.emit({ type: Grid2Component.LAST_PAGE, payload: this.getPageCount() });
+        this.onPage.emit(this.getPageCount());
         break;
     }
   }
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
-    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
+    this.onPageSize.emit(payload.value[0].value);
   }
 
   dragStarted(): void {
@@ -221,11 +221,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectionChanged(): void {
-    const selected = this.gridOptions.api.getSelectedRows();
-    this.onSelect.emit({
-      type: Grid2Component.SELECTED_ROWS,
-      payload: selected.map(row => row[this.rowIdKey])
-    });
+    const selected = this.selected.map(row => row[this.rowIdKey]);
+    this.refreshRowCount();
+    this.onSelect.emit(selected);
   }
 
   rowDoubleClicked(): void {
@@ -283,7 +281,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   onSortChanged(): void {
     this.calculateGridSettings();
     const sorters: IAGridSortModel[] = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
+    this.onSort.emit(sorters);
   }
 
   getSorters(): any {
@@ -689,9 +687,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
-    this.onColumnGroup.emit({
-      type: Grid2Component.GROUP_COLUMNS, payload: event.getColumns().map(column => column.getColId())
-    });
+    // NOTE: emit colId's only as an array
+    this.onColumnGroup.emit(event.getColumns().map(column => column.getColId()));
   }
 
   private calculateGridSettings(): void {
