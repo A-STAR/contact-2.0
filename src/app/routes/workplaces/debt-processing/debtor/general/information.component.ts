@@ -8,7 +8,6 @@ import { INode } from '../../../../../shared/gui-objects/container/container.int
 import { IPerson } from '../debtor.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
@@ -41,7 +40,7 @@ export class DebtorInformationComponent implements OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.personSubscription = Observable.combineLatest(

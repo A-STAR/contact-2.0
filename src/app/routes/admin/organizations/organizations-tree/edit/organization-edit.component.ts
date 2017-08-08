@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, AfterViewInit, Component, OnInit } from '@angular/core';
 
-import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IOrganization } from '../../organizations.interface';
@@ -12,14 +12,23 @@ import { EntityBaseComponent } from '../../../../../shared/components/entity/edi
   selector: 'app-organization-edit',
   templateUrl: './organization-edit.component.html'
 })
-export class OrganizationEditComponent extends EntityBaseComponent<IOrganization> implements OnInit {
-  constructor(private userDictionariesService: UserDictionaries2Service) {
+export class OrganizationEditComponent extends EntityBaseComponent<IOrganization> implements AfterViewInit, OnInit {
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private userDictionariesService: UserDictionariesService,
+  ) {
     super();
   }
 
   ngOnInit(): void {
-    this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_BRANCHES)
-      .subscribe(options => this.controls = this.buildControls(options));
+    this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES)
+      .subscribe(options => {
+        this.controls = this.buildControls(options);
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngAfterViewInit(): void {
   }
 
   get title(): string {

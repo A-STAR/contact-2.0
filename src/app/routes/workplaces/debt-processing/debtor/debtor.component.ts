@@ -9,7 +9,6 @@ import { IPerson } from './debtor.interface';
 
 import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
@@ -39,7 +38,7 @@ export class DebtorComponent implements OnDestroy {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {

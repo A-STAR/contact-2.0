@@ -34,7 +34,7 @@ export class EmailCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
       this.userPermissionsService.has('EMAIL_EDIT'),
       this.userPermissionsService.has('EMAIL_COMMENT_EDIT'),
       // TODO(d.maltsev): pass entity type

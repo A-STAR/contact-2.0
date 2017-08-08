@@ -36,7 +36,7 @@ export class AddressCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
       this.userPermissionsService.has('ADDRESS_EDIT'),
       this.userPermissionsService.has('ADDRESS_COMMENT_EDIT'),
       // TODO(d.maltsev): pass entity type

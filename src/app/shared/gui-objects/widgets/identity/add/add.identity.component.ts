@@ -41,7 +41,7 @@ export class AddIdentityComponent extends EntityBaseComponent<IIdentityDoc> impl
     super();
     Observable.combineLatest(
       this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
     )
     .take(1)
     .subscribe(([ canAdd, identityTypes ]) => {

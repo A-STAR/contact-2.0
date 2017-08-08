@@ -16,7 +16,6 @@ import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 import { ActionsLogService } from './actions-log.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';

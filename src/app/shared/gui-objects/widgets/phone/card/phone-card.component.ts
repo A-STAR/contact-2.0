@@ -34,7 +34,7 @@ export class PhoneCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.userPermissionsService.has('PHONE_EDIT'),
       this.userPermissionsService.has('PHONE_COMMENT_EDIT'),
       // TODO(d.maltsev): pass entity type

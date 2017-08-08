@@ -3,13 +3,9 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
-import { arrayToObject } from '../../utils';
-
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
-import { IUserDictionariesState, IUserDictionary, IUserTerm, IUserDictionaries } from './user-dictionaries.interface';
-
-import { DataService } from '../../data/data.service';
+import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserDictionary, IUserTerm } from './user-dictionaries.interface';
 
 @Injectable()
 export class UserDictionariesService {
@@ -46,7 +42,11 @@ export class UserDictionariesService {
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
 
-  constructor(private store: Store<IAppState>, private dataService: DataService) {}
+  private state: IUserDictionariesState;
+
+  constructor(private store: Store<IAppState>) {
+    this.state$.subscribe(state => this.state = state);
+  }
 
   createRefreshAction(dictionaryId: number): Action {
     return {
@@ -55,68 +55,43 @@ export class UserDictionariesService {
     };
   }
 
-  preload(dictionaryIds: Array<number>): void {
-    this.state
-      .take(1)
-      .subscribe(state => {
-        dictionaryIds.forEach(dictionaryId => {
-          if (!state.dictionaries[dictionaryId]) {
-            this.refresh(dictionaryId);
-          }
-        });
-      });
+  getDictionary(id: number): Observable<IUserDictionary> {
+    return this.loadDictionaries([ id ], term => term).map(dictionaries => dictionaries[id]);
   }
 
-  refresh(dictionaryId: number): void {
-    const action = this.createRefreshAction(dictionaryId);
-    this.store.dispatch(action);
+  getDictionaries(ids: Array<number>): Observable<IUserDictionaries> {
+    return this.loadDictionaries(ids, term => term);
   }
 
-  getDictionaryAsArray(dictionaryId: number): Observable<IUserTerm[]> {
-    return this.state
-      .map(state => state.dictionaries[dictionaryId] || [])
-      .distinctUntilChanged();
+  getDictionaryAsOptions(id: number): Observable<Array<IOption>> {
+    return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionaries(Ids: number[]): Promise<IUserDictionaries> {
-    const mapDictionary = id => this.dataService
-      .read('/dictionaries/{id}/userterms', { id })
-      .toPromise()
-      .then(resp => ({ id, terms: resp.userTerms }));
+  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: Array<IOption> }> {
+    return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
+  }
 
-    const allDictionaries = Ids.map(mapDictionary);
-
-    return Promise.all(allDictionaries).then(dictionaries => {
-      return dictionaries.reduce((acc, dictionary) => {
-            acc[dictionary.id] = [...dictionary.terms];
-            return acc;
-          }, {});
+  private loadDictionaries<T>(ids: Array<number>, transform: ITransformCallback<T>): Observable<{ [key: number]: Array<T> }> {
+    ids.forEach(id => {
+      if (!this.state.dictionaries[id]) {
+        const action = this.createRefreshAction(id);
+        this.store.dispatch(action);
+      }
     });
-  }
 
-  getDictionary(dictionaryId: number): Observable<IUserDictionary> {
-    return this.state
-      .map(state => state.dictionaries[dictionaryId] || [])
-      .map(arrayToObject('code'))
+    return this.state$
+      .map(state => ids.reduce((acc, id) => {
+        const dictionary = state.dictionaries[id];
+        return {
+          ...acc,
+          [id]: dictionary ? dictionary.map(transform) : null
+        };
+      }, {}))
+      .filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true))
       .distinctUntilChanged();
   }
 
-  getDictionaryOptions(dictionaryId: number): Observable<IOption[]> {
-    // TODO(d.maltsev): remove this when the db has correct data
-    switch (dictionaryId) {
-      case UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE:
-        return Observable.of([
-          { value: 1, label: 'Системный' },
-        ]);
-    }
-
-    return this.state
-      .map(state => state.dictionaries[dictionaryId] || [])
-      .map(terms => terms.map(term => ({ value: term.code, label: term.name })))
-      .distinctUntilChanged();
-  }
-
-  private get state(): Observable<IUserDictionariesState> {
+  private get state$(): Observable<IUserDictionariesState> {
     return this.store.select(state => state.userDictionaries);
   }
 }

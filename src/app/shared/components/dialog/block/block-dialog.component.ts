@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angu
 
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form-control.interface';
 
-import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -23,7 +23,7 @@ export class BlockDialogComponent implements OnInit {
   controls: Array<IDynamicFormControl> = null;
   data: any;
 
-  constructor(private userDictionariesService: UserDictionaries2Service) {}
+  constructor(private userDictionariesService: UserDictionariesService) {}
 
   ngOnInit(): void {
     this.userDictionariesService
