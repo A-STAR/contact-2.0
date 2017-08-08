@@ -2,7 +2,7 @@ import { ChangeDetectorRef, AfterViewInit, Component, OnInit } from '@angular/co
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IOrganization } from '../../organizations.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 

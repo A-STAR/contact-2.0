@@ -65,7 +65,6 @@ export class DictComponent implements OnDestroy {
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private columns$: Observable<IGridColumn[]>;
   private dictionariesService$: Subscription;
   private viewPermissionSubscription: Subscription;
 
