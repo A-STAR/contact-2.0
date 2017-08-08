@@ -5,7 +5,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '../shared/shared.module';
 import { PagesModule } from './pages/pages.module';
 
-import { MetadataResolver } from '../core/metadata/metadata.resolver';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
 import { PermissionsService } from './admin/roles/permissions.service';
 
@@ -19,7 +18,6 @@ import { routes } from './routes';
     PagesModule,
   ],
   providers: [
-    MetadataResolver,
     PermissionsService,
   ],
   exports: [
