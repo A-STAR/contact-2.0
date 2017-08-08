@@ -54,6 +54,7 @@
         "DEBT_LIST": "Debt List",
         "DEBTOR_CARD": "Debtor",
         "DEBTOR_ADDRESS": "Debtor's address",
+        "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_PHONE": "Debtor's phone",
         "TASKS": "Tasks",

@@ -54,6 +54,7 @@
         "DEBT_LIST": "Список долгов",
         "DEBTOR_CARD": "Карточка должника",
         "DEBTOR_ADDRESS": "Адрес должника",
+        "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_PHONE": "Телефон должника",
         "TASKS": "Постановка задач",
