@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { GridModule } from '../../../../components/grid/grid.module';
