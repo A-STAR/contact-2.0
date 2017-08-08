@@ -770,6 +770,11 @@
           "confirmMessage": "Are you sure you want to remove phone number {{ phone }}?"
         }
       }
+    },
+    "debt": {
+      "grid": {
+        "id": "Id"
+      }
     }
   },
   "entities": {
