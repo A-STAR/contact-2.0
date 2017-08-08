@@ -152,6 +152,21 @@ export class GridService {
     });
   }
 
+  setDictionaryRenderers(columns: IGridColumn[]): Observable<IGridColumn[]> {
+    const dictColumns = columns.filter(col => !!col.dictCode);
+    const dictionaryIds = dictColumns.map(col => col.dictCode);
+
+    return this.userDictionariesService.getDictionariesAsOptions(dictionaryIds)
+      .map(dictionaries => {
+        // Get the dictionaries and convert them to renderers
+        const renderers = dictColumns.reduce((acc, col) => {
+          acc[col.prop] = dictionaries[col.dictCode];
+          return acc;
+        }, {} as IRenderer);
+        return this.setRenderers(columns, renderers);
+      });
+  }
+
   private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {
     const isArray = Array.isArray(rendererFn);
     const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, /* ChangeDetectorRef, */ Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -12,7 +12,7 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
-// import { GridService } from '../../../../shared/components/grid/grid.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -52,15 +52,13 @@ export class DictComponent implements OnDestroy {
     }
   ];
 
-  columns$: Observable<IGridColumn[]> = Observable.of([
+  columns: IGridColumn[] = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE }, // 9
     { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES }, // 5
-  ]);
-
-  renderers: IRenderer = {};
+  ];
 
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
@@ -69,30 +67,27 @@ export class DictComponent implements OnDestroy {
   private viewPermissionSubscription: Subscription;
 
   constructor(
-    // private cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
-    // private gridService: GridService,
+    private gridService: GridService,
     private lookupService: LookupService,
-    // private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    // const dictionaryIds = this.columns.map(col => col.dictCode).filter(Boolean);
-    // this.dictionariesService$ = Observable.combineLatest(
-    //   this.userDictionariesService.getDictionariesAsOptions(dictionaryIds),
-    //   this.dictionariesService.state
-    // )
-    // .map(([dictionaries, dicState]) => {
-    //   // Get the dictionaries and convert them to renderers
-    //   this.columns
-    //     .filter(col => !!col.dictCode)
-    //     .forEach(col => {
-    //       this.renderers[col.prop] = dictionaries[col.dictCode];
-    //     });
-    //   this.renderers.parentCode = dicState.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
-    //   this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    // })
-    // .subscribe(() => this.cdRef.markForCheck());
+
+    this.gridService.setDictionaryRenderers(this.columns)
+      .flatMap(columns => {
+        this.columns = columns;
+        return this.dictionariesService.state;
+      })
+      .take(2)
+      .subscribe(dicState => {
+        const renderers: IRenderer = {};
+        renderers.parentCode = dicState.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
+        this.columns = this.gridService.setRenderers(this.columns, renderers);
+        this.cdRef.markForCheck();
+      });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>

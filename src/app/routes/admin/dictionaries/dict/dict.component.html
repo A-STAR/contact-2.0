@@ -38,7 +38,7 @@
 <app-grid
   selectionType="single"
   [allowDblClick]="canEdit | async"
-  [columns]="columns$ | async"
+  [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
   [emptyMessage]="emptyMessage$ | async"
   [rows]="dictionaries | async"
