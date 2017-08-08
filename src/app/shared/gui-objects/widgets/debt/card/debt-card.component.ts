@@ -7,8 +7,8 @@ import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynam
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+// import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+// import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -30,8 +30,8 @@ export class DebtCardComponent {
     private contentTabService: ContentTabService,
     private debtService: DebtService,
     private route: ActivatedRoute,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    // private userDictionariesService: UserDictionariesService,
+    // private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
       this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null)
