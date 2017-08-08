@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
@@ -32,6 +33,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
+  @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() allowDblClick = true;
   @Input() footerHeight = 50;
   @Input() columns: IGridColumn[] = [];
@@ -39,6 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() emptyMessage: string = null;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
+  @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Output() onAction: EventEmitter<any> = new EventEmitter();
@@ -64,7 +67,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   constructor(
     public settings: SettingsService,
     private translate: TranslateService,
-    private changeDetector: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.clickDebouncer = new Subject();
@@ -119,14 +122,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       if (this.emptyMessage) {
         this.messages.emptyMessage = translations[this.emptyMessage];
       }
-      this.changeDetector.markForCheck();
+      this.cdRef.markForCheck();
     });
   }
 
-  ngOnChanges(changes: any): void {
-    if (changes.emptyMessage) {
-      if (changes.emptyMessage.currentValue) {
-        this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+  ngOnChanges(changes: SimpleChanges): void {
+    const { emptyMessage, selection, rows } = changes;
+    if (emptyMessage) {
+      if (emptyMessage.currentValue) {
+        this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
       } else {
         // TODO(d.maltsev): code duplication
         const gridMessagesKey = 'grid.messages';
@@ -135,6 +139,13 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           .take(1)
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
+    }
+    if (selection) {
+      this.selected = [...selection.currentValue];
+    }
+    if (rows) {
+      // This clears the current selection, otherwise it'd stay
+      this.selected = [];
     }
   }
 
@@ -168,17 +179,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   onActivate(event: any): void {
     const { row, type } = event;
-    if (type === 'dblclick') {
-      // NOTE: workaround for rows getting unselected on dblclick
-      if (!this.selected.find(selected => selected.$$id === row.$$id)) {
-        this.selected = this.selected.concat(row);
-      }
-    }
     this.clickDebouncer.next({ type, row });
   }
 
   getRowHeight(row: any): number {
     return row.height;
+  }
+
+  clearSelection(): void {
+    this.selected = [];
   }
 
   private translateColumns(columnTranslations: object): void {
