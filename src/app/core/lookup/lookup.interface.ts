@@ -1,3 +1,15 @@
+export interface ILookupCurrency {
+  id: number;
+  code: string;
+  name: string;
+  shortName: string;
+}
+
+export interface ILookupCurrenciesResponse {
+  success: boolean;
+  currencies: Array<ILookupCurrency>;
+}
+
 export interface ILookupLanguage {
   id: number;
   name: string;
@@ -30,6 +42,7 @@ export interface ILookupRolesResponse {
 }
 
 export interface ILookupState {
+  currencies: Array<ILookupCurrency>;
   languages: Array<ILookupLanguage>;
   roles: Array<ILookupRole>;
   users: Array<ILookupUser>;

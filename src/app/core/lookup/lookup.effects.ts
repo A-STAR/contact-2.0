@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { ILookupLanguagesResponse, ILookupRolesResponse, ILookupUsersResponse } from './lookup.interface';
+import { ILookupCurrenciesResponse, ILookupLanguagesResponse, ILookupRolesResponse, ILookupUsersResponse } from './lookup.interface';
 
 import { DataService } from '../data/data.service';
 import { LookupService } from './lookup.service';
@@ -12,6 +12,18 @@ import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class LookupEffects {
+  @Effect()
+  fetchCurrencies$ = this.actions
+    .ofType(LookupService.LOOKUP_CURRENCIES_FETCH)
+    .mergeMap((action: Action) => {
+      return this.readLookupCurrencies()
+        .map(response => ({
+          type: LookupService.LOOKUP_CURRENCIES_FETCH_SUCCESS,
+          payload: { currencies: response.currencies }
+        }))
+        .catch(this.notificationService.error('errors.default.read').entity('entities.lookup.currencies.gen.plural').callback());
+    });
+
   @Effect()
   fetchLanguages$ = this.actions
     .ofType(LookupService.LOOKUP_LANGUAGES_FETCH)
@@ -53,6 +65,10 @@ export class LookupEffects {
     private dataService: DataService,
     private notificationService: NotificationsService,
   ) {}
+
+  private readLookupCurrencies(): Observable<ILookupCurrenciesResponse> {
+    return this.dataService.read('/lookup/currencies');
+  }
 
   private readLookupLanguages(): Observable<ILookupLanguagesResponse> {
     return this.dataService.read('/lookup/languages');

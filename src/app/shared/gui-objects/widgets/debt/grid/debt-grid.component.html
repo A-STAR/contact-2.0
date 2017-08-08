@@ -1,10 +1,9 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
-  *ngIf="canDisplayGrid"
   columnTranslationKey="widgets.debt"
   selectionType="single"
-  [styles]="{ height: '230px' }"
+  [styles]="{ height: '600px' }"
   [columns]="columns"
   [rows]="debts"
   (onDblClick)="onDoubleClick($event)"

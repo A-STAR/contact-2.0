@@ -1,13 +1,17 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IDebt } from '../debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtService } from '../debt.service';
+import { GridService } from '../../../../components/grid/grid.service';
+import { LookupService } from '../../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -55,11 +59,44 @@ export class DebtGridComponent {
 
   private personId = (this.route.params as any).value.id || null;
 
+  private gridSubscription: Subscription;
+
+  private renderers: IRenderer = {
+    creditTypeCode: [],
+    statusCode: [],
+    currencyId: [],
+    debtReasonCode: [],
+    creditStartDate: 'dateTimeRenderer',
+  };
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
+    private gridService: GridService,
+    private lookupService: LookupService,
     private route: ActivatedRoute,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
+        UserDictionariesService.DICTIONARY_DEBT_STATUS,
+        UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
+      ]),
+      this.lookupService.currencyOptions,
+    ).subscribe(([ dictionariesOptions, currencyOptions ]) => {
+      this.renderers = {
+        ...this.renderers,
+        creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
+        statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
+        debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
+        currencyId: [ ...currencyOptions ],
+      }
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      this.cdRef.markForCheck();
+    });
+
     this.fetch().subscribe(debts => this.debts = debts);
   }
 
@@ -77,10 +114,6 @@ export class DebtGridComponent {
 
   onEdit(debtId: number): void {
 
-  }
-
-  get canDisplayGrid(): boolean {
-    return true;
   }
 
   get selectedDebt$(): Observable<IDebt> {
