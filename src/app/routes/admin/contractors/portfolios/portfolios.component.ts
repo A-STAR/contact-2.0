@@ -13,7 +13,7 @@ import { ContentTabService } from '../../../../shared/components/content-tabstri
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
@@ -104,20 +104,15 @@ export class PortfoliosComponent implements OnDestroy {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION,
-      UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS,
-      UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE,
-    ]);
 
     this.dictionariesSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE)
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_DIRECTION),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_STAGE)
     ).subscribe(([ directionCodeOptions, statusCodeOptions, stageCodeOptions ]) => {
       this.renderers.directionCode = [].concat(directionCodeOptions);
       this.renderers.statusCode = [].concat(statusCodeOptions);

@@ -14,6 +14,7 @@ import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolio
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -88,7 +89,7 @@ export class ContractorManagersComponent implements OnDestroy {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.canViewSubscription = this.canView$.subscribe(canView => {
@@ -101,18 +102,13 @@ export class ContractorManagersComponent implements OnDestroy {
     });
 
     this.dictionariesSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER)
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER)
     ).subscribe(([ branchOptions, genderOptions ]) => {
       this.renderers.branchCode = [].concat(branchOptions);
       this.renderers.genderCode = [].concat(genderOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_BRANCHES,
-      UserDictionariesService.DICTIONARY_GENDER
-    ]);
 
     this.managersSubscription = this.contractorsAndPortfoliosService.selectedManager$.subscribe(manager => {
       this.selectedManager = manager;

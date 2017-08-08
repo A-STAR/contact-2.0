@@ -32,18 +32,17 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered"
-  [items]="toolbarItems">
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
 </app-toolbar-2>
 
 <app-grid
   selectionType="single"
-  [emptyMessage]="emptyMessage$ | async"
-  [styles]="{height: '300px'}"
+  [allowDblClick]="canEdit | async"
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="dictionaries | async"
-  [allowDblClick]="canEdit | async"
+  [styles]="{height: '300px'}"
   (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

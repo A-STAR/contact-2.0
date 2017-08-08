@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
 import { IOrganization } from '../../organizations.interface';
@@ -13,15 +13,13 @@ import { EntityBaseComponent } from '../../../../../shared/components/entity/edi
   templateUrl: './organization-edit.component.html'
 })
 export class OrganizationEditComponent extends EntityBaseComponent<IOrganization> implements OnInit {
-  constructor(private userDictionariesService: UserDictionariesService) {
+  constructor(private userDictionariesService: UserDictionaries2Service) {
     super();
   }
 
   ngOnInit(): void {
-    this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES)
+    this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_BRANCHES)
       .subscribe(options => this.controls = this.buildControls(options));
-
-    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_BRANCHES ]);
   }
 
   get title(): string {

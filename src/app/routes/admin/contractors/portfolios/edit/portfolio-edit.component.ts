@@ -10,7 +10,7 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -35,7 +35,7 @@ export class PortfolioEditComponent {
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionaries2Service,
     private valueConverterService: ValueConverterService,
   ) {
     // TODO(d.maltsev): stronger typing
@@ -48,9 +48,9 @@ export class PortfolioEditComponent {
     }
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_DIRECTION),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_STAGE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_PORTFOLIO_STATUS),
       this.contractorId && this.portfolioId ?
         this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS).map(action => action.payload.portfolio) :
         Observable.of(null)
@@ -66,12 +66,6 @@ export class PortfolioEditComponent {
         endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
       } : null;
     });
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION,
-      UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE,
-      UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS,
-    ]);
 
     this.actions.ofType(
       ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS,

@@ -31,19 +31,19 @@ export class UserPermissionsService {
   }
 
   has(permissionName: string): Observable<boolean> {
-    return this.getPermissions().map(permissions => this.userHasPermission(permissions, permissionName));
+    return this.getPermissions().map(permissions => this.userHasPermission(permissions, permissionName)).distinctUntilChanged();
   }
 
   hasOne(permissionNames: Array<string>): Observable<boolean> {
     return this.getPermissions().map(permissions =>
       permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(permissions, permissionName), false)
-    );
+    ).distinctUntilChanged();
   }
 
   hasAll(permissionNames: Array<string>): Observable<boolean> {
     return this.getPermissions().map(permissions =>
       permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(permissions, permissionName), true)
-    );
+    ).distinctUntilChanged();
   }
 
   private userHasPermission(permissions: IUserPermissions, permissionName: string): boolean {

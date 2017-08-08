@@ -8,6 +8,7 @@ export type TRendererType = Function | Array<any>
 
 export interface IGridColumn {
   disabled?: boolean;
+  dictCode?: number;
   localized?: boolean;
   maxWidth?: number;
   minWidth?: number;

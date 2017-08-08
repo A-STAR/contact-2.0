@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angu
 
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form-control.interface';
 
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 import { DynamicFormComponent } from '../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -23,11 +23,11 @@ export class BlockDialogComponent implements OnInit {
   controls: Array<IDynamicFormControl> = null;
   data: any;
 
-  constructor(private userDictionariesService: UserDictionariesService) {}
+  constructor(private userDictionariesService: UserDictionaries2Service) {}
 
   ngOnInit(): void {
     this.userDictionariesService
-      .getDictionaryOptions(this.dictionaryId)
+      .getDictionaryAsOptions(this.dictionaryId)
       .take(1)
       .subscribe(options => {
         this.controls = [
@@ -37,8 +37,6 @@ export class BlockDialogComponent implements OnInit {
           blockReasonCode: options[0].value
         };
       });
-
-    this.userDictionariesService.preload([ this.dictionaryId ]);
   }
 
   onCloseHandle(): void {

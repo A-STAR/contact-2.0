@@ -88,7 +88,7 @@ export class UserDictionariesService {
 
     return Promise.all(allDictionaries).then(dictionaries => {
       return dictionaries.reduce((acc, dictionary) => {
-            acc[dictionary.id] = dictionary.terms;
+            acc[dictionary.id] = [...dictionary.terms];
             return acc;
           }, {});
     });

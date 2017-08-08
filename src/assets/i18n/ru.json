@@ -34,7 +34,7 @@
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Словари",
-        "BANKS": "Клиенты и портфели",
+        "PORTFOLIOS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
         "CONTRACTOR_MANAGER": "Менеджер контрагента",
@@ -289,7 +289,8 @@
       "code": "Код",
       "name": "Название",
       "parentCode": "Родительский словарь",
-      "typeCode": "Тип словаря"
+      "typeCode": "Тип словаря",
+      "termTypeCode": "Тип терминов"
     },
     "remove": {
       "title": "Удаление словаря",
@@ -695,6 +696,7 @@
   "widgets": {
     "address": {
       "card": {
+        "fullAddress": "Адрес",
         "postalCode": "Индекс",
         "country": "Страна",
         "region": "Регион",

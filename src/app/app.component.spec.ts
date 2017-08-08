@@ -1,8 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpModule, Http } from '@angular/http';
-
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { createTranslateLoader } from './app.module';
 
 import { SettingsService } from './core/settings/settings.service';
@@ -13,14 +12,14 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule,
+        HttpClientModule,
         RouterTestingModule.withRoutes([]),
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
             useFactory: createTranslateLoader,
             deps: [
-              Http
+              HttpClient
             ]
           }
         })
