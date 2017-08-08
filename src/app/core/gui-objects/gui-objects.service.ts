@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { NavigationStart, NavigationEnd, Router } from '@angular/router';
-import { Headers } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
 import { IGuiObjectsState, IMenuItem, IGuiObject } from './gui-objects.interface';
-
-import { DataService } from '../data/data.service';
 
 import { menuConfig } from '../../routes/menu-config';
 
@@ -17,21 +13,8 @@ export class GuiObjectsService {
   static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
 
   private _guiObjects: Array<IGuiObject>;
-  private lastNavigationStartTimestamp: number = null;
 
-  constructor(
-    private dataService: DataService,
-    private router: Router,
-    private store: Store<IAppState>,
-  ) {
-    this.onSectionLoadStart();
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.onSectionLoadStart();
-      } else if (event instanceof NavigationEnd) {
-        this.onSectionLoadEnd(event);
-      }
-    });
+  constructor(private store: Store<IAppState>) {
     this.state$.subscribe(state => this._guiObjects = state.data);
   }
 
@@ -62,33 +45,6 @@ export class GuiObjectsService {
       ...menuConfig[guiObject.name],
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
-  }
-
-  private onSectionLoadStart(): void {
-    this.lastNavigationStartTimestamp = Date.now();
-  }
-
-  private onSectionLoadEnd(event: NavigationEnd): void {
-    const delay = Date.now() - this.lastNavigationStartTimestamp;
-    const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
-    if (name) {
-      this.logAction(name, delay);
-    }
-  }
-
-  private logAction(name: string, delay: number): void {
-    this.menuItemIds
-      .take(1)
-      .subscribe(menuItemIds => {
-        if (menuItemIds[name] === 0) {
-          return;
-        }
-        const data = { typeCode: 1, duration: delay };
-        const headers = new Headers({
-          'X-Gui-Object': menuItemIds[name]
-        });
-        this.dataService.create('/actions', {}, data, { headers }).subscribe();
-      });
   }
 
   private flattenGuiObjectIds(appGuiObjects: Array<IGuiObject>): any {

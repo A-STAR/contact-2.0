@@ -1,18 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 
-import { ITab } from './content-tab.interface';
+import { ITab, ITabEvent, TabEventStageEnum } from './content-tab.interface';
+
+import { ActionsLogService } from '../../../../core/actions-log/actions-log.service';
+import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
+
+import { menuConfig } from '../../../../routes/menu-config';
 
 @Injectable()
 export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
+  private lastTabEvent: ITabEvent = null;
 
   constructor(
+    private actionsLogService: ActionsLogService,
+    private guiObjectsService: GuiObjectsService,
     private location: Location,
     private router: Router,
-  ) {}
+  ) {
+    this.onSectionLoadStart();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.onSectionLoadStart();
+      } else if (event instanceof NavigationEnd) {
+        this.onSectionLoadEnd(event);
+      }
+    });
+  }
 
   get tabs(): ITab[] {
     return this._tabs;
@@ -27,6 +44,7 @@ export class ContentTabService {
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);
+      this.lastTabEvent.stage = TabEventStageEnum.TAB_OPEN;
     } else {
       this.setActiveIndex(found);
     }
@@ -72,5 +90,32 @@ export class ContentTabService {
     const i = this._activeIndex;
     this.location.back();
     this.removeTab(i);
+  }
+
+  private onSectionLoadStart(): void {
+    this.lastTabEvent = {
+      timestamp: Date.now(),
+      stage: TabEventStageEnum.NAVIGATION_START
+    }
+  }
+
+  private onSectionLoadEnd(event: NavigationEnd): void {
+    if (this.lastTabEvent.stage === TabEventStageEnum.TAB_OPEN) {
+      const delay = Date.now() - this.lastTabEvent.timestamp;
+      const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
+      if (name) {
+        this.logAction(name, delay);
+      }
+    }
+  }
+
+  private logAction(name: string, delay: number): void {
+    this.guiObjectsService.menuItemIds
+      .take(1)
+      .subscribe(menuItemIds => {
+        if (menuItemIds[name] > 0) {
+          this.actionsLogService.log(name, delay, menuItemIds[name]);
+        }
+      });
   }
 }
