@@ -13,7 +13,7 @@
   actionTranslationKey="widgets.phone.dialogs.unblock.confirmMessage"
   actionMessage="default.yesNo.Yes"
   actionMode="success"
-  [messageParams]="selectedAddress$ | async"
+  [messageParams]="selectedPhone$ | async"
   (action)="onUnblockDialogSubmit($event)"
   (cancel)="onDialogClose()">
 </app-dialog-action>
@@ -24,7 +24,7 @@
   actionTranslationKey="widgets.phone.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedAddress$ | async"
+  [messageParams]="selectedPhone$ | async"
   (action)="onRemoveDialogSubmit($event)"
   (cancel)="onDialogClose()">
 </app-dialog-action>
