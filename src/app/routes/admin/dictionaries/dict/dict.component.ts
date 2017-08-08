@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, /* ChangeDetectorRef, */ Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -12,7 +12,7 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
+// import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -69,11 +69,11 @@ export class DictComponent implements OnDestroy {
   private viewPermissionSubscription: Subscription;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
+    // private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
-    private gridService: GridService,
+    // private gridService: GridService,
     private lookupService: LookupService,
-    private userDictionariesService: UserDictionariesService,
+    // private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
