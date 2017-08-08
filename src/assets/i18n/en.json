@@ -482,7 +482,7 @@
           "verification": "Верификация контактных данных"
         },
         "grid": {
-          "phoneNumber": "Number",
+          "phone": "Number",
           "typeCode": "Type",
           "statusCode": "Status",
           "isBlocked": "Blocked",
