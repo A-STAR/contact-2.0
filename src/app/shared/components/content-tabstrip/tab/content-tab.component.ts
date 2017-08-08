@@ -18,7 +18,7 @@ import { ITab } from './content-tab.interface';
 })
 export class ContentTabComponent implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('target', {read: ViewContainerRef}) target;
-  @Input() tab: ITab;
+  @Input() tab = null as ITab;
   compRef: ComponentRef<any>;
   private isViewInitialized = false;
 

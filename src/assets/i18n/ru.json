@@ -770,6 +770,23 @@
           "confirmMessage": "Вы действительно хотите удалить телефон {{ phone }}?"
         }
       }
+    },
+    "debt": {
+      "grid": {
+        "id": "Ид долга",
+        "creditTypeCode": "Тип продукта",
+        "creditName": "Название продукта",
+        "contract": "Номер договора",
+        "statusCode": "Статус",
+        "creditStartDate": "Дата выдачи",
+        "currencyId": "Валюта",
+        "debtSum": "Сумма просроченного долга",
+        "totalSum": "Общая сумма кредита",
+        "dpd": "Кол-во дней просрочки",
+        "portfolio": "Портфель",
+        "bank": "Банк",
+        "debtReasonCode": "Причина"
+      }
     }
   },
   "entities": {

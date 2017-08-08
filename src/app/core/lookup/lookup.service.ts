@@ -4,19 +4,24 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
-import { ILookupState, ILookupLanguage, ILookupRole, ILookupUser } from './lookup.interface';
+import { ILookupState, ILookupCurrency, ILookupLanguage, ILookupRole, ILookupUser } from './lookup.interface';
 import { IOption } from '../converter/value-converter.interface';
 
 import { ValueConverterService } from '../converter/value-converter.service';
 
 @Injectable()
 export class LookupService {
-  static LOOKUP_LANGUAGES_FETCH         = 'LOOKUP_LANGUAGES_FETCH';
-  static LOOKUP_LANGUAGES_FETCH_SUCCESS = 'LOOKUP_LANGUAGES_FETCH_SUCCESS';
-  static LOOKUP_ROLES_FETCH             = 'LOOKUP_ROLES_FETCH';
-  static LOOKUP_ROLES_FETCH_SUCCESS     = 'LOOKUP_ROLES_FETCH_SUCCESS';
-  static LOOKUP_USERS_FETCH             = 'LOOKUP_USERS_FETCH';
-  static LOOKUP_USERS_FETCH_SUCCESS     = 'LOOKUP_USERS_FETCH_SUCCESS';
+  static LOOKUP_LANGUAGES_FETCH          = 'LOOKUP_LANGUAGES_FETCH';
+  static LOOKUP_LANGUAGES_FETCH_SUCCESS  = 'LOOKUP_LANGUAGES_FETCH_SUCCESS';
+  static LOOKUP_CURRENCIES_FETCH         = 'LOOKUP_CURRENCIES_FETCH';
+  static LOOKUP_CURRENCIES_FETCH_SUCCESS = 'LOOKUP_CURRENCIES_FETCH_SUCCESS';
+  static LOOKUP_ROLES_FETCH              = 'LOOKUP_ROLES_FETCH';
+  static LOOKUP_ROLES_FETCH_SUCCESS      = 'LOOKUP_ROLES_FETCH_SUCCESS';
+  static LOOKUP_USERS_FETCH              = 'LOOKUP_USERS_FETCH';
+  static LOOKUP_USERS_FETCH_SUCCESS      = 'LOOKUP_USERS_FETCH_SUCCESS';
+
+  private _currencies: Array<ILookupCurrency>;
+  private _currenciesRequestSent = false;
 
   private _languages: Array<ILookupLanguage>;
   private _languagesRequestSent = false;
@@ -32,10 +37,16 @@ export class LookupService {
     private valueConverterService: ValueConverterService,
   ) {
     this.state.subscribe(state => {
+      this._currencies = state.currencies;
       this._languages = state.languages;
       this._roles = state.roles;
       this._users = state.users;
     });
+  }
+
+  get currencies(): Observable<Array<ILookupCurrency>> {
+    return this.getCurrencies()
+      .distinctUntilChanged();
   }
 
   get languages(): Observable<Array<ILookupLanguage>> {
@@ -50,6 +61,12 @@ export class LookupService {
 
   get users(): Observable<Array<ILookupUser>> {
     return this.getUsers()
+      .distinctUntilChanged();
+  }
+
+  get currencyOptions(): Observable<Array<IOption>> {
+    return this.getCurrencies()
+      .map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })))
       .distinctUntilChanged();
   }
 
@@ -71,6 +88,10 @@ export class LookupService {
       .distinctUntilChanged();
   }
 
+  createRefreshCurrenciesAction(): Action {
+    return { type: LookupService.LOOKUP_CURRENCIES_FETCH };
+  }
+
   createRefreshLanguagesAction(): Action {
     return { type: LookupService.LOOKUP_LANGUAGES_FETCH };
   }
@@ -81,6 +102,11 @@ export class LookupService {
 
   createRefreshUsersAction(): Action {
     return { type: LookupService.LOOKUP_USERS_FETCH };
+  }
+
+  refreshCurrencies(): void {
+    const action = this.createRefreshCurrenciesAction();
+    this.store.dispatch(action);
   }
 
   refreshLanguages(): void {
@@ -96,6 +122,14 @@ export class LookupService {
   refreshUsers(): void {
     const action = this.createRefreshUsersAction();
     this.store.dispatch(action);
+  }
+
+  private getCurrencies(): Observable<Array<ILookupCurrency>> {
+    if (!this._currencies && !this._currenciesRequestSent) {
+      this._currenciesRequestSent = true;
+      this.refreshCurrencies();
+    }
+    return this.state.map(state => state.currencies).filter(Boolean).distinctUntilChanged();
   }
 
   private getLanguages(): Observable<Array<ILookupRole>> {
