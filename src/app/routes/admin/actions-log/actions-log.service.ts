@@ -56,27 +56,9 @@ export class ActionsLogService {
     private store: Store<IAppState>,
   ) {}
 
-  get actionsLogCurrentPage(): Observable<number> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.currentPage)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogCurrentPageSize(): Observable<number> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.pageSize)
-      .distinctUntilChanged();
-  }
-
   get actionsLogSorters(): Observable<IAGridSortModel[]> {
     return this.store
       .select(state => state.actionsLog.actionsLogGrid.sorters)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogSelected(): Observable<IDictionaryItem[]> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.selectedRows)
       .distinctUntilChanged();
   }
 
@@ -118,6 +100,13 @@ export class ActionsLogService {
   fetch(filters: FilterObject): void {
     this.store.dispatch({
       payload: { filters },
+      type: ActionsLogService.ACTIONS_LOG_FETCH,
+    });
+  }
+
+  getPage(filters: FilterObject, pageNo: number = 1): void {
+    this.store.dispatch({
+      payload: { filters, currentPage: pageNo },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }

@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 
-import { IAGridColumn, IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridColumn, IAGridEventPayload, IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
@@ -40,9 +40,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   employeesRows: Observable<IEmployee[]>;
   // grid
   actionsLogData: Observable<IActionsLogData>;
-  actionsLogCurrentPage: Observable<number>;
-  actionsLogCurrentPageSize: Observable<number>;
-  actionsLogSelected: Observable<IDictionaryItem[]>;
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
 
@@ -64,9 +61,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.employeesRows = this.actionsLogService.employeesRows;
     // grid
     this.actionsLogData = this.actionsLogService.actionsLogRows;
-    this.actionsLogCurrentPage = this.actionsLogService.actionsLogCurrentPage;
-    this.actionsLogCurrentPageSize = this.actionsLogService.actionsLogCurrentPageSize;
-    this.actionsLogSelected = this.actionsLogService.actionsLogSelected;
     this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
   }
 
@@ -100,25 +94,29 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   onFilter(gridFilters: any): void {
     const filters = this.getCombinedFilters();
-    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    // this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
     this.actionsLogService.filter(filters);
+  }
+
+  onPage(nextPage: number): void {
+    console.log('nextPage', nextPage);
   }
 
   onRequestData(payload: IAGridEventPayload): void {
     const filters = this.getCombinedFilters();
-    this.store.dispatch(payload);
+    // this.store.dispatch(payload);
     if (this.grid.rowCount) {
       this.actionsLogService.fetch(filters);
     }
   }
 
-  onSelect(payload: IAGridEventPayload): void {
-    this.store.dispatch(payload);
+  onSelect(selected: IAGridSelected): void {
+    // this.store.dispatch(selected);
   }
 
   doSearch(): void {
     const filters = this.getCombinedFilters();
-    this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
+    // this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
     this.actionsLogService.filter(filters);
   }
 

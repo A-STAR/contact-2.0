@@ -71,7 +71,6 @@ export class DictComponent implements OnDestroy {
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private lookupService: LookupService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
