@@ -1,0 +1,13 @@
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  *ngIf="canDisplayGrid"
+  columnTranslationKey="debtor.information.document"
+  selectionType="single"
+  [styles]="{height: '230px'}"
+  [columns]="columns"
+  [rowClass]="getRowClass()"
+  [rows]="documents"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>
