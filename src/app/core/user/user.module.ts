@@ -6,7 +6,6 @@ import { UserConstantsEffects } from './constants/user-constants.effects';
 import { UserConstantsService } from './constants/user-constants.service';
 import { UserDictionariesEffects } from './dictionaries/user-dictionaries.effects';
 import { UserDictionariesService } from './dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from './dictionaries/user-dictionaries-2.service';
 import { UserPermissionsEffects } from './permissions/user-permissions.effects';
 import { UserPermissionsService } from './permissions/user-permissions.service';
 
@@ -20,7 +19,6 @@ import { UserPermissionsService } from './permissions/user-permissions.service';
   providers: [
     UserConstantsService,
     UserDictionariesService,
-    UserDictionaries2Service,
     UserPermissionsService,
   ]
 })

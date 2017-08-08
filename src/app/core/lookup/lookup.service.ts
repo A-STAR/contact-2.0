@@ -67,7 +67,7 @@ export class LookupService {
 
   get userOptions(): Observable<Array<IOption>> {
     return this.getUsers()
-      .map(users => this.valueConverterService.valuesToOptions(users))
+      .map(users => users.map((user: any) => ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })))
       .distinctUntilChanged();
   }
 

@@ -16,7 +16,6 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 
 @Component({
   selector: 'app-dict',
@@ -75,11 +74,10 @@ export class DictComponent implements OnDestroy {
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private lookupService: LookupService,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-
     const dictionaryIds = this.columns.map(col => col.dictCode).filter(Boolean);
     this.dictionariesService$ = Observable.combineLatest(
       this.userDictionariesService.getDictionaries(dictionaryIds),

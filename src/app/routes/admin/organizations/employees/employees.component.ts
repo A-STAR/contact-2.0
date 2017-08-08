@@ -10,7 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
-import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
@@ -90,11 +90,11 @@ export class EmployeesComponent implements OnDestroy {
     private gridService: GridService,
     private organizationsService: OrganizationsService,
     private translateService: TranslateService,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_EMPLOYEE_ROLE)
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE)
       .take(1)
       .subscribe(employeeRoles => {
         this.renderers.roleCode = employeeRoles;
@@ -107,7 +107,7 @@ export class EmployeesComponent implements OnDestroy {
         this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
       });
 
-    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_EMPLOYEE_ROLE);
+    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
 
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 

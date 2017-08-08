@@ -118,16 +118,18 @@ export class GridService {
     };
 
     return this.metadataService.getMetadata(metadataKey)
-        .take(1)
-        .toPromise()
-        .then(metadata => {
-          const dictionaryIds = metadata
-            .filter(column => !!column.dictCode)
-            .map(column => column.dictCode);
-
-          return Promise.all([metadata, this.userDictionariesService.getDictionaries(dictionaryIds)]);
-        })
-        .then(mapColumns);
+      .take(1)
+      .toPromise()
+      .then(metadata => {
+        const dictionaryIds = metadata
+          .filter(column => !!column.dictCode)
+          .map(column => column.dictCode);
+        return Promise.all([
+          metadata,
+          this.userDictionariesService.getDictionaries(dictionaryIds).take(1).toPromise()
+        ]);
+      })
+      .then(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {

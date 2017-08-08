@@ -7,7 +7,7 @@ import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/gr
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { UserDictionaries2Service } from '../../../../../core/user/dictionaries/user-dictionaries-2.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-portfolio-move',
@@ -37,9 +37,9 @@ export class PortfolioMoveComponent implements OnDestroy {
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
   ) {
-    this.dictionariesSubscription = this.userDictionariesService.getDictionaryAsOptions(UserDictionaries2Service.DICTIONARY_CONTRACTOR_TYPE)
+    this.dictionariesSubscription = this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE)
       .subscribe(options => {
         this.renderers.typeCode = [].concat(options);
         this.columns = this.gridService.setRenderers(this.columns, this.renderers);

@@ -14,7 +14,6 @@ import { GridService } from '../../../components/grid/grid.service';
 import { IdentityService } from './identity.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserDictionaries2Service } from '../../../../core/user/dictionaries/user-dictionaries-2.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../components/grid/grid.component';
@@ -84,7 +83,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
     private identityService: IdentityService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userDictionariesService: UserDictionaries2Service,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
