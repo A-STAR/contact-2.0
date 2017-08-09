@@ -5,7 +5,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { Store } from '@ngrx/store';
 
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 
