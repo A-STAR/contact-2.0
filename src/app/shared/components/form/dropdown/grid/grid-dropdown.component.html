@@ -1,6 +1,14 @@
-<div>
-  <input type="text" class="form-control">
+<app-dropdown>
+  <ng-container trigger>
+    <input type="text" class="form-control">
+  </ng-container>
   <div>
-    123
+    <app-grid
+      selectionType="single"
+      [columns]="columns"
+      [rows]="rows"
+      [styles]="{height: '200px'}"
+      (onDblClick)="onDoubleClick($event)">
+    </app-grid>
   </div>
-</div>
+</app-dropdown>

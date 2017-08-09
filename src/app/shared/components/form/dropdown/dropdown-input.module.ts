@@ -1,20 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BasicDropdownComponent } from './basic/basic-dropdown.component';
-import { GridDropdownComponent } from './grid/grid-dropdown.component';
+import { GridDropdownModule } from './grid/grid-dropdown.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    GridDropdownModule,
   ],
   exports: [
-    BasicDropdownComponent,
-    GridDropdownComponent,
-  ],
-  declarations: [
-    BasicDropdownComponent,
-    GridDropdownComponent,
-  ],
+    GridDropdownModule,
+  ]
 })
 export class DropdownInputModule { }
