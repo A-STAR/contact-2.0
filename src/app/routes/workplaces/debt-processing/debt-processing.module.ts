@@ -12,6 +12,7 @@ import { DebtProcessingComponent } from './debt-processing.component';
 
 import { DebtorComponent } from './debtor/debtor.component';
 import { DebtorAddressComponent } from './debtor/address/address.component';
+import { DebtorDebtComponent } from './debtor/debt/debt.component';
 import { DebtorEmailComponent } from './debtor/email/email.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 
@@ -23,7 +24,9 @@ const routes: Routes = [
   { path: ':id/email/create', component: DebtorEmailComponent },
   { path: ':id/email/:emailId', component: DebtorEmailComponent },
   { path: ':id/phone/create', component: DebtorPhoneComponent },
-  { path: ':id/phone/:phoneId', component: DebtorPhoneComponent }
+  { path: ':id/phone/:phoneId', component: DebtorPhoneComponent },
+  { path: ':id/debt/:debtId', component: DebtorDebtComponent },
+  { path: ':id/debt/:debtId', component: DebtorDebtComponent }
 ];
 
 @NgModule({

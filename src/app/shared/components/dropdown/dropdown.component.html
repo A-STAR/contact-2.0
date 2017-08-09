@@ -1,7 +1,9 @@
-<div #trigger (click)="toggle()">
-  <ng-content select="[trigger]"></ng-content>
-</div>
+<div class="dropdown-container">
+  <div #trigger (click)="toggle()">
+    <ng-content select="[trigger]"></ng-content>
+  </div>
 
-<div *ngIf="isOpen" [@isOpen] class="dropdown right">
-  <ng-content></ng-content>
+  <div *ngIf="isOpen" [@isOpen] [ngClass]="ngClass">
+    <ng-content></ng-content>
+  </div>
 </div>

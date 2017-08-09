@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -75,6 +75,7 @@ export class DebtGridComponent {
     private gridService: GridService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -101,19 +102,19 @@ export class DebtGridComponent {
   }
 
   onDoubleClick(debt: IDebt): void {
-
+    this.onEdit(debt.id);
   }
 
   onSelect(debt: IDebt): void {
 
   }
 
-  onAdd(): void {
-
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/debt/create` ]);
   }
 
-  onEdit(debtId: number): void {
-
+  private onEdit(debtId: number): void {
+    this.router.navigate([ `${this.router.url}/debt/${debtId}` ]);
   }
 
   get selectedDebt$(): Observable<IDebt> {
