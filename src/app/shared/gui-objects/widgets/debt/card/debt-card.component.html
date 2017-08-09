@@ -8,3 +8,10 @@
 </div>
 
 <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+
+<app-grid
+  selectionType="single"
+  [styles]="{ height: '200px' }"
+  [columns]="componentsColumns"
+  [rows]="componentsRows">
+</app-grid>

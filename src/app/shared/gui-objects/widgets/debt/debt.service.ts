@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { IDebt } from './debt.interface';
+
+import { IDebt, IDebtComponent } from './debt.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -30,5 +31,12 @@ export class DebtService {
 
   update(personId: number, debtId: number, debt: IDebt): Observable<void> {
     return Observable.of(null);
+  }
+
+  fetchComponents(debtId: number): Observable<Array<IDebtComponent>> {
+    return this.dataService
+      .read('/debts/{debtId}/components', { debtId })
+      .map(response => response.components)
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.debtComponents.gen.plural').dispatchCallback());
   }
 }

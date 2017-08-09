@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { GridModule } from '../../../../components/grid/grid.module';
 
 import { DebtCardComponent } from './debt-card.component';
 
@@ -10,6 +11,7 @@ import { DebtCardComponent } from './debt-card.component';
   imports: [
     CommonModule,
     DynamicFormModule,
+    GridModule,
     TranslateModule,
   ],
   exports: [

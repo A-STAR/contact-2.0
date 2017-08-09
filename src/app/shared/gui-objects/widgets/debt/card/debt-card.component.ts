@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
+import { IDebt, IDebtComponent } from '../debt.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 import { IGridColumn } from '../../../../components/grid/grid.interface';
 import { ILookupPortfolio } from '../../../../../core/lookup/lookup.interface';
@@ -29,7 +30,14 @@ export class DebtCardComponent {
   private debtId = (this.route.params as any).value.debtId || null;
 
   controls: Array<IDynamicFormItem> = null;
-  debt: any;
+  debt: IDebt;
+
+  componentsColumns: Array<IGridColumn> = [
+    { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
+    { prop: 'sum', minWidth: 150, maxWidth: 200 },
+    { prop: 'currencyId', minWidth: 150, maxWidth: 200 },
+  ];
+  componentsRows: Array<IDebtComponent> = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -114,6 +122,11 @@ export class DebtCardComponent {
         creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
         startDate: this.valueConverterService.fromISO(debt.startDate as string),
       };
+      this.cdRef.markForCheck();
+    });
+
+    this.debtService.fetchComponents(this.debtId).subscribe(components => {
+      this.componentsRows = components;
       this.cdRef.markForCheck();
     });
   }
