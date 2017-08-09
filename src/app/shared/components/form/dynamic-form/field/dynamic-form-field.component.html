@@ -131,7 +131,7 @@
       [columns]="control.gridColumns"
       [rows]="control.gridRows"
       [valueGetter]="control.gridValueGetter"
-      (onSelect)="control.gridOnSelect ? control.gridOnSelect($event) : null">
+      (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
   </ng-container>
 

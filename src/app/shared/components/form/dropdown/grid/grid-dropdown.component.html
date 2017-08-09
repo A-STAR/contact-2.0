@@ -8,12 +8,17 @@
   </ng-container>
   <div>
     <app-grid
-      selectionType="single"
       [columns]="columns"
       [footerHeight]="false"
       [rows]="rows"
+      [selectionType]="null"
       [styles]="{ height: '200px', border: 'none' }"
-      (onDblClick)="onDoubleClick($event)">
+      (onSelect)="onSelect($event)">
     </app-grid>
+    <div class="panel-footer text-right">
+      <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
+        {{ 'default.buttons.clear' | translate }}
+      </button>
+    </div>
   </div>
 </app-dropdown>

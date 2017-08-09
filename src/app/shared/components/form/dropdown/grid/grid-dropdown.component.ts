@@ -24,7 +24,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() rows: Array<T>;
   @Input() valueGetter: (row: T) => string = () => null;
 
-  @Output() onSelect = new EventEmitter<T>();
+  @Output() select = new EventEmitter<T>();
 
   @ViewChild('dropdown') dropdown: DropdownComponent;
 
@@ -54,12 +54,20 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this._isDisabled = isDisabled;
   }
 
-  onDoubleClick(row: T): void {
-    const newValue = this.valueGetter(row);
+  onSelect(row: T): void {
+    this.setValue(row);
+  }
+
+  onClearClick(): void {
+    this.setValue(null);
+  }
+
+  private setValue(row: T): void {
+    const newValue = row ? this.valueGetter(row) : null;
     this._value = newValue;
     this.propagateChange(newValue);
     this.dropdown.close();
-    this.onSelect.emit(row);
+    this.select.emit(row);
   }
 
   private propagateChange: Function = () => {};
