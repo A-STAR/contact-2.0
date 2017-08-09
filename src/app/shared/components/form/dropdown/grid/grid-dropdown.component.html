@@ -1,6 +1,9 @@
 <app-dropdown>
   <ng-container trigger>
-    <input type="text" class="form-control">
+    <input
+      type="text"
+      class="form-control"
+      [ngModel]="value">
   </ng-container>
   <div>
     <app-grid

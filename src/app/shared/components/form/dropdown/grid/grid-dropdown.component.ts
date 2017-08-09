@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../../grid/grid.interface';
@@ -16,17 +16,12 @@ import { IGridColumn } from '../../../grid/grid.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridDropdownComponent<T> implements ControlValueAccessor {
+  @Input() columns: Array<IGridColumn>;
+  @Input() rows: Array<T>;
+  @Input() valueGetter: (row: T) => string = () => null;
+
   private _value: string;
   private _isDisabled = false;
-
-  columns: Array<IGridColumn> = [
-    { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
-    { prop: 'name', minWidth: 150, maxWidth: 350 },
-    { prop: 'value', minWidth: 100, maxWidth: 150, localized: true },
-    { prop: 'dsc', minWidth: 200 },
-  ];
-
-  rows: Array<T> = [];
 
   get value(): string {
     return this._value;
@@ -52,7 +47,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   }
 
   onDoubleClick(row: T): void {
-    console.log('click!', row);
+    this._value = this.valueGetter(row);
   }
 
   private propagateChange: Function = () => {};

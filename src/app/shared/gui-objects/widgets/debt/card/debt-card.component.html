@@ -7,6 +7,6 @@
   </button>
 </div>
 
-<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+<app-grid-dropdown [columns]="columns" [rows]="rows" [valueGetter]="valueGetter"></app-grid-dropdown>
 
-<app-grid-dropdown></app-grid-dropdown>
+<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>

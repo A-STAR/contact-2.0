@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IGridColumn } from '../../../../components/grid/grid.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
@@ -25,6 +26,15 @@ export class DebtCardComponent {
 
   controls: Array<IDynamicFormItem> = null;
   debt: any;
+
+  columns: Array<IGridColumn> = [
+    { prop: 'name', minWidth: 100 },
+    { prop: 'value', minWidth: 100 },
+  ];
+
+  rows = [
+    { name: 'foo', value: 'bar' }
+  ];
 
   constructor(
     private contentTabService: ContentTabService,
@@ -74,7 +84,9 @@ export class DebtCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  valueGetter = row => row.value;
+
+  onSubmit(): void {
     const { value } = this.form;
     const data = {
       ...value,
@@ -88,11 +100,11 @@ export class DebtCardComponent {
     action.subscribe(() => this.onBack());
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }
