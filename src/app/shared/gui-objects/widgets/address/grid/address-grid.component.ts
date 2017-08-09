@@ -118,7 +118,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
-        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
 
       this.columns = this.gridService.setRenderers(columns, this.renderers);
@@ -173,10 +173,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.block(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.block(18, this.id, this.selectedAddressId$.value, blockReasonCode).subscribe(() => this.onSubmitSuccess());
   }
 
-  onUnblockDialogSubmit(blockReasonCode: number): void {
+  onUnblockDialogSubmit(): void {
     this.addressService.unblock(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 

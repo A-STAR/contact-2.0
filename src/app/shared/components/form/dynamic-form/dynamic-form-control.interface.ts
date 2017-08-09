@@ -1,7 +1,9 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
-import { ISelectionAction } from '../select/select-interfaces';
+import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
+import { ISelectionAction } from '../select/select-interfaces';
+
 
 export interface IValidationMessages {
   [key: string]: string;
@@ -40,6 +42,11 @@ export interface IDynamicFormControl {
   height?: number;
   // options for dialog input
   action?: () => void;
+  // options for grid select
+  gridColumns?: Array<IGridColumn>;
+  gridRows?: Array<any>;
+  gridValueGetter?: Function;
+  gridOnSelect?: Function;
 }
 
 export type ControlTypes = 'number'
@@ -53,7 +60,8 @@ export type ControlTypes = 'number'
   | 'checkbox'
   | 'multiselect'
   | 'image'
-  | 'dialog';
+  | 'dialog'
+  | 'gridselect';
 
 export interface IValue {
   [key: string]: any;

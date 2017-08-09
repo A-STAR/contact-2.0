@@ -63,7 +63,6 @@ export class DictComponent implements OnDestroy {
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private dictionariesService$: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -71,6 +70,7 @@ export class DictComponent implements OnDestroy {
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private lookupService: LookupService,
+    // private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
@@ -97,7 +97,6 @@ export class DictComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dictionariesService$.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 

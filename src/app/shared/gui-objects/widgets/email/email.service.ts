@@ -39,8 +39,8 @@ export class EmailService {
       .catch(this.notificationsService.error('errors.default.update').entity('entities.emails.gen.singular').dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, emailId: number): Observable<void> {
-    return this.update(entityType, entityId, emailId, { isBlocked: 1 });
+  block(entityType: number, entityId: number, emailId: number, blockReasonCode: number): Observable<void> {
+    return this.update(entityType, entityId, emailId, { isBlocked: 1, blockReasonCode });
   }
 
   unblock(entityType: number, entityId: number, emailId: number): Observable<void> {
