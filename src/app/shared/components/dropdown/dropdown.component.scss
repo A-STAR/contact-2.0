@@ -1,3 +1,5 @@
+@import "../../styles/app/variables";
+
 $border-color: #d5d5d5;
 $arrow-width: 8px;
 $arrow-margin: 20px;
@@ -6,45 +8,63 @@ $arrow-margin: 20px;
   border: 1px solid $border-color;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   position: absolute;
-  left: 0;
-  margin-left: 50%;
-  transform: translateX(-$arrow-margin - $arrow-width);
+  z-index: $zindex-dropdown;
 
-  &:before,
-  &:after {
-    bottom: 100%;
-    border-color: transparent;
-    left: $arrow-margin;
-    border: solid transparent;
-    content: ' ';
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
+  &.left {
+    left: 0;
+    margin-left: 50%;
+    transform: translateX(-$arrow-margin - $arrow-width);
   }
 
-  &:before {
-    border-bottom-color: $border-color;
-    border-width: $arrow-width;
-    margin-left: -$arrow-width;
+  &.right {
+    right: 0;
+    margin-right: 50%;
+    transform: translateX($arrow-margin + $arrow-width);
   }
 
-  &:after {
-    border-bottom-color: #fafafa;
-    border-width: $arrow-width - 1;
-    margin-left: -($arrow-width - 1);
+  &.full {
+    width: 100%;
   }
-}
 
-.dropdown.right {
-  left: auto;
-  right: 0;
-  margin-right: 50%;
-  transform: translateX($arrow-margin + $arrow-width);
+  &.arrow {
+    &:before,
+    &:after {
+      bottom: 100%;
+      border-color: transparent;
+      border: solid transparent;
+      content: ' ';
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
 
-  &:before,
-  &:after {
-    left: auto;
-    right: $arrow-margin;
+    &:before {
+      border-bottom-color: $border-color;
+      border-width: $arrow-width;
+      margin-left: -$arrow-width;
+    }
+
+    &:after {
+      border-bottom-color: #fafafa;
+      border-width: $arrow-width - 1;
+      margin-left: -($arrow-width - 1);
+    }
+  }
+
+  &.left.arrow {
+    &:before,
+    &:after {
+      left: $arrow-margin;
+      right: auto;
+    }
+  }
+
+  &.right.arrow {
+    &:before,
+    &:after {
+      left: auto;
+      right: $arrow-margin;
+    }
   }
 }
