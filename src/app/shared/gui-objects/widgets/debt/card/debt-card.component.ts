@@ -1,13 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 import { IGridColumn } from '../../../../components/grid/grid.interface';
+import { ILookupPortfolio } from '../../../../../core/lookup/lookup.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
+import { LookupService } from '../../../../../core/lookup/lookup.service';
 // import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 // import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -15,7 +17,8 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 
 @Component({
   selector: 'app-debt-card',
-  templateUrl: './debt-card.component.html'
+  templateUrl: './debt-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
@@ -28,27 +31,29 @@ export class DebtCardComponent {
   debt: any;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
+    private lookupService: LookupService,
     private route: ActivatedRoute,
     // private userDictionariesService: UserDictionariesService,
     // private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
+      this.lookupService.portfolios,
       this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ debt ]) => {
+    .subscribe(([ portfolios, debt ]) => {
       const portfolioOptions = {
         gridColumns: [
-          { prop: 'name', minWidth: 100 },
-          { prop: 'value', minWidth: 100 },
+          { prop: 'id', minWidth: 50, maxWidth: 50 },
+          { prop: 'name', minWidth: 100, maxWidth: 300 },
+          { prop: 'contractor', minWidth: 100, maxWidth: 300 },
         ],
-        gridRows: [
-         { name: 'foo', value: 'bar' }
-        ],
-        gridValueGetter: row => row.value,
-        gridOnSelect: row => console.log(row)
+        gridRows: portfolios,
+        gridValueGetter: (row: ILookupPortfolio) => row.name,
+        gridOnSelect: (row: ILookupPortfolio) => console.log(row)
       };
       this.controls = [
         {
@@ -83,6 +88,7 @@ export class DebtCardComponent {
         }
       ];
       this.debt = debt;
+      this.cdRef.markForCheck();
     });
   }
 
