@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 
-import { IAGridSelected, IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
