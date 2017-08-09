@@ -22,7 +22,10 @@ export class LookupEffects {
           type: LookupService.LOOKUP_FETCH_SUCCESS,
           payload: { key, data }
         }))
-        .catch(this.notificationService.error('errors.default.read').entity(`entities.lookup.${key}.gen.plural`).callback());
+        .catch(response => [
+          { type: LookupService.LOOKUP_FETCH_FAILURE },
+          this.notificationService.error('errors.default.read').entity(`entities.lookup.${key}.gen.plural`).response(response).action(),
+        ]);
     });
 
   constructor(

@@ -13,6 +13,7 @@ import { ValueConverterService } from '../converter/value-converter.service';
 export class LookupService {
   static LOOKUP_FETCH         = 'LOOKUP_FETCH';
   static LOOKUP_FETCH_SUCCESS = 'LOOKUP_FETCH_SUCCESS';
+  static LOOKUP_FETCH_FAILURE = 'LOOKUP_FETCH_FAILURE';
 
   private _state: ILookupState;
 
