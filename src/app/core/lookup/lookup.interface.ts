@@ -1,13 +1,10 @@
+export type ILookupKey = 'currencies' | 'languages' | 'roles' | 'users';
+
 export interface ILookupCurrency {
   id: number;
   code: string;
   name: string;
   shortName: string;
-}
-
-export interface ILookupCurrenciesResponse {
-  success: boolean;
-  currencies: Array<ILookupCurrency>;
 }
 
 export interface ILookupLanguage {
@@ -16,19 +13,9 @@ export interface ILookupLanguage {
   isMain: boolean;
 }
 
-export interface ILookupLanguagesResponse {
-  success: boolean;
-  languages: Array<ILookupLanguage>;
-}
-
 export interface ILookupUser {
   id: number;
   name: string;
-}
-
-export interface ILookupUsersResponse {
-  success: boolean;
-  users: Array<ILookupUser>;
 }
 
 export interface ILookupRole {
@@ -36,14 +23,27 @@ export interface ILookupRole {
   name: string;
 }
 
-export interface ILookupRolesResponse {
-  success: boolean;
-  roles: Array<ILookupRole>;
+export enum LookupStatusEnum {
+  PENDING,
+  LOADED,
+  ERROR,
 }
 
 export interface ILookupState {
-  currencies: Array<ILookupCurrency>;
-  languages: Array<ILookupLanguage>;
-  roles: Array<ILookupRole>;
-  users: Array<ILookupUser>;
+  currencies: {
+    data: Array<ILookupCurrency>;
+    status: LookupStatusEnum;
+  };
+  languages: {
+    data: Array<ILookupLanguage>;
+    status: LookupStatusEnum;
+  };
+  roles: {
+    data: Array<ILookupRole>;
+    status: LookupStatusEnum;
+  };
+  users: {
+    data: Array<ILookupUser>;
+    status: LookupStatusEnum;
+  };
 }

@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { ILookupCurrenciesResponse, ILookupLanguagesResponse, ILookupRolesResponse, ILookupUsersResponse } from './lookup.interface';
+import { ILookupCurrency, ILookupLanguage, ILookupRole, ILookupUser, ILookupKey } from './lookup.interface';
 
 import { DataService } from '../data/data.service';
 import { LookupService } from './lookup.service';
@@ -14,50 +14,15 @@ import { NotificationsService } from '../notifications/notifications.service';
 export class LookupEffects {
   @Effect()
   fetchCurrencies$ = this.actions
-    .ofType(LookupService.LOOKUP_CURRENCIES_FETCH)
+    .ofType(LookupService.LOOKUP_FETCH)
     .mergeMap((action: Action) => {
-      return this.readLookupCurrencies()
-        .map(response => ({
-          type: LookupService.LOOKUP_CURRENCIES_FETCH_SUCCESS,
-          payload: { currencies: response.currencies }
+      const { key } = action.payload;
+      return this.readData(key)
+        .map(data => ({
+          type: LookupService.LOOKUP_FETCH_SUCCESS,
+          payload: { key, data }
         }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.lookup.currencies.gen.plural').callback());
-    });
-
-  @Effect()
-  fetchLanguages$ = this.actions
-    .ofType(LookupService.LOOKUP_LANGUAGES_FETCH)
-    .mergeMap((action: Action) => {
-      return this.readLookupLanguages()
-        .map(response => ({
-          type: LookupService.LOOKUP_LANGUAGES_FETCH_SUCCESS,
-          payload: { languages: response.languages }
-        }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.lookup.languages.gen.plural').callback());
-    });
-
-  @Effect()
-  fetchRoles$ = this.actions
-    .ofType(LookupService.LOOKUP_ROLES_FETCH)
-    .mergeMap((action: Action) => {
-      return this.readLookupRoles()
-        .map(response => ({
-          type: LookupService.LOOKUP_ROLES_FETCH_SUCCESS,
-          payload: { roles: response.roles }
-        }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.lookup.roles.gen.plural').callback());
-    });
-
-  @Effect()
-  fetchUsers$ = this.actions
-    .ofType(LookupService.LOOKUP_USERS_FETCH)
-    .mergeMap((action: Action) => {
-      return this.readLookupUsers()
-        .map(response => ({
-          type: LookupService.LOOKUP_USERS_FETCH_SUCCESS,
-          payload: { users: response.users }
-        }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.lookup.users.gen.plural').callback());
+        .catch(this.notificationService.error('errors.default.read').entity(`entities.lookup.${key}.gen.plural`).callback());
     });
 
   constructor(
@@ -66,19 +31,7 @@ export class LookupEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private readLookupCurrencies(): Observable<ILookupCurrenciesResponse> {
-    return this.dataService.read('/lookup/currencies');
-  }
-
-  private readLookupLanguages(): Observable<ILookupLanguagesResponse> {
-    return this.dataService.read('/lookup/languages');
-  }
-
-  private readLookupRoles(): Observable<ILookupRolesResponse> {
-    return this.dataService.read('/lookup/roles');
-  }
-
-  private readLookupUsers(): Observable<ILookupUsersResponse> {
-    return this.dataService.read('/lookup/users');
+  private readData(key: ILookupKey): any {
+    return this.dataService.read(`/lookup/${key}`).map(response => response[key]);
   }
 }
