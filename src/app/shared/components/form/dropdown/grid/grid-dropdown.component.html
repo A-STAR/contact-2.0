@@ -1,10 +1,10 @@
-<app-dropdown #dropdown [fullWidth]="true">
+<app-dropdown #dropdown [enabled]="!isDisabled" [fullWidth]="true">
   <ng-container trigger>
-    <input
-      type="text"
-      class="form-control"
-      [disabled]="isDisabled"
-      [ngModel]="value">
+    <span [ngClass]="controlClass">
+      {{ value }}
+      <i class="caret"></i>
+    </span>
+    <input type="hidden" [ngModel]="value">
   </ng-container>
   <div>
     <app-grid

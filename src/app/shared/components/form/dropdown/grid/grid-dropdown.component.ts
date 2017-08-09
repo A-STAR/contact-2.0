@@ -8,6 +8,7 @@ import { DropdownComponent } from '../../../dropdown/dropdown.component';
 @Component({
   selector: 'app-grid-dropdown',
   templateUrl: './grid-dropdown.component.html',
+  styleUrls: [ './grid-dropdown.component.scss' ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -19,6 +20,7 @@ import { DropdownComponent } from '../../../dropdown/dropdown.component';
 })
 export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() columns: Array<IGridColumn>;
+  @Input() controlClass = 'form-control';
   @Input() rows: Array<T>;
   @Input() valueGetter: (row: T) => string = () => null;
 
