@@ -10,8 +10,9 @@ import { ILookupPortfolio } from '../../../../../core/lookup/lookup.interface';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
-// import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 // import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -36,15 +37,23 @@ export class DebtCardComponent {
     private debtService: DebtService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
-    // private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService,
     // private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     Observable.combineLatest(
       this.lookupService.portfolios,
+      this.lookupService.contractorOptions,
+      this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
+        UserDictionariesService.DICTIONARY_BRANCHES,
+        UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
+        UserDictionariesService.DICTIONARY_REGIONS,
+      ]),
       this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ portfolios, debt ]) => {
+    .subscribe(([ portfolios, contractorOptions, dictionaryOptions, debt ]) => {
       const portfolioOptions = {
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },
@@ -55,27 +64,39 @@ export class DebtCardComponent {
         gridValueGetter: (row: ILookupPortfolio) => row.name,
         gridOnSelect: (row: ILookupPortfolio) => console.log(row)
       };
+      const creditTypeOptions = {
+        options: dictionaryOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE]
+      };
+      const regionOptions = {
+        options: dictionaryOptions[UserDictionariesService.DICTIONARY_REGIONS]
+      };
+      const branchOptions = {
+        options: dictionaryOptions[UserDictionariesService.DICTIONARY_BRANCHES]
+      };
+      const reasonOptions = {
+        options: dictionaryOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON]
+      };
       this.controls = [
         {
           width: 6,
           children: [
             { label: 'widgets.debt.grid.id', controlName: 'id', type: 'text', disabled: true },
             { label: 'widgets.debt.grid.portfolioId', controlName: 'portfolioId', type: 'gridselect', ...portfolioOptions },
-            { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'text', disabled: true },
+            { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'select', disabled: true, options: contractorOptions },
             { label: 'widgets.debt.grid.creditName', controlName: 'creditName', type: 'text' },
-            { label: 'widgets.debt.grid.creditTypeCode', controlName: 'creditTypeCode', type: 'text' },
+            { label: 'widgets.debt.grid.creditTypeCode', controlName: 'creditTypeCode', type: 'select', ...creditTypeOptions  },
             { label: 'widgets.debt.grid.contract', controlName: 'contract', type: 'text' },
-            { label: 'widgets.debt.grid.creditStartDate', controlName: 'creditStartDate', type: 'text' },
-            { label: 'widgets.debt.grid.creditEndDate', controlName: 'creditEndDate', type: 'text' },
-            { label: 'widgets.debt.grid.regionCode', controlName: 'regionCode', type: 'text' },
-            { label: 'widgets.debt.grid.branchCode', controlName: 'branchCode', type: 'text' },
+            { label: 'widgets.debt.grid.creditStartDate', controlName: 'creditStartDate', type: 'datepicker' },
+            { label: 'widgets.debt.grid.creditEndDate', controlName: 'creditEndDate', type: 'datepicker' },
+            { label: 'widgets.debt.grid.regionCode', controlName: 'regionCode', type: 'select', ...regionOptions },
+            { label: 'widgets.debt.grid.branchCode', controlName: 'branchCode', type: 'select', ...branchOptions },
           ]
         },
         {
           width: 6,
           children: [
-            { label: 'widgets.debt.grid.debtReasonCode', controlName: 'debtReasonCode', type: 'text' },
-            { label: 'widgets.debt.grid.startDate', controlName: 'startDate', type: 'text' },
+            { label: 'widgets.debt.grid.debtReasonCode', controlName: 'debtReasonCode', type: 'select', ...reasonOptions },
+            { label: 'widgets.debt.grid.startDate', controlName: 'startDate', type: 'datepicker' },
             { label: 'widgets.debt.grid.dpd', controlName: 'dpd', type: 'text' },
             { label: 'widgets.debt.grid.currencyId', controlName: 'currencyId', type: 'text' },
             { label: 'widgets.debt.grid.debtSum', controlName: 'debtSum', type: 'text' },
@@ -87,7 +108,12 @@ export class DebtCardComponent {
           ]
         }
       ];
-      this.debt = debt;
+      this.debt = {
+        ...debt,
+        creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
+        creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
+        startDate: this.valueConverterService.fromISO(debt.startDate as string),
+      };
       this.cdRef.markForCheck();
     });
   }
