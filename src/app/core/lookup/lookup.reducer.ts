@@ -7,6 +7,7 @@ import { LookupService } from './lookup.service';
 const defaultState: ILookupState = {
   currencies: null,
   languages: null,
+  portfolios: null,
   roles: null,
   users: null,
 };

@@ -4,7 +4,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
-import { ILookupState, ILookupCurrency, ILookupLanguage, ILookupRole, ILookupUser, ILookupKey, LookupStatusEnum } from './lookup.interface';
+import {
+  ILookupState,
+  ILookupCurrency,
+  ILookupLanguage,
+  ILookupPortfolio,
+  ILookupRole,
+  ILookupUser,
+  ILookupKey,
+  LookupStatusEnum
+} from './lookup.interface';
 import { IOption } from '../converter/value-converter.interface';
 
 import { ValueConverterService } from '../converter/value-converter.service';
@@ -21,7 +30,7 @@ export class LookupService {
     private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
   ) {
-    this.state.subscribe(state => this._state = state);
+    this.state$.subscribe(state => this._state = state);
   }
 
   get currencies(): Observable<Array<ILookupCurrency>> {
@@ -30,6 +39,10 @@ export class LookupService {
 
   get languages(): Observable<Array<ILookupLanguage>> {
     return this.getSlice('languages').distinctUntilChanged();
+  }
+
+  get portfolios(): Observable<Array<ILookupPortfolio>> {
+    return this.getSlice('portfolios').distinctUntilChanged();
   }
 
   get roles(): Observable<Array<ILookupRole>> {
@@ -49,6 +62,12 @@ export class LookupService {
   get languageOptions(): Observable<Array<IOption>> {
     return this.getSlice('languages')
       .map(languages => this.valueConverterService.valuesToOptions(languages))
+      .distinctUntilChanged();
+  }
+
+  get portfolioOptions(): Observable<Array<IOption>> {
+    return this.getSlice('portfolios')
+      .map(portfolios => this.valueConverterService.valuesToOptions(portfolios))
       .distinctUntilChanged();
   }
 
@@ -78,14 +97,14 @@ export class LookupService {
     if (!status || status === LookupStatusEnum.ERROR) {
       this.refresh(key);
     }
-    return this.state
+    return this.state$
       .map(state => state[key])
       .filter(slice => slice && slice.status === LookupStatusEnum.LOADED)
       .map(slice => slice.data)
       .distinctUntilChanged();
   }
 
-  private get state(): Observable<ILookupState> {
+  private get state$(): Observable<ILookupState> {
     return this.store.select(state => state.lookup);
   }
 }

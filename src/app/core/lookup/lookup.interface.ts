@@ -1,4 +1,4 @@
-export type ILookupKey = 'currencies' | 'languages' | 'roles' | 'users';
+export type ILookupKey = 'currencies' | 'languages' | 'portfolios' | 'roles' | 'users';
 
 export interface ILookupCurrency {
   id: number;
@@ -13,12 +13,18 @@ export interface ILookupLanguage {
   isMain: boolean;
 }
 
-export interface ILookupUser {
+export interface ILookupPortfolio {
   id: number;
+  contractor: string;
   name: string;
 }
 
 export interface ILookupRole {
+  id: number;
+  name: string;
+}
+
+export interface ILookupUser {
   id: number;
   name: string;
 }
@@ -29,21 +35,15 @@ export enum LookupStatusEnum {
   ERROR,
 }
 
+export interface ILookupSlice<T> {
+  data: Array<T>;
+  status: LookupStatusEnum;
+}
+
 export interface ILookupState {
-  currencies: {
-    data: Array<ILookupCurrency>;
-    status: LookupStatusEnum;
-  };
-  languages: {
-    data: Array<ILookupLanguage>;
-    status: LookupStatusEnum;
-  };
-  roles: {
-    data: Array<ILookupRole>;
-    status: LookupStatusEnum;
-  };
-  users: {
-    data: Array<ILookupUser>;
-    status: LookupStatusEnum;
-  };
+  currencies: ILookupSlice<ILookupCurrency>;
+  languages: ILookupSlice<ILookupLanguage>;
+  portfolios: ILookupSlice<ILookupPortfolio>;
+  roles: ILookupSlice<ILookupRole>;
+  users: ILookupSlice<ILookupUser>;
 }
