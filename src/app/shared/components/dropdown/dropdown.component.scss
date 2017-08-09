@@ -4,6 +4,10 @@ $border-color: #d5d5d5;
 $arrow-width: 8px;
 $arrow-margin: 20px;
 
+.dropdown-container {
+  position: relative;
+}
+
 .dropdown {
   border: 1px solid $border-color;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);

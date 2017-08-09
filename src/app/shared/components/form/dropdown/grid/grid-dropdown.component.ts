@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../../grid/grid.interface';
+
+import { DropdownComponent } from '../../../dropdown/dropdown.component';
 
 @Component({
   selector: 'app-grid-dropdown',
@@ -19,6 +21,8 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() columns: Array<IGridColumn>;
   @Input() rows: Array<T>;
   @Input() valueGetter: (row: T) => string = () => null;
+
+  @ViewChild('dropdown') dropdown: DropdownComponent;
 
   private _value: string;
   private _isDisabled = false;
@@ -47,7 +51,10 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   }
 
   onDoubleClick(row: T): void {
-    this._value = this.valueGetter(row);
+    const newValue = this.valueGetter(row);
+    this._value = newValue;
+    this.propagateChange(newValue);
+    this.dropdown.close();
   }
 
   private propagateChange: Function = () => {};

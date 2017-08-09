@@ -1,16 +1,18 @@
-<app-dropdown [fullWidth]="true">
+<app-dropdown #dropdown [fullWidth]="true">
   <ng-container trigger>
     <input
       type="text"
       class="form-control"
+      [disabled]="isDisabled"
       [ngModel]="value">
   </ng-container>
   <div>
     <app-grid
       selectionType="single"
       [columns]="columns"
+      [footerHeight]="false"
       [rows]="rows"
-      [styles]="{height: '200px'}"
+      [styles]="{ height: '200px' }"
       (onDblClick)="onDoubleClick($event)">
     </app-grid>
   </div>
