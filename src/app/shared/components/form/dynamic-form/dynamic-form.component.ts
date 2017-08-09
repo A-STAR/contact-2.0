@@ -40,9 +40,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   get value(): any {
-    const value = this.form.getRawValue();
+    const { controls, value } = this.form;
     return Object.keys(value).reduce((acc, key) => {
-      acc[key] = value[key] === '' ? null : value[key];
+      if (!controls[key].disabled) {
+        acc[key] = value[key] === '' ? null : value[key];
+      }
       return acc;
     }, {});
   }
