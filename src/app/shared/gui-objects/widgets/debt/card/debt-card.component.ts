@@ -61,7 +61,7 @@ export class DebtCardComponent {
           children: [
             { label: 'widgets.debt.grid.id', controlName: 'id', type: 'text', disabled: true },
             { label: 'widgets.debt.grid.portfolioId', controlName: 'portfolioId', type: 'gridselect', ...portfolioOptions },
-            { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'text' },
+            { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'text', disabled: true },
             { label: 'widgets.debt.grid.creditName', controlName: 'creditName', type: 'text' },
             { label: 'widgets.debt.grid.creditTypeCode', controlName: 'creditTypeCode', type: 'text' },
             { label: 'widgets.debt.grid.contract', controlName: 'contract', type: 'text' },

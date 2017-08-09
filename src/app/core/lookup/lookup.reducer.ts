@@ -5,6 +5,7 @@ import { ILookupState, LookupStatusEnum } from './lookup.interface';
 import { LookupService } from './lookup.service';
 
 const defaultState: ILookupState = {
+  contractors: null,
   currencies: null,
   languages: null,
   portfolios: null,
