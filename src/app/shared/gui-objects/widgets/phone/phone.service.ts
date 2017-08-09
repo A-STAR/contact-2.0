@@ -40,7 +40,7 @@ export class PhoneService {
   }
 
   block(entityType: number, entityId: number, phoneId: number, blockReasonCode: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isBlocked: 1,blockReasonCode });
+    return this.update(entityType, entityId, phoneId, { isBlocked: 1, blockReasonCode });
   }
 
   unblock(entityType: number, entityId: number, phoneId: number): Observable<void> {
