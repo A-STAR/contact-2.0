@@ -14,7 +14,7 @@
   actionMessage="default.yesNo.Yes"
   actionMode="success"
   [messageParams]="selectedAddress$ | async"
-  (action)="onUnblockDialogSubmit($event)"
+  (action)="onUnblockDialogSubmit()"
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
@@ -25,7 +25,7 @@
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedAddress$ | async"
-  (action)="onRemoveDialogSubmit($event)"
+  (action)="onRemoveDialogSubmit()"
   (cancel)="onDialogClose()">
 </app-dialog-action>
 

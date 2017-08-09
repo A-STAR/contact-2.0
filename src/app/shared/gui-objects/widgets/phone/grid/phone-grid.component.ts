@@ -171,10 +171,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    this.phoneService.block(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.block(18, this.id, this.selectedPhoneId$.value, blockReasonCode).subscribe(() => this.onSubmitSuccess());
   }
 
-  onUnblockDialogSubmit(blockReasonCode: number): void {
+  onUnblockDialogSubmit(): void {
     this.phoneService.unblock(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
