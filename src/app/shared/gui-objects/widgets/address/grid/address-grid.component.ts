@@ -173,10 +173,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onBlockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.block(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.block(18, this.id, this.selectedAddressId$.value, blockReasonCode).subscribe(() => this.onSubmitSuccess());
   }
 
-  onUnblockDialogSubmit(blockReasonCode: number): void {
+  onUnblockDialogSubmit(): void {
     this.addressService.unblock(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 

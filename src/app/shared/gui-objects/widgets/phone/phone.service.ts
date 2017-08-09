@@ -39,8 +39,8 @@ export class PhoneService {
       .catch(this.notificationsService.error('errors.default.update').entity('entities.phones.gen.singular').dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, phoneId: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isBlocked: 1 });
+  block(entityType: number, entityId: number, phoneId: number, blockReasonCode: number): Observable<void> {
+    return this.update(entityType, entityId, phoneId, { isBlocked: 1,blockReasonCode });
   }
 
   unblock(entityType: number, entityId: number, phoneId: number): Observable<void> {
