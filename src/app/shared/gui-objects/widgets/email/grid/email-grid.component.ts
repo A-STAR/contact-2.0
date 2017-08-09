@@ -111,7 +111,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
         blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
-        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
