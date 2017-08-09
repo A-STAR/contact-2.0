@@ -9,9 +9,9 @@ import { Store } from '@ngrx/store';
 
 import { IActionsLogData, IEmployee } from './actions-log.interface';
 
-import { IAGridColumn, IAGridEventPayload, IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridSelected, IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
@@ -36,7 +36,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   // filter
-  actionTypesRows: Observable<IDictionaryItem[]>;
+  actionTypesRows: Observable<IUserDictionary>;
   employeesRows: Observable<IEmployee[]>;
   // grid
   actionsLogData: Observable<IActionsLogData>;
@@ -53,7 +53,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     private actionsLogService: ActionsLogService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
   ) {
     // filter
@@ -70,20 +69,20 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.permissionSub = this.hasViewPermission$
-      .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          // this.actionsLogService.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
+          this.actionsLogService.clear();
+          this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           this.actionsLogService.getEmployeesAndActionTypes()
             .take(1)
-            .subscribe(
-              () => {
-                // const filters = this.getCombinedFilters();
-                // this.actionsLogService.fetch(filters);
-              }
-            );
+            .subscribe();
+          // load data
+          if (this.grid.gridOptions.api) {
+            this.onRequest();
+          } else {
+            // this.grid.initCallbacks.push(this.onRequest.bind(this));
+          }
         }
       });
   }
@@ -92,40 +91,20 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.permissionSub.unsubscribe();
   }
 
-  onFilter(gridFilters: any): void {
+  onRequest(): void {
     const filters = this.getCombinedFilters();
-    // this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
-    this.actionsLogService.filter(filters);
-  }
-
-  onPage(nextPage: number): void {
-    console.log('nextPage', nextPage);
-  }
-
-  onRequestData(payload: IAGridEventPayload): void {
-    const filters = this.getCombinedFilters();
-    // this.store.dispatch(payload);
-    if (this.grid.rowCount) {
-      this.actionsLogService.fetch(filters);
-    }
+    const params = this.grid.getRequestParams();
+    this.actionsLogService.fetch(filters, params);
   }
 
   onSelect(selected: IAGridSelected): void {
-    // this.store.dispatch(selected);
-  }
-
-  doSearch(): void {
-    const filters = this.getCombinedFilters();
-    // this.store.dispatch({ type: Grid2Component.FIRST_PAGE });
-    this.actionsLogService.filter(filters);
+    // console.log(selected);
   }
 
   doExport(): void {
     const filters = this.getCombinedFilters();
-    const sorters = this.grid.getSorters();
-    const { pageSize, page: currentPage } = this.grid;
-    const gridRequestParams = { currentPage, pageSize, sorters };
-    const request = this.gridService.buildRequest(gridRequestParams, filters);
+    const params = this.grid.getRequestParams();
+    const request = this.gridService.buildRequest(params, filters);
     const columns = this.grid.getExportableColumns();
     const body = { columns, ...request };
 
@@ -147,4 +126,5 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     const filters = this.filter.getFilters();
     return filters.addFilter(this.grid.getFilters());
   }
+
 }

@@ -27,7 +27,7 @@ import {
 } from '../toolbar/toolbar.interface';
 import {
   IAGridEventPayload, IAGridExportableColumn, IAGridGroups, IAGridSelected,
-  IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -38,6 +38,10 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
+
+interface ITranslations {
+  translations: { [index: string]: string };
+}
 
 @Component({
   selector: 'app-grid2',
@@ -63,26 +67,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
-  @Input() metadataKey: string;
-  @Input() filterEnabled = true;
-  @Input() headerHeight = 25;
+  @Input() disableFilters = false;
   @Input() groupColumnMinWidth = 120;
-  @Input() page = 1;
+  @Input() headerHeight = 25;
+  @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
     .sort((x, y) => x > y ? 1 : -1);
-  // NOTE: remote by default, if you need local sorting => change to `false`
+  @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
   @Input() rowHeight = 25;
+  @Input() rowIdKey = 'id';
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
-  @Input() persistenceKey: string;
   @Input() showDndGroupPanel = false;
+  @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
-
-  @Input() rowIdKey = 'id';
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -98,8 +100,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
-  paginationPanel: IToolbarAction[] = [];
   gridOptions: GridOptions = {};
+  page: number = this.startPage;
+  paginationPanel: IToolbarAction[] = [];
+  initCallbacks: Function[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -122,7 +126,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   // selected rows
   get selected(): RowNode[] {
-    return this.gridOptions.api.getSelectedRows();
+    return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
   ngOnInit(): void {
@@ -136,7 +140,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
-      .then(columns => {
+      .take(1)
+      .subscribe(columns => {
         const { colDefs } = this.restoreGridSettings();
 
         this.columns = columns.slice();
@@ -144,24 +149,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.setGridOptions();
         this.setPagination();
 
-        this.langSubscription = this.translate.onLangChange
-          .subscribe((translations: { translations: { [index: string]: string } }) =>
-            this.refreshTranslations(translations.translations));
-
         this.initialized = true;
         this.cdRef.markForCheck();
         this.onInit.emit();
       });
+
+      this.langSubscription = this.translate.onLangChange
+        .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.initialized) {
       return;
     }
-    const { rowCount, rows, currentPage, currentPageSize } = changes;
-    if (rows || currentPage || currentPageSize) {
+    const { rowCount, rows } = changes;
+    if (rows) {
       this.refreshPagination();
       this.clearRangeSelections();
+      this.viewportDatasource.params.setRowData(this.rows);
     }
     if (rowCount) {
       this.viewportDatasource.params.setRowCount(rowCount.currentValue);
@@ -171,9 +176,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       } else {
         this.gridOptions.api.showNoRowsOverlay();
       }
-    }
-    if (rows) {
-      this.viewportDatasource.params.setRowData(this.rows);
     }
   }
 
@@ -189,26 +191,31 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit(this.page - 1);
+        this.onPage.emit(--this.page);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
-        if (this.page === this.getPageCount()) {
+        if ((this.page + 1) >= this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit(this.page + 1);
+        this.onPage.emit(++this.page);
         break;
       case ToolbarActionTypeEnum.GO_FIRST:
+        this.page = 1;
         this.onPage.emit(1);
         break;
       case ToolbarActionTypeEnum.GO_LAST:
-        this.onPage.emit(this.getPageCount());
+        this.page = this.getPageCount();
+        this.onPage.emit(this.page);
         break;
     }
   }
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
-    this.onPageSize.emit(payload.value[0].value);
+    const newSize = payload.value[0].value;
+    console.log('new page size', newSize);
+    this.pageSize = newSize || this.pageSize;
+    this.onPageSize.emit(this.pageSize);
   }
 
   dragStarted(): void {
@@ -232,6 +239,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onFilterChanged(): void {
     const filters = this.getFilters();
+    this.page = 1;
     this.onFilter.emit(filters);
   }
 
@@ -295,6 +303,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         const { field, headerName: name } = column.getColDef();
         return { field, name };
       });
+  }
+
+  getRequestParams(): IAGridRequestParams {
+    const sorters = this.getSorters();
+    const { pageSize, page: currentPage } = this;
+    return { currentPage, pageSize, sorters };
   }
 
   private getTextFilter(model: any): any {
@@ -577,7 +591,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
-      floatingFilter: true,
+      floatingFilter: !this.disableFilters,
       getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
@@ -609,11 +623,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       toolPanelSuppressPivotMode: true,
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
-      isExternalFilterPresent: () => this.filterEnabled,
+      isExternalFilterPresent: () => !this.disableFilters,
       doesExternalFilterPass: (node: RowNode) => true,
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: this.onFilterChanged.bind(this),
-      onGridReady: () => this.setSortModel(),
+      onGridReady: () => this.onGridReady(),
       // onGridSizeChanged: (params) => this.onGridSizeChanged(),
       onColumnResized: () => this.calculateGridSettings(),
       onColumnVisible: () => this.calculateGridSettings(),
@@ -723,5 +737,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private setSortModel(): void {
     const { sortModel } = this.gridSettings || this.restoreGridSettings();
     this.gridOptions.api.setSortModel(sortModel);
+  }
+
+  private onGridReady(): void {
+    this.setSortModel();
+    this.initCallbacks.forEach((cb: Function) => cb());
+    this.initCallbacks = [];
   }
 }

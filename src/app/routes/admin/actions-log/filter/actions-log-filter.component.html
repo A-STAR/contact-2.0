@@ -55,6 +55,7 @@
             *ngIf="isDialog('employees')"
             [titleTranslationKey]="employeesControl.label"
             [autoWidth]="false"
+            [styles]="{width: '70%'}"
             (action)="onSetEmployees()"
             (cancel)="setDialog(null)"
           >
@@ -62,7 +63,7 @@
               #employees
               [formControlName]="employeesControl.controlName"
               [syncFormControlChanges]="false"
-              [height]="190"
+              [height]="300"
               [rowsFrom]="employeesRows | async"
               [rowsFilterFrom]="employeesRowsFilter"
               columnsTranslationKeyFrom="actionsLog.filter.employees"
@@ -94,6 +95,7 @@
           <app-action-dialog
             *ngIf="isDialog('actionTypes')"
             [autoWidth]="false"
+            [styles]="{width: '70%'}"
             [titleTranslationKey]="actionTypesControl.label"
             (action)="onSetActionTypes()"
             (cancel)="setDialog()"
@@ -102,7 +104,7 @@
               #actionTypes
               [formControlName]="actionTypesControl.controlName"
               [syncFormControlChanges]="false"
-              [height]="190"
+              [height]="300"
               [rowsFrom]="actionTypesRows | async"
               columnsTranslationKeyFrom="actionsLog.filter.actionsTypes"
               columnsTranslationKeyTo="actionsLog.filter.actionsTypes"

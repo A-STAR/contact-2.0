@@ -35,7 +35,13 @@
       </li>
 
       <li>
-        <app-dropdown #notificationsDropdown class="menu-item" [enabled]="hasNotifications$ | async">
+        <app-dropdown
+          #notificationsDropdown
+          class="menu-item"
+          position="right"
+          [displayArrow]="true"
+          [enabled]="hasNotifications$ | async"
+        >
           <a trigger title="Messages">
             <i class="icon-bell"></i>
             <div *ngIf="hasNotifications$ | async" class="label label-danger">
@@ -58,7 +64,12 @@
       </li>
 
       <li>
-        <app-dropdown #accountDropdown  class="menu-item">
+        <app-dropdown
+          #accountDropdown
+          class="menu-item"
+          position="right"
+          [displayArrow]="true"
+        >
           <a trigger [title]="'header.account.title' | translate">
             <i class="icon-user"></i>
           </a>

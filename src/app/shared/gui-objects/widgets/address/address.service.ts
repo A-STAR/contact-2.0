@@ -39,8 +39,8 @@ export class AddressService {
       .catch(this.notificationsService.error('errors.default.update').entity('entities.addresses.gen.singular').dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, addressId: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isBlocked: 1 });
+  block(entityType: number, entityId: number, addressId: number, blockReasonCode: number): Observable<void> {
+    return this.update(entityType, entityId, addressId, { isBlocked: 1, blockReasonCode });
   }
 
   unblock(entityType: number, entityId: number, addressId: number): Observable<void> {
