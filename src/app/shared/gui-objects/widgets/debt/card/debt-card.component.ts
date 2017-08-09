@@ -27,15 +27,6 @@ export class DebtCardComponent {
   controls: Array<IDynamicFormItem> = null;
   debt: any;
 
-  columns: Array<IGridColumn> = [
-    { prop: 'name', minWidth: 100 },
-    { prop: 'value', minWidth: 100 },
-  ];
-
-  rows = [
-    { name: 'foo', value: 'bar' }
-  ];
-
   constructor(
     private contentTabService: ContentTabService,
     private debtService: DebtService,
@@ -48,12 +39,23 @@ export class DebtCardComponent {
     )
     .take(1)
     .subscribe(([ debt ]) => {
+      const portfolioOptions = {
+        gridColumns: [
+          { prop: 'name', minWidth: 100 },
+          { prop: 'value', minWidth: 100 },
+        ],
+        gridRows: [
+         { name: 'foo', value: 'bar' }
+        ],
+        gridValueGetter: row => row.value,
+        gridOnSelect: row => console.log(row)
+      };
       this.controls = [
         {
           width: 6,
           children: [
             { label: 'widgets.debt.grid.id', controlName: 'id', type: 'text', disabled: true },
-            { label: 'widgets.debt.grid.portfolioId', controlName: 'portfolioId', type: 'text' },
+            { label: 'widgets.debt.grid.portfolioId', controlName: 'portfolioId', type: 'gridselect', ...portfolioOptions },
             { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'text' },
             { label: 'widgets.debt.grid.creditName', controlName: 'creditName', type: 'text' },
             { label: 'widgets.debt.grid.creditTypeCode', controlName: 'creditTypeCode', type: 'text' },
@@ -83,8 +85,6 @@ export class DebtCardComponent {
       this.debt = debt;
     });
   }
-
-  valueGetter = row => row.value;
 
   onSubmit(): void {
     const { value } = this.form;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../../grid/grid.interface';
@@ -23,6 +23,8 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() controlClass = 'form-control';
   @Input() rows: Array<T>;
   @Input() valueGetter: (row: T) => string = () => null;
+
+  @Output() onSelect = new EventEmitter<T>();
 
   @ViewChild('dropdown') dropdown: DropdownComponent;
 
@@ -57,6 +59,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this._value = newValue;
     this.propagateChange(newValue);
     this.dropdown.close();
+    this.onSelect.emit(row);
   }
 
   private propagateChange: Function = () => {};
