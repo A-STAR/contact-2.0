@@ -15,7 +15,6 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid-filte
 
 import { ActionsLogService } from './actions-log.service';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
@@ -49,7 +48,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private actionsLogService: ActionsLogService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -77,9 +75,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
             .subscribe();
           // load data
           if (this.grid.gridOptions.api) {
-            this.onRequest();
-          } else {
-            // this.grid.initCallbacks.push(this.onRequest.bind(this));
+            // this.onRequest();
           }
         }
       });
@@ -102,7 +98,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   doExport(): void {
     const filters = this.getCombinedFilters();
     const params = this.grid.getRequestParams();
-    const request = this.gridService.buildRequest(params, filters);
+    const request = this.grid.buildRequest(params, filters);
     const columns = this.grid.getExportableColumns();
     const body = { columns, ...request };
 

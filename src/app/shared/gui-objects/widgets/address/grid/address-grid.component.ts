@@ -24,7 +24,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 export class AddressGridComponent implements OnInit, OnDestroy {
   private selectedAddressId$ = new BehaviorSubject<number>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
@@ -45,7 +45,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && address.isBlocked),
+        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isBlocked),
       action: () => this.setDialog(2)
     },
     {

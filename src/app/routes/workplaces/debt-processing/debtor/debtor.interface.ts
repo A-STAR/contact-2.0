@@ -1,6 +1,15 @@
 export interface IPerson {
   id: number;
-  birthDate: string | Date;
+  birthDate?: string | Date;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string,
+  type?: number;
+  responsible?: string;
+  reward?: number;
+  debtId?: number;
+  product?: string;
+  city?: string;
 }
 
 export interface IPersonsResponse {
