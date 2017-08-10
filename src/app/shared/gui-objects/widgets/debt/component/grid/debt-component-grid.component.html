@@ -3,5 +3,7 @@
   selectionType="single"
   [styles]="{ height: '200px' }"
   [columns]="columns"
-  [rows]="components">
+  [rows]="components"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onDoubleClick($event)">
 </app-grid>

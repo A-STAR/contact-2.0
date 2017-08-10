@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -21,6 +22,8 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 export class DebtComponentGridComponent {
   private debtId = (this.route.params as any).value.debtId || null;
 
+  private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
+
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
     { prop: 'sum', minWidth: 150, maxWidth: 200 },
@@ -37,35 +40,28 @@ export class DebtComponentGridComponent {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      enabled: this.canEditDebtComponent$
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      enabled: Observable.combineLatest(
+        this.canEditDebtComponent$,
+        this.selectedDebtComponentId$
+      ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      enabled: Observable.combineLatest(
+        this.canEditDebtComponent$,
+        this.selectedDebtComponentId$
+      ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
+      enabled: this.canEditDebtComponent$
     },
   ];
 
@@ -91,6 +87,14 @@ export class DebtComponentGridComponent {
       this.components = components;
       this.cdRef.markForCheck();
     });
+  }
+
+  onSelect(debtComponent: IDebtComponent): void {
+    this.selectedDebtComponentId$.next(debtComponent.id);
+  }
+
+  onDoubleClick(debtComponent: IDebtComponent): void {
+
   }
 
   private get canEditDebtComponent$(): Observable<boolean> {
