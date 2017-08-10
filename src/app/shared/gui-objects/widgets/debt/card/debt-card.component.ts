@@ -69,7 +69,8 @@ export class DebtCardComponent {
           { prop: 'contractor', minWidth: 100, maxWidth: 300 },
         ],
         gridRows: portfolios,
-        gridValueGetter: (row: ILookupPortfolio) => row.name,
+        gridLabelGetter: (row: ILookupPortfolio) => row.name,
+        gridValueGetter: (row: ILookupPortfolio) => row.id,
         gridOnSelect: (row: ILookupPortfolio) => console.log(row)
       };
       const creditTypeOptions = {

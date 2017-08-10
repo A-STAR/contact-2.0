@@ -129,7 +129,9 @@
     </label>
     <app-grid-dropdown
       [columns]="control.gridColumns"
+      [formControlName]="control.controlName"
       [rows]="control.gridRows"
+      [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
       (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
