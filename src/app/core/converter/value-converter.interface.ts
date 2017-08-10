@@ -28,6 +28,10 @@ export interface IOption {
   value: number | string;
 }
 
+export interface IOptionSet {
+  [key: number]: Array<IOption>;
+}
+
 export interface IDateFormats {
   date: string;
   dateTime: string;

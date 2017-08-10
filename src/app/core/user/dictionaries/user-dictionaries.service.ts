@@ -38,6 +38,10 @@ export class UserDictionariesService {
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;
   static DICTIONARY_PORTFOLIO_STAGE             = 31;
+  static DICTIONARY_DEBT_LIST_1                 = 34;
+  static DICTIONARY_DEBT_LIST_2                 = 35;
+  static DICTIONARY_DEBT_LIST_3                 = 36;
+  static DICTIONARY_DEBT_LIST_4                 = 37;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

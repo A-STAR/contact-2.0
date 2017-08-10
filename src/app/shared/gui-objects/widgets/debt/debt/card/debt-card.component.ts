@@ -6,7 +6,9 @@ import 'rxjs/add/observable/combineLatest';
 import { IDebt } from '../debt.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
+import { IOption, IOptionSet } from '../../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
+import { IUserPermissions } from '../../../../../../core/user/permissions/user-permissions.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
@@ -51,63 +53,25 @@ export class DebtCardComponent {
         UserDictionariesService.DICTIONARY_BRANCHES,
         UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
         UserDictionariesService.DICTIONARY_REGIONS,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_1,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_2,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_3,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_4,
+      ]),
+      this.userPermissionsService.get([
+        'DEBT_EDIT',
+        'DEBT_PORTFOLIO_EDIT',
+        'DEBT_COMPONENT_SUM_EDIT',
+        'DEBT_DICT1_EDIT_LIST',
+        'DEBT_DICT2_EDIT_LIST',
+        'DEBT_DICT3_EDIT_LIST',
+        'DEBT_DICT4_EDIT_LIST',
       ]),
       this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaryOptions, debt ]) => {
-      const portfolioOptions = {
-        gridColumns: [
-          { prop: 'id', minWidth: 50, maxWidth: 50 },
-          { prop: 'name', minWidth: 100, maxWidth: 300 },
-          { prop: 'contractor', minWidth: 100, maxWidth: 300 },
-        ],
-        gridRows: portfolios,
-        gridLabelGetter: (row: ILookupPortfolio) => row.name,
-        gridValueGetter: (row: ILookupPortfolio) => row.id,
-        gridOnSelect: (row: ILookupPortfolio) => console.log(row)
-      };
-      const creditTypeOptions = {
-        options: dictionaryOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE]
-      };
-      const regionOptions = {
-        options: dictionaryOptions[UserDictionariesService.DICTIONARY_REGIONS]
-      };
-      const branchOptions = {
-        options: dictionaryOptions[UserDictionariesService.DICTIONARY_BRANCHES]
-      };
-      const reasonOptions = {
-        options: dictionaryOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON]
-      };
-      this.controls = [
-        // Row 1
-        { label: 'widgets.debt.grid.id', controlName: 'id', type: 'text', disabled: true, width: 2 },
-        { label: 'widgets.debt.grid.portfolioId', controlName: 'portfolioId', type: 'gridselect', ...portfolioOptions, width: 5 },
-        { label: 'widgets.debt.grid.bankId', controlName: 'bankId', type: 'select', disabled: true, options: contractorOptions, width: 5 },
-        // Row 2
-        { label: 'widgets.debt.grid.creditName', controlName: 'creditName', type: 'text', width: 4 },
-        { label: 'widgets.debt.grid.creditTypeCode', controlName: 'creditTypeCode', type: 'select', ...creditTypeOptions, width: 4 },
-        { label: 'widgets.debt.grid.contract', controlName: 'contract', type: 'text', width: 4 },
-        // Row 2
-        { label: 'widgets.debt.grid.creditStartDate', controlName: 'creditStartDate', type: 'datepicker', width: 3 },
-        { label: 'widgets.debt.grid.creditEndDate', controlName: 'creditEndDate', type: 'datepicker', width: 3 },
-        { label: 'widgets.debt.grid.regionCode', controlName: 'regionCode', type: 'select', ...regionOptions, width: 3 },
-        { label: 'widgets.debt.grid.branchCode', controlName: 'branchCode', type: 'select', ...branchOptions, width: 3 },
-        // Row 3
-        { label: 'widgets.debt.grid.debtReasonCode', controlName: 'debtReasonCode', type: 'select', ...reasonOptions, width: 2 },
-        { label: 'widgets.debt.grid.startDate', controlName: 'startDate', type: 'datepicker', width: 2 },
-        { label: 'widgets.debt.grid.dpd', controlName: 'dpd', type: 'text', width: 2 },
-        { label: 'widgets.debt.grid.currencyId', controlName: 'currencyId', type: 'select', options: currencyOptions, width: 2 },
-        { label: 'widgets.debt.grid.debtSum', controlName: 'debtSum', type: 'text', width: 2 },
-        { label: 'widgets.debt.grid.totalSum', controlName: 'totalSum', type: 'text', width: 2 },
-        // Row 4
-        { label: 'widgets.debt.grid.dict1Code', controlName: 'dict1Code', type: 'text', width: 3 },
-        { label: 'widgets.debt.grid.dict2Code', controlName: 'dict2Code', type: 'text', width: 3 },
-        { label: 'widgets.debt.grid.dict3Code', controlName: 'dict3Code', type: 'text', width: 3 },
-        { label: 'widgets.debt.grid.dict4Code', controlName: 'dict4Code', type: 'text', width: 3 },
-        // Row 5
-        { label: 'widgets.debt.grid.comment', controlName: 'comment', type: 'textarea' }
-      ];
+    .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, debt ]) => {
+      this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions);
       this.debt = {
         ...debt,
         creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
@@ -129,7 +93,7 @@ export class DebtCardComponent {
       ? this.debtService.update(this.id, this.debtId, data)
       : this.debtService.create(this.id, data);
 
-    action.subscribe(() => this.onBack());
+    // action.subscribe(() => this.onBack());
   }
 
   onBack(): void {
@@ -140,7 +104,185 @@ export class DebtCardComponent {
     return this.form && this.form.canSubmit;
   }
 
-  get canEditDebtComponent$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_EDIT');
+  private initControls(
+    portfolios: Array<ILookupPortfolio>,
+    contractorOptions: Array<IOption>,
+    currencyOptions: Array<IOption>,
+    dictionaries: IOptionSet,
+    permissions: IUserPermissions,
+  ): any {
+    return [
+      // Row 1
+      {
+        label: 'widgets.debt.grid.id',
+        controlName: 'id',
+        type: 'text',
+        disabled: true,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.portfolioId',
+        controlName: 'portfolioId',
+        type: 'gridselect',
+        gridColumns: [
+          { prop: 'id', minWidth: 50, maxWidth: 50 },
+          { prop: 'name', minWidth: 100, maxWidth: 300 },
+          { prop: 'contractor', minWidth: 100, maxWidth: 300 },
+        ],
+        gridRows: portfolios,
+        gridLabelGetter: (row: ILookupPortfolio) => row.name,
+        gridValueGetter: (row: ILookupPortfolio) => row.id,
+        gridOnSelect: (row: ILookupPortfolio) => console.log(row),
+        disabled: !permissions['DEBT_PORTFOLIO_EDIT'].valueB,
+        width: 5
+      },
+      {
+        label: 'widgets.debt.grid.bankId',
+        controlName: 'bankId',
+        type: 'select',
+        options: contractorOptions,
+        disabled: true,
+        width: 5
+      },
+      // Row 2
+      {
+        label: 'widgets.debt.grid.creditName',
+        controlName: 'creditName',
+        type: 'text',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 4
+      },
+      {
+        label: 'widgets.debt.grid.creditTypeCode',
+        controlName: 'creditTypeCode',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_PRODUCT_TYPE],
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 4
+      },
+      {
+        label: 'widgets.debt.grid.contract',
+        controlName: 'contract',
+        type: 'text',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 4
+      },
+      // Row 3
+      {
+        label: 'widgets.debt.grid.creditStartDate',
+        controlName: 'creditStartDate',
+        type: 'datepicker',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.creditEndDate',
+        controlName: 'creditEndDate',
+        type: 'datepicker',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.regionCode',
+        controlName: 'regionCode',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_REGIONS],
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.branchCode',
+        controlName: 'branchCode',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_BRANCHES],
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 3
+      },
+      // Row 4
+      {
+        label: 'widgets.debt.grid.debtReasonCode',
+        controlName: 'debtReasonCode',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON],
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.startDate',
+        controlName: 'startDate',
+        type: 'datepicker',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.dpd',
+        controlName: 'dpd',
+        type: 'text',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.currencyId',
+        controlName: 'currencyId',
+        type: 'select',
+        options: currencyOptions,
+        disabled: !permissions['DEBT_EDIT'].valueB,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.debtSum',
+        controlName: 'debtSum',
+        type: 'text',
+        disabled: !permissions['DEBT_COMPONENT_SUM_EDIT'].valueB,
+        width: 2
+      },
+      {
+        label: 'widgets.debt.grid.totalSum',
+        controlName: 'totalSum',
+        type: 'text',
+        disabled: !permissions['DEBT_COMPONENT_SUM_EDIT'].valueB,
+        width: 2
+      },
+      // Row 5
+      {
+        label: 'widgets.debt.grid.dict1Code',
+        controlName: 'dict1Code',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1],
+        disabled: !permissions['DEBT_DICT1_EDIT_LIST'].valueS,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.dict2Code',
+        controlName: 'dict2Code',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2],
+        disabled: !permissions['DEBT_DICT2_EDIT_LIST'].valueS,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.dict3Code',
+        controlName: 'dict3Code',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3],
+        disabled: !permissions['DEBT_DICT3_EDIT_LIST'].valueS,
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.dict4Code',
+        controlName: 'dict4Code',
+        type: 'select',
+        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4],
+        disabled: !permissions['DEBT_DICT4_EDIT_LIST'].valueS,
+        width: 3
+      },
+      // Row 6
+      {
+        label: 'widgets.debt.grid.comment',
+        controlName: 'comment',
+        type: 'textarea',
+        disabled: !permissions['DEBT_EDIT'].valueB,
+      }
+    ];
   }
 }

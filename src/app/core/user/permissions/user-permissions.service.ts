@@ -5,7 +5,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserPermissions } from './user-permissions.interface';
+import { IUserPermission, IUserPermissions } from './user-permissions.interface';
 
 @Injectable()
 export class UserPermissionsService {
@@ -28,6 +28,12 @@ export class UserPermissionsService {
   refresh(): void {
     const action = this.createRefreshAction();
     this.store.dispatch(action);
+  }
+
+  get(permissionNames: Array<string>): Observable<IUserPermissions> {
+    return this.getPermissions()
+      .map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {}))
+      .distinctUntilChanged();
   }
 
   has(permissionName: string): Observable<boolean> {
