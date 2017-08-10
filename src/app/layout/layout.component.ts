@@ -26,7 +26,7 @@ export class LayoutComponent {
     DebtorPhoneComponent: 'DEBTOR_PHONE',
     DebtorsComponent: 'DEBT_LIST',
     DebtProcessingComponent: 'DEBTS',
-    DictAndTermsComponent: 'DICTIONARIES',
+    DictionariesComponent: 'DICTIONARIES',
     HelpComponent: 'HELP',
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
