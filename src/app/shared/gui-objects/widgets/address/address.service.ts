@@ -8,6 +8,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class AddressService {
+  static MESSAGE_ADDRESS_SAVED = 'MESSAGE_ADDRESS_SAVED';
+
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,

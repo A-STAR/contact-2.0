@@ -12,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -96,6 +97,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -124,6 +126,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.messageBusService
+      .select(AddressService.MESSAGE_ADDRESS_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {

@@ -6,6 +6,7 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -28,6 +29,7 @@ export class PhoneCardComponent {
 
   constructor(
     private contentTabService: ContentTabService,
+    private messageBusService: MessageBusService,
     private phoneService: PhoneService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -66,7 +68,10 @@ export class PhoneCardComponent {
       ? this.phoneService.update(18, this.id, this.phoneId, data)
       : this.phoneService.create(18, this.id, data);
 
-    action.subscribe(() => this.onBack());
+    action.subscribe(() => {
+      this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
+      this.onBack();
+    });
   }
 
   public onBack(): void {

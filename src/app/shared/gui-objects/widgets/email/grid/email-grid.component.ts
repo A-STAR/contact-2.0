@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { EmailService } from '../email.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -88,9 +89,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   private id = (this.route.params as any).value.id || null;
 
   constructor(
-    private emailService: EmailService,
     private cdRef: ChangeDetectorRef,
+    private emailService: EmailService,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -116,6 +118,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.messageBusService
+      .select(EmailService.MESSAGE_EMAIL_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {

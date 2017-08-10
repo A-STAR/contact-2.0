@@ -7,6 +7,7 @@ import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynam
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmailService } from '../email.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -29,6 +30,7 @@ export class EmailCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private emailService: EmailService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -62,7 +64,10 @@ export class EmailCardComponent {
       ? this.emailService.update(18, this.id, this.emailId, data)
       : this.emailService.create(18, this.id, data);
 
-    action.subscribe(() => this.onBack());
+    action.subscribe(() => {
+      this.messageBusService.dispatch(EmailService.MESSAGE_EMAIL_SAVED);
+      this.onBack();
+    });
   }
 
   public onBack(): void {

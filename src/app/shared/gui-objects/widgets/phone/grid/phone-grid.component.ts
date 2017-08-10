@@ -9,9 +9,10 @@ import { IPhone } from '../phone.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { PhoneService } from '../phone.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -92,10 +93,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private id = (this.route.params as any).value.id || null;
 
   constructor(
-    private phoneService: PhoneService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
+    private phoneService: PhoneService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -122,6 +124,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.messageBusService
+      .select(PhoneService.MESSAGE_PHONE_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
