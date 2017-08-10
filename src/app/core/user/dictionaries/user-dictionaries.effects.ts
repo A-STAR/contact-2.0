@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 
 import { IUserTermsResponse } from './user-dictionaries.interface';
 

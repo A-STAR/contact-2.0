@@ -20,7 +20,7 @@ export const routes: Route[] = [
           { path: '', redirectTo: '../home', pathMatch: 'full' },
           { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
           { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' },
-          { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionaries.module#DictionaryModule' },
+          { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionaries.module#DictionariesModule' },
           { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
           { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
           { path: 'action-log', loadChildren: './admin/actions-log/actions-log.module#ActionsLogModule' },
