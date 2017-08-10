@@ -12,11 +12,11 @@
 </app-action-dialog>
 
 <div>
+  <button class="btn btn-default" (click)="onClose()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
   <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
     <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
-  <button class="btn btn-default" (click)="onClose()">
-    <i class="fa fa-remove"></i> {{ 'default.buttons.back' | translate }}
   </button>
 </div>
 
