@@ -164,8 +164,9 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     this.selectedEmailId$.next(email.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number): void {
-    this.emailService.block(18, this.id, this.selectedEmailId$.value, blockReasonCode).subscribe(() => this.onSubmitSuccess());
+  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+    this.emailService.block(18, this.id, this.selectedEmailId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
