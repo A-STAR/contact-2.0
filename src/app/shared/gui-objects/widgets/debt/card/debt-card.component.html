@@ -7,11 +7,20 @@
   </button>
 </div>
 
-<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+<div class="pb-lg">
+  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+</div>
 
-<app-grid
-  selectionType="single"
-  [styles]="{ height: '200px' }"
-  [columns]="componentsColumns"
-  [rows]="componentsRows">
-</app-grid>
+<div class="pb-lg">
+  <app-grid
+    selectionType="single"
+    [styles]="{ height: '200px' }"
+    [columns]="componentsColumns"
+    [rows]="componentsRows">
+  </app-grid>
+</div>
+
+<div>
+  <button class="btn btn-default">История смены портфеля</button>
+  <button class="btn btn-default">История задолженности</button>
+</div>
