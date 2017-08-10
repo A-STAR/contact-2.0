@@ -25,5 +25,5 @@ export interface IDebt {
 
 export interface IDebtProcessingState {
   debts: Array<IDebt>;
-  grid: IAGridState;
+  // grid: IAGridState;
 }

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAGridFilterRequest } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -15,9 +15,10 @@ export class DebtProcessingEffects {
   @Effect()
   fetch$ = this.actions
     .ofType(DebtProcessingService.DEBT_PROCESSING_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(([action, store]) => {
-      const request = this.gridService.buildRequest(store.debtProcessing.grid, action.payload.filters);
+    .switchMap(action => {
+      const filterRequest: IAGridFilterRequest = action.payload;
+      const request = this.gridService.buildRequest(filterRequest, filterRequest.filters);
+
       return this.read(request)
         .map(response => ({
           type: DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS,
@@ -35,7 +36,6 @@ export class DebtProcessingEffects {
     private dataService: DataService,
     private gridService: GridService,
     private notifications: NotificationsService,
-    private store: Store<IAppState>,
   ) {}
 
   read(request: any): Observable<any> {

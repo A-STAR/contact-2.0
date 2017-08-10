@@ -7,21 +7,21 @@ import { DebtProcessingService } from './debt-processing.service';
 
 const defaultState: IDebtProcessingState = {
   debts: [],
-  grid: AGRID_DEFAULT_STATE
-};
-
-const ownReducer = (ownState: IDebtProcessingState, ownAction: Action): IDebtProcessingState => {
-  switch (ownAction.type) {
-    case DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS:
-      return {
-        ...ownState,
-        debts: ownAction.payload.debts
-      };
-    default:
-      return ownState;
-  }
+  // grid: AGRID_DEFAULT_STATE
 };
 
 export function debtProcessingReducer(state: IDebtProcessingState = defaultState, action: Action): IDebtProcessingState {
-  return combineWithAGridReducer('grid', ownReducer)(state, action);
-}
+  switch (action.type) {
+    case DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS:
+      return {
+        ...state,
+        debts: action.payload.debts
+      };
+    default:
+      return state;
+  }
+};
+
+// export function debtProcessingReducer(state: IDebtProcessingState = defaultState, action: Action): IDebtProcessingState {
+//   return combineWithAGridReducer('grid', ownReducer)(state, action);
+// }

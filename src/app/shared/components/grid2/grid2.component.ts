@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
@@ -26,8 +25,9 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridEventPayload, IAGridExportableColumn, IAGridGroups, IAGridSelected,
-  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams } from './grid2.interface';
+  IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
+  IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -85,12 +85,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() fetchUrl: string;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
   @Output() onColumnGroup = new EventEmitter<IAGridGroups>();
   // NOTE: emits the `.data` property of RowNode
-  @Output() onDblClick = new EventEmitter<RowNode[]>();
+  @Output() onDblClick = new EventEmitter<any>();
   @Output() onFilter = new EventEmitter<FilterObject>();
   @Output() onPage = new EventEmitter<number>();
   @Output() onInit = new EventEmitter<void>();
@@ -112,7 +113,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private elRef: ElementRef,
     private gridService: GridService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
@@ -233,8 +233,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.onSelect.emit(selected);
   }
 
-  rowDoubleClicked(): void {
-    this.onDblClick.emit(this.selected);
+  rowDoubleClicked(row: RowNode): void {
+    this.onDblClick.emit(row.data);
   }
 
   onFilterChanged(): void {
@@ -310,6 +310,35 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     const { pageSize, page: currentPage } = this;
     return { currentPage, pageSize, sorters };
   }
+
+  buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
+    const request: IAGridRequest = {};
+    const { sorters, currentPage, pageSize } = params;
+
+    if (sorters) {
+      request.sorting = sorters.map(col => {
+        return { field: col.colId, direction: col.sort } as IAGridSorter;
+      });
+    }
+
+    if (filters.hasFilter() || filters.hasValues()) {
+      request.filtering = filters;
+    }
+
+    if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
+      request.paging = {
+        pageNumber: currentPage,
+        resultsPerPage: pageSize
+      };
+    }
+
+    return request;
+  }
+
+  // fetch(filters: FilterObject, params: IAGridRequestParams): void {
+  //   const payload = { filters, ...params };
+  //   this.gridService.fetch(payload);
+  // }
 
   private getTextFilter(model: any): any {
     const { filter, type } = model;

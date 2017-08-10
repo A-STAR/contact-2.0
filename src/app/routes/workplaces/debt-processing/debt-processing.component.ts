@@ -30,14 +30,6 @@ export class DebtProcessingComponent {
     private router: Router,
   ) {}
 
-  get currentPage$(): Observable<number> {
-    return this.debtProcessingService.currentPage$;
-  }
-
-  get pageSize$(): Observable<number> {
-    return this.debtProcessingService.pageSize$;
-  }
-
   get rows$(): Observable<Array<IDebt>> {
     return this.debtProcessingService.debts$;
   }
@@ -46,28 +38,20 @@ export class DebtProcessingComponent {
     return this.debtProcessingService.debts$.map(debts => debts.length);
   }
 
-  get selected$(): Observable<Array<IDebt>> {
-    return this.debtProcessingService.selected$;
-  }
-
-  onRequestData(action: IAGridEventPayload): void {
-    this.dispatch(action);
-    this.debtProcessingService.fetch(this.getFilter());
-  }
-
-  onFilter(gridFilters: any): void {
-    this.dispatch({ type: Grid2Component.FIRST_PAGE });
-    this.debtProcessingService.filter(this.getFilter());
+  onRequest(): void {
+    const filters = this.grid.getFilters();
+    const params = this.grid.getRequestParams();
+    this.debtProcessingService.fetch(filters, params);
   }
 
   onSelect(action: IAGridEventPayload): void {
-    this.dispatch(action);
+    // this.dispatch(action);
   }
 
-  onDblClick([id]: Array<number>): void {
+  onDblClick({ debtId }: IDebt): void {
     const { innerHeight: height, innerWidth: width} = window;
     const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
-    const win = window.open(`${this.router.url}/${id}`, '_blank', winConfig);
+    const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
     if (win.focus) { win.focus() };
   }
 
@@ -75,11 +59,4 @@ export class DebtProcessingComponent {
     return debt.debtId;
   }
 
-  private dispatch(action: Action): void {
-    this.debtProcessingService.dispatch(action.type, action.payload);
-  }
-
-  private getFilter(): FilterObject {
-    return this.grid.getFilters();
-  }
 }

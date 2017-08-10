@@ -40,7 +40,6 @@ export class GridService {
    */
   buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
     const request: IAGridRequest = {};
-    // const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
 
     if (sorters) {
@@ -48,10 +47,6 @@ export class GridService {
         return { field: col.colId, direction: col.sort } as IAGridSorter;
       });
     }
-
-    // if (filters) {
-    //   filter.addFilter(filters);
-    // }
 
     if (filters.hasFilter() || filters.hasValues()) {
       request.filtering = filters;
@@ -121,10 +116,10 @@ export class GridService {
         const dictionaryIds = metadata
           .filter(column => !!column.dictCode)
           .map(column => column.dictCode);
-        return Observable.combineLatest([
+        return Observable.combineLatest(
           Observable.of(metadata),
           this.userDictionariesService.getDictionaries(dictionaryIds)
-        ]);
+        );
       })
       .map(mapColumns);
   }

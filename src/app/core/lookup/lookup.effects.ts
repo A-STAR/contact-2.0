@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 
-import { ILookupCurrency, ILookupLanguage, ILookupRole, ILookupUser, ILookupKey } from './lookup.interface';
+import { ILookupKey } from './lookup.interface';
 
 import { DataService } from '../data/data.service';
 import { LookupService } from './lookup.service';
