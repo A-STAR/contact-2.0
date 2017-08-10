@@ -105,7 +105,7 @@ export class LookupService {
 
   private getSlice(key: ILookupKey): Observable<Array<any>> {
     const status = this._state[key] && this._state[key].status;
-    if (!status || status === LookupStatusEnum.ERROR) {
+    if (status === LookupStatusEnum.ERROR) {
       this.refresh(key);
     }
     return this.state$
