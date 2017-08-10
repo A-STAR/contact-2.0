@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { EmailService } from '../email.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -66,6 +67,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
@@ -88,9 +90,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   private id = (this.route.params as any).value.id || null;
 
   constructor(
-    private emailService: EmailService,
     private cdRef: ChangeDetectorRef,
+    private emailService: EmailService,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -116,6 +119,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.busSubscription = this.messageBusService
+      .select(EmailService.MESSAGE_EMAIL_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -134,6 +141,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {
@@ -164,8 +172,9 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     this.selectedEmailId$.next(email.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number): void {
-    this.emailService.block(18, this.id, this.selectedEmailId$.value, blockReasonCode).subscribe(() => this.onSubmitSuccess());
+  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+    this.emailService.block(18, this.id, this.selectedEmailId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
