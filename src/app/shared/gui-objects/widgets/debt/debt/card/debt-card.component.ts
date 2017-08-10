@@ -7,7 +7,6 @@ import { IDebt } from '../debt.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 import { IOption, IOptionSet } from '../../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
 import { IUserPermissions } from '../../../../../../core/user/permissions/user-permissions.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
@@ -93,7 +92,7 @@ export class DebtCardComponent {
       ? this.debtService.update(this.id, this.debtId, data)
       : this.debtService.create(this.id, data);
 
-    // action.subscribe(() => this.onBack());
+    action.subscribe(() => this.onBack());
   }
 
   onBack(): void {

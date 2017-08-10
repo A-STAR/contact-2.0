@@ -44,7 +44,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedEmail$)
-        .map(([ canUnblock, email ]) => canUnblock && !!email && email.isBlocked),
+        .map(([ canUnblock, email ]) => canUnblock && !!email && !!email.isBlocked),
       action: () => this.setDialog(2)
     },
     {

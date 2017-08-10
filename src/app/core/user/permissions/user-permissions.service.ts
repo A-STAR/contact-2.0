@@ -5,7 +5,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserPermission, IUserPermissions } from './user-permissions.interface';
+import { IUserPermissions } from './user-permissions.interface';
 
 @Injectable()
 export class UserPermissionsService {

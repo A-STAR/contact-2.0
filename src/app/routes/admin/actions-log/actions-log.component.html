@@ -3,7 +3,7 @@
   [employeesRows]="employeesRows"
   [actionTypesRows]="actionTypesRows"
   (export)="doExport()"
-  (search)="doSearch()"
+  (search)="onRequest()"
   (queryBuilderOpen)="openQueryBuilder()"
 >
 </app-actions-log-filter>
@@ -30,16 +30,13 @@
 <app-grid2
   ngClass="actions-log-grid"
   metadataKey="actions"
-  [page]="actionsLogCurrentPage | async"
-  [pageSize]="actionsLogCurrentPageSize | async"
   persistenceKey="actionsLog"
   [rows]="(actionsLogData | async).data"
   [rowCount]="(actionsLogData | async)?.total"
-  [selected]="actionsLogSelected | async"
-  (onPage)="onRequestData($event)"
-  (onPageSize)="onRequestData($event)"
-  (onSort)="onRequestData($event)"
-  (onFilter)="onFilter($event)"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onFilter)="onRequest()"
   (onSelect)="onSelect($event)"
 >
 </app-grid2>

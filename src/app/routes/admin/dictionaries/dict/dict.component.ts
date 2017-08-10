@@ -166,7 +166,6 @@ export class DictComponent implements OnDestroy {
   }
 
   onUpdateEntity(data: IDictionary): void {
-    console.log('dictionary', data);
     data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
     data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
     data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);

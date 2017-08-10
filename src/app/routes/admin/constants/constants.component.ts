@@ -60,7 +60,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   permissionSub: Subscription;
 
-  rows$: Observable<Array<IConstant>>;
+  rows$: Observable<IConstant[]>;
 
   selectedRecord$: Observable<IConstant>;
 
@@ -78,7 +78,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private valueConverterService: ValueConverterService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
+    this.rows$ = this.constantsService.state
+      .map(state => this.valueConverterService.deserializeSet(state.constants)) as Observable<IConstant[]>;
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
