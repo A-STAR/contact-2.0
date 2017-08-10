@@ -5,14 +5,14 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IDebt } from '../debt.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtService } from '../debt.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '../../../../../components/grid/grid.service';
+import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-debt-grid',

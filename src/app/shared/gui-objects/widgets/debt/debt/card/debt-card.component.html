@@ -1,0 +1,21 @@
+<div class="pb-lg">
+  <button class="btn btn-default" (click)="onBack()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+</div>
+
+<div class="pb-lg">
+  <app-debt-component-grid></app-debt-component-grid>
+</div>
+
+<div>
+  <button class="btn btn-default">История смены портфеля</button>
+  <button class="btn btn-default">История задолженности</button>
+</div>

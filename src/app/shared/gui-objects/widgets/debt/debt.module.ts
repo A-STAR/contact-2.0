@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DebtCardModule } from './card/debt-card.module';
-import { DebtGridModule } from './grid/debt-grid.module';
-
-import { DebtService } from './debt.service';
+import { DebtModule as DebtMainModule } from './debt/debt.module';
 
 @NgModule({
   imports: [
-    DebtCardModule,
-    DebtGridModule,
+    DebtMainModule,
     CommonModule,
   ],
   exports: [
-    DebtCardModule,
-    DebtGridModule,
-  ],
-  providers: [
-    DebtService,
+    DebtMainModule,
   ]
 })
 export class DebtModule { }

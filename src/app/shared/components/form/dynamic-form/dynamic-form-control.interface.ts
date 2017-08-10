@@ -45,6 +45,7 @@ export interface IDynamicFormControl {
   // options for grid select
   gridColumns?: Array<IGridColumn>;
   gridRows?: Array<any>;
+  gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
 }

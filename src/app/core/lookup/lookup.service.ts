@@ -6,6 +6,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { IAppState } from '../state/state.interface';
 import {
   ILookupState,
+  ILookupContractor,
   ILookupCurrency,
   ILookupLanguage,
   ILookupPortfolio,
@@ -33,6 +34,10 @@ export class LookupService {
     this.state$.subscribe(state => this._state = state);
   }
 
+  get contractors(): Observable<Array<ILookupContractor>> {
+    return this.getSlice('contractors').distinctUntilChanged();
+  }
+
   get currencies(): Observable<Array<ILookupCurrency>> {
     return this.getSlice('currencies').distinctUntilChanged();
   }
@@ -51,6 +56,12 @@ export class LookupService {
 
   get users(): Observable<Array<ILookupUser>> {
     return this.getSlice('users').distinctUntilChanged();
+  }
+
+  get contractorOptions(): Observable<Array<IOption>> {
+    return this.getSlice('contractors')
+      .map(contractors => this.valueConverterService.valuesToOptions(contractors))
+      .distinctUntilChanged();
   }
 
   get currencyOptions(): Observable<Array<IOption>> {

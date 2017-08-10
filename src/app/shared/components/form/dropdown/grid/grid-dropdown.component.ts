@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../../grid/grid.interface';
@@ -22,17 +22,25 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() columns: Array<IGridColumn>;
   @Input() controlClass = 'form-control';
   @Input() rows: Array<T>;
-  @Input() valueGetter: (row: T) => string = () => null;
 
   @Output() select = new EventEmitter<T>();
 
   @ViewChild('dropdown') dropdown: DropdownComponent;
 
-  private _value: string;
+  private _selection: T;
   private _isDisabled = false;
 
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  @Input() labelGetter: (row: T) => string = () => null;
+  @Input() valueGetter: (row: T) => string = () => null;
+
+  get label(): string {
+    return this._selection ? this.labelGetter(this._selection) : null;
+  }
+
   get value(): string {
-    return this._value;
+    return this._selection ? this.valueGetter(this._selection) : null;
   }
 
   get isDisabled(): boolean {
@@ -40,7 +48,8 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    this._value = value;
+    this._selection = (this.rows || []).find(row => this.valueGetter(row) === value);
+    this.cdRef.markForCheck();
   }
 
   registerOnChange(fn: Function): void {
@@ -55,17 +64,16 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   }
 
   onSelect(row: T): void {
-    this.setValue(row);
+    this.setRow(row);
   }
 
   onClearClick(): void {
-    this.setValue(null);
+    this.setRow(null);
   }
 
-  private setValue(row: T): void {
-    const newValue = row ? this.valueGetter(row) : null;
-    this._value = newValue;
-    this.propagateChange(newValue);
+  private setRow(row: T): void {
+    this._selection = row;
+    this.propagateChange(this.value);
     this.dropdown.close();
     this.select.emit(row);
   }

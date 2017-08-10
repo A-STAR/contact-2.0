@@ -33,10 +33,15 @@ export class UserDictionariesService {
   static DICTIONARY_ADDRESS_REASON_FOR_BLOCKING = 23;
   static DICTIONARY_EMAIL_TYPE                  = 24;
   static DICTIONARY_EMAIL_REASON_FOR_BLOCKING   = 25;
+  static DICTIONARY_REGIONS                     = 26; // NOT READY
   static DICTIONARY_CONTRACTOR_TYPE             = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;
   static DICTIONARY_PORTFOLIO_STAGE             = 31;
+  static DICTIONARY_DEBT_LIST_1                 = 34;
+  static DICTIONARY_DEBT_LIST_2                 = 35;
+  static DICTIONARY_DEBT_LIST_3                 = 36;
+  static DICTIONARY_DEBT_LIST_4                 = 37;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
