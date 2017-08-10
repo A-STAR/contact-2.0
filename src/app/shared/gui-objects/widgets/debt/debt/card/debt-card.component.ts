@@ -30,6 +30,8 @@ export class DebtCardComponent {
   private id = (this.route.params as any).value.id || null;
   private debtId = (this.route.params as any).value.debtId || null;
 
+  private contractorOptions: Array<IOption> = [];
+
   controls: Array<IDynamicFormItem> = null;
   debt: IDebt;
 
@@ -70,6 +72,7 @@ export class DebtCardComponent {
     )
     .take(1)
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, debt ]) => {
+      this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions);
       this.debt = {
         ...debt,
@@ -103,6 +106,11 @@ export class DebtCardComponent {
     return this.form && this.form.canSubmit;
   }
 
+  private onPortfolioChange(portfolio: ILookupPortfolio): void {
+    const contractor = this.contractorOptions.find(option => portfolio && option.label === portfolio.contractor);
+    this.form.form.patchValue({ bankId: contractor && contractor.value });
+  }
+
   private initControls(
     portfolios: Array<ILookupPortfolio>,
     contractorOptions: Array<IOption>,
@@ -131,7 +139,7 @@ export class DebtCardComponent {
         gridRows: portfolios,
         gridLabelGetter: (row: ILookupPortfolio) => row.name,
         gridValueGetter: (row: ILookupPortfolio) => row.id,
-        gridOnSelect: (row: ILookupPortfolio) => console.log(row),
+        gridOnSelect: (row: ILookupPortfolio) => this.onPortfolioChange(row),
         disabled: !permissions['DEBT_PORTFOLIO_EDIT'].valueB,
         width: 5
       },
