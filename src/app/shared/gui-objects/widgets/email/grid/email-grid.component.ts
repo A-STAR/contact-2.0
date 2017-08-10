@@ -67,6 +67,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
@@ -119,7 +120,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.messageBusService
+    this.busSubscription = this.messageBusService
       .select(EmailService.MESSAGE_EMAIL_SAVED)
       .subscribe(() => this.fetch());
   }
@@ -140,6 +141,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {

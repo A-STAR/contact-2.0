@@ -67,6 +67,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
@@ -125,7 +126,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.messageBusService
+    this.busSubscription = this.messageBusService
       .select(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
   }
@@ -146,6 +147,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {
