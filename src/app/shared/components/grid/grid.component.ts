@@ -145,7 +145,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
     if (rows) {
       // This clears the current selection, otherwise it'd stay
-      this.selected = [];
+      // this.selected = [];
     }
   }
 

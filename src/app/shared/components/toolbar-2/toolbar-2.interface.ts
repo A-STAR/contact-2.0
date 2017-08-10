@@ -17,7 +17,7 @@ export enum ToolbarItemTypeEnum {
   CHECKBOX,
 }
 
-export type IToolbarActionCreator = () => void;
+export type IToolbarAction = () => void;
 
 export interface IToolbarDefaultElement {
   icon: string;
@@ -25,7 +25,7 @@ export interface IToolbarDefaultElement {
 }
 
 export interface IToolbarElement {
-  action: IToolbarActionCreator | Action;
+  action: IToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
 }

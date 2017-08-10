@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
-import { IGridColumn } from '../../../../components/grid/grid.interface';
 import { ILookupPortfolio } from '../../../../../core/lookup/lookup.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';

@@ -187,7 +187,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   }
 
   findIndexInSelection(node: ITreeNode): number {
-    let index: number = -1;
+    let index = -1;
     if (this.selectionMode && this.selection) {
       if (this.isSingleSelectionMode()) {
         index = this.selection === node ? 0 : -1;

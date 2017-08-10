@@ -44,7 +44,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
-        .map(([ canUnblock, phone ]) => canUnblock && !!phone && phone.isBlocked),
+        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isBlocked),
       action: () => this.setDialog(2)
     },
     {

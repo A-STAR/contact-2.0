@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
@@ -41,7 +40,6 @@ export class GridService {
    */
   buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
     const request: IAGridRequest = {};
-    const filter: FilterObject = FilterObject.create().and();
     const { sorters, currentPage, pageSize } = params;
 
     if (sorters) {
@@ -50,12 +48,8 @@ export class GridService {
       });
     }
 
-    if (filters) {
-      filter.addFilter(filters);
-    }
-
-    if (filter.hasFilter() || filter.hasValues()) {
-      request.filtering = filter;
+    if (filters.hasFilter() || filters.hasValues()) {
+      request.filtering = filters;
     }
 
     if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
@@ -74,9 +68,9 @@ export class GridService {
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {object} renderers Column renderers, i.e. getters
-   * @returns {Promise<IAGridColumn[]>} Column defininitions
+   * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnMeta(metadataKey: string, renderers: object): Promise<IAGridColumn[]> {
+  getColumnMeta(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
     const mapColumns = ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
 
       const columns: IAGridColumn[] = metadata
@@ -118,18 +112,16 @@ export class GridService {
     };
 
     return this.metadataService.getMetadata(metadataKey)
-      .take(1)
-      .toPromise()
-      .then(metadata => {
+      .flatMap(metadata => {
         const dictionaryIds = metadata
           .filter(column => !!column.dictCode)
           .map(column => column.dictCode);
-        return Promise.all([
-          metadata,
-          this.userDictionariesService.getDictionaries(dictionaryIds).take(1).toPromise()
-        ]);
+        return Observable.combineLatest(
+          Observable.of(metadata),
+          this.userDictionariesService.getDictionaries(dictionaryIds)
+        );
       })
-      .then(mapColumns);
+      .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {

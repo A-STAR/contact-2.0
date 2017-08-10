@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
-import { IAppState } from '../../../core/state/state.interface';
 import { IUser } from './users.interface';
 
 import { DataService } from '../../../core/data/data.service';
