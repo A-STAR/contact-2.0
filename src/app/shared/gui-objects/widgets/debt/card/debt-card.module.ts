@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from '../../../../components/grid/grid.module';
+import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
 import { DebtCardComponent } from './debt-card.component';
 
@@ -12,6 +13,7 @@ import { DebtCardComponent } from './debt-card.component';
     CommonModule,
     DynamicFormModule,
     GridModule,
+    Toolbar2Module,
     TranslateModule,
   ],
   exports: [
