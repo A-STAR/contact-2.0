@@ -20,8 +20,9 @@ export interface ILookupLanguage {
 
 export interface ILookupPortfolio {
   id: number;
-  contractor: string;
   name: string;
+  contractorId: number;
+  contractor: string;
 }
 
 export interface ILookupRole {

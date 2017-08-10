@@ -106,11 +106,6 @@ export class DebtCardComponent {
     return this.form && this.form.canSubmit;
   }
 
-  private onPortfolioChange(portfolio: ILookupPortfolio): void {
-    const contractor = this.contractorOptions.find(option => portfolio && option.label === portfolio.contractor);
-    this.form.form.patchValue({ bankId: contractor && contractor.value });
-  }
-
   private initControls(
     portfolios: Array<ILookupPortfolio>,
     contractorOptions: Array<IOption>,
@@ -139,7 +134,7 @@ export class DebtCardComponent {
         gridRows: portfolios,
         gridLabelGetter: (row: ILookupPortfolio) => row.name,
         gridValueGetter: (row: ILookupPortfolio) => row.id,
-        gridOnSelect: (row: ILookupPortfolio) => this.onPortfolioChange(row),
+        gridOnSelect: (row: ILookupPortfolio) => this.form.form.patchValue({ bankId: row && row.contractorId }),
         disabled: !permissions['DEBT_PORTFOLIO_EDIT'].valueB,
         width: 5
       },
