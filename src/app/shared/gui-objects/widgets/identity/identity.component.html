@@ -18,7 +18,7 @@
   actionMode="danger"
   actionTranslationKey="debtor.identityDocs.remove.confirmMessage"
   actionMessage="default.buttons.remove"
-  [messageParams]="selectedEntity | async"
+  [messageParams]="identityDoc"
   titleTranslationKey="debtor.identityDocs.remove.title"
   (action)="onRemove()"
   (cancel)="onCancel()"

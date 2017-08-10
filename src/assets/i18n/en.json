@@ -438,7 +438,7 @@
       },
       "remove": {
         "title": "Delete the document",
-        "confirmMessage": "Do you really want to delete the document {{ name }}?"
+        "confirmMessage": "Do you really want to delete the document {{ docNumber }}?"
       },
       "grid": {
         "id": "Id",

@@ -13,8 +13,6 @@ import {
   NotificationTypeEnum
 } from './notifications.interface';
 
-import { NotificationsService } from '../notifications/notifications.service';
-
 export class NotificationActionBuilder {
   private _prefix: string;
   private _response: Response;
@@ -62,7 +60,7 @@ export class NotificationActionBuilder {
       alert: this._alert
     };
 
-    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
+    return this.createAction('NOTIFICATION_PUSH', {
       notification: {
         type: this._type,
         message: this.translateMessage(messageOptions),
