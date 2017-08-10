@@ -24,9 +24,3 @@ export interface IDebt {
   dict3Code: number;
   dict4Code: number;
 }
-
-export interface IDebtComponent {
-  typeCode: number;
-  sum: number;
-  currencyId: number;
-}

@@ -3,15 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDebt, IDebtComponent } from '../debt.interface';
+import { IDebt } from '../debt.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
-import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
-import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -34,59 +32,10 @@ export class DebtCardComponent {
   controls: Array<IDynamicFormItem> = null;
   debt: IDebt;
 
-  componentsColumns: Array<IGridColumn> = [
-    { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
-    { prop: 'sum', minWidth: 150, maxWidth: 200 },
-    { prop: 'currencyId', minWidth: 150, maxWidth: 200 },
-  ];
-  componentsRows: Array<IDebtComponent> = [];
-
-  private componentRenderers: IRenderer = {
-    typeCode: [],
-    currencyId: [],
-  };
-
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
-    },
-  ];
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
-    private gridService: GridService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -165,20 +114,6 @@ export class DebtCardComponent {
         creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
         startDate: this.valueConverterService.fromISO(debt.startDate as string),
       };
-      this.cdRef.markForCheck();
-    });
-
-    Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PRODUCT_TYPE),
-      this.lookupService.currencyOptions,
-    ).subscribe(([ productTypeOptions, currencyOptions ]) => {
-      this.componentRenderers.typeCode = [ ...productTypeOptions ];
-      this.componentRenderers.currencyId = [ ...currencyOptions ];
-      this.componentsColumns = this.gridService.setRenderers(this.componentsColumns, this.componentRenderers);
-    });
-
-    this.debtService.fetchComponents(this.debtId).subscribe(components => {
-      this.componentsRows = components;
       this.cdRef.markForCheck();
     });
   }
