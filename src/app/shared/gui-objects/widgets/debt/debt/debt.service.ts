@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IDebt, IDebtComponent } from './debt.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '../../../../../core/data/data.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class DebtService {

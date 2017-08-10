@@ -4,20 +4,20 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebt, IDebtComponent } from '../debt.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
-import { IGridColumn, IRenderer } from '../../../../components/grid/grid.interface';
-import { ILookupPortfolio } from '../../../../../core/lookup/lookup.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
+import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+import { GridService } from '../../../../../components/grid/grid.service';
+import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../../core/converter/value-converter.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-debt-card',
