@@ -16,6 +16,7 @@ export class LookupEffects {
     .mergeMap((action: Action) => {
       const { key } = action.payload;
       return this.readData(key)
+        .do(() => console.log('lookup fetched'))
         .map(data => ({
           type: LookupService.LOOKUP_FETCH_SUCCESS,
           payload: { key, data }

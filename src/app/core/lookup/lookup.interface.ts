@@ -42,7 +42,7 @@ export enum LookupStatusEnum {
 }
 
 export interface ILookupSlice<T> {
-  data: Array<T>;
+  data?: Array<T>;
   status: LookupStatusEnum;
 }
 

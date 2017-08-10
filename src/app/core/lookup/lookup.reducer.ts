@@ -15,7 +15,16 @@ const defaultState: ILookupState = {
 
 export function lookupReducer(state: ILookupState = defaultState, action: Action): ILookupState {
   switch (action.type) {
-    case LookupService.LOOKUP_FETCH_SUCCESS:
+    case LookupService.LOOKUP_FETCH: {
+      const { key } = action.payload;
+      return {
+        ...state,
+        [key]: {
+          status: LookupStatusEnum.PENDING
+        }
+      };
+    }
+    case LookupService.LOOKUP_FETCH_SUCCESS: {
       const { key, data } = action.payload;
       return {
         ...state,
@@ -24,13 +33,16 @@ export function lookupReducer(state: ILookupState = defaultState, action: Action
           status: LookupStatusEnum.LOADED
         }
       };
-    case LookupService.LOOKUP_FETCH_FAILURE:
+    }
+    case LookupService.LOOKUP_FETCH_FAILURE: {
+      const { key } = action.payload;
       return {
         ...state,
         [key]: {
           status: LookupStatusEnum.ERROR
         }
       }
+    }
     default:
       return state;
   }
