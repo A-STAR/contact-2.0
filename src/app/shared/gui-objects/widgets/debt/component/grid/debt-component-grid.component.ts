@@ -12,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/too
 import { DebtComponentService } from '../debt-component.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -26,6 +27,7 @@ export class DebtComponentGridComponent implements OnDestroy {
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
 
   private gridSubscription: Subscription;
+  private busSubscription: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
@@ -75,6 +77,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     private debtComponentService: DebtComponentService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -91,6 +94,10 @@ export class DebtComponentGridComponent implements OnDestroy {
 
     // TODO(d.maltsev): check permissions
     this.fetch();
+
+    this.busSubscription = this.messageBusService
+      .select(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
