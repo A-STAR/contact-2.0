@@ -8,7 +8,10 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, IValue } from './dynamic-form-control.interface';
+
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -22,10 +25,16 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  private flattenedControls: Array<IDynamicFormControl>;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private valueConverterService: ValueConverterService,
+  ) {}
 
   ngOnInit(): void {
-    this.form = this.createForm();
+    this.flattenedControls = this.flattenFormControls(this.controls);
+    this.form = this.createForm(this.flattenedControls);
     this.populateForm();
   }
 
@@ -49,23 +58,32 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     }, {});
   }
 
+  get requestValue(): any {
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (control.dirty) {
+        acc[key] = control.value === '' ? null : this.toRequest(control.value, this.flattenedControls.find(c => c.controlName === key));
+      }
+      return acc;
+    }, {});
+  }
+
   onSelectItems(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
   }
 
-  private createForm(): FormGroup {
-    const controls = this.flattenFormControls(this.controls)
-      .reduce((acc, control: IDynamicFormControl) => {
-        const options = {
-          disabled: control.disabled,
-          value: ''
-        };
-        const validators = control.required
-          ? Validators.compose([ ...control.validators || [], Validators.required ])
-          : control.validators;
-        acc[control.controlName] = new FormControl(options, validators);
-        return acc;
-      }, {} as IControls);
+  private createForm(flattenedControls: Array<IDynamicFormControl>): FormGroup {
+    const controls = flattenedControls.reduce((acc, control: IDynamicFormControl) => {
+      const options = {
+        disabled: control.disabled,
+        value: ''
+      };
+      const validators = control.required
+        ? Validators.compose([ ...control.validators || [], Validators.required ])
+        : control.validators;
+      acc[control.controlName] = new FormControl(options, validators);
+      return acc;
+    }, {} as IControls);
 
     return this.formBuilder.group(controls);
   }
@@ -84,6 +102,20 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private populateForm(): void {
     if (this.data) {
       this.form.patchValue(this.data);
+    }
+  }
+
+  private toRequest(value: any, control: IDynamicFormControl): any {
+    switch (control.type) {
+      case 'select':
+        return Array.isArray(value) && !control.multiple ? value[0].value : value.map(item => item.value);
+      case 'datepicker':
+        return this.valueConverterService.toISO(value);
+      case 'boolean':
+      case 'checkbox':
+        return Number(value);
+      default:
+        return value;
     }
   }
 }

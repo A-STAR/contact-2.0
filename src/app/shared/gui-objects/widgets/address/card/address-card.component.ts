@@ -54,15 +54,9 @@ export class AddressCardComponent {
   }
 
   public onSubmit(): void {
-    const { value } = this.form;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
-    }
-
     const action = this.addressId
-      ? this.addressService.update(18, this.id, this.addressId, data)
-      : this.addressService.create(18, this.id, data);
+      ? this.addressService.update(18, this.id, this.addressId, this.form.requestValue)
+      : this.addressService.create(18, this.id, this.form.requestValue);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);

@@ -56,17 +56,9 @@ export class PhoneCardComponent {
   }
 
   public onSubmit(): void {
-    const { value } = this.form;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
-      stopAutoInfo: value.stopAutoInfo ? Number(value.stopAutoInfo) : undefined,
-      stopAutoSms: value.stopAutoInfo ? Number(value.stopAutoSms) : undefined,
-    }
-
     const action = this.phoneId
-      ? this.phoneService.update(18, this.id, this.phoneId, data)
-      : this.phoneService.create(18, this.id, data);
+      ? this.phoneService.update(18, this.id, this.phoneId, this.form.requestValue)
+      : this.phoneService.create(18, this.id, this.form.requestValue);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
