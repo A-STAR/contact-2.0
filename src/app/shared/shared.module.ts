@@ -38,6 +38,7 @@ import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
@@ -81,6 +82,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GuiObjectsModule,
     ImageUploadModule,
     InfoDialogModule,
+    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
@@ -146,6 +148,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     MultiSelectModule,
     NumericInputComponent,
+    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilderComponent,
