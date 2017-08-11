@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDebtComponent } from '../debt-component.interface';
+import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
 
@@ -19,10 +20,12 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   templateUrl: './debt-component-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtComponentGridComponent {
+export class DebtComponentGridComponent implements OnDestroy {
   private debtId = (this.route.params as any).value.debtId || null;
 
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
+
+  private gridSubscription: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
@@ -39,12 +42,12 @@ export class DebtComponentGridComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => null,
+      action: () => this.onAdd(),
       enabled: this.canEditDebtComponent$
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => null,
+      action: () => this.onEdit(this.selectedDebtComponentId$.value),
       enabled: Observable.combineLatest(
         this.canEditDebtComponent$,
         this.selectedDebtComponentId$
@@ -52,7 +55,7 @@ export class DebtComponentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => null,
+      action: () => this.dialog$.next('delete'),
       enabled: Observable.combineLatest(
         this.canEditDebtComponent$,
         this.selectedDebtComponentId$
@@ -60,10 +63,12 @@ export class DebtComponentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => null,
+      action: () => this.fetch(),
       enabled: this.canEditDebtComponent$
     },
   ];
+
+  private dialog$ = new BehaviorSubject<IDebtDialog>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -71,11 +76,12 @@ export class DebtComponentGridComponent {
     private gridService: GridService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PRODUCT_TYPE),
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
       this.lookupService.currencyOptions,
     ).subscribe(([ productTypeOptions, currencyOptions ]) => {
       this.renderers.typeCode = [ ...productTypeOptions ];
@@ -83,10 +89,17 @@ export class DebtComponentGridComponent {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 
-    this.debtComponentService.fetchAll(this.debtId).subscribe(components => {
-      this.components = components;
-      this.cdRef.markForCheck();
-    });
+    // TODO(d.maltsev): check permissions
+    this.fetch();
+  }
+
+  ngOnDestroy(): void {
+    this.gridSubscription.unsubscribe();
+  }
+
+  get selectedDebtComponent$(): Observable<IDebtComponent> {
+    return this.selectedDebtComponentId$
+      .map(id => this.components.find(component => component.id === id));
   }
 
   onSelect(debtComponent: IDebtComponent): void {
@@ -94,7 +107,33 @@ export class DebtComponentGridComponent {
   }
 
   onDoubleClick(debtComponent: IDebtComponent): void {
+    this.onEdit(debtComponent.id);
+  }
 
+  onRemoveSubmit(): void {
+    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value).subscribe(() => {
+      this.fetch();
+      this.dialog$.next(null);
+    });
+  }
+
+  onCloseDialog(): void {
+    this.dialog$.next(null);
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/debt-component/create` ]);
+  }
+
+  private onEdit(debtComponentId: number): void {
+    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ]);
+  }
+
+  private fetch(): void {
+    this.debtComponentService.fetchAll(this.debtId).subscribe(components => {
+      this.components = components;
+      this.cdRef.markForCheck();
+    });
   }
 
   private get canEditDebtComponent$(): Observable<boolean> {

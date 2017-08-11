@@ -34,6 +34,7 @@ export class UserDictionariesService {
   static DICTIONARY_EMAIL_TYPE                  = 24;
   static DICTIONARY_EMAIL_REASON_FOR_BLOCKING   = 25;
   static DICTIONARY_REGIONS                     = 26; // NOT READY
+  static DICTIONARY_DEBT_COMPONENTS             = 27;
   static DICTIONARY_CONTRACTOR_TYPE             = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;

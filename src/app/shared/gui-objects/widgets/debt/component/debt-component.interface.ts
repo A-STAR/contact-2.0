@@ -4,3 +4,5 @@ export interface IDebtComponent {
   sum: number;
   currencyId: number;
 }
+
+export type IDebtDialog = 'delete';
