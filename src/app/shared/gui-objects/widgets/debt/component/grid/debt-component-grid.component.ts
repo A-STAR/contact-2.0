@@ -68,7 +68,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     },
   ];
 
-  private dialog$ = new BehaviorSubject<IDebtDialog>(null);
+  dialog$ = new BehaviorSubject<IDebtDialog>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
