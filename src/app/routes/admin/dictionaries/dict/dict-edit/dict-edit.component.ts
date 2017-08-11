@@ -40,6 +40,16 @@ export class DictEditComponent extends EntityBaseComponent<IDictionary> implemen
     super.ngOnInit();
   }
 
+  toSubmittedValues(values: IDictionary): IDictionary {
+    const { parentCode, termTypeCode, typeCode } = values;
+    return {
+      ...values,
+      parentCode: Array.isArray(parentCode) ? parentCode[0].value : parentCode,
+      termTypeCode: Array.isArray(termTypeCode) ? termTypeCode[0].value : termTypeCode,
+      typeCode: Array.isArray(typeCode) ? typeCode[0].value : typeCode,
+    }
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
     const filteredControls = [
       {
