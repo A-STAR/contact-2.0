@@ -39,14 +39,14 @@ export class AddressCardComponent {
   ) {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
-      this.userPermissionsService.has('ADDRESS_EDIT'),
-      this.userPermissionsService.has('ADDRESS_COMMENT_EDIT'),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_EDIT') : Observable.of(true),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_COMMENT_EDIT') : Observable.of(true),
       // TODO(d.maltsev): pass entity type
       this.addressId ? this.addressService.fetch(18, this.id, this.addressId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, address ]) => {
-      this.controls = address.isText
+      this.controls = address && address.isText
         ? this.buildShortControls(options, canEdit, canEditComment)
         : this.buildFullControls(options, canEdit, canEditComment);
       this.address = address;
