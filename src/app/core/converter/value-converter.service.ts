@@ -78,7 +78,7 @@ export class ValueConverterService {
   }
 
   firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
-    const v: number|any[] = this.toLabeledValues(data);
+    const v = this.toLabeledValues(data);
     if (Array.isArray(v)) {
       return v.length ? v[0] : data;
     }
