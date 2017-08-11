@@ -55,6 +55,7 @@
         "DEBTOR_CARD": "Карточка должника",
         "DEBTOR_ADDRESS": "Адрес должника",
         "DEBTOR_DEBT": "Долг должника",
+        "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_PHONE": "Телефон должника",
         "TASKS": "Постановка задач",
@@ -793,6 +794,17 @@
         "portfolio": "Портфель",
         "bank": "Банк",
         "debtReasonCode": "Причина"
+      },
+      "component": {
+        "grid": {
+          "typeCode": "Тип",
+          "sum": "Сумма",
+          "currencyId": "Валюта"
+        },
+        "remove": {
+          "title": "Удаление компонента долга",
+          "confirmMessage": "Вы действительно хотите удалить компонент?"
+        }
       }
     }
   },
@@ -889,6 +901,7 @@
   "errors": {
     "server": {
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Тип компонент долга уже существует",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "dictTermAlreadyExists": "Словарный термин уже существует",

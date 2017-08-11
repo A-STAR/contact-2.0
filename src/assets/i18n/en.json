@@ -55,6 +55,7 @@
         "DEBTOR_CARD": "Debtor",
         "DEBTOR_ADDRESS": "Debtor's address",
         "DEBTOR_DEBT": "Debtor's debt",
+        "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_PHONE": "Debtor's phone",
         "TASKS": "Tasks",
@@ -764,11 +765,11 @@
         },
         "unblock": {
           "title": "Unblock phone number",
-          "confirmMessage": "Are you sure you want to unblock phone number {{ phone }}?"
+          "confirmMessage": "Are you sure you want to unblock phone {{ phone }}?"
         },
         "delete": {
           "title": "Remove phone number",
-          "confirmMessage": "Are you sure you want to remove phone number {{ phone }}?"
+          "confirmMessage": "Are you sure you want to remove phone {{ phone }}?"
         }
       }
     },
@@ -793,6 +794,17 @@
         "portfolio": "Portfolio",
         "bank": "Bank",
         "debtReasonCode": "Reason"
+      },
+      "component": {
+        "grid": {
+          "typeCode": "Type",
+          "sum": "Amount",
+          "currencyId": "Currency"
+        },
+        "remove": {
+          "title": "Remove debt component",
+          "confirmMessage": "Are you sure you want to remove debt component?"
+        }
       }
     }
   },
@@ -889,6 +901,7 @@
   "errors": {
     "server": {
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Debt component type already exists",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "dictTermAlreadyExists": "Словарный термин уже существует",

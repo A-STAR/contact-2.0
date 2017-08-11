@@ -48,11 +48,27 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     return this.form.dirty && this.form.valid;
   }
 
+  /**
+   * @deprecated
+   */
   get value(): any {
-    const { controls, value } = this.form;
-    return Object.keys(value).reduce((acc, key) => {
-      if (!controls[key].disabled) {
-        acc[key] = value[key] === '' ? null : value[key];
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (!control.disabled) {
+        acc[key] = control.value === '' ? null : control.value;
+      }
+      return acc;
+    }, {});
+  }
+
+  /**
+   * @deprecated
+   */
+  get dirtyValue(): any {
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (control.dirty) {
+        acc[key] = control.value === '' ? null : control.value;
       }
       return acc;
     }, {});
@@ -84,7 +100,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       acc[control.controlName] = new FormControl(options, validators);
       return acc;
     }, {} as IControls);
-
     return this.formBuilder.group(controls);
   }
 
