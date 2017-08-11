@@ -121,6 +121,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value).subscribe(() => {
       this.fetch();
       this.dialog$.next(null);
+      this.selectedDebtComponentId$.next(null);
     });
   }
 
