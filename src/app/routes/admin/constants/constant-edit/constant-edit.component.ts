@@ -40,9 +40,10 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
     this.langSub.unsubscribe();
   }
 
-  toSubmittedValues(constant: IConstant): IConstant {
+  toSubmittedValues(constant: IConstant): Partial<IConstant> {
     return {
-      ...constant,
+      id: this.editedEntity.id,
+      typeCode: this.editedEntity.typeCode,
       value: constant.typeCode === 2 ? this.valueConverterService.toISO(constant.value) : constant.value
     };
   }

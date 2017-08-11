@@ -69,7 +69,7 @@ export class DebtComponentCardComponent {
   }
 
   public onSubmit(): void {
-    const { value } = this.form;
+    const value = this.form.dirtyValue;
     const data = {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
