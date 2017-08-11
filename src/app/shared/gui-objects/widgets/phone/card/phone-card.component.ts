@@ -60,8 +60,8 @@ export class PhoneCardComponent {
     const data = {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
-      stopAutoInfo: value.stopAutoInfo ? Number(value.stopAutoInfo) : undefined,
-      stopAutoSms: value.stopAutoInfo ? Number(value.stopAutoSms) : undefined,
+      stopAutoInfo: value.stopAutoInfo !== undefined ? Number(value.stopAutoInfo) : undefined,
+      stopAutoSms: value.stopAutoSms !== undefined ? Number(value.stopAutoSms) : undefined,
     }
 
     const action = this.phoneId
