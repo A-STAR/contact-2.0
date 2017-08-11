@@ -901,6 +901,7 @@
   "errors": {
     "server": {
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Debt component type already exists",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "dictTermAlreadyExists": "Словарный термин уже существует",
