@@ -94,6 +94,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         disabled: control.disabled,
         value: ''
       };
+      if (control.type === 'checkbox') {
+        options.value = <any>false;
+      }
       const validators = control.required
         ? Validators.compose([ ...control.validators || [], Validators.required ])
         : control.validators;
@@ -104,8 +107,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
-    // TODO: item type
-    return formControls.reduce((acc, control: any) => {
+    return formControls.reduce((acc, control: IDynamicFormItem) => {
       const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
       return [
         ...acc,

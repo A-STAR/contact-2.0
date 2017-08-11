@@ -19,14 +19,15 @@ export interface IDynamicFormGroup {
 }
 
 export interface IDynamicFormControl {
-  label: string;
+  children?: IDynamicFormControl[];
   controlName?: string;
-  type: ControlTypes;
   dependsOn?: string;
-  required?: boolean;
   disabled?: boolean;
-  readonly?: boolean;
+  label: string;
   placeholder?: string;
+  readonly?: boolean;
+  required?: boolean;
+  type: ControlTypes;
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;

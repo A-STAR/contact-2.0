@@ -1,27 +1,27 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IGridColumn, IRenderer } from '../../../components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../components/toolbar-2/toolbar-2.interface';
-import { IIdentityDoc } from './identity.interface';
+import { IGridColumn, IRenderer } from '../../../../components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IIdentityDoc } from '../identity.interface';
 
-// import { Dialog } from '../../../../core/decorators/dialog';
-import { GridService } from '../../../components/grid/grid.service';
-import { IdentityService } from './identity.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '../../../../components/grid/grid.service';
+import { IdentityService } from '../identity.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../components/grid/grid.component';
+import { GridComponent } from '../../../../components/grid/grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-identity-grid',
-  templateUrl: './identity.component.html',
+  templateUrl: './identity-grid.component.html',
 })
 export class IdentityGridComponent implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
@@ -30,8 +30,9 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   private dialog: string;
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
-  gridSubscription: Subscription;
+  busSubscription: Subscription;
   canViewSubscription: Subscription;
+  gridSubscription: Subscription;
 
   identityDoc: IIdentityDoc;
   rows: IIdentityDoc[] = [];
@@ -56,18 +57,18 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => this.setDialog('addIdentity')
+      action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: Observable.combineLatest(this.canEdit$, this.selectedRows$)
-        .map(([canEdit, selected]) => canEdit && selected.length === 1),
-      action: () => this.setDialog('editIdentity')
+        .map(([canEdit, selected]) => canEdit && !!selected.length),
+      action: () => this.onEdit(this.identityDoc.id)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: Observable.combineLatest(this.canDelete$, this.selectedRows$)
-        .map(([canDelete, selected]) => canDelete && selected.length === 1),
+        .map(([canDelete, selected]) => canDelete && !!selected.length),
       action: () => this.setDialog('removeIdentity')
     },
     {
@@ -79,9 +80,11 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private cdRef: ChangeDetectorRef,
-    private identityService: IdentityService,
     private gridService: GridService,
+    private identityService: IdentityService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -95,11 +98,14 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
     )
     .subscribe(([ canView, identityOptions ]) => {
-      // console.log('identityOptions', identityOptions);
       this.renderers.docTypeCode = [].concat(identityOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.busSubscription = this.messageBusService
+      .select(IdentityService.MESSAGE_IDENTITY_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -116,8 +122,9 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gridSubscription.unsubscribe();
     this.selectedRows$.complete();
+    this.busSubscription.unsubscribe();
+    this.gridSubscription.unsubscribe();
   }
 
   isDialog(dialog: string): boolean {
@@ -131,7 +138,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   fetch(): void {
     if (this.parentId) {
       this.identityService
-        .fetch(this.parentId)
+        .fetchAll(this.parentId)
         .subscribe(identities => {
           this.rows = identities;
           this.selectedRows$.next([]);
@@ -139,16 +146,6 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
         });
     }
   }
-
-  onAddDocument(doc: IIdentityDoc): void {
-    this.identityService.create(this.parentId, doc)
-      .subscribe(this.onSubmitSuccess);
-  }
-
-  onEditDocument(doc: IIdentityDoc): void {
-    this.identityService.update(this.parentId, this.grid.selected[0].id, doc)
-      .subscribe(this.onSubmitSuccess);
-}
 
   onCancel(): void {
     this.setDialog(null);
@@ -165,7 +162,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(doc: IIdentityDoc): void {
-    this.setDialog('editIdentity');
+    this.onEdit(doc.id);
   }
 
   get canView$(): Observable<boolean> {
@@ -182,6 +179,14 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
 
   get canDelete$(): Observable<boolean> {
     return this.userPermissionsService.has('IDENTITY_DOCUMENT_DELETE').distinctUntilChanged();
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/identity/create` ]);
+  }
+
+  private onEdit(identityId: number): void {
+    this.router.navigate([ `${this.router.url}/identity/${identityId}` ]);
   }
 
   private clear(): void {

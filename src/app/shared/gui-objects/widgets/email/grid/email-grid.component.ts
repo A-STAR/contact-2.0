@@ -86,7 +86,6 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
 
   constructor(

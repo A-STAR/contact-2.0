@@ -8,6 +8,7 @@ export interface IIdentityDoc {
   issueDate?: Date | string;
   issuePlace?: string;
   isMain: number;
+  refPersonId?: number;
 }
 
 export interface IIDentityResponse {

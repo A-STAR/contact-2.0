@@ -1,18 +1,3 @@
-<app-add-identity
-  *ngIf="isDialog('addIdentity')"
-  (add)="onAddDocument($event)"
-  (cancel)="onCancel()"
->
-</app-add-identity>
-
-<app-edit-identity
-  *ngIf="isDialog('editIdentity')"
-  [identityDoc]="identityDoc"
-  (edit)="onEditDocument($event)"
-  (cancel)="onCancel()"
->
-</app-edit-identity>
-
 <app-dialog-action
   *ngIf="isDialog('removeIdentity')"
   actionMode="danger"
@@ -30,6 +15,7 @@
   [columns]="columns"
   columnTranslationKey="debtor.identityDocs"
   [rows]="rows"
+  selectionType="single"
   [styles]="{height: '200px'}"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)"

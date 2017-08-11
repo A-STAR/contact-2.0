@@ -57,6 +57,7 @@
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_EMAIL": "Debtor's email",
+        "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PHONE": "Debtor's phone",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
@@ -68,7 +69,7 @@
         "SEARCH_GROUPS": "Search Groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Arbitrary Reports",
+        "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help"
       }
     },
@@ -522,7 +523,7 @@
       "title": "Tasks"
     },
     "workHistoryTab": {
-      "title": "Work history (full)"
+      "title": "Work history"
     },
     "actionLogTab": {
       "title": "Actions log"

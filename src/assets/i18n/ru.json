@@ -57,6 +57,7 @@
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
+        "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PHONE": "Телефон должника",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
@@ -522,7 +523,7 @@
       "title": "Задачи"
     },
     "workHistoryTab": {
-      "title": "История работы (полная)"
+      "title": "История работы"
     },
     "actionLogTab": {
       "title": "Лог действий"
@@ -540,7 +541,7 @@
       "title": "Социальные сети"
     },
     "extrasDebtInfoTab": {
-      "title": "Доп. инфо о долге"
+      "title": "Доп. инфо"
     }
   },
   "person": {

@@ -46,10 +46,11 @@ export class DebtProcessingComponent {
   }
 
   onDblClick({ debtId }: IDebt): void {
-    const { innerHeight: height, innerWidth: width} = window;
-    const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
-    const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
-    if (win.focus) { win.focus() };
+    this.router.navigate([ `${this.router.url}/${debtId}` ]);
+    // const { innerHeight: height, innerWidth: width} = window;
+    // const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
+    // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
+    // if (win.focus) { win.focus() };
   }
 
   getRowNodeId(debt: IDebt): number {

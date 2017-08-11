@@ -1,0 +1,22 @@
+<div class="pb-lg">
+  <button class="btn btn-default" (click)="onBack()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="identity"></app-dynamic-form>
+
+<app-dialog-action
+  *ngIf="isDialog('confirmIdentity')"
+  actionMode="success"
+  actionTranslationKey="debtor.identityDocs.remove.confirmMessage"
+  actionMessage="default.buttons.OK"
+  [messageParams]="identityDoc"
+  titleTranslationKey="debtor.identityDocs.remove.title"
+  (action)="onComfirm()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
