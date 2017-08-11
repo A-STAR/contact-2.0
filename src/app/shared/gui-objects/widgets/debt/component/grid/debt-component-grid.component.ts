@@ -1,15 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDebtComponent } from '../debt-component.interface';
+import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
 
 import { DebtComponentService } from '../debt-component.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -18,8 +21,13 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   templateUrl: './debt-component-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtComponentGridComponent {
+export class DebtComponentGridComponent implements OnDestroy {
   private debtId = (this.route.params as any).value.debtId || null;
+
+  private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
+
+  private gridSubscription: Subscription;
+  private busSubscription: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
@@ -36,50 +44,47 @@ export class DebtComponentGridComponent {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      action: () => this.onAdd(),
+      enabled: this.canEditDebtComponent$
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      action: () => this.onEdit(this.selectedDebtComponentId$.value),
+      enabled: Observable.combineLatest(
+        this.canEditDebtComponent$,
+        this.selectedDebtComponentId$
+      ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: Observable.combineLatest(
-      //   this.userPermissionsService.has('CONST_VALUE_EDIT'),
-      //   this.constantsService.state.map(state => !!state.currentConstant)
-      // ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      action: () => this.dialog$.next('delete'),
+      enabled: Observable.combineLatest(
+        this.canEditDebtComponent$,
+        this.selectedDebtComponentId$
+      ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => null,
-      enabled: this.canEditDebtComponent$,
-      // enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
+      action: () => this.fetch(),
+      enabled: this.canEditDebtComponent$
     },
   ];
+
+  dialog$ = new BehaviorSubject<IDebtDialog>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtComponentService: DebtComponentService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PRODUCT_TYPE),
+    this.gridSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
       this.lookupService.currencyOptions,
     ).subscribe(([ productTypeOptions, currencyOptions ]) => {
       this.renderers.typeCode = [ ...productTypeOptions ];
@@ -87,6 +92,51 @@ export class DebtComponentGridComponent {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 
+    this.fetch();
+
+    this.busSubscription = this.messageBusService
+      .select(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
+      .subscribe(() => this.fetch());
+  }
+
+  ngOnDestroy(): void {
+    this.gridSubscription.unsubscribe();
+  }
+
+  get selectedDebtComponent$(): Observable<IDebtComponent> {
+    return this.selectedDebtComponentId$
+      .map(id => this.components.find(component => component.id === id));
+  }
+
+  onSelect(debtComponent: IDebtComponent): void {
+    this.selectedDebtComponentId$.next(debtComponent.id);
+  }
+
+  onDoubleClick(debtComponent: IDebtComponent): void {
+    this.onEdit(debtComponent.id);
+  }
+
+  onRemoveSubmit(): void {
+    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value).subscribe(() => {
+      this.fetch();
+      this.dialog$.next(null);
+      this.selectedDebtComponentId$.next(null);
+    });
+  }
+
+  onCloseDialog(): void {
+    this.dialog$.next(null);
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/debt-component/create` ]);
+  }
+
+  private onEdit(debtComponentId: number): void {
+    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ]);
+  }
+
+  private fetch(): void {
     this.debtComponentService.fetchAll(this.debtId).subscribe(components => {
       this.components = components;
       this.cdRef.markForCheck();

@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, IValue } from './dynamic-form-control.interface';
 
 @Component({
@@ -40,17 +40,25 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   get value(): any {
-    const { controls, value } = this.form;
-    return Object.keys(value).reduce((acc, key) => {
-      if (!controls[key].disabled) {
-        acc[key] = value[key] === '' ? null : value[key];
-      }
-      return acc;
-    }, {});
+    return this.getValue(control => !control.disabled);
+  }
+
+  get dirtyValue(): any {
+    return this.getValue(control => control.dirty);
   }
 
   onSelectItems(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
+  }
+
+  private getValue(filter: (control: AbstractControl) => boolean): any {
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (filter(control)) {
+        acc[key] = control.value === '' ? null : control.value;
+      }
+      return acc;
+    }, {});
   }
 
   private createForm(): FormGroup {

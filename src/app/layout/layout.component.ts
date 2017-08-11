@@ -22,6 +22,7 @@ export class LayoutComponent {
     DebtorComponent: 'DEBTOR_CARD',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
     DebtorDebtComponent: 'DEBTOR_DEBT',
+    DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
     DebtorEmailComponent: 'DEBTOR_EMAIL',
     DebtorPhoneComponent: 'DEBTOR_PHONE',
     DebtorsComponent: 'DEBT_LIST',
