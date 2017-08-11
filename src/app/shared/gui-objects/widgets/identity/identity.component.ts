@@ -95,7 +95,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
     )
     .subscribe(([ canView, identityOptions ]) => {
-      console.log('identityOptions', identityOptions);
+      // console.log('identityOptions', identityOptions);
       this.renderers.docTypeCode = [].concat(identityOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();

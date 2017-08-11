@@ -71,6 +71,7 @@ export class EditIdentityComponent extends EntityBaseComponent<IIdentityDoc> imp
       docTypeCode: Array.isArray(values.docTypeCode) ? values.docTypeCode[0].value : values.docTypeCode,
       expiryDate: values.expiryDate && this.valueService.toISO(values.expiryDate as Date) || null,
       issueDate: values.issueDate && this.valueService.toISO(values.issueDate as Date) || null,
+      isMain: Number(values.isMain)
     };
   }
 
