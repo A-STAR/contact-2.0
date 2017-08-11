@@ -62,7 +62,8 @@ export type ControlTypes = 'number'
   | 'multiselect'
   | 'image'
   | 'dialog'
-  | 'gridselect';
+  | 'gridselect'
+  | 'password';
 
 export interface IValue {
   [key: string]: any;

@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
+import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { SelectModule } from '../select/select.module';
 
@@ -19,6 +20,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     DatePickerModule,
     DropdownInputModule,
     ImageUploadModule,
+    PasswordModule,
     PopupInputModule,
     ReactiveFormsModule,
     TranslateModule,

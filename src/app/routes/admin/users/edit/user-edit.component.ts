@@ -143,7 +143,7 @@ export class UserEditComponent {
 
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
-      { label: 'users.edit.password', controlName: 'password', type: 'text', validators: [ passwordValidators ] },
+      { label: 'users.edit.password', controlName: 'password', type: 'password', validators: [ passwordValidators ] },
       { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', disabled: !this.permissions.canEditLdap,
           action: () => this.isLdapUserBeingSelected = true },
       { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
