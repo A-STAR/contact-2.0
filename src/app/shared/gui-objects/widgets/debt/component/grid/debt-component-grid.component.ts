@@ -92,7 +92,6 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 
-    // TODO(d.maltsev): check permissions
     this.fetch();
 
     this.busSubscription = this.messageBusService
