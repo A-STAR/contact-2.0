@@ -3,6 +3,10 @@ export interface IEntityAttribute {
   isUsed: boolean;
 }
 
+export interface IEntityAttributes {
+  [key: number]: IEntityAttribute;
+}
+
 export interface IEntityAttributeResponse extends IEntityAttribute {
   success: boolean;
 }
