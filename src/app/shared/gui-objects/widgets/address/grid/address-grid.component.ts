@@ -75,7 +75,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     statusCode: [],
     blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
+    isResidence: 'checkboxRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -83,7 +84,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'fullAddress' },
     { prop: 'statusCode' },
     { prop: 'isResidence' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
