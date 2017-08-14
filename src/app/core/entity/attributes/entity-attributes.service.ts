@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-import { EntityAttributesStatusEnum, IEntityAttribute, IEntityAttributesState } from './entity-attributes.interface';
+import { EntityAttributesStatusEnum, IEntityAttributes, IEntityAttributesState } from './entity-attributes.interface';
 import { IAppState } from '../../state/state.interface';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class EntityAttributesService {
     this.state$.subscribe(state => this._state = state);
   }
 
-  getAttributes(ids: Array<number>): Observable<{ [key: number]: IEntityAttribute }> {
+  getAttributes(ids: Array<number>): Observable<IEntityAttributes> {
     ids.forEach(id => {
       const status = this._state[id] && this._state[id].status;
       if (status !== EntityAttributesStatusEnum.PENDING && status !== EntityAttributesStatusEnum.LOADED) {
