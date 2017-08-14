@@ -11,6 +11,7 @@ import { IUserPermissions } from '../../../../../../core/user/permissions/user-p
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
+import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -39,6 +40,7 @@ export class DebtCardComponent {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
+    private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -68,10 +70,17 @@ export class DebtCardComponent {
         'DEBT_DICT3_EDIT_LIST',
         'DEBT_DICT4_EDIT_LIST',
       ]),
+      this.entityAttributesService.getAttributes([
+        EntityAttributesService.DICT_VALUE_1,
+        EntityAttributesService.DICT_VALUE_2,
+        EntityAttributesService.DICT_VALUE_3,
+        EntityAttributesService.DICT_VALUE_4,
+      ]),
       this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, debt ]) => {
+    .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
+      console.log(attributes);
       this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions);
       this.debt = {
