@@ -12,6 +12,8 @@ import {
   ITerm,
 } from './dictionaries.interface';
 
+import { DataService } from '../data/data.service';
+
 @Injectable()
 export class DictionariesService {
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
@@ -30,6 +32,9 @@ export class DictionariesService {
   static TERM_TRANSLATIONS_FETCH_SUCCESS = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
   static TERMS_FETCH                = 'TERMS_FETCH';
   static TERMS_FETCH_SUCCESS        = 'TERMS_FETCH_SUCCESS';
+  static TERMS_PARENT_FETCH         = 'TERMS_PARENT_FETCH';
+  static TERMS_PARENT_FETCH_SUCCESS = 'TERMS_PARENT_FETCH_SUCCESS';
+  static TERMS_PARENT_CLEAR         = 'TERMS_PARENT_CLEAR';
   static TERM_TYPES_FETCH           = 'TERM_TYPES_FETCH';
   static TERMS_TYPES_FETCH_SUCCESS  = 'TERMS_TYPES_FETCH_SUCCESS';
   static TERMS_CLEAR                = 'TERMS_CLEAR';
@@ -39,23 +44,23 @@ export class DictionariesService {
   static TERM_SELECT                = 'TERM_SELECT';
   static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(
+    private dataService: DataService,
+    private store: Store<IAppState>
+  ) {}
 
   get state(): Observable<IDictionariesState> {
-    return this.store
-      .select(state => state.dictionaries)
+    return this.store.select(state => state.dictionaries)
       .distinctUntilChanged();
   }
 
   get selectedDictionary(): Observable<IDictionary> {
-    return this.store
-      .select(state => state.dictionaries.selectedDictionary)
+    return this.state.map(dictionaries => dictionaries.selectedDictionary)
       .distinctUntilChanged();
   }
 
   get selectedTerm(): Observable<ITerm> {
-    return this.store
-      .select(state => state.dictionaries.selectedTerm)
+    return this.state.map(dictionaries => dictionaries.selectedTerm)
       .distinctUntilChanged();
   }
 
@@ -76,26 +81,32 @@ export class DictionariesService {
   }
 
   get dialogAction(): Observable<DictionariesDialogActionEnum> {
-    return this.store
-      .select(state => state.dictionaries.dialogAction)
+    return this.state.map(dictionaries => dictionaries.dialogAction)
       .distinctUntilChanged();
   }
 
   get dictionaries(): Observable<IDictionary[]> {
-    return this.store
-      .select(state => state.dictionaries.dictionaries)
+    return this.state.map(dictionaries => dictionaries.dictionaries)
       .distinctUntilChanged();
   }
 
   get terms(): Observable<ITerm[]> {
-    return this.store
-      .select(state => state.dictionaries.terms)
+    return this.state.map(dictionaries => dictionaries.terms)
+      .distinctUntilChanged();
+  }
+
+  get parentTerms(): Observable<ITerm[]> {
+    return this.state.map(dictionaries => dictionaries.parentTerms)
+      .distinctUntilChanged();
+  }
+
+  get dropdownTerms(): Observable<ITerm[]> {
+    return this.state.map(dictionaries => dictionaries.parentTerms)
       .distinctUntilChanged();
   }
 
   get dictionaryTermTypes(): Observable<ITerm[]> {
-    return this.store
-      .select((state: IAppState) => state.dictionaries.dictionaryTermTypes)
+    return this.state.map(dictionaries => dictionaries.dictionaryTermTypes)
       .distinctUntilChanged();
   }
 

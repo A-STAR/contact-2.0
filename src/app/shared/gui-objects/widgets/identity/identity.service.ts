@@ -7,8 +7,6 @@ import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
 export class IdentityService {
-  static GRID_IDENTITY_FETCH = 'DEBTOR_IDENTITY_FETCH';
-  static GRID_IDENTITY_FETCH_SUCCESS = 'DEBTOR_IDENTITY_FETCH_SUCCESS';
   static MESSAGE_IDENTITY_SAVED = 'MESSAGE_IDENTITY_SAVED';
 
   hasMain = false;

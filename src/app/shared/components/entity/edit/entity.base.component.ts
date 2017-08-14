@@ -88,8 +88,7 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     private entityBaseComponent: EntityBaseComponent<T>,
     private displayControlName: string,
     private translatedControlName: string
-  ) {
-  }
+  ) {}
 
   onInit(): void {
     const dynamicDisplayControl: IDynamicFormControl = this.flattenFormControls(this.entityBaseComponent.controls)
@@ -130,10 +129,9 @@ export class TranslationFieldsExtension<T> implements IEntityBaseComponentExtens
     this.translatedControl.markAsDirty();
   }
 
-  // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
+  // TODO: avoid duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
   private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
-    // TODO: item type
-    return formControls.reduce((acc, control: any) => {
+    return formControls.reduce((acc, control: IDynamicFormControl) => {
       const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
       return [
         ...acc,

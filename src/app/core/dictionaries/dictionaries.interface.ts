@@ -48,6 +48,7 @@ export interface IDictionariesState {
   selectedDictionary: IDictionary;
   selectedTerm: ITerm;
   terms: Array<ITerm>;
+  parentTerms: Array<ITerm>;
   dictionaryTermTypes: Array<ITerm>;
   dialogAction: DictionariesDialogActionEnum;
 }
