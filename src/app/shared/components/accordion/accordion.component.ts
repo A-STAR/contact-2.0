@@ -7,11 +7,13 @@ import { AccordionItemComponent } from './item/accordion-item.component';
   templateUrl: './accordion.component.html'
 })
 export class AccordionComponent {
-  private activeItemIndex = null;
+  private _tabs: Array<AccordionItemComponent> = [];
 
-  tabs: Array<AccordionItemComponent> = [];
+  get tabs(): Array<AccordionItemComponent> {
+    return this._tabs;
+  }
 
   addTab(item: AccordionItemComponent): void {
-    this.tabs.push(item);
+    this._tabs.push(item);
   }
 }

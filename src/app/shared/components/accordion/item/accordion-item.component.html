@@ -1,8 +1,13 @@
-<div (click)="onClick()">
-  {{ title | translate }}
+<div class="title">
+  <h4 (click)="onClick()">
+    {{ title | translate }}
+    <span [ngClass]="{ 'collapse-button': true, 'collapsed': isCollapsed }">
+      <i class="fa fa-angle-down"></i>
+    </span>
+  </h4>
 </div>
 
-<ng-container *ngIf="!isHidden">
+<div *ngIf="!isCollapsed" [@isCollapsed]>
   <ng-content>
   </ng-content>
-</ng-container>
+</div>
