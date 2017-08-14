@@ -11,6 +11,7 @@ export class IdentityService {
   static GRID_IDENTITY_FETCH_SUCCESS = 'DEBTOR_IDENTITY_FETCH_SUCCESS';
   static MESSAGE_IDENTITY_SAVED = 'MESSAGE_IDENTITY_SAVED';
 
+  hasMain = false;
   private url = '/persons/{personId}/identitydocuments';
 
   constructor(
@@ -19,7 +20,8 @@ export class IdentityService {
 
   fetchAll(personId: number): Observable<any> {
     return this.dataService.read('/persons/{personId}/identitydocuments', { personId })
-      .map(response => response.identityDocuments);
+      .map(response => response.identityDocuments)
+      .do(identityDocs => this.checkForMain(identityDocs));
   }
 
   fetch(personId: number, docId: number): Observable<IIdentityDoc> {
@@ -38,5 +40,9 @@ export class IdentityService {
 
   update(personId: number, docId: number, doc: IIdentityDoc): Observable<boolean> {
     return this.dataService.update(`${this.url}/{docId}`, { personId, docId }, doc);
+  }
+
+  private checkForMain(identityDocs: IIdentityDoc[]): void {
+    this.hasMain = identityDocs.some(doc => Boolean(doc.isMain));
   }
 }

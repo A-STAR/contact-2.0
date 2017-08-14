@@ -442,6 +442,10 @@
         "title": "Delete the document",
         "confirmMessage": "Do you really want to delete the document {{ docNumber }}?"
       },
+      "changeMain": {
+        "title": "Confirm",
+        "confirmMessage": "This debtor already has an identity doc attribute set to \"Main\". Do you really want to set this identity document as main?"
+      },
       "grid": {
         "id": "Id",
         "docTypeCode": "Type",

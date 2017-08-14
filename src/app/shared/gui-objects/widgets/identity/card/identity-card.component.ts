@@ -73,17 +73,30 @@ export class IdentityCardComponent {
   }
 
   onConfirm(): void {
-    // TODO(a.tymchuk): implement the logic
+    this.onSubmit(this.form.requestValue);
     this.setDialog(null);
   }
 
   onCancel(): void {
-    // TODO(a.tymchuk): implement the logic
     this.setDialog(null);
+    const data = { ...this.form.requestValue, isMain: 0 };
+    this.onSubmit(data);
   }
 
-  onSubmit(): void {
+  onBeforeSubmit(): void {
     const data = this.form.requestValue;
+    if (data.isMain && this.identityService.hasMain) {
+      this.setDialog('confirmIdentity');
+    } else {
+      this.onSubmit(data);
+    }
+  }
+
+  onBack(): void {
+    this.contentTabService.back();
+  }
+
+  private onSubmit(data: any): void {
     const action = this.identityId
       ? this.identityService.update(this.personId, this.identityId, data)
       : this.identityService.create(this.personId, data);
@@ -92,9 +105,5 @@ export class IdentityCardComponent {
       this.messageBusService.dispatch(IdentityService.MESSAGE_IDENTITY_SAVED);
       this.onBack();
     });
-  }
-
-  onBack(): void {
-    this.contentTabService.back();
   }
 }
