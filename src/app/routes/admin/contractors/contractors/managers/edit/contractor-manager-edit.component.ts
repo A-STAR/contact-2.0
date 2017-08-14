@@ -96,6 +96,7 @@ export class ContractorManagerEditComponent {
       { label: 'contractors.managers.grid.workPhone', controlName: 'workPhone', type: 'text' },
       { label: 'contractors.managers.grid.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'contractors.managers.grid.workAddress', controlName: 'workAddress', type: 'text' },
+      { label: 'contractors.managers.grid.email', controlName: 'email', type: 'text' },
       { label: 'contractors.managers.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
   }

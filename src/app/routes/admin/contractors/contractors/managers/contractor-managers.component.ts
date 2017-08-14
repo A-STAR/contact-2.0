@@ -64,6 +64,7 @@ export class ContractorManagersComponent implements OnDestroy {
     { prop: 'workPhone', minWidth: 100, maxWidth: 150 },
     { prop: 'intPhone', minWidth: 100, maxWidth: 150 },
     { prop: 'workAddress', minWidth: 100, maxWidth: 250 },
+    { prop: 'email', minWidth: 100, maxWidth: 200 },
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
