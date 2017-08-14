@@ -10,7 +10,7 @@ export class ComponentLogService {
   constructor(private dataService: DataService) {}
 
   read(debtId: number): Observable<Array<IComponentLogEntry>> {
-    return this.dataService.read('/debts/{debtId}/portfoliolog?directionCodes=1,2', { debtId })
+    return this.dataService.read('/debts/{debtId}/componentlog', { debtId })
       .map((response: IComponentLogsResponse) => response.componentLogs);
   }
 }

@@ -1,8 +1,10 @@
 export interface IComponentLogEntry {
-  directionCode: number;
-  portfolioName: string;
+  typeCode: number;
+  sum: number;
+  currency: string;
   fromDate: string;
   toDate: string;
+  userId: number;
   lastName: string;
   firstName: string;
   middleName: string;

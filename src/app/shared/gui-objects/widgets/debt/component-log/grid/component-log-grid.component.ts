@@ -13,7 +13,9 @@ import { toFullName } from '../../../../../../core/utils';
 })
 export class ComponentLogGridComponent {
   columns: Array<IGridColumn> = [
-    { prop: 'portfolioName', minWidth: 150, maxWidth: 250 },
+    { prop: 'typeCode', minWidth: 150, maxWidth: 250 },
+    { prop: 'sum', minWidth: 150, maxWidth: 250 },
+    { prop: 'currency', minWidth: 150, maxWidth: 250 },
     { prop: 'fromDate', minWidth: 150, maxWidth: 250 },
     { prop: 'toDate', minWidth: 150, maxWidth: 250 },
     { prop: 'fullName', minWidth: 150, maxWidth: 250 },
@@ -25,13 +27,9 @@ export class ComponentLogGridComponent {
     toDate: 'dateTimeRenderer'
   };
 
-  private _entries: Array<IComponentLogEntry>;
+  entries: Array<IComponentLogEntry>;
 
   constructor(private componentLogService: ComponentLogService) {
-    this.componentLogService.read(1).subscribe(entries => this._entries = entries);
-  }
-
-  getEntries(directionCode: number): Array<IComponentLogEntry> {
-    return (this._entries || []).filter(entry => entry.directionCode === directionCode);
+    this.componentLogService.read(1).subscribe(entries => this.entries = entries);
   }
 }
