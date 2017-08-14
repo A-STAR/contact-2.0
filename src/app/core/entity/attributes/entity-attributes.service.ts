@@ -5,8 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { EntityAttributesStatusEnum, IEntityAttribute, IEntityAttributesState } from './entity-attributes.interface';
 import { IAppState } from '../../state/state.interface';
 
-import { DataService } from '../../data/data.service';
-
 @Injectable()
 export class EntityAttributesService {
   static DICT_VALUE_1 = 198;
