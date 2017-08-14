@@ -5,6 +5,7 @@ import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/c
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
 import { IDebtProcessingState } from '../../routes/workplaces/debt-processing/debt-processing.interface';
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
+import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
 import { ILookupState } from '../lookup/lookup.interface';
 import { INotificationsState } from '../notifications/notifications.interface';
@@ -24,6 +25,7 @@ export interface IAppState {
   readonly debtors: IDebtorsState;
   readonly debtProcessing: IDebtProcessingState;
   readonly dictionaries: IDictionariesState;
+  readonly entityAttributes: IEntityAttributesState;
   readonly guiObjects: IGuiObjectsState;
   readonly lookup: ILookupState;
   readonly metadata: IMetadataState;

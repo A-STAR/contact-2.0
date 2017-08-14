@@ -9,6 +9,7 @@ import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
 import { debtProcessingReducer } from '../../routes/workplaces/debt-processing/debt-processing.reducer';
+import { entityAttributesReducer } from '../entity/attributes/entity-attributes.reducer';
 import { guiObjectsReducer } from '../gui-objects/gui-objects.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
@@ -28,6 +29,7 @@ export const reducers = {
   debtors: debtorsReducer,
   debtProcessing: debtProcessingReducer,
   dictionaries: dictionariesReducer,
+  entityAttributes: entityAttributesReducer,
   guiObjects: guiObjectsReducer,
   lookup: lookupReducer,
   notifications: notificationReducer,
