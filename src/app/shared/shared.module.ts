@@ -21,6 +21,7 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
+import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { AttachmentsModule } from './components/attachments/attachments.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
@@ -67,6 +68,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MultiSelectModule,
     PerfectScrollbarModule,
     // app modules
+    AccordionModule,
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,
@@ -130,6 +132,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ToasterModule,
     VectormapDirective,
     // App exports
+    AccordionModule,
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,
