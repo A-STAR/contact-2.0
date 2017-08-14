@@ -1,1 +1,8 @@
-Accordion item
+<div (click)="onClick()">
+  {{ title | translate }}
+</div>
+
+<ng-container *ngIf="!isHidden">
+  <ng-content>
+  </ng-content>
+</ng-container>
