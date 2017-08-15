@@ -12,7 +12,7 @@ import {
   ITerm,
 } from './dictionaries.interface';
 
-import { DataService } from '../data/data.service';
+// import { DataService } from '../data/data.service';
 
 @Injectable()
 export class DictionariesService {
@@ -45,7 +45,7 @@ export class DictionariesService {
   static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
   constructor(
-    private dataService: DataService,
+    // private dataService: DataService,
     private store: Store<IAppState>
   ) {}
 

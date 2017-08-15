@@ -66,7 +66,6 @@ export class EmployeesComponent implements OnDestroy {
   ];
 
   renderers: IRenderer = {
-    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
     isBlocked: 'checkboxRenderer',
   };
 

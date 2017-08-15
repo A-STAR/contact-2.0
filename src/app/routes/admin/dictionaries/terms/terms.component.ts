@@ -13,7 +13,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { checkboxRenderer } from '../../../../core/utils';
 
@@ -91,7 +90,6 @@ export class TermsComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;

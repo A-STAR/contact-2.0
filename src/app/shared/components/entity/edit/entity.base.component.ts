@@ -1,12 +1,6 @@
 import { EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
 
-import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import {
-  IDynamicFormControl,
-  IDynamicFormItem,
-  ISelectItemsPayload
-} from '../../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../form/dynamic-form/dynamic-form-control.interface';
 
 import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
 

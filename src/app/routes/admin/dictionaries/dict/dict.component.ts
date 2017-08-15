@@ -8,7 +8,6 @@ import { ILabeledValue } from '../../../../core/converter/value-converter.interf
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
@@ -71,7 +70,6 @@ export class DictComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
 
     this.gridService.setDictionaryRenderers(this.columns)
