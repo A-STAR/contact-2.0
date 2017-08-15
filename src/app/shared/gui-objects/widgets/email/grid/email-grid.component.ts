@@ -73,13 +73,13 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     typeCode: [],
     blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'email' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
   ];

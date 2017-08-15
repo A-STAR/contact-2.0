@@ -44,13 +44,13 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
     { prop: 'issuePlace', type: 'string' },
     { prop: 'expiryDate', type: 'date' },
     { prop: 'citizenship', type: 'string' },
-    { prop: 'isMain', localized: true, maxWidth: 70 },
+    { prop: 'isMain', maxWidth: 70 },
   ];
 
   renderers: IRenderer = {
     expiryDate: 'dateTimeRenderer',
     issueDate: 'dateTimeRenderer',
-    isMain: 'yesNoRenderer',
+    isMain: 'checkboxRenderer',
   };
 
   toolbarItems: Array<IToolbarItem> = [
