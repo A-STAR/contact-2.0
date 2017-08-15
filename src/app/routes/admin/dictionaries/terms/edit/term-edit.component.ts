@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
@@ -7,22 +7,24 @@ import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 
 import { toLabeledValues } from '../../../../../core/utils';
 
-import { EntityTranslationComponent } from '../../../../../shared/components/entity/entity.translation.component';
-
-const nameControlName = 'name';
+import { EntityTranslationComponent } from '../../../../../shared/components/entity/translation.component';
 
 @Component({
   selector: 'app-term-edit',
   templateUrl: './term-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TermEditComponent extends EntityTranslationComponent<ITerm> implements OnInit {
+export class TermEditComponent extends EntityTranslationComponent<ITerm> {
 
   @Input() languages: ILookupLanguage[];
   @Input() terms: ITerm[];
 
+  toSubmittedValues(values: ITerm): any {
+    return this.dynamicForm.requestValue;
+  }
+
   protected getControls(): Array<IDynamicFormControl> {
-    const filteredControls = [
+    const controls: IDynamicFormControl[] = [
       {
         label: 'terms.edit.code',
         controlName: 'code',
@@ -42,11 +44,12 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> impleme
       },
       {
         label: 'terms.edit.text',
-        controlName: nameControlName,
+        controlName: this.nameControlName,
         type: 'text',
         required: true
       },
       {
+        label: null,
         controlName: this.displayControlName,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',
@@ -77,13 +80,13 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> impleme
         controlName: 'isClosed',
         type: 'checkbox'
       }
-    ]
-    .filter(control => {
-      return this.isEditMode()
-        ? nameControlName !== control.controlName
-        : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
-    });
+    ];
+    // .filter(control => {
+    //   return this.isEditMode()
+    //     ? nameControlName !== control.controlName
+    //     : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
+    // });
 
-    return filteredControls as Array<IDynamicFormControl>;
+    return this.filterControls(controls);
   }
 }

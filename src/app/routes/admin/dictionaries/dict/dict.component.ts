@@ -165,18 +165,14 @@ export class DictComponent implements OnDestroy {
   }
 
   onUpdateEntity(data: IDictionary): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
-    data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
-
     const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
 
     const deletedTranslations = nameTranslations
-      .filter((item: ILabeledValue) => item.removed)
+      .filter(item => item.removed)
       .map((item: ILabeledValue) => item.value);
 
-    const updatedTranslations = nameTranslations
-      .filter((item: ILabeledValue) => !item.removed)
+    const updatedTranslations: IEntityTranslation[] = nameTranslations
+      .filter(item => !item.removed)
       .map((item: ILabeledValue) => ({
         languageId: item.value,
         value: item.context ? item.context.translation : null

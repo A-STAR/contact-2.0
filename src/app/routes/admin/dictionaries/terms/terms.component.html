@@ -1,7 +1,5 @@
 <app-term-edit
   *ngIf="isReadyForCreating | async"
-  displayControlName="translatedName"
-  translatedControlName="nameTranslations"
   [languages]="languages | async"
   [mode]="'create'"
   [terms]="dropdownTerms | async"
@@ -12,8 +10,6 @@
 
 <app-term-edit
   *ngIf="isReadyForEditing | async"
-  displayControlName="translatedName"
-  translatedControlName="nameTranslations"
   [editedEntity]="selectedEntity | async"
   [languages]="languages | async"
   [mode]="'update'"

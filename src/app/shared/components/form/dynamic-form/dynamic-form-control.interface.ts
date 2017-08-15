@@ -51,20 +51,22 @@ export interface IDynamicFormControl {
   gridOnSelect?: Function;
 }
 
-export type ControlTypes = 'number'
+export type ControlTypes =
+    'boolean'
+  | 'checkbox'
+  | 'datepicker'
+  | 'dialog'
+  | 'dynamic'
+  | 'gridselect'
+  | 'hidden'
+  | 'image'
+  | 'multiselect'
+  | 'number'
+  | 'password'
+  | 'select'
   | 'text'
   | 'textarea'
-  | 'select'
-  | 'datepicker'
-  | 'boolean'
-  | 'dynamic'
-  | 'hidden'
-  | 'checkbox'
-  | 'multiselect'
-  | 'image'
-  | 'dialog'
-  | 'gridselect'
-  | 'password';
+;
 
 export interface IValue {
   [key: string]: any;
