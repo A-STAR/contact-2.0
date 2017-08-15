@@ -1,11 +1,11 @@
 import { Input, Component, OnInit } from '@angular/core';
 
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser } from '../../organizations.interface';
 
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 
 @Component({
   selector: 'app-employee-edit',

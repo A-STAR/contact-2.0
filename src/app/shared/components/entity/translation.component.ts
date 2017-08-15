@@ -2,13 +2,10 @@ import { AfterViewInit, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
-import {
-  IDynamicFormControl,
-  IDynamicFormItem,
-  ISelectItemsPayload
-} from '../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl, IDynamicFormItem, ISelectItemsPayload
+} from '../form/dynamic-form/dynamic-form.interface';
 
-import { EntityBaseComponent } from './edit/entity.base.component';
+import { EntityBaseComponent } from './base.component';
 
 export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implements AfterViewInit, OnInit {
   displayControlName = 'translatedName';

@@ -1,8 +1,8 @@
 import { EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
-import { IDynamicFormItem } from '../../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../form/dynamic-form/dynamic-form.interface';
 
-import { DynamicFormComponent } from '../../form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '../form/dynamic-form/dynamic-form.component';
 
 export abstract class EntityBaseComponent<T> implements OnInit {
 

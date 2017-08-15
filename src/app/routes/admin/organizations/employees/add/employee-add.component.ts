@@ -3,13 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../../organizations.service';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({

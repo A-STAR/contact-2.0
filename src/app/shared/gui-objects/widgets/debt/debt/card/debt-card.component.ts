@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../debt.interface';
-import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 import { IOption, IOptionSet } from '../../../../../../core/converter/value-converter.interface';

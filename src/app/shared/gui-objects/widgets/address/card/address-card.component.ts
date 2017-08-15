@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IAddress } from '../address.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { AddressService } from '../address.service';

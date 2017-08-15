@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { EntityBaseComponent } from '../../../../shared/components/entity/base.component';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IConstant } from '../constants.interface';
 
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
