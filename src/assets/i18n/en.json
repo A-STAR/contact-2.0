@@ -810,6 +810,28 @@
           "title": "Remove debt component",
           "confirmMessage": "Are you sure you want to remove debt component?"
         }
+      },
+      "componentLog": {
+        "title": "Debt Components History",
+        "grid": {
+          "typeCode": "Type",
+          "sum": "Amount",
+          "currency": "Currency",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
+        }
+      },
+      "portfolioLog": {
+        "title": "Portfolio History",
+        "incoming": "Incoming",
+        "outgoing": "Outgoing",
+        "grid": {
+          "portfolioName": "Portfolio",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
+        }
       }
     }
   },

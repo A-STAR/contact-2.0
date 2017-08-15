@@ -1,14 +1,16 @@
 <app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab title="Входящие" [closable]="false">
+  <app-tab title="widgets.debt.portfolioLog.incoming" [closable]="false">
     <app-grid
+      columnTranslationKey="widgets.debt.portfolioLog"
       [selectionType]="null"
       [styles]="{ height: '400px' }"
       [columns]="columns"
       [rows]="getEntries(1)">
     </app-grid>
   </app-tab>
-  <app-tab title="Исходящие" [closable]="false">
+  <app-tab title="widgets.debt.portfolioLog.outgoing" [closable]="false">
     <app-grid
+      columnTranslationKey="widgets.debt.portfolioLog"
       [selectionType]="null"
       [styles]="{ height: '400px' }"
       [columns]="columns"
