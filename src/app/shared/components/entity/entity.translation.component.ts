@@ -1,4 +1,4 @@
-import { AfterViewInit, EventEmitter, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
