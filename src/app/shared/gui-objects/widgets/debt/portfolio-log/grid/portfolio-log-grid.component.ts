@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
 import { IPortfolioLogEntry } from '../portfolio-log.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
 
+import { GridService } from '../../../../../components/grid/grid.service';
 import { PortfolioLogService } from '../portfolio-log.service';
 
 import { toFullName } from '../../../../../../core/utils';
 
 @Component({
   selector: 'app-portfolio-log-grid',
-  templateUrl: './portfolio-log-grid.component.html'
+  templateUrl: './portfolio-log-grid.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioLogGridComponent {
   columns: Array<IGridColumn> = [
@@ -27,8 +29,16 @@ export class PortfolioLogGridComponent {
 
   private _entries: Array<IPortfolioLogEntry>;
 
-  constructor(private portfolioLogService: PortfolioLogService) {
-    this.portfolioLogService.read(1).subscribe(entries => this._entries = entries);
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private portfolioLogService: PortfolioLogService,
+  ) {
+    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.portfolioLogService.read(1).subscribe(entries => {
+      this._entries = entries;
+      this.cdRef.markForCheck();
+    });
   }
 
   getEntries(directionCode: number): Array<IPortfolioLogEntry> {

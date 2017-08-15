@@ -80,7 +80,6 @@ export class DebtCardComponent {
     )
     .take(1)
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
-      console.log(attributes);
       this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions);
       this.debt = {
