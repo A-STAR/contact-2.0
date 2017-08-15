@@ -115,6 +115,14 @@ export class DebtCardComponent {
     return this.form && this.form.canSubmit;
   }
 
+  get canViewComponentLog$(): Observable<boolean> {
+    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_LOG_VIEW');
+  }
+
+  get canViewPortfolioLog$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
+  }
+
   private filterOptions(options: Array<IOption>, permission: IUserPermission): Array<IOption> {
     if (permission.valueS === 'ALL') {
       return options;

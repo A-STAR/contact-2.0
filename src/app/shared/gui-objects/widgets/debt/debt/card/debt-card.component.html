@@ -17,10 +17,10 @@
 </div>
 
 <app-accordion>
-  <app-accordion-item title="История смены портфеля">
-    123
+  <app-accordion-item *ngIf="canViewPortfolioLog$ | async" title="widgets.debt.portfolioLog.title">
+    <app-portfolio-log-grid></app-portfolio-log-grid>
   </app-accordion-item>
-  <app-accordion-item title="История задолженности">
-    456
+  <app-accordion-item *ngIf="canViewComponentLog$ | async" title="widgets.debt.componentLog.title">
+    <app-component-log-grid></app-component-log-grid>
   </app-accordion-item>
 </app-accordion>
