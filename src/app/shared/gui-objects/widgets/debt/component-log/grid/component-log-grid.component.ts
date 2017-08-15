@@ -7,8 +7,6 @@ import { ComponentLogService } from '../component-log.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { toFullName } from '../../../../../../core/utils';
-
 @Component({
   selector: 'app-component-log-grid',
   templateUrl: './component-log-grid.component.html',
@@ -25,7 +23,6 @@ export class ComponentLogGridComponent {
   ];
 
   private renderers: IRenderer = {
-    fullName: toFullName,
     fromDate: 'dateTimeRenderer',
     toDate: 'dateTimeRenderer'
   };

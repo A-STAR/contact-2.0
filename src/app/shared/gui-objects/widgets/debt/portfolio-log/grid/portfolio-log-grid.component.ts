@@ -6,8 +6,6 @@ import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.inte
 import { GridService } from '../../../../../components/grid/grid.service';
 import { PortfolioLogService } from '../portfolio-log.service';
 
-import { toFullName } from '../../../../../../core/utils';
-
 @Component({
   selector: 'app-portfolio-log-grid',
   templateUrl: './portfolio-log-grid.component.html',
@@ -22,7 +20,6 @@ export class PortfolioLogGridComponent {
   ];
 
   private renderers: IRenderer = {
-    fullName: toFullName,
     fromDate: 'dateTimeRenderer',
     toDate: 'dateTimeRenderer'
   };
