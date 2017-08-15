@@ -5,9 +5,10 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../debt.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 import { IOption, IOptionSet } from '../../../../../../core/converter/value-converter.interface';
-import { IUserPermissions } from '../../../../../../core/user/permissions/user-permissions.interface';
+import { IUserPermission, IUserPermissions } from '../../../../../../core/user/permissions/user-permissions.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
@@ -81,7 +82,7 @@ export class DebtCardComponent {
     .take(1)
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
       this.contractorOptions = contractorOptions;
-      this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions);
+      this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes);
       this.debt = {
         ...debt,
         creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
@@ -122,13 +123,22 @@ export class DebtCardComponent {
     return this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
   }
 
+  private filterOptions(options: Array<IOption>, permission: IUserPermission): Array<IOption> {
+    if (permission.valueS === 'ALL') {
+      return options;
+    }
+    const values = permission.valueS.split(',');
+    return options.filter(option => values.includes(String(option.value)));
+  }
+
   private initControls(
     portfolios: Array<ILookupPortfolio>,
     contractorOptions: Array<IOption>,
     currencyOptions: Array<IOption>,
     dictionaries: IOptionSet,
     permissions: IUserPermissions,
-  ): any {
+    attributes: IEntityAttributes,
+  ): Array<IDynamicFormItem> {
     return [
       // Row 1
       {
@@ -262,38 +272,50 @@ export class DebtCardComponent {
         width: 2
       },
       // Row 5
-      {
-        label: 'widgets.debt.grid.dict1Code',
-        controlName: 'dict1Code',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1],
-        disabled: !permissions['DEBT_DICT1_EDIT_LIST'].valueS,
-        width: 3
-      },
-      {
-        label: 'widgets.debt.grid.dict2Code',
-        controlName: 'dict2Code',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2],
-        disabled: !permissions['DEBT_DICT2_EDIT_LIST'].valueS,
-        width: 3
-      },
-      {
-        label: 'widgets.debt.grid.dict3Code',
-        controlName: 'dict3Code',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3],
-        disabled: !permissions['DEBT_DICT3_EDIT_LIST'].valueS,
-        width: 3
-      },
-      {
-        label: 'widgets.debt.grid.dict4Code',
-        controlName: 'dict4Code',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4],
-        disabled: !permissions['DEBT_DICT4_EDIT_LIST'].valueS,
-        width: 3
-      },
+      attributes[EntityAttributesService.DICT_VALUE_1].isUsed
+        ? {
+          label: 'widgets.debt.grid.dict1Code',
+          controlName: 'dict1Code',
+          type: 'select',
+          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1], permissions['DEBT_DICT1_EDIT_LIST']),
+          disabled: !permissions['DEBT_DICT1_EDIT_LIST'].valueS,
+          required: attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
+          width: 3
+        }
+        : null,
+      attributes[EntityAttributesService.DICT_VALUE_2].isUsed
+        ? {
+          label: 'widgets.debt.grid.dict2Code',
+          controlName: 'dict2Code',
+          type: 'select',
+          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2], permissions['DEBT_DICT2_EDIT_LIST']),
+          disabled: !permissions['DEBT_DICT2_EDIT_LIST'].valueS,
+          required: attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
+          width: 3
+        }
+        : null,
+      attributes[EntityAttributesService.DICT_VALUE_3].isUsed
+        ? {
+          label: 'widgets.debt.grid.dict3Code',
+          controlName: 'dict3Code',
+          type: 'select',
+          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3], permissions['DEBT_DICT3_EDIT_LIST']),
+          disabled: !permissions['DEBT_DICT3_EDIT_LIST'].valueS,
+          required: attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
+          width: 3
+        }
+        : null,
+      attributes[EntityAttributesService.DICT_VALUE_4].isUsed
+        ? {
+          label: 'widgets.debt.grid.dict4Code',
+          controlName: 'dict4Code',
+          type: 'select',
+          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4], permissions['DEBT_DICT4_EDIT_LIST']),
+          disabled: !permissions['DEBT_DICT4_EDIT_LIST'].valueS,
+          required: attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
+          width: 3
+        }
+        : null,
       // Row 6
       {
         label: 'widgets.debt.grid.comment',
@@ -301,6 +323,6 @@ export class DebtCardComponent {
         type: 'textarea',
         disabled: !permissions['DEBT_EDIT'].valueB,
       }
-    ];
+    ].filter(c => c !== null) as Array<IDynamicFormItem>;
   }
 }

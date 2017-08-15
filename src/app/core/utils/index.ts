@@ -3,6 +3,8 @@
  * Description: exports small utility functions to be used across different components
  */
 
+export const toLabeledValues = item => ({ label: item.name, value: item.code });
+
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {
   return [ person.lastName, person.firstName, person.middleName ]
     .filter(Boolean).join(' ');

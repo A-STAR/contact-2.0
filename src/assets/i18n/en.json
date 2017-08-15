@@ -635,6 +635,7 @@
         "workPhone": "Work phone",
         "intPhone": "Extension",
         "workAddress": "Address",
+        "email": "Email",
         "comment": "Comment"
       },
       "messages": {

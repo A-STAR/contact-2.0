@@ -62,12 +62,12 @@ export class EmployeesComponent implements OnDestroy {
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
     { prop: 'roleCode', minWidth: 100 },
-    { prop: 'isBlocked', minWidth: 100, localized: true },
+    { prop: 'isBlocked', minWidth: 100 },
   ];
 
   renderers: IRenderer = {
     fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
   };
 
   action: IOrganizationDialogActionEnum;

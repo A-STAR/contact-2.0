@@ -635,6 +635,7 @@
         "workPhone": "Рабочий телефон",
         "intPhone": "Внутренний номер",
         "workAddress": "Адрес",
+        "email": "Email",
         "comment": "Комментарий"
       },
       "messages": {

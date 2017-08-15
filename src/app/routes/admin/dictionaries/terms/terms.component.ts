@@ -131,6 +131,10 @@ export class TermsComponent implements OnDestroy {
     return this.dictionariesService.terms;
   }
 
+  get dropdownTerms(): Observable<ITerm[]> {
+    return this.dictionariesService.dropdownTerms;
+  }
+
   get isEntityBeingCreated(): Observable<boolean> {
     return this.dictionariesService.dialogAction
       .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_ADD);
@@ -150,7 +154,9 @@ export class TermsComponent implements OnDestroy {
     return Observable.combineLatest(
       this.isEntityBeingCreated,
       this.isTermRelationsReady,
-    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+      this.isDropdownTermsReady,
+    ).map(([isEntityBeingCreated, isDictionaryRelationsReady, isDropdownTermsReady]) =>
+      isEntityBeingCreated && isDictionaryRelationsReady && isDropdownTermsReady);
   }
 
   get isReadyForEditing(): Observable<boolean> {
@@ -158,12 +164,17 @@ export class TermsComponent implements OnDestroy {
       this.isEntityBeingEdited,
       this.isTermRelationsReady,
       this.dictionariesService.isSelectedTermReady,
-    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedTermReady]) =>
-    isEntityBeingEdited && isRelationsReady && isSelectedTermReady);
+      this.isDropdownTermsReady,
+    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedTermReady, isDropdownTermsReady]) =>
+      isEntityBeingEdited && isRelationsReady && isSelectedTermReady && isDropdownTermsReady);
+  }
+
+  get isDropdownTermsReady(): Observable<boolean> {
+    return this.dropdownTerms.map(terms => !!terms);
   }
 
   get isTermRelationsReady(): Observable<boolean> {
-    return this.languages.map((languages) => !!languages);
+    return this.languages.map(languages => !!languages);
   }
 
   onRemoveSubmit(): void {
@@ -194,12 +205,12 @@ export class TermsComponent implements OnDestroy {
       const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
 
       const deletedTranslations = nameTranslations
-        .filter((item: ILabeledValue) => item.removed)
-        .map((item: ILabeledValue) => item.value);
+        .filter(item => item.removed)
+        .map(item => item.value);
 
       const updatedTranslations = nameTranslations
-        .filter((item: ILabeledValue) => !item.removed)
-        .map((item: ILabeledValue) => ({
+        .filter(item => !item.removed)
+        .map(item => ({
           languageId: item.value,
           value: item.context ? item.context.translation : null
         }))
