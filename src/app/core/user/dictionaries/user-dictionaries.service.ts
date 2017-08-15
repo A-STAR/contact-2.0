@@ -27,6 +27,7 @@ export class UserDictionariesService {
   static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;
   static DICTIONARY_PHONE_STATUS                = 18;
+  static DICTIONARY_REASON_FOR_STATUS_CHANGE    = 19;
   static DICTIONARY_PHONE_REASON_FOR_BLOCKING   = 20;
   static DICTIONARY_ADDRESS_TYPE                = 21;
   static DICTIONARY_ADDRESS_STATUS              = 22;
