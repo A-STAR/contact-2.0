@@ -8,6 +8,7 @@ import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
+import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SelectModule } from '../select/select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -22,6 +23,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ImageUploadModule,
     PasswordModule,
     PopupInputModule,
+    RadioGroupModule,
     ReactiveFormsModule,
     TranslateModule,
     SelectModule,

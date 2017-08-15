@@ -43,6 +43,7 @@ import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
+import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TimeModule } from './components/form/time/time.module';
@@ -88,6 +89,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
+    RadioGroupModule,
     SpinnerModule,
     TabstripModule,
     ToasterModule,
@@ -156,6 +158,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ProgressbarModule,
     QBuilderComponent,
     QBuilder2Module,
+    RadioGroupModule,
     RouterOutlet2Directive,
     SpinnerModule,
     TabstripModule,

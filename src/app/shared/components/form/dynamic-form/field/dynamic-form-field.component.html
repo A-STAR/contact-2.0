@@ -146,6 +146,15 @@
     </label>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'radio'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+      </span>
+    </label>
+    <app-radio-group [formControlName]="control.controlName" [options]="control.radioOptions"></app-radio-group>
+  </ng-container>
+
   <input *ngSwitchCase="'hidden'"
          type="hidden"
          class="form-control"

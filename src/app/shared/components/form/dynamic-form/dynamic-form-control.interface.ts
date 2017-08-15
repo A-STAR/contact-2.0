@@ -3,7 +3,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ISelectionAction } from '../select/select-interfaces';
-
+import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 
 export interface IValidationMessages {
   [key: string]: string;
@@ -49,6 +49,8 @@ export interface IDynamicFormControl {
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
+  // options for radio group
+  radioOptions?: Array<IRadioGroupOption>;
 }
 
 export type ControlTypes = 'number'
@@ -64,7 +66,8 @@ export type ControlTypes = 'number'
   | 'image'
   | 'dialog'
   | 'gridselect'
-  | 'password';
+  | 'password'
+  | 'radio';
 
 export interface IValue {
   [key: string]: any;
