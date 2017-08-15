@@ -14,6 +14,8 @@ export enum ToolbarItemTypeEnum {
   BUTTON_UPLOAD,
   BUTTON_BLOCK,
   BUTTON_UNBLOCK,
+  BUTTON_CHANGE_STATUS,
+  BUTTON_CLOSE,
   CHECKBOX,
 }
 

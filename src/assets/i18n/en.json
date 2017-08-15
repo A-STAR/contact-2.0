@@ -116,7 +116,9 @@
       "download": "Download",
       "upload": "Upload",
       "block": "Block",
-      "unblock": "Unblock"
+      "unblock": "Unblock",
+      "changeStatus": "Change Status",
+      "close": "Close"
     }
   },
   "queryBuilder": {

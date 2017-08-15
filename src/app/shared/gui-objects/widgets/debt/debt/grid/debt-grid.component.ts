@@ -30,8 +30,13 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ canEdit, email ]) => canEdit && !!email),
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ permission, debt ]) => permission && !!debt),
       action: () => this.onEdit(this.selectedDebtId$.value)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      enabled: Observable.combineLatest(this.canChangeStatus$, this.selectedDebt$).map(([ permission, debt ]) => permission && !!debt),
+      action: () => this.onChangeStatus()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -68,6 +73,8 @@ export class DebtGridComponent {
     debtReasonCode: [],
     creditStartDate: 'dateTimeRenderer',
   };
+
+  dialog$ = new BehaviorSubject<number>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -106,7 +113,11 @@ export class DebtGridComponent {
   }
 
   onSelect(debt: IDebt): void {
+    this.selectedDebtId$.next(debt.id);
+  }
 
+  onDialogClose(): void {
+    this.dialog$.next(null);
   }
 
   private onAdd(): void {
@@ -115,6 +126,10 @@ export class DebtGridComponent {
 
   private onEdit(debtId: number): void {
     this.router.navigate([ `${this.router.url}/debt/${debtId}` ]);
+  }
+
+  private onChangeStatus(): void {
+    this.dialog$.next(1);
   }
 
   get selectedDebt$(): Observable<IDebt> {
@@ -147,6 +162,10 @@ export class DebtGridComponent {
         'DEBT_DICT4_EDIT_LIST'
       ])
       .distinctUntilChanged();
+  }
+
+  get canChangeStatus$(): Observable<boolean> {
+    return this.userPermissionsService.has('DEBT_STATUS_EDIT_LIST');
   }
 
   private fetch(): Observable<Array<IDebt>> {

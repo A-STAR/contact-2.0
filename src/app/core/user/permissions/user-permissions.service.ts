@@ -52,6 +52,19 @@ export class UserPermissionsService {
     ).distinctUntilChanged();
   }
 
+  containsOne(permissionName: string, values: Array<number>): Observable<boolean> {
+    return this.getPermissions()
+      .map(permissions => {
+        const permission = permissions[permissionName];
+        if (permission.valueS === 'ALL') {
+          return true;
+        }
+        const options = permission.valueS.split(',').map(Number);
+        return values.reduce((acc, value) => acc || options.includes(value), false);
+      })
+      .distinctUntilChanged();
+  }
+
   private userHasPermission(permissions: IUserPermissions, permissionName: string): boolean {
     const permission = permissions[permissionName];
     return permission && permission.valueB;

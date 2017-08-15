@@ -53,12 +53,20 @@ export class Toolbar2Component {
     },
     [ToolbarItemTypeEnum.BUTTON_BLOCK]: {
       label: 'toolbar.action.block',
-      icon: 'fa fa-close',
+      icon: 'fa fa-unlock-alt',
     },
     [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: {
       label: 'toolbar.action.unblock',
-      icon: 'fa fa-check',
+      icon: 'fa fa-unlock',
     },
+    [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: {
+      label: 'toolbar.action.changeStatus',
+      icon: 'fa fa-bell',
+    },
+    [ToolbarItemTypeEnum.BUTTON_CLOSE]: {
+      label: 'toolbar.action.close',
+      icon: 'fa fa-ban',
+    }
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -74,6 +82,8 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_UPLOAD,
     ToolbarItemTypeEnum.BUTTON_BLOCK,
     ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+    ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+    ToolbarItemTypeEnum.BUTTON_CLOSE,
   ];
 
   constructor(
