@@ -756,6 +756,18 @@
         }
       }
     },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Work type",
+        "company": "Company",
+        "position": "Position",
+        "hireDate": "Hire date",
+        "dismissDate": "Dismissal date",
+        "income": "Income",
+        "currencyId": "Currency",
+        "comment": "Comment"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Type",
@@ -1081,6 +1093,7 @@
         "selectAll": "All",
         "copy": "Copy",
         "copyWithHeaders": "Copy with headers",
+        "resetColumns": "Reset settings",
         "paste": "Paste",
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",

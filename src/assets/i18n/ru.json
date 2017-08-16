@@ -756,6 +756,18 @@
         }
       }
     },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Тип работы",
+        "company": "Компания",
+        "position": "Должность",
+        "hireDate": "Дата приема",
+        "dismissDate": "Дата увольнения",
+        "income": "Доход",
+        "currencyId": "Валюта",
+        "comment": "Комментарий"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Тип",
@@ -1061,8 +1073,8 @@
         "and": "И",
         "or": "Или"
       },
-      "groupDndTitle": "Группировка",
       "groupColumn": "Группировка",
+      "groupDndTitle": "Группировка",
       "loading": "Загрузка данных...",
       "selectedCounts": "{{ selected }} выбрано / {{ length }} всего",
       "localeText": {
@@ -1081,6 +1093,7 @@
         "selectAll": "Все",
         "copy": "Копировать",
         "copyWithHeaders": "Копировать c заголовками",
+        "resetColumns": "Сбросить настройки",
         "paste": "Вставить",
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",

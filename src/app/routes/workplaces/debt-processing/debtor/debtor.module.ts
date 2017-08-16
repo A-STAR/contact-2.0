@@ -6,6 +6,7 @@ import { DebtorAddressModule } from './address/address.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDebtModule } from './debt/debt.module';
 import { DebtorEmailModule } from './email/email.module';
+import { DebtorEmploymentModule } from './employment/employment.module';
 import { DebtorIdentityModule } from './identity/identity.module';
 import { DebtorPhoneModule } from './phone/phone.module';
 
@@ -21,6 +22,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorDebtComponentModule,
     DebtorDebtModule,
     DebtorEmailModule,
+    DebtorEmploymentModule,
     DebtorIdentityModule,
     DebtorPhoneModule,
     SharedModule,

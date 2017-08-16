@@ -5,7 +5,7 @@ import { Directive, HostListener, Input } from '@angular/core';
 })
 export class OffClickDirective {
 
-  @Input() public appOffClick: any;
+  @Input() public appOffClick: Function;
 
   constructor() {
   }

@@ -6,8 +6,7 @@
     [alignTarget]="inputRef"
     [autoAlignEnabled]="autoAlignEnabled"
   >
-    <li *ngIf="filterEnabled"
-        class="app-select-search-wrapper">
+    <li *ngIf="filterEnabled" class="app-select-search-wrapper">
       <input
         appFocus
         type="text"
@@ -15,14 +14,8 @@
         [(ngModel)]="filterValue"
       >
     </li>
-    <li
-      *ngFor="let action of actions"
-      class="app-select-unselectable"
-    >
-      <div
-        class="app-select-tool"
-        (click)="actionClick(action, $event)"
-      >
+    <li *ngFor="let action of actions" class="app-select-unselectable">
+      <div class="app-select-tool" (click)="actionClick(action, $event)">
         {{ action.text | translate }}
         <span
           *ngIf="action.actionIconCls"
@@ -36,15 +29,13 @@
         [ngClass]="{ active: isActive(option) }"
         (click)="onSelectMatch($event, option)"
       >
-        <div
-          class="dropdown-item"
-          [innerHtml]="toDisplayValue(option)">
-        </div>
+        <div class="dropdown-item" [innerHtml]="toDisplayValue(option)"></div>
       </div>
     </li>
   </ul>
 </ng-template>
 
+<!-- single-select -->
 <div
   class="ui-select-container dropdown open"
   *ngIf="!multiple"
@@ -52,19 +43,12 @@
   [attr.disabled]="disabled"
   [appOffClick]="clickedOutside"
 >
-  <div
-    *ngIf="!inputMode"
-    class="ui-select-match"
-  >
+  <div *ngIf="!inputMode" class="ui-select-match">
     <span
       [ngClass]="[ inputClass, 'app-select-unselectable' ]"
       (click)="onMatchClick($event)"
     >
-      <span
-        *ngIf="active.length"
-        [innerHTML]="toDisplayValue(active[0])"
-      >
-      </span>
+      <span *ngIf="active.length" [innerHTML]="toDisplayValue(active[0])"></span>
       <i class="caret app-select-caret"></i>
     </span>
   </div>
@@ -78,10 +62,10 @@
     (click)="onInputClick($event)"
     [placeholder]="displayPlaceholder"
   >
-  <ng-container *ngTemplateOutlet="optionsTemplate">
-  </ng-container>
+  <ng-container *ngTemplateOutlet="optionsTemplate"></ng-container>
 </div>
 
+<!-- multiple-select -->
 <div tabindex="0"
      [ngStyle]="styles"
      [attr.disabled]="disabled"
@@ -116,6 +100,5 @@
     autocomplete="false"
     [placeholder]="displayPlaceholder"
   >
-  <ng-container *ngTemplateOutlet="optionsTemplate">
-  </ng-container>
+  <ng-container *ngTemplateOutlet="optionsTemplate"></ng-container>
 </div>

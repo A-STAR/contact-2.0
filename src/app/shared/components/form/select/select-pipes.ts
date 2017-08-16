@@ -16,11 +16,11 @@ export class RawDataFilterPipe implements PipeTransform {
     if (params.sortType) {
       switch (params.sortType) {
         case 'up':
-          transformedList.sort((item1: ILabeledValue, item2: ILabeledValue) =>
-            (item1.label || String(item1.value)).localeCompare((item2.label || String(item2.value))));
+          transformedList.sort((item1, item2) =>
+            (item1.label || String(item1.value)).localeCompare(item2.label || String(item2.value)));
           break;
         case 'down':
-          transformedList.sort((item1: ILabeledValue, item2: ILabeledValue) =>
+          transformedList.sort((item1, item2) =>
             (item2.label || String(item2.value)).localeCompare(item1.label || String(item1.value)));
           break;
       }
