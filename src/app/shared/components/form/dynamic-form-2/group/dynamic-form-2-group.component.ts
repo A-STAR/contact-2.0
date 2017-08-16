@@ -12,6 +12,7 @@ import { IDynamicFormGroup } from '../dynamic-form-2.interface';
 export class DynamicForm2GroupComponent {
   @Input() group: IDynamicFormGroup;
   @Input() formGroup: FormGroup;
+  @Input() border = true;
 
   trackByFn(index: number): number {
     return index;

@@ -16,6 +16,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
+import { hasDigits } from '../../../../../core/validators';
+
 @Component({
   selector: 'app-address-card',
   templateUrl: './address-card.component.html'
@@ -40,7 +42,8 @@ export class AddressCardComponent {
         {
           type: 'text',
           label: 'foo',
-          name: 'foo'
+          name: 'foo',
+          validators: hasDigits
         },
         {
           type: 'group',

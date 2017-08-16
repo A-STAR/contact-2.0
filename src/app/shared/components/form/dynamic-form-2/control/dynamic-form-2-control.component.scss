@@ -1,0 +1,23 @@
+@import "../../../../styles/app/variables.scss";
+
+.control {
+  position: relative;
+
+  .error {
+    background-color: $brand-danger;
+    border: 1px solid $brand-danger-dark;
+    border-radius: 2px;
+    color: #fff;
+    display: none;
+    font-size: $font-size-small;
+    list-style-type: none;
+    margin: 2px 0 0;
+    padding: 2px 12px;
+    position: absolute;
+    z-index: $zindex-app-validation;
+  }
+
+  &:hover .error {
+    display: block;
+  }
+}

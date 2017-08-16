@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms'
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IDynamicFormControl, IDynamicFormGroup, IDynamicFormItem, IDynamicFormValue } from './dynamic-form-2.interface';
+import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interface';
 
 @Component({
   selector: 'app-dynamic-form-2',
@@ -44,10 +44,6 @@ export class DynamicForm2Component implements OnInit {
     // TODO(d.maltsev): convert value to flat structure
     // console.log(this.rootFormGroup.get('baz.foobar'));
     return this.rootFormGroup.value;
-  }
-
-  private getGroupValue(group: IDynamicFormGroup): object {
-    return {};
   }
 
   private buildFormGroup(group: IDynamicFormGroup): FormGroup {

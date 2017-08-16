@@ -1,15 +1,14 @@
 .group {
   position: relative;
-  margin-top: 10px;
-  padding: 10px 10px 5px;
+  margin-top: 16px;
+  padding: 12px 12px 5px;
   border: 1px solid #d5d5d5;
 }
 
-.group-legend {
+.legend {
   position: absolute;
-  top: -1px;
-  left: 10px;
-  padding: 0 10px;
-  transform: translateY(-50%);
+  top: -12px;
+  left: 12px;
+  padding: 1px 8px 0;
   background: #d5d5d5;
 }

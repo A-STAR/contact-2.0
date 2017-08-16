@@ -1,6 +1,6 @@
-<div class="group">
+<div [ngClass]="{ group: border }">
   <label>
-    <span class="group-legend">
+    <span *ngIf="border" class="legend">
       {{ group.label }}
     </span>
     <div *ngFor="let item of group.children; let i = index; trackBy: trackByFn">

@@ -1,6 +1,11 @@
-<div [formGroup]="parentFormGroup">
+<div [ngClass]="{ control: true, 'has-error': displayErrors }" [formGroup]="parentFormGroup">
   <label>
     <span>{{ control.label }}</span>
     <input type="text" class="form-control" [formControlName]="control.name">
+    <ul *ngIf="displayErrors" class="error">
+      <li *ngFor="let error of errors">
+        {{ getErrorTranslationKey(error) | translate:getErrorParams(error) }}
+      </li>
+    </ul>
   </label>
 </div>
