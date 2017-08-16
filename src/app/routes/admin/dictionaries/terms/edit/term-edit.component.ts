@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 
 import { toLabeledValues } from '../../../../../core/utils';

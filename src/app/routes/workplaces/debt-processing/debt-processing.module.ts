@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: ':id/address/:addressId', component: DebtorAddressComponent },
   { path: ':id/email/create', component: DebtorEmailComponent },
   { path: ':id/email/:emailId', component: DebtorEmailComponent },
-  { path: ':id/emmployment/create', component: DebtorEmploymentComponent },
+  { path: ':id/employment/create', component: DebtorEmploymentComponent },
   { path: ':id/employment/:employmentId', component: DebtorEmploymentComponent },
   { path: ':id/phone/create', component: DebtorPhoneComponent },
   { path: ':id/identity/create', component: DebtorIdentityComponent },

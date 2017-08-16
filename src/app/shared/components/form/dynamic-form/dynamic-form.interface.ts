@@ -2,7 +2,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { ISelectionAction } from '../select/select-interfaces';
+import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 
 export interface IValidationMessages {

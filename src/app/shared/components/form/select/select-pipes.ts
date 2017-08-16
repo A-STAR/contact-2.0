@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { IRawDataFilterPipeParams } from './select-interfaces';
+import { IRawDataFilterPipeParams } from './select.interface';
 
 @Pipe({name: 'rawDataFilter'})
 export class RawDataFilterPipe implements PipeTransform {

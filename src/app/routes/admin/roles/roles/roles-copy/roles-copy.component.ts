@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPermissionRole } from '../../permissions.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 import { ILabeledValue } from '../../../../../core/converter/value-converter.interface';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
