@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
@@ -32,8 +31,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
   ];
 
   renderers: IRenderer = {
-    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
-    isBlocked: ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'),
+    isBlocked: 'checkboxRenderer',
   };
 
   get formData(): any {
@@ -47,7 +45,6 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
   constructor(
     private gridService: GridService,
     private organizationsService: OrganizationsService,
-    private translateService: TranslateService,
   ) {
     super();
     this.organizationsService.fetchNotAddedEmployees();
