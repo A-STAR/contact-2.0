@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDebt, IEmployment } from './employment.interface';
+import { IEmployment } from './employment.interface';
 
 // import { DataService } from '../../../../core/data/data.service';
 // import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -50,15 +50,15 @@ export class EmploymentService {
   fetch(personId: number, employmentId: number): Observable<IEmployment> {
     return Observable.of(records[0]);
     // return this.dataService
-    //   .read('/debts/{debtId}', { personId, debtId })
+    //   .read('/debts/{employmentId}', { personId, employmentId })
     //   .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, debt: IDebt): Observable<void> {
+  create(personId: number, employment: IEmployment): Observable<void> {
     return Observable.of(null);
   }
 
-  update(personId: number, debtId: number, debt: IDebt): Observable<void> {
+  update(personId: number, employmentId: number, employment: IEmployment): Observable<void> {
     return Observable.of(null);
   }
 }
