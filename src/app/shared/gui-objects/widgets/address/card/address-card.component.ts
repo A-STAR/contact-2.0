@@ -5,6 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IAddress } from '../address.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormGroup } from '../../../../components/form/dynamic-form-2/dynamic-form-2.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { AddressService } from '../address.service';
@@ -28,6 +29,35 @@ export class AddressCardComponent {
 
   controls: Array<IDynamicFormItem> = null;
   address: IAddress;
+
+  get group$(): Observable<IDynamicFormGroup> {
+    return Observable.of({
+      type: 'group',
+      isCollapsible: false,
+      label: 'rootGroup',
+      name: 'rootGroup',
+      children: [
+        {
+          type: 'text',
+          label: 'foo',
+          name: 'foo'
+        },
+        {
+          type: 'group',
+          isCollapsible: false,
+          label: 'baz',
+          name: 'baz',
+          children: [
+            {
+              type: 'text',
+              label: 'foobar',
+              name: 'foobar'
+            }
+          ]
+        }
+      ]
+    } as IDynamicFormGroup);
+  }
 
   constructor(
     private addressService: AddressService,

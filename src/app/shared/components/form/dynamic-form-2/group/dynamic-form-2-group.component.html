@@ -1,0 +1,18 @@
+<div class="group">
+  <label>
+    <span class="group-legend">
+      {{ group.label }}
+    </span>
+    <div *ngFor="let item of group.children; let i = index; trackBy: trackByFn">
+      <!-- Nested form group -->
+      <ng-container *ngIf="item.type === 'group'; else control">
+        <app-dynamic-form-2-group [group]="item" [formGroup]="formGroup.controls[item.name]">
+        </app-dynamic-form-2-group>
+      </ng-container>
+      <!-- Form control -->
+      <ng-template #control>
+        <app-dynamic-form-2-control [control]="item" [parentFormGroup]="formGroup"></app-dynamic-form-2-control>
+      </ng-template>
+    </div>
+  </label>
+</div>
