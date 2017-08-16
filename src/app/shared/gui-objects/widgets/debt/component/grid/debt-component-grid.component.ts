@@ -90,6 +90,7 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.renderers.typeCode = [ ...productTypeOptions ];
       this.renderers.currencyId = [ ...currencyOptions ];
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      this.cdRef.markForCheck();
     });
 
     this.fetch();
