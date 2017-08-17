@@ -47,6 +47,10 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     return this._isDisabled;
   }
 
+  get selection(): Array<T> {
+    return [ this._selection ];
+  }
+
   writeValue(value: string): void {
     this._selection = (this.rows || []).find(row => this.valueGetter(row) === value);
     this.cdRef.markForCheck();
