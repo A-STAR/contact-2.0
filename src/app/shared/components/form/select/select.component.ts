@@ -14,8 +14,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
-import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { ISelectionAction, SelectionActionTypeEnum, SelectInputValueType } from './select.interface';
+import { ISelectionAction, SelectionActionTypeEnum, ILabeledValue } from './select.interface';
+
+// NOTE: declaring it here to avoid compile-time error
+type SelectInputValueType = number | string | ILabeledValue[];
 
 @Component({
   selector: 'app-select',
@@ -35,27 +37,40 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() actions: Array<ISelectionAction> = [];
   @Input() filterEnabled = false;
   @Input() inputClass = 'form-control';
+  /**
+   * `true` means the control's `required` property is false,
+   *  therefore an empty/null value can be selected
+   */
+  @Input() nullable = true;
   @Input() placeholder = '';
   @Input() renderer: any;
-  @Input() options: ILabeledValue[] = [];
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onSelect: EventEmitter<ILabeledValue[]> = new EventEmitter<ILabeledValue[]>();
-  @Output() clickAction: EventEmitter<ISelectionAction> = new EventEmitter<ISelectionAction>();
+  @Output() onSelect = new EventEmitter<ILabeledValue[]>();
+  @Output() clickAction = new EventEmitter<ISelectionAction>();
 
   @ViewChild('input') inputRef: ElementRef;
 
   sortType: string;
   optionsOpened = false;
 
-  private _inputMode = false;
-  private _disabled;
+  private _active: ILabeledValue[];
+  private _autoAlign = false;
   private _canSelectMultipleItem = true;
   private _closableSelectedItem = true;
+  private _disabled = false;
+  private _inputMode = false;
+  private _emptyOption: ILabeledValue = { value: null, label: 'default.select.empty' };
+  private _options: ILabeledValue[] = [];
   private _readonly = true;
   private _multiple = false;
-  private _active: ILabeledValue[];
-  private _autoAlignEnabled = false;
+
+  @Input()
+  set options(options: ILabeledValue[]) {
+    this._options = this.nullable
+      ? [].concat(this._emptyOption, options || [])
+      : [].concat(options || []);
+  }
 
   @Input()
   set closableSelectedItem(value: boolean) {
@@ -68,8 +83,8 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   @Input()
-  set autoAlignEnabled(autoAlignEnabled: boolean) {
-    this._autoAlignEnabled = this.setDefault(autoAlignEnabled, this._autoAlignEnabled);
+  set autoAlign(autoAlign: boolean) {
+    this._autoAlign = this.setDefault(autoAlign, this._autoAlign);
   }
 
   @Input()
@@ -86,8 +101,12 @@ export class SelectComponent implements ControlValueAccessor {
     }
   }
 
-  get autoAlignEnabled(): boolean {
-    return this._autoAlignEnabled;
+  get options(): ILabeledValue[] {
+    return this._options;
+  }
+
+  get autoAlign(): boolean {
+    return this._autoAlign;
   }
 
   get canSelectMultipleItem(): boolean {
@@ -107,7 +126,7 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   get disabled(): boolean {
-    return this._disabled || undefined;
+    return this._disabled;
   }
 
   get inputMode(): boolean {
@@ -269,7 +288,7 @@ export class SelectComponent implements ControlValueAccessor {
   onMatchClick($event: Event): void {
     this.stopEvent($event);
 
-    if (this._disabled === true) {
+    if (this._disabled) {
       return;
     }
 

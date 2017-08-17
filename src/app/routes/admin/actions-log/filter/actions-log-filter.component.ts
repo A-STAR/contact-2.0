@@ -117,7 +117,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.startDateControl = {
         controlName: 'startDate',
-        label: 'default.dateTimeRage.from',
+        label: 'default.dateTimeRange.from',
         required: true,
         type: 'datepicker',
       },
@@ -129,7 +129,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.endDateControl = {
         controlName: 'endDate',
-        label: 'default.dateTimeRage.to',
+        label: 'default.dateTimeRange.to',
         required: true,
         type: 'datepicker',
       },

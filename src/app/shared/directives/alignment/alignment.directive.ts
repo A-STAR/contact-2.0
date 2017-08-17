@@ -5,12 +5,12 @@ import { Directive, Input, ElementRef, Renderer2, AfterViewInit } from '@angular
 })
 export class AlignmentDirective implements AfterViewInit {
   @Input() alignTarget: Element;
-  @Input() autoAlignEnabled: boolean;
+  @Input() autoAlign: boolean;
 
   constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
-    if (this.autoAlignEnabled) {
+    if (this.autoAlign) {
       this.updateElementStyles();
     }
   }
@@ -19,7 +19,7 @@ export class AlignmentDirective implements AfterViewInit {
     // TODO(a.tymchuk): 12 height?
     const height: number = this.getElementHeight(this.element.nativeElement) + 12;
     this.renderer.setStyle(this.element.nativeElement, 'position', 'absolute');
-    this.renderer.setStyle(this.element.nativeElement, 'top', `-${height}px`);
+    this.renderer.setStyle(this.element.nativeElement, 'top', `-${height - 2}px`);
   }
 
   private getElementHeight(element: Element): number {

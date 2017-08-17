@@ -53,14 +53,15 @@
         {{ control.label | translate }}
       </span>
       <app-select [formControlName]="control.controlName"
-                  [options]="control.options"
                   [actions]="control.optionsActions"
-                  [renderer]="control.optionsRenderer"
-                  [multiple]="control.multiple"
                   [closableSelectedItem]="control.closableSelectedItem"
                   [controlDisabled]="control.disabled"
-                  [readonly]="control.readonly"
+                  [multiple]="control.multiple"
+                  [nullable]="!control.required"
+                  [options]="control.options"
                   [placeholder]="control.placeholder"
+                  [readonly]="control.readonly"
+                  [renderer]="control.optionsRenderer"
                   (onSelect)="selectHandler({ control: control, items: $event})">
       </app-select>
     </label>

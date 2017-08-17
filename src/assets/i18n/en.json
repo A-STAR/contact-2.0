@@ -1061,7 +1061,7 @@
       "back": "Back",
       "block": "Block"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "From",
       "to": "To"
     },
@@ -1105,6 +1105,9 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "select" : {
+      "empty": "[empty value]"
     },
     "sex": {
       "m": "m",
