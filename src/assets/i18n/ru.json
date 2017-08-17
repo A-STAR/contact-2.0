@@ -1061,7 +1061,7 @@
       "excel": "Экспорт в Excel",
       "block": "Блокировать"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "Начало",
       "to": "Окончание"
     },
@@ -1105,6 +1105,9 @@
       "equal": "равно",
       "notEqual": "не равно",
       "empty": "пусто"
+    },
+    "select" : {
+      "empty": "[пустое значение]"
     },
     "sex": {
       "m": "м",

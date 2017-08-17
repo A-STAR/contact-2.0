@@ -105,6 +105,7 @@ export class AuthService implements CanActivate {
 
   initTokenTimer(token: string): void {
     this.zone.runOutsideAngular(() => {
+      this.clearTokenTimer();
       this.tokenTimer = setInterval(() => this.onTimer(token), AuthService.JWT_TIMER_INTERVAL);
     });
   }

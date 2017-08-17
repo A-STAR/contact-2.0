@@ -1,19 +1,12 @@
-<ng-template
-  #labelTemplate
-  let-action="action"
->
-  <span
-    *ngIf="action.hasLabel"
-    class="app-toolbar-action-text"
-  >
+<ng-template #labelTemplate let-action="action">
+  <span *ngIf="action.hasLabel" class="app-toolbar-action-text">
     {{ action.text | translate }}
   </span>
 </ng-template>
 
 <ul class="app-toolbar">
   <ng-container *ngFor="let action of actions">
-   <li *ngIf="!action.hidden"
-       class="app-control">
+   <li *ngIf="!action.hidden" class="app-control">
 
     <ng-container [ngSwitch]="action.control">
       <span
@@ -29,21 +22,22 @@
           </ng-container>
         </label>
       </span>
-      <span *ngSwitchCase="ToolbarControlEnum.SELECT">
+      <ng-container *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
           [active]="action.activeValue"
-          [autoAlignEnabled]="true"
+          [autoAlign]="true"
           [controlDisabled]="!!action.disabled"
           [options]="action.value"
           [readonly]="true"
+          [nullable]="false"
           [styles]="action.styles"
           (onSelect)="onSelect(action, $event)"
         >
         </app-select>
-      </span>
-      <span *ngSwitchCase="ToolbarControlEnum.LABEL">
+      </ng-container>
+      <ng-container *ngSwitchCase="ToolbarControlEnum.LABEL">
         <span class="app-label">{{ action.text }}</span>
-      </span>
+      </ng-container>
       <button
         *ngSwitchDefault
         [attr.title]="action.text | translate"

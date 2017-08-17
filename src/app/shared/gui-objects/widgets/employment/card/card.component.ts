@@ -21,7 +21,7 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 export class EmploymentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private dialog: string;
+  // private dialog: string;
   private personId = (this.route.params as any).value.id || null;
   private identityId = (this.route.params as any).value.identityId || null;
 

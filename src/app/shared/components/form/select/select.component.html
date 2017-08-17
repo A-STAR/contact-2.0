@@ -4,7 +4,7 @@
     appAlignment
     class="ui-select-choices dropdown-menu"
     [alignTarget]="inputRef"
-    [autoAlignEnabled]="autoAlignEnabled"
+    [autoAlign]="autoAlign"
   >
     <li *ngIf="filterEnabled" class="app-select-search-wrapper">
       <input
@@ -23,9 +23,9 @@
         </span>
       </div>
     </li>
-    <li *ngFor="let option of (options || []) | rawDataFilter: { sortType: sortType }">
+    <li *ngFor="let option of options | rawDataFilter: { sortType: sortType }">
       <div
-        class="ui-select-choices-row"
+        class="ui-select-item"
         [ngClass]="{ active: isActive(option) }"
         (click)="onSelectMatch($event, option)"
       >
@@ -35,12 +35,12 @@
   </ul>
 </ng-template>
 
-<!-- single-select -->
+<!-- single-option-select -->
 <div
   class="ui-select-container dropdown open"
   *ngIf="!multiple"
   [ngStyle]="styles"
-  [attr.disabled]="disabled"
+  [attr.disabled]="disabled || undefined"
   [appOffClick]="clickedOutside"
 >
   <div *ngIf="!inputMode" class="ui-select-match">
@@ -65,10 +65,10 @@
   <ng-container *ngTemplateOutlet="optionsTemplate"></ng-container>
 </div>
 
-<!-- multiple-select -->
+<!-- multi-option-select -->
 <div tabindex="0"
      [ngStyle]="styles"
-     [attr.disabled]="disabled"
+     [attr.disabled]="disabled || undefined"
      *ngIf="multiple"
      [appOffClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open"
