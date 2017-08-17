@@ -895,9 +895,6 @@
       "gen": { "singular": "debtor", "plural": "debtors list" },
       "info": {
         "gen": { "plural": "debtor general information" }
-      },
-      "phones": {
-        "gen": { "plural": "debtors phones list" }
       }
     },
     "metadata": {
@@ -936,6 +933,9 @@
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity document list" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "debt component", "plural": "debt components" }
     }
   },
   "errors": {

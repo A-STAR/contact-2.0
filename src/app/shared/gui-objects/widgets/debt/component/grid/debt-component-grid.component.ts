@@ -13,6 +13,7 @@ import { DebtComponentService } from '../debt-component.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
+import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -27,6 +28,7 @@ export class DebtComponentGridComponent implements OnDestroy {
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
 
   private gridSubscription: Subscription;
+  private fetchSubscription: Subscription;
   private busSubscription: Subscription;
 
   columns: Array<IGridColumn> = [
@@ -66,7 +68,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: this.canEditDebtComponent$
+      enabled: this.canViewDebtComponent$
     },
   ];
 
@@ -78,6 +80,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -93,7 +96,14 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.fetch();
+    this.fetchSubscription = this.canViewDebtComponent$.subscribe(hasPermission => {
+      if (hasPermission) {
+        this.fetch();
+      } else {
+        this.clear();
+        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
+      }
+    });
 
     this.busSubscription = this.messageBusService
       .select(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
@@ -102,6 +112,8 @@ export class DebtComponentGridComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
+    this.fetchSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get selectedDebtComponent$(): Observable<IDebtComponent> {
@@ -142,6 +154,15 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.components = components;
       this.cdRef.markForCheck();
     });
+  }
+
+  private clear(): void {
+    this.components = [];
+    this.cdRef.markForCheck();
+  }
+
+  private get canViewDebtComponent$(): Observable<boolean> {
+    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_VIEW');
   }
 
   private get canEditDebtComponent$(): Observable<boolean> {
