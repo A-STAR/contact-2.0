@@ -57,6 +57,7 @@
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
+        "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PHONE": "Телефон должника",
         "TASKS": "Постановка задач",

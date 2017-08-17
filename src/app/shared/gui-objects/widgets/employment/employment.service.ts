@@ -61,4 +61,8 @@ export class EmploymentService {
   update(personId: number, employmentId: number, employment: IEmployment): Observable<void> {
     return Observable.of(null);
   }
+
+  delete(personId: number, employmentId: number): Observable<void> {
+    return Observable.of(null);
+  }
 }

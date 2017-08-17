@@ -8,6 +8,7 @@ import { IEmployment } from '../employment.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmploymentService } from '../employment.service';
+import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -21,9 +22,9 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 export class EmploymentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  // private dialog: string;
+  private dialog: string;
   private personId = (this.route.params as any).value.id || null;
-  private identityId = (this.route.params as any).value.identityId || null;
+  private employmentId = (this.route.params as any).value.employmentId || null;
 
   controls: IDynamicFormControl[] = null;
   employment: IEmployment;
@@ -31,6 +32,7 @@ export class EmploymentCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private employmentService: EmploymentService,
+    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
@@ -38,23 +40,25 @@ export class EmploymentCardComponent {
   ) {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
-      this.identityId
+      this.lookupService.currencyOptions,
+      this.employmentId
         ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
         : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
-      this.identityId ? this.employmentService.fetch(this.personId, this.identityId) : Observable.of(null)
+      this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, canEdit, employment ]) => {
-      this.controls = ([
-        { label: 'debtor.identityDocs.grid.docTypeCode', controlName: 'docTypeCode', type: 'select', options, required: true, },
-        { label: 'debtor.identityDocs.grid.docNumber', controlName: 'docNumber',  type: 'text', required: true, },
-        { label: 'debtor.identityDocs.grid.issueDate', controlName: 'issueDate', type: 'datepicker', },
-        { label: 'debtor.identityDocs.grid.issuePlace', controlName: 'issuePlace', type: 'text', },
-        { label: 'debtor.identityDocs.grid.expiryDate', controlName: 'expiryDate', type: 'datepicker', },
-        { label: 'debtor.identityDocs.grid.citizenship', controlName: 'citizenship', type: 'text', },
-        { label: 'debtor.identityDocs.grid.comment', controlName: 'comment', type: 'textarea', },
-      ] as IDynamicFormControl[])
-      .map(control => canEdit ? control : { ...control, disabled: true });
+    .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
+      const controls: IDynamicFormControl[] = [
+        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true, },
+        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', },
+        { label: 'widgets.employment.grid.position', controlName: 'position',  type: 'text', },
+        { label: 'widgets.employment.grid.hireDate', controlName: 'hireDate', type: 'datepicker', },
+        { label: 'widgets.employment.grid.dismissDate', controlName: 'dismissDate', type: 'datepicker', },
+        { label: 'widgets.employment.grid.income', controlName: 'income',  type: 'number', },
+        { label: 'widgets.employment.grid.currencyId', controlName: 'currencyId', type: 'select', options: currencyOptions },
+        { label: 'widgets.employment.grid.comment', controlName: 'comment', type: 'textarea', },
+      ];
+      this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.employment = employment;
     });
   }
@@ -63,14 +67,22 @@ export class EmploymentCardComponent {
     return this.form && this.form.canSubmit;
   }
 
+  isDialog(dialog: string): boolean {
+    return this.dialog === dialog;
+  }
+
+  setDialog(dialog: string): void {
+    this.dialog = dialog;
+  }
+
   onBack(): void {
     this.contentTabService.back();
   }
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    const action = this.identityId
-      ? this.employmentService.update(this.personId, this.identityId, data)
+    const action = this.employmentId
+      ? this.employmentService.update(this.personId, this.employmentId, data)
       : this.employmentService.create(this.personId, data);
 
     action.subscribe(() => {

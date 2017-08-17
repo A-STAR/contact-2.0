@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -20,7 +21,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent {
-  private selectedDebtId$ = new BehaviorSubject<number>(null);
+  private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
+  private selectedEmployment: IEmployment;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -30,8 +32,19 @@ export class EmploymentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ canEdit, email ]) => canEdit && !!email),
-      action: () => this.onEdit(this.selectedDebtId$.value)
+      action: () => this.onEdit(this.selectedEmployment.id),
+      enabled: Observable.combineLatest(
+        this.canEdit$,
+        this.selectedEmployment$
+      ).map(([canEdit, selectedEmployment]) => !!canEdit && !!selectedEmployment)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.onDelete(this.selectedEmployment.id),
+      enabled: Observable.combineLatest(
+        this.canDelete$,
+        this.selectedEmployment$
+      ).map(([canDelete, selectedEmployment]) => !!canDelete && !!selectedEmployment),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -75,13 +88,13 @@ export class EmploymentGridComponent {
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
+        UserDictionariesService.DICTIONARY_WORK_TYPE
       ]),
       this.lookupService.currencyOptions,
     ).subscribe(([ dictionariesOptions, currencyOptions ]) => {
       this.renderers = {
         ...this.renderers,
-        workTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
+        workTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_WORK_TYPE] ],
         currencyId: [ ...currencyOptions ],
       }
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -96,37 +109,32 @@ export class EmploymentGridComponent {
   }
 
   onSelect(employment: IEmployment): void {
-
+    this.selectedEmployment$.next(employment)
+    this.selectedEmployment = employment;
   }
 
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/employment/create` ]);
   }
 
-  private onEdit(debtId: number): void {
-    this.router.navigate([ `${this.router.url}/employment/${debtId}` ]);
+  private onEdit(employmentId: number): void {
+    this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
   }
 
-  get selectedDebt$(): Observable<IEmployment> {
-    return this.selectedDebtId$.map(id => this.employments.find(employment => employment.id === id));
+  private onDelete(employmentId: number): Observable<void> {
+    return this.employmentService.delete(this.personId, employmentId);
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService
-      .hasOne([
-        'EMPLOYMENT_ADD',
-      ])
-      .distinctUntilChanged();
+    return this.userPermissionsService.has('EMPLOYMENT_ADD').distinctUntilChanged();
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService
-      .hasOne([
-        'DEBT_EDIT',
-        'DEBT_PORTFOLIO_EDIT',
-        'DEBT_COMPONENT_SUM_EDIT',
-      ])
-      .distinctUntilChanged();
+    return this.userPermissionsService.has('EMPLOYMENT_EDIT').distinctUntilChanged();
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
   }
 
   private fetch(): Observable<IEmployment[]> {
