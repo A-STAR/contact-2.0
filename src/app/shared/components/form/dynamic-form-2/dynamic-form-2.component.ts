@@ -33,17 +33,17 @@ export class DynamicForm2Component implements OnInit {
   }
 
   get isDirty(): boolean {
-    return this.rootFormGroup.dirty;
+    return this.rootFormGroup && this.rootFormGroup.dirty;
   }
 
   get isValid(): boolean {
-    return this.rootFormGroup.valid;
+    return this.rootFormGroup && this.rootFormGroup.valid;
   }
 
   get value(): any {
     // TODO(d.maltsev): convert value to flat structure
     // console.log(this.rootFormGroup.get('baz.foobar'));
-    return this.rootFormGroup.value;
+    return this.rootFormGroup && this.rootFormGroup.value;
   }
 
   private buildFormGroup(group: IDynamicFormGroup): FormGroup {
@@ -51,15 +51,19 @@ export class DynamicForm2Component implements OnInit {
       ...acc,
       [item.name]: item.type === 'group' ? this.buildFormGroup(item) : this.buildFormControl(item)
     }), {});
-    return new FormGroup(controls, this.composeValidators(group.validators));
+    return new FormGroup(controls, this.composeValidators(group.validators, group.required));
   }
 
   private buildFormControl(control: IDynamicFormControl): FormControl {
-    const options = { disabled: false, value: '' };
-    return new FormControl(options, control.validators);
+    const options = {
+      disabled: false,
+      value: control.type === 'checkbox' ? false : ''
+    };
+    return new FormControl(options, this.composeValidators(control.validators, control.required));
   }
 
-  private composeValidators(validators: ValidatorFn | Array<ValidatorFn>): ValidatorFn {
-    return Array.isArray(validators) ? Validators.compose(validators) : validators;
+  private composeValidators(validators: ValidatorFn | Array<ValidatorFn>, required: boolean): ValidatorFn {
+    const validatorsArray = Array.isArray(validators) ? validators : [ validators ];
+    return required ? Validators.compose([ ...validatorsArray, Validators.required]) : Validators.compose(validatorsArray);
   }
 }

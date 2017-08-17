@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { SelectModule } from '../select/select.module';
+
 import { DynamicForm2ControlComponent } from './control/dynamic-form-2-control.component';
 import { DynamicForm2GroupComponent } from './group/dynamic-form-2-group.component';
 
@@ -12,6 +14,7 @@ import { DynamicForm2Component } from './dynamic-form-2.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    SelectModule,
     TranslateModule,
   ],
   exports: [

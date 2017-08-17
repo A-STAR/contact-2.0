@@ -1,5 +1,5 @@
 <app-dynamic-form-2-group
-  [border]="false"
+  *ngIf="rootFormGroup"
   [group]="group | async"
   [formGroup]="rootFormGroup">
 </app-dynamic-form-2-group>

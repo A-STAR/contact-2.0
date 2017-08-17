@@ -1,18 +1,24 @@
-<div [ngClass]="{ group: border }">
-  <label>
-    <span *ngIf="border" class="legend">
-      {{ group.label }}
-    </span>
-    <div *ngFor="let item of group.children; let i = index; trackBy: trackByFn">
+<div [ngClass]="{ group: group.bordered }">
+  <span *ngIf="group.bordered" class="legend">
+    {{ group.label | translate }}<span *ngIf="group.required">*</span>
+  </span>
+  <div class="row">
+    <div *ngFor="let item of group.children; let i = index; trackBy: trackByFn" [ngClass]="getItemClass(item)">
       <!-- Nested form group -->
       <ng-container *ngIf="item.type === 'group'; else control">
-        <app-dynamic-form-2-group [group]="item" [formGroup]="formGroup.controls[item.name]">
+        <app-dynamic-form-2-group
+          [group]="item"
+          [formGroup]="formGroup.controls[item.name]">
         </app-dynamic-form-2-group>
       </ng-container>
       <!-- Form control -->
       <ng-template #control>
-        <app-dynamic-form-2-control [control]="item" [parentFormGroup]="formGroup"></app-dynamic-form-2-control>
+        <app-dynamic-form-2-control
+          [control]="item"
+          [parentFormGroup]="formGroup"
+          [parentTranslationKey]="group.translationKey">
+        </app-dynamic-form-2-control>
       </ng-template>
     </div>
-  </label>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicFormGroup } from '../dynamic-form-2.interface';
+import { IDynamicFormGroup, IDynamicFormItem } from '../dynamic-form-2.interface';
 
 @Component({
   selector: 'app-dynamic-form-2-group',
@@ -12,7 +12,10 @@ import { IDynamicFormGroup } from '../dynamic-form-2.interface';
 export class DynamicForm2GroupComponent {
   @Input() group: IDynamicFormGroup;
   @Input() formGroup: FormGroup;
-  @Input() border = true;
+
+  getItemClass(item: IDynamicFormItem): string {
+    return `col-xs-${item.width || 12}`;
+  }
 
   trackByFn(index: number): number {
     return index;

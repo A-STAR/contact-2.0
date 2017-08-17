@@ -11,8 +11,9 @@ export interface IDynamicFormValue {
 }
 
 export interface IDynamicFormGenericControl {
-  label: string;
   name: string;
+  label?: string;
+  required?: boolean;
   validators?: ValidatorFn | Array<ValidatorFn>;
   width?: number;
 }
@@ -20,31 +21,35 @@ export interface IDynamicFormGenericControl {
 export interface IDynamicFormGroup extends IDynamicFormGenericControl {
   type: 'group';
   children: Array<IDynamicFormItem>;
-  isCollapsible: boolean;
+  bordered?: boolean;
+  translationKey?: string;
 }
 
 export interface IDynamicFormTextControl extends IDynamicFormGenericControl {
   type: 'text';
+  placeholder: string;
 }
 
-export interface IDynamicFormDatepickerControl extends IDynamicFormGenericControl {
-  type: 'datepicker';
+export interface IDynamicFormTextAreaControl extends IDynamicFormGenericControl {
+  type: 'textarea';
+  placeholder: string;
+  nRows: number;
 }
 
 export interface IDynamicFormSelectControl extends IDynamicFormGenericControl {
   type: 'select';
   options: Array<IDynamicFormOption>;
+  placeholder: string;
 }
 
-export interface IDynamicFormRadioControl extends IDynamicFormGenericControl {
-  type: 'radio';
-  options: Array<IDynamicFormOption>;
+export interface IDynamicFormCheckboxControl extends IDynamicFormGenericControl {
+  type: 'checkbox';
 }
 
 export type IDynamicFormControl =
-  IDynamicFormTextControl |
-  IDynamicFormDatepickerControl |
+  IDynamicFormCheckboxControl |
   IDynamicFormSelectControl |
-  IDynamicFormRadioControl;
+  IDynamicFormTextControl |
+  IDynamicFormTextAreaControl;
 
 export type IDynamicFormItem = IDynamicFormControl | IDynamicFormGroup;

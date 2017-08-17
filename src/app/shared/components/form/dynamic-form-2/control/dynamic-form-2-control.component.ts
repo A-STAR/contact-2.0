@@ -16,6 +16,7 @@ export class DynamicForm2ControlComponent implements OnInit {
 
   @Input() control: IDynamicFormControl;
   @Input() parentFormGroup: FormGroup;
+  @Input() parentTranslationKey: string = null;
 
   private _control;
 
@@ -29,6 +30,11 @@ export class DynamicForm2ControlComponent implements OnInit {
 
   get errors(): Array<any> {
     return Object.keys(this._control.errors || {});
+  }
+
+  get label(): string {
+    const label = this.control.label || this.control.name;
+    return this.parentTranslationKey ? `${this.parentTranslationKey}.${label}` : label;
   }
 
   getErrorTranslationKey(key: string): string {
