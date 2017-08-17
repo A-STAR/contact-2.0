@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { IDynamicFormControl } from '../dynamic-form-2.interface';
 
@@ -11,21 +11,12 @@ import { DynamicFormGroupComponent } from '../../dynamic-form/group/dynamic-form
   styleUrls: [ './dynamic-form-2-control.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicForm2ControlComponent implements OnInit {
+export class DynamicForm2ControlComponent {
   static DEFAULT_MESSAGES = {};
 
   @Input() control: IDynamicFormControl;
   @Input() parentFormGroup: FormGroup;
   @Input() parentTranslationKey: string = null;
-
-  private _control;
-
-  constructor(private cdRef: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    this._control = this.parentFormGroup.get(this.control.name);
-    this.cdRef.markForCheck();
-  }
 
   get displayErrors(): boolean {
     return this._control && this.errors.length > 0 && (this._control.dirty || this._control.touched);
@@ -46,5 +37,9 @@ export class DynamicForm2ControlComponent implements OnInit {
 
   getErrorParams(key: string): object {
     return this._control.errors[key];
+  }
+
+  private get _control(): AbstractControl {
+    return this.parentFormGroup.get(this.control.name);
   }
 }

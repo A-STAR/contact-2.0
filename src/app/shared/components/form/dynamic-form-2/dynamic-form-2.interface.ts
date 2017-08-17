@@ -13,6 +13,7 @@ export interface IDynamicFormValue {
 export interface IDynamicFormGenericControl {
   name: string;
   label?: string;
+  disabled?: boolean;
   required?: boolean;
   validators?: ValidatorFn | Array<ValidatorFn>;
   width?: number;

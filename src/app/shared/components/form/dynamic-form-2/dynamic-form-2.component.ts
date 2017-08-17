@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -12,22 +12,27 @@ import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interfa
 })
 export class DynamicForm2Component implements OnInit {
   @Input() group: Observable<IDynamicFormGroup>;
-
-  @Input('value')
-  set value(value: any) {
-    // TODO(d.maltsev): convert value to nested structure
-    this.rootFormGroup.patchValue(value);
-  }
+  @Input() formValue: Observable<any>;
 
   rootFormGroup: FormGroup;
+
+  private controls = {};
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.group
+    Observable
+      .combineLatest(this.group, this.formValue)
       .distinctUntilChanged()
-      .subscribe(group => {
+      .subscribe(([ group, value ]) => {
         this.rootFormGroup = this.buildFormGroup(group);
+        this.controls = this.flattenControls(group);
+        Object.keys(value || {}).forEach(key => {
+          const control = this.getControl(key);
+          if (control) {
+            control.setValue(value[key]);
+          }
+        });
         this.cdRef.markForCheck();
       });
   }
@@ -41,9 +46,27 @@ export class DynamicForm2Component implements OnInit {
   }
 
   get value(): any {
-    // TODO(d.maltsev): convert value to flat structure
-    // console.log(this.rootFormGroup.get('baz.foobar'));
-    return this.rootFormGroup && this.rootFormGroup.value;
+    return Object.keys(this.controls).reduce((acc, key) => {
+      const control = this.getControl(key);
+      if (control && control.dirty) {
+        acc[key] = this.toRequest(control.value, key);
+      }
+      return acc;
+    }, {});
+  }
+
+  private getControl(key: string): AbstractControl {
+    return this.rootFormGroup && this.controls[key] && this.rootFormGroup.get(this.controls[key].path);
+  }
+
+  private flattenControls(group: IDynamicFormGroup, path: string = null): any {
+    return group.children.reduce((acc, item) => {
+      const p = path ? path + '.' + item.name : item.name;
+      return {
+        ...acc,
+        ...(item.type === 'group' ? this.flattenControls(item, p) : { [item.name]: { path: p, item } })
+      };
+    }, {});
   }
 
   private buildFormGroup(group: IDynamicFormGroup): FormGroup {
@@ -65,5 +88,16 @@ export class DynamicForm2Component implements OnInit {
   private composeValidators(validators: ValidatorFn | Array<ValidatorFn>, required: boolean): ValidatorFn {
     const validatorsArray = Array.isArray(validators) ? validators : [ validators ];
     return required ? Validators.compose([ ...validatorsArray, Validators.required]) : Validators.compose(validatorsArray);
+  }
+
+  private toRequest(value: any, key: string): any {
+    switch (this.controls[key].item.type) {
+      case 'select':
+        return Array.isArray(value) ? value[0].value : value;
+      case 'checkbox':
+        return Number(value);
+      default:
+        return value === '' ? null : value;
+    }
   }
 }
