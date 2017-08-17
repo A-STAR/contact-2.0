@@ -131,12 +131,11 @@
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Please, authenticate",
-    "LOGIN_PLACEHOLDER": "Login",
-    "PASSWORD_PLACEHOLDER": "Password",
-    "REMEMBER_ME": "Remember login",
-    "FORGOT_PASSWORD": "Forgot password?",
-    "LOGIN_BUTTON": "Login"
+    "please_authenticate": "Please, authenticate",
+    "login_placeholder": "Login",
+    "password_placeholder": "Password",
+    "remember_me": "Remember login",
+    "login_button": "Login"
   },
   "constants": {
     "title": "Constants",
@@ -526,8 +525,8 @@
     "tasksTab": {
       "title": "Tasks"
     },
-    "workHistoryTab": {
-      "title": "Work history"
+    "employmentRecordTab": {
+      "title": "Employment record"
     },
     "actionLogTab": {
       "title": "Actions log"

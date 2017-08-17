@@ -43,10 +43,10 @@ export class EmploymentGridComponent {
     { prop: 'workTypeCode' },
     { prop: 'company' },
     { prop: 'position' },
-    { prop: 'hireDate' },
-    { prop: 'dismissDate' },
-    { prop: 'income' },
-    { prop: 'currencyId' },
+    { prop: 'hireDate', maxWidth: 130 },
+    { prop: 'dismissDate', maxWidth: 130 },
+    { prop: 'income', maxWidth: 110 },
+    { prop: 'currencyId', maxWidth: 110 },
     { prop: 'comment' },
   ];
 
