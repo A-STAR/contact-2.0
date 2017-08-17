@@ -1,15 +1,40 @@
+@import "../../../../styles/app/variables.scss";
+
 .group {
   position: relative;
-  margin-top: 20px;
+  margin-top: 21px;
   padding: 16px 12px 8px;
   border: 1px solid #d5d5d5;
-}
 
-.legend {
-  position: absolute;
-  top: -12px;
-  left: 12px;
-  padding: 1px 8px 0;
-  background: #d5d5d5;
-  font-weight: bold;
+  .legend {
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    padding: 1px 8px 0;
+    background: #d5d5d5;
+    font-weight: bold;
+  }
+
+  &.error {
+    border-color: $brand-danger;
+  }
+
+  .error {
+    background-color: $brand-danger;
+    border: 1px solid $brand-danger-dark;
+    border-radius: 2px;
+    color: #fff;
+    display: none;
+    font-size: $font-size-small;
+    list-style-type: none;
+    margin: 12px 0 0;
+    padding: 2px 12px;
+    position: absolute;
+    z-index: $zindex-app-validation;
+    left: 0;
+  }
+
+  &:hover .error {
+    display: block;
+  }
 }

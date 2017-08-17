@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { IDynamicFormControl } from '../dynamic-form-2.interface';
@@ -20,12 +20,15 @@ export class DynamicForm2ControlComponent implements OnInit {
 
   private _control;
 
+  constructor(private cdRef: ChangeDetectorRef) {}
+
   ngOnInit(): void {
     this._control = this.parentFormGroup.get(this.control.name);
+    this.cdRef.markForCheck();
   }
 
   get displayErrors(): boolean {
-    return this.errors.length > 0 && (this._control.dirty || this._control.touched);
+    return this._control && this.errors.length > 0 && (this._control.dirty || this._control.touched);
   }
 
   get errors(): Array<any> {

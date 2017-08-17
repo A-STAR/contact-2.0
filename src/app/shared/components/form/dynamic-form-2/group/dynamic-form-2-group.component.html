@@ -1,4 +1,4 @@
-<div [ngClass]="{ group: group.bordered }">
+<div [ngClass]="{ group: group.bordered, error: displayErrors }">
   <span *ngIf="group.bordered" class="legend">
     {{ group.label | translate }}<span *ngIf="group.required">*</span>
   </span>
@@ -21,4 +21,10 @@
       </ng-template>
     </div>
   </div>
+
+  <ul *ngIf="displayErrors" class="error">
+    <li *ngFor="let error of errors">
+      {{ getErrorTranslationKey(error) | translate:getErrorParams(error) }}
+    </li>
+  </ul>
 </div>

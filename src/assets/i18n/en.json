@@ -90,7 +90,8 @@
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"

@@ -15,6 +15,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicForm2Component } from '../../../../components/form/dynamic-form-2/dynamic-form-2.component';
 
+import { oneOfGroupRequired } from '../../../../../core/validators';
+
 @Component({
   selector: 'app-address-card',
   templateUrl: './address-card.component.html'
@@ -79,7 +81,7 @@ export class AddressCardComponent {
           width: 6,
           translationKey: 'widgets.address.card',
           children: [
-            { type: 'text', name: 'postalCode' },
+            { type: 'text', name: 'postalCode', required: true },
             {
               type: 'group',
               bordered: true,
@@ -88,6 +90,7 @@ export class AddressCardComponent {
               name: 'foo',
               translationKey: 'widgets.address.card',
               required: true,
+              validators: oneOfGroupRequired,
               children: [
                 { type: 'text', name: 'country' },
                 { type: 'text', name: 'region' },
@@ -111,7 +114,7 @@ export class AddressCardComponent {
           translationKey: 'widgets.address.card',
           children: [
             { type: 'select', name: 'typeCode', options, required: true },
-            { type: 'textarea', name: 'comment' },
+            { type: 'textarea', name: 'comment', required: true },
             { type: 'checkbox', name: 'isResidence' },
           ]
         },
