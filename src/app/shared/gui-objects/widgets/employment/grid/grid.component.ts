@@ -48,7 +48,8 @@ export class EmploymentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch()
+      action: () => this.fetch(),
+      enabled: this.canView$
     },
   ];
 
@@ -101,7 +102,7 @@ export class EmploymentGridComponent {
       this.cdRef.markForCheck();
     });
 
-    this.fetch().take(1).subscribe(employments => this.employments = employments);
+    this.fetch();
   }
 
   onDoubleClick(employment: IEmployment): void {
@@ -111,6 +112,7 @@ export class EmploymentGridComponent {
   onSelect(employment: IEmployment): void {
     this.selectedEmployment$.next(employment)
     this.selectedEmployment = employment;
+    console.log(employment);
   }
 
   private onAdd(): void {
@@ -125,6 +127,10 @@ export class EmploymentGridComponent {
     return this.employmentService.delete(this.personId, employmentId);
   }
 
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('EMPLOYMENT_VIEW').distinctUntilChanged();
+  }
+
   get canAdd$(): Observable<boolean> {
     return this.userPermissionsService.has('EMPLOYMENT_ADD').distinctUntilChanged();
   }
@@ -137,7 +143,8 @@ export class EmploymentGridComponent {
     return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
   }
 
-  private fetch(): Observable<IEmployment[]> {
-    return this.employmentService.fetchAll(this.personId);
+  private fetch(): void {
+    this.employmentService.fetchAll(this.personId)
+      .subscribe(employments => this.employments = employments);
   }
 }

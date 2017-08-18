@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IEmployment } from './employment.interface';
 
-// import { DataService } from '../../../../core/data/data.service';
-// import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '../../../../core/data/data.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 const records = [
   {
@@ -36,22 +36,23 @@ export class EmploymentService {
   static MESSAGE_EMPLOYMENT_SAVED = 'MESSAGE_EMPLOYMENT_SAVED';
 
   constructor(
-    // private dataService: DataService,
-    // private notificationsService: NotificationsService,
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
   ) {}
 
   fetchAll(personId: number): Observable<IEmployment[]> {
-    return Observable.of(records);
-    // return this.dataService
-    //   .read('/persons/{personId}/debts', { personId })
-    //   .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.plural').dispatchCallback());
+    return this.dataService
+      .read('/persons/{personId}/employments', { personId })
+      .map(resp => resp.employments)
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, employmentId: number): Observable<IEmployment> {
-    return Observable.of(records[0]);
-    // return this.dataService
-    //   .read('/debts/{employmentId}', { personId, employmentId })
-    //   .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
+    // return Observable.of(records[0]);
+    return this.dataService
+      .read('/persons/{personId}/employments/{employmentId}', { personId, employmentId })
+      .map(resp => resp.employments[0])
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
   }
 
   create(personId: number, employment: IEmployment): Observable<void> {
