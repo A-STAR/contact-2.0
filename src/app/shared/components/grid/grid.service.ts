@@ -169,12 +169,12 @@ export class GridService {
       if (isArray) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
         return labeledValue
-          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
+          ? (column.localized && labeledValue.label ? this.translateService.instant(labeledValue.label) : labeledValue.label)
           : entity[column.prop];
       } else {
 
         const displayValue = String((rendererFn as Function)(entity, value));
-        return column.localized
+        return column.localized && displayValue
           ? this.translateService.instant(displayValue)
           : displayValue;
       }
