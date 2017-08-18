@@ -26,10 +26,14 @@ export class DebtService {
   }
 
   create(personId: number, debt: IDebt): Observable<void> {
-    return Observable.of(null);
+    return this.dataService
+      .create('/persons/{personId}/debts', { personId }, debt)
+      .catch(this.notificationsService.error('errors.default.create').entity('entities.debts.gen.singular').dispatchCallback());
   }
 
   update(personId: number, debtId: number, debt: IDebt): Observable<void> {
-    return Observable.of(null);
+    return this.dataService
+      .update('/persons/{personId}/debts/{debtId}', { debtId, personId }, debt)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

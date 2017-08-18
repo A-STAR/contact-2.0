@@ -83,32 +83,31 @@ export class DebtCardComponent {
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
       this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes);
-      this.debt = {
-        ...debt,
-        creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
-        creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
-        startDate: this.valueConverterService.fromISO(debt.startDate as string),
-      };
+      this.debt = debt
+        ? {
+          ...debt,
+          creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
+          creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
+          startDate: this.valueConverterService.fromISO(debt.startDate as string),
+        }
+        : null;
       this.cdRef.markForCheck();
     });
   }
 
   onSubmit(): void {
-    const { value } = this.form;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
-    }
-
     const action = this.debtId
-      ? this.debtService.update(this.id, this.debtId, data)
-      : this.debtService.create(this.id, data);
-
+      ? this.debtService.update(this.id, this.debtId, this.form.requestValue)
+      : this.debtService.create(this.id, this.form.requestValue);
     action.subscribe(() => this.onBack());
   }
 
   onBack(): void {
     this.contentTabService.back();
+  }
+
+  get displayDebtData(): boolean {
+    return !!this.debtId;
   }
 
   get canSubmit(): boolean {
@@ -162,6 +161,7 @@ export class DebtCardComponent {
         gridValueGetter: (row: ILookupPortfolio) => row.id,
         gridOnSelect: (row: ILookupPortfolio) => this.form.form.patchValue({ bankId: row && row.contractorId }),
         disabled: !permissions['DEBT_PORTFOLIO_EDIT'].valueB,
+        required: true,
         width: 5
       },
       {
@@ -255,6 +255,7 @@ export class DebtCardComponent {
         type: 'select',
         options: currencyOptions,
         disabled: !permissions['DEBT_EDIT'].valueB,
+        required: true,
         width: 2
       },
       {
@@ -262,6 +263,7 @@ export class DebtCardComponent {
         controlName: 'debtSum',
         type: 'text',
         disabled: !permissions['DEBT_COMPONENT_SUM_EDIT'].valueB,
+        required: true,
         width: 2
       },
       {
