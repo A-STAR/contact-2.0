@@ -811,7 +811,8 @@
         "dpd": "DPD",
         "portfolio": "Portfolio",
         "bank": "Bank",
-        "debtReasonCode": "Reason"
+        "debtReasonCode": "Reason",
+        "comment": "Comments"
       },
       "component": {
         "title": "Debt components",
