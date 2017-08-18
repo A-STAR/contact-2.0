@@ -98,7 +98,7 @@ export class DebtGridComponent {
       this.cdRef.markForCheck();
     });
 
-    this.fetch().subscribe(debts => this.debts = debts);
+    this.fetch();
   }
 
   onDoubleClick(debt: IDebt): void {
@@ -106,7 +106,7 @@ export class DebtGridComponent {
   }
 
   onSelect(debt: IDebt): void {
-
+    this.selectedDebtId$.next(debt.id);
   }
 
   private onAdd(): void {
@@ -149,7 +149,7 @@ export class DebtGridComponent {
       .distinctUntilChanged();
   }
 
-  private fetch(): Observable<Array<IDebt>> {
-    return this.debtService.fetchAll(this.personId);
+  private fetch(): void {
+    this.debtService.fetchAll(this.personId).subscribe(debts => this.debts = debts);
   }
 }
