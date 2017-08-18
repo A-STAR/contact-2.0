@@ -814,6 +814,7 @@
         "debtReasonCode": "Причина"
       },
       "component": {
+        "title": "Компоненты долга",
         "grid": {
           "typeCode": "Тип",
           "sum": "Сумма",

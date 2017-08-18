@@ -814,6 +814,7 @@
         "debtReasonCode": "Reason"
       },
       "component": {
+        "title": "Debt components",
         "grid": {
           "typeCode": "Type",
           "sum": "Amount",
