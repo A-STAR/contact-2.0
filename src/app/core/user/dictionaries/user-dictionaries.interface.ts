@@ -2,6 +2,8 @@ export interface IUserTerm {
   code: number;
   name: string;
   isClosed: boolean;
+  parentDictTerm: number;
+  parentCode: number;
 }
 
 export interface IUserTermsResponse {

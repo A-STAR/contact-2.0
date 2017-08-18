@@ -3,7 +3,8 @@
     <h3>Change Status</h3>
   </div>
   <div>
-    <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
+    <app-dynamic-form-2 #form [group]="group$" [formValue]="value$"></app-dynamic-form-2>
+    {{ form.value | json }}
   </div>
   <div dialog-footer>
     <button class="btn btn-success" (click)="onSubmit()">

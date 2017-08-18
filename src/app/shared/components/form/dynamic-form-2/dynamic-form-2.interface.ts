@@ -6,11 +6,13 @@ export interface IDynamicFormOption {
   disabled?: boolean;
 }
 
+export type IDynamicFormFieldValue = string | number;
+
 export interface IDynamicFormValue {
-  [key: string]: string | number | Date | Array<string> | Array<number>;
+  [key: string]: IDynamicFormFieldValue;
 }
 
-export interface IDynamicFormGenericControl {
+export interface IDynamicFormGenericItem {
   name: string;
   label?: string;
   disabled?: boolean;
@@ -19,11 +21,16 @@ export interface IDynamicFormGenericControl {
   width?: number;
 }
 
-export interface IDynamicFormGroup extends IDynamicFormGenericControl {
+export interface IDynamicFormGroup extends IDynamicFormGenericItem {
   type: 'group';
   children: Array<IDynamicFormItem>;
   bordered?: boolean;
   translationKey?: string;
+}
+
+export interface IDynamicFormGenericControl extends IDynamicFormGenericItem {
+  display?: boolean;
+  onChange?: (value: IDynamicFormFieldValue) => void;
 }
 
 export interface IDynamicFormTextControl extends IDynamicFormGenericControl {
@@ -47,8 +54,14 @@ export interface IDynamicFormCheckboxControl extends IDynamicFormGenericControl 
   type: 'checkbox';
 }
 
+export interface IDynamicFormRadioGroupControl extends IDynamicFormGenericControl {
+  type: 'radio';
+  options: Array<IDynamicFormOption>;
+}
+
 export type IDynamicFormControl =
   IDynamicFormCheckboxControl |
+  IDynamicFormRadioGroupControl |
   IDynamicFormSelectControl |
   IDynamicFormTextControl |
   IDynamicFormTextAreaControl;

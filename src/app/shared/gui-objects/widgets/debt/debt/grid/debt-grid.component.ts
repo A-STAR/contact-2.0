@@ -140,7 +140,7 @@ export class DebtGridComponent {
     return this.userPermissionsService
       .hasOne([
         'DEBT_ADD',
-        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not necesserily boolean values
+        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not boolean values
         'DEBT_DICT1_EDIT_LIST',
         'DEBT_DICT2_EDIT_LIST',
         'DEBT_DICT3_EDIT_LIST',
@@ -155,7 +155,7 @@ export class DebtGridComponent {
         'DEBT_EDIT',
         'DEBT_PORTFOLIO_EDIT',
         'DEBT_COMPONENT_SUM_EDIT',
-        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not necesserily boolean values
+        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not boolean values
         'DEBT_DICT1_EDIT_LIST',
         'DEBT_DICT2_EDIT_LIST',
         'DEBT_DICT3_EDIT_LIST',
@@ -165,7 +165,7 @@ export class DebtGridComponent {
   }
 
   get canChangeStatus$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_STATUS_EDIT_LIST');
+    return this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', null);
   }
 
   private fetch(): void {

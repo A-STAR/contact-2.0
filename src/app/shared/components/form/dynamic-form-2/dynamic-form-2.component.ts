@@ -12,7 +12,7 @@ import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interfa
 })
 export class DynamicForm2Component implements OnInit {
   @Input() group: Observable<IDynamicFormGroup>;
-  @Input() formValue: Observable<any>;
+  @Input() formValue: Observable<any> = Observable.of({});
 
   rootFormGroup: FormGroup;
 
@@ -95,6 +95,7 @@ export class DynamicForm2Component implements OnInit {
       case 'select':
         return Array.isArray(value) ? value[0].value : value;
       case 'checkbox':
+      case 'radio':
         return Number(value);
       default:
         return value === '' ? null : value;

@@ -1,17 +1,28 @@
-<div [ngClass]="{ control: true, 'has-error': displayErrors }">
+<div *ngIf="control.display !== false" [ngClass]="{ control: true, 'has-error': displayErrors }">
   <ng-container [ngSwitch]="control.type" [formGroup]="parentFormGroup">
 
     <ng-container *ngSwitchCase="'text'">
       <label>
         <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <input type="text" class="form-control" [attr.placeholder]="(control.placeholder || '') | translate" [formControlName]="control.name">
+        <input
+          type="text"
+          class="form-control"
+          [attr.placeholder]="(control.placeholder || '') | translate"
+          [formControlName]="control.name"
+          (ngModelChange)="control.onChange ? control.onChange($event) : null"
+        />
       </label>
     </ng-container>
 
     <ng-container *ngSwitchCase="'textarea'">
       <label>
         <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <textarea class="form-control" rows="control.nRows || 2" [attr.placeholder]="(control.placeholder || '') | translate" [formControlName]="control.name">
+        <textarea
+          class="form-control"
+          rows="control.nRows || 2"
+          [attr.placeholder]="(control.placeholder || '') | translate"
+          [formControlName]="control.name"
+          (ngModelChange)="control.onChange ? control.onChange($event) : null">
         </textarea>
       </label>
     </ng-container>
@@ -19,16 +30,38 @@
     <ng-container *ngSwitchCase="'checkbox'">
       <div class="checkbox mt0 mb0">
         <label>
-          <input type="checkbox" [formControlName]="control.name"/>
+          <input
+            type="checkbox"
+            [formControlName]="control.name"
+            (ngModelChange)="control.onChange ? control.onChange($event) : null"
+          />
           <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
         </label>
       </div>
     </ng-container>
 
+    <ng-container *ngSwitchCase="'radio'">
+      <label>
+        <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
+      </label>
+      <app-radio-group
+        [formControlName]="control.name"
+        [options]="control.options"
+        (ngModelChange)="control.onChange ? control.onChange($event) : null">
+      </app-radio-group>
+    </ng-container>
+
     <ng-container *ngSwitchCase="'select'">
       <label>
         <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <app-select [formControlName]="control.name" [options]="control.options" [placeholder]="control.placeholder"></app-select>
+        <!-- TODO(d.maltsev): `onChange`: convert value to number or array of numbers -->
+        <app-select
+          [formControlName]="control.name"
+          [nullable]="!control.required"
+          [options]="control.options"
+          [placeholder]="control.placeholder"
+          (ngModelChange)="control.onChange ? control.onChange($event) : null">
+        </app-select>
       </label>
     </ng-container>
   </ng-container>
