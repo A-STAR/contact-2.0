@@ -21,12 +21,23 @@ export class DynamicForm2Component implements OnInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    Observable
-      .combineLatest(this.group, this.formValue)
+    this.group
       .distinctUntilChanged()
-      .subscribe(([ group, value ]) => {
+      .subscribe(group => {
+        const value = this.rootFormGroup && this.rootFormGroup.value;
         this.rootFormGroup = this.buildFormGroup(group);
+        if (value) {
+          this.rootFormGroup.patchValue(value);
+        }
         this.controls = this.flattenControls(group);
+        this.cdRef.markForCheck();
+
+        console.log(this.value);
+      });
+
+    this.formValue
+      .distinctUntilChanged()
+      .subscribe(value => {
         Object.keys(value || {}).forEach(key => {
           const control = this.getControl(key);
           if (control) {
@@ -48,7 +59,8 @@ export class DynamicForm2Component implements OnInit {
   get value(): any {
     return Object.keys(this.controls).reduce((acc, key) => {
       const control = this.getControl(key);
-      if (control && control.dirty) {
+      // if (control && control.dirty) {
+      if (control) {
         acc[key] = this.toRequest(control.value, key);
       }
       return acc;

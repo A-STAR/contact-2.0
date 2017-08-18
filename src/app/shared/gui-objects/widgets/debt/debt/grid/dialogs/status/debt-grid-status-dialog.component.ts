@@ -7,8 +7,6 @@ import { UserConstantsService } from '../../../../../../../../core/user/constant
 import { UserDictionariesService } from '../../../../../../../../core/user/dictionaries/user-dictionaries.service'
 import { UserPermissionsService } from '../../../../../../../../core/user/permissions/user-permissions.service'
 
-import { UserPermissions } from '../../../../../../../../core/user/permissions/user-permissions';
-
 @Component({
   selector: 'app-debt-grid-status-dialog',
   templateUrl: './debt-grid-status-dialog.component.html'
@@ -34,9 +32,9 @@ export class DebtGridStatusDialogComponent {
       this.userConstantsService.get('Debt.StatusReason.MandatoryList'),
       this.code$,
     ).map(([ dictionaries, bag, reasonRequired, code ]) => {
-      console.log(dictionaries);
-      console.log(code);
-      console.log(reasonRequired);
+      // console.log(dictionaries);
+      // console.log(code);
+      // console.log(reasonRequired);
       return {
         type: 'group',
         name: 'rootGroup',
