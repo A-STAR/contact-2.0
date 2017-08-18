@@ -106,7 +106,7 @@ export class DebtCardComponent {
     this.contentTabService.back();
   }
 
-  get displayGridData(): boolean {
+  get displayDebtData(): boolean {
     return !!this.debtId;
   }
 
