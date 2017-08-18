@@ -11,19 +11,19 @@ import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserDic
 export class UserDictionariesService {
   static DICTIONARY_VARIABLE_TYPE               =  1;
   static DICTIONARY_BOOLEAN_TYPE                =  2;
-  static DICTIONARY_PRODUCT_TYPE                =  3; // NOT READY
+  static DICTIONARY_PRODUCT_TYPE                =  3;
   static DICTIONARY_ACTION_TYPES                =  4;
   static DICTIONARY_TERM_TYPES                  =  5;
-  static DICTIONARY_BRANCHES                    =  6; // NOT READY
+  static DICTIONARY_BRANCHES                    =  6;
   static DICTIONARY_DEBT_STATUS                 =  7; // NOT READY
   static DICTIONARY_EMPLOYEE_ROLE               =  8;
   static DICTIONARY_DICTIONARY_TYPE             =  9;
   static DICTIONARY_DICTIONARY_TERM_TYPE        = 10;
-  static DICTIONARY_DEBT_ORIGINATION_REASON     = 11; // NOT READY
+  static DICTIONARY_DEBT_ORIGINATION_REASON     = 11;
   static DICTIONARY_PERSON_TYPE                 = 12;
   static DICTIONARY_GENDER                      = 13;
-  static DICTIONARY_MARITAL_STATUS              = 14; // NOT READY
-  static DICTIONARY_EDUCATION                   = 15; // NOT READY
+  static DICTIONARY_MARITAL_STATUS              = 14;
+  static DICTIONARY_EDUCATION                   = 15;
   static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;
   static DICTIONARY_PHONE_STATUS                = 18;
@@ -34,7 +34,7 @@ export class UserDictionariesService {
   static DICTIONARY_ADDRESS_REASON_FOR_BLOCKING = 23;
   static DICTIONARY_EMAIL_TYPE                  = 24;
   static DICTIONARY_EMAIL_REASON_FOR_BLOCKING   = 25;
-  static DICTIONARY_REGIONS                     = 26; // NOT READY
+  static DICTIONARY_REGIONS                     = 26;
   static DICTIONARY_DEBT_COMPONENTS             = 27;
   static DICTIONARY_CONTRACTOR_TYPE             = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
@@ -44,6 +44,7 @@ export class UserDictionariesService {
   static DICTIONARY_DEBT_LIST_2                 = 35;
   static DICTIONARY_DEBT_LIST_3                 = 36;
   static DICTIONARY_DEBT_LIST_4                 = 37;
+  static DICTIONARY_WORK_TYPE                   = 38; // NOT READY
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

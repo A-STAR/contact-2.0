@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';

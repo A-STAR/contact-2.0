@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 
-import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 

@@ -670,10 +670,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
-      {
-        name: 'Alert value',
-        action: () => { window.alert('Alerting about ' + params.value); },
-      },
+      // {
+      //   name: 'Alert value',
+      //   action: () => { window.alert('Alerting about ' + params.value); },
+      // },
       {
         name: 'Always disabled',
         disabled: true,
@@ -692,18 +692,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   ]
       // },
       'separator',
-      {
-        name: 'Checked',
-        checked: true,
-        action: () => { console.log('Checked Selected'); }
-      },
+      // {
+      //   name: 'Checked',
+      //   checked: true,
+      //   action: () => { console.log('Checked Selected'); }
+      // },
       'copy',
       'copyWithHeaders',
       'separator',
+      // 'resetColumns',
       {
-        name: 'Reset columns',
+        name: this.translate.instant('default.grid.localeText.resetColumns'),
         action: () => this.resetGridSettings(),
-        shortcut: 'Alt+R'
+        // shortcut: 'Alt+R'
       }
     ];
   }

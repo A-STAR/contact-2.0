@@ -1,3 +1,9 @@
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
+
+export { ILabeledValue };
+
+export type SelectInputValueType = number | string | ILabeledValue[];
+
 export enum SelectionActionTypeEnum {
   SORT
 }

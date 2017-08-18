@@ -62,7 +62,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   element: HTMLElement;
   messages: IMessages = {};
   selected: Array<any> = [];
+  // a cache to prevent select from firing on already selected row
   subscription: Subscription;
+
+  private _selected: any = [];
 
   constructor(
     public settings: SettingsService,
@@ -74,7 +77,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.debouncerSub = this.clickDebouncer
       .debounceTime(100)
       .subscribe(({ type, row }: {type: string; row: any}) => {
-        if (type === 'click') {
+        if (type === 'select') {
           this.onSelect.emit(row);
         } else if (type === 'dblclick' && this.allowDblClick) {
           this.onDblClick.emit(row);
@@ -144,8 +147,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       this.selected = [...selection.currentValue];
     }
     if (rows) {
-      // This clears the current selection, otherwise it'd stay
-      // this.selected = [];
+      this._selected = [];
     }
   }
 
@@ -174,12 +176,23 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   onSelectRow(event: any): void {
-    this.clickDebouncer.next({ type: 'click', row: event.row });
+    const { selected } = event;
+    const rowSelected = this._selected[0];
+    if (!rowSelected || rowSelected.id !== selected[0].id) {
+      const row = this.selectionType === 'single' ? selected[0] : selected;
+      this.clickDebouncer.next({ type: 'select', row });
+    }
+    this._selected = [].concat(selected);
   }
 
   onActivate(event: any): void {
-    const { row, type } = event;
-    this.clickDebouncer.next({ type, row });
+    const { row, type, event: e } = event;
+    if (type === 'dblclick') {
+      this.clickDebouncer.next({ type, row });
+    }
+    if (type === 'keydown' && e.keyCode === 13) {
+      this.clickDebouncer.next({ type: 'select', row });
+    }
   }
 
   getRowHeight(row: any): number {

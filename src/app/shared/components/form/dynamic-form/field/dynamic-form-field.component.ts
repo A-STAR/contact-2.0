@@ -6,10 +6,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import {
-  IDynamicFormControl,
-  ISelectItemsPayload
-} from '../dynamic-form-control.interface';
+import { IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form.interface';
 
 @Component({
   selector: 'app-dynamic-form-field',

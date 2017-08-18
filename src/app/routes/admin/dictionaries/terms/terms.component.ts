@@ -13,7 +13,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { checkboxRenderer } from '../../../../core/utils';
 
@@ -91,7 +90,6 @@ export class TermsComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
@@ -196,41 +194,29 @@ export class TermsComponent implements OnDestroy {
       });
   }
 
-  modifyEntity(data: ITerm, editMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
-    data.isClosed = Number(data.isClosed);
-
-    if (editMode) {
-      const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
-
-      const deletedTranslations = nameTranslations
-        .filter(item => item.removed)
-        .map(item => item.value);
-
-      const updatedTranslations = nameTranslations
-        .filter(item => !item.removed)
-        .map(item => ({
-          languageId: item.value,
-          value: item.context ? item.context.translation : null
-        }))
-        .filter((item: IEntityTranslation) => item.value !== null);
-
-      delete data.translatedName;
-      delete data.nameTranslations;
-
-      this.dictionariesService.updateTerm(data, deletedTranslations, updatedTranslations);
-    } else {
-      this.dictionariesService.createTerm(data);
-    }
-  }
-
   onUpdateEntity(data: ITerm): void {
-    this.modifyEntity(data, true);
+    const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
+
+    const deletedTranslations = nameTranslations
+      .filter(item => item.removed)
+      .map(item => item.value);
+
+    const updatedTranslations: IEntityTranslation[] = nameTranslations
+      .filter(item => !item.removed)
+      .map(item => ({
+        languageId: item.value,
+        value: item.context ? item.context.translation : null
+      }))
+      .filter((item: IEntityTranslation) => item.value !== null);
+
+    delete data.translatedName;
+    delete data.nameTranslations;
+
+    this.dictionariesService.updateTerm(data, deletedTranslations, updatedTranslations);
   }
 
   onCreateEntity(data: ITerm): void {
-    this.modifyEntity(data, false);
+    this.dictionariesService.createTerm(data);
   }
 
   onSelect(term: ITerm): void {

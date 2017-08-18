@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebtComponent } from '../debt-component.interface';
-import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtComponentService } from '../debt-component.service';

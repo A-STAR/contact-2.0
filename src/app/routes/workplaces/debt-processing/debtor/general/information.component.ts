@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 import { IPerson } from '../debtor.interface';

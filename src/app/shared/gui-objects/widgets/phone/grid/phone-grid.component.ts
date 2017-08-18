@@ -74,7 +74,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     statusCode: [],
     blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
     phone: 'phoneRenderer',
   };
 
@@ -82,7 +82,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     { prop: 'typeCode' },
     { prop: 'phone' },
     { prop: 'statusCode' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },

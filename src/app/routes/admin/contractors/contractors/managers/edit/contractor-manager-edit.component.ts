@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';

@@ -57,6 +57,7 @@
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
+        "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PHONE": "Телефон должника",
         "TASKS": "Постановка задач",
@@ -90,7 +91,8 @@
     "fieldDigits": "Это поле должно содержать хотя бы одну цифру",
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
-    "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}"
+    "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
+    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено"
   },
   "network": {
     "CONNECTION_ERROR": "Ошибка соединения"
@@ -133,12 +135,11 @@
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Пожалуйста, авторизуйтесь",
-    "LOGIN_PLACEHOLDER": "Логин",
-    "PASSWORD_PLACEHOLDER": "Пароль",
-    "REMEMBER_ME": "Запомнить логин",
-    "FORGOT_PASSWORD": "Забыли пароль?",
-    "LOGIN_BUTTON": "Войти"
+    "please_authenticate": "Пожалуйста, авторизуйтесь",
+    "login_placeholder": "Логин",
+    "password_placeholder": "Пароль",
+    "remember_me": "Запомнить логин",
+    "login_button": "Войти"
   },
   "constants": {
     "title": "Константы",
@@ -528,8 +529,8 @@
     "tasksTab": {
       "title": "Задачи"
     },
-    "workHistoryTab": {
-      "title": "История работы"
+    "employmentRecordTab": {
+      "title": "История трудоустройства"
     },
     "actionLogTab": {
       "title": "Лог действий"
@@ -758,6 +759,18 @@
         }
       }
     },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Тип работы",
+        "company": "Компания",
+        "position": "Должность",
+        "hireDate": "Дата приема",
+        "dismissDate": "Дата увольнения",
+        "income": "Доход",
+        "currencyId": "Валюта",
+        "comment": "Комментарий"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Тип",
@@ -885,9 +898,6 @@
       "gen": { "singular": "должника", "plural": "списка должников" },
       "info": {
         "gen": { "plural": "общей информации о должнике" }
-      },
-      "phones": {
-        "gen": { "plural": "телефонов должника" }
       }
     },
     "metadata": {
@@ -926,6 +936,9 @@
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "компонента долга ", "plural": "компонентов долга" }
     }
   },
   "errors": {
@@ -1051,7 +1064,7 @@
       "excel": "Экспорт в Excel",
       "block": "Блокировать"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "Начало",
       "to": "Окончание"
     },
@@ -1063,8 +1076,8 @@
         "and": "И",
         "or": "Или"
       },
-      "groupDndTitle": "Группировка",
       "groupColumn": "Группировка",
+      "groupDndTitle": "Группировка",
       "loading": "Загрузка данных...",
       "selectedCounts": "{{ selected }} выбрано / {{ length }} всего",
       "localeText": {
@@ -1083,6 +1096,7 @@
         "selectAll": "Все",
         "copy": "Копировать",
         "copyWithHeaders": "Копировать c заголовками",
+        "resetColumns": "Сбросить настройки",
         "paste": "Вставить",
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",
@@ -1094,6 +1108,9 @@
       "equal": "равно",
       "notEqual": "не равно",
       "empty": "пусто"
+    },
+    "select" : {
+      "empty": "[пустое значение]"
     },
     "sex": {
       "m": "м",

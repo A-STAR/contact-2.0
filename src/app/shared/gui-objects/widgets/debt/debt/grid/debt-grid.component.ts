@@ -105,7 +105,7 @@ export class DebtGridComponent {
       this.cdRef.markForCheck();
     });
 
-    this.fetch().subscribe(debts => this.debts = debts);
+    this.fetch();
   }
 
   onDoubleClick(debt: IDebt): void {
@@ -168,7 +168,7 @@ export class DebtGridComponent {
     return this.userPermissionsService.has('DEBT_STATUS_EDIT_LIST');
   }
 
-  private fetch(): Observable<Array<IDebt>> {
-    return this.debtService.fetchAll(this.personId);
+  private fetch(): void {
+    this.debtService.fetchAll(this.personId).subscribe(debts => this.debts = debts);
   }
 }

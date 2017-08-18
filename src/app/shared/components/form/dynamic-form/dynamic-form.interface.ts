@@ -2,7 +2,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { ISelectionAction } from '../select/select-interfaces';
+import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 
 export interface IValidationMessages {
@@ -53,21 +53,23 @@ export interface IDynamicFormControl {
   radioOptions?: Array<IRadioGroupOption>;
 }
 
-export type ControlTypes = 'number'
+export type ControlTypes =
+    'boolean'
+  | 'checkbox'
+  | 'datepicker'
+  | 'dialog'
+  | 'dynamic'
+  | 'gridselect'
+  | 'hidden'
+  | 'image'
+  | 'multiselect'
+  | 'number'
+  | 'password'
+  | 'radio'
+  | 'select'
   | 'text'
   | 'textarea'
-  | 'select'
-  | 'datepicker'
-  | 'boolean'
-  | 'dynamic'
-  | 'hidden'
-  | 'checkbox'
-  | 'multiselect'
-  | 'image'
-  | 'dialog'
-  | 'gridselect'
-  | 'password'
-  | 'radio';
+;
 
 export interface IValue {
   [key: string]: any;

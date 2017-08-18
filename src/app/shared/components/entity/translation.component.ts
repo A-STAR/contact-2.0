@@ -1,25 +1,21 @@
-import { AfterViewInit, Input, OnInit } from '@angular/core';
+import { AfterViewInit, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
-import {
-  IDynamicFormControl,
-  IDynamicFormItem,
-  ISelectItemsPayload
-} from '../form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl, IDynamicFormItem, ISelectItemsPayload
+} from '../form/dynamic-form/dynamic-form.interface';
 
-// import { DynamicFormComponent } from '../form/dynamic-form/dynamic-form.component';
-import { EntityBaseComponent } from './edit/entity.base.component';
+import { EntityBaseComponent } from './base.component';
 
 export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implements AfterViewInit, OnInit {
-  @Input() displayControlName: string;
-  @Input() translatedControlName: string;
+  displayControlName = 'translatedName';
+  nameControlName = 'name';
+  translatedControlName = 'nameTranslations';
 
   private _currentSelectedItem: ILabeledValue;
 
   ngOnInit(): void {
     super.ngOnInit();
-    console.log('editedEntity', this.editedEntity);
 
     if (this.isEditMode()) {
       const dynamicDisplayControl: IDynamicFormControl = this.flattenFormControls(this.controls)
@@ -67,13 +63,20 @@ export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implem
     this.translatedControl.markAsDirty();
   }
 
+  filterControls(controls: IDynamicFormControl[]): IDynamicFormControl[] {
+    return controls.filter(control => {
+        return this.isEditMode()
+        ? this.nameControlName !== control.controlName
+        : ![this.translatedControlName, this.displayControlName].includes(control.controlName)
+    });
+  }
+
   protected getControls(): Array<IDynamicFormItem> {
     return this.controls;
   }
 
   // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts
   private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
-    // TODO: item type
     return formControls.reduce((acc, control: IDynamicFormControl) => {
       const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
       return [

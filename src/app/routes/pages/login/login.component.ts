@@ -31,14 +31,18 @@ export class LoginComponent {
     });
   }
 
+  isControlDirtyOrTouched(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return (control.dirty || control.touched);
+  }
+
+  control
   submitForm(event: UIEvent, value: any): void {
     event.preventDefault();
 
     this.login = value.remember_login ? value.login : null;
 
-    [].forEach.call(this.form.controls, ctrl => {
-        ctrl.markAsTouched();
-    });
+    this.form.markAsTouched();
 
     if (this.form.valid) {
       const { login, password } = value;

@@ -23,8 +23,8 @@ export const arrayToObject = (key: string) => (arr: Array<any>) => {
   }, {});
 };
 
-export const checkboxRenderer = (key: string) => ({ [key]: truthy }) => truthy
-  ? `<i class="fa fa-check-square-o" aria-hidden="true"></i>` : '';
+export const checkboxRenderer = (key: string) => ({ [key]: truthy }) =>
+  `<i class="fa fa${truthy ? '-check' : ''}-square-o" aria-hidden="true"></i>`;
 
 export const yesNoRenderer = (key: string) => ({ [key]: truthy }) => truthy ? 'default.yesNo.Yes' : 'default.yesNo.No';
 

@@ -57,6 +57,7 @@
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_EMAIL": "Debtor's email",
+        "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PHONE": "Debtor's phone",
         "TASKS": "Tasks",
@@ -90,7 +91,8 @@
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"
@@ -133,12 +135,11 @@
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Please, authenticate",
-    "LOGIN_PLACEHOLDER": "Login",
-    "PASSWORD_PLACEHOLDER": "Password",
-    "REMEMBER_ME": "Remember login",
-    "FORGOT_PASSWORD": "Forgot password?",
-    "LOGIN_BUTTON": "Login"
+    "please_authenticate": "Please, authenticate",
+    "login_placeholder": "Login",
+    "password_placeholder": "Password",
+    "remember_me": "Remember login",
+    "login_button": "Login"
   },
   "constants": {
     "title": "Constants",
@@ -528,8 +529,8 @@
     "tasksTab": {
       "title": "Tasks"
     },
-    "workHistoryTab": {
-      "title": "Work history"
+    "employmentRecordTab": {
+      "title": "Employment record"
     },
     "actionLogTab": {
       "title": "Actions log"
@@ -758,6 +759,18 @@
         }
       }
     },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Work type",
+        "company": "Company",
+        "position": "Position",
+        "hireDate": "Hire date",
+        "dismissDate": "Dismissal date",
+        "income": "Income",
+        "currencyId": "Currency",
+        "comment": "Comment"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Type",
@@ -885,9 +898,6 @@
       "gen": { "singular": "debtor", "plural": "debtors list" },
       "info": {
         "gen": { "plural": "debtor general information" }
-      },
-      "phones": {
-        "gen": { "plural": "debtors phones list" }
       }
     },
     "metadata": {
@@ -926,6 +936,9 @@
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity document list" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "debt component", "plural": "debt components" }
     }
   },
   "errors": {
@@ -1051,7 +1064,7 @@
       "back": "Back",
       "block": "Block"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "From",
       "to": "To"
     },
@@ -1083,6 +1096,7 @@
         "selectAll": "All",
         "copy": "Copy",
         "copyWithHeaders": "Copy with headers",
+        "resetColumns": "Reset settings",
         "paste": "Paste",
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
@@ -1094,6 +1108,9 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "select" : {
+      "empty": "[empty value]"
     },
     "sex": {
       "m": "m",

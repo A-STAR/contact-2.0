@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, animate, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form.interface';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -29,7 +29,8 @@ export class DynamicFormGroupComponent {
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
     hasuppercasechars: 'validation.fieldUpperCase',
-    maxsize: 'validation.fieldMaxSize'
+    maxsize: 'validation.fieldMaxSize',
+    oneofgrouprequired: 'validation.oneOfGroupRequired',
   };
 
   @Input() collapsible = false;

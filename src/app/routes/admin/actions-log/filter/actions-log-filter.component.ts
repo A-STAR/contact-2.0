@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable'
 import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
@@ -117,7 +117,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.startDateControl = {
         controlName: 'startDate',
-        label: 'default.dateTimeRage.from',
+        label: 'default.dateTimeRange.from',
         required: true,
         type: 'datepicker',
       },
@@ -129,7 +129,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.endDateControl = {
         controlName: 'endDate',
-        label: 'default.dateTimeRage.to',
+        label: 'default.dateTimeRange.to',
         required: true,
         type: 'datepicker',
       },
