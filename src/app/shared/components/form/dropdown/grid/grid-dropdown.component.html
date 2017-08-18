@@ -11,7 +11,8 @@
       [columns]="columns"
       [footerHeight]="false"
       [rows]="rows"
-      [selectionType]="null"
+      [selection]="selection"
+      [selectionType]="'single'"
       [styles]="{ height: '200px', border: 'none' }"
       (onSelect)="onSelect($event)">
     </app-grid>
