@@ -79,13 +79,13 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private identityService: IdentityService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -98,7 +98,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
     )
     .subscribe(([ canView, identityOptions ]) => {
-      this.renderers.docTypeCode = [].concat(identityOptions);
+      this.renderers.docTypeCode = [...identityOptions];
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();
     });
@@ -123,6 +123,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.selectedRows$.complete();
+    this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
   }

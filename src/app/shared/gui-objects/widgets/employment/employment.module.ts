@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { EmploymentCardModule } from './card/card.module';
-import { EmploymentGridModule } from './grid/grid.module';
+import { EmploymentCardModule } from './card/employment-card.module';
+import { EmploymentGridModule } from './grid/employment-grid.module';
 
 import { EmploymentService } from './employment.service';
 

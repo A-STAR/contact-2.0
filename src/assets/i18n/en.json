@@ -528,7 +528,11 @@
       "title": "Tasks"
     },
     "employmentRecordTab": {
-      "title": "Employment record"
+      "title": "Employment record",
+      "remove": {
+        "title": "Delete the record",
+        "confirmMessage": "Do you really want to delete the selected record?"
+      },
     },
     "actionLogTab": {
       "title": "Actions log"
@@ -934,6 +938,9 @@
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity document list" }
+    },
+    "employment": {
+      "gen": { "singular": "employment record", "plural": "employment records" }
     },
     "debtComponents": {
       "gen": { "singular": "debt component", "plural": "debt components" }

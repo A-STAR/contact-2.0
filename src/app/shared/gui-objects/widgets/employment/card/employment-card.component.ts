@@ -17,12 +17,11 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 
 @Component({
   selector: 'app-employment-card',
-  templateUrl: './card.component.html'
+  templateUrl: './employment-card.component.html'
 })
 export class EmploymentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private dialog: string;
   private personId = (this.route.params as any).value.id || null;
   private employmentId = (this.route.params as any).value.employmentId || null;
 
@@ -39,7 +38,7 @@ export class EmploymentCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
       this.lookupService.currencyOptions,
       this.employmentId
         ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
@@ -65,14 +64,6 @@ export class EmploymentCardComponent {
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
-  }
-
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  setDialog(dialog: string): void {
-    this.dialog = dialog;
   }
 
   onBack(): void {

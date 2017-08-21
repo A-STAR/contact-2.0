@@ -28,7 +28,6 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
   private debtId = (this.route.params as any).value.debtId || null;
 
@@ -83,23 +82,13 @@ export class DebtCardComponent {
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
       this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes);
-      this.debt = {
-        ...debt,
-        creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
-        creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
-        startDate: this.valueConverterService.fromISO(debt.startDate as string),
-      };
+      this.debt = debt;
       this.cdRef.markForCheck();
     });
   }
 
   onSubmit(): void {
-    const { value } = this.form;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
-    }
-
+    const data = this.form.requestValue;
     const action = this.debtId
       ? this.debtService.update(this.id, this.debtId, data)
       : this.debtService.create(this.id, data);
