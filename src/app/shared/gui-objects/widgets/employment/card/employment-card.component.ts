@@ -41,15 +41,16 @@ export class EmploymentCardComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
       this.lookupService.currencyOptions,
       this.employmentId
-        ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
-        : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
+        ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
+        : this.userPermissionsService.has('EMPLOYMENT_ADD'),
       this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
+      console.log('can edit?', canEdit);
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true, },
-        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', },
+        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },
+        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', required: true },
         { label: 'widgets.employment.grid.position', controlName: 'position',  type: 'text', },
         { label: 'widgets.employment.grid.hireDate', controlName: 'hireDate', type: 'datepicker', },
         { label: 'widgets.employment.grid.dismissDate', controlName: 'dismissDate', type: 'datepicker', },
