@@ -86,7 +86,6 @@ export class DebtCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
     const action = this.debtId
       ? this.debtService.update(this.id, this.debtId, this.form.requestValue)
       : this.debtService.create(this.id, this.form.requestValue);
