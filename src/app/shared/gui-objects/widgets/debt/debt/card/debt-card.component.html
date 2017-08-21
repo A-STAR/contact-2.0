@@ -11,12 +11,10 @@
   <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
 </div>
 
-<div class="pb-lg">
-  <h4>Компоненты долга</h4>
-  <app-debt-component-grid></app-debt-component-grid>
-</div>
-
-<app-accordion>
+<app-accordion *ngIf="displayDebtData">
+  <app-accordion-item title="widgets.debt.component.title">
+    <app-debt-component-grid></app-debt-component-grid>
+  </app-accordion-item>
   <app-accordion-item *ngIf="canViewPortfolioLog$ | async" title="widgets.debt.portfolioLog.title">
     <app-portfolio-log-grid></app-portfolio-log-grid>
   </app-accordion-item>

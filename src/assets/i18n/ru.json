@@ -816,9 +816,11 @@
         "dpd": "Кол-во дней просрочки",
         "portfolio": "Портфель",
         "bank": "Банк",
-        "debtReasonCode": "Причина"
+        "debtReasonCode": "Причина",
+        "comment": "Комментарий"
       },
       "component": {
+        "title": "Компоненты долга",
         "grid": {
           "typeCode": "Тип",
           "sum": "Сумма",
