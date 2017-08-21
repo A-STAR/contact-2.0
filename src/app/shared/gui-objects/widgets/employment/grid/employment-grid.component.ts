@@ -20,7 +20,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 @Component({
   selector: 'app-employment-grid',
   templateUrl: './employment-grid.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
 
