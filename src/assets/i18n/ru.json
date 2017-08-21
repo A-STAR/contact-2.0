@@ -740,6 +740,18 @@
         }
       }
     },
+    "contact": {
+      "grid": {
+        "fullName": "Full name",
+        "birthDate": "Birth date",
+        "birthPlace": "Place of birth",
+        "genderCode": "Gender",
+        "familyStatusCode": "Family status",
+        "educationCode": "Education",
+        "linkTypeCode": "Type",
+        "comment": "Comment"
+      }
+    },
     "email": {
       "card": {
         "typeCode": "Тип",

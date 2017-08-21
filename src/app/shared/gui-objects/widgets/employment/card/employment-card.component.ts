@@ -47,7 +47,6 @@ export class EmploymentCardComponent {
     )
     .take(1)
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
-      console.log('can edit?', canEdit);
       const controls: IDynamicFormControl[] = [
         { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },
         { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', required: true },

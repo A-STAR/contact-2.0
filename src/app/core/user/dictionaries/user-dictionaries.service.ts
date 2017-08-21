@@ -39,11 +39,16 @@ export class UserDictionariesService {
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;
   static DICTIONARY_PORTFOLIO_STAGE             = 31;
+  static DICTIONARY_CONTACT_TYPE                = 32; // NOT READY
+  static DICTIONARY_DOCUMENT_TYPE               = 33; // NOT READY
   static DICTIONARY_DEBT_LIST_1                 = 34;
   static DICTIONARY_DEBT_LIST_2                 = 35;
   static DICTIONARY_DEBT_LIST_3                 = 36;
   static DICTIONARY_DEBT_LIST_4                 = 37;
-  static DICTIONARY_WORK_TYPE                   = 38; // NOT READY
+  static DICTIONARY_WORK_TYPE                   = 38;
+  static DICTIONARY_PROMISE_STATUS              = 39; // NOT READY
+  static DICTIONARY_PAYMENT_STATUS              = 40; // NOT READY
+  static DICTIONARY_PAYMENT_DETAILS             = 41; // NOT READY
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

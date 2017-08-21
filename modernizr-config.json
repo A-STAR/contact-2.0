@@ -12,8 +12,6 @@
         "css/animations",
         "css/calc",
         "css/transforms",
-        "css/transforms3d",
-        "css/transformstylepreserve3d",
         "css/transitions",
         "css/flexboxtweener",
         "css/fontface",
@@ -25,8 +23,6 @@
         "svg/inline",
         "svg/smil",
         "storage/localstorage",
-        "storage/sessionstorage",
-        "storage/websqldatabase",
         "css/multiplebgs"
     ]
 }

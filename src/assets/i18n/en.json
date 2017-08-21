@@ -732,12 +732,24 @@
         },
         "unblock": {
           "title": "Unblock address",
-          "confirmMessage": "Are you sure you want to unblock address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to unblock the address {{ fullAddress }}?"
         },
         "delete": {
           "title": "Remove address",
-          "confirmMessage": "Are you sure you want to remove address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to remove the address {{ fullAddress }}?"
         }
+      }
+    },
+    "contact": {
+      "grid": {
+        "fullName": "Full name",
+        "birthDate": "Birth date",
+        "birthPlace": "Place of birth",
+        "genderCode": "Gender",
+        "familyStatusCode": "Family status",
+        "educationCode": "Education",
+        "linkTypeCode": "Type",
+        "comment": "Comment"
       }
     },
     "email": {
