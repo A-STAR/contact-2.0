@@ -81,8 +81,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.subscription.unsubscribe();
   }
 
-  writeValue(value: Date): void {
-    this.value = value;
+  writeValue(value: Date | string): void {
+    this.value = typeof value === 'string'
+      ? this.valueConverterService.fromISO(value as string)
+      : value;
   }
 
   registerOnChange(fn: Function): void {

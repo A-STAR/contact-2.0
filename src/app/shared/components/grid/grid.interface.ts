@@ -3,8 +3,10 @@ export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 export type TRendererType = Function | Array<any>
   | 'checkboxRenderer'
   | 'dateTimeRenderer'
+  | 'numberRenderer'
   | 'phoneRenderer'
-  | 'yesNoRenderer';
+  | 'yesNoRenderer'
+  ;
 
 export interface IGridColumn {
   disabled?: boolean;

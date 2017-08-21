@@ -16,7 +16,6 @@ import { EntityAttributesService } from '../../../../../../core/entity/attribute
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -28,7 +27,6 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
   private debtId = (this.route.params as any).value.debtId || null;
 
@@ -46,7 +44,6 @@ export class DebtCardComponent {
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     Observable.combineLatest(
       this.lookupService.portfolios,
@@ -83,14 +80,7 @@ export class DebtCardComponent {
     .subscribe(([ portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes, debt ]) => {
       this.contractorOptions = contractorOptions;
       this.controls = this.initControls(portfolios, contractorOptions, currencyOptions, dictionaries, permissions, attributes);
-      this.debt = debt
-        ? {
-          ...debt,
-          creditStartDate: this.valueConverterService.fromISO(debt.creditStartDate as string),
-          creditEndDate: this.valueConverterService.fromISO(debt.creditEndDate as string),
-          startDate: this.valueConverterService.fromISO(debt.startDate as string),
-        }
-        : null;
+      this.debt = debt;
       this.cdRef.markForCheck();
     });
   }

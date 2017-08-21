@@ -43,9 +43,18 @@ export const phoneRenderer = (key: string) => ({ [key]: phone }) => (phone || ''
       return `${t1 ? '+' + t1 + ' ' : ''}${t2 ? '(' + t2 + ') ' : ''}${t3}-${t4}`;
   });
 
+export const numberRenderer = (key: string) => ({ [key]: num }) => {
+  const parts = (String(num == null ? 0 : num) || '').split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (!parts[1]) {
+    parts.push('00');
+  }
+  return parts.join('.');
+}
 
 export const renderers = {
   checkboxRenderer,
   phoneRenderer,
-  yesNoRenderer
+  yesNoRenderer,
+  numberRenderer,
 };
