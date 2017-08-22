@@ -26,7 +26,7 @@
     [closable]="false">
     <app-debt-grid></app-debt-grid>
   </app-tab>
-  <app-tab
+  <!-- <app-tab
     [title]="'debtor.propertyTab.title'"
     [closable]="false"
   >
@@ -35,11 +35,12 @@
     [title]="'debtor.guarantorsTab.title'"
     [closable]="false"
   >
-  </app-tab>
+  </app-tab> -->
   <app-tab
     [title]="'debtor.contactsTab.title'"
     [closable]="false"
   >
+    <app-contact-grid></app-contact-grid>
   </app-tab>
   <app-tab
     [title]="'debtor.documentationTab.title'"
@@ -47,18 +48,18 @@
   >
     <app-debtor-documents></app-debtor-documents>
   </app-tab>
-  <app-tab
+  <!-- <app-tab
     [title]="'debtor.accountsTab.title'"
     [closable]="false"
-  >
-  </app-tab>
+    >
+  </app-tab> -->
   <app-tab
     [title]="'debtor.employmentRecordTab.title'"
     [closable]="false"
   >
     <app-employment-grid></app-employment-grid>
   </app-tab>
-  <app-tab
+  <!-- <app-tab
     [title]="'debtor.actionLogTab.title'"
     [closable]="false"
   >
@@ -72,5 +73,5 @@
     [title]="'debtor.extrasDebtInfoTab.title'"
     [closable]="false"
   >
-  </app-tab>
+  </app-tab> -->
 </app-tabstrip>

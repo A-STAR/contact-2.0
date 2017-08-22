@@ -4,10 +4,11 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/zip';
 
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interface';
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IValueEntity } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -25,14 +26,12 @@ export class PermissionsComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
+    { prop: 'value', minWidth: 70, maxWidth: 100,
+      renderer: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
+    },
     { prop: 'dsc', minWidth: 200 },
     { prop: 'comment', minWidth: 300 },
   ];
-
-  renderers: IRenderer = {
-    value: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
-  };
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -69,8 +68,7 @@ export class PermissionsComponent implements OnDestroy {
     },
   ];
 
-  // TODO(d.maltsev): type
-  permissions$: Observable<Array<any>>;
+  permissions$: Observable<IValueEntity[]>;
 
   canViewPermissions$: Observable<boolean>;
 
@@ -91,7 +89,7 @@ export class PermissionsComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.columns = this.gridService.setRenderers(this.columns);
     this.permissionsSubscription = this.permissionsService.permissions
       .subscribe(
         (permissions: IPermissionsState) => {

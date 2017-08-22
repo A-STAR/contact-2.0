@@ -54,6 +54,7 @@
         "DEBT_LIST": "Debt List",
         "DEBTOR_CARD": "Debtor",
         "DEBTOR_ADDRESS": "Debtor's address",
+        "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_EMAIL": "Debtor's email",
@@ -532,7 +533,7 @@
       "remove": {
         "title": "Delete the record",
         "confirmMessage": "Do you really want to delete the selected record?"
-      },
+      }
     },
     "actionLogTab": {
       "title": "Actions log"
@@ -555,8 +556,8 @@
   },
   "person": {
     "gender": "Gender",
-    "birthDate": "Birthdate",
-    "birthPlace": "Birthplace",
+    "birthDate": "Date of birth",
+    "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
     "comment": "Comment"
@@ -732,12 +733,27 @@
         },
         "unblock": {
           "title": "Unblock address",
-          "confirmMessage": "Are you sure you want to unblock address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to unblock the address {{ fullAddress }}?"
         },
         "delete": {
           "title": "Remove address",
-          "confirmMessage": "Are you sure you want to remove address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to remove the address {{ fullAddress }}?"
         }
+      }
+    },
+    "contact": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "birthDate": "Birth date",
+        "birthPlace": "Place of birth",
+        "genderCode": "Gender",
+        "familyStatusCode": "Family status",
+        "educationCode": "Education",
+        "linkTypeCode": "Type",
+        "comment": "Comment"
       }
     },
     "email": {
@@ -817,7 +833,11 @@
         "portfolio": "Portfolio",
         "bank": "Bank",
         "debtReasonCode": "Reason",
-        "comment": "Comments"
+        "comment": "Comments",
+        "dict1Code": "Dpd interval",
+        "dict2Code": "Dpd strategy",
+        "dict3Code": "Unknown",
+        "dict4Code": "Unknown"
       },
       "component": {
         "title": "Debt components",
@@ -828,7 +848,7 @@
         },
         "remove": {
           "title": "Remove debt component",
-          "confirmMessage": "Are you sure you want to remove debt component?"
+          "confirmMessage": "Are you sure you want to remove the debt component?"
         }
       },
       "componentLog": {

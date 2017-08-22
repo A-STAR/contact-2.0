@@ -54,6 +54,7 @@
         "DEBT_LIST": "Список долгов",
         "DEBTOR_CARD": "Карточка должника",
         "DEBTOR_ADDRESS": "Адрес должника",
+        "DEBTOR_CONTACTS": "Контактные лица должника",
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
@@ -740,6 +741,21 @@
         }
       }
     },
+    "contact": {
+      "grid": {
+        "fullName": "ФИО",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "genderCode": "Пол",
+        "familyStatusCode": "Семейное положение",
+        "educationCode": "Образование",
+        "linkTypeCode": "Тип",
+        "comment": "Комментарий"
+      }
+    },
     "email": {
       "card": {
         "typeCode": "Тип",
@@ -817,7 +833,11 @@
         "portfolio": "Портфель",
         "bank": "Банк",
         "debtReasonCode": "Причина",
-        "comment": "Комментарий"
+        "comment": "Комментарий",
+        "dict1Code": "Интервал",
+        "dict2Code": "Стратегия",
+        "dict3Code": "Н/Д",
+        "dict4Code": "Н/Д"
       },
       "component": {
         "title": "Компоненты долга",
@@ -828,7 +848,7 @@
         },
         "remove": {
           "title": "Удаление компонента долга",
-          "confirmMessage": "Вы действительно хотите удалить компонент?"
+          "confirmMessage": "Вы действительно хотите удалить компонент долга?"
         }
       },
       "componentLog": {

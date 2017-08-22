@@ -116,6 +116,9 @@ export class DebtCardComponent {
     if (permission.valueS === 'ALL') {
       return options;
     }
+    if (!permission.valueS) {
+      return [];
+    }
     const values = permission.valueS.split(',');
     return options.filter(option => values.includes(String(option.value)));
   }

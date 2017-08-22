@@ -12,6 +12,7 @@ import { DebtProcessingComponent } from './debt-processing.component';
 
 import { DebtorComponent } from './debtor/debtor.component';
 import { DebtorAddressComponent } from './debtor/address/address.component';
+import { DebtorContactsComponent } from './debtor/contacts/contacts.component';
 import { DebtorDebtComponent } from './debtor/debt/debt.component';
 import { DebtorDebtComponentComponent } from './debtor/debt-component/debt-component.component';
 import { DebtorEmploymentComponent } from './debtor/employment/employment.component';
@@ -24,6 +25,8 @@ const routes: Routes = [
   { path: ':id', component: DebtorComponent },
   { path: ':id/address/create', component: DebtorAddressComponent },
   { path: ':id/address/:addressId', component: DebtorAddressComponent },
+  { path: ':id/contact/create', component: DebtorContactsComponent },
+  { path: ':id/contact/:contactId', component: DebtorContactsComponent },
   { path: ':id/email/create', component: DebtorEmailComponent },
   { path: ':id/email/:emailId', component: DebtorEmailComponent },
   { path: ':id/employment/create', component: DebtorEmploymentComponent },

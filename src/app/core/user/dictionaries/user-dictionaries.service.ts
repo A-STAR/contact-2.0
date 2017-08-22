@@ -22,7 +22,8 @@ export class UserDictionariesService {
   static DICTIONARY_DEBT_ORIGINATION_REASON     = 11;
   static DICTIONARY_PERSON_TYPE                 = 12;
   static DICTIONARY_GENDER                      = 13;
-  static DICTIONARY_MARITAL_STATUS              = 14;
+  // static DICTIONARY_MARITAL_STATUS           = 14;
+  static DICTIONARY_FAMILY_STATUS               = 14; // WTF, this is not english => google
   static DICTIONARY_EDUCATION                   = 15;
   static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;
@@ -39,11 +40,16 @@ export class UserDictionariesService {
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;
   static DICTIONARY_PORTFOLIO_STAGE             = 31;
+  static DICTIONARY_CONTACT_TYPE                = 32;
+  static DICTIONARY_DOCUMENT_TYPE               = 33;
   static DICTIONARY_DEBT_LIST_1                 = 34;
   static DICTIONARY_DEBT_LIST_2                 = 35;
   static DICTIONARY_DEBT_LIST_3                 = 36;
   static DICTIONARY_DEBT_LIST_4                 = 37;
-  static DICTIONARY_WORK_TYPE                   = 38; // NOT READY
+  static DICTIONARY_WORK_TYPE                   = 38;
+  static DICTIONARY_PROMISE_STATUS              = 39;
+  static DICTIONARY_PAYMENT_STATUS              = 40;
+  static DICTIONARY_PAYMENT_DETAILS             = 41;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

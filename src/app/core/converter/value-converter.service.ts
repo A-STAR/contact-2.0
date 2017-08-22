@@ -48,6 +48,9 @@ export class ValueConverterService {
       case 4:
         valueEntity.value = String(valueEntity.valueB);
         break;
+      case 5:
+        valueEntity.value = Number(valueEntity.valueN).toFixed(2);
+        break;
       default:
         valueEntity.value = '';
     }
@@ -60,9 +63,9 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      return Number(valueEntity.value) === 1
-        ? 'default.boolean.TRUE'
-        : 'default.boolean.FALSE';
+      return this.translateService.instant(
+        Number(valueEntity.value) === 1 ? 'default.boolean.TRUE' : 'default.boolean.FALSE'
+      );
     }
     return valueEntity.value;
   }

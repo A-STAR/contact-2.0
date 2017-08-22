@@ -21,6 +21,7 @@ export class LayoutComponent {
     DashboardComponent: 'HOME',
     DebtorComponent: 'DEBTOR_CARD',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
+    DebtorContactsComponent: 'DEBTOR_CONTACTS',
     DebtorDebtComponent: 'DEBTOR_DEBT',
     DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
     DebtorEmailComponent: 'DEBTOR_EMAIL',
