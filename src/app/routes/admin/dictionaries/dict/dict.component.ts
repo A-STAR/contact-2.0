@@ -55,8 +55,8 @@ export class DictComponent implements OnDestroy {
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE }, // 9
-    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES }, // 5
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
+    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
   ];
 
   hasViewPermission$: Observable<boolean>;
@@ -77,12 +77,14 @@ export class DictComponent implements OnDestroy {
         this.columns = columns;
         return this.dictionariesService.state;
       })
-      .take(2)
+      .take(3)
       .subscribe(dicState => {
-        const renderers: IRenderer = {};
-        renderers.parentCode = dicState.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
-        this.columns = this.gridService.setRenderers(this.columns, renderers);
-        this.cdRef.markForCheck();
+        const { dictionaries } = dicState;
+        if (dictionaries.length) {
+          const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
+          this.columns = this.gridService.setRenderers(this.columns, renderers);
+          this.cdRef.markForCheck();
+        }
       });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');

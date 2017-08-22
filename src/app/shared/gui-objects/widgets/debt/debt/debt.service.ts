@@ -16,12 +16,14 @@ export class DebtService {
   fetchAll(personId: number): Observable<Array<IDebt>> {
     return this.dataService
       .read('/persons/{personId}/debts', { personId })
+      .map(resp => resp.debts)
       .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { personId, debtId })
+      .map(resp => resp.debts[0] || {})
       .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
   }
 

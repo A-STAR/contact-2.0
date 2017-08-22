@@ -556,8 +556,8 @@
   },
   "person": {
     "gender": "Gender",
-    "birthDate": "Birthdate",
-    "birthPlace": "Birthplace",
+    "birthDate": "Date of birth",
+    "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
     "comment": "Comment"

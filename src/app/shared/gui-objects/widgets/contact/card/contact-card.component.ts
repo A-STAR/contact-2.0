@@ -38,7 +38,7 @@ export class ContactCardComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
-        UserDictionariesService.DICTIONARY_MARITAL_STATUS,
+        UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         UserDictionariesService.DICTIONARY_EDUCATION,
       ]),
       this.contactId
@@ -51,7 +51,7 @@ export class ContactCardComponent {
       const controls: IDynamicFormControl[] = [
         { label: 'widgets.contact.grid.firstName', controlName: 'firstName', type: 'text' },
         { label: 'widgets.contact.grid.middleName', controlName: 'middleName', type: 'text' },
-        { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text' },
+        { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text', required: true },
         { label: 'widgets.contact.grid.birthDate', controlName: 'birthDate',  type: 'datepicker' },
         { label: 'widgets.contact.grid.birthPlace', controlName: 'birthPlace',  type: 'text', },
         { label: 'widgets.contact.grid.genderCode', controlName: 'genderCode', type: 'number', },

@@ -57,11 +57,11 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName' },
-    { prop: 'birthDate', maxWidth: 130 },
+    { prop: 'birthDate', maxWidth: 130, renderer: 'dateTimeRenderer' },
     { prop: 'birthPlace' },
-    { prop: 'genderCode' },
-    { prop: 'familyStatusCode' },
-    { prop: 'educationCode' },
+    { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
+    { prop: 'familyStatusCode', dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS },
+    { prop: 'educationCode', dictCode: UserDictionariesService.DICTIONARY_EDUCATION },
     { prop: 'linkTypeCode' },
     { prop: 'comment' },
   ];
@@ -73,15 +73,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private gridSubscription: Subscription;
-
-  private renderers: IRenderer = {
-    workTypeCode: [],
-    currencyId: [],
-    income: 'numberRenderer',
-    hireDate: 'dateTimeRenderer',
-    dismissDate: 'dateTimeRenderer',
-  };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -95,21 +86,13 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(
-        UserDictionariesService.DICTIONARY_WORK_TYPE
-      ),
-      this.lookupService.currencyOptions,
-    )
-    .subscribe(([ dictOptions, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
-        workTypeCode: [ ...dictOptions ],
-        currencyId: [ ...currencyOptions ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+    this.gridService.setDictionaryRenderers(this.columns)
+      .map(columns => {
+        this.columns = this.gridService.setRenderers(columns);
+        this.cdRef.markForCheck();
+      })
+      .take(3)
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -119,7 +102,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.contact.gen.plural').dispatch();
           this.clear();
         }
       });
@@ -133,7 +116,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     this.selectedContact$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.gridSubscription.unsubscribe();
+    // this.gridSubscription.unsubscribe();
   }
 
   onDoubleClick(contact: IContact): void {

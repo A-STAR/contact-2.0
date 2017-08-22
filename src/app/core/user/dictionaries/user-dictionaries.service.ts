@@ -22,7 +22,8 @@ export class UserDictionariesService {
   static DICTIONARY_DEBT_ORIGINATION_REASON     = 11;
   static DICTIONARY_PERSON_TYPE                 = 12;
   static DICTIONARY_GENDER                      = 13;
-  static DICTIONARY_MARITAL_STATUS              = 14;
+  // static DICTIONARY_MARITAL_STATUS           = 14;
+  static DICTIONARY_FAMILY_STATUS               = 14; // WTF, this is not english => google
   static DICTIONARY_EDUCATION                   = 15;
   static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;

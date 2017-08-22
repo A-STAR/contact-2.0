@@ -16,7 +16,7 @@ export interface IGridColumn {
   minWidth?: number;
   name?: string;
   prop: string;
-  renderer?: Function;
+  renderer?: Function | string;
   type?: string;
   // NOTE: technical use only by grid.service.ts, pls do NOT use directly
   $$valueGetter?: Function;
