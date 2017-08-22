@@ -532,7 +532,7 @@
       "remove": {
         "title": "Delete the record",
         "confirmMessage": "Do you really want to delete the selected record?"
-      },
+      }
     },
     "actionLogTab": {
       "title": "Actions log"

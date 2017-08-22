@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
   sparkOptions2 = {
     type: 'line',
     height: 80,
-    width: '100%',
+    width: '95%',
     lineWidth: 2,
     lineColor: this.colors.byName('purple'),
     spotColor: '#888',
