@@ -7,7 +7,7 @@ import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';

@@ -833,7 +833,11 @@
         "portfolio": "Portfolio",
         "bank": "Bank",
         "debtReasonCode": "Reason",
-        "comment": "Comments"
+        "comment": "Comments",
+        "dict1Code": "Dpd interval",
+        "dict2Code": "Dpd strategy",
+        "dict3Code": "Unknown",
+        "dict4Code": "Unknown"
       },
       "component": {
         "title": "Debt components",
@@ -844,7 +848,7 @@
         },
         "remove": {
           "title": "Remove debt component",
-          "confirmMessage": "Are you sure you want to remove debt component?"
+          "confirmMessage": "Are you sure you want to remove the debt component?"
         }
       },
       "componentLog": {
