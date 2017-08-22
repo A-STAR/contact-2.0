@@ -50,13 +50,11 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { prop: 'name', minWidth: 150, maxWidth: 350 },
-    { prop: 'value', minWidth: 100, maxWidth: 150, localized: true },
+    { prop: 'value', minWidth: 100, maxWidth: 150,
+      renderer: (constant: IConstant) => this.valueConverterService.deserializeBoolean(constant)
+    },
     { prop: 'dsc', minWidth: 200 },
   ];
-
-  renderers = {
-    value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
-  };
 
   permissionSub: Subscription;
 
@@ -77,7 +75,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.columns = this.gridService.setRenderers(this.columns);
     this.rows$ = this.constantsService.state
       .map(state => this.valueConverterService.deserializeSet(state.constants)) as Observable<IConstant[]>;
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);

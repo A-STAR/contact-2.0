@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
@@ -24,11 +23,11 @@ export class GridService {
   constructor(
     private converterService: ValueConverterService,
     private metadataService: MetadataService,
-    private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {
     const dateTimeRenderer = (key: string) => ({ [key]: value }) => value ? this.converterService.ISOToLocalDateTime(value) : '';
-    this.predefinedRenderers = { ...gridRenderers, dateTimeRenderer };
+    const dateRenderer = (key: string) => ({ [key]: value }) => value ? this.converterService.ISOToLocalDate(value) : '';
+    this.predefinedRenderers = { ...gridRenderers, dateTimeRenderer, dateRenderer };
   }
 
   /**
@@ -139,10 +138,14 @@ export class GridService {
       // Syntax 2: provide renderers in a column's `renderer` property
       : columns.map(column => {
           const { renderer } = column;
-          if (Object.prototype.toString.call(renderer) === '[object String]') {
+          const type = Object.prototype.toString.call(renderer);
+          if ( type === '[object String]') {
             // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
             const renderFn: Function = this.predefinedRenderers[renderer as string];
             return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
+          }
+          if (type === 'function') {
+            return column;
           }
           return renderer ? this.setRenderer(column, renderer as Function) : column;
         });
@@ -182,15 +185,10 @@ export class GridService {
 
       if (isArray) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
-        return labeledValue
-          ? (column.localized && labeledValue.label ? this.translateService.instant(labeledValue.label) : labeledValue.label)
-          : entity[column.prop];
+        return labeledValue ? labeledValue.label : entity[column.prop];
       } else {
 
-        const displayValue = String((rendererFn as Function)(entity, value));
-        return column.localized && displayValue
-          ? this.translateService.instant(displayValue)
-          : displayValue;
+        return String((rendererFn as Function)(entity, value));
       }
     };
     // NOTE: for compatibility between grid & grid2

@@ -48,15 +48,18 @@ export class ContactCardComponent {
     )
     .take(1)
     .subscribe(([ options, canEdit, contact ]) => {
+      const genderOptions = options[UserDictionariesService.DICTIONARY_GENDER];
+      const familyOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
+      const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
       const controls: IDynamicFormControl[] = [
         { label: 'widgets.contact.grid.firstName', controlName: 'firstName', type: 'text' },
         { label: 'widgets.contact.grid.middleName', controlName: 'middleName', type: 'text' },
         { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text', required: true },
         { label: 'widgets.contact.grid.birthDate', controlName: 'birthDate',  type: 'datepicker' },
         { label: 'widgets.contact.grid.birthPlace', controlName: 'birthPlace',  type: 'text', },
-        { label: 'widgets.contact.grid.genderCode', controlName: 'genderCode', type: 'number', },
-        { label: 'widgets.contact.grid.familyStatusCode', controlName: 'familyStatusCode', type: 'number', },
-        { label: 'widgets.contact.grid.educationCode', controlName: 'educationCode',  type: 'number', },
+        { label: 'widgets.contact.grid.genderCode', controlName: 'genderCode', type: 'select', options: genderOptions },
+        { label: 'widgets.contact.grid.familyStatusCode', controlName: 'familyStatusCode', type: 'select', options: familyOptions },
+        { label: 'widgets.contact.grid.educationCode', controlName: 'educationCode',  type: 'select', options: educationOptions },
         { label: 'widgets.contact.grid.linkTypeCode', controlName: 'linkTypeCode',  type: 'number', },
         { label: 'widgets.contact.grid.comment', controlName: 'comment', type: 'textarea', },
       ];

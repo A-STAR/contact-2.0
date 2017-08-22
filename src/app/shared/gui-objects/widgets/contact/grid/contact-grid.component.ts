@@ -56,12 +56,12 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName' },
-    { prop: 'birthDate', maxWidth: 130, renderer: 'dateTimeRenderer' },
+    { prop: 'birthDate', maxWidth: 110, renderer: 'dateRenderer' },
     { prop: 'birthPlace' },
     { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
     { prop: 'familyStatusCode', dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS },
     { prop: 'educationCode', dictCode: UserDictionariesService.DICTIONARY_EDUCATION },
-    { prop: 'linkTypeCode' },
+    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
     { prop: 'comment' },
   ];
 
@@ -83,18 +83,17 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridService.setDictionaryRenderers(this.columns)
+    this.gridService.setDictionaryRenderers(this.gridService.setRenderers(this.columns))
       .map(columns => {
-        this.columns = this.gridService.setRenderers(columns);
+        this.columns = columns;
         this.cdRef.markForCheck();
       })
-      .take(3)
+      .take(4)
       .subscribe();
   }
 
   ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();
@@ -113,7 +112,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     this.selectedContact$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    // this.gridSubscription.unsubscribe();
   }
 
   onDoubleClick(contact: IContact): void {

@@ -2,6 +2,7 @@ export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export type TRendererType = Function | Array<any>
   | 'checkboxRenderer'
+  | 'dateRenderer'
   | 'dateTimeRenderer'
   | 'numberRenderer'
   | 'phoneRenderer'
@@ -11,7 +12,10 @@ export type TRendererType = Function | Array<any>
 export interface IGridColumn {
   disabled?: boolean;
   dictCode?: number;
-  localized?: boolean;
+  /**
+   * @deprecated
+   */
+  // localized?: boolean;
   maxWidth?: number;
   minWidth?: number;
   name?: string;
