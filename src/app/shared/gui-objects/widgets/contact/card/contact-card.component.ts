@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '../contact.interface';
+import { IContact } from '../contact.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
@@ -25,7 +25,7 @@ export class ContactCardComponent {
   private contactId = (this.route.params as any).value.contactId || null;
 
   controls: IDynamicFormControl[] = null;
-  employment: IEmployment;
+  contact: IContact;
 
   constructor(
     private contentTabService: ContentTabService,
@@ -47,12 +47,11 @@ export class ContactCardComponent {
       this.contactId ? this.contactService.fetch(this.personId, this.contactId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, canEdit, employment ]) => {
-      console.log('can edit?', canEdit);
+    .subscribe(([ options, canEdit, contact ]) => {
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.contact.grid.firstName', controlName: 'firstName', type: 'text', required: true },
-        { label: 'widgets.contact.grid.middleName', controlName: 'middleName', type: 'text', required: true },
-        { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text', required: true },
+        { label: 'widgets.contact.grid.firstName', controlName: 'firstName', type: 'text' },
+        { label: 'widgets.contact.grid.middleName', controlName: 'middleName', type: 'text' },
+        { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text' },
         { label: 'widgets.contact.grid.birthDate', controlName: 'birthDate',  type: 'datepicker' },
         { label: 'widgets.contact.grid.birthPlace', controlName: 'birthPlace',  type: 'text', },
         { label: 'widgets.contact.grid.genderCode', controlName: 'genderCode', type: 'number', },
@@ -62,7 +61,7 @@ export class ContactCardComponent {
         { label: 'widgets.contact.grid.comment', controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
-      this.employment = employment;
+      this.contact = contact;
     });
   }
 
@@ -81,7 +80,7 @@ export class ContactCardComponent {
       : this.contactService.create(this.personId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(ContactService.MESSAGE_EMPLOYMENT_SAVED);
+      this.messageBusService.dispatch(ContactService.MESSAGE_CONTACT_SAVED);
       this.onBack();
     });
   }

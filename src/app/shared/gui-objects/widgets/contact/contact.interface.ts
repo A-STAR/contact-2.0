@@ -1,11 +1,14 @@
-export interface IEmployment {
+export interface IContact {
   id?: number;
-  workTypeCode: number;
-  company?: string;
-  position?: string;
-  hireDate?: Date | string;
-  dismissDate?: Date | string;
-  income?: number;
-  currencyId?: number;
-  comment?: string;
+  fullName?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  birthDate?: Date | string;
+  birthPlace?: string;
+  genderCode: number;
+  familyStatusCode: number;
+  educationCode: number;
+  linkTypeCode: number;
+  comment: string;
 }

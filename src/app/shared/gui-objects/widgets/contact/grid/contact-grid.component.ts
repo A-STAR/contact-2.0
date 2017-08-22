@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IEmployment } from '../contact.interface';
+import { IContact } from '../contact.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -24,7 +24,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 })
 export class ContactGridComponent implements OnInit, OnDestroy {
 
-  private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
+  private selectedContact$ = new BehaviorSubject<IContact>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -34,19 +34,19 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedEmployment$.value.id),
+      action: () => this.onEdit(this.selectedContact$.value.id),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        this.selectedEmployment$
-      ).map(([canEdit, selectedEmployment]) => !!canEdit && !!selectedEmployment)
+        this.selectedContact$
+      ).map(([canEdit, selectedContact]) => !!canEdit && !!selectedContact)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeEmployment'),
+      action: () => this.setDialog('removeContact'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.selectedEmployment$
-      ).map(([canDelete, selectedEmployment]) => !!canDelete && !!selectedEmployment),
+        this.selectedContact$
+      ).map(([canDelete, selectedContact]) => !!canDelete && !!selectedContact),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -56,17 +56,17 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'workTypeCode' },
-    { prop: 'company' },
-    { prop: 'position' },
-    { prop: 'hireDate', maxWidth: 130 },
-    { prop: 'dismissDate', maxWidth: 130 },
-    { prop: 'income', maxWidth: 110 },
-    { prop: 'currencyId', maxWidth: 110 },
+    { prop: 'fullName' },
+    { prop: 'birthDate', maxWidth: 130 },
+    { prop: 'birthPlace' },
+    { prop: 'genderCode' },
+    { prop: 'familyStatusCode' },
+    { prop: 'educationCode' },
+    { prop: 'linkTypeCode' },
     { prop: 'comment' },
   ];
 
-  employments: Array<IEmployment> = [];
+  contacts: Array<IContact> = [];
 
   private dialog: string;
   private personId = (this.route.params as any).value.id || null;
@@ -125,28 +125,28 @@ export class ContactGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.messageBusService
-      .select(ContactService.MESSAGE_EMPLOYMENT_SAVED)
+      .select(ContactService.MESSAGE_CONTACT_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
-    this.selectedEmployment$.complete();
+    this.selectedContact$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
   }
 
-  onDoubleClick(employment: IEmployment): void {
-    this.onEdit(employment.id);
+  onDoubleClick(contact: IContact): void {
+    this.onEdit(contact.id);
   }
 
-  onSelect(employment: IEmployment): void {
-    this.selectedEmployment$.next(employment)
+  onSelect(contact: IContact): void {
+    this.selectedContact$.next(contact)
   }
 
   onRemove(): void {
-    const { id: employmentId } = this.selectedEmployment$.value;
-    this.contactService.delete(this.personId, employmentId)
+    const { id: contactId } = this.selectedContact$.value;
+    this.contactService.delete(this.personId, contactId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -166,41 +166,41 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/employment/create` ]);
+    this.router.navigate([ `${this.router.url}/contact/create` ]);
   }
 
-  private onEdit(employmentId: number): void {
-    this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
+  private onEdit(contactId: number): void {
+    this.router.navigate([ `${this.router.url}/contact/${contactId}` ]);
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('CONTACT_PERSON_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('CONTACT_PERSON_ADD').distinctUntilChanged();
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_EDIT').distinctUntilChanged();
+    return this.userPermissionsService.has('CONTACT_PERSON_EDIT').distinctUntilChanged();
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
+    return this.userPermissionsService.has('CONTACT_PERSON_DELETE').distinctUntilChanged();
   }
 
   private fetch(): void {
     this.contactService.fetchAll(this.personId)
-      .subscribe(employments => {
-        this.employments = [].concat(employments);
-        this.selectedEmployment$.next(null);
+      .subscribe(contacts => {
+        this.contacts = [].concat(contacts);
+        this.selectedContact$.next(null);
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this.employments = [];
-    this.selectedEmployment$.next(null);
+    this.contacts = [];
+    this.selectedContact$.next(null);
     this.cdRef.markForCheck();
   }
 

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { DebtorAddressModule } from './address/address.module';
+import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDebtModule } from './debt/debt.module';
 import { DebtorEmailModule } from './email/email.module';
@@ -19,6 +20,7 @@ import { DebtorInformationComponent } from './general/information.component';
 @NgModule({
   imports: [
     DebtorAddressModule,
+    DebtorContactsModule,
     DebtorDebtComponentModule,
     DebtorDebtModule,
     DebtorEmailModule,

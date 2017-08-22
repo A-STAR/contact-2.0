@@ -54,6 +54,7 @@
         "DEBT_LIST": "Список долгов",
         "DEBTOR_CARD": "Карточка должника",
         "DEBTOR_ADDRESS": "Адрес должника",
+        "DEBTOR_CONTACTS": "Контактные лица должника",
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
         "DEBTOR_EMAIL": "Email должника",
@@ -742,14 +743,17 @@
     },
     "contact": {
       "grid": {
-        "fullName": "Full name",
-        "birthDate": "Birth date",
-        "birthPlace": "Place of birth",
-        "genderCode": "Gender",
-        "familyStatusCode": "Family status",
-        "educationCode": "Education",
-        "linkTypeCode": "Type",
-        "comment": "Comment"
+        "fullName": "ФИО",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "genderCode": "Пол",
+        "familyStatusCode": "Семейное положение",
+        "educationCode": "Образование",
+        "linkTypeCode": "Тип",
+        "comment": "Комментарий"
       }
     },
     "email": {

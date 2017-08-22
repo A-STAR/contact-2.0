@@ -1,51 +1,52 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IEmployment } from './contact.interface';
+import { IContact } from './contact.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class ContactService {
-  static MESSAGE_EMPLOYMENT_SAVED = 'MESSAGE_EMPLOYMENT_SAVED';
+  static MESSAGE_CONTACT_SAVED = 'MESSAGE_CONTACT_SAVED';
 
-  private url = '/persons/{personId}/employments';
+  private baseUrl = '/persons/{personId}/contactpersons';
+  private extUrl = `${this.baseUrl}/{contactId}`;
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(personId: number): Observable<IEmployment[]> {
+  fetchAll(personId: number): Observable<IContact[]> {
     return this.dataService
-      .read(this.url, { personId })
-      .map(resp => resp.employments)
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employment.gen.plural').dispatchCallback());
+      .read(this.baseUrl, { personId })
+      .map(resp => resp.contactPersons)
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.plural').dispatchCallback());
   }
 
-  fetch(personId: number, employmentId: number): Observable<IEmployment> {
+  fetch(personId: number, contactId: number): Observable<IContact> {
     return this.dataService
-      .read(`${this.url}/{employmentId}`, { personId, employmentId })
-      .map(resp => resp.employments[0] || {})
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employment.gen.singular').dispatchCallback());
+      .read(this.extUrl, { personId, contactId })
+      .map(resp => resp.contactPersons[0] || {})
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, employment: IEmployment): Observable<any> {
+  create(personId: number, contact: IContact): Observable<any> {
     return this.dataService
-      .create(this.url, { personId }, employment)
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.employment.gen.singular').dispatchCallback());
+      .create(this.baseUrl, { personId }, contact)
+      .catch(this.notificationsService.error('errors.default.create').entity('entities.contact.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, employmentId: number, employment: IEmployment): Observable<any> {
+  update(personId: number, contactId: number, contact: IContact): Observable<any> {
     return this.dataService
-      .update(`${this.url}/{employmentId}`, { personId, employmentId }, employment)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.employment.gen.singular').dispatchCallback());
+      .update(this.extUrl, { personId, contactId }, contact)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.contact.gen.singular').dispatchCallback());
   }
 
-  delete(personId: number, employmentId: number): Observable<any> {
+  delete(personId: number, contactId: number): Observable<any> {
     return this.dataService
-      .delete(`${this.url}/{employmentId}`, { personId, employmentId })
-      .catch(this.notificationsService.error('errors.default.delete').entity('entities.employment.gen.singular').dispatchCallback());
+      .delete(this.extUrl, { personId, contactId })
+      .catch(this.notificationsService.error('errors.default.delete').entity('entities.contact.gen.singular').dispatchCallback());
   }
 }
