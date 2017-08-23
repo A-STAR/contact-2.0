@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IDebt, IDebtProcessingState } from './debt-processing.interface';
+import { IDebtProcessingState } from './debt-processing.interface';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 

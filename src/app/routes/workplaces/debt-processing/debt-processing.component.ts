@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import { IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IDebt } from './debt-processing.interface';
 
 import { DebtProcessingService } from './debt-processing.service';
