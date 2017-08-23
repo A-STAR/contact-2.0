@@ -22,7 +22,8 @@ export class DebtProcessingEffects {
         .map(response => ({
           type: DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS,
           payload: {
-            debts: response.data
+            data: response.data,
+            total: response.total,
           },
         }))
         // TODO(d.maltsev): i18n

@@ -114,6 +114,10 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription.unsubscribe();
   }
 
+  get selectedContact(): IContact {
+    return this.selectedContact$.value;
+  }
+
   onDoubleClick(contact: IContact): void {
     this.onEdit(contact.id);
   }

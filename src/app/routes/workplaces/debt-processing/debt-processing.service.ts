@@ -12,12 +12,9 @@ import { FilterObject } from '../../../shared/components/grid2/filter/grid-filte
 export class DebtProcessingService {
   static DEBT_PROCESSING_FETCH         = 'DEBT_PROCESSING_FETCH';
   static DEBT_PROCESSING_FETCH_SUCCESS = 'DEBT_PROCESSING_FETCH_SUCCESS';
+  static DEBT_PROCESSING_CLEAR         = 'DEBT_PROCESSING_CLEAR';
 
   constructor(private store: Store<IAppState>) {}
-
-  get debts$(): Observable<Array<IDebt>> {
-    return this.state$.map(state => state.debts).distinctUntilChanged();
-  }
 
   fetch(filters: FilterObject, params: IAGridRequestParams): void {
     this.store.dispatch({
@@ -29,11 +26,11 @@ export class DebtProcessingService {
   clear(): void {
     this.store.dispatch({
       payload: { data: [], total: 0 },
-      type: DebtProcessingService.DEBT_PROCESSING_FETCH_SUCCESS,
+      type: DebtProcessingService.DEBT_PROCESSING_CLEAR,
     });
   }
 
-  private get state$(): Observable<IDebtProcessingState> {
-    return this.store.select(state => state.debtProcessing);
+  get state$(): Observable<IDebtProcessingState> {
+    return this.store.select(state => state.debtProcessing).distinctUntilChanged();
   }
 }
