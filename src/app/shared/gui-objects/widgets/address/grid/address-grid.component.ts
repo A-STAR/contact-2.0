@@ -71,9 +71,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
 
   private renderers: IRenderer = {
-    typeCode: [],
-    statusCode: [],
-    blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
     isBlocked: 'checkboxRenderer',
     isResidence: 'checkboxRenderer',
@@ -92,7 +89,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
 
   constructor(
@@ -114,6 +110,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ]),
       this.canViewBlock$,
     )
+    .take(1)
     .subscribe(([ options, canViewBlock ]) => {
       this.renderers = {
         ...this.renderers,

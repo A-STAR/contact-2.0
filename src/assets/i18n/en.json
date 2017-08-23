@@ -434,6 +434,7 @@
     "responsible": "Manager",
     "reward": "Remuneration",
     "identityDocs": {
+      "title": "Identity documents",
       "add": {
         "title": "Add an identity"
       },
