@@ -50,8 +50,8 @@ export class DebtGridComponent {
     { prop: 'debtSum' },
     { prop: 'totalSum' },
     { prop: 'dpd' },
-    { prop: 'portfolio' },
-    { prop: 'bank' },
+    { prop: 'portfolioId' },
+    { prop: 'bankId' },
     { prop: 'debtReasonCode' },
   ];
 
@@ -78,15 +78,19 @@ export class DebtGridComponent {
         UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
       ]),
       this.lookupService.currencyOptions,
+      this.lookupService.portfolioOptions,
+      this.lookupService.contractorOptions,
     )
     .take(1)
-    .subscribe(([ dictionariesOptions, currencyOptions ]) => {
+    .subscribe(([ dictionariesOptions, currencyOptions, portfolioOptions, contractorOptions ]) => {
       const renderers: IRenderer = {
         creditStartDate: 'dateTimeRenderer',
         creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
         statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
         debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
         currencyId: [ ...currencyOptions ],
+        portfolioId: [ ...portfolioOptions ],
+        bankId: [ ...contractorOptions ],
       }
       this.columns = this.gridService.setRenderers(this.columns, renderers);
       this.cdRef.markForCheck();
