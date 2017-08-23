@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import { IAGridEventPayload } from '../../../shared/components/grid2/grid2.interface';
 import { IDebt } from './debt-processing.interface';
 
 import { DebtProcessingService } from './debt-processing.service';
@@ -28,11 +27,11 @@ export class DebtProcessingComponent {
   ) {}
 
   get rows$(): Observable<Array<IDebt>> {
-    return this.debtProcessingService.debts$;
+    return this.debtProcessingService.state$.map(debts => debts.data);
   }
 
   get rowCount$(): Observable<number> {
-    return this.debtProcessingService.debts$.map(debts => debts.length);
+    return this.debtProcessingService.state$.map(debts => debts.total);
   }
 
   onRequest(): void {
@@ -41,12 +40,8 @@ export class DebtProcessingComponent {
     this.debtProcessingService.fetch(filters, params);
   }
 
-  onSelect(action: IAGridEventPayload): void {
-    // this.dispatch(action);
-  }
-
-  onDblClick({ debtId }: IDebt): void {
-    this.router.navigate([ `${this.router.url}/${debtId}` ]);
+  onDblClick({ personId }: IDebt): void {
+    this.router.navigate([ `${this.router.url}/${personId}` ]);
     // const { innerHeight: height, innerWidth: width} = window;
     // const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
     // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);

@@ -511,7 +511,11 @@
       "title": "Поручители"
     },
     "contactsTab": {
-      "title": "Контакты"
+      "title": "Контакты",
+      "remove": {
+        "title": "Удалить контактное лицо",
+        "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
+      }
     },
     "planningTab": {
       "title": "Планирование"
@@ -627,7 +631,7 @@
     "managers": {
       "remove": {
         "title": "Удаление менеджера",
-        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }}?"
+        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }} ?"
       },
       "grid": {
         "fullName": "ФИО",

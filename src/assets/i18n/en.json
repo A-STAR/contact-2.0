@@ -486,9 +486,9 @@
         }
       },
       "phone": {
-        "title": "Телефоны",
+        "title": "Phones",
         "toolbar": {
-          "verification": "Верификация контактных данных"
+          "verification": "Contact verification"
         },
         "grid": {
           "phone": "Number",
@@ -511,7 +511,11 @@
       "title": "Guarantors"
     },
     "contactsTab": {
-      "title": "Contacts"
+      "title": "Contacts",
+      "remove": {
+        "title": "Delete the contact",
+        "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
+      }
     },
     "planningTab": {
       "title": "Planning"
@@ -627,7 +631,7 @@
     "managers": {
       "remove": {
         "title": "Delete manager",
-        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+        "confirmMessage": "Are you sure you want to delete the manager {{ lastName }}?"
       },
       "grid": {
         "fullName": "Full name",

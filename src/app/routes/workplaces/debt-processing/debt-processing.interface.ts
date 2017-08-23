@@ -22,5 +22,6 @@ export interface IDebt {
 }
 
 export interface IDebtProcessingState {
-  debts: Array<IDebt>;
+  data: Array<IDebt>;
+  total: number;
 }
