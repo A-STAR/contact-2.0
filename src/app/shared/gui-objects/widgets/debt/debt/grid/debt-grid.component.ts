@@ -61,14 +61,6 @@ export class DebtGridComponent {
 
   private gridSubscription: Subscription;
 
-  private renderers: IRenderer = {
-    creditTypeCode: [],
-    statusCode: [],
-    currencyId: [],
-    debtReasonCode: [],
-    creditStartDate: 'dateTimeRenderer',
-  };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
@@ -86,15 +78,17 @@ export class DebtGridComponent {
         UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
       ]),
       this.lookupService.currencyOptions,
-    ).subscribe(([ dictionariesOptions, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
+    )
+    .take(1)
+    .subscribe(([ dictionariesOptions, currencyOptions ]) => {
+      const renderers: IRenderer = {
+        creditStartDate: 'dateTimeRenderer',
         creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
         statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
         debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
         currencyId: [ ...currencyOptions ],
       }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      this.columns = this.gridService.setRenderers(this.columns, renderers);
       this.cdRef.markForCheck();
     });
 
@@ -150,6 +144,10 @@ export class DebtGridComponent {
   }
 
   private fetch(): void {
-    this.debtService.fetchAll(this.personId).subscribe(debts => this.debts = debts);
+    this.debtService.fetchAll(this.personId).subscribe(debts => {
+      this.selectedDebtId$.next(null);
+      this.debts = debts;
+      this.cdRef.markForCheck();
+    });
   }
 }

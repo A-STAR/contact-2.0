@@ -87,10 +87,11 @@ export class GridService {
               // Dictionary
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
+                const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
                 column.renderer = (row: ITypeCodeItem) => {
-                  const cellValue = row[column.name];
-                  const typeDescription = dictionary.find(item => item.code === cellValue);
-                  return typeDescription ? typeDescription.name : cellValue;
+                  const dictCode = row[column.name];
+                  const dictValue = dictionaryHash[dictCode];
+                  return  dictValue !== undefined ? dictValue : dictCode;
                 };
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }

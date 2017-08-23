@@ -832,12 +832,12 @@
         "dpd": "Кол-во дней просрочки",
         "portfolio": "Портфель",
         "bank": "Банк",
-        "debtReasonCode": "Причина",
+        "debtReasonCode": "Причина просрочки",
         "comment": "Комментарий",
         "dict1Code": "Интервал",
         "dict2Code": "Стратегия",
-        "dict3Code": "Н/Д",
-        "dict4Code": "Н/Д"
+        "dict3Code": "Балл 3",
+        "dict4Code": "Балл 4"
       },
       "component": {
         "title": "Компоненты долга",

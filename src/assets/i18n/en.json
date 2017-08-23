@@ -832,12 +832,12 @@
         "dpd": "DPD",
         "portfolio": "Portfolio",
         "bank": "Bank",
-        "debtReasonCode": "Reason",
+        "debtReasonCode": "Debt reason",
         "comment": "Comments",
         "dict1Code": "Dpd interval",
         "dict2Code": "Dpd strategy",
-        "dict3Code": "Unknown",
-        "dict4Code": "Unknown"
+        "dict3Code": "Score 3",
+        "dict4Code": "Score 4"
       },
       "component": {
         "title": "Debt components",
