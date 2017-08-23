@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IContact } from '../contact.interface';
+import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
@@ -12,7 +13,11 @@ import { MessageBusService } from '../../../../../core/message-bus/message-bus.s
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { EmploymentGridComponent } from '../../../../../shared/gui-objects/widgets/employment/grid/employment-grid.component';
+import { IdentityGridComponent } from '../../../../../shared/gui-objects/widgets/identity/grid/identity-grid.component';
+import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
 
 @Component({
   selector: 'app-contact-card',
@@ -26,6 +31,16 @@ export class ContactCardComponent {
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;
+
+  node: INode = {
+    container: 'tabs',
+    children: [
+      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
+      { component: AddressGridComponent, title: 'debtor.information.address.title' },
+      { component: IdentityGridComponent, title: 'debtor.identityDocs.title' },
+      { component: EmploymentGridComponent, title: 'debtor.employmentRecordTab.title' },
+    ]
+  };
 
   constructor(
     private contentTabService: ContentTabService,

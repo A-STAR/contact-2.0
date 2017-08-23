@@ -40,7 +40,7 @@ export class ContentTabService {
   }
 
   addTab(tab: ITab): void {
-    const found = this._tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
+    const found = this.tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);
@@ -89,7 +89,7 @@ export class ContentTabService {
   back(): void {
     const i = this._activeIndex;
     this.location.back();
-    this.removeTab(i);
+    this.tabs = this.tabs.filter((tab, index) => index !== i);
   }
 
   private onSectionLoadStart(): void {
