@@ -75,8 +75,7 @@ export class UsersComponent implements OnDestroy {
 
   editedEntity: IUser;
 
-  // TODO(d.maltsev): role options type
-  roleOptions$: Observable<any>;
+  roleOptions$: Observable<IOption[]>;
   languageOptions$: Observable<Array<IOption>>;
 
   users$: Observable<Array<IUser>>;
@@ -113,7 +112,6 @@ export class UsersComponent implements OnDestroy {
         state => {
           this.displayBlockedUsers = state.displayBlocked;
           this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
-          console.log('boo');
         }
       );
 
