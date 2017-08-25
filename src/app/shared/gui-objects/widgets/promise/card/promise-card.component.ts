@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '../promise.interface';
+import { IPromise } from '../promise.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PromiseService } from '../promise.service';
@@ -25,10 +25,10 @@ export class PromiseCardComponent {
   private routeParams = (<any>this.route.params).value;
   private personId = this.routeParams.id || null;
   private contactId = this.routeParams.contactId || null;
-  private employmentId = this.routeParams.employmentId || null;
+  private promiseId = this.routeParams.promiseId || null;
 
   controls: IDynamicFormControl[] = null;
-  employment: IEmployment;
+  promise: IPromise;
 
   constructor(
     private contentTabService: ContentTabService,
@@ -39,31 +39,28 @@ export class PromiseCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // NOTE: on deper routes we should take the contactId
     this.personId = this.contactId || this.personId;
+    console.log('route params', this.routeParams);
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
       this.lookupService.currencyOptions,
-      this.employmentId
-        ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
-        : this.userPermissionsService.has('EMPLOYMENT_ADD'),
-      this.employmentId ? this.promiseService.fetch(this.personId, this.employmentId) : Observable.of(null)
+      this.promiseId
+        ? this.userPermissionsService.has('PROMISE_EDIT')
+        : this.userPermissionsService.has('PROMISE_ADD'),
+      this.promiseId ? this.promiseService.fetch(this.personId, this.promiseId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
+    .subscribe(([ options, currencyOptions, canEdit, promise ]) => {
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },
-        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', required: true },
-        { label: 'widgets.employment.grid.position', controlName: 'position',  type: 'text', },
-        { label: 'widgets.employment.grid.hireDate', controlName: 'hireDate', type: 'datepicker', },
-        { label: 'widgets.employment.grid.dismissDate', controlName: 'dismissDate', type: 'datepicker', },
-        { label: 'widgets.employment.grid.income', controlName: 'income',  type: 'number', },
-        { label: 'widgets.employment.grid.currencyId', controlName: 'currencyId', type: 'select', options: currencyOptions },
-        { label: 'widgets.employment.grid.comment', controlName: 'comment', type: 'textarea', },
+        { label: 'widgets.promise.grid.promiseDate', controlName: 'promiseDate', type: 'datepicker', },
+        { label: 'widgets.promise.grid.promiseSum', controlName: 'promiseSum',  type: 'number', },
+        { label: 'widgets.promise.grid.receiveDateTime', controlName: 'receiveDateTime', type: 'datepicker', },
+        // { label: 'widgets.promise.grid.currencyId', controlName: 'currencyId', type: 'select', options: currencyOptions },
+        { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
-      this.employment = employment;
+      this.promise = promise;
     });
   }
 
@@ -77,8 +74,8 @@ export class PromiseCardComponent {
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    const action = this.employmentId
-      ? this.promiseService.update(this.personId, this.employmentId, data)
+    const action = this.promiseId
+      ? this.promiseService.update(this.personId, this.promiseId, data)
       : this.promiseService.create(this.personId, data);
 
     action.subscribe(() => {
