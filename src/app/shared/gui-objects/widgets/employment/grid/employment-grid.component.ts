@@ -69,8 +69,8 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   employments: Array<IEmployment> = [];
 
   private dialog: string;
-  private personId = (this.route.params as any).value.id || null;
-  // private contactId = (this.route.params as any).value.contactId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.contactId || this.routeParams.id || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -111,7 +111,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();
     });
-    // console.log('contactId', this.contactId);
   }
 
   ngOnInit(): void {

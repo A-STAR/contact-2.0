@@ -20,7 +20,6 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 export class PhoneCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  // TODO(d.maltsev): is there a better way to get route params?
   private id = (this.route.params as any).value.id || null;
   private phoneId = (this.route.params as any).value.phoneId || null;
 
