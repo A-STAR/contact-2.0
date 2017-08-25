@@ -84,6 +84,8 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     dismissDate: 'dateTimeRenderer',
   };
 
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,

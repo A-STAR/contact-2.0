@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { PersistenceService } from '../persistence/persistence.service';
+import { propOr } from '../utils';
+
 @Injectable()
 export class SettingsService {
 
@@ -7,7 +10,7 @@ export class SettingsService {
   public layout: any;
   private user: any;
 
-  constructor() {
+  constructor(private persistenceService: PersistenceService) {
 
     // User Settings
     this.user = {
@@ -23,10 +26,12 @@ export class SettingsService {
       year: (new Date()).getFullYear()
     };
 
+    const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
+    const isCollapsed = propOr('isCollapsed', false)(layout);
     // Layout Settings
     this.layout = {
       isFixed: true,
-      isCollapsed: false,
+      isCollapsed: isCollapsed,
       isBoxed: false,
       isRTL: false,
       horizontal: false,

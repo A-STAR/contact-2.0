@@ -224,7 +224,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `phone/create` ], { relativeTo: this.route });
+    this.router.navigate([ `${this.router.url}/phone/create` ]);
   }
 
   private onEdit(phoneId: number): void {

@@ -25,11 +25,13 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
 export class AddressCardComponent {
   @ViewChild('form') form: DynamicForm2Component;
 
-  private id = (this.route.params as any).value.id || null;
-  private addressId = (this.route.params as any).value.addressId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
+  private addressId = this.routeParams.addressId || null;
 
   address$ = new BehaviorSubject<IAddress>(null);
-  group$;
+  group$: Observable<IDynamicFormGroup>;
 
   constructor(
     private addressService: AddressService,
@@ -39,8 +41,11 @@ export class AddressCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     if (this.addressId) {
-      this.addressService.fetch(18, this.id, this.addressId).subscribe(address => this.address$.next(address));
+      this.addressService.fetch(18, this.personId, this.addressId).subscribe(address => this.address$.next(address));
     }
 
     this.group$ = Observable.combineLatest(
@@ -53,13 +58,13 @@ export class AddressCardComponent {
       return address && address.isText
         ? this.buildShortControls(options, canEdit, canEditComment)
         : this.buildFullControls(options, canEdit, canEditComment);
-    })
+    });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const action = this.addressId
-      ? this.addressService.update(18, this.id, this.addressId, this.form.value)
-      : this.addressService.create(18, this.id, this.form.value);
+      ? this.addressService.update(18, this.personId, this.addressId, this.form.value)
+      : this.addressService.create(18, this.personId, this.form.value);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);
@@ -67,11 +72,11 @@ export class AddressCardComponent {
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.isValid && this.form.isDirty;
   }
 
@@ -91,7 +96,7 @@ export class AddressCardComponent {
               type: 'group',
               bordered: true,
               // TODO(d.maltsev): i18n
-              label: 'Полный адрес',
+              label: 'widgets.address.card.fullAddressLabel',
               name: 'foo',
               translationKey: 'widgets.address.card',
               required: true,
