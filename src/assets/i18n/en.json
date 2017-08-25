@@ -61,6 +61,7 @@
         "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PHONE": "Debtor's phone",
+        "DEBTOR_PROMISE": "Payment promise",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -816,6 +817,16 @@
           "title": "Remove phone number",
           "confirmMessage": "Are you sure you want to remove phone {{ phone }}?"
         }
+      }
+    },
+    "promise": {
+      "grid": {
+        "promiseDate": "Due date",
+        "promiseSum": "Amount",
+        "receiveDateTime": "Promise received",
+        "statusCode": "Status",
+        "comment": "Comment",
+        "fullName": "Operator"
       }
     },
     "debt": {

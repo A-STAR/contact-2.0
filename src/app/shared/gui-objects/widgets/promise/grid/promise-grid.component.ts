@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IEmployment } from '../promise.interface';
+import { IPromise } from '../promise.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -24,7 +24,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
 
-  private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
+  private selectedPromise$ = new BehaviorSubject<IPromise>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -34,19 +34,19 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedEmployment$.value.id),
+      action: () => this.onEdit(this.selectedPromise$.value.id),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        this.selectedEmployment$
-      ).map(([canEdit, selectedEmployment]) => !!canEdit && !!selectedEmployment)
+        this.selectedPromise$
+      ).map(([canEdit, selectedPromise]) => !!canEdit && !!selectedPromise)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeEmployment'),
+      action: () => this.setDialog('remove'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.selectedEmployment$
-      ).map(([canDelete, selectedEmployment]) => !!canDelete && !!selectedEmployment),
+        this.selectedPromise$
+      ).map(([canDelete, selectedPromise]) => !!canDelete && !!selectedPromise),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -56,17 +56,15 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'workTypeCode' },
-    { prop: 'company' },
-    { prop: 'position' },
-    { prop: 'hireDate', maxWidth: 130 },
-    { prop: 'dismissDate', maxWidth: 130 },
-    { prop: 'income', maxWidth: 110 },
-    { prop: 'currencyId', maxWidth: 110 },
+    { prop: 'promiseDate', maxWidth: 130 },
+    { prop: 'promiseSum', maxWidth: 110 },
+    { prop: 'receiveDateTime', maxWidth: 130 },
+    { prop: 'statusCode' },
     { prop: 'comment' },
+    { prop: 'fullName' },
   ];
 
-  employments: Array<IEmployment> = [];
+  rows: Array<IPromise> = [];
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
@@ -77,11 +75,10 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
-    workTypeCode: [],
-    currencyId: [],
-    income: 'numberRenderer',
-    hireDate: 'dateTimeRenderer',
-    dismissDate: 'dateTimeRenderer',
+    promiseDate: 'dateTimeRenderer',
+    promiseSum: 'numberRenderer',
+    receiveDateTime: 'dateTimeRenderer',
+    statusCode: [],
   };
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
@@ -107,7 +104,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     .subscribe(([ dictOptions, currencyOptions ]) => {
       this.renderers = {
         ...this.renderers,
-        workTypeCode: [ ...dictOptions ],
+        statusCode: [ ...dictOptions ],
         currencyId: [ ...currencyOptions ],
       }
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -117,39 +114,38 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.promises.gen.plural').dispatch();
           this.clear();
         }
       });
 
     this.busSubscription = this.messageBusService
-      .select(PromiseService.MESSAGE_EMPLOYMENT_SAVED)
+      .select(PromiseService.MESSAGE_PROMISE_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
-    this.selectedEmployment$.complete();
+    this.selectedPromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
   }
 
-  onDoubleClick(employment: IEmployment): void {
-    this.onEdit(employment.id);
+  onDoubleClick(promise: IPromise): void {
+    this.onEdit(promise.id);
   }
 
-  onSelect(employment: IEmployment): void {
-    this.selectedEmployment$.next(employment)
+  onSelect(promise: IPromise): void {
+    this.selectedPromise$.next(promise)
   }
 
   onRemove(): void {
-    const { id: employmentId } = this.selectedEmployment$.value;
-    this.promiseService.delete(this.personId, employmentId)
+    const { id: promiseId } = this.selectedPromise$.value;
+    this.promiseService.delete(this.personId, promiseId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -169,41 +165,41 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/employment/create` ]);
+    this.router.navigate([ `${this.router.url}/promise/create` ]);
   }
 
-  private onEdit(employmentId: number): void {
-    this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
+  private onEdit(promiseId: number): void {
+    this.router.navigate([ `${this.router.url}/promise/${promiseId}` ]);
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_ADD').distinctUntilChanged();
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_EDIT').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_EDIT').distinctUntilChanged();
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_DELETE').distinctUntilChanged();
   }
 
   private fetch(): void {
     this.promiseService.fetchAll(this.personId)
-      .subscribe(employments => {
-        this.employments = [].concat(employments);
-        this.selectedEmployment$.next(null);
+      .subscribe(promises => {
+        this.rows = [].concat(promises);
+        this.selectedPromise$.next(null);
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this.employments = [];
-    this.selectedEmployment$.next(null);
+    this.rows = [];
+    this.selectedPromise$.next(null);
     this.cdRef.markForCheck();
   }
 

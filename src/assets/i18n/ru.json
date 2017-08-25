@@ -61,6 +61,7 @@
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PHONE": "Телефон должника",
+        "DEBTOR_PROMISE": "Обещание платежа",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -816,6 +817,16 @@
           "title": "Удалить телефон",
           "confirmMessage": "Вы действительно хотите удалить телефон {{ phone }}?"
         }
+      }
+    },
+    "promise": {
+      "grid": {
+        "promiseDate": "Обещанная дата",
+        "promiseSum": "Сумма в валюте",
+        "receiveDateTime": "Дата получения",
+        "statusCode": "Статус",
+        "comment": "Комментарий",
+        "fullName": "Оператор"
       }
     },
     "debt": {

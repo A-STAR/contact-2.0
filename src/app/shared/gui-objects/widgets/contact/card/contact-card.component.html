@@ -11,4 +11,4 @@
   <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
 </div>
 
-<app-container [node]="node"></app-container>
+<app-container *ngIf="contactId" [node]="node"></app-container>

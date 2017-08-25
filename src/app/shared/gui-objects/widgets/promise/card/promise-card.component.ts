@@ -82,7 +82,7 @@ export class PromiseCardComponent {
       : this.promiseService.create(this.personId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PromiseService.MESSAGE_EMPLOYMENT_SAVED);
+      this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);
       this.onBack();
     });
   }
