@@ -9,6 +9,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class PhoneService {
   static MESSAGE_PHONE_SAVED = 'MESSAGE_PHONE_SAVED';
+  baseUrl = '/entityTypes/{entityType}/entities/{entityId}/phones';
+  extUrl = `${this.baseUrl}/{phoneId}`;
 
   constructor(
     private dataService: DataService,
@@ -17,27 +19,27 @@ export class PhoneService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IPhone>> {
     return this.dataService
-      .read('/api/entityTypes/{entityType}/entities/{entityId}/phones', { entityType, entityId })
+      .read(this.baseUrl, { entityType, entityId })
       .map((response: IPhonesResponse) => response.phones)
       .catch(this.notificationsService.error('errors.default.read').entity('entities.phones.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, phoneId: number): Observable<IPhone> {
     return this.dataService
-      .read('/api/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}', { entityType, entityId, phoneId })
+      .read(this.extUrl, { entityType, entityId, phoneId })
       .map((response: IPhonesResponse) => response.phones[0])
       .catch(this.notificationsService.error('errors.default.read').entity('entities.phones.gen.singular').dispatchCallback());
   }
 
   create(entityType: number, entityId: number, phone: IPhone): Observable<void> {
     return this.dataService
-      .create('/api/entityTypes/{entityType}/entities/{entityId}/phones/', { entityType, entityId }, phone)
+      .create(this.baseUrl, { entityType, entityId }, phone)
       .catch(this.notificationsService.error('errors.default.create').entity('entities.phones.gen.singular').dispatchCallback());
   }
 
   update(entityType: number, entityId: number, phoneId: number, phone: Partial<IPhone>): Observable<void> {
     return this.dataService
-      .update('/api/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}', { entityType, entityId, phoneId }, phone)
+      .update(this.extUrl, { entityType, entityId, phoneId }, phone)
       .catch(this.notificationsService.error('errors.default.update').entity('entities.phones.gen.singular').dispatchCallback());
   }
 
@@ -51,7 +53,7 @@ export class PhoneService {
 
   delete(entityType: number, entityId: number, phoneId: number): Observable<void> {
     return this.dataService
-      .delete('/api/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}', { entityType, entityId, phoneId })
+      .delete(this.extUrl, { entityType, entityId, phoneId })
       .catch(this.notificationsService.error('errors.default.delete').entity('entities.phones.gen.singular').dispatchCallback());
   }
 }

@@ -61,6 +61,7 @@
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PHONE": "Телефон должника",
+        "DEBTOR_PROMISE": "Обещание платежа",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -518,8 +519,8 @@
         "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
       }
     },
-    "planningTab": {
-      "title": "Планирование"
+    "promisesTab": {
+      "title": "Обещания"
     },
     "documentationTab": {
       "title": "Документы",
@@ -818,6 +819,16 @@
         }
       }
     },
+    "promise": {
+      "grid": {
+        "promiseDate": "Обещанная дата",
+        "promiseSum": "Сумма в валюте",
+        "receiveDateTime": "Дата получения",
+        "statusCode": "Статус",
+        "comment": "Комментарий",
+        "fullName": "Оператор"
+      }
+    },
     "debt": {
       "grid": {
         "id": "Ид долга",
@@ -963,6 +974,9 @@
     },
     "phones": {
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
+    },
+    "contacts": {
+      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }

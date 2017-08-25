@@ -19,6 +19,7 @@ import { DebtorEmploymentComponent } from './debtor/employment/employment.compon
 import { DebtorEmailComponent } from './debtor/email/email.component';
 import { DebtorIdentityComponent } from './debtor/identity/identity.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
+import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
@@ -81,6 +82,12 @@ const routes: Routes = [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
       { path: 'create', component: DebtorPhoneComponent },
       { path: ':phoneId', component: DebtorPhoneComponent },
+    ]
+  },
+  { path: ':id/promise', children: [
+      { path: '', redirectTo: 'create', pathMatch: 'full' },
+      { path: 'create', component: DebtorPromiseComponent },
+      { path: ':promiseId', component: DebtorPromiseComponent },
     ]
   },
   // TODO(a.tymchuk): figure out how to break down here

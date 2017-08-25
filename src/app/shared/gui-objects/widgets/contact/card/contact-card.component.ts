@@ -26,8 +26,9 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
 export class ContactCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private personId = (this.route.params as any).value.id || null;
-  private contactId = (this.route.params as any).value.contactId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  contactId = this.routeParams.contactId || null;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;

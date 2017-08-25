@@ -1,0 +1,23 @@
+<app-dialog-action
+  *ngIf="isDialog('remove')"
+  actionMode="danger"
+  actionTranslationKey="debtor.promisesTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.promisesTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
+
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.promise"
+  selectionType="single"
+  [styles]="gridStyles"
+  [columns]="columns"
+  [rows]="rows"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>
