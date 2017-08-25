@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IPhone } from '../phone.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -20,11 +21,13 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 export class PhoneCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private id = (this.route.params as any).value.id || null;
-  private phoneId = (this.route.params as any).value.phoneId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
+  private phoneId = this.routeParams.phoneId || null;
 
   controls: Array<IDynamicFormItem> = null;
-  phone: any;
+  phone: IPhone;
 
   constructor(
     private contentTabService: ContentTabService,
@@ -34,12 +37,15 @@ export class PhoneCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
       this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
       // TODO(d.maltsev): pass entity type
-      this.phoneId ? this.phoneService.fetch(18, this.id, this.phoneId) : Observable.of(null)
+      this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
@@ -56,8 +62,8 @@ export class PhoneCardComponent {
 
   public onSubmit(): void {
     const action = this.phoneId
-      ? this.phoneService.update(18, this.id, this.phoneId, this.form.requestValue)
-      : this.phoneService.create(18, this.id, this.form.requestValue);
+      ? this.phoneService.update(18, this.personId, this.phoneId, this.form.requestValue)
+      : this.phoneService.create(18, this.personId, this.form.requestValue);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
