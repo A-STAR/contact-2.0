@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { DebtorContactsComponent } from './contacts.component';
+import { DebtorPromiseComponent } from './promise.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    DebtorContactsComponent,
+    DebtorPromiseComponent
   ],
   declarations: [
-    DebtorContactsComponent
+    DebtorPromiseComponent
   ],
 })
-export class DebtorContactsModule {}
+export class DebtorPromiseModule {}

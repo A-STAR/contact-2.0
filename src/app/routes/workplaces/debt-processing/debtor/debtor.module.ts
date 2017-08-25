@@ -10,6 +10,7 @@ import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
 import { DebtorIdentityModule } from './identity/identity.module';
 import { DebtorPhoneModule } from './phone/phone.module';
+import { DebtorPromiseModule } from './promise/promise.module';
 
 import { DebtorService } from './debtor.service';
 
@@ -27,6 +28,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorEmploymentModule,
     DebtorIdentityModule,
     DebtorPhoneModule,
+    DebtorPromiseModule,
     SharedModule,
   ],
   declarations: [

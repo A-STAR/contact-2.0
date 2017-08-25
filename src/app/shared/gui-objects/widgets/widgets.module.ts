@@ -8,6 +8,7 @@ import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { IdentityModule } from './identity/identity.module';
 import { PhoneModule } from './phone/phone.module';
+import { PromiseModule } from './promise/promise.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { PhoneModule } from './phone/phone.module';
     EmploymentModule,
     IdentityModule,
     PhoneModule,
+    PromiseModule,
   ],
   exports: [
     AddressModule,
@@ -28,6 +30,7 @@ import { PhoneModule } from './phone/phone.module';
     EmploymentModule,
     IdentityModule,
     PhoneModule,
+    PromiseModule,
   ]
 })
 export class WidgetsModule { }

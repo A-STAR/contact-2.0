@@ -518,8 +518,8 @@
         "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
       }
     },
-    "planningTab": {
-      "title": "Планирование"
+    "promisesTab": {
+      "title": "Обещания"
     },
     "documentationTab": {
       "title": "Документы",
@@ -963,6 +963,9 @@
     },
     "phones": {
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
+    },
+    "contacts": {
+      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }

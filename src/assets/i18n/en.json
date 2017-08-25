@@ -518,8 +518,8 @@
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
       }
     },
-    "planningTab": {
-      "title": "Planning"
+    "promisesTab": {
+      "title": "Promises"
     },
     "documentationTab": {
       "title": "Documents",
@@ -963,6 +963,9 @@
     },
     "phones": {
       "gen": { "singular": "phone number", "plural": "phone numbers list" }
+    },
+    "contacts": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity document list" }
