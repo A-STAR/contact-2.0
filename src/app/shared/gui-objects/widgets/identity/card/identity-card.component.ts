@@ -22,8 +22,10 @@ export class IdentityCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
   private dialog: string;
-  private personId = (this.route.params as any).value.id || null;
-  private identityId = (this.route.params as any).value.identityId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
+  private identityId = this.routeParams.identityId || null;
 
   controls: IDynamicFormControl[] = null;
   identity: IIdentityDoc;
@@ -36,6 +38,9 @@ export class IdentityCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
       this.identityId

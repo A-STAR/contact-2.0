@@ -2,11 +2,26 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PersistenceService {
+  static LAYOUT_KEY = 'state/layout';
+
   get(key: string): any {
     try {
       return JSON.parse(localStorage.getItem(key));
     } catch (error) {
+      // remove the key if its contents cannot be parsed
+      localStorage.removeItem(key);
       return null;
+    }
+  }
+
+  getOr(key: string, orValue: any): any {
+    try {
+      const result = JSON.parse(localStorage.getItem(key));
+      return result !== null ? result : orValue;
+    } catch (error) {
+      // remove the key if its contents cannot be parsed
+      localStorage.removeItem(key);
+      return orValue;
     }
   }
 

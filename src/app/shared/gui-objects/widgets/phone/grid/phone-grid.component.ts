@@ -63,7 +63,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [];
 
-  private _phones: Array<any> = [];
+  phones: Array<IPhone> = [];
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -90,8 +90,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  // TODO(d.maltsev): is there a better way to get route params?
-  private id = (this.route.params as any).value.id || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.contactId || this.routeParams.id || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -158,10 +158,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
   }
 
-  get phones(): Array<IPhone> {
-    return this._phones;
-  }
-
   get dialog(): number {
     return this._dialog;
   }
@@ -180,15 +176,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
-    this.phoneService.block(18, this.id, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.block(18, this.personId, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.phoneService.unblock(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.phoneService.delete(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.delete(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -196,7 +192,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedPhone$(): Observable<IPhone> {
-    return this.selectedPhoneId$.map(id => this._phones.find(phone => phone.id === id));
+    return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
   }
 
   get canView$(): Observable<boolean> {
@@ -243,15 +239,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
-    this.phoneService.fetchAll(18, this.id)
+    this.phoneService.fetchAll(18, this.personId)
       .subscribe(phones => {
-        this._phones = phones;
+        this.phones = phones;
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this._phones = [];
+    this.phones = [];
     this.cdRef.markForCheck();
   }
 

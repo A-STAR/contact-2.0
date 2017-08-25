@@ -1,32 +1,32 @@
 <app-block-dialog
-  *ngIf="dialog === 1"
+  *ngIf="isDialog('block')"
   titleTranslationKey="widgets.address.dialogs.block.title"
   labelTranslationKey="widgets.address.dialogs.block.blockReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
-  (close)="onDialogClose()">
+  (close)="onCloseDialog()">
 </app-block-dialog>
 
 <app-dialog-action
-  *ngIf="dialog === 2"
+  *ngIf="isDialog('unblock')"
   titleTranslationKey="widgets.address.dialogs.unblock.title"
   actionTranslationKey="widgets.address.dialogs.unblock.confirmMessage"
   actionMessage="default.yesNo.Yes"
   actionMode="success"
   [messageParams]="selectedAddress$ | async"
   (action)="onUnblockDialogSubmit()"
-  (cancel)="onDialogClose()">
+  (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-dialog-action
-  *ngIf="dialog === 3"
+  *ngIf="isDialog('delete')"
   titleTranslationKey="widgets.address.dialogs.delete.title"
   actionTranslationKey="widgets.address.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedAddress$ | async"
   (action)="onRemoveDialogSubmit()"
-  (cancel)="onDialogClose()">
+  (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>

@@ -716,6 +716,7 @@
     "address": {
       "card": {
         "fullAddress": "Адрес",
+        "fullAddressLabel": "Полный адрес",
         "postalCode": "Индекс",
         "country": "Страна",
         "region": "Регион",

@@ -1,11 +1,10 @@
-<app-toolbar-2
-  [items]="toolbarItems">
-</app-toolbar-2>
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   selectionType="single"
   [columns]="columns"
   [rows]="attachments$ | async"
+  [styles]="{height: '600px'}"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

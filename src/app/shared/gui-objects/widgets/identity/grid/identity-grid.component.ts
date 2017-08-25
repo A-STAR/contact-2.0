@@ -26,10 +26,15 @@ import { GridComponent } from '../../../../components/grid/grid.component';
 export class IdentityGridComponent implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  private parentId: number;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
+
   private dialog: string;
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
+  gridStyles = this.contactId ? { height: '230px' } : { height: '200px' };
+  toolbarClass = this.contactId ? 'bh' : 'bordered';
   busSubscription: Subscription;
   canViewSubscription: Subscription;
   gridSubscription: Subscription;
@@ -90,7 +95,9 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
 
-    this.parentId = Number((this.route.params as any).value.id) || null;
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
     this.gridSubscription = Observable.combineLatest(
@@ -137,9 +144,9 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   }
 
   fetch(): void {
-    if (this.parentId) {
+    if (this.personId) {
       this.identityService
-        .fetchAll(this.parentId)
+        .fetchAll(this.personId)
         .subscribe(identities => {
           this.rows = identities;
           this.selectedRows$.next([]);
@@ -153,7 +160,7 @@ export class IdentityGridComponent implements OnInit, OnDestroy {
   }
 
   onRemove(): void {
-    this.identityService.delete(this.parentId, this.grid.selected[0].id)
+    this.identityService.delete(this.personId, this.grid.selected[0].id)
       .subscribe(this.onSubmitSuccess);
   }
 

@@ -716,6 +716,7 @@
     "address": {
       "card": {
         "fullAddress": "Address",
+        "fullAddressLabel": "Full address",
         "postalCode": "Postal code",
         "country": "Country",
         "region": "Region",

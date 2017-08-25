@@ -10,13 +10,13 @@
 >
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 [ngClass]="toolbarClass" [items]="toolbarItems"></app-toolbar-2>
 <app-grid
   [columns]="columns"
   columnTranslationKey="debtor.identityDocs"
   [rows]="rows"
   selectionType="single"
-  [styles]="{height: '200px'}"
+  [styles]="gridStyles"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)"
 >
