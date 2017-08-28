@@ -84,17 +84,27 @@ const routes: Routes = [
       { path: ':phoneId', component: DebtorPhoneComponent },
     ]
   },
-  { path: ':id/promise', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorPromiseComponent },
-      { path: ':promiseId', component: DebtorPromiseComponent },
+  { path: ':id/debt', children: [
+      { path: '', redirectTo: '..', pathMatch: 'full' },
+      { path: 'create', component: DebtorDebtComponent },
+      { path: ':debtId', children: [
+          { path: '', pathMatch: 'full', component: DebtorDebtComponent },
+          { path: 'debt-component', children: [
+              { path: '', redirectTo: 'create', pathMatch: 'full' },
+              { path: 'create', component: DebtorDebtComponentComponent },
+              { path: ':debtComponentId', component: DebtorDebtComponentComponent },
+            ]
+          },
+          { path: 'promise', children: [
+              { path: '', redirectTo: 'create', pathMatch: 'full' },
+              { path: 'create', component: DebtorPromiseComponent },
+              { path: ':promiseId', component: DebtorPromiseComponent },
+            ]
+          }
+        ]
+      },
     ]
   },
-  // TODO(a.tymchuk): figure out how to break down here
-  { path: ':id/debt/create', component: DebtorDebtComponent },
-  { path: ':id/debt/:debtId', component: DebtorDebtComponent },
-  { path: ':id/debt/:debtId/debt-component/create', component: DebtorDebtComponentComponent },
-  { path: ':id/debt/:debtId/debt-component/:debtComponentId', component: DebtorDebtComponentComponent },
 ];
 
 @NgModule({

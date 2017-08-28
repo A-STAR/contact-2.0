@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -23,8 +23,7 @@ export class PromiseCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.id || null;
-  private contactId = this.routeParams.contactId || null;
+  private debtId = this.routeParams.debtId || null;
   private promiseId = this.routeParams.promiseId || null;
 
   controls: IDynamicFormControl[] = null;
@@ -36,11 +35,10 @@ export class PromiseCardComponent {
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.personId = this.contactId || this.personId;
-    console.log('route params', this.routeParams);
 
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
@@ -48,7 +46,7 @@ export class PromiseCardComponent {
       this.promiseId
         ? this.userPermissionsService.has('PROMISE_EDIT')
         : this.userPermissionsService.has('PROMISE_ADD'),
-      this.promiseId ? this.promiseService.fetch(this.personId, this.promiseId) : Observable.of(null)
+      this.promiseId ? this.promiseService.fetch(this.debtId, this.promiseId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, currencyOptions, canEdit, promise ]) => {
@@ -69,14 +67,15 @@ export class PromiseCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate([ `../../../..` ], { relativeTo: this.route });
+    this.contentTabService.removeCurrentTab();
   }
 
   onSubmit(): void {
     const data = this.form.requestValue;
     const action = this.promiseId
-      ? this.promiseService.update(this.personId, this.promiseId, data)
-      : this.promiseService.create(this.personId, data);
+      ? this.promiseService.update(this.debtId, this.promiseId, data)
+      : this.promiseService.create(this.debtId, data);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);
