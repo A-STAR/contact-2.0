@@ -122,7 +122,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
           this.clear();
         }
       });

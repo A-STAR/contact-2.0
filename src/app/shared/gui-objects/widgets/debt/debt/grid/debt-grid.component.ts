@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/comp
 import { DebtService } from '../debt.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -30,7 +31,7 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ canEdit, email ]) => canEdit && !!email),
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebtId$).map(([ canEdit, debtId ]) => canEdit && !!debtId),
       action: () => this.onEdit(this.selectedDebtId$.value)
     },
     {
@@ -66,6 +67,7 @@ export class DebtGridComponent {
     private debtService: DebtService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -105,6 +107,7 @@ export class DebtGridComponent {
 
   onSelect(debt: IDebt): void {
     this.selectedDebtId$.next(debt.id);
+    this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt.id);
   }
 
   private onAdd(): void {
@@ -113,10 +116,6 @@ export class DebtGridComponent {
 
   private onEdit(debtId: number): void {
     this.router.navigate([ `${this.router.url}/debt/${debtId}` ]);
-  }
-
-  get selectedDebt$(): Observable<IDebt> {
-    return this.selectedDebtId$.map(id => this.debts.find(debt => debt.id === id));
   }
 
   get canAdd$(): Observable<boolean> {
@@ -149,7 +148,7 @@ export class DebtGridComponent {
 
   private fetch(): void {
     this.debtService.fetchAll(this.personId).subscribe(debts => {
-      this.selectedDebtId$.next(null);
+      this.onSelect({ id: null } as IDebt);
       this.debts = debts;
       this.cdRef.markForCheck();
     });

@@ -8,6 +8,11 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 
 @Injectable()
 export class DebtService {
+  static MESSAGE_DEBT_SELECTED = 'MESSAGE_DEBT_SELECTED';
+
+  baseUrl = '/persons/{personId}/debts';
+  extUrl = `${this.baseUrl}/{debtId}`;
+
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
@@ -15,27 +20,27 @@ export class DebtService {
 
   fetchAll(personId: number): Observable<Array<IDebt>> {
     return this.dataService
-      .read('/persons/{personId}/debts', { personId })
+      .read(this.baseUrl, { personId })
       .map(resp => resp.debts)
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { personId, debtId })
       .map(resp => resp.debts[0] || {})
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
   create(personId: number, debt: IDebt): Observable<void> {
     return this.dataService
-      .create('/persons/{personId}/debts', { personId }, debt)
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.debts.gen.singular').dispatchCallback());
+      .create(this.baseUrl, { personId }, debt)
+      .catch(this.notificationsService.createError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
   update(personId: number, debtId: number, debt: IDebt): Observable<void> {
     return this.dataService
-      .update('/persons/{personId}/debts/{debtId}', { debtId, personId }, debt)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.debts.gen.singular').dispatchCallback());
+      .update(this.extUrl, { debtId, personId }, debt)
+      .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }
