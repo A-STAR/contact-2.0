@@ -520,7 +520,11 @@
       }
     },
     "promisesTab": {
-      "title": "Обещания"
+      "title": "Обещания",
+      "remove": {
+        "title": "Удалить обещание",
+        "confirmMessage": "Вы действительно хотите удалить это обещание?"
+      }
     },
     "documentationTab": {
       "title": "Документы",
@@ -928,6 +932,9 @@
     },
     "portfolios": {
       "gen": { "singular": "портфеля", "plural": "списка портфелей" }
+    },
+    "promises": {
+      "gen": { "singular": "обещания", "plural": "списка обещаний" }
     },
     "organizations": {
       "gen": { "singular": "организации", "plural": "списка организаций" }

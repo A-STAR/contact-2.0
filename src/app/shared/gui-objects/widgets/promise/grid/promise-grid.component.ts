@@ -67,11 +67,12 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   rows: Array<IPromise> = [];
 
   private dialog: string;
+  private debtId: number;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.id || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private debtSubscription: Subscription;
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
@@ -81,7 +82,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     statusCode: [],
   };
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -123,6 +124,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
         }
       });
 
+    this.debtSubscription = this.messageBusService
+      .select(PromiseService.MESSAGE_DEBT_SELECTED)
+      .subscribe((id: number) => {
+        this.debtId = id;
+        this.fetch();
+      });
+
     this.busSubscription = this.messageBusService
       .select(PromiseService.MESSAGE_PROMISE_SAVED)
       .subscribe(() => this.fetch());
@@ -132,6 +140,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.selectedPromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.debtSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
   }
 
@@ -140,12 +149,12 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(promise: IPromise): void {
-    this.selectedPromise$.next(promise)
+    this.selectedPromise$.next(promise);
   }
 
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
-    this.promiseService.delete(this.personId, promiseId)
+    this.promiseService.delete(this.debtId, promiseId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -189,7 +198,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.promiseService.fetchAll(this.personId)
+    if (!this.debtId) { return; }
+
+    this.promiseService.fetchAll(this.debtId)
       .subscribe(promises => {
         this.rows = [].concat(promises);
         this.selectedPromise$.next(null);

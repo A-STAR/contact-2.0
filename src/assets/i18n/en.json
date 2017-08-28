@@ -520,7 +520,11 @@
       }
     },
     "promisesTab": {
-      "title": "Promises"
+      "title": "Promises",
+      "remove": {
+        "title": "Delete the promise",
+        "confirmMessage": "Do you really want to delete this promise?"
+      }
     },
     "documentationTab": {
       "title": "Documents",
@@ -894,49 +898,52 @@
   },
   "entities": {
     "roles": {
-      "gen": { "singular": "role", "plural": "roles list" }
+      "gen": { "singular": "role", "plural": "roles" }
     },
     "permissions": {
-      "gen": { "singular": "permit", "plural": "permits list" }
+      "gen": { "singular": "permit", "plural": "permits" }
     },
     "guiObjects": {
-      "gen": { "singular": "GUI object", "plural": "GUI objects list" }
+      "gen": { "singular": "GUI object", "plural": "GUI objects" }
     },
     "users": {
-      "gen": { "singular": "user", "plural": "users list" },
+      "gen": { "singular": "user", "plural": "users" },
       "photos": {
         "gen": { "singular": "user photo" }
       }
     },
     "actionsLog": {
-      "gen": { "singular": "actions log entry", "plural": "actions log" }
+      "gen": { "singular": "actions log entry", "plural": "action log" }
     },
     "constants": {
-      "gen": { "singular": "constant", "plural": "constants list" }
+      "gen": { "singular": "constant", "plural": "constants" }
     },
     "dictionaries": {
-      "gen": { "singular": "dictionary", "plural": "dictionaries list" }
+      "gen": { "singular": "dictionary", "plural": "dictionaries" }
     },
     "terms": {
-      "gen": { "singular": "dictionary term", "plural": "dictionary terms list" }
+      "gen": { "singular": "dictionary term", "plural": "dictionary terms" }
     },
     "contractors": {
-      "gen": { "singular": "contractor", "plural": "contractors list" }
+      "gen": { "singular": "contractor", "plural": "contractors" }
     },
     "managers": {
-      "gen": { "singular": "manager", "plural": "managers list" }
+      "gen": { "singular": "manager", "plural": "managers" }
     },
     "portfolios": {
-      "gen": { "singular": "portfolio", "plural": "portfolios list" }
+      "gen": { "singular": "portfolio", "plural": "portfolios" }
+    },
+    "promises": {
+      "gen": { "singular": "promise", "plural": "promises" }
     },
     "organizations": {
-      "gen": { "singular": "organization", "plural": "organizations list" }
+      "gen": { "singular": "organization", "plural": "organizations" }
     },
     "employees": {
-      "gen": { "singular": "employee", "plural": "employees list" }
+      "gen": { "singular": "employee", "plural": "employees" }
     },
     "debtors": {
-      "gen": { "singular": "debtor", "plural": "debtors list" },
+      "gen": { "singular": "debtor", "plural": "debtors" },
       "info": {
         "gen": { "plural": "debtor general information" }
       }
@@ -946,16 +953,16 @@
     },
     "user": {
       "constants": {
-        "gen": { "singular": "user constant", "plural": "user constants list" }
+        "gen": { "singular": "user constant", "plural": "user constants" }
       },
       "languages": {
-        "gen": { "singular": "user language", "plural": "user languages list" }
+        "gen": { "singular": "user language", "plural": "user languages" }
       },
       "permissions": {
-        "gen": { "singular": "user permit", "plural": "user permits list" }
+        "gen": { "singular": "user permit", "plural": "user permits" }
       },
       "dictionaries": {
-        "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
+        "gen": { "singular": "user dictionary", "plural": "user dictionaries" }
       }
     },
     "lookup": {
@@ -967,19 +974,19 @@
       }
     },
     "addresses": {
-      "gen": { "singular": "address", "plural": "addresses list" }
+      "gen": { "singular": "address", "plural": "addresses" }
     },
     "emails": {
-      "gen": { "singular": "email", "plural": "emails list" }
+      "gen": { "singular": "email", "plural": "emails" }
     },
     "phones": {
-      "gen": { "singular": "phone number", "plural": "phone numbers list" }
+      "gen": { "singular": "phone number", "plural": "phone numbers" }
     },
     "contacts": {
       "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     },
     "identityDocs": {
-      "gen": { "singular": "identity document", "plural": "identity document list" }
+      "gen": { "singular": "identity document", "plural": "identity documents" }
     },
     "employment": {
       "gen": { "singular": "employment record", "plural": "employment records" }
@@ -991,7 +998,7 @@
   "errors": {
     "server": {
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
-      "componentTypeAlreadyExists": "Debt component type already exists",
+      "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "dictTermAlreadyExists": "Словарный термин уже существует",
