@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPromise } from '../promise.interface';
+import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -14,6 +15,7 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -23,8 +25,10 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
-
   private selectedPromise$ = new BehaviorSubject<IPromise>(null);
+  private debt$ = new BehaviorSubject<IDebt>(null);
+  // NOTE: emit true, since false would mean that the user can add a record
+  private hasActivePromise$ = new BehaviorSubject<boolean>(true);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -33,20 +37,10 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedPromise$.value.id),
-      enabled: Observable.combineLatest(
-        this.canEdit$,
-        this.selectedPromise$
-      ).map(([canEdit, selectedPromise]) => !!canEdit && !!selectedPromise)
-    },
-    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('remove'),
-      enabled: Observable.combineLatest(
-        this.canDelete$,
-        this.selectedPromise$
-      ).map(([canDelete, selectedPromise]) => !!canDelete && !!selectedPromise),
+      enabled: Observable.combineLatest(this.canDelete$, this.selectedPromise$)
+        .map(([canDelete, selectedPromise]) => canDelete && !!selectedPromise),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -67,7 +61,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   rows: Array<IPromise> = [];
 
   private dialog: string;
-  private debtId: number;
   private routeParams = (<any>this.route.params).value;
 
   private busSubscription: Subscription;
@@ -76,7 +69,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
-    promiseDate: 'dateTimeRenderer',
+    promiseDate: 'dateRenderer',
     promiseSum: 'numberRenderer',
     receiveDateTime: 'dateTimeRenderer',
     statusCode: [],
@@ -93,13 +86,12 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
+    private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(
-        UserDictionariesService.DICTIONARY_WORK_TYPE
-      ),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
       this.lookupService.currencyOptions,
     )
     .subscribe(([ dictOptions, currencyOptions ]) => {
@@ -126,9 +118,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
     this.debtSubscription = this.messageBusService
       .select(PromiseService.MESSAGE_DEBT_SELECTED)
-      .subscribe((id: number) => {
-        this.debtId = id;
-        this.fetch();
+      .subscribe((debt: IDebt) => {
+        this.debt$.next(debt);
+        if (!debt.id) {
+          this.clear();
+        } else {
+          this.fetch();
+        }
       });
 
     this.busSubscription = this.messageBusService
@@ -138,14 +134,12 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.selectedPromise$.complete();
+    this.debt$.complete();
+    this.hasActivePromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
-  }
-
-  onDoubleClick(promise: IPromise): void {
-    this.onEdit(promise.id);
   }
 
   onSelect(promise: IPromise): void {
@@ -154,7 +148,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
-    this.promiseService.delete(this.debtId, promiseId)
+    this.promiseService.delete(this.debt$.value.id, promiseId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -173,44 +167,62 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.setDialog(null);
   }
 
-  private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/promise/create` ]);
-  }
-
-  private onEdit(promiseId: number): void {
-    this.router.navigate([ `${this.router.url}/promise/${promiseId}` ]);
+  get debtId(): number {
+    return this.debt$.value && this.debt$.value.id;
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_ADD').distinctUntilChanged();
+    return Observable.combineLatest(
+      this.userPermissionsService.has('PROMISE_ADD'),
+      this.userConstantsService.get('Promise.SeveralActive.Use'),
+      this.debt$,
+      this.hasActivePromise$,
+    )
+    .map(([canAdd, severalActive, debt, hasActivePromise ]) => {
+      return canAdd && ![6, 7, 8, 17].includes(debt.statusCode) && !severalActive.valueB && !hasActivePromise;
+    })
+    .distinctUntilChanged();
   }
 
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_EDIT').distinctUntilChanged();
+  get canСonfirm$(): Observable<boolean> {
+    return this.userPermissionsService.has('PROMISE_CONFIRM');
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_DELETE').distinctUntilChanged();
+    return this.userPermissionsService.has('PROMISE_DELETE');
+  }
+
+  private onAdd(): void {
+    const debtId = this.debtId;
+    if (!this.debtId) { return; }
+    this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/create` ]);
   }
 
   private fetch(): void {
-    if (!this.debtId) { return; }
+    const debtId = this.debtId;
+    if (!debtId) { return; }
 
-    this.promiseService.fetchAll(this.debtId)
+    this.promiseService.fetchAll(debtId)
       .subscribe(promises => {
         this.rows = [].concat(promises);
         this.selectedPromise$.next(null);
         this.cdRef.markForCheck();
+      });
+
+    this.promiseService.getLimit(debtId)
+      .subscribe(({ hasActivePromise }) => {
+        this.hasActivePromise$.next(hasActivePromise);
       });
   }
 
   private clear(): void {
     this.rows = [];
     this.selectedPromise$.next(null);
+    this.hasActivePromise$.next(true);
     this.cdRef.markForCheck();
   }
 

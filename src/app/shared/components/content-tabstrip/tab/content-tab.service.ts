@@ -50,6 +50,11 @@ export class ContentTabService {
     }
   }
 
+  removeCurrentTab(): void {
+    const active = this.getActiveIndex();
+    this.tabs = this.tabs.filter((tab, index) => index !== active);
+  }
+
   removeTab(i: number): void {
     let active = this.getActiveIndex();
     const last = this.tabs.length - 1;

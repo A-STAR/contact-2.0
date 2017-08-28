@@ -50,4 +50,10 @@ export class PromiseService {
       .delete(this.extUrl, { debtId, promiseId })
       .catch(this.notificationsService.deleteError().entity('entities.promises.gen.singular').dispatchCallback());
   }
+
+  getLimit(debtId: number): Observable<any> {
+    return this.dataService
+      .read('/debts/{debtId}/promiseslimit', { debtId })
+      .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
+  }
 }

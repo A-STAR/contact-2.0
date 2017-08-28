@@ -21,7 +21,7 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtGridComponent {
-  private selectedDebtId$ = new BehaviorSubject<number>(null);
+  private selectedDebt$ = new BehaviorSubject<IDebt>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -31,8 +31,8 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebtId$).map(([ canEdit, debtId ]) => canEdit && !!debtId),
-      action: () => this.onEdit(this.selectedDebtId$.value)
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ canEdit, debt ]) => canEdit && !!debt),
+      action: () => this.onEdit(this.selectedDebt$.value.id)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -106,8 +106,8 @@ export class DebtGridComponent {
   }
 
   onSelect(debt: IDebt): void {
-    this.selectedDebtId$.next(debt.id);
-    this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt.id);
+    this.selectedDebt$.next(debt);
+    this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt);
   }
 
   private onAdd(): void {
