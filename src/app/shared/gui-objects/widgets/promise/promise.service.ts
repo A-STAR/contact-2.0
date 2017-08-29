@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPromise } from './promise.interface';
+import { IPromise, IPromiseLimit } from './promise.interface';
+import { IDebt } from '../debt/debt/debt.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -51,9 +52,16 @@ export class PromiseService {
       .catch(this.notificationsService.deleteError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
-  getLimit(debtId: number): Observable<any> {
+  getPromiseLimit(debtId: number): Observable<IPromiseLimit> {
     return this.dataService
       .read('/debts/{debtId}/promiseslimit', { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
+  }
+
+  fetchDebt(debtId: number): Observable<IDebt> {
+    return this.dataService
+      .read('/debts/{debtId}', { debtId })
+      .map(result => result.debts[0] || {})
+      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

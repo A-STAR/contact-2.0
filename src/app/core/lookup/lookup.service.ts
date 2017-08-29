@@ -4,6 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
+
+import { valuesToOptions } from '../utils';
+
 import {
   ILookupState,
   ILookupContractor,
@@ -34,28 +37,45 @@ export class LookupService {
     this.state$.subscribe(state => this._state = state);
   }
 
+  lookup(entity: ILookupKey): Observable<Array<any>> {
+    return this.getSlice(entity);
+  }
+
+  lookupAsOptions(entity: ILookupKey): Observable<Array<IOption>> {
+    const result = this.getSlice(entity);
+    switch (entity) {
+      case 'currencies':
+        return result.map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })));
+      case 'users':
+        return result.map(users => users.map((user: any) =>
+          ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })));
+      default:
+        return result.map(valuesToOptions);
+    }
+  }
+
   get contractors(): Observable<Array<ILookupContractor>> {
-    return this.getSlice('contractors').distinctUntilChanged();
+    return this.getSlice('contractors');
   }
 
   get currencies(): Observable<Array<ILookupCurrency>> {
-    return this.getSlice('currencies').distinctUntilChanged();
+    return this.getSlice('currencies');
   }
 
   get languages(): Observable<Array<ILookupLanguage>> {
-    return this.getSlice('languages').distinctUntilChanged();
+    return this.getSlice('languages');
   }
 
   get portfolios(): Observable<Array<ILookupPortfolio>> {
-    return this.getSlice('portfolios').distinctUntilChanged();
+    return this.getSlice('portfolios');
   }
 
   get roles(): Observable<Array<ILookupRole>> {
-    return this.getSlice('roles').distinctUntilChanged();
+    return this.getSlice('roles');
   }
 
   get users(): Observable<Array<ILookupUser>> {
-    return this.getSlice('users').distinctUntilChanged();
+    return this.getSlice('users');
   }
 
   get contractorOptions(): Observable<Array<IOption>> {

@@ -50,9 +50,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'promiseDate', maxWidth: 130 },
-    { prop: 'promiseSum', maxWidth: 110 },
-    { prop: 'receiveDateTime', maxWidth: 130 },
+    { prop: 'promiseDate', minWidth: 110, maxWidth: 130 },
+    { prop: 'promiseAmount', minWidth: 110, maxWidth: 130 },
+    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130 },
     { prop: 'statusCode' },
     { prop: 'comment' },
     { prop: 'fullName' },
@@ -70,7 +70,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   private renderers: IRenderer = {
     promiseDate: 'dateRenderer',
-    promiseSum: 'numberRenderer',
+    promiseAmount: 'numberRenderer',
     receiveDateTime: 'dateTimeRenderer',
     statusCode: [],
   };
@@ -92,7 +92,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   ) {
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
-      this.lookupService.currencyOptions,
+      this.lookupService.lookupAsOptions('currencies'),
     )
     .subscribe(([ dictOptions, currencyOptions ]) => {
       this.renderers = {
@@ -182,8 +182,10 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       this.debt$,
       this.hasActivePromise$,
     )
-    .map(([canAdd, severalActive, debt, hasActivePromise ]) => {
-      return canAdd && ![6, 7, 8, 17].includes(debt.statusCode) && !severalActive.valueB && !hasActivePromise;
+    .map(([canAdd, severalActiveValue, debt, hasActivePromise ]) => {
+      const severalActiveUse = Boolean(severalActiveValue.valueB);
+      return canAdd && this.debtId && ![6, 7, 8, 17].includes(debt.statusCode) &&
+       (severalActiveUse || (!severalActiveUse && !hasActivePromise));
     })
     .distinctUntilChanged();
   }
@@ -213,7 +215,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.promiseService.getLimit(debtId)
+    this.promiseService.getPromiseLimit(debtId)
       .subscribe(({ hasActivePromise }) => {
         this.hasActivePromise$.next(hasActivePromise);
       });

@@ -24,6 +24,10 @@ export interface IDynamicFormControl {
   dependsOn?: string;
   disabled?: boolean;
   label: string;
+  // markAsDirty if the control is passed a value
+  markAsDirty?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
   placeholder?: string;
   readonly?: boolean;
   required?: boolean;

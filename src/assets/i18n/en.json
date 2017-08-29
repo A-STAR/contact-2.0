@@ -89,6 +89,8 @@
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
     "fieldRequired": "This field is required",
+    "fieldMin": "The value must be greater than {{ min }}",
+    "fieldMax": "The value must be less than {{ max }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
@@ -524,6 +526,14 @@
       "remove": {
         "title": "Delete the promise",
         "confirmMessage": "Do you really want to delete this promise?"
+      },
+      "confirmInsufficient": {
+        "title": "Confirm amount",
+        "confirmMessage": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?"
+      },
+      "infoIncreaseAmount": {
+        "title": "Information",
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due."
       }
     },
     "documentationTab": {
@@ -826,7 +836,7 @@
     "promise": {
       "grid": {
         "promiseDate": "Due date",
-        "promiseSum": "Amount",
+        "promiseAmount": "Amount",
         "receiveDateTime": "Promise received",
         "statusCode": "Status",
         "comment": "Comment",
@@ -947,6 +957,9 @@
       "info": {
         "gen": { "plural": "debtor general information" }
       }
+    },
+    "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
     },
     "metadata": {
       "gen": { "plural": "metadata" }

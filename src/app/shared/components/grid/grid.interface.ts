@@ -1,3 +1,5 @@
+import { ILookupKey } from '../../../core/lookup/lookup.interface';
+
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export type TRendererType = Function | Array<any>
@@ -12,6 +14,7 @@ export type TRendererType = Function | Array<any>
 export interface IGridColumn {
   disabled?: boolean;
   dictCode?: number;
+  lookupOptions?: ILookupKey;
   /**
    * @deprecated
    */

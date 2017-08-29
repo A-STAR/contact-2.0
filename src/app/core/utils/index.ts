@@ -3,9 +3,18 @@
  * Description: exports small utility functions to be used across different components
  */
 
+import { IOption, INamedValue } from '../converter/value-converter.interface';
+
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
+
+export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
+  return values.map(value => ({
+    label: value.name,
+    value: value.id
+  }));
+}
 
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {
   return [ person.lastName, person.firstName, person.middleName ]

@@ -25,6 +25,8 @@ import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../d
 export class DynamicFormGroupComponent {
   static DEFAULT_MESSAGES = {
     required: 'validation.fieldRequired',
+    min: 'validation.fieldMin',
+    max: 'validation.fieldMax',
     minlength: 'validation.fieldMinLength',
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
