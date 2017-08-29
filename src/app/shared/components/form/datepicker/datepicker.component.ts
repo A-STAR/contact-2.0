@@ -23,6 +23,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @Input() buttonClass = 'btn btn-default';
   @Input() inputClass = 'form-control';
   @Input() placeholder = 'default.date.datePicker.placeholder';
+  @Input() maxDate: Date = null;
+  @Input() minDate: Date = null;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;

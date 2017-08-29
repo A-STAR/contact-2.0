@@ -7,3 +7,9 @@ export interface IPromise {
   comment?: string;
   fullName?: string;
 }
+
+export interface IPromiseLimit {
+  hasActivePromise: boolean;
+  maxDays: number;
+  minAmountPercent: number;
+}
