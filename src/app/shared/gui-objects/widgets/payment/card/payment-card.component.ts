@@ -6,11 +6,11 @@ import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPromise, IPromiseLimit } from '../promise.interface';
+import { IPromise, IPromiseLimit } from '../payment.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { PromiseService } from '../promise.service';
+import { PaymentService } from '../payment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -23,10 +23,10 @@ import { min } from '../../../../../core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-promise-card',
-  templateUrl: './promise-card.component.html'
+  selector: 'app-payment-card',
+  templateUrl: './payment-card.component.html'
 })
-export class PromiseCardComponent implements AfterViewInit, OnDestroy {
+export class PaymentCardComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
@@ -48,7 +48,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
-    private promiseService: PromiseService,
+    private paymentService: PaymentService,
     private route: ActivatedRoute,
     private router: Router,
     private userConstantsService: UserConstantsService,
@@ -60,10 +60,10 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
       this.lookupService.lookupAsOptions('currencies'),
       this.userPermissionsService.has('PROMISE_ADD'),
-      this.promiseService.getPromiseLimit(this.debtId),
-      this.promiseService.fetchDebt(this.debtId),
+      this.paymentService.getPromiseLimit(this.debtId),
+      this.paymentService.fetchDebt(this.debtId),
       this.promiseId
-        ? this.promiseService.fetch(this.debtId, this.promiseId)
+        ? this.paymentService.fetch(this.debtId, this.promiseId)
         : Observable.of(null),
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
@@ -114,7 +114,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
         // console.log('form is not ready', this.form);
       }, 1000);
     } else {
-      console.log('form should be ready');
+      console.log('form should be ready', this.form);
     }
   }
 
@@ -178,11 +178,11 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private save(promise: IPromise = null): void {
     const data: IPromise = promise || this.form.requestValue;
     const action = this.promiseId
-      ? this.promiseService.update(this.debtId, this.promiseId, data)
-      : this.promiseService.create(this.debtId, data);
+      ? this.paymentService.update(this.debtId, this.promiseId, data)
+      : this.paymentService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);
+      this.messageBusService.dispatch(PaymentService.MESSAGE_PROMISE_SAVED);
       this.setDialog();
       this.onBack();
     });

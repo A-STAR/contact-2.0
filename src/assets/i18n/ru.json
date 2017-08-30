@@ -521,6 +521,9 @@
         "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
       }
     },
+    "paymentsTab": {
+      "title": "Платежи"
+    },
     "promisesTab": {
       "title": "Обещания",
       "approve": {

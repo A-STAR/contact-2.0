@@ -7,6 +7,7 @@ import { DebtModule } from './debt/debt.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { IdentityModule } from './identity/identity.module';
+import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 
@@ -19,6 +20,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     IdentityModule,
+    PaymentModule,
     PhoneModule,
     PromiseModule,
   ],
@@ -29,6 +31,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     IdentityModule,
+    PaymentModule,
     PhoneModule,
     PromiseModule,
   ]
