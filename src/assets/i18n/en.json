@@ -521,6 +521,9 @@
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
       }
     },
+    "paymentsTab": {
+      "title": "Payments"
+    },
     "promisesTab": {
       "title": "Promises",
       "approve": {

@@ -18,6 +18,7 @@ import { DebtorDebtComponentComponent } from './debtor/debt-component/debt-compo
 import { DebtorEmploymentComponent } from './debtor/employment/employment.component';
 import { DebtorEmailComponent } from './debtor/email/email.component';
 import { DebtorIdentityComponent } from './debtor/identity/identity.component';
+import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 
@@ -99,6 +100,12 @@ const routes: Routes = [
               { path: '', redirectTo: 'create', pathMatch: 'full' },
               { path: 'create', component: DebtorPromiseComponent },
               { path: ':promiseId', component: DebtorPromiseComponent },
+            ]
+          },
+          { path: 'payment', children: [
+              { path: '', redirectTo: 'create', pathMatch: 'full' },
+              { path: 'create', component: DebtorPaymentComponent },
+              { path: ':paymentId', component: DebtorPaymentComponent },
             ]
           }
         ]
