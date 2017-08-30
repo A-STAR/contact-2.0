@@ -27,7 +27,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 export class PromiseGridComponent implements OnInit, OnDestroy {
   private selectedPromise$ = new BehaviorSubject<IPromise>(null);
   private debt$ = new BehaviorSubject<IDebt>(null);
-  // NOTE: emit true, since false would mean that the user can add a record
+  // NOTE: emit true by default, since false means that the user can add another promise
   private hasActivePromise$ = new BehaviorSubject<boolean>(true);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -37,21 +37,29 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.onAdd()
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      label: 'debtor.promisesTab.approve.buttonLabel',
+      enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPromise$)
+        .map(([ canConfirm, selectedPromise ]) => canConfirm && !!selectedPromise && selectedPromise.statusCode === 6),
+      action: () => this.setDialog('approve')
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('remove'),
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedPromise$)
-        .map(([canDelete, selectedPromise]) => canDelete && !!selectedPromise),
+      enabled: Observable.combineLatest(this.canDelete$, this.canСonfirm$, this.selectedPromise$)
+        .map(([canDelete, canConfirm, selectedPromise]) =>
+          (canDelete && !!selectedPromise) || (canConfirm && !!selectedPromise && selectedPromise.statusCode === 6)),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: this.canView$
+      enabled: this.canRefresh$
     },
   ];
 
   columns: Array<IGridColumn> = [
     { prop: 'promiseDate', minWidth: 110, maxWidth: 130 },
-    { prop: 'promiseAmount', minWidth: 110, maxWidth: 130 },
+    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130 },
     { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130 },
     { prop: 'statusCode' },
     { prop: 'comment' },
@@ -149,22 +157,33 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
     this.promiseService.delete(this.debt$.value.id, promiseId)
-      .subscribe(() => {
-        this.setDialog(null);
-        this.fetch();
-      });
+      .subscribe(
+        () => this.setDialog().fetch(),
+        () => this.setDialog()
+    );
+  }
+
+  onApprove(): void {
+    const { id: promiseId } = this.selectedPromise$.value;
+    const promise = { isUnconfirmed: 0 } as IPromise;
+    this.promiseService.update(this.debt$.value.id, promiseId, promise)
+      .subscribe(
+        () => this.setDialog().fetch(),
+        () => this.setDialog()
+    );
   }
 
   isDialog(dialog: string): boolean {
     return this.dialog === dialog;
   }
 
-  setDialog(dialog: string): void {
+  setDialog(dialog: string = null): PromiseGridComponent {
     this.dialog = dialog;
+    return this;
   }
 
   onCancel(): void {
-    this.setDialog(null);
+    this.setDialog();
   }
 
   get debtId(): number {
@@ -190,6 +209,12 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     .distinctUntilChanged();
   }
 
+  get canRefresh$(): Observable<boolean> {
+    return Observable.combineLatest(this.canView$, this.debt$)
+      .map(([ canView, debt ]) => canView && !!debt && !!debt.id)
+      .distinctUntilChanged();
+  }
+
   get canСonfirm$(): Observable<boolean> {
     return this.userPermissionsService.has('PROMISE_CONFIRM');
   }
@@ -199,13 +224,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    const debtId = this.debtId;
-    if (!this.debtId) { return; }
+    const { debtId } = this;
+    if (!debtId) { return; }
     this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/create` ]);
   }
 
   private fetch(): void {
-    const debtId = this.debtId;
+    const { debtId } = this;
     if (!debtId) { return; }
 
     this.promiseService.fetchAll(debtId)

@@ -55,7 +55,7 @@ export class PromiseService {
   getPromiseLimit(debtId: number): Observable<IPromiseLimit> {
     return this.dataService
       .read('/debts/{debtId}/promiseslimit', { debtId })
-      .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.promisesLimit.gen.plural').dispatchCallback());
   }
 
   fetchDebt(debtId: number): Observable<IDebt> {

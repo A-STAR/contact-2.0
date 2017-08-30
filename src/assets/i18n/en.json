@@ -523,13 +523,18 @@
     },
     "promisesTab": {
       "title": "Promises",
+      "approve": {
+        "title": "Approve the promise",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this promise?"
+      },
       "remove": {
         "title": "Delete the promise",
-        "confirmMessage": "Do you really want to delete this promise?"
+        "message": "Do you really want to delete this promise?"
       },
       "confirmInsufficient": {
         "title": "Confirm amount",
-        "confirmMessage": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?"
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?"
       },
       "infoIncreaseAmount": {
         "title": "Information",
@@ -946,6 +951,9 @@
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
+    "promisesLimit": {
+      "gen": { "plural": "promise constraints" }
+    },
     "organizations": {
       "gen": { "singular": "organization", "plural": "organizations" }
     },
@@ -1010,16 +1018,29 @@
   },
   "errors": {
     "server": {
+      "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
+      "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
+      "contactPersonNotFound": "Не найдено контактное лицо по Id",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
+      "currencyNotFound": "Не найдена валюта по id",
+      "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
+      "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_sum) по Id",
+      "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
       "dictionaryTermNotFound": "Словарный термин не найден",
+      "emailNotFound": "Не найден email по id",
+      "employmentNotFound": "Не найдена запись о занятости по id",
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
+      "entityNotFound": "Не найдена сущность при обращении по entityTypeId или entityAttributeId",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
+      "entityTypeIsNotSupportedForEntity": "Для заданного entityTypeId не поддерживаются операции с заданной сущностью",
+      "fieldMustBeGreaterThan": "Значение поля должно быть больше заданного значения {{ $1 }}",
+      "fieldMustBeGreaterOrEqualThan": "Значение поля должно быть больше или равно заданному значению {{ $1 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
       "fieldSizeMustBeBetween": "Длина поля {{ $1 }} должна быть в диапазоне от {{ $2 }} до {{ $3 }} символов",
       "fileExtentionIsRequired": "В имени сохраняемого файла отсутствует расширение",
@@ -1036,18 +1057,25 @@
       "incorrectValuesForPermitRoleTypeBoolean": "Некорректное значение булевого параметра доступа",
       "incorrectValuesForPermitRoleTypeNumber": "Некорректное значение числового параметра доступа",
       "incorrectValuesForPermitRoleTypeString": "Некорректное значение строкового параметра доступа",
+      "incorrectStatusCodeValue": "Некорректное значение кода статуса долга",
       "invalidDateFormat": "Некорректный формат даты {{ $1 }}",
       "invalidDateTimeFormat": "Некорректный формат даты и времени {{ $1 }}",
       "invalidDoubleFormat": "Некорректный формат дробного числового параметра {{ $1 }}",
+      "invalidEmailFormat": "Формат email не удовлетворяет заданному шаблону",
       "invalidInputFileStream": "Ошибка при обработке и/или преобразовании входного бинарного потока",
       "invalidInputModel": "Некорректная/пустая входная модель данных",
       "invalidIntegerFormat": "Некорректный формат целочисленного числового параметра {{ $1 }}",
+      "invalidPhoneFormat": "Формат телефона не удовлетворяет заданному шаблону",
       "invalidPortfolioDirection": "Некорректное направление портфеля",
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
+      "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
+      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "promiseSumMustBeGreaterThenPercentsDebtSum": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",
       "organizationRootDeleteAttempt": "Запрошено удаление организации, членом которой является инициатор запроса",
@@ -1058,7 +1086,9 @@
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
+      "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
+      "tempalteNotFound": "Не найден шаблон по Id",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",

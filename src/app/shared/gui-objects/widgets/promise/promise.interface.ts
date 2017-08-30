@@ -1,11 +1,12 @@
 export interface IPromise {
   id?: number;
+  comment?: string;
+  fullName?: string;
+  isUnconfirmed?: number;
   promiseDate: Date | string;
   promiseSum: number;
   receiveDateTime: Date | string;
   statusCode?: number;
-  comment?: string;
-  fullName?: string;
 }
 
 export interface IPromiseLimit {
