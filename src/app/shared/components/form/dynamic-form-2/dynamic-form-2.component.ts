@@ -79,7 +79,7 @@ export class DynamicForm2Component implements OnInit {
 
   private buildFormControl(control: IDynamicFormControl): FormControl {
     const options = {
-      disabled: false,
+      disabled: !!control.disabled,
       value: control.type === 'checkbox' ? false : ''
     };
     return new FormControl(options, this.composeValidators(control.validators, control.required));
