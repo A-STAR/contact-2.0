@@ -59,6 +59,10 @@ export class Toolbar2Component {
       label: 'toolbar.action.unblock',
       icon: 'fa fa-check',
     },
+    [ToolbarItemTypeEnum.BUTTON_UNDO]: {
+      label: 'toolbar.action.undo',
+      icon: 'fa fa-undo',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -74,6 +78,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_UPLOAD,
     ToolbarItemTypeEnum.BUTTON_BLOCK,
     ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+    ToolbarItemTypeEnum.BUTTON_UNDO,
   ];
 
   constructor(

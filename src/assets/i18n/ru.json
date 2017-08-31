@@ -60,6 +60,7 @@
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
+        "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
         "TASKS": "Постановка задач",
@@ -110,7 +111,7 @@
   },
   "toolbar": {
     "action": {
-      "add": "Добавить",
+      "add": "Создать",
       "edit": "Изменить",
       "remove": "Удалить",
       "copy": "Копировать",
@@ -122,7 +123,8 @@
       "download": "Скачать",
       "upload": "Загрузить",
       "block": "Заблокировать",
-      "unblock": "Разблокировать"
+      "unblock": "Разблокировать",
+      "undo": "Отменить"
     }
   },
   "queryBuilder": {
@@ -384,7 +386,7 @@
       "tab": {
         "title": "Доступы"
       },
-      "tab2": {
+      "access": {
         "title": "Текущие настройки доступов"
       },
       "add": {
@@ -522,7 +524,17 @@
       }
     },
     "paymentsTab": {
-      "title": "Платежи"
+      "title": "Платежи",
+      "confirm": {
+        "title": "Подтвердить платеж",
+        "buttonLabel": "Подтвердить платеж",
+        "message": "Вы действительно хотите подтвердить этот платеж?"
+      },
+      "cancel": {
+        "title": "Отменить платеж",
+        "buttonLabel": "Отменить",
+        "message": "Вы действительно хотите отменить этот платеж?"
+      }
     },
     "promisesTab": {
       "title": "Обещания",
@@ -841,6 +853,27 @@
         }
       }
     },
+    "payment": {
+      "grid": {
+        "amount": "Сумма",
+        "amountMainCurrency": "Сумма в валюте",
+        "comment": "Комментарий",
+        "commission": "Комиссия",
+        "currencyName": "Валюта",
+        "isConfirmed": "Подтвержден",
+        "payerName": "ФИО плательщика",
+        "paymentDateTime": "Дата платежа",
+        "purposeCode": "Назначение",
+        "receiveDateTime": "Дата получения",
+        "reqUserFullName": "Оператор (заявка)",
+        "receiptNumber": "№ квитанции",
+        "statusCode": "Статус",
+        "userFullName": "Оператор (факт)"
+      },
+      "toolbar": {
+        "showCanceled": "Показывать отмененные"
+      }
+    },
     "promise": {
       "grid": {
         "promiseDate": "Обещанная дата",
@@ -951,6 +984,9 @@
     "portfolios": {
       "gen": { "singular": "портфеля", "plural": "списка портфелей" }
     },
+    "payments": {
+      "gen": { "singular": "платежа", "plural": "списка платежей" }
+    },
     "promises": {
       "gen": { "singular": "обещания", "plural": "списка обещаний" }
     },
@@ -1029,6 +1065,7 @@
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "currencyNotFound": "Не найдена валюта по id",
+      "currencyRateNotFound": "Не найден курс валюты на определенную дату",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
       "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_sum) по Id",
       "debtPromiseNotFound": "Не найдено обещание по Id",

@@ -1,27 +1,20 @@
-export interface IPromise {
-  id?: number;
-  comment?: string;
-  fullName?: string;
-  isUnconfirmed?: number;
-  promiseDate: Date | string;
-  promiseSum: number;
-  receiveDateTime: Date | string;
-  statusCode?: number;
-}
-
 export interface IPayment {
   id?: number;
+  amount: number;
+  amountMainCurrency?: number;
   comment?: string;
-  fullName?: string;
-  isUnconfirmed?: number;
-  promiseDate: Date | string;
-  promiseSum: number;
-  receiveDateTime: Date | string;
+  currencyName?: string;
+  currencyId: number;
+  commission?: number;
+  isCanceled?: number;
+  isConfirmed?: number;
+  payerName?: string;
+  paymentDateTime: Date | string;
+  purposeCode?: number;
+  receiptNumber?: string;
+  receiveDateTime?: Date | string;
+  reqUserFullName?: string;
+  reqUserId?: number;
   statusCode?: number;
-}
-
-export interface IPromiseLimit {
-  hasActivePromise: boolean;
-  maxDays: number;
-  minAmountPercent: number;
+  userFullName?: string;
 }

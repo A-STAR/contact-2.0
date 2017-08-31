@@ -49,7 +49,7 @@ export class UserDictionariesService {
   static DICTIONARY_WORK_TYPE                   = 38;
   static DICTIONARY_PROMISE_STATUS              = 39;
   static DICTIONARY_PAYMENT_STATUS              = 40;
-  static DICTIONARY_PAYMENT_DETAILS             = 41;
+  static DICTIONARY_PAYMENT_PURPOSE             = 41;
   static DICTIONARY_MESSAGE_TEMPLATE_TYPE       = 42; // NOT READY
   static DICTIONARY_ROLE_ACCESSIBLE_ENTITIES    = 43; // NOT READY
 
