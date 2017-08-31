@@ -1,19 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
-import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPromise, IPromiseLimit } from '../payment.interface';
-import { IDebt } from '../../debt/debt/debt.interface';
+import { IPayment } from '../payment.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PaymentService } from '../payment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -26,22 +22,16 @@ import { min } from '../../../../../core/validators';
   selector: 'app-payment-card',
   templateUrl: './payment-card.component.html'
 })
-export class PaymentCardComponent implements AfterViewInit, OnDestroy {
+export class PaymentCardComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private canAddInsufficientAmount: boolean;
   private debtId = this.routeParams.debtId;
-  private debt: IDebt;
-  private promiseId = this.routeParams.promiseId;
-  private promiseLimit: IPromiseLimit;
-  private minAmountPercentFormula: number;
-  private minAmountPercentPermission: boolean;
-  private canAddInsufficientAmountSub: Subscription;
+  private paymentId = this.routeParams.paymentId;
 
   controls: IDynamicFormControl[] = null;
   dialog: string;
-  promise: IPromise;
+  payment: IPayment;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -51,106 +41,74 @@ export class PaymentCardComponent implements AfterViewInit, OnDestroy {
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private router: Router,
-    private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
       this.lookupService.lookupAsOptions('currencies'),
-      this.userPermissionsService.has('PROMISE_ADD'),
-      this.paymentService.getPromiseLimit(this.debtId),
-      this.paymentService.fetchDebt(this.debtId),
-      this.promiseId
-        ? this.paymentService.fetch(this.debtId, this.promiseId)
+      this.lookupService.lookupAsOptions('users'),
+      this.userPermissionsService.has('PAYMENT_ADD'),
+      this.userPermissionsService.has('PAYMENT_EDIT'),
+      this.userPermissionsService.has('PAYMENT_USER_EDIT'),
+      this.canConfirm$,
+      this.paymentId
+        ? this.paymentService.fetch(this.debtId, this.paymentId)
         : Observable.of(null),
-      this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
-      this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
     .take(1)
-    .subscribe(([
-      options, currencyOptions, canAdd, promiseLimit,
-      debt, promise, minAmountPercentFormula, minAmountPercentPermission
-    ]) => {
-      this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
-      this.minAmountPercentPermission = minAmountPercentPermission;
-      this.promiseLimit = promiseLimit;
-      this.debt = debt;
-      const { maxDays } = promiseLimit;
-      const today = new Date();
-      this.promise = promise ? promise : { receiveDateTime: today };
+    .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {
+      this.payment = payment ? payment : { receiveDateTime: new Date(), paymentDateTime: new Date() };
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.promise.grid.promiseDate', controlName: 'promiseDate', type: 'datepicker', required: true },
         {
-          label: 'widgets.promise.grid.promiseAmount',
-          controlName: 'promiseAmount',
-          type: 'number',
-          required: true,
-          validators: [min(0)]
+          label: 'widgets.payment.grid.amount', controlName: 'amount', disabled: !canEdit,
+          type: 'number', validators: [min(0)], width: 6
         },
         {
-          label: 'widgets.promise.grid.receiveDateTime',
-          controlName: 'receiveDateTime',
-          type: 'datepicker',
-          required: true,
-          markAsDirty: true,
+          label: 'widgets.payment.grid.currencyName', controlName: 'currencyId', disabled: !canEdit,
+          type: 'select', required: true, options: currencyOptions, width: 6
         },
-        { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
+        {
+          label: 'widgets.payment.grid.paymentDateTime', controlName: 'paymentDateTime', disabled: !canEdit,
+          type: 'datepicker', required: true, markAsDirty: true, width: 6 },
+        {
+          label: 'widgets.payment.grid.receiveDateTime', controlName: 'receiveDateTime', disabled: !canEdit,
+          type: 'datepicker', markAsDirty: true, width: 6 },
+        { label: 'widgets.payment.grid.payerName', controlName: 'payerName', type: 'text', disabled: !canEdit, width: 6 },
+        {
+          label: 'widgets.payment.grid.reqUserFullName', controlName: 'reqUserId', disabled: !canEditUser,
+          type: 'select', options: userOptions, width: 6
+        },
+        { label: 'widgets.payment.grid.receiptNumber', controlName: 'receiptNumber', type: 'text', disabled: !canEdit, width: 6 },
+        {
+          label: 'widgets.payment.grid.purposeCode', controlName: 'purposeCode', disabled: !canEdit,
+          type: 'select', options: purposeOptions, width: 6
+        },
+        { label: 'widgets.payment.grid.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit, width: 12 },
+        {
+          label: 'widgets.payment.grid.isConfirmed', controlName: 'isConfirmed', disabled: !canConfirm,
+          type: 'checkbox', required: true, width: 12
+        },
       ];
-      controls[0].minDate = moment(today).add(0, 'day').toDate();
-      controls[0].maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
-      this.controls = controls.map(control => canAdd ? control : { ...control, disabled: true });
+
+      this.controls =  payment.isCanceled
+        ? controls.map(control => ({ ...control, disabled: true }))
+        : !canConfirm && !this.paymentId
+        ? controls.filter(control => control.controlName !== 'isConfirmed')
+            .map(control => canAdd ? control : { ...control, disabled: true })
+        : controls.map(control => canAdd ? control : { ...control, disabled: true });
+
       this.cdRef.markForCheck();
     });
-
-    this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
-      .subscribe(canAdd => this.canAddInsufficientAmount = canAdd);
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.form) {
-      setTimeout(() => {
-        // console.log('form is not ready', this.form);
-      }, 1000);
-    } else {
-      console.log('form should be ready', this.form);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.canAddInsufficientAmountSub.unsubscribe();
   }
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 
-  get minAmountPercent(): number {
-    return this.promiseLimit && this.promiseLimit.minAmountPercent || 0;
-  }
-
-  get canAddInsufficientAmount$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD');
-  }
-
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  setDialog(dialog: string = null): void {
-    this.dialog = dialog;
-  }
-
-  onCancel(): void {
-    this.setDialog();
-  }
-
-  onConfirm(): void {
-    const data = this.form.requestValue;
-    data.promiseDate = moment(this.form.value.promiseDate).utcOffset(0, true).format('YYYY-MM-DD');
-    data.isUnconfirmed = 1;
-    this.save(data);
+  get canConfirm$(): Observable<boolean> {
+    return this.userPermissionsService.has('PAYMENT_CONFIRM');
   }
 
   onBack(): void {
@@ -159,31 +117,13 @@ export class PaymentCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
-    // console.log('promiseAmount', data.promiseAmount);
-    // console.log('debtAmount', this.debt.debtSum);
-    // console.log('minAmountPercent', this.minAmountPercent);
-    // console.log('calcAmount', this.debt.debtSum * this.minAmountPercent / 100);
-    if (data.promiseAmount < this.debt.debtSum * this.minAmountPercent / 100) {
-      if (this.canAddInsufficientAmount) {
-        this.setDialog('confirm');
-      } else {
-        this.setDialog('info');
-      }
-    } else {
-      this.save();
-    }
-  }
-
-  private save(promise: IPromise = null): void {
-    const data: IPromise = promise || this.form.requestValue;
-    const action = this.promiseId
-      ? this.paymentService.update(this.debtId, this.promiseId, data)
+    const data: IPayment = this.form.requestValue;
+    const action = this.paymentId
+      ? this.paymentService.update(this.debtId, this.paymentId, data)
       : this.paymentService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PaymentService.MESSAGE_PROMISE_SAVED);
-      this.setDialog();
+      this.messageBusService.dispatch(PaymentService.MESSAGE_PAYMENT_SAVED);
       this.onBack();
     });
   }

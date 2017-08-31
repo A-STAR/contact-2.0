@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IPromise } from '../payment.interface';
+import { IPayment } from '../payment.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -15,7 +15,6 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -25,48 +24,70 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentGridComponent implements OnInit, OnDestroy {
-  private selectedPromise$ = new BehaviorSubject<IPromise>(null);
+  private selectedPayment$ = new BehaviorSubject<IPayment>(null);
   private debt$ = new BehaviorSubject<IDebt>(null);
-  // NOTE: emit true by default, since false means that the user can add another promise
-  private hasActivePromise$ = new BehaviorSubject<boolean>(true);
+
+  displayCanceled = false;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: Observable.combineLatest(this.canAdd$, this.debt$)
+        .map(([ canAdd, debt ]) => canAdd && !!debt && !!debt.id),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      label: 'debtor.promisesTab.approve.buttonLabel',
-      enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPromise$)
-        .map(([ canConfirm, selectedPromise ]) => canConfirm && !!selectedPromise && selectedPromise.statusCode === 6),
-      action: () => this.setDialog('approve')
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedPayment$)
+        .map(([ canAdd, selectedPayment ]) => canAdd && !!selectedPayment && !selectedPayment.isCanceled),
+      action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: Observable.combineLatest(this.canDelete$, this.canСonfirm$, this.selectedPromise$)
-        .map(([canDelete, canConfirm, selectedPromise]) =>
-          (canDelete && !!selectedPromise) || (canConfirm && !!selectedPromise && selectedPromise.statusCode === 6)),
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      label: 'debtor.paymentsTab.confirm.buttonLabel',
+      enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPayment$)
+      .map(([ canConfirm, selectedPayment ]) =>
+        canConfirm && !!selectedPayment && !selectedPayment.isCanceled && !selectedPayment.isConfirmed),
+      action: () => this.setDialog('confirm')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNDO,
+      label: 'debtor.paymentsTab.cancel.buttonLabel',
+      action: () => this.setDialog('cancel'),
+      enabled: Observable.combineLatest(this.canCancel$, this.selectedPayment$)
+        .map(([canCancel, selectedPayment]) =>
+          canCancel && !!selectedPayment && !selectedPayment.isCanceled),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
       enabled: this.canRefresh$
     },
+    {
+      type: ToolbarItemTypeEnum.CHECKBOX,
+      action: () => this.toggleFilter(),
+      label: 'widgets.payment.toolbar.showCanceled',
+      state: this.displayCanceled
+    }
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'promiseDate', minWidth: 110, maxWidth: 130 },
-    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130 },
+    { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130 },
+    { prop: 'paymentDateTime', minWidth: 120, maxWidth: 130 },
+    { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
+    { prop: 'amountMainCurrency', minWidth: 130, maxWidth: 130 },
     { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130 },
     { prop: 'statusCode' },
+    { prop: 'purposeCode' },
     { prop: 'comment' },
-    { prop: 'fullName' },
+    { prop: 'userFullName' },
+    { prop: 'reqUserFullName' },
+    { prop: 'payerName' },
+    { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
+    { prop: 'commission', minWidth: 110, maxWidth: 130 },
   ];
 
-  rows: Array<IPromise> = [];
+  rows: Array<IPayment> = [];
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
@@ -77,9 +98,12 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
-    promiseDate: 'dateRenderer',
-    promiseAmount: 'numberRenderer',
+    amount: 'numberRenderer',
+    amountMainCurrency: 'numberRenderer',
+    commission: 'numberRenderer',
+    paymentDateTime: 'dateTimeRenderer',
     receiveDateTime: 'dateTimeRenderer',
+    purposeCode: [],
     statusCode: [],
   };
 
@@ -94,18 +118,22 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // Bind the context to the filter, or it will throw
+    this.filter = this.filter.bind(this);
+
     this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
       this.lookupService.lookupAsOptions('currencies'),
     )
-    .subscribe(([ dictOptions, currencyOptions ]) => {
+    .subscribe(([ statusCodes, purposeCodes, currencyOptions ]) => {
       this.renderers = {
         ...this.renderers,
-        statusCode: [ ...dictOptions ],
+        statusCode: [ ...statusCodes ],
+        purposeCode: [ ...purposeCodes ],
         currencyId: [ ...currencyOptions ],
       }
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
@@ -119,7 +147,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.promises.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.payments.gen.plural').dispatch();
           this.clear();
         }
       });
@@ -136,37 +164,76 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.messageBusService
-      .select(PaymentService.MESSAGE_PROMISE_SAVED)
+      .select(PaymentService.MESSAGE_PAYMENT_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
-    this.selectedPromise$.complete();
+    this.selectedPayment$.complete();
     this.debt$.complete();
-    this.hasActivePromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
     this.gridSubscription.unsubscribe();
   }
 
-  onSelect(promise: IPromise): void {
-    this.selectedPromise$.next(promise);
+  get debtId(): number {
+    return this.debt$.value && this.debt$.value.id;
   }
 
-  onRemove(): void {
-    const { id: promiseId } = this.selectedPromise$.value;
-    this.paymentService.delete(this.debt$.value.id, promiseId)
-      .subscribe(
-        () => this.setDialog().fetch(),
-        () => this.setDialog()
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('PAYMENT_VIEW');
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('PAYMENT_ADD');
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.hasOne(['PAYMENT_EDIT', 'PAYMENT_USER_EDIT']);
+  }
+
+  get canRefresh$(): Observable<boolean> {
+    return Observable.combineLatest(this.canView$, this.debt$)
+      .map(([ canView, debt ]) => canView && !!debt && !!debt.id)
+      .distinctUntilChanged();
+  }
+
+  get canСonfirm$(): Observable<boolean> {
+    return this.userPermissionsService.has('PAYMENT_CONFIRM');
+  }
+
+  get canCancel$(): Observable<boolean> {
+    return this.userPermissionsService.has('PAYMENT_CANCEL');
+  }
+
+  filter(payment: IPayment): boolean {
+    return !payment.isCanceled || this.displayCanceled;
+  }
+
+  toggleFilter(): void {
+    this.displayCanceled = !this.displayCanceled;
+    this.fetch();
+  }
+
+  onSelect(payment: IPayment): void {
+    this.selectedPayment$.next(payment);
+  }
+
+  onConfirm(): void {
+    const { id: paymentId } = this.selectedPayment$.value;
+    const payment = { isConfirmed: 1 } as IPayment;
+    this.paymentService.update(this.debtId, paymentId, payment)
+    .subscribe(
+      () => this.setDialog().fetch(),
+      () => this.setDialog()
     );
   }
 
-  onApprove(): void {
-    const { id: promiseId } = this.selectedPromise$.value;
-    const promise = { isUnconfirmed: 0 } as IPromise;
-    this.paymentService.update(this.debt$.value.id, promiseId, promise)
+  onCancelConfirm(): void {
+    const { id: paymentId } = this.selectedPayment$.value;
+    const payment = { isCanceled: 1 } as IPayment;
+    this.paymentService.update(this.debtId, paymentId, payment)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -186,70 +253,37 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.setDialog();
   }
 
-  get debtId(): number {
-    return this.debt$.value && this.debt$.value.id;
+  onDoubleClick(payment: IPayment): void {
+    this.onEdit(payment);
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return Observable.combineLatest(
-      this.userPermissionsService.has('PROMISE_ADD'),
-      this.userConstantsService.get('Promise.SeveralActive.Use'),
-      this.debt$,
-      this.hasActivePromise$,
-    )
-    .map(([canAdd, severalActiveValue, debt, hasActivePromise ]) => {
-      const severalActiveUse = Boolean(severalActiveValue.valueB);
-      return canAdd && this.debtId && ![6, 7, 8, 17].includes(debt.statusCode) &&
-       (severalActiveUse || (!severalActiveUse && !hasActivePromise));
-    })
-    .distinctUntilChanged();
-  }
-
-  get canRefresh$(): Observable<boolean> {
-    return Observable.combineLatest(this.canView$, this.debt$)
-      .map(([ canView, debt ]) => canView && !!debt && !!debt.id)
-      .distinctUntilChanged();
-  }
-
-  get canСonfirm$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_CONFIRM');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_DELETE');
+  private onEdit(payment: IPayment = null): void {
+    const { id } = payment || this.selectedPayment$.value;
+    const { debtId } = this;
+    this.router.navigate([ `${this.router.url}/debt/${debtId}/payment/${id}` ]);
   }
 
   private onAdd(): void {
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/create` ]);
+    this.router.navigate([ `${this.router.url}/debt/${debtId}/payment/create` ]);
   }
 
   private fetch(): void {
     const { debtId } = this;
     if (!debtId) { return; }
 
-    this.paymentService.fetchAll(debtId)
-      .subscribe(promises => {
-        this.rows = [].concat(promises);
-        this.selectedPromise$.next(null);
+    this.paymentService.fetchAll(debtId, this.displayCanceled)
+      .subscribe(payments => {
+        this.rows = [].concat(payments);
+        this.selectedPayment$.next(null);
         this.cdRef.markForCheck();
-      });
-
-    this.paymentService.getPromiseLimit(debtId)
-      .subscribe(({ hasActivePromise }) => {
-        this.hasActivePromise$.next(hasActivePromise);
       });
   }
 
   private clear(): void {
     this.rows = [];
-    this.selectedPromise$.next(null);
-    this.hasActivePromise$.next(true);
+    this.selectedPayment$.next(null);
     this.cdRef.markForCheck();
   }
 

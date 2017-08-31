@@ -10,6 +10,6 @@ export class HDividerComponent implements OnInit {
   @Input() className = 'hdivider-default';
 
   ngOnInit(): void {
-    // attach resize handlers
+    // attach drag handlers
   }
 }

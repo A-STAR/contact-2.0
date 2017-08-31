@@ -60,6 +60,7 @@
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_IDENTITY": "Identity document",
+        "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
         "TASKS": "Tasks",
@@ -110,7 +111,7 @@
   },
   "toolbar": {
     "action": {
-      "add": "Add",
+      "add": "Create",
       "edit": "Edit",
       "remove": "Remove",
       "copy": "Copy",
@@ -122,7 +123,8 @@
       "download": "Download",
       "upload": "Upload",
       "block": "Block",
-      "unblock": "Unblock"
+      "unblock": "Unblock",
+      "undo": "Undo"
     }
   },
   "queryBuilder": {
@@ -384,7 +386,7 @@
       "tab": {
         "title": "Permits"
       },
-      "tab2": {
+      "access": {
         "title": "Access settings"
       },
       "add": {
@@ -522,7 +524,17 @@
       }
     },
     "paymentsTab": {
-      "title": "Payments"
+      "title": "Payments",
+      "confirm": {
+        "title": "Approve the payment",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this payment?"
+      },
+      "cancel": {
+        "title": "Cancel the payment",
+        "buttonLabel": "Cancel",
+        "message": "Do you really want to cancel this payment?"
+      }
     },
     "promisesTab": {
       "title": "Promises",
@@ -841,6 +853,27 @@
         }
       }
     },
+    "payment": {
+      "grid": {
+        "amount": "Amount",
+        "amountMainCurrency": "Amount in currency",
+        "comment": "Comment",
+        "commission": "Commission",
+        "currencyName": "Currency",
+        "isConfirmed": "Is confirmed",
+        "payerName": "Payer",
+        "paymentDateTime": "Payment date",
+        "purposeCode": "Purpose",
+        "receiptNumber": "Receipt No",
+        "receiveDateTime": "Received on",
+        "reqUserFullName": "Req operator",
+        "statusCode": "Status",
+        "userFullName": "Operator"
+      },
+      "toolbar": {
+        "showCanceled": "Show canceled"
+      }
+    },
     "promise": {
       "grid": {
         "promiseDate": "Due date",
@@ -951,6 +984,9 @@
     "portfolios": {
       "gen": { "singular": "portfolio", "plural": "portfolios" }
     },
+    "payments": {
+      "gen": { "singular": "payment", "plural": "payments" }
+    },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
@@ -1029,6 +1065,7 @@
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "currencyNotFound": "Не найдена валюта по id",
+      "currencyRateNotFound": "Currency rate not found for this date",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
       "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_sum) по Id",
       "debtPromiseNotFound": "Не найдено обещание по Id",

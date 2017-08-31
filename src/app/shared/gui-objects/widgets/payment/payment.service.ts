@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPromise, IPromiseLimit } from './payment.interface';
+import { IPayment } from './payment.interface';
 import { IDebt } from '../debt/debt/debt.interface';
 
 import { DataService } from '../../../../core/data/data.service';
@@ -9,53 +9,42 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class PaymentService {
-  static MESSAGE_PROMISE_SAVED = 'MESSAGE_PROMISE_SAVED';
+  static MESSAGE_PAYMENT_SAVED = 'MESSAGE_PAYMENT_SAVED';
   static MESSAGE_DEBT_SELECTED = 'MESSAGE_DEBT_SELECTED';
 
-  private baseUrl = '/debts/{debtId}/promises';
-  private extUrl = `${this.baseUrl}/{promiseId}`;
+  private baseUrl = '/debts/{debtId}/payments';
+  private extUrl = `${this.baseUrl}/{paymentId}`;
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number): Observable<IPromise[]> {
+  fetchAll(debtId: number, displayCanceled: boolean = false): Observable<IPayment[]> {
+    const url = !displayCanceled ? `${this.baseUrl}?isCanceled=0` : this.baseUrl;
     return this.dataService
-      .read(this.baseUrl, { debtId })
-      .map(resp => resp.promises)
-      .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
+      .read(url, { debtId })
+      .map(resp => resp.payments)
+      .catch(this.notificationsService.fetchError().entity('entities.payments.gen.plural').dispatchCallback());
   }
 
-  fetch(debtId: number, promiseId: number): Observable<IPromise> {
+  fetch(debtId: number, paymentId: number): Observable<IPayment> {
     return this.dataService
-      .read(this.extUrl, { debtId, promiseId })
-      .map(resp => resp.promises[0] || {})
-      .catch(this.notificationsService.fetchError().entity('entities.promises.gen.singular').dispatchCallback());
+      .read(this.extUrl, { debtId, paymentId })
+      .map(resp => resp.payments[0] || {})
+      .catch(this.notificationsService.fetchError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 
-  create(debtId: number, promise: IPromise): Observable<any> {
+  create(debtId: number, payment: IPayment): Observable<any> {
     return this.dataService
-      .create(this.baseUrl, { debtId }, promise)
-      .catch(this.notificationsService.createError().entity('entities.promises.gen.singular').dispatchCallback());
+      .create(this.baseUrl, { debtId }, payment)
+      .catch(this.notificationsService.createError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 
-  update(debtId: number, promiseId: number, promise: IPromise): Observable<any> {
+  update(debtId: number, paymentId: number, payment: IPayment): Observable<any> {
     return this.dataService
-      .update(this.extUrl, { debtId, promiseId }, promise)
-      .catch(this.notificationsService.updateError().entity('entities.promises.gen.singular').dispatchCallback());
-  }
-
-  delete(debtId: number, promiseId: number): Observable<any> {
-    return this.dataService
-      .delete(this.extUrl, { debtId, promiseId })
-      .catch(this.notificationsService.deleteError().entity('entities.promises.gen.singular').dispatchCallback());
-  }
-
-  getPromiseLimit(debtId: number): Observable<IPromiseLimit> {
-    return this.dataService
-      .read('/debts/{debtId}/promiseslimit', { debtId })
-      .catch(this.notificationsService.fetchError().entity('entities.promisesLimit.gen.plural').dispatchCallback());
+      .update(this.extUrl, { debtId, paymentId }, payment)
+      .catch(this.notificationsService.updateError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 
   fetchDebt(debtId: number): Observable<IDebt> {
