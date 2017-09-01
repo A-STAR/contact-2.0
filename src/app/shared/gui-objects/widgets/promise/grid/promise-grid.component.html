@@ -28,5 +28,7 @@
   [styles]="gridStyles"
   [columns]="columns"
   [rows]="rows"
-  (onSelect)="onSelect($event)">
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)"
+>
 </app-grid>

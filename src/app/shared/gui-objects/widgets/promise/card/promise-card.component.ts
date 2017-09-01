@@ -94,13 +94,17 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
           controlName: 'receiveDateTime',
           type: 'datepicker',
           required: true,
-          markAsDirty: true,
+          markAsDirty: !promise,
         },
         { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
       ];
-      controls[0].minDate = moment(today).add(0, 'day').toDate();
-      controls[0].maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
-      this.controls = controls.map(control => canAdd ? control : { ...control, disabled: true });
+      if (!promise) {
+        controls[0].minDate = moment(today).add(0, 'day').toDate();
+        controls[0].maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
+      }
+      this.controls = promise
+        ? controls.map(control => ({ ...control, disabled: true }))
+        : controls.map(control => canAdd ? control : { ...control, disabled: true });
       this.cdRef.markForCheck();
     });
 

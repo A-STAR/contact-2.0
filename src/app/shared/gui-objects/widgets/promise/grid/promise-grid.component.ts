@@ -154,6 +154,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.selectedPromise$.next(promise);
   }
 
+  onDoubleClick(promise: IPromise): void {
+    const { id: promiseId } = this.selectedPromise$.value;
+    const { debtId } = this;
+    if (!debtId) { return; }
+    this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/${promiseId}` ]);
+  }
+
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
     this.promiseService.delete(this.debt$.value.id, promiseId)
