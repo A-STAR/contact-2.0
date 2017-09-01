@@ -71,10 +71,10 @@ export class PaymentCardComponent {
         },
         {
           label: 'widgets.payment.grid.paymentDateTime', controlName: 'paymentDateTime', disabled: !canEdit,
-          type: 'datepicker', required: true, markAsDirty: true, width: 6 },
+          type: 'datepicker', required: true, markAsDirty: !payment, width: 6 },
         {
           label: 'widgets.payment.grid.receiveDateTime', controlName: 'receiveDateTime', disabled: !canEdit,
-          type: 'datepicker', markAsDirty: true, width: 6 },
+          type: 'datepicker', markAsDirty: !payment, width: 6 },
         { label: 'widgets.payment.grid.payerName', controlName: 'payerName', type: 'text', disabled: !canEdit, width: 6 },
         {
           label: 'widgets.payment.grid.reqUserFullName', controlName: 'reqUserId', disabled: !canEditUser,

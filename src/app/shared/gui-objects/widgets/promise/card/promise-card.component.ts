@@ -159,10 +159,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    // console.log('promiseAmount', data.promiseAmount);
-    // console.log('debtAmount', this.debt.debtSum);
-    // console.log('minAmountPercent', this.minAmountPercent);
-    // console.log('calcAmount', this.debt.debtSum * this.minAmountPercent / 100);
     if (data.promiseAmount < this.debt.debtSum * this.minAmountPercent / 100) {
       if (this.canAddInsufficientAmount) {
         this.setDialog('confirm');
