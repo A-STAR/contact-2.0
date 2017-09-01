@@ -4,7 +4,7 @@ export interface IPromise {
   fullName?: string;
   isUnconfirmed?: number;
   promiseDate: Date | string;
-  promiseSum: number;
+  promiseAmount: number;
   receiveDateTime: Date | string;
   statusCode?: number;
 }

@@ -76,10 +76,12 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
       this.minAmountPercentPermission = minAmountPercentPermission;
       this.promiseLimit = promiseLimit;
-      this.debt = debt;
-      const { maxDays } = promiseLimit;
+      this.debt = <IDebt>debt;
+      const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
       const today = new Date();
-      this.promise = promise ? promise : { receiveDateTime: today };
+      // Calculate the minimum promise amount
+      const minAmount = Math.round((minAmountPercent / 100) * debt.debtSum * 100) / 100;
+      this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
       const controls: IDynamicFormControl[] = [
         { label: 'widgets.promise.grid.promiseDate', controlName: 'promiseDate', type: 'datepicker', required: true },
         {
@@ -87,6 +89,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
           controlName: 'promiseAmount',
           type: 'number',
           required: true,
+          markAsDirty: !promise,
           validators: [min(0)]
         },
         {
