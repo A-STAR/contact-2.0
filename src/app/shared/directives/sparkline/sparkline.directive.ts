@@ -31,13 +31,12 @@ export class SparklineDirective implements OnInit, OnDestroy {
   private initSparkLine(): void {
     let options = this.sparkline;
     const data = this.$element.data();
-
     if (!options) {
       // If no scope options, try with data attributes
       options = data;
     } else if (data) {
       // Data attributes overrides scope options
-      options = $.extend({}, options, data);
+      options = {...options, ...data };
     }
 
     options.type = options.type || 'bar';

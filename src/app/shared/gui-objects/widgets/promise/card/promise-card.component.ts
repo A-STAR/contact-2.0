@@ -154,8 +154,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate([ `../../../..` ], { relativeTo: this.route });
-    this.contentTabService.removeCurrentTab();
+    this.contentTabService.gotoParent(this.router, 4);
   }
 
   onSubmit(): void {

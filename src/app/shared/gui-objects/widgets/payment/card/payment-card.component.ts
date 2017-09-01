@@ -92,7 +92,7 @@ export class PaymentCardComponent {
         },
       ];
 
-      this.controls =  payment.isCanceled
+      this.controls =  this.payment.isCanceled
         ? controls.map(control => ({ ...control, disabled: true }))
         : !canConfirm && !this.paymentId
         ? controls.filter(control => control.controlName !== 'isConfirmed')
@@ -112,8 +112,7 @@ export class PaymentCardComponent {
   }
 
   onBack(): void {
-    this.router.navigate([ `../../../..` ], { relativeTo: this.route });
-    this.contentTabService.removeCurrentTab();
+    this.contentTabService.gotoParent(this.router, 4);
   }
 
   onSubmit(): void {

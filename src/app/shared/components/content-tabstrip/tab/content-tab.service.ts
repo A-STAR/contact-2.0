@@ -50,9 +50,13 @@ export class ContentTabService {
     }
   }
 
-  removeCurrentTab(): void {
-    const active = this.getActiveIndex();
-    this.tabs = this.tabs.filter((tab, index) => index !== active);
+  getCurrentTab(): ITab {
+    return this.tabs[this.getActiveIndex()];
+  }
+
+  removeTabNoNav(current: number): void {
+    this.tabs = this.tabs.filter((tab, index) => index !== current);
+    // this.setActiveIndex(this.tabs.length - 1);
   }
 
   removeTab(i: number): void {
@@ -68,9 +72,7 @@ export class ContentTabService {
 
     this.tabs = this.tabs.filter((tab, index) => index !== i);
     this.setActiveIndex(active);
-    this.router
-      .navigateByUrl(this.tabs[active].path)
-      .then(result => result);
+    this.router.navigateByUrl(this.tabs[active].path);
   }
 
   setActiveIndex(i: number): void {
@@ -86,7 +88,7 @@ export class ContentTabService {
   }
 
   navigate(url: string): void {
-    const i = this._activeIndex;
+    const i = this.getActiveIndex();
     this.router.navigate([url])
       .then(() => this.removeTab(i));
   }
@@ -95,6 +97,20 @@ export class ContentTabService {
     const i = this._activeIndex;
     this.location.back();
     this.tabs = this.tabs.filter((tab, index) => index !== i);
+  }
+
+  gotoParent(router: Router, cutNSections: number): void {
+    const current = this.getActiveIndex();
+    const { path } = this.getCurrentTab();
+    const re = new RegExp('(\/[^\/]*){' + cutNSections + '}$', 'g');
+    router.navigate([ path.replace(re, '') ])
+      .then(() => {
+        if (path === this.getCurrentTab().path) {
+            this.removeTab(current);
+        } else {
+          this.removeTabNoNav(current);
+        }
+      });
   }
 
   private onSectionLoadStart(): void {

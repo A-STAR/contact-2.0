@@ -24,6 +24,9 @@ export class DebtProcessingService {
 
     return this.dataService.create('/list?name=debtsprocessingall', {}, request)
       // .map((response: IAGridResponse<IDebt>) => ({ ...response }))
-      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
+      // TODO(d.maltsev): the `.error` method should not return the error payload back to the component,
+      // but the default response like in the example below...
+      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback())
+      .map(response => !response.data ? { data: [], total: 0 } : response);
   }
 }
