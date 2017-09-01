@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
@@ -21,6 +22,7 @@ import { DebtorInformationComponent } from './general/information.component';
 
 @NgModule({
   imports: [
+    DebtorActionLogModule,
     DebtorAddressModule,
     DebtorContactsModule,
     DebtorDebtComponentModule,
