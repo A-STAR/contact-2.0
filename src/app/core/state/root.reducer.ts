@@ -8,7 +8,6 @@ import { authReducer, resetReducer } from '../auth/auth.reducer';
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
-import { debtProcessingReducer } from '../../routes/workplaces/debt-processing/debt-processing.reducer';
 import { entityAttributesReducer } from '../entity/attributes/entity-attributes.reducer';
 import { guiObjectsReducer } from '../gui-objects/gui-objects.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
@@ -27,7 +26,6 @@ export const reducers = {
   auth: authReducer,
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
-  debtProcessing: debtProcessingReducer,
   dictionaries: dictionariesReducer,
   entityAttributes: entityAttributesReducer,
   guiObjects: guiObjectsReducer,

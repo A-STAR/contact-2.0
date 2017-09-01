@@ -1,36 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Action } from '@ngrx/store';
 
-import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
-import { IAppState } from '../../../core/state/state.interface';
-import { IDebtProcessingState } from './debt-processing.interface';
+import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
+import { IDebt } from './debt-processing.interface';
+
+import { DataService } from '../../../core/data/data.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class DebtProcessingService {
-  static DEBT_PROCESSING_FETCH         = 'DEBT_PROCESSING_FETCH';
-  static DEBT_PROCESSING_FETCH_SUCCESS = 'DEBT_PROCESSING_FETCH_SUCCESS';
-  static DEBT_PROCESSING_CLEAR         = 'DEBT_PROCESSING_CLEAR';
+  constructor(
+    private dataService: DataService,
+    private gridService: GridService,
+    private notifications: NotificationsService,
+  ) {}
 
-  constructor(private store: Store<IAppState>) {}
+  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt> | Action> {
+    const request = this.gridService.buildRequest(params, filters);
 
-  fetch(filters: FilterObject, params: IAGridRequestParams): void {
-    this.store.dispatch({
-      payload: { filters, ...params },
-      type: DebtProcessingService.DEBT_PROCESSING_FETCH,
-    });
-  }
-
-  clear(): void {
-    this.store.dispatch({
-      payload: { data: [], total: 0 },
-      type: DebtProcessingService.DEBT_PROCESSING_CLEAR,
-    });
-  }
-
-  get state$(): Observable<IDebtProcessingState> {
-    return this.store.select(state => state.debtProcessing).distinctUntilChanged();
+    return this.dataService.create('/list?name=debtsprocessingall', {}, request)
+      // .map((response: IAGridResponse<IDebt>) => ({ ...response }))
+      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
   }
 }

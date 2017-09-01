@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
 
 import { IDebt } from './debt-processing.interface';
+import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 
 import { DebtProcessingService } from './debt-processing.service';
 
@@ -21,23 +20,24 @@ export class DebtProcessingComponent {
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
+  rows: IDebt[] = [];
+  rowCount = 0;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private debtProcessingService: DebtProcessingService,
     private router: Router,
   ) {}
 
-  get rows$(): Observable<Array<IDebt>> {
-    return this.debtProcessingService.state$.map(debts => debts.data);
-  }
-
-  get rowCount$(): Observable<number> {
-    return this.debtProcessingService.state$.map(debts => debts.total);
-  }
-
   onRequest(): void {
     const filters = this.grid.getFilters();
     const params = this.grid.getRequestParams();
-    this.debtProcessingService.fetch(filters, params);
+    this.debtProcessingService.fetch(filters, params)
+      .subscribe((response: IAGridResponse<IDebt>) => {
+        this.rows = [...response.data];
+        this.rowCount = response.total;
+        this.cdRef.markForCheck();
+      });
   }
 
   onDblClick({ personId }: IDebt): void {

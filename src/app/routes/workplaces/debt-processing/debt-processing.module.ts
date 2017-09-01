@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
 
 import { DebtorModule } from './debtor/debtor.module';
 import { SharedModule } from '../../../shared/shared.module';
 
-import { DebtProcessingEffects } from './debt-processing.effects';
 import { DebtProcessingService } from './debt-processing.service';
 
 import { DebtProcessingComponent } from './debt-processing.component';
@@ -117,7 +115,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     DebtorModule,
-    EffectsModule.run(DebtProcessingEffects),
     RouterModule.forChild(routes),
     SharedModule,
   ],

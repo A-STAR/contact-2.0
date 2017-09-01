@@ -513,9 +513,6 @@
     "propertyTab": {
       "title": "Имущество"
     },
-    "guarantorsTab": {
-      "title": "Поручители"
-    },
     "contactsTab": {
       "title": "Контакты",
       "remove": {
@@ -556,7 +553,7 @@
         "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению."
       }
     },
-    "documentationTab": {
+    "documentsTab": {
       "title": "Документы",
       "errors": {
         "download": "Не удалось скачать документ"

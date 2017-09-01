@@ -76,6 +76,11 @@ export interface IAGridRequest {
   filtering?: FilterObject;
 }
 
+export interface IAGridResponse<T> {
+  data?: Array<T>;
+  total?: number;
+}
+
 export interface IAGridEventPayload {
   type: string;
   payload?:
