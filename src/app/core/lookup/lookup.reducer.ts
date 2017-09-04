@@ -1,32 +1,48 @@
 import { Action } from '@ngrx/store';
 
-import { ILookupState } from './lookup.interface';
+import { ILookupState, LookupStatusEnum } from './lookup.interface';
 
 import { LookupService } from './lookup.service';
 
 const defaultState: ILookupState = {
+  contractors: null,
+  currencies: null,
   languages: null,
+  portfolios: null,
   roles: null,
   users: null,
 };
 
 export function lookupReducer(state: ILookupState = defaultState, action: Action): ILookupState {
   switch (action.type) {
-    case LookupService.LOOKUP_LANGUAGES_FETCH_SUCCESS:
+    case LookupService.LOOKUP_FETCH: {
+      const { key } = action.payload;
       return {
         ...state,
-        languages: action.payload.languages
+        [key]: {
+          status: LookupStatusEnum.PENDING
+        }
       };
-    case LookupService.LOOKUP_ROLES_FETCH_SUCCESS:
+    }
+    case LookupService.LOOKUP_FETCH_SUCCESS: {
+      const { key, data } = action.payload;
       return {
         ...state,
-        roles: action.payload.roles
+        [key]: {
+          data,
+          status: LookupStatusEnum.LOADED
+        }
       };
-    case LookupService.LOOKUP_USERS_FETCH_SUCCESS:
+    }
+    case LookupService.LOOKUP_FETCH_FAILURE: {
+      const { key } = action.payload;
       return {
         ...state,
-        users: action.payload.users
-      };
+        [key]: {
+          status: LookupStatusEnum.ERROR
+        }
+      }
+    }
     default:
       return state;
   }

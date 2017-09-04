@@ -12,12 +12,13 @@ import { Observable } from 'rxjs/Observable'
 import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { toFullName, timeToHourMinSec } from '../../../../core/utils';
 import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
@@ -86,8 +87,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   constructor(
     formBuilder: FormBuilder,
     gridService: GridService,
+    valueConverterService: ValueConverterService,
   ) {
-    super(formBuilder);
+    super(formBuilder, valueConverterService);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
     this.employeesColumnsTo = gridService.setRenderers(this.employeesColumnsTo, this.renderers);
   }
@@ -115,7 +117,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.startDateControl = {
         controlName: 'startDate',
-        label: 'default.dateTimeRage.from',
+        label: 'default.dateTimeRange.from',
         required: true,
         type: 'datepicker',
       },
@@ -127,7 +129,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.endDateControl = {
         controlName: 'endDate',
-        label: 'default.dateTimeRage.to',
+        label: 'default.dateTimeRange.to',
         required: true,
         type: 'datepicker',
       },

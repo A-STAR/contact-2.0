@@ -1,0 +1,33 @@
+<app-dialog-action
+  *ngIf="isDialog('confirm')"
+  actionMode="warning"
+  actionTranslationKey="debtor.promisesTab.confirmInsufficient.message"
+  actionMessage="default.buttons.save"
+  [messageParams]="{percent: minAmountPercent}"
+  titleTranslationKey="debtor.promisesTab.confirmInsufficient.title"
+  (action)="onConfirm()"
+  (cancel)="onCancel()"
+  >
+</app-dialog-action>
+
+<app-info-dialog
+  *ngIf="isDialog('info')"
+  titleTranslationKey="debtor.promisesTab.infoIncreaseAmount.title"
+  (onClose)="onCancel()"
+  >
+  <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
+</app-info-dialog>
+
+<div class="pb-lg">
+  <button class="btn btn-default" (click)="onBack()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="promise"></app-dynamic-form>
+</div>
+

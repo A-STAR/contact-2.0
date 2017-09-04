@@ -19,12 +19,15 @@ import { ContentTabService } from '../shared/components/content-tabstrip/tab/con
 import { DataService } from './data/data.service';
 import { DictionariesEffects } from './dictionaries/dictionaries.effects';
 import { DictionariesService } from './dictionaries/dictionaries.service';
+import { EntityAttributesEffects } from './entity/attributes/entity-attributes.effects';
+import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
 import { GuiObjectsEffects } from './gui-objects/gui-objects.effects';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupEffects } from './lookup/lookup.effects';
 import { LookupService } from './lookup/lookup.service';
+import { MessageBusService } from './message-bus/message-bus.service';
 import { MetadataEffects } from './metadata/metadata.effects';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsEffects } from './notifications/notifications.effects';
@@ -42,6 +45,7 @@ import { rootReducer } from './state/root.reducer';
     StoreModule.provideStore(rootReducer),
     EffectsModule.run(AuthEffects),
     EffectsModule.run(DictionariesEffects),
+    EffectsModule.run(EntityAttributesEffects),
     EffectsModule.run(GuiObjectsEffects),
     EffectsModule.run(LookupEffects),
     EffectsModule.run(NotificationsEffects),
@@ -58,6 +62,7 @@ import { rootReducer } from './state/root.reducer';
     AuthHttpService,
     AuthService,
     ContentTabService,
+    EntityAttributesService,
     EntityTranslationsService,
     DictionariesService,
     DatePipe,
@@ -65,6 +70,7 @@ import { rootReducer } from './state/root.reducer';
     JwtHelper,
     LookupService,
     GuiObjectsService,
+    MessageBusService,
     MetadataService,
     NotificationsService,
     PersistenceService,

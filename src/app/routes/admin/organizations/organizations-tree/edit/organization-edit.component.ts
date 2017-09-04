@@ -2,11 +2,11 @@ import { ChangeDetectorRef, AfterViewInit, Component, OnInit } from '@angular/co
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOrganization } from '../../organizations.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 
 @Component({
   selector: 'app-organization-edit',

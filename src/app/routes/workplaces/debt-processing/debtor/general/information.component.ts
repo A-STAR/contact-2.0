@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ChangeDetectionStrategy, Input, OnDestroy
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormGroup } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 import { IPerson } from '../debtor.interface';
@@ -46,7 +46,7 @@ export class DebtorInformationComponent implements OnDestroy {
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
-        UserDictionariesService.DICTIONARY_MARITAL_STATUS,
+        UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         UserDictionariesService.DICTIONARY_EDUCATION,
       ]),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
@@ -64,7 +64,7 @@ export class DebtorInformationComponent implements OnDestroy {
 
   protected getControls(options: { [key: number]: Array<IOption> }, canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {
     const genderOptions        = options[UserDictionariesService.DICTIONARY_GENDER];
-    const maritalStatusOptions = options[UserDictionariesService.DICTIONARY_MARITAL_STATUS];
+    const maritalStatusOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
     const educationOptions     = options[UserDictionariesService.DICTIONARY_EDUCATION];
     return [
       {

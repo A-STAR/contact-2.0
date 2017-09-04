@@ -6,16 +6,16 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IActionLog, IActionsLogData, IActionsLogPayload, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IAGridSortModel, IAGridFilterRequest } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridFilterRequest, IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class ActionsLogService {
@@ -25,60 +25,31 @@ export class ActionsLogService {
   static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
   static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
 
-  @Effect() onSearchEffect = this.effectActions
+  @Effect() onSearchEffect = this.actions
     .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(
-      (payload): Observable<IActionsLogPayload> => {
-        const [action, store]: [Action, IAppState] = payload;
-        const filterRequest: IAGridFilterRequest = action.payload;
-        const { currentPage, pageSize, sorters } = store.actionsLog.actionsLogGrid;
-        const gridRequestPayload = { currentPage, pageSize, sorters };
-        const request = this.gridService.buildRequest(gridRequestPayload, filterRequest.filters);
+    .switchMap((action: Action): Observable<IActionsLogPayload> => {
+      const filterRequest: IAGridFilterRequest = action.payload;
+      const request = this.gridService.buildRequest(filterRequest, filterRequest.filters);
 
-        return this.dataService.create('/list?name=actions', {}, request)
-          .map((result: { data: IActionLog[], total: number }): IActionsLogPayload => {
-            const { data, total } = result;
-            return {
-              payload: { data, total },
-              type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
-            };
-          })
-          .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
+      return this.dataService.create('/list?name=actions', {}, request)
+        .map((payload: { data: IActionLog[], total: number }): IActionsLogPayload => {
+          return {
+            type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
+            payload,
+          };
+        })
+        .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
       }
     );
 
   constructor(
     private dataService: DataService,
-    private effectActions: Actions,
+    private actions: Actions,
     private gridService: GridService,
     private notifications: NotificationsService,
     private store: Store<IAppState>,
+    private userDictionariesService: UserDictionariesService,
   ) {}
-
-  get actionsLogCurrentPage(): Observable<number> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.currentPage)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogCurrentPageSize(): Observable<number> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.pageSize)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogSorters(): Observable<IAGridSortModel[]> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.sorters)
-      .distinctUntilChanged();
-  }
-
-  get actionsLogSelected(): Observable<IDictionaryItem[]> {
-    return this.store
-      .select(state => state.actionsLog.actionsLogGrid.selectedRows)
-      .distinctUntilChanged();
-  }
 
   get actionsLogRows(): Observable<IActionsLogData> {
     return this.store
@@ -92,7 +63,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionTypesRows(): Observable<IDictionaryItem[]> {
+  get actionTypesRows(): Observable<IUserDictionary> {
     return this.store
       .select(state => state.actionsLog.actionTypes)
       .distinctUntilChanged();
@@ -115,17 +86,17 @@ export class ActionsLogService {
     );
   }
 
-  fetch(filters: FilterObject): void {
+  fetch(filters: FilterObject, params: IAGridRequestParams): void {
     this.store.dispatch({
-      payload: { filters },
+      payload: { filters, ...params },
       type: ActionsLogService.ACTIONS_LOG_FETCH,
     });
   }
 
-  filter(filters: FilterObject): void {
+  clear(): void {
     this.store.dispatch({
-      payload: { filters, currentPage: 1 },
-      type: ActionsLogService.ACTIONS_LOG_FETCH,
+      payload: { data: [], total: 0 },
+      type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
     });
   }
 
@@ -133,11 +104,8 @@ export class ActionsLogService {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
 
-  // TODO(a.tymchuk): use the dictionary API
-  getActionTypes(): Observable<IDictionaryItem[]> {
-    return this.dataService.read('/dictionaries/{code}/terms', {
-      code: UserDictionariesService.DICTIONARY_ACTION_TYPES
-    }).map(data => data.terms);
+  getActionTypes(): Observable<IUserDictionary> {
+    return this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_ACTION_TYPES);
   }
 
   // TODO(a.tymchuk): use the user API

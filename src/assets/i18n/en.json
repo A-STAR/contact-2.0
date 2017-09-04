@@ -54,8 +54,15 @@
         "DEBT_LIST": "Debt List",
         "DEBTOR_CARD": "Debtor",
         "DEBTOR_ADDRESS": "Debtor's address",
+        "DEBTOR_CONTACTS": "Debtor contacts",
+        "DEBTOR_DEBT": "Debtor's debt",
+        "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_EMAIL": "Debtor's email",
+        "DEBTOR_EMPLOYMENT": "Employment record",
+        "DEBTOR_IDENTITY": "Identity document",
+        "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
+        "DEBTOR_PROMISE": "Payment promise",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -66,7 +73,7 @@
         "SEARCH_GROUPS": "Search Groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Arbitrary Reports",
+        "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help"
       }
     },
@@ -83,11 +90,14 @@
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
     "fieldRequired": "This field is required",
+    "fieldMin": "The value must be greater than {{ minValue }}",
+    "fieldMax": "The value must be less than {{ maxValue }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"
@@ -101,7 +111,7 @@
   },
   "toolbar": {
     "action": {
-      "add": "Add",
+      "add": "Create",
       "edit": "Edit",
       "remove": "Remove",
       "copy": "Copy",
@@ -113,7 +123,8 @@
       "download": "Download",
       "upload": "Upload",
       "block": "Block",
-      "unblock": "Unblock"
+      "unblock": "Unblock",
+      "undo": "Undo"
     }
   },
   "queryBuilder": {
@@ -128,12 +139,11 @@
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Please, authenticate",
-    "LOGIN_PLACEHOLDER": "Login",
-    "PASSWORD_PLACEHOLDER": "Password",
-    "REMEMBER_ME": "Remember login",
-    "FORGOT_PASSWORD": "Forgot password?",
-    "LOGIN_BUTTON": "Login"
+    "please_authenticate": "Please, authenticate",
+    "login_placeholder": "Login",
+    "password_placeholder": "Password",
+    "remember_me": "Remember login",
+    "login_button": "Login"
   },
   "constants": {
     "title": "Constants",
@@ -376,7 +386,7 @@
       "tab": {
         "title": "Permits"
       },
-      "tab2": {
+      "access": {
         "title": "Access settings"
       },
       "add": {
@@ -429,6 +439,7 @@
     "responsible": "Manager",
     "reward": "Remuneration",
     "identityDocs": {
+      "title": "Identity documents",
       "add": {
         "title": "Add an identity"
       },
@@ -437,7 +448,11 @@
       },
       "remove": {
         "title": "Delete the document",
-        "confirmMessage": "Do you really want to delete the document {{ name }}?"
+        "confirmMessage": "Do you really want to delete the document {{ docNumber }}?"
+      },
+      "changeMain": {
+        "title": "Confirm",
+        "confirmMessage": "This debtor already has an identity doc attribute set to \"Main\". Do you really want to set this identity document as main?"
       },
       "grid": {
         "id": "Id",
@@ -477,12 +492,12 @@
         }
       },
       "phone": {
-        "title": "Телефоны",
+        "title": "Phones",
         "toolbar": {
-          "verification": "Верификация контактных данных"
+          "verification": "Contact verification"
         },
         "grid": {
-          "phoneNumber": "Number",
+          "phone": "Number",
           "typeCode": "Type",
           "statusCode": "Status",
           "isBlocked": "Blocked",
@@ -498,16 +513,47 @@
     "propertyTab": {
       "title": "Property"
     },
-    "guarantorsTab": {
-      "title": "Guarantors"
-    },
     "contactsTab": {
-      "title": "Contacts"
+      "title": "Contacts",
+      "remove": {
+        "title": "Delete the contact",
+        "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
+      }
     },
-    "planningTab": {
-      "title": "Planning"
+    "paymentsTab": {
+      "title": "Payments",
+      "confirm": {
+        "title": "Approve the payment",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this payment?"
+      },
+      "cancel": {
+        "title": "Cancel the payment",
+        "buttonLabel": "Cancel",
+        "message": "Do you really want to cancel this payment?"
+      }
     },
-    "documentationTab": {
+    "promisesTab": {
+      "title": "Promises",
+      "approve": {
+        "title": "Approve the promise",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this promise?"
+      },
+      "remove": {
+        "title": "Delete the promise",
+        "message": "Do you really want to delete this promise?"
+      },
+      "confirmInsufficient": {
+        "title": "Confirm amount",
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?"
+      },
+      "infoIncreaseAmount": {
+        "title": "Information",
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due."
+      }
+    },
+    "documentsTab": {
       "title": "Documents",
       "errors": {
         "download": "Could not download document"
@@ -519,8 +565,12 @@
     "tasksTab": {
       "title": "Tasks"
     },
-    "workHistoryTab": {
-      "title": "Work history (full)"
+    "employmentRecordTab": {
+      "title": "Employment record",
+      "remove": {
+        "title": "Delete the record",
+        "confirmMessage": "Do you really want to delete the selected record?"
+      }
     },
     "actionLogTab": {
       "title": "Actions log"
@@ -543,8 +593,8 @@
   },
   "person": {
     "gender": "Gender",
-    "birthDate": "Birthdate",
-    "birthPlace": "Birthplace",
+    "birthDate": "Date of birth",
+    "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
     "comment": "Comment"
@@ -614,7 +664,7 @@
     "managers": {
       "remove": {
         "title": "Delete manager",
-        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+        "confirmMessage": "Are you sure you want to delete the manager {{ lastName }}?"
       },
       "grid": {
         "fullName": "Full name",
@@ -628,6 +678,7 @@
         "workPhone": "Work phone",
         "intPhone": "Extension",
         "workAddress": "Address",
+        "email": "Email",
         "comment": "Comment"
       },
       "messages": {
@@ -697,6 +748,7 @@
     "address": {
       "card": {
         "fullAddress": "Address",
+        "fullAddressLabel": "Full address",
         "postalCode": "Postal code",
         "country": "Country",
         "region": "Region",
@@ -719,12 +771,27 @@
         },
         "unblock": {
           "title": "Unblock address",
-          "confirmMessage": "Are you sure you want to unblock address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to unblock the address {{ fullAddress }}?"
         },
         "delete": {
           "title": "Remove address",
-          "confirmMessage": "Are you sure you want to remove address {{ fullAddress }}?"
+          "confirmMessage": "Are you sure you want to remove the address {{ fullAddress }}?"
         }
+      }
+    },
+    "contact": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "birthDate": "Birth date",
+        "birthPlace": "Place of birth",
+        "genderCode": "Gender",
+        "familyStatusCode": "Family status",
+        "educationCode": "Education",
+        "linkTypeCode": "Type",
+        "comment": "Comment"
       }
     },
     "email": {
@@ -748,6 +815,18 @@
         }
       }
     },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Work type",
+        "company": "Company",
+        "position": "Position",
+        "hireDate": "Hire date",
+        "dismissDate": "Dismissal date",
+        "income": "Income",
+        "currencyId": "Currency",
+        "comment": "Comment"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Type",
@@ -763,82 +842,184 @@
         },
         "unblock": {
           "title": "Unblock phone number",
-          "confirmMessage": "Are you sure you want to unblock phone number {{ phone }}?"
+          "confirmMessage": "Are you sure you want to unblock phone {{ phone }}?"
         },
         "delete": {
           "title": "Remove phone number",
-          "confirmMessage": "Are you sure you want to remove phone number {{ phone }}?"
+          "confirmMessage": "Are you sure you want to remove phone {{ phone }}?"
+        }
+      }
+    },
+    "payment": {
+      "grid": {
+        "amount": "Amount",
+        "amountMainCurrency": "Amount in currency",
+        "comment": "Comment",
+        "commission": "Commission",
+        "currencyName": "Currency",
+        "isConfirmed": "Is confirmed",
+        "payerName": "Payer",
+        "paymentDateTime": "Payment date",
+        "purposeCode": "Purpose",
+        "receiptNumber": "Receipt No",
+        "receiveDateTime": "Received on",
+        "reqUserFullName": "Req operator",
+        "statusCode": "Status",
+        "userFullName": "Operator"
+      },
+      "toolbar": {
+        "showCanceled": "Show canceled"
+      }
+    },
+    "promise": {
+      "grid": {
+        "promiseDate": "Due date",
+        "promiseAmount": "Amount",
+        "receiveDateTime": "Promise received",
+        "statusCode": "Status",
+        "comment": "Comment",
+        "fullName": "Operator"
+      }
+    },
+    "debt": {
+      "grid": {
+        "id": "Id",
+        "portfolioId": "Portfolio",
+        "bankId": "Bank",
+        "creditTypeCode": "Credit type",
+        "creditName": "Credit name",
+        "contract": "Contract #",
+        "statusCode": "Status",
+        "creditStartDate": "Credit start date",
+        "creditEndDate": "Credit end date",
+        "regionCode": "Region",
+        "branchCode": "Branch",
+        "currencyId": "Currency",
+        "startDate": "DPD start date",
+        "debtSum": "Debt amount",
+        "totalSum": "Total amount",
+        "dpd": "DPD",
+        "portfolio": "Portfolio",
+        "bank": "Bank",
+        "debtReasonCode": "Debt reason",
+        "comment": "Comments",
+        "dict1Code": "Dpd interval",
+        "dict2Code": "Dpd strategy",
+        "dict3Code": "Score 3",
+        "dict4Code": "Score 4"
+      },
+      "component": {
+        "title": "Debt components",
+        "grid": {
+          "typeCode": "Type",
+          "sum": "Amount",
+          "currencyId": "Currency"
+        },
+        "remove": {
+          "title": "Remove debt component",
+          "confirmMessage": "Are you sure you want to remove the debt component?"
+        }
+      },
+      "componentLog": {
+        "title": "Debt Components History",
+        "grid": {
+          "typeCode": "Type",
+          "sum": "Amount",
+          "currency": "Currency",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
+        }
+      },
+      "portfolioLog": {
+        "title": "Portfolio History",
+        "incoming": "Incoming",
+        "outgoing": "Outgoing",
+        "grid": {
+          "portfolioName": "Portfolio",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
         }
       }
     }
   },
   "entities": {
     "roles": {
-      "gen": { "singular": "role", "plural": "roles list" }
+      "gen": { "singular": "role", "plural": "roles" }
     },
     "permissions": {
-      "gen": { "singular": "permit", "plural": "permits list" }
+      "gen": { "singular": "permit", "plural": "permits" }
     },
     "guiObjects": {
-      "gen": { "singular": "GUI object", "plural": "GUI objects list" }
+      "gen": { "singular": "GUI object", "plural": "GUI objects" }
     },
     "users": {
-      "gen": { "singular": "user", "plural": "users list" },
+      "gen": { "singular": "user", "plural": "users" },
       "photos": {
         "gen": { "singular": "user photo" }
       }
     },
     "actionsLog": {
-      "gen": { "singular": "actions log entry", "plural": "actions log" }
+      "gen": { "singular": "actions log entry", "plural": "action log" }
     },
     "constants": {
-      "gen": { "singular": "constant", "plural": "constants list" }
+      "gen": { "singular": "constant", "plural": "constants" }
     },
     "dictionaries": {
-      "gen": { "singular": "dictionary", "plural": "dictionaries list" }
+      "gen": { "singular": "dictionary", "plural": "dictionaries" }
     },
     "terms": {
-      "gen": { "singular": "dictionary term", "plural": "dictionary terms list" }
+      "gen": { "singular": "dictionary term", "plural": "dictionary terms" }
     },
     "contractors": {
-      "gen": { "singular": "contractor", "plural": "contractors list" }
+      "gen": { "singular": "contractor", "plural": "contractors" }
     },
     "managers": {
-      "gen": { "singular": "manager", "plural": "managers list" }
+      "gen": { "singular": "manager", "plural": "managers" }
     },
     "portfolios": {
-      "gen": { "singular": "portfolio", "plural": "portfolios list" }
+      "gen": { "singular": "portfolio", "plural": "portfolios" }
+    },
+    "payments": {
+      "gen": { "singular": "payment", "plural": "payments" }
+    },
+    "promises": {
+      "gen": { "singular": "promise", "plural": "promises" }
+    },
+    "promisesLimit": {
+      "gen": { "plural": "promise constraints" }
     },
     "organizations": {
-      "gen": { "singular": "organization", "plural": "organizations list" }
+      "gen": { "singular": "organization", "plural": "organizations" }
     },
     "employees": {
-      "gen": { "singular": "employee", "plural": "employees list" }
+      "gen": { "singular": "employee", "plural": "employees" }
     },
     "debtors": {
-      "gen": { "singular": "debtor", "plural": "debtors list" },
+      "gen": { "singular": "debtor", "plural": "debtors" },
       "info": {
         "gen": { "plural": "debtor general information" }
-      },
-      "phones": {
-        "gen": { "plural": "debtors phones list" }
       }
+    },
+    "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
     },
     "metadata": {
       "gen": { "plural": "metadata" }
     },
     "user": {
       "constants": {
-        "gen": { "singular": "user constant", "plural": "user constants list" }
+        "gen": { "singular": "user constant", "plural": "user constants" }
       },
       "languages": {
-        "gen": { "singular": "user language", "plural": "user languages list" }
+        "gen": { "singular": "user language", "plural": "user languages" }
       },
       "permissions": {
-        "gen": { "singular": "user permit", "plural": "user permits list" }
+        "gen": { "singular": "user permit", "plural": "user permits" }
       },
       "dictionaries": {
-        "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
+        "gen": { "singular": "user dictionary", "plural": "user dictionaries" }
       }
     },
     "lookup": {
@@ -850,29 +1031,53 @@
       }
     },
     "addresses": {
-      "gen": { "singular": "address", "plural": "addresses list" }
+      "gen": { "singular": "address", "plural": "addresses" }
     },
     "emails": {
-      "gen": { "singular": "email", "plural": "emails list" }
+      "gen": { "singular": "email", "plural": "emails" }
     },
     "phones": {
-      "gen": { "singular": "phone number", "plural": "phone numbers list" }
+      "gen": { "singular": "phone number", "plural": "phone numbers" }
+    },
+    "contacts": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     },
     "identityDocs": {
-      "gen": { "singular": "identity document", "plural": "identity document list" }
+      "gen": { "singular": "identity document", "plural": "identity documents" }
+    },
+    "employment": {
+      "gen": { "singular": "employment record", "plural": "employment records" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "debt component", "plural": "debt components" }
     }
   },
   "errors": {
     "server": {
+      "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
+      "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
+      "contactPersonNotFound": "Не найдено контактное лицо по Id",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
+      "currencyNotFound": "Не найдена валюта по id",
+      "currencyRateNotFound": "Currency rate not found for this date",
+      "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
+      "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_sum) по Id",
+      "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
       "dictionaryTermNotFound": "Словарный термин не найден",
+      "emailNotFound": "Не найден email по id",
+      "employmentNotFound": "Не найдена запись о занятости по id",
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
+      "entityNotFound": "Не найдена сущность при обращении по entityTypeId или entityAttributeId",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
+      "entityTypeIsNotSupportedForEntity": "Для заданного entityTypeId не поддерживаются операции с заданной сущностью",
+      "fieldMustBeGreaterThan": "Значение поля должно быть больше заданного значения {{ $1 }}",
+      "fieldMustBeGreaterOrEqualThan": "Значение поля должно быть больше или равно заданному значению {{ $1 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
       "fieldSizeMustBeBetween": "Длина поля {{ $1 }} должна быть в диапазоне от {{ $2 }} до {{ $3 }} символов",
       "fileExtentionIsRequired": "В имени сохраняемого файла отсутствует расширение",
@@ -889,18 +1094,25 @@
       "incorrectValuesForPermitRoleTypeBoolean": "Некорректное значение булевого параметра доступа",
       "incorrectValuesForPermitRoleTypeNumber": "Некорректное значение числового параметра доступа",
       "incorrectValuesForPermitRoleTypeString": "Некорректное значение строкового параметра доступа",
+      "incorrectStatusCodeValue": "Некорректное значение кода статуса долга",
       "invalidDateFormat": "Некорректный формат даты {{ $1 }}",
       "invalidDateTimeFormat": "Некорректный формат даты и времени {{ $1 }}",
       "invalidDoubleFormat": "Некорректный формат дробного числового параметра {{ $1 }}",
+      "invalidEmailFormat": "Формат email не удовлетворяет заданному шаблону",
       "invalidInputFileStream": "Ошибка при обработке и/или преобразовании входного бинарного потока",
       "invalidInputModel": "Некорректная/пустая входная модель данных",
       "invalidIntegerFormat": "Некорректный формат целочисленного числового параметра {{ $1 }}",
+      "invalidPhoneFormat": "Формат телефона не удовлетворяет заданному шаблону",
       "invalidPortfolioDirection": "Некорректное направление портфеля",
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
+      "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
+      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "promiseSumMustBeGreaterThenPercentsDebtSum": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",
       "organizationRootDeleteAttempt": "Запрошено удаление организации, членом которой является инициатор запроса",
@@ -911,7 +1123,9 @@
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
+      "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
+      "tempalteNotFound": "Не найден шаблон по Id",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
@@ -984,7 +1198,7 @@
       "back": "Back",
       "block": "Block"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "From",
       "to": "To"
     },
@@ -1016,6 +1230,7 @@
         "selectAll": "All",
         "copy": "Copy",
         "copyWithHeaders": "Copy with headers",
+        "resetColumns": "Reset settings",
         "paste": "Paste",
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
@@ -1027,6 +1242,9 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "select" : {
+      "empty": "[empty value]"
     },
     "sex": {
       "m": "m",

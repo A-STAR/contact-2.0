@@ -1,5 +1,3 @@
-import { IAGridState } from '../../../shared/components/grid2/grid2.interface';
-
 export interface IDebt {
   debtId: number;
   personId: number;
@@ -24,6 +22,6 @@ export interface IDebt {
 }
 
 export interface IDebtProcessingState {
-  debts: Array<IDebt>;
-  grid: IAGridState;
+  data: Array<IDebt>;
+  total: number;
 }

@@ -9,7 +9,7 @@
 
   <!-- Tabstrip -->
   <ng-container *ngIf="node.container === 'tabs'">
-    <app-tabstrip>
+    <app-tabstrip [inverse]="true">
       <app-tab *ngFor="let childNode of node.children" [closable]="false" [title]="childNode.title | translate">
         <app-container [node]="childNode"></app-container>
       </app-tab>

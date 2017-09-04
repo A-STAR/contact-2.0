@@ -1,5 +1,4 @@
-import { IAGridState } from '../../../shared/components/grid2/grid2.interface';
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 export interface IEmployee {
   id: number;
@@ -28,13 +27,12 @@ export interface IActionLog {
 export interface IActionsLogState {
   actionsLog: IActionsLogData;
   employees: IEmployee[];
-  actionTypes: IDictionaryItem[];
-  actionsLogGrid: IAGridState;
+  actionTypes: IUserDictionary;
 }
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IActionsLogData|IEmployee[]|IDictionaryItem[];
+  payload?: IActionsLogData|IEmployee[]|IUserDictionary;
 }
 
 export interface IActionsLogData {

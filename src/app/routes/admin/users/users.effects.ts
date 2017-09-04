@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
-import { IAppState } from '../../../core/state/state.interface';
 import { IUser } from './users.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -37,6 +36,19 @@ export class UsersEffects {
               userId: null
             }
           }
+        ])
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
+    });
+
+  @Effect()
+  toggleBlockedUsers$ = this.actions
+    .ofType(UsersService.USER_TOGGLE_BLOCKED)
+    .switchMap((action: Action) => {
+      return this.readUsers()
+        .mergeMap(data => [
+          {
+            type: UsersService.USERS_FETCH,
+          },
         ])
         .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
     });

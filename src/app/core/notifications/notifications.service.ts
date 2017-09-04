@@ -66,6 +66,22 @@ export class NotificationsService implements OnDestroy {
       .distinctUntilChanged();
   }
 
+  fetchError(text: string = 'errors.default.read'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  createError(text: string = 'errors.default.create'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  updateError(text: string = 'errors.default.update'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  deleteError(text: string = 'errors.default.delete'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
   error(text: string = null): NotificationActionBuilder {
     return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.ERROR, text);
   }

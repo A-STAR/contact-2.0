@@ -27,8 +27,11 @@
       <p-calendar
         [inline]="true"
         [locale]="locale"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
         [monthNavigator]="true"
         [ngModel]="value"
+        [selectOtherMonths]="true"
         [yearNavigator]="true"
         [yearRange]="'1900:2050'"
         (ngModelChange)="onValueChange($event)">

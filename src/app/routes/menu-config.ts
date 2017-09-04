@@ -119,11 +119,11 @@ export const menuConfig: IMenuConfig = {
     link: '/workplaces',
     icon: 'icon-earphones-alt'
   },
-  // debtList: {
-  //   text: 'sidebar.nav.menu.DEBT_LIST',
-  //   link: '/workplaces/debts',
-  //   icon: 'icon-wallet'
-  // },
+  debtList: {
+    text: 'sidebar.nav.menu.DEBT_LIST',
+    link: '/workplaces/debts',
+    icon: 'icon-wallet'
+  },
   tasks: {
     text: 'sidebar.nav.menu.TASKS',
     link: '/workplaces/tasks',

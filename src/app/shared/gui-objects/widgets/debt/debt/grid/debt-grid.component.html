@@ -1,0 +1,12 @@
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.debt"
+  selectionType="single"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="debts"
+  [styles]="{ height: '230px' }"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

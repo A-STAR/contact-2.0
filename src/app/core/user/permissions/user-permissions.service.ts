@@ -30,6 +30,12 @@ export class UserPermissionsService {
     this.store.dispatch(action);
   }
 
+  get(permissionNames: Array<string>): Observable<IUserPermissions> {
+    return this.getPermissions()
+      .map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {}))
+      .distinctUntilChanged();
+  }
+
   has(permissionName: string): Observable<boolean> {
     return this.getPermissions().map(permissions => this.userHasPermission(permissions, permissionName)).distinctUntilChanged();
   }

@@ -48,6 +48,9 @@ export class ValueConverterService {
       case 4:
         valueEntity.value = String(valueEntity.valueB);
         break;
+      case 5:
+        valueEntity.value = Number(valueEntity.valueN).toFixed(2);
+        break;
       default:
         valueEntity.value = '';
     }
@@ -60,9 +63,9 @@ export class ValueConverterService {
 
   deserializeBoolean(valueEntity: IValueEntity): ValueType {
     if (valueEntity.typeCode === 4) {
-      return Number(valueEntity.value) === 1
-        ? 'default.boolean.TRUE'
-        : 'default.boolean.FALSE';
+      return this.translateService.instant(
+        Number(valueEntity.value) === 1 ? 'default.boolean.TRUE' : 'default.boolean.FALSE'
+      );
     }
     return valueEntity.value;
   }
@@ -78,7 +81,7 @@ export class ValueConverterService {
   }
 
   firstLabeledValue(data: string|number|ILabeledValue[]): number|any[] {
-    const v: number|any[] = this.toLabeledValues(data);
+    const v = this.toLabeledValues(data);
     if (Array.isArray(v)) {
       return v.length ? v[0] : data;
     }

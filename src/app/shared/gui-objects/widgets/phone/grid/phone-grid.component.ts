@@ -9,9 +9,10 @@ import { IPhone } from '../phone.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { PhoneService } from '../phone.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -44,7 +45,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
-        .map(([ canUnblock, phone ]) => canUnblock && !!phone && phone.isBlocked),
+        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isBlocked),
       action: () => this.setDialog(2)
     },
     {
@@ -62,17 +63,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [];
 
-  private _phones: Array<any> = [];
+  phones: Array<IPhone> = [];
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     typeCode: [],
     statusCode: [],
     blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
     phone: 'phoneRenderer',
   };
 
@@ -80,7 +82,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     { prop: 'typeCode' },
     { prop: 'phone' },
     { prop: 'statusCode' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
@@ -88,14 +90,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  // TODO(d.maltsev): is there a better way to get route params?
-  private id = (this.route.params as any).value.id || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.contactId || this.routeParams.id || null;
 
   constructor(
-    private phoneService: PhoneService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
+    private phoneService: PhoneService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -117,11 +120,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
-        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.busSubscription = this.messageBusService
+      .select(PhoneService.MESSAGE_PHONE_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -140,6 +147,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {
@@ -148,10 +156,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
-  }
-
-  get phones(): Array<IPhone> {
-    return this._phones;
   }
 
   get dialog(): number {
@@ -170,16 +174,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$.next(phone.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number): void {
-    this.phoneService.block(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+    this.phoneService.block(18, this.personId, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
-  onUnblockDialogSubmit(blockReasonCode: number): void {
-    this.phoneService.unblock(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+  onUnblockDialogSubmit(): void {
+    this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.phoneService.delete(18, this.id, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.delete(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -187,7 +192,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedPhone$(): Observable<IPhone> {
-    return this.selectedPhoneId$.map(id => this._phones.find(phone => phone.id === id));
+    return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
   }
 
   get canView$(): Observable<boolean> {
@@ -234,15 +239,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
-    this.phoneService.fetchAll(18, this.id)
+    this.phoneService.fetchAll(18, this.personId)
       .subscribe(phones => {
-        this._phones = phones;
+        this.phones = phones;
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this._phones = [];
+    this.phones = [];
     this.cdRef.markForCheck();
   }
 

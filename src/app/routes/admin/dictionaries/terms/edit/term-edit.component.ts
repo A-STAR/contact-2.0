@@ -1,49 +1,30 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { ITerm } from '../../../../../core/dictionaries/dictionaries.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select-interfaces';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 
-import {
-  EntityBaseComponent,
-  TranslationFieldsExtension
-} from '../../../../../shared/components/entity/edit/entity.base.component';
+import { toLabeledValues } from '../../../../../core/utils';
 
-const NAME_TRANSLATIONS_CONTROL_NAME = 'nameTranslations';
-const TRANSLATED_NAME_CONTROL_NAME = 'translatedName';
-const NAME_CONTROL_NAME = 'name';
+import { EntityTranslationComponent } from '../../../../../shared/components/entity/translation.component';
 
 @Component({
   selector: 'app-term-edit',
   templateUrl: './term-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnInit {
+export class TermEditComponent extends EntityTranslationComponent<ITerm> {
 
   @Input() languages: ILookupLanguage[];
   @Input() terms: ITerm[];
 
-  constructor() {
-    super();
-  }
-
-  ngOnInit(): void {
-    if (this.isEditMode()) {
-      this.extensions.push(
-        new TranslationFieldsExtension<ITerm>(this, TRANSLATED_NAME_CONTROL_NAME, NAME_TRANSLATIONS_CONTROL_NAME)
-      );
-    }
-    super.ngOnInit();
+  toSubmittedValues(values: ITerm): any {
+    return this.dynamicForm.requestValue;
   }
 
   protected getControls(): Array<IDynamicFormControl> {
-    const filteredControls = [
+    const controls: IDynamicFormControl[] = [
       {
         label: 'terms.edit.code',
         controlName: 'code',
@@ -52,7 +33,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnI
       },
       {
         label: 'terms.edit.text',
-        controlName: NAME_TRANSLATIONS_CONTROL_NAME,
+        controlName: this.translatedControlName,
         type: 'select',
         multiple: true,
         required: true,
@@ -63,12 +44,13 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnI
       },
       {
         label: 'terms.edit.text',
-        controlName: NAME_CONTROL_NAME,
+        controlName: this.nameControlName,
         type: 'text',
         required: true
       },
       {
-        controlName: TRANSLATED_NAME_CONTROL_NAME,
+        label: null,
+        controlName: this.displayControlName,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',
         required: true
@@ -88,7 +70,7 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnI
         label: 'terms.edit.parent',
         controlName: 'parentCode',
         type: 'select',
-        options: this.terms.map(term => ({ label: term.name, value: term.code })),
+        options: this.terms.map(toLabeledValues),
         optionsActions: [
           { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
         ]
@@ -98,13 +80,13 @@ export class TermEditComponent extends EntityBaseComponent<ITerm> implements OnI
         controlName: 'isClosed',
         type: 'checkbox'
       }
-    ].filter(
-      (control) => {
-        return this.isEditMode()
-          ? ![NAME_CONTROL_NAME].includes(control.controlName)
-          : ![NAME_TRANSLATIONS_CONTROL_NAME, TRANSLATED_NAME_CONTROL_NAME].includes(control.controlName);
-      });
+    ];
+    // .filter(control => {
+    //   return this.isEditMode()
+    //     ? nameControlName !== control.controlName
+    //     : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
+    // });
 
-    return filteredControls as Array<IDynamicFormControl>;
+    return this.filterControls(controls);
   }
 }

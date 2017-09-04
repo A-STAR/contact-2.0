@@ -1,0 +1,25 @@
+<app-dropdown #dropdown [enabled]="!isDisabled" [fullWidth]="true">
+  <ng-container trigger>
+    <span [ngClass]="controlClass">
+      {{ label }}
+      <i class="caret"></i>
+    </span>
+    <input type="hidden" [ngModel]="value">
+  </ng-container>
+  <div>
+    <app-grid
+      [columns]="columns"
+      [footerHeight]="false"
+      [rows]="rows"
+      [selection]="selection"
+      [selectionType]="'single'"
+      [styles]="{ height: '200px', border: 'none' }"
+      (onSelect)="onSelect($event)">
+    </app-grid>
+    <div class="panel-footer text-right">
+      <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
+        {{ 'default.buttons.clear' | translate }}
+      </button>
+    </div>
+  </div>
+</app-dropdown>

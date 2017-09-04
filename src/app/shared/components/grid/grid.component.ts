@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
@@ -32,6 +33,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
+  @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() allowDblClick = true;
   @Input() footerHeight = 50;
   @Input() columns: IGridColumn[] = [];
@@ -39,6 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() emptyMessage: string = null;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
+  @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Output() onAction: EventEmitter<any> = new EventEmitter();
@@ -59,19 +62,22 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   element: HTMLElement;
   messages: IMessages = {};
   selected: Array<any> = [];
+  // a cache to prevent select from firing on already selected row
   subscription: Subscription;
 
+  private _selected: any = [];
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     public settings: SettingsService,
     private translate: TranslateService,
-    private changeDetector: ChangeDetectorRef,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.clickDebouncer = new Subject();
     this.debouncerSub = this.clickDebouncer
       .debounceTime(100)
       .subscribe(({ type, row }: {type: string; row: any}) => {
-        if (type === 'click') {
+        if (type === 'select') {
           this.onSelect.emit(row);
         } else if (type === 'dblclick' && this.allowDblClick) {
           this.onDblClick.emit(row);
@@ -111,22 +117,27 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           acc[key] = key.split('.').reduce((a, prop) => a[prop], translations);
           return acc;
         }, {}))
-    ).subscribe(translations => {
-      this.messages = { ...translations[gridMessagesKey] };
-      if (this.columnTranslationKey) {
-        this.translateColumns(translations[this.columnTranslationKey].grid);
-      }
-      if (this.emptyMessage) {
-        this.messages.emptyMessage = translations[this.emptyMessage];
-      }
-      this.changeDetector.markForCheck();
-    });
+    )
+    .subscribe(
+      translations => {
+        this.messages = { ...translations[gridMessagesKey] };
+        if (this.columnTranslationKey) {
+          this.translateColumns(translations[this.columnTranslationKey].grid);
+        }
+        if (this.emptyMessage) {
+          this.messages.emptyMessage = translations[this.emptyMessage];
+        }
+        this.cdRef.markForCheck();
+      },
+      error => console.log(error)
+    );
   }
 
-  ngOnChanges(changes: any): void {
-    if (changes.emptyMessage) {
-      if (changes.emptyMessage.currentValue) {
-        this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+  ngOnChanges(changes: SimpleChanges): void {
+    const { emptyMessage, selection, rows } = changes;
+    if (emptyMessage) {
+      if (emptyMessage.currentValue) {
+        this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
       } else {
         // TODO(d.maltsev): code duplication
         const gridMessagesKey = 'grid.messages';
@@ -135,6 +146,14 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           .take(1)
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
+    }
+    if (selection) {
+      this.selected = [...selection.currentValue];
+    }
+    if (rows) {
+      this._selected = [];
+      this.cdRef.markForCheck();
+      this.dataTable.recalculate();
     }
   }
 
@@ -163,22 +182,31 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   onSelectRow(event: any): void {
-    this.clickDebouncer.next({ type: 'click', row: event.row });
+    const { selected } = event;
+    const rowSelected = this._selected[0];
+    if (!rowSelected || rowSelected.id !== selected[0].id) {
+      const row = this.selectionType === 'single' ? selected[0] : selected;
+      this.clickDebouncer.next({ type: 'select', row });
+    }
+    this._selected = [].concat(selected);
   }
 
   onActivate(event: any): void {
-    const { row, type } = event;
+    const { row, type, event: e } = event;
     if (type === 'dblclick') {
-      // NOTE: workaround for rows getting unselected on dblclick
-      if (!this.selected.find(selected => selected.$$id === row.$$id)) {
-        this.selected = this.selected.concat(row);
-      }
+      this.clickDebouncer.next({ type, row });
     }
-    this.clickDebouncer.next({ type, row });
+    if (type === 'keydown' && e.keyCode === 13) {
+      this.clickDebouncer.next({ type: 'select', row });
+    }
   }
 
   getRowHeight(row: any): number {
     return row.height;
+  }
+
+  clearSelection(): void {
+    this.selected = [];
   }
 
   private translateColumns(columnTranslations: object): void {

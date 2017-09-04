@@ -40,7 +40,7 @@ export class ContentTabService {
   }
 
   addTab(tab: ITab): void {
-    const found = this._tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
+    const found = this.tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);
@@ -48,6 +48,15 @@ export class ContentTabService {
     } else {
       this.setActiveIndex(found);
     }
+  }
+
+  getCurrentTab(): ITab {
+    return this.tabs[this.getActiveIndex()];
+  }
+
+  removeTabNoNav(current: number): void {
+    this.tabs = this.tabs.filter((tab, index) => index !== current);
+    // this.setActiveIndex(this.tabs.length - 1);
   }
 
   removeTab(i: number): void {
@@ -63,9 +72,7 @@ export class ContentTabService {
 
     this.tabs = this.tabs.filter((tab, index) => index !== i);
     this.setActiveIndex(active);
-    this.router
-      .navigateByUrl(this.tabs[active].path)
-      .then(result => result);
+    this.router.navigateByUrl(this.tabs[active].path);
   }
 
   setActiveIndex(i: number): void {
@@ -81,7 +88,7 @@ export class ContentTabService {
   }
 
   navigate(url: string): void {
-    const i = this._activeIndex;
+    const i = this.getActiveIndex();
     this.router.navigate([url])
       .then(() => this.removeTab(i));
   }
@@ -89,7 +96,21 @@ export class ContentTabService {
   back(): void {
     const i = this._activeIndex;
     this.location.back();
-    this.removeTab(i);
+    this.tabs = this.tabs.filter((tab, index) => index !== i);
+  }
+
+  gotoParent(router: Router, cutNSections: number): void {
+    const current = this.getActiveIndex();
+    const { path } = this.getCurrentTab();
+    const re = new RegExp('(\/[^\/]*){' + cutNSections + '}$', 'g');
+    router.navigate([ path.replace(re, '') ])
+      .then(() => {
+        if (path === this.getCurrentTab().path) {
+            this.removeTab(current);
+        } else {
+          this.removeTabNoNav(current);
+        }
+      });
   }
 
   private onSectionLoadStart(): void {

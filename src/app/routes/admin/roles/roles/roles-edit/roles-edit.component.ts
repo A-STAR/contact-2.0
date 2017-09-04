@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPermissionRole } from '../../permissions.interface';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 
 @Component({
   selector: 'app-roles-edit',

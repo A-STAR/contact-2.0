@@ -12,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { AddressService } from '../address.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -24,7 +25,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 export class AddressGridComponent implements OnInit, OnDestroy {
   private selectedAddressId$ = new BehaviorSubject<number>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
@@ -40,19 +41,19 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
         .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
-      action: () => this.setDialog(1)
+      action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && address.isBlocked),
-      action: () => this.setDialog(2)
+        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isBlocked),
+      action: () => this.setDialog('unblock')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: Observable.combineLatest(this.canDelete$, this.selectedAddress$)
         .map(([ canDelete, address ]) => canDelete && !!address),
-      action: () => this.setDialog(3)
+      action: () => this.setDialog('delete')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -67,13 +68,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
-    typeCode: [],
-    statusCode: [],
-    blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
+    isResidence: 'checkboxRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -81,27 +81,32 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'fullAddress' },
     { prop: 'statusCode' },
     { prop: 'isResidence' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },
   ];
 
-  private _dialog = null;
+  private dialog: string;
 
-  // TODO(d.maltsev): is there a better way to get route params?
-  private id = (this.route.params as any).value.id || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
 
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     this.gridSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
@@ -110,6 +115,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ]),
       this.canViewBlock$,
     )
+    .take(1)
     .subscribe(([ options, canViewBlock ]) => {
       this.renderers = {
         ...this.renderers,
@@ -118,12 +124,16 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
-        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
 
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
     });
+
+    this.busSubscription = this.messageBusService
+      .select(AddressService.MESSAGE_ADDRESS_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -142,6 +152,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {
@@ -156,10 +167,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this._addresses;
   }
 
-  get dialog(): number {
-    return this._dialog;
-  }
-
   getRowClass(): any {
     return (address: IAddress) => ({ blocked: !!address.isBlocked });
   }
@@ -172,20 +179,25 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddressId$.next(address.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.block(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+    this.addressService.block(18, this.personId, this.selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
-  onUnblockDialogSubmit(blockReasonCode: number): void {
-    this.addressService.unblock(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+  onUnblockDialogSubmit(): void {
+    this.addressService.unblock(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.id, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.delete(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
-  onDialogClose(): void {
+  onCloseDialog(): void {
     this.setDialog(null);
+  }
+
+  isDialog(dialog: string): boolean {
+    return this.dialog === dialog;
   }
 
   get selectedAddress$(): Observable<IAddress> {
@@ -236,7 +248,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private fetch(): void {
     // TODO(d.maltsev): persist selection
     // TODO(d.maltsev): pass entity type
-    this.addressService.fetchAll(18, this.id)
+    this.addressService.fetchAll(18, this.personId)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();
@@ -248,8 +260,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private setDialog(dialog: number): void {
-    this._dialog = dialog;
+  private setDialog(dialog: string): void {
+    this.dialog = dialog;
     this.cdRef.markForCheck();
   }
 }

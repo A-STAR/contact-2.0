@@ -5,45 +5,39 @@ import {
   IEmployee
 } from './actions-log.interface';
 
-import { IDictionaryItem } from '../../../core/dictionaries/dictionaries.interface';
+import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
-import { combineWithAGridReducer, AGRID_DEFAULT_STATE } from '../../../shared/components/grid2/grid2.reducer';
 import { ActionsLogService } from './actions-log.service';
 
 const defaultState: IActionsLogState = {
   actionsLog: { data: [], total: 0 },
   employees: [],
   actionTypes: [],
-  actionsLogGrid: AGRID_DEFAULT_STATE,
 };
 
-const ownReducer = (ownState: IActionsLogState, ownAction: IActionsLogPayload): IActionsLogState => {
-  switch (ownAction.type) {
+export function actionsLogReducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
+  switch (action.type) {
     case ActionsLogService.ACTIONS_LOG_DESTROY:
       return { ...defaultState };
 
     case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
       return {
-        ...ownState,
-        actionTypes: ownAction.payload as IDictionaryItem[]
+        ...state,
+        actionTypes: action.payload as IUserDictionary
       };
 
     case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:
       return {
-        ...ownState,
-        employees: ownAction.payload as IEmployee[]
+        ...state,
+        employees: action.payload as IEmployee[]
       };
 
     case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
       return {
-        ...ownState,
-        actionsLog: ownAction.payload as IActionsLogData
+        ...state,
+        actionsLog: action.payload as IActionsLogData
       };
     default:
-      return ownState;
+      return state;
   }
 };
-
-export function actionsLogReducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
-  return combineWithAGridReducer('actionsLogGrid', ownReducer)(state, action);
-}

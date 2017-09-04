@@ -4,8 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DatePickerModule } from '../datepicker/datepicker.module';
+import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
+import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
+import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SelectModule } from '../select/select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -16,8 +19,11 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
   imports: [
     CommonModule,
     DatePickerModule,
+    DropdownInputModule,
     ImageUploadModule,
+    PasswordModule,
     PopupInputModule,
+    RadioGroupModule,
     ReactiveFormsModule,
     TranslateModule,
     SelectModule,

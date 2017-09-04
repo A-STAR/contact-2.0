@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 import { IPerson } from './debtor.interface';
 
@@ -69,12 +69,15 @@ export class DebtorComponent implements OnDestroy {
 
   onSubmit(): void {
     const value = {
-      ...this.form.value,
-      ...this.information.form.value,
-      birthDate: this.valueConverterService.toISO(this.information.form.value.birthDate)
+      ...this.form.requestValue,
+      ...this.information.form.requestValue,
     }
 
-    this.debtorService.update(this.personId, value).subscribe();
+    this.debtorService.update(this.personId, value).subscribe(() => {
+      this.form.form.markAsPristine();
+      this.information.form.form.markAsPristine();
+      this.cdRef.markForCheck();
+    });
   }
 
   private getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {

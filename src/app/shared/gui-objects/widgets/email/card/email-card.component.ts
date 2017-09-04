@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmailService } from '../email.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -29,14 +30,15 @@ export class EmailCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private emailService: EmailService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
-      this.userPermissionsService.has('EMAIL_EDIT'),
-      this.userPermissionsService.has('EMAIL_COMMENT_EDIT'),
+      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : Observable.of(true),
+      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : Observable.of(true),
       // TODO(d.maltsev): pass entity type
       this.emailId ? this.emailService.fetch(18, this.id, this.emailId) : Observable.of(null)
     )
@@ -52,17 +54,14 @@ export class EmailCardComponent {
   }
 
   public onSubmit(): void {
-    const { value } = this.form;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode
-    }
-
     const action = this.emailId
-      ? this.emailService.update(18, this.id, this.emailId, data)
-      : this.emailService.create(18, this.id, data);
+      ? this.emailService.update(18, this.id, this.emailId, this.form.requestValue)
+      : this.emailService.create(18, this.id, this.form.requestValue);
 
-    action.subscribe(() => this.onBack());
+    action.subscribe(() => {
+      this.messageBusService.dispatch(EmailService.MESSAGE_EMAIL_SAVED);
+      this.onBack();
+    });
   }
 
   public onBack(): void {

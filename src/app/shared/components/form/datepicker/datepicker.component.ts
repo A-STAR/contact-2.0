@@ -23,6 +23,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @Input() buttonClass = 'btn btn-default';
   @Input() inputClass = 'form-control';
   @Input() placeholder = 'default.date.datePicker.placeholder';
+  @Input() maxDate: Date = null;
+  @Input() minDate: Date = null;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -81,8 +83,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.subscription.unsubscribe();
   }
 
-  writeValue(value: Date): void {
-    this.value = value;
+  writeValue(value: Date | string): void {
+    this.value = typeof value === 'string'
+      ? this.valueConverterService.fromISO(value as string)
+      : value;
   }
 
   registerOnChange(fn: Function): void {

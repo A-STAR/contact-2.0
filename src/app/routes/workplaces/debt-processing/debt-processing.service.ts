@@ -1,57 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Action } from '@ngrx/store';
 
-import { IAGridSortModel, IAGridState } from '../../../shared/components/grid2/grid2.interface';
-import { IAppState } from '../../../core/state/state.interface';
-import { IDebt, IDebtProcessingState } from './debt-processing.interface';
+import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
+import { IDebt } from './debt-processing.interface';
+
+import { DataService } from '../../../core/data/data.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class DebtProcessingService {
-  static DEBT_PROCESSING_FETCH         = 'DEBT_PROCESSING_FETCH';
-  static DEBT_PROCESSING_FETCH_SUCCESS = 'DEBT_PROCESSING_FETCH_SUCCESS';
+  constructor(
+    private dataService: DataService,
+    private gridService: GridService,
+    private notifications: NotificationsService,
+  ) {}
 
-  constructor(private store: Store<IAppState>) {}
+  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt> | Action> {
+    const request = this.gridService.buildRequest(params, filters);
 
-  get currentPage$(): Observable<number> {
-    return this.grid$.map(grid => grid.currentPage).distinctUntilChanged();
-  }
-
-  get pageSize$(): Observable<number> {
-    return this.grid$.map(grid => grid.pageSize).distinctUntilChanged();
-  }
-
-  get sorters$(): Observable<Array<IAGridSortModel>> {
-    return this.grid$.map(grid => grid.sorters).distinctUntilChanged();
-  }
-
-  get selected$(): Observable<Array<IDebt>> {
-    return this.grid$.map(grid => grid.selectedRows).distinctUntilChanged();
-  }
-
-  get debts$(): Observable<Array<IDebt>> {
-    return this.state$.map(state => state.debts).distinctUntilChanged();
-  }
-
-  fetch(filters: FilterObject): void {
-    this.dispatch(DebtProcessingService.DEBT_PROCESSING_FETCH, { filters });
-  }
-
-  filter(filters: FilterObject): void {
-    this.dispatch(DebtProcessingService.DEBT_PROCESSING_FETCH, { currentPage: 1, filters });
-  }
-
-  dispatch(type: string, payload: number | object = null): void {
-    this.store.dispatch({ type, payload });
-  }
-
-  private get grid$(): Observable<IAGridState> {
-    return this.state$.map(state => state.grid);
-  }
-
-  private get state$(): Observable<IDebtProcessingState> {
-    return this.store.select(state => state.debtProcessing);
+    return this.dataService.create('/list?name=debtsprocessingall', {}, request)
+      // .map((response: IAGridResponse<IDebt>) => ({ ...response }))
+      // TODO(d.maltsev): the `.error` method should not return the error payload back to the component,
+      // but the default response like in the example below...
+      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback())
+      .map(response => !response.data ? { data: [], total: 0 } : response);
   }
 }
