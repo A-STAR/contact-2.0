@@ -3,6 +3,6 @@ import { ValidatorFn } from '@angular/forms';
 export const min = (minValue: number): ValidatorFn => {
   return control => {
     const value = Number(control.value);
-    return typeof value !== 'number' || value == null || value <= minValue ? { min: false } : null;
+    return typeof value !== 'number' || value == null || value <= minValue ? { min: { minValue } } : null;
   };
 }
