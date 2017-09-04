@@ -16,7 +16,7 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils';
+import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-document-grid',
