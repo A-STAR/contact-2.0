@@ -794,6 +794,16 @@
         "comment": "Комментарий"
       }
     },
+    "document": {
+      "grid": {
+        "docName": "Название документа",
+        "fileName": "Имя файла",
+        "docTypeCode": "Тип документа",
+        "docNumber": "Номер",
+        "operatorName": "Оператор",
+        "comment": "Комментарий"
+      }
+    },
     "email": {
       "card": {
         "typeCode": "Тип",

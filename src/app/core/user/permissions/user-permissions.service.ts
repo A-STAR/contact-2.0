@@ -7,6 +7,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { IAppState } from '../../state/state.interface';
 import { IUserPermissions } from './user-permissions.interface';
 
+import { UserPermissions } from './user-permissions';
+
 @Injectable()
 export class UserPermissionsService {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
@@ -30,31 +32,53 @@ export class UserPermissionsService {
     this.store.dispatch(action);
   }
 
+  bag(): Observable<UserPermissions> {
+    return this.getPermissions()
+      .map(permissions => new UserPermissions(permissions))
+      .distinctUntilChanged();
+  }
+
+  check(callback: (permissions: UserPermissions) => boolean): Observable<boolean> {
+    return this.bag()
+      .map(bag => callback(bag))
+      .distinctUntilChanged();
+  }
+
+  has(name: string): Observable<boolean> {
+    return this.check(bag => bag.has(name));
+  }
+
+  hasOne(names: Array<string>): Observable<boolean> {
+    return this.check(bag => bag.hasOneOf(names));
+  }
+
+  hasAll(names: Array<string>): Observable<boolean> {
+    return this.check(bag => bag.hasAllOf(names));
+  }
+
+  contains(name: string, value: number): Observable<boolean> {
+    return this.check(bag => bag.contains(name, value));
+  }
+
+  containsOne(name: string, values: Array<number>): Observable<boolean> {
+    return this.check(bag => bag.containsOneOf(name, values));
+  }
+
+  containsAll(name: string, values: Array<number>): Observable<boolean> {
+    return this.check(bag => bag.containsAllOf(name, values));
+  }
+
+  containsCustom(name: string): Observable<boolean> {
+    return this.check(bag => bag.containsCustom(name));
+  }
+
+  /**
+   * @deprecated
+   */
   get(permissionNames: Array<string>): Observable<IUserPermissions> {
     return this.getPermissions()
       .map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {}))
       .distinctUntilChanged();
-  }
-
-  has(permissionName: string): Observable<boolean> {
-    return this.getPermissions().map(permissions => this.userHasPermission(permissions, permissionName)).distinctUntilChanged();
-  }
-
-  hasOne(permissionNames: Array<string>): Observable<boolean> {
-    return this.getPermissions().map(permissions =>
-      permissionNames.reduce((acc, permissionName) => acc || this.userHasPermission(permissions, permissionName), false)
-    ).distinctUntilChanged();
-  }
-
-  hasAll(permissionNames: Array<string>): Observable<boolean> {
-    return this.getPermissions().map(permissions =>
-      permissionNames.reduce((acc, permissionName) => acc && this.userHasPermission(permissions, permissionName), true)
-    ).distinctUntilChanged();
-  }
-
-  private userHasPermission(permissions: IUserPermissions, permissionName: string): boolean {
-    const permission = permissions[permissionName];
-    return permission && permission.valueB;
   }
 
   private getPermissions(): Observable<IUserPermissions> {

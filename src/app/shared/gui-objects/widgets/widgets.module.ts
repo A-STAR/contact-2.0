@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AddressModule } from './address/address.module';
 import { ContactModule } from './contact/contact.module';
 import { DebtModule } from './debt/debt.module';
+import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { IdentityModule } from './identity/identity.module';
@@ -17,6 +18,7 @@ import { PromiseModule } from './promise/promise.module';
     AddressModule,
     ContactModule,
     DebtModule,
+    DocumentModule,
     EmailModule,
     EmploymentModule,
     IdentityModule,
@@ -28,6 +30,7 @@ import { PromiseModule } from './promise/promise.module';
     AddressModule,
     ContactModule,
     DebtModule,
+    DocumentModule,
     EmailModule,
     EmploymentModule,
     IdentityModule,

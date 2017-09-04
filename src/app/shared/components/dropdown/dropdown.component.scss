@@ -6,6 +6,11 @@ $arrow-margin: 20px;
 
 .dropdown-container {
   position: relative;
+  display: inline-block;
+}
+
+.dropdown-trigger {
+  display: inline-block;
 }
 
 .dropdown {

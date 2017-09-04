@@ -96,7 +96,7 @@ export class Toolbar2Component {
   onClick(item: IToolbarItem): void {
     if (typeof item.action === 'function') {
       item.action();
-    } else {
+    } else if (item.action) {
       this.store.dispatch(item.action);
     }
   }
