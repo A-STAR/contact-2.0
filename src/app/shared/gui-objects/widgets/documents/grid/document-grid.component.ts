@@ -49,31 +49,23 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [];
+  columns: Array<IGridColumn> = [
+    { prop: 'docName' },
+    { prop: 'fileName' },
+    { prop: 'docTypeCode' },
+    { prop: 'docNumber' },
+    { prop: 'operatorName' },
+    { prop: 'comment' }
+  ];
 
-  private _documents: Array<IDocument> = [];
+  documents: Array<IDocument> = [];
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
 
   private renderers: IRenderer = {
-    typeCode: [],
-    statusCode: [],
-    blockReasonCode: [],
-    blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'checkboxRenderer',
+    docTypeCode: [],
   };
-
-  private _columns: Array<IGridColumn> = [
-    { prop: 'typeCode' },
-    { prop: 'fullDocument' },
-    { prop: 'statusCode' },
-    { prop: 'isResidence' },
-    { prop: 'isBlocked', maxWidth: 90 },
-    { prop: 'blockReasonCode' },
-    { prop: 'blockDateTime' },
-    { prop: 'comment' },
-  ];
 
   private _dialog = null;
 
@@ -90,26 +82,15 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
-        UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
-        UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
-      ]),
-      this.canViewBlock$,
-    )
-    .subscribe(([ options, canViewBlock ]) => {
+    this.gridSubscription = this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_DOCUMENT_TYPE,
+      ])
+    .subscribe(options => {
       this.renderers = {
         ...this.renderers,
-        typeCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE] ],
-        statusCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS] ],
-        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
+        docTypeCode: [ ...options[UserDictionariesService.DICTIONARY_DOCUMENT_TYPE] ],
       }
-      const columns = this._columns.filter(column => {
-        return canViewBlock ? true : [ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
-      });
-
-      this.columns = this.gridService.setRenderers(columns, this.renderers);
+      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();
     });
   }
@@ -136,20 +117,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.columns.length > 0;
   }
 
-  get blockDialogDictionaryId(): number {
-    return UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING;
-  }
-
-  get documents(): Array<IDocument> {
-    return this._documents;
-  }
-
   get dialog(): number {
     return this._dialog;
-  }
-
-  getRowClass(): any {
-    return (document: IDocument) => ({ blocked: !!document.isBlocked });
   }
 
   onDoubleClick(document: IDocument): void {
@@ -158,14 +127,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   onSelect(document: IDocument): void {
     this.selectedDocumentId$.next(document.id);
-  }
-
-  onBlockDialogSubmit(blockReasonCode: number): void {
-    this.documentService.block(18, this.id, this.selectedDocumentId$.value).subscribe(() => this.onSubmitSuccess());
-  }
-
-  onUnblockDialogSubmit(blockReasonCode: number): void {
-    this.documentService.unblock(18, this.id, this.selectedDocumentId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
@@ -177,15 +138,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedDocument$(): Observable<IDocument> {
-    return this.selectedDocumentId$.map(id => this._documents.find(document => document.id === id));
+    return this.selectedDocumentId$.map(id => this.documents.find(document => document.id === id));
   }
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('ADDRESS_VIEW').distinctUntilChanged();
-  }
-
-  get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_BLOCK_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
@@ -198,14 +155,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   get canDelete$(): Observable<boolean> {
     return this.userPermissionsService.has('ADDRESS_DELETE').distinctUntilChanged();
-  }
-
-  get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_BLOCK').distinctUntilChanged();
-  }
-
-  get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_UNBLOCK').distinctUntilChanged();
   }
 
   private onAdd(): void {
@@ -226,13 +175,13 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): pass entity type
     this.documentService.fetchAll(18, this.id)
       .subscribe(documents => {
-        this._documents = documents;
+        this.documents = documents;
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this._documents = [];
+    this.documents = [];
     this.cdRef.markForCheck();
   }
 

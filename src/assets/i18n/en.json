@@ -794,6 +794,16 @@
         "comment": "Comment"
       }
     },
+    "document": {
+      "grid": {
+        "docName": "Document Name",
+        "fileName": "File Name",
+        "docTypeCode": "Document Type",
+        "docNumber": "Number",
+        "operatorName": "Operator",
+        "comment": "Comment"
+      }
+    },
     "email": {
       "card": {
         "typeCode": "Type",

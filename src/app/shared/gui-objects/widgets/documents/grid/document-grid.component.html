@@ -2,11 +2,10 @@
 
 <app-grid
   *ngIf="canDisplayGrid"
-  columnTranslationKey="debtor.information.document"
+  columnTranslationKey="widgets.document"
   selectionType="single"
-  [styles]="{height: '230px'}"
+  [styles]="{ height: '600px' }"
   [columns]="columns"
-  [rowClass]="getRowClass()"
   [rows]="documents"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
