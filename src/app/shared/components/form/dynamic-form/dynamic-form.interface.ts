@@ -21,6 +21,7 @@ export interface IDynamicFormGroup {
 export interface IDynamicFormControl {
   children?: IDynamicFormControl[];
   controlName?: string;
+  dateOnly?: boolean;
   dependsOn?: string;
   disabled?: boolean;
   label: string;

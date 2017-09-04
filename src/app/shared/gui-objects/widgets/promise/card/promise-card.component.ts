@@ -11,10 +11,8 @@ import { IDebt } from '../../debt/debt/debt.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PromiseService } from '../promise.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -38,27 +36,54 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private minAmountPercentFormula: number;
   private minAmountPercentPermission: boolean;
   private canAddInsufficientAmountSub: Subscription;
+  private receiveDateTimeSub: Subscription;
 
-  controls: IDynamicFormControl[] = null;
+  controls: IDynamicFormControl[] = [
+    {
+      label: 'widgets.promise.grid.promiseDate',
+      controlName: 'promiseDate',
+      type: 'datepicker',
+      dateOnly: true,
+      required: true
+    },
+    {
+      label: 'widgets.promise.grid.promiseAmount',
+      controlName: 'promiseAmount',
+      type: 'number',
+      required: true,
+      markAsDirty: true,
+      validators: [min(0)]
+    },
+    {
+      label: 'widgets.promise.grid.receiveDateTime',
+      controlName: 'receiveDateTime',
+      type: 'datepicker',
+      markAsDirty: true,
+      required: true,
+    },
+    { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
+  ];
+
   dialog: string;
   promise: IPromise;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private promiseService: PromiseService,
     private route: ActivatedRoute,
     private router: Router,
     private userConstantsService: UserConstantsService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
+    this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
+      .subscribe(canAdd => this.canAddInsufficientAmount = canAdd);
+  }
+
+  ngAfterViewInit(): void {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
-      this.lookupService.lookupAsOptions('currencies'),
       this.userPermissionsService.has('PROMISE_ADD'),
       this.promiseService.getPromiseLimit(this.debtId),
       this.promiseService.fetchDebt(this.debtId),
@@ -70,63 +95,57 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     )
     .take(1)
     .subscribe(([
-      options, currencyOptions, canAdd, promiseLimit,
-      debt, promise, minAmountPercentFormula, minAmountPercentPermission
+      canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
     ]) => {
       this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
       this.minAmountPercentPermission = minAmountPercentPermission;
       this.promiseLimit = promiseLimit;
       this.debt = <IDebt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
-      const today = new Date();
       // Calculate the minimum promise amount
       const minAmount = Math.round((minAmountPercent / 100) * debt.debtSum * 100) / 100;
-      this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
-      const controls: IDynamicFormControl[] = [
-        { label: 'widgets.promise.grid.promiseDate', controlName: 'promiseDate', type: 'datepicker', required: true },
-        {
-          label: 'widgets.promise.grid.promiseAmount',
-          controlName: 'promiseAmount',
-          type: 'number',
-          required: true,
-          markAsDirty: !promise,
-          validators: [min(0)]
-        },
-        {
-          label: 'widgets.promise.grid.receiveDateTime',
-          controlName: 'receiveDateTime',
-          type: 'datepicker',
-          required: true,
-          markAsDirty: !promise,
-        },
-        { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
-      ];
+      const today = new Date();
+
       if (!promise) {
-        controls[0].minDate = moment(today).add(0, 'day').toDate();
-        controls[0].maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
+        const promiseDate = this.getControl('promiseDate');
+        promiseDate.maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
+        const receiveDate = this.getControl('receiveDateTime');
+        receiveDate.maxDate = today;
       }
-      this.controls = promise
-        ? controls.map(control => ({ ...control, disabled: true }))
-        : controls.map(control => canAdd ? control : { ...control, disabled: true });
+
+      const disabledControls = promise
+        ? this.controls
+        : canAdd
+        ? this.controls.filter(control => control.disabled)
+        : this.controls;
+
+        this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
+
+      this.form.disableControls(disabledControls);
       this.cdRef.markForCheck();
     });
 
-    this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
-      .subscribe(canAdd => this.canAddInsufficientAmount = canAdd);
-  }
+    this.receiveDateTimeSub = this.form.onCtrlValueChange('receiveDateTime')
+      .subscribe(value => {
+        if (!value) {
+          return;
+        }
+        const control = this.getControl('promiseDate');
+        const { maxDays } = this.promiseLimit;
+        control.minDate = maxDays == null ? null : moment(value).toDate();
 
-  ngAfterViewInit(): void {
-    if (!this.form) {
-      setTimeout(() => {
-        // console.log('form is not ready', this.form);
-      }, 1000);
-    } else {
-      console.log('form should be ready');
-    }
+        // minDate should not be set if the operator want to record a past promise
+        // control.minDate = moment(value).isSameOrAfter(new Date(), 'day')
+        //     ? moment(value).toDate()
+        //     : null;
+        control.maxDate = maxDays == null ? null : moment(value).add(maxDays, 'day').toDate();
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
     this.canAddInsufficientAmountSub.unsubscribe();
+    this.receiveDateTimeSub.unsubscribe();
   }
 
   get canSubmit(): boolean {
@@ -155,7 +174,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   onConfirm(): void {
     const data = this.form.requestValue;
-    data.promiseDate = moment(this.form.value.promiseDate).utcOffset(0, true).format('YYYY-MM-DD');
     data.isUnconfirmed = 1;
     this.save(data);
   }
@@ -175,6 +193,10 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     } else {
       this.save();
     }
+  }
+
+  private getControl(controlName: string): IDynamicFormControl {
+    return this.controls.find(control => control.controlName === controlName);
   }
 
   private save(promise: IPromise = null): void {

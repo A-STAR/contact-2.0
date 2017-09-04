@@ -107,6 +107,10 @@ export class ValueConverterService {
     return this.toLocal(date, this.formats.date);
   }
 
+  toDateOnly(date: Date): string {
+    return moment(date).utcOffset(0, true).format('YYYY-MM-DD');
+  }
+
   fromISO(value: string): Date {
     return value ? new Date(value) : null;
   }
