@@ -8,6 +8,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class DocumentService {
+  static MESSAGE_DOCUMENT_SAVED = 'MESSAGE_DOCUMENT_SAVED';
+
   private static BASE_URL = '/entityTypes/{entityType}/entities/{entityId}/fileattachments';
 
   constructor(

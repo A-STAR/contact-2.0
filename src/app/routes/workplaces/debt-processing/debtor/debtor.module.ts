@@ -7,6 +7,7 @@ import { DebtorAddressModule } from './address/address.module';
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDebtModule } from './debt/debt.module';
+import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
 import { DebtorIdentityModule } from './identity/identity.module';
@@ -17,7 +18,6 @@ import { DebtorPromiseModule } from './promise/promise.module';
 import { DebtorService } from './debtor.service';
 
 import { DebtorComponent } from './debtor.component';
-import { DebtorDocumentsComponent } from './documents/debtor-documents.component';
 import { DebtorInformationComponent } from './general/information.component';
 
 @NgModule({
@@ -27,6 +27,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorContactsModule,
     DebtorDebtComponentModule,
     DebtorDebtModule,
+    DebtorDocumentModule,
     DebtorEmailModule,
     DebtorEmploymentModule,
     DebtorIdentityModule,
@@ -37,7 +38,6 @@ import { DebtorInformationComponent } from './general/information.component';
   ],
   declarations: [
     DebtorComponent,
-    DebtorDocumentsComponent,
     DebtorInformationComponent,
   ],
   providers: [
