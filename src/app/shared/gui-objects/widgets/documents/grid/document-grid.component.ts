@@ -61,7 +61,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     statusCode: [],
     blockReasonCode: [],
     blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'yesNoRenderer',
+    isBlocked: 'checkboxRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
@@ -69,7 +69,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     { prop: 'fullDocument' },
     { prop: 'statusCode' },
     { prop: 'isResidence' },
-    { prop: 'isBlocked', localized: true, maxWidth: 90 },
+    { prop: 'isBlocked', maxWidth: 90 },
     { prop: 'blockReasonCode' },
     { prop: 'blockDateTime' },
     { prop: 'comment' },

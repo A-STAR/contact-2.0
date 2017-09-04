@@ -10,6 +10,7 @@ export interface IDocument {
   middleName: string;
   fileName: string;
   entityTypeCode: number;
+  isBlocked: number | boolean;
 }
 
 export interface IDocumentsResponse {
