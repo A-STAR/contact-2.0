@@ -25,6 +25,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @Input() placeholder = 'default.date.datePicker.placeholder';
   @Input() maxDate: Date = null;
   @Input() minDate: Date = null;
+  @Input() required = false;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -79,8 +80,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   ngOnDestroy(): void {
-    document.body.removeChild(this.dropdown.nativeElement);
     this.subscription.unsubscribe();
+    document.body.removeChild(this.dropdown.nativeElement);
   }
 
   writeValue(value: Date | string): void {
