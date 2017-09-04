@@ -2,15 +2,46 @@
   <div class="toolbar-item" *ngFor="let item of items">
 
     <!-- Button -->
-    <button
-      *ngIf="isButton(item)"
-      class="btn btn-default"
-      [disabled]="isDisabled(item) | async"
-      [title]="getLabel(item) | translate"
-      (click)="onClick(item)"
-    >
-      <i [ngClass]="getIcon(item)"></i>
-    </button>
+    <ng-container *ngIf="isButton(item)">
+
+      <!-- Dropdown Group -->
+      <div *ngIf="item.children; else button">
+        <app-dropdown position="left" [enabled]="!(isDisabled(item) | async)">
+          <button
+            trigger
+            class="btn btn-default"
+            [disabled]="isDisabled(item) | async"
+            [title]="getLabel(item) | translate"
+          >
+            <i [ngClass]="getIcon(item)"></i>
+          </button>
+          <ul class="list-group mb0">
+            <li *ngFor="let child of item.children" class="list-group-item p0 b0">
+              <button
+                class="btn btn-link"
+                [disabled]="isDisabled(child) | async"
+                [title]="getLabel(item) | translate"
+                (click)="onClick(child)"
+              >
+                {{ child.label | translate }}
+              </button>
+            </li>
+          </ul>
+        </app-dropdown>
+      </div>
+
+      <!-- Simple Button -->
+      <ng-template #button>
+        <button
+          class="btn btn-default"
+          [disabled]="isDisabled(item) | async"
+          [title]="getLabel(item) | translate"
+          (click)="onClick(item)"
+        >
+          <i [ngClass]="getIcon(item)"></i>
+        </button>
+      </ng-template>
+    </ng-container>
 
     <!-- Checkbox -->
     <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">

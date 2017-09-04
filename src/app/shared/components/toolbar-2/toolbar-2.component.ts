@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
@@ -96,7 +96,7 @@ export class Toolbar2Component {
   onClick(item: IToolbarItem): void {
     if (typeof item.action === 'function') {
       item.action();
-    } else {
+    } else if (item.action) {
       this.store.dispatch(item.action);
     }
   }

@@ -16,6 +16,8 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils';
+
 @Component({
   selector: 'app-document-grid',
   templateUrl: './document-grid.component.html',
@@ -27,19 +29,28 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
+      enabled: combineLatestOr([ this.canAddToDebt$, this.canAddToDebtor$ ]),
+      children: [
+        {
+          label: 'Добавить к долгу',
+          enabled: this.canAddToDebt$,
+          action: () => this.onAdd()
+        },
+        {
+          label: 'Добавить к должнику',
+          enabled: this.canAddToDebtor$,
+          action: () => this.onAdd()
+        },
+      ]
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDocument$)
-        .map(([ canEdit, document ]) => canEdit && !!document),
+      enabled: combineLatestAnd([ this.canEdit$, this.selectedDocument$.map(Boolean) ]),
       action: () => this.onEdit(this.selectedDocumentId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedDocument$)
-        .map(([ canDelete, document ]) => canDelete && !!document),
+      enabled: combineLatestAnd([ this.canDelete$, this.selectedDocument$.map(Boolean) ]),
       action: () => this.setDialog(3)
     },
     {
@@ -145,8 +156,12 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('ADDRESS_VIEW').distinctUntilChanged();
   }
 
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_ADD').distinctUntilChanged();
+  get canAddToDebt$(): Observable<boolean> {
+    return this.userPermissionsService.bag().map(bag => bag.contains('FILE_ATTACHMENT_ADD_LIST', 19));
+  }
+
+  get canAddToDebtor$(): Observable<boolean> {
+    return this.userPermissionsService.bag().map(bag => bag.contains('FILE_ATTACHMENT_ADD_LIST', 18));
   }
 
   get canEdit$(): Observable<boolean> {
