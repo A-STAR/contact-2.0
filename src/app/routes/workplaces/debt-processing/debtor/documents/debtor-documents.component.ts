@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
-// import { IAttachment } from '../../../../../shared/components/attachments/attachments.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { DocumentGridComponent } from '../../../../../shared/gui-objects/widgets/documents/grid/document-grid.component';
