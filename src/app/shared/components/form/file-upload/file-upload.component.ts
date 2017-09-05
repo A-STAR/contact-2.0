@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,7 +15,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent implements ControlValueAccessor {
+  private file: File;
+
+  isDisabled = false;
+
   writeValue(file: File): void {
+    this.file = file;
   }
 
   registerOnChange(fn: Function): void {
@@ -26,6 +31,13 @@ export class FileUploadComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    this.file = file;
+    this.propagateChange(file);
   }
 
   private propagateChange: Function = () => {};

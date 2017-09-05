@@ -52,10 +52,10 @@ export class DocumentCardComponent {
   }
 
   public onSubmit(): void {
-    const file = this.files[0];
+    const { file, ...document } = this.form.requestValue;
     const action = this.documentId
-      ? this.documentService.update(18, this.id, this.documentId, this.form.requestValue, file)
-      : this.documentService.create(18, this.id, this.form.requestValue, file);
+      ? this.documentService.update(18, this.id, this.documentId, document, file)
+      : this.documentService.create(18, this.id, document, file);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);
@@ -68,10 +68,6 @@ export class DocumentCardComponent {
   }
 
   public get canSubmit(): boolean {
-    return this.form && this.form.canSubmit && this.files.length > 0;
-  }
-
-  get files(): ArrayLike<File> {
-    return this.file.nativeElement.files;
+    return this.form && this.form.canSubmit;
   }
 }
