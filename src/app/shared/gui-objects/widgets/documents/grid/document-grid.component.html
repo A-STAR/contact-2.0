@@ -10,3 +10,10 @@
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
 </app-grid>
+
+<app-downloader
+  #downloader
+  [entityTranslationKey]="'entityTranslationKey'"
+  [name]="name$ | async"
+  [url]="url$ | async">
+</app-downloader>

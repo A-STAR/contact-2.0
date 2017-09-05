@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -16,6 +16,8 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { DownloaderComponent } from '../../../../components/downloader/downloader.component';
+
 import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
 
 @Component({
@@ -24,6 +26,8 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @ViewChild('downloader') downloader: DownloaderComponent;
+
   private selectedDocumentId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -49,6 +53,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       action: () => this.onEdit(this.selectedDocumentId$.value)
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+      enabled: this.selectedDocument$.map(Boolean),
+      action: () => this.onDownload()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([ this.canDelete$, this.selectedDocument$.map(Boolean) ]),
       action: () => this.setDialog(3)
@@ -70,6 +79,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   ];
 
   documents: Array<IDocument> = [];
+
+  // TODO(d.maltsev): get name from server
+  // See: https://stackoverflow.com/questions/33046930/how-to-get-the-name-of-a-file-downloaded-with-angular-http
+  name$ = new BehaviorSubject<string>('foo');
+  url$ = new BehaviorSubject<string>(null);
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -138,6 +152,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   onSelect(document: IDocument): void {
     this.selectedDocumentId$.next(document.id);
+    this.url$.next(`/api/fileattachments/${document.id}`);
+  }
+
+  onDownload(): void {
+    this.downloader.download();
   }
 
   onRemoveDialogSubmit(): void {

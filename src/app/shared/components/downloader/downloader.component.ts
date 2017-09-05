@@ -25,7 +25,8 @@ export class DownloaderComponent {
       this.dataService.createBlob(this.url, {}, body) :
       this.dataService.readBlob(this.url, {});
 
-    request.map(blob => {
+    request
+      .map(blob => {
         const href = URL.createObjectURL(blob);
         this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
         URL.revokeObjectURL(href);
