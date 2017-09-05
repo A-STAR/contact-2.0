@@ -246,8 +246,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): persist selection
-    // TODO(d.maltsev): pass entity type
     this.addressService.fetchAll(18, this.personId)
       .subscribe(addresses => {
         this._addresses = addresses;

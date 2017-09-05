@@ -12,6 +12,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { DocumentService } from '../document.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -60,7 +61,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([ this.canDelete$, this.selectedDocument$.map(Boolean) ]),
-      action: () => this.setDialog(3)
+      action: () => this.setDialog('delete')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -87,6 +88,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     docTypeCode: [],
@@ -102,22 +104,28 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = this.userDictionariesService.getDictionariesAsOptions([
+    this.gridSubscription = this.userDictionariesService
+      .getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_DOCUMENT_TYPE,
       ])
-    .subscribe(options => {
-      this.renderers = {
-        ...this.renderers,
-        docTypeCode: [ ...options[UserDictionariesService.DICTIONARY_DOCUMENT_TYPE] ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+      .subscribe(options => {
+        this.renderers = {
+          ...this.renderers,
+          docTypeCode: [ ...options[UserDictionariesService.DICTIONARY_DOCUMENT_TYPE] ],
+        }
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+        this.cdRef.markForCheck();
+      });
+
+    this.busSubscription = this.messageBusService
+      .select(DocumentService.MESSAGE_DOCUMENT_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -136,10 +144,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-  }
-
-  get canDisplayGrid(): boolean {
-    return this.columns.length > 0;
+    this.busSubscription.unsubscribe();
   }
 
   get dialog(): number {
@@ -165,6 +170,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   onDialogClose(): void {
     this.setDialog(null);
+  }
+
+  isDialog(dialog: string): boolean {
+    return this._dialog === dialog;
   }
 
   get selectedDocument$(): Observable<IDocument> {
@@ -219,7 +228,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private setDialog(dialog: number): void {
+  private setDialog(dialog: string): void {
     this._dialog = dialog;
     this.cdRef.markForCheck();
   }
