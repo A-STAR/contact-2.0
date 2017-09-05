@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -18,7 +18,8 @@ import { maxFileSize } from '../../../../../core/validators';
 
 @Component({
   selector: 'app-document-card',
-  templateUrl: './document-card.component.html'
+  templateUrl: './document-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
@@ -30,6 +31,7 @@ export class DocumentCardComponent {
   document: IDocument;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private documentService: DocumentService,
     private messageBusService: MessageBusService,
@@ -53,6 +55,7 @@ export class DocumentCardComponent {
         { label: 'widgets.document.grid.file', controlName: 'file', type: 'file', validators: [ fileSizeValidator ] },
       ];
       this.document = document;
+      this.cdRef.markForCheck();
     });
   }
 

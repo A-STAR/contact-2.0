@@ -26,7 +26,6 @@ export class DocumentService {
   fetch(entityType: number, entityId: number, documentId: number): Observable<IDocument> {
     return this.dataService
       .read(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId })
-      .map((documents: Array<IDocument>) => documents[0])
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.singular').dispatchCallback());
   }
 
@@ -52,8 +51,11 @@ export class DocumentService {
 
   private initFormData(document: Partial<IDocument>, file: File): FormData {
     const data = new FormData();
-    data.append('file', file);
-    data.append('properties', new Blob([ JSON.stringify({ ...document, fileName: file.name }) ], { type: 'application/json' }));
+    if (file) {
+      data.append('file', file);
+    }
+    const properties = new Blob([ JSON.stringify({ ...document, fileName: file ? file.name : undefined }) ], { type: 'application/json' });
+    data.append('properties', properties);
     return data;
   }
 }
