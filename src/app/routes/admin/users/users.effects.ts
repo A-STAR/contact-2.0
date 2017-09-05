@@ -41,6 +41,19 @@ export class UsersEffects {
     });
 
   @Effect()
+  toggleBlockedUsers$ = this.actions
+    .ofType(UsersService.USER_TOGGLE_BLOCKED)
+    .switchMap((action: Action) => {
+      return this.readUsers()
+        .mergeMap(data => [
+          {
+            type: UsersService.USERS_FETCH,
+          },
+        ])
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
+    });
+
+  @Effect()
   fetchUser$ = this.actions
     .ofType(UsersService.USER_FETCH)
     .switchMap((action: Action) => {

@@ -37,6 +37,7 @@ import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-for
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
+import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
@@ -85,6 +86,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GuiObjectsModule,
+    HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
     PasswordModule,
@@ -152,6 +154,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GuiObjectsModule,
+    HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
     MultiSelectModule,

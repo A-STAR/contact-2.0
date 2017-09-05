@@ -13,7 +13,6 @@ import { DebtorIdentityComponent } from './identity.component';
   ],
   declarations: [
     DebtorIdentityComponent
-  ],
-  providers: [],
+  ]
 })
 export class DebtorIdentityModule { }

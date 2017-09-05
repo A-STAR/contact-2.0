@@ -3,12 +3,11 @@
   persistenceKey="debtsprocessingall"
   rowIdKey="debtId"
   [ngClass]="'debt-processing-grid'"
-  [rows]="rows$ | async"
-  [rowCount]="rowCount$ | async"
+  [rows]="rows"
+  [rowCount]="rowCount"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onFilter)="onRequest()"
-  (onSelect)="onSelect($event)"
   (onDblClick)="onDblClick($event)">
 </app-grid2>

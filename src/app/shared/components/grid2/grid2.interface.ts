@@ -19,6 +19,7 @@ export interface IAGridColumn {
   minWidth?: number;
   name?: string;
   renderer?: Function;
+  valueGetter?: (params: ValueGetterParams) => any | string;
   sort?: string;
   type?: string;
   width?: number;
@@ -75,6 +76,11 @@ export interface IAGridRequest {
   filtering?: FilterObject;
 }
 
+export interface IAGridResponse<T> {
+  data?: Array<T>;
+  total?: number;
+}
+
 export interface IAGridEventPayload {
   type: string;
   payload?:
@@ -96,4 +102,12 @@ export interface IViewportDatasourceParams {
     }) => void;
     /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
     getRow: (rowIndex: number) => RowNode;
+}
+
+export interface ValueGetterParams {
+  colDef: ColDef;
+  context: any;
+  data: any;
+  getValue: (field: string) => any;
+  node: RowNode;
 }

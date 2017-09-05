@@ -266,6 +266,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
+              // console.log(column.filterValues);
+              // console.log('model', model);
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
             } else {

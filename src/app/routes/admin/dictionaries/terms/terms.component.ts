@@ -7,14 +7,14 @@ import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
-import { checkboxRenderer } from '../../../../core/utils';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-terms',
@@ -57,20 +57,10 @@ export class TermsComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 400 },
-    { prop: 'typeCode', localized: true },
-    { prop: 'parentCodeName' },
-    { prop: 'isClosed' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
+    { prop: 'parentCodeName', renderer: (term: ITerm) => term.parentCodeName || term.parentCode || '' },
+    { prop: 'isClosed', renderer: 'checkboxRenderer' },
   ];
-
-  renderers: IRenderer = {
-    // TODO(a.tymchuk): use dictionaries API
-    typeCode: [
-      { label: 'dictionaries.types.system', value: 1 },
-      { label: 'dictionaries.types.client', value: 2 }
-    ],
-    parentCodeName: (term: ITerm) => term.parentCodeName || term.parentCode || '',
-    isClosed: checkboxRenderer('isClosed'),
-  };
 
   rows = [];
 
@@ -91,13 +81,18 @@ export class TermsComponent implements OnDestroy {
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    this.gridService.setDictionaryRenderers(this.columns)
+      .map(columns => {
+        this.columns = this.gridService.setRenderers(columns);
+      })
+      .take(1)
+      .subscribe();
+
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
       this.action = state.dialogAction;
       this.rows = state.terms;
       this.masterEntity = state.selectedDictionary;
     });
-
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
 

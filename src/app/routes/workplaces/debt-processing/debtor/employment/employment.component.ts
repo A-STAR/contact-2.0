@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
-import { EmploymentCardComponent } from '../../../../../shared/gui-objects/widgets/employment/card/card.component';
+import { EmploymentCardComponent } from '../../../../../shared/gui-objects/widgets/employment/card/employment-card.component';
 
 @Component({
   selector: 'app-debtor-employment',

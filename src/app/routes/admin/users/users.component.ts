@@ -30,8 +30,7 @@ export class UsersComponent implements OnDestroy {
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
     { prop: 'roleId', minWidth: 100 },
-    // TODO: display column depending on filter
-    { prop: 'isBlocked', minWidth: 100, localized: true },
+    { prop: 'isBlocked', minWidth: 100 },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
@@ -41,7 +40,7 @@ export class UsersComponent implements OnDestroy {
 
   renderers: IRenderer = {
     roleId: [],
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
+    isBlocked: 'checkboxRenderer',
     languageId: [],
   };
 
@@ -76,8 +75,7 @@ export class UsersComponent implements OnDestroy {
 
   editedEntity: IUser;
 
-  // TODO(d.maltsev): role options type
-  roleOptions$: Observable<any>;
+  roleOptions$: Observable<IOption[]>;
   languageOptions$: Observable<Array<IOption>>;
 
   users$: Observable<Array<IUser>>;
@@ -109,7 +107,7 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    this.usersSubscription = this.usersService.state
+    this.usersSubscription = this.usersService.state.distinctUntilChanged()
       .subscribe(
         state => {
           this.displayBlockedUsers = state.displayBlocked;

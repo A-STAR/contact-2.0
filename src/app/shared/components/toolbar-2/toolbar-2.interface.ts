@@ -16,6 +16,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_UNBLOCK,
   BUTTON_CHANGE_STATUS,
   BUTTON_CLOSE,
+  BUTTON_UNDO,
   CHECKBOX,
 }
 
@@ -27,14 +28,15 @@ export interface IToolbarDefaultElement {
 }
 
 export interface IToolbarElement {
-  action: IToolbarAction | Action;
+  action?: IToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
 }
 
 export interface IToolbarButton extends IToolbarElement {
-  icon?: string;
   type: ToolbarItemTypeEnum;
+  icon?: string;
+  children?: Array<IToolbarElement>;
 }
 
 export interface IToolbarCheckbox extends IToolbarElement {

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { TranslateService } from '@ngx-translate/core';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
-import { IGridColumn, IRenderer } from './grid.interface';
+import { IGridColumn, IRenderer, TRendererType } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
@@ -24,11 +23,11 @@ export class GridService {
   constructor(
     private converterService: ValueConverterService,
     private metadataService: MetadataService,
-    private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {
     const dateTimeRenderer = (key: string) => ({ [key]: value }) => value ? this.converterService.ISOToLocalDateTime(value) : '';
-    this.predefinedRenderers = { ...gridRenderers, dateTimeRenderer };
+    const dateRenderer = (key: string) => ({ [key]: value }) => value ? this.converterService.ISOToLocalDate(value) : '';
+    this.predefinedRenderers = { ...gridRenderers, dateTimeRenderer, dateRenderer };
   }
 
   /**
@@ -88,10 +87,11 @@ export class GridService {
               // Dictionary
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
+                const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
                 column.renderer = (row: ITypeCodeItem) => {
-                  const cellValue = row[column.name];
-                  const typeDescription = dictionary.find(item => item.code === cellValue);
-                  return typeDescription ? typeDescription.name : cellValue;
+                  const dictCode = row[column.name];
+                  const dictValue = dictionaryHash[dictCode];
+                  return  dictValue !== undefined ? dictValue : dictCode;
                 };
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
@@ -124,16 +124,33 @@ export class GridService {
       .map(mapColumns);
   }
 
-  setRenderers(columns: IGridColumn[], renderers: object): IGridColumn[] {
-    return columns.map(column => {
-      const renderer = renderers[column.prop];
-      if (Object.prototype.toString.call(renderer) === '[object String]') {
-        // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
-        const renderFn: Function = this.predefinedRenderers[renderer];
-        return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
-      }
-      return renderer ? this.setRenderer(column, renderer) : column;
-    });
+  setRenderers(columns: IGridColumn[], renderers?: IRenderer): IGridColumn[] {
+    return renderers
+      // Syntax 1: provide renderers in an object
+      ? columns.map(column => {
+          const renderer = renderers[column.prop];
+          if (Object.prototype.toString.call(renderer) === '[object String]') {
+            // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
+            const renderFn: Function = this.predefinedRenderers[renderer as string];
+            return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
+          }
+          return renderer ? this.setRenderer(column, renderer as Function) : column;
+        })
+      // Syntax 2: provide renderers in a column's `renderer` property
+      : columns.map(column => {
+          const { renderer } = column;
+          const type = Object.prototype.toString.call(renderer);
+          if ( type === '[object String]') {
+            // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
+            const renderFn: Function = this.predefinedRenderers[renderer as string];
+            return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
+          }
+          if (type === 'function') {
+            return column;
+          }
+          return renderer ? this.setRenderer(column, renderer as Function) : column;
+        });
+
   }
 
   // NOTE: ag-grid only
@@ -159,33 +176,29 @@ export class GridService {
       });
   }
 
-  private setRenderer(column: IGridColumn, rendererFn: Function | IRenderer): IGridColumn {
+  private setRenderer(column: IGridColumn, rendererFn: TRendererType): IGridColumn {
     const isArray = Array.isArray(rendererFn);
     const entities: ILabeledValue[] = isArray ? [].concat(rendererFn) : [];
 
+    // NOTE: @swimlane's way to define a getter
     column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
 
       if (isArray) {
         const labeledValue: ILabeledValue = entities.find(v => v.value === entity[column.prop]);
-        return labeledValue
-          ? (column.localized ? this.translateService.instant(labeledValue.label) : labeledValue.label)
-          : entity[column.prop];
+        return labeledValue ? labeledValue.label : entity[column.prop];
       } else {
 
-        const displayValue = String((rendererFn as Function)(entity, value));
-        return column.localized
-          ? this.translateService.instant(displayValue)
-          : displayValue;
+        return String((rendererFn as Function)(entity, value));
       }
     };
     // NOTE: for compatibility between grid & grid2
-    // TODO(a.tymchuk): see if @swimlane has a better option
     column.renderer = column.$$valueGetter;
     return column;
   }
 
-  private setValueGetter(column: IAGridColumn, getterFn: Function | IRenderer): IAGridColumn {
+  // NOTE: ag-grid only
+  private setValueGetter(column: IAGridColumn, getterFn: TRendererType): IAGridColumn {
     const isArray = Array.isArray(getterFn);
     const entities: ILabeledValue[] = isArray ? [].concat(getterFn) : [];
 

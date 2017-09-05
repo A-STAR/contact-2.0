@@ -111,7 +111,8 @@ export class UserEditComponent {
       return;
     }
 
-    const { image, ...user } = this.toSubmittedValues(this.form.value);
+    // const { image, ...user } = this.getRequestValues(this.form.value);
+    const { image, ...user } = this.form.requestValue;
 
     if (this.userId) {
       this.usersService.update(user, image, this.userId);
@@ -192,29 +193,6 @@ export class UserEditComponent {
     } : {
       roleId: 1,
       languageId: 1
-    };
-  }
-
-  private toSubmittedValues(value: IUser): any {
-    const submittedValue = {
-      ...value,
-      isBlocked: value.isBlocked ? 1 : 0,
-      password: value.password || undefined,
-      ldapLogin: value.ldapLogin || null,
-      // TODO(a.tymchuk): fix this in select control?
-      roleId: Array.isArray(value.roleId) ? value.roleId[0].value : value.roleId,
-      startWorkDate: this.valueConverterService.toISO(value.startWorkDate as Date),
-      endWorkDate: this.valueConverterService.toISO(value.endWorkDate as Date),
-      // TODO(a.tymchuk): fix this in select control?
-      languageId: Array.isArray(value.languageId) ? value.languageId[0].value : value.languageId
-    };
-
-    const { roleId, ldapLogin, ...user } = submittedValue;
-
-    return {
-      ...(this.permissions.canEditUser ? user : {}),
-      ...(this.permissions.canEditRole ? { roleId } : {}),
-      ...(this.permissions.canEditLdap ? { ldapLogin } : {}),
     };
   }
 }

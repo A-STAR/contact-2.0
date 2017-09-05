@@ -1,11 +1,12 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
-  columnTranslationKey="widgets.employment"
+  *ngIf="canDisplayGrid"
+  columnTranslationKey="widgets.document"
   selectionType="single"
   [styles]="{ height: '600px' }"
   [columns]="columns"
-  [rows]="employments"
+  [rows]="documents"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

@@ -11,6 +11,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/comp
 import { DebtService } from '../debt.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -55,8 +56,8 @@ export class DebtGridComponent {
     { prop: 'debtSum' },
     { prop: 'totalSum' },
     { prop: 'dpd' },
-    { prop: 'portfolio' },
-    { prop: 'bank' },
+    { prop: 'portfolioId' },
+    { prop: 'bankId' },
     { prop: 'debtReasonCode' },
   ];
 
@@ -81,6 +82,7 @@ export class DebtGridComponent {
     private debtService: DebtService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -93,15 +95,21 @@ export class DebtGridComponent {
         UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
       ]),
       this.lookupService.currencyOptions,
-    ).subscribe(([ dictionariesOptions, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
+      this.lookupService.portfolioOptions,
+      this.lookupService.contractorOptions,
+    )
+    .take(1)
+    .subscribe(([ dictionariesOptions, currencyOptions, portfolioOptions, contractorOptions ]) => {
+      const renderers: IRenderer = {
+        creditStartDate: 'dateRenderer',
         creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
         statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
         debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
         currencyId: [ ...currencyOptions ],
+        portfolioId: [ ...portfolioOptions ],
+        bankId: [ ...contractorOptions ],
       }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      this.columns = this.gridService.setRenderers(this.columns, renderers);
       this.cdRef.markForCheck();
     });
 
@@ -114,6 +122,7 @@ export class DebtGridComponent {
 
   onSelect(debt: IDebt): void {
     this.selectedDebtId$.next(debt.id);
+    this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt);
   }
 
   onDialogClose(): void {
@@ -169,6 +178,10 @@ export class DebtGridComponent {
   }
 
   private fetch(): void {
-    this.debtService.fetchAll(this.personId).subscribe(debts => this.debts = debts);
+    this.debtService.fetchAll(this.personId).subscribe(debts => {
+      this.onSelect({ id: null } as IDebt);
+      this.debts = debts;
+      this.cdRef.markForCheck();
+    });
   }
 }

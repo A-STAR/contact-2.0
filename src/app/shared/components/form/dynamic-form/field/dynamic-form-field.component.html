@@ -87,7 +87,12 @@
         {{ control.label | translate }}
       </span>
     </label>
-    <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
+    <app-input-datepicker
+      [formControlName]="control.controlName"
+      [minDate]="control.minDate"
+      [maxDate]="control.maxDate"
+      [required]="control.required"
+    ></app-input-datepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">

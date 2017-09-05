@@ -66,7 +66,11 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_CLOSE]: {
       label: 'toolbar.action.close',
       icon: 'fa fa-ban',
-    }
+    },
+    [ToolbarItemTypeEnum.BUTTON_UNDO]: {
+      label: 'toolbar.action.undo',
+      icon: 'fa fa-undo',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -84,6 +88,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_UNBLOCK,
     ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
     ToolbarItemTypeEnum.BUTTON_CLOSE,
+    ToolbarItemTypeEnum.BUTTON_UNDO,
   ];
 
   constructor(
@@ -101,7 +106,7 @@ export class Toolbar2Component {
   onClick(item: IToolbarItem): void {
     if (typeof item.action === 'function') {
       item.action();
-    } else {
+    } else if (item.action) {
       this.store.dispatch(item.action);
     }
   }

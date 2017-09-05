@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -12,17 +12,19 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { EmploymentService } from '../employment.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-employment-grid',
-  templateUrl: './grid.component.html',
+  templateUrl: './employment-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmploymentGridComponent {
+export class EmploymentGridComponent implements OnInit, OnDestroy {
+
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
-  private selectedEmployment: IEmployment;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -32,7 +34,7 @@ export class EmploymentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedEmployment.id),
+      action: () => this.onEdit(this.selectedEmployment$.value.id),
       enabled: Observable.combineLatest(
         this.canEdit$,
         this.selectedEmployment$
@@ -40,7 +42,7 @@ export class EmploymentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.onDelete(this.selectedEmployment.id),
+      action: () => this.setDialog('removeEmployment'),
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.selectedEmployment$
@@ -48,7 +50,8 @@ export class EmploymentGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch()
+      action: () => this.fetch(),
+      enabled: this.canView$
     },
   ];
 
@@ -65,43 +68,75 @@ export class EmploymentGridComponent {
 
   employments: Array<IEmployment> = [];
 
-  private personId = (this.route.params as any).value.id || null;
+  private dialog: string;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.contactId || this.routeParams.id || null;
 
+  private busSubscription: Subscription;
+  private canViewSubscription: Subscription;
   private gridSubscription: Subscription;
 
   private renderers: IRenderer = {
     workTypeCode: [],
     currencyId: [],
+    income: 'numberRenderer',
     hireDate: 'dateTimeRenderer',
     dismissDate: 'dateTimeRenderer',
   };
+
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
+      this.userDictionariesService.getDictionaryAsOptions(
         UserDictionariesService.DICTIONARY_WORK_TYPE
-      ]),
+      ),
       this.lookupService.currencyOptions,
-    ).subscribe(([ dictionariesOptions, currencyOptions ]) => {
+    )
+    .subscribe(([ dictOptions, currencyOptions ]) => {
       this.renderers = {
         ...this.renderers,
-        workTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_WORK_TYPE] ],
+        workTypeCode: [ ...dictOptions ],
         currencyId: [ ...currencyOptions ],
       }
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
       this.cdRef.markForCheck();
     });
+  }
 
-    this.fetch().take(1).subscribe(employments => this.employments = employments);
+  ngOnInit(): void {
+    this.canViewSubscription = this.canView$
+      .filter(canView => canView !== undefined)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.fetch();
+        } else {
+          this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
+          this.clear();
+        }
+      });
+
+    this.busSubscription = this.messageBusService
+      .select(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
+      .subscribe(() => this.fetch());
+  }
+
+  ngOnDestroy(): void {
+    this.selectedEmployment$.complete();
+    this.busSubscription.unsubscribe();
+    this.canViewSubscription.unsubscribe();
+    this.gridSubscription.unsubscribe();
   }
 
   onDoubleClick(employment: IEmployment): void {
@@ -110,7 +145,27 @@ export class EmploymentGridComponent {
 
   onSelect(employment: IEmployment): void {
     this.selectedEmployment$.next(employment)
-    this.selectedEmployment = employment;
+  }
+
+  onRemove(): void {
+    const { id: employmentId } = this.selectedEmployment$.value;
+    this.employmentService.delete(this.personId, employmentId)
+      .subscribe(() => {
+        this.setDialog(null);
+        this.fetch();
+      });
+  }
+
+  isDialog(dialog: string): boolean {
+    return this.dialog === dialog;
+  }
+
+  setDialog(dialog: string): void {
+    this.dialog = dialog;
+  }
+
+  onCancel(): void {
+    this.setDialog(null);
   }
 
   private onAdd(): void {
@@ -121,8 +176,8 @@ export class EmploymentGridComponent {
     this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
   }
 
-  private onDelete(employmentId: number): Observable<void> {
-    return this.employmentService.delete(this.personId, employmentId);
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('EMPLOYMENT_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
@@ -137,7 +192,19 @@ export class EmploymentGridComponent {
     return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
   }
 
-  private fetch(): Observable<IEmployment[]> {
-    return this.employmentService.fetchAll(this.personId);
+  private fetch(): void {
+    this.employmentService.fetchAll(this.personId)
+      .subscribe(employments => {
+        this.employments = [].concat(employments);
+        this.selectedEmployment$.next(null);
+        this.cdRef.markForCheck();
+      });
   }
+
+  private clear(): void {
+    this.employments = [];
+    this.selectedEmployment$.next(null);
+    this.cdRef.markForCheck();
+  }
+
 }

@@ -6,6 +6,7 @@
       [disabled]="isDisabled"
       [ngClass]="inputClass"
       [ngModel]="formattedDate"
+      [required]="required"
       (change)="onValueChange($event)"
     />
 
@@ -27,8 +28,12 @@
       <p-calendar
         [inline]="true"
         [locale]="locale"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
         [monthNavigator]="true"
         [ngModel]="value"
+        [required]="required"
+        [selectOtherMonths]="true"
         [yearNavigator]="true"
         [yearRange]="'1900:2050'"
         (ngModelChange)="onValueChange($event)">

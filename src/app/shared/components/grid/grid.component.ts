@@ -68,9 +68,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   private _selected: any = [];
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     public settings: SettingsService,
     private translate: TranslateService,
-    private cdRef: ChangeDetectorRef,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
     this.clickDebouncer = new Subject();
@@ -117,16 +117,20 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           acc[key] = key.split('.').reduce((a, prop) => a[prop], translations);
           return acc;
         }, {}))
-    ).subscribe(translations => {
-      this.messages = { ...translations[gridMessagesKey] };
-      if (this.columnTranslationKey) {
-        this.translateColumns(translations[this.columnTranslationKey].grid);
-      }
-      if (this.emptyMessage) {
-        this.messages.emptyMessage = translations[this.emptyMessage];
-      }
-      this.cdRef.markForCheck();
-    });
+    )
+    .subscribe(
+      translations => {
+        this.messages = { ...translations[gridMessagesKey] };
+        if (this.columnTranslationKey) {
+          this.translateColumns(translations[this.columnTranslationKey].grid);
+        }
+        if (this.emptyMessage) {
+          this.messages.emptyMessage = translations[this.emptyMessage];
+        }
+        this.cdRef.markForCheck();
+      },
+      error => console.log(error)
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -148,6 +152,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
     if (rows) {
       this._selected = [];
+      this.cdRef.markForCheck();
+      this.dataTable.recalculate();
     }
   }
 

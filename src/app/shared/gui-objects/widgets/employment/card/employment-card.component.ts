@@ -17,14 +17,15 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 
 @Component({
   selector: 'app-employment-card',
-  templateUrl: './card.component.html'
+  templateUrl: './employment-card.component.html'
 })
 export class EmploymentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private dialog: string;
-  private personId = (this.route.params as any).value.id || null;
-  private employmentId = (this.route.params as any).value.employmentId || null;
+  private routeParams = (<any>this.route.params).value;
+  private personId = this.routeParams.id || null;
+  private contactId = this.routeParams.contactId || null;
+  private employmentId = this.routeParams.employmentId || null;
 
   controls: IDynamicFormControl[] = null;
   employment: IEmployment;
@@ -38,19 +39,22 @@ export class EmploymentCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    // NOTE: on deper routes we should take the contactId
+    this.personId = this.contactId || this.personId;
+
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
       this.lookupService.currencyOptions,
       this.employmentId
-        ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
-        : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
+        ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
+        : this.userPermissionsService.has('EMPLOYMENT_ADD'),
       this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true, },
-        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', },
+        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },
+        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', required: true },
         { label: 'widgets.employment.grid.position', controlName: 'position',  type: 'text', },
         { label: 'widgets.employment.grid.hireDate', controlName: 'hireDate', type: 'datepicker', },
         { label: 'widgets.employment.grid.dismissDate', controlName: 'dismissDate', type: 'datepicker', },
@@ -65,14 +69,6 @@ export class EmploymentCardComponent {
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
-  }
-
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  setDialog(dialog: string): void {
-    this.dialog = dialog;
   }
 
   onBack(): void {

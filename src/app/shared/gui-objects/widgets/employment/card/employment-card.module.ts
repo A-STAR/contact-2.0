@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 
-import { EmploymentCardComponent } from './card.component';
+import { EmploymentCardComponent } from './employment-card.component';
 
 @NgModule({
   imports: [
