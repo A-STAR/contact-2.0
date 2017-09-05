@@ -43,4 +43,10 @@ export class DebtService {
       .update(this.extUrl, { debtId, personId }, debt)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
+
+  changeStatus(personId: number, debtId: number, debt: Partial<IDebt>): Observable<void> {
+    return this.dataService
+      .update(`${this.extUrl}/statuschange`, { debtId, personId }, debt)
+      .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
+  }
 }

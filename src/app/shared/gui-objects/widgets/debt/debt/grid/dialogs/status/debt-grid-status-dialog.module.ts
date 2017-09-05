@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../../../components/dialog/dialog.module';
-import { DynamicForm2Module } from '../../../../../../../components/form/dynamic-form-2/dynamic-form-2.module';
+import { DynamicFormModule } from '../../../../../../../components/form/dynamic-form/dynamic-form.module';
 
 import { DebtGridStatusDialogComponent } from './debt-grid-status-dialog.component';
 
@@ -11,7 +11,7 @@ import { DebtGridStatusDialogComponent } from './debt-grid-status-dialog.compone
   imports: [
     CommonModule,
     DialogModule,
-    DynamicForm2Module,
+    DynamicFormModule,
     TranslateModule,
   ],
   exports: [

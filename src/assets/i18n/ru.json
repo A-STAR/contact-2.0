@@ -920,6 +920,15 @@
         "dict3Code": "Балл 3",
         "dict4Code": "Балл 4"
       },
+      "dialogs": {
+        "statusChange": {
+          "title": "Смена статуса долга",
+          "statusCode": "Выберите статус",
+          "reasonCode": "Выберите причину",
+          "customStatusCode": "Пользовательский статус",
+          "comment": "Комментарий"
+        }
+      },
       "component": {
         "title": "Компоненты долга",
         "grid": {

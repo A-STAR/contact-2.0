@@ -1,14 +1,13 @@
 <app-dialog (onClose)="onClose()">
   <div dialog-header>
-    <h3>Change Status</h3>
+    <h3>{{ 'widgets.debt.dialogs.statusChange.title' | translate }}</h3>
   </div>
   <div>
-    <app-dynamic-form-2 #form [group]="group$" [formValue]="value$"></app-dynamic-form-2>
-    {{ form.value | json }}
+    <app-dynamic-form #form [controls]="controls" [data]="{}"></app-dynamic-form>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.block' | translate }}
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
     <button class="btn btn-default" (click)="onClose()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}

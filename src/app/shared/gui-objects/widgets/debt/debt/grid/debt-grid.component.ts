@@ -67,14 +67,6 @@ export class DebtGridComponent {
 
   private gridSubscription: Subscription;
 
-  private renderers: IRenderer = {
-    creditTypeCode: [],
-    statusCode: [],
-    currencyId: [],
-    debtReasonCode: [],
-    creditStartDate: 'dateTimeRenderer',
-  };
-
   dialog$ = new BehaviorSubject<number>(null);
 
   constructor(
@@ -101,7 +93,7 @@ export class DebtGridComponent {
     .take(1)
     .subscribe(([ dictionariesOptions, currencyOptions, portfolioOptions, contractorOptions ]) => {
       const renderers: IRenderer = {
-        creditStartDate: 'dateRenderer',
+        creditStartDate: 'dateTimeRenderer',
         creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
         statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
         debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
@@ -127,6 +119,10 @@ export class DebtGridComponent {
 
   onDialogClose(): void {
     this.dialog$.next(null);
+  }
+
+  onChangeStatusDialogSubmit(): void {
+    this.fetch();
   }
 
   private onAdd(): void {

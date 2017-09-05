@@ -132,7 +132,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   onCtrlValueChange(controlName: string): Observable<any> {
-    return this.form.get('receiveDateTime').valueChanges;
+    return this.form.get(controlName).valueChanges;
   }
 
   private createForm(flatControls: Array<IDynamicFormControl>): FormGroup {
