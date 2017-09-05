@@ -18,7 +18,20 @@
       [scrollbarH]="false"
       (activate)="onActivate($event)"
       (select)="onSelectRow($event)"
+      (tableContextmenu)="onTableContextMenu($event)"
     >
     </ngx-datatable>
   </div>
+</div>
+
+<div
+  *ngIf="ctxShowMenu"
+  class="ngx-datatable-context-menu-wrapper"
+  [ngStyle]="ctxStyles"
+  tabindex="-1"
+>
+  <ul class="ngx-datatable-context-menu">
+    <li (click)="onCtxMenuClick($event, 'phone')">Copy value</li>
+    <li (click)="onCtxMenuClick($event)">Copy row</li>
+  </ul>
 </div>

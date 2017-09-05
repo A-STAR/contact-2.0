@@ -491,9 +491,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridOptions.api.clearFocusedCell();
   }
 
-  private getRendererByName(field: string): Function {
-    return this.columns.find(column => column.colId === field).renderer;
-  }
+  // private getRendererByName(field: string): Function {
+  //   return this.columns.find(column => column.colId === field).renderer;
+  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);
@@ -557,8 +557,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           colDef.suppressSizeToFit = true;
           break;
       }
-      if (column.renderer) {
-        colDef.cellRenderer = (params: ICellRendererParams) => column.renderer(params.data);
+      if (column.$$valueGetter) {
+        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }
 
@@ -575,28 +575,28 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private setGridOptions(): void {
     this.gridOptions = {
-      autoGroupColumnDef: {
-        headerName: this.translate.instant('default.grid.groupColumn'),
-        minWidth: this.groupColumnMinWidth,
-        suppressMenu: true,
-        suppressMovable: true,
-        suppressFilter: true,
-        cellRenderer: 'group',
-        cellRendererParams: {
-          innerRenderer: (params) => {
-            const rowNode: RowNode = params.node;
-            const { field } = rowNode;
-            if (rowNode.group && rowNode.allLeafChildren.length) {
-              const renderer = this.getRendererByName(field);
-              const data = rowNode.allLeafChildren[0].data;
-              return renderer
-                ? renderer(data)
-                : (data[field] || rowNode.rowGroupColumn.getColDef().headerName);
-            }
-            return '';
-          },
-        }
-      },
+      // autoGroupColumnDef: {
+      //   headerName: this.translate.instant('default.grid.groupColumn'),
+      //   minWidth: this.groupColumnMinWidth,
+      //   suppressMenu: true,
+      //   suppressMovable: true,
+      //   suppressFilter: true,
+      //   cellRenderer: 'group',
+      //   cellRendererParams: {
+      //     innerRenderer: (params) => {
+      //       const rowNode: RowNode = params.node;
+      //       const { field } = rowNode;
+      //       if (rowNode.group && rowNode.allLeafChildren.length) {
+      //         const renderer = this.getRendererByName(field);
+      //         const data = rowNode.allLeafChildren[0].data;
+      //         return renderer
+      //           ? renderer(data)
+      //           : (data[field] || rowNode.rowGroupColumn.getColDef().headerName);
+      //       }
+      //       return '';
+      //     },
+      //   }
+      // },
       dateComponentFramework: GridDatePickerComponent,
       debug: false,
       defaultColDef: {

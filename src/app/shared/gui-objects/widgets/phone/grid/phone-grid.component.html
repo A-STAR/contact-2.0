@@ -1,5 +1,5 @@
 <app-block-dialog
-  *ngIf="dialog === 1"
+  *ngIf="isDialog('block')"
   titleTranslationKey="widgets.phone.dialogs.block.title"
   labelTranslationKey="widgets.phone.dialogs.block.blockReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
@@ -8,7 +8,7 @@
 </app-block-dialog>
 
 <app-dialog-action
-  *ngIf="dialog === 2"
+  *ngIf="isDialog('unblock')"
   titleTranslationKey="widgets.phone.dialogs.unblock.title"
   actionTranslationKey="widgets.phone.dialogs.unblock.confirmMessage"
   actionMessage="default.yesNo.Yes"
@@ -19,7 +19,7 @@
 </app-dialog-action>
 
 <app-dialog-action
-  *ngIf="dialog === 3"
+  *ngIf="isDialog('delete')"
   titleTranslationKey="widgets.phone.dialogs.delete.title"
   actionTranslationKey="widgets.phone.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
@@ -34,6 +34,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.phone"
+  [contextMenuEnabled]="true"
   selectionType="single"
   [styles]="{height: '230px'}"
   [columns]="columns"
