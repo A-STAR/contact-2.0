@@ -34,6 +34,10 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
+  get fileName(): string {
+    return this.file ? this.file.name : null;
+  }
+
   onFileChange(event: any): void {
     const file = event.target.files[0];
     this.file = file;

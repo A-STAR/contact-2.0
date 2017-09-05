@@ -9,16 +9,18 @@ import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynam
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DocumentService } from '../document.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+
+import { maxFileSize } from '../../../../../core/validators';
 
 @Component({
   selector: 'app-document-card',
   templateUrl: './document-card.component.html'
 })
 export class DocumentCardComponent {
-  @ViewChild('file') file: ElementRef;
   @ViewChild('form') form: DynamicFormComponent;
 
   private id = (this.route.params as any).value.id || null;
@@ -32,20 +34,23 @@ export class DocumentCardComponent {
     private documentService: DocumentService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
+    private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
+      this.userConstantsService.get('FileAttachment.MaxSize'),
       this.documentId ? this.documentService.fetch(18, this.id, this.documentId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, document ]) => {
+    .subscribe(([ options, maxSize, document ]) => {
+      const fileSizeValidator = maxFileSize(maxSize.valueN);
       this.controls = [
         { label: 'widgets.document.grid.docTypeCode', controlName: 'docTypeCode', type: 'select', options },
         { label: 'widgets.document.grid.docName', controlName: 'docName', type: 'text' },
         { label: 'widgets.document.grid.docNumber', controlName: 'docNumber', type: 'text' },
         { label: 'widgets.document.grid.comment', controlName: 'comment', type: 'textarea' },
-        { label: 'file', controlName: 'file', type: 'file' },
+        { label: 'widgets.document.grid.file', controlName: 'file', type: 'file', validators: [ fileSizeValidator ] },
       ];
       this.document = document;
     });
