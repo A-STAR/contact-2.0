@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -12,9 +12,12 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { DocumentService } from '../document.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { DownloaderComponent } from '../../../../components/downloader/downloader.component';
 
 import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
 
@@ -24,6 +27,8 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @ViewChild('downloader') downloader: DownloaderComponent;
+
   private selectedDocumentId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -49,9 +54,14 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       action: () => this.onEdit(this.selectedDocumentId$.value)
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+      enabled: this.selectedDocument$.map(Boolean),
+      action: () => this.onDownload()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([ this.canDelete$, this.selectedDocument$.map(Boolean) ]),
-      action: () => this.setDialog(3)
+      action: () => this.setDialog('delete')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -71,8 +81,14 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   documents: Array<IDocument> = [];
 
+  // TODO(d.maltsev): get name from server
+  // See: https://stackoverflow.com/questions/33046930/how-to-get-the-name-of-a-file-downloaded-with-angular-http
+  name$ = new BehaviorSubject<string>('foo');
+  url$ = new BehaviorSubject<string>(null);
+
   private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private busSubscription: Subscription;
 
   private renderers: IRenderer = {
     docTypeCode: [],
@@ -88,22 +104,28 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = this.userDictionariesService.getDictionariesAsOptions([
+    this.gridSubscription = this.userDictionariesService
+      .getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_DOCUMENT_TYPE,
       ])
-    .subscribe(options => {
-      this.renderers = {
-        ...this.renderers,
-        docTypeCode: [ ...options[UserDictionariesService.DICTIONARY_DOCUMENT_TYPE] ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+      .subscribe(options => {
+        this.renderers = {
+          ...this.renderers,
+          docTypeCode: [ ...options[UserDictionariesService.DICTIONARY_DOCUMENT_TYPE] ],
+        }
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+        this.cdRef.markForCheck();
+      });
+
+    this.busSubscription = this.messageBusService
+      .select(DocumentService.MESSAGE_DOCUMENT_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -122,10 +144,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-  }
-
-  get canDisplayGrid(): boolean {
-    return this.columns.length > 0;
+    this.busSubscription.unsubscribe();
   }
 
   get dialog(): number {
@@ -138,6 +157,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   onSelect(document: IDocument): void {
     this.selectedDocumentId$.next(document.id);
+    this.url$.next(`/api/fileattachments/${document.id}`);
+  }
+
+  onDownload(): void {
+    this.downloader.download();
   }
 
   onRemoveDialogSubmit(): void {
@@ -146,6 +170,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   onDialogClose(): void {
     this.setDialog(null);
+  }
+
+  isDialog(dialog: string): boolean {
+    return this._dialog === dialog;
   }
 
   get selectedDocument$(): Observable<IDocument> {
@@ -200,7 +228,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private setDialog(dialog: number): void {
+  private setDialog(dialog: string): void {
     this._dialog = dialog;
     this.cdRef.markForCheck();
   }

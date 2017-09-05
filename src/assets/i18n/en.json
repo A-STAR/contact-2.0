@@ -801,7 +801,8 @@
         "docTypeCode": "Document Type",
         "docNumber": "Number",
         "operatorName": "Operator",
-        "comment": "Comment"
+        "comment": "Comment",
+        "file": "File"
       }
     },
     "email": {

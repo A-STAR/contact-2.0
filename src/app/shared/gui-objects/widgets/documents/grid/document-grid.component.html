@@ -1,7 +1,17 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.document.dialogs.delete.title"
+  actionTranslationKey="widgets.document.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
 <app-grid
-  *ngIf="canDisplayGrid"
   columnTranslationKey="widgets.document"
   selectionType="single"
   [styles]="{ height: '600px' }"
@@ -10,3 +20,10 @@
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
 </app-grid>
+
+<app-downloader
+  #downloader
+  [entityTranslationKey]="'entityTranslationKey'"
+  [name]="name$ | async"
+  [url]="url$ | async">
+</app-downloader>
