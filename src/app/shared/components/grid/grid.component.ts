@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  Renderer2,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -44,11 +45,21 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
+  @Input() contextMenuEnabled = false;
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
+  clickDebouncer: Subject<{ type: string; row: any}>;
   columnDefs: IGridColumn[];
+  // Context Menu
+  ctxRow: any;
+  ctxColumn: any;
+  ctxEvent: MouseEvent;
+  ctxOutsideListener: Function;
+  ctxShowMenu = false;
+  ctxStyles: any;
+
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -57,7 +68,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     pagerPrevious: 'fa fa-angle-double-left',
     pagerNext: 'fa fa-angle-double-right',
   };
-  clickDebouncer: Subject<{ type: string; row: any}>;
+
   debouncerSub: Subscription;
   element: HTMLElement;
   messages: IMessages = {};
@@ -69,10 +80,12 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private renderer: Renderer2,
     public settings: SettingsService,
     private translate: TranslateService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
+    this.onDocumentClick = this.onDocumentClick.bind(this);
     this.clickDebouncer = new Subject();
     this.debouncerSub = this.clickDebouncer
       .debounceTime(100)
@@ -93,6 +106,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   get filteredRows(): Array<any> {
     return (this.rows || []).filter(this.filter);
+  }
+
+  get hasSingleSelection(): boolean {
+    return this._selected.length === 1;
   }
 
   ngOnInit(): void {
@@ -158,6 +175,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   ngAfterViewInit(): void {
+    if (this.contextMenuEnabled) {
+      this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
+    }
     // Define a possible height of the datatable
     // 43px - tab height,
     // 2x12px - top & bottom padding around the grid
@@ -175,6 +195,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.debouncerSub.unsubscribe();
+    if (this.ctxOutsideListener) {
+      this.ctxOutsideListener();
+    }
   }
 
   onActionClick(event: any): void {
@@ -199,6 +222,74 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (type === 'keydown' && e.keyCode === 13) {
       this.clickDebouncer.next({ type: 'select', row });
     }
+  }
+
+  onDocumentClick(event: MouseEvent): void {
+    if (this.ctxShowMenu) {
+      this.hideCtxMenu();
+    }
+  }
+
+  onTableContextMenu(ctxEvent: any): void {
+    ctxEvent.event.preventDefault();
+    ctxEvent.event.stopPropagation();
+
+    if (!this.contextMenuEnabled || !this.hasSingleSelection) {
+      return;
+    }
+
+    this.ctxEvent = ctxEvent.event;
+
+    if (ctxEvent.type === 'body') {
+      this.ctxRow = ctxEvent.content;
+      this.ctxColumn = undefined;
+      this.showCtxMenu();
+      const { x, y } = this.ctxEvent;
+      this.ctxStyles = { left: x + 'px', top: y + 'px' };
+    } else {
+      // Should you need to hook to the column header click, uncomment the next line
+      // this.ctxColumn = ctxEvent.content;
+      this.ctxRow = undefined;
+    }
+  }
+
+  onCtxMenuClick(event: MouseEvent, prop: string): void {
+    const data = prop ? this.ctxRow[prop] : this.ctxRow;
+    const copyAsPlaintext = (content) => {
+      const copyFrom = document.createElement('textarea');
+      copyFrom.textContent = content;
+      const body = document.querySelector('body');
+      body.appendChild(copyFrom);
+      copyFrom.select();
+
+      document.execCommand('copy');
+      body.removeChild(copyFrom);
+    }
+
+    const formattedData = prop
+      ? data
+      : this.columns
+          .filter(column => data[column.prop] !== null)
+          .map(column => {
+            return column.type === 'boolean'
+              ? Boolean(data[column.prop])
+              : column.$$valueGetter && column.dictCode
+                ? column.$$valueGetter(data, column.prop)
+                : data[column.prop];
+          })
+          .join('\t');
+
+    copyAsPlaintext(formattedData);
+    this.hideCtxMenu();
+  }
+
+  hideCtxMenu(): void {
+    this.ctxShowMenu = false;
+    this.cdRef.markForCheck();
+  }
+
+  showCtxMenu(): void {
+    this.ctxShowMenu = true;
   }
 
   getRowHeight(row: any): number {
