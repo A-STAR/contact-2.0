@@ -30,15 +30,17 @@ export class DocumentService {
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.singular').dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, document: IDocument): Observable<void> {
+  create(entityType: number, entityId: number, document: IDocument, file: File): Observable<void> {
+    const data = this.initFormData(document, file);
     return this.dataService
-      .create(DocumentService.BASE_URL, { entityType, entityId }, document)
+      .create(DocumentService.BASE_URL, { entityType, entityId }, data)
       .catch(this.notificationsService.error('errors.default.create').entity('entities.documents.gen.singular').dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, documentId: number, document: Partial<IDocument>): Observable<void> {
+  update(entityType: number, entityId: number, documentId: number, document: Partial<IDocument>, file: File): Observable<void> {
+    const data = this.initFormData(document, file);
     return this.dataService
-      .update(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, document)
+      .update(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, data)
       .catch(this.notificationsService.error('errors.default.update').entity('entities.documents.gen.singular').dispatchCallback());
   }
 
@@ -46,5 +48,12 @@ export class DocumentService {
     return this.dataService
       .delete(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId })
       .catch(this.notificationsService.error('errors.default.delete').entity('entities.documents.gen.singular').dispatchCallback());
+  }
+
+  private initFormData(document: Partial<IDocument>, file: File): FormData {
+    const data = new FormData();
+    data.append('file', file);
+    data.append('properties', new Blob([ JSON.stringify({ ...document, fileName: file.name }) ], { type: 'application/json' }));
+    return data;
   }
 }

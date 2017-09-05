@@ -34,6 +34,7 @@ import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-form-2.module';
+import { FileUploadModule } from './components/form/file-upload/file-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
@@ -83,6 +84,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DropdownInputModule,
     DynamicFormModule,
     DynamicForm2Module,
+    FileUploadModule,
     GridModule,
     Grid2Module,
     GuiObjectsModule,
@@ -151,6 +153,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DynamicFormModule,
     DynamicForm2Module,
     DialogModule,
+    FileUploadModule,
     GridModule,
     Grid2Module,
     GuiObjectsModule,
