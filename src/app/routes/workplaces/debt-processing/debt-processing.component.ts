@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
 
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
@@ -25,6 +26,7 @@ export class DebtProcessingComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private debtProcessingService: DebtProcessingService,
     private router: Router,
   ) {}
@@ -41,6 +43,10 @@ export class DebtProcessingComponent {
   }
 
   onDblClick({ personId }: IDebt): void {
+    const tabIndex = this.contentTabService.findTabIndexByPath(`${this.router.url}\/[0-9]+$`);
+    if (tabIndex) {
+      this.contentTabService.removeTab(tabIndex);
+    }
     this.router.navigate([ `${this.router.url}/${personId}` ]);
     // const { innerHeight: height, innerWidth: width} = window;
     // const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
@@ -51,5 +57,4 @@ export class DebtProcessingComponent {
   getRowNodeId(debt: IDebt): number {
     return debt.debtId;
   }
-
 }

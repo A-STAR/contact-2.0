@@ -113,6 +113,10 @@ export class ContentTabService {
       });
   }
 
+  findTabIndexByPath(path: string): number {
+    return this._tabs.findIndex(tab => tab.path.match(path) !== null);
+  }
+
   private onSectionLoadStart(): void {
     this.lastTabEvent = {
       timestamp: Date.now(),
