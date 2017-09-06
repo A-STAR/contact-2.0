@@ -42,6 +42,23 @@ export class DebtGridComponent {
       action: () => this.onChangeStatus()
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_CLOSE,
+      children: [
+        {
+          label: 'К возврату клиентом',
+          action: () => {}
+        },
+        {
+          label: 'Отозван клиентом',
+          action: () => {}
+        },
+        {
+          label: 'Завершить',
+          action: () => {}
+        },
+      ]
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch()
     },
