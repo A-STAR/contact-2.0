@@ -61,7 +61,7 @@ export class Toolbar2Component {
     },
     [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: {
       label: 'toolbar.action.changeStatus',
-      icon: 'fa fa-bell',
+      icon: 'fa fa-random',
     },
     [ToolbarItemTypeEnum.BUTTON_CLOSE]: {
       label: 'toolbar.action.close',
