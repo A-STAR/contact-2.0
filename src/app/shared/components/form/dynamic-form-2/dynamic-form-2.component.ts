@@ -12,7 +12,7 @@ import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interfa
 })
 export class DynamicForm2Component implements OnInit {
   @Input() group: Observable<IDynamicFormGroup>;
-  @Input() formValue: Observable<any> = Observable.of({});
+  @Input() formValue: Observable<any>;
 
   rootFormGroup: FormGroup;
 
@@ -21,23 +21,12 @@ export class DynamicForm2Component implements OnInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.group
+    Observable
+      .combineLatest(this.group, this.formValue)
       .distinctUntilChanged()
-      .subscribe(group => {
-        const value = this.rootFormGroup && this.rootFormGroup.value;
+      .subscribe(([ group, value ]) => {
         this.rootFormGroup = this.buildFormGroup(group);
-        if (value) {
-          this.rootFormGroup.patchValue(value);
-        }
         this.controls = this.flattenControls(group);
-        this.cdRef.markForCheck();
-
-        console.log(this.value);
-      });
-
-    this.formValue
-      .distinctUntilChanged()
-      .subscribe(value => {
         Object.keys(value || {}).forEach(key => {
           const control = this.getControl(key);
           if (control) {
@@ -59,8 +48,7 @@ export class DynamicForm2Component implements OnInit {
   get value(): any {
     return Object.keys(this.controls).reduce((acc, key) => {
       const control = this.getControl(key);
-      // if (control && control.dirty) {
-      if (control) {
+      if (control && control.dirty) {
         acc[key] = this.toRequest(control.value, key);
       }
       return acc;
@@ -107,7 +95,6 @@ export class DynamicForm2Component implements OnInit {
       case 'select':
         return Array.isArray(value) ? value[0].value : value;
       case 'checkbox':
-      case 'radio':
         return Number(value);
       default:
         return value === '' ? null : value;

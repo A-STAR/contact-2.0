@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SelectModule } from '../select/select.module';
 
 import { DynamicForm2ControlComponent } from './control/dynamic-form-2-control.component';
@@ -14,7 +13,6 @@ import { DynamicForm2Component } from './dynamic-form-2.component';
 @NgModule({
   imports: [
     CommonModule,
-    RadioGroupModule,
     ReactiveFormsModule,
     SelectModule,
     TranslateModule,
