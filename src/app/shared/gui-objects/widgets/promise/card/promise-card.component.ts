@@ -116,8 +116,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       const disabledControls = promise
         ? this.controls
         : canAdd
-        ? this.controls.filter(control => control.disabled)
-        : this.controls;
+          ? this.controls.filter(control => control.disabled)
+          : this.controls;
 
         this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
 
@@ -127,18 +127,18 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
     this.receiveDateTimeSub = this.form.onCtrlValueChange('receiveDateTime')
       .subscribe(value => {
-        if (!value) {
-          return;
-        }
-        const control = this.getControl('promiseDate');
+        if (!value) { return; }
         const { maxDays } = this.promiseLimit;
-        control.minDate = maxDays == null ? null : moment(value).toDate();
+        const today = new Date();
+        const promiseCtrl = this.getControl('promiseDate');
 
         // minDate should not be set if the operator want to record a past promise
-        // control.minDate = moment(value).isSameOrAfter(new Date(), 'day')
-        //     ? moment(value).toDate()
-        //     : null;
-        control.maxDate = maxDays == null ? null : moment(value).add(maxDays, 'day').toDate();
+        promiseCtrl.minDate = moment(value).isBefore(today, 'day') || !maxDays
+          ? null
+          : moment(value).toDate();
+        promiseCtrl.maxDate = !maxDays
+          ? null
+          : moment(today).add(maxDays, 'day').toDate();
         this.cdRef.markForCheck();
       });
   }
