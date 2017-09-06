@@ -748,6 +748,16 @@
     }
   },
   "widgets": {
+    "actionLog": {
+      "grid": {
+        "createDateTime": "Дата",
+        "dsc": "Описание",
+        "guiObject": "Модуль",
+        "fullName": "Оператор",
+        "machine": "Компьютер",
+        "typeCode": "Тип действия"
+      }
+    },
     "address": {
       "card": {
         "fullAddress": "Адрес",

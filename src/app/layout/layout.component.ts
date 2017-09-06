@@ -20,6 +20,7 @@ export class LayoutComponent {
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
     DashboardComponent: 'HOME',
     DebtorComponent: 'DEBTOR_CARD',
+    DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
     DebtorContactsComponent: 'DEBTOR_CONTACTS',
     DebtorDebtComponent: 'DEBTOR_DEBT',

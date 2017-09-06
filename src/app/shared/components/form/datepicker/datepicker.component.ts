@@ -70,7 +70,9 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target) && this.isExpanded) {
+    if (!this.dropdown.nativeElement.contains(event.target)
+      && !this.trigger.nativeElement.contains(event.target) && this.isExpanded
+    ) {
       this.toggleCalendar(false);
     }
   };

@@ -1,0 +1,25 @@
+<!-- <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2> -->
+
+<app-grid
+  columnTranslationKey="widgets.actionLog"
+  selectionType="single"
+  [styles]="{ height: '600px' }"
+  [columns]="columns"
+  [rows]="rows"
+  (onSelect)="onSelect($event)"
+>
+</app-grid>
+<!--
+<app-grid2
+metadataKey="debtsprocessingall"
+persistenceKey="debtsprocessingall"
+rowIdKey="debtId"
+[ngClass]="'debt-processing-grid'"
+[rows]="rows"
+[rowCount]="rowCount"
+(onPage)="onRequest()"
+(onPageSize)="onRequest()"
+(onSort)="onRequest()"
+(onFilter)="onRequest()"
+(onDblClick)="onDblClick($event)">
+</app-grid2> -->

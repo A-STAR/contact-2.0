@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../../../../shared/shared.module';
-
 import { DebtorActionLogComponent } from './action-log.component';
+import { GridModule } from '../../../components/grid/grid.module';
+
 import { ActionLogService } from './action-log.service';
 
 @NgModule({
   imports: [
-    SharedModule,
+    GridModule,
   ],
   exports: [
     DebtorActionLogComponent

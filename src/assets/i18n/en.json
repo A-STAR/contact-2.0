@@ -748,6 +748,16 @@
     }
   },
   "widgets": {
+    "actionLog": {
+      "grid": {
+        "createDateTime": "Date",
+        "dsc": "Description",
+        "guiObject": "Module",
+        "fullName": "Operator",
+        "machine": "Computer",
+        "typeCode": "Action type"
+      }
+    },
     "address": {
       "card": {
         "fullAddress": "Address",
