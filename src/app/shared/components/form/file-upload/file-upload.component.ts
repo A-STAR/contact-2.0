@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,6 +15,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent implements ControlValueAccessor {
+  @Input() fileName: string;
+
   private file: File;
 
   isDisabled = false;
@@ -34,8 +36,8 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  get fileName(): string {
-    return this.file ? this.file.name : null;
+  get displayFileName(): string {
+    return this.file ? this.file.name : this.fileName;
   }
 
   onFileChange(event: any): void {

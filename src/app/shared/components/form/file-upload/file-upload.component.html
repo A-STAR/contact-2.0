@@ -1,6 +1,6 @@
 <button class="btn btn-default" (click)="file.click()">Выберите файл</button>
 <span class="pl-lg file-name">
-  {{ fileName }}
+  {{ displayFileName }}
 </span>
 
 <input #file style="display: none;" type="file" [disabled]="isDisabled" (change)="onFileChange($event)">

@@ -57,6 +57,7 @@
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_IDENTITY": "Identity document",
@@ -124,6 +125,8 @@
       "upload": "Upload",
       "block": "Block",
       "unblock": "Unblock",
+      "changeStatus": "Change Status",
+      "close": "Close",
       "undo": "Undo"
     }
   },
@@ -803,6 +806,12 @@
         "operatorName": "Operator",
         "comment": "Comment",
         "file": "File"
+      },
+      "dialogs": {
+        "delete": {
+          "title": "Remove document?",
+          "confirmMessage": "Are you sure you want to remove document {{ docName }}?"
+        }
       }
     },
     "email": {
@@ -918,6 +927,15 @@
         "dict2Code": "Dpd strategy",
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
+      },
+      "dialogs": {
+        "statusChange": {
+          "title": "Debt Status Update",
+          "statusCode": "Select Status",
+          "reasonCode": "Select Reason",
+          "customStatusCode": "Custom Status",
+          "comment": "Comments"
+        }
       },
       "component": {
         "title": "Debt components",

@@ -21,7 +21,7 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtGridComponent {
-  private selectedDebt$ = new BehaviorSubject<IDebt>(null);
+  private selectedDebtId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -31,8 +31,15 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ canEdit, debt ]) => canEdit && !!debt),
-      action: () => this.onEdit(this.selectedDebt$.value.id)
+      enabled: Observable.combineLatest(this.canEdit$, this.selectedDebt$).map(([ permission, debt ]) => permission && !!debt),
+      action: () => this.onEdit(this.selectedDebtId$.value)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      enabled: Observable.combineLatest(
+        this.canChangeStatus$, this.selectedDebt$).map(([ permission, debt ]) => permission && !!debt
+      ),
+      action: () => this.onChangeStatus()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -61,6 +68,8 @@ export class DebtGridComponent {
   private personId = (this.route.params as any).value.id || null;
 
   private gridSubscription: Subscription;
+
+  dialog$ = new BehaviorSubject<number>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -106,8 +115,16 @@ export class DebtGridComponent {
   }
 
   onSelect(debt: IDebt): void {
-    this.selectedDebt$.next(debt);
+    this.selectedDebtId$.next(debt.id);
     this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt);
+  }
+
+  onDialogClose(): void {
+    this.dialog$.next(null);
+  }
+
+  onChangeStatusDialogSubmit(): void {
+    this.fetch();
   }
 
   private onAdd(): void {
@@ -118,11 +135,19 @@ export class DebtGridComponent {
     this.router.navigate([ `${this.router.url}/debt/${debtId}` ]);
   }
 
+  private onChangeStatus(): void {
+    this.dialog$.next(1);
+  }
+
+  get selectedDebt$(): Observable<IDebt> {
+    return this.selectedDebtId$.map(id => this.debts.find(debt => debt.id === id));
+  }
+
   get canAdd$(): Observable<boolean> {
     return this.userPermissionsService
       .hasOne([
         'DEBT_ADD',
-        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not necesserily boolean values
+        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not boolean values
         'DEBT_DICT1_EDIT_LIST',
         'DEBT_DICT2_EDIT_LIST',
         'DEBT_DICT3_EDIT_LIST',
@@ -137,13 +162,17 @@ export class DebtGridComponent {
         'DEBT_EDIT',
         'DEBT_PORTFOLIO_EDIT',
         'DEBT_COMPONENT_SUM_EDIT',
-        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not necesserily boolean values
+        // TODO(d.maltsev): DEBT_DICTX_EDIT_LIST are not boolean values
         'DEBT_DICT1_EDIT_LIST',
         'DEBT_DICT2_EDIT_LIST',
         'DEBT_DICT3_EDIT_LIST',
         'DEBT_DICT4_EDIT_LIST'
       ])
       .distinctUntilChanged();
+  }
+
+  get canChangeStatus$(): Observable<boolean> {
+    return this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', null);
   }
 
   private fetch(): void {

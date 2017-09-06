@@ -9,7 +9,7 @@ import { DocumentCardComponent } from '../../../../../shared/gui-objects/widgets
   templateUrl: './document.component.html'
 })
 export class DebtorDocumentComponent {
-  static COMPONENT_NAME = 'DebtorDocumentsComponent';
+  static COMPONENT_NAME = 'DebtorDocumentComponent';
 
   get node(): INode {
     return {

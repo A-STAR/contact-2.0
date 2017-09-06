@@ -57,6 +57,7 @@
         "DEBTOR_CONTACTS": "Контактные лица должника",
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
+        "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
@@ -124,6 +125,8 @@
       "upload": "Загрузить",
       "block": "Заблокировать",
       "unblock": "Разблокировать",
+      "changeStatus": "Сменить статус",
+      "close": "Закрыть",
       "undo": "Отменить"
     }
   },
@@ -803,6 +806,12 @@
         "operatorName": "Оператор",
         "comment": "Комментарий",
         "file": "Файл"
+      },
+      "dialogs": {
+        "delete": {
+          "title": "Удалить документ",
+          "confirmMessage": "Вы действительно хотите удалить документ {{ docName }}?"
+        }
       }
     },
     "email": {
@@ -918,6 +927,15 @@
         "dict2Code": "Стратегия",
         "dict3Code": "Балл 3",
         "dict4Code": "Балл 4"
+      },
+      "dialogs": {
+        "statusChange": {
+          "title": "Смена статуса долга",
+          "statusCode": "Выберите статус",
+          "reasonCode": "Выберите причину",
+          "customStatusCode": "Пользовательский статус",
+          "comment": "Комментарий"
+        }
       },
       "component": {
         "title": "Компоненты долга",

@@ -1,5 +1,5 @@
 export interface IRadioGroupOption {
-  value: string;
+  value: number | string;
   label: string;
   disabled?: boolean;
 }
