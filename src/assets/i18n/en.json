@@ -124,6 +124,8 @@
       "upload": "Upload",
       "block": "Block",
       "unblock": "Unblock",
+      "changeStatus": "Change Status",
+      "close": "Close",
       "undo": "Undo"
     }
   },
@@ -918,6 +920,15 @@
         "dict2Code": "Dpd strategy",
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
+      },
+      "dialogs": {
+        "statusChange": {
+          "title": "Debt Status Update",
+          "statusCode": "Select Status",
+          "reasonCode": "Select Reason",
+          "customStatusCode": "Custom Status",
+          "comment": "Comments"
+        }
       },
       "component": {
         "title": "Debt components",

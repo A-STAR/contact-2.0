@@ -1,3 +1,10 @@
+<app-debt-grid-status-dialog
+  *ngIf="(dialog$ | async) === 1"
+  [debt]="selectedDebt$ | async"
+  (submit)="onChangeStatusDialogSubmit()"
+  (close)="onDialogClose()">
+</app-debt-grid-status-dialog>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
