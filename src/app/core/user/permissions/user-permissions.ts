@@ -17,6 +17,18 @@ export class UserPermissions {
     return names.reduce((acc, name) => acc && this.getBooleanValue(name), true);
   }
 
+  notEmpty(name: string): boolean {
+    return this.getStringValue(name) !== '';
+  }
+
+  notEmptyOneOf(names: Array<string>): boolean {
+    return names.reduce((acc, name) => acc || this.getStringValue(name) !== '', false);
+  }
+
+  notEmptyAllOf(names: Array<string>): boolean {
+    return names.reduce((acc, name) => acc && this.getStringValue(name) !== '', true);
+  }
+
   contains(name: string, value: number): boolean {
     return this.stringValueContainsAll(name) || this.stringValueContainsNumber(name, value);
   }

@@ -5,6 +5,12 @@
   (close)="onDialogClose()">
 </app-debt-grid-status-dialog>
 
+<app-debt-grid-close-dialog
+  *ngIf="(dialog$ | async) === 2"
+  (submit)="onChangeCloseDialogSubmit()"
+  (close)="onDialogClose()">
+</app-debt-grid-close-dialog>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
