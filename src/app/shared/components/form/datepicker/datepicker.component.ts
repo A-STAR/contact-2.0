@@ -70,7 +70,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target)) {
+    if (!this.dropdown.nativeElement.contains(event.target) && !this.trigger.nativeElement.contains(event.target) && this.isExpanded) {
       this.toggleCalendar(false);
     }
   };
@@ -95,6 +95,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   registerOnTouched(fn: Function): void {
+    this.propagateTouch = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -116,11 +117,17 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
   }
 
+  onBlur(): void {
+    this.propagateTouch(true);
+  }
+
   toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
       // TODO(d.maltsev): is there a better way to do this?
       setTimeout(() => this.positionDropdown(), 0);
+    } else {
+      this.propagateTouch(true);
     }
 
     if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
@@ -129,6 +136,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private propagateChange: Function = () => {};
+  private propagateTouch: Function = () => {};
 
   private positionDropdown(): void {
     const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();
