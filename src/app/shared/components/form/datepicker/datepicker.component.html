@@ -7,6 +7,7 @@
       [ngClass]="inputClass"
       [ngModel]="formattedDate"
       [required]="required"
+      (blur)="onBlur()"
       (change)="onValueChange($event)"
     />
 
