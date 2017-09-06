@@ -34,6 +34,8 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.address"
+  contextFieldName="fullAddress"
+  [contextMenuEnabled]="true"
   selectionType="single"
   [styles]="{height: '230px'}"
   [columns]="columns"

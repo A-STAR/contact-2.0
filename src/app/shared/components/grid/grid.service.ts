@@ -199,7 +199,7 @@ export class GridService {
      * @deprecated
      * Since the renderer can bear a string (aka 'numberRenderer' or 'phoneRenderer'),
      * it should be possible and safe to reinitialize the rendereres. This is why we have to keep
-     * them untouched in the column, so that the real renderer functions should go to `$$valueGetter`
+     * the column's `renderer` property untouched, so that the renderer function should go to `$$valueGetter`
      */
     // column.renderer = column.$$valueGetter;
     return column;

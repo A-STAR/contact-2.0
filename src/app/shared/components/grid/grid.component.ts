@@ -46,6 +46,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Input() contextMenuEnabled = false;
+  @Input() contextFieldName: string;
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
@@ -53,8 +54,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   clickDebouncer: Subject<{ type: string; row: any}>;
   columnDefs: IGridColumn[];
   // Context Menu
-  ctxRow: any;
   ctxColumn: any;
+  ctxRow: any;
   ctxEvent: MouseEvent;
   ctxOutsideListener: Function;
   ctxShowMenu = false;

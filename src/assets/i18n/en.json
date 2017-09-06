@@ -1240,6 +1240,8 @@
         "endsWith": "ends with",
         "selectAll": "All",
         "copy": "Copy",
+        "copyField": "Copy {{ field }}",
+        "copyRow": "Copy row",
         "copyWithHeaders": "Copy with headers",
         "resetColumns": "Reset settings",
         "paste": "Paste",

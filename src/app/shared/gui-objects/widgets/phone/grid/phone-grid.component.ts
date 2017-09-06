@@ -99,7 +99,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     )
     .take(1)
     .subscribe(([ columns, canViewBlock ]) => {
-      const filteredColumns = this._columns.filter(column => {
+      const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
       this.columns = this.gridService.setRenderers(filteredColumns);

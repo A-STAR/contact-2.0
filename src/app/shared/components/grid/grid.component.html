@@ -31,7 +31,9 @@
   tabindex="-1"
 >
   <ul class="ngx-datatable-context-menu">
-    <li (click)="onCtxMenuClick($event, 'phone')">Copy value</li>
-    <li (click)="onCtxMenuClick($event)">Copy row</li>
+    <li *ngIf="contextFieldName" (click)="onCtxMenuClick($event, contextFieldName)">
+      {{ 'default.grid.localeText.copyField' | translate: { field: contextFieldName } }}
+    </li>
+    <li (click)="onCtxMenuClick($event)">{{ 'default.grid.localeText.copyRow' | translate }}</li>
   </ul>
 </div>
