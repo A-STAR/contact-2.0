@@ -93,7 +93,7 @@ export class DebtGridComponent {
     .take(1)
     .subscribe(([ dictionariesOptions, currencyOptions, portfolioOptions, contractorOptions ]) => {
       const renderers: IRenderer = {
-        creditStartDate: 'dateTimeRenderer',
+        creditStartDate: 'dateRenderer',
         creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
         statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
         debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
