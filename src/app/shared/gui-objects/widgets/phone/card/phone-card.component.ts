@@ -19,7 +19,7 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
   templateUrl: './phone-card.component.html'
 })
 export class PhoneCardComponent {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
   private personId = this.routeParams.id || null;
@@ -44,7 +44,6 @@ export class PhoneCardComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
       this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
-      // TODO(d.maltsev): pass entity type
       this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId) : Observable.of(null)
     )
     .take(1)
@@ -60,7 +59,7 @@ export class PhoneCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const action = this.phoneId
       ? this.phoneService.update(18, this.personId, this.phoneId, this.form.requestValue)
       : this.phoneService.create(18, this.personId, this.form.requestValue);
@@ -71,11 +70,11 @@ export class PhoneCardComponent {
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

@@ -13,6 +13,7 @@ import { DebtorAddressComponent } from './debtor/address/address.component';
 import { DebtorContactsComponent } from './debtor/contacts/contacts.component';
 import { DebtorDebtComponent } from './debtor/debt/debt.component';
 import { DebtorDebtComponentComponent } from './debtor/debt-component/debt-component.component';
+import { DebtorDocumentComponent } from './debtor/document/document.component';
 import { DebtorEmploymentComponent } from './debtor/employment/employment.component';
 import { DebtorEmailComponent } from './debtor/email/email.component';
 import { DebtorIdentityComponent } from './debtor/identity/identity.component';
@@ -57,6 +58,12 @@ const routes: Routes = [
           { path: ':employmentId', component: DebtorEmploymentComponent },
         ]
       },
+    ]
+  },
+  { path: ':id/document', children: [
+      { path: '', redirectTo: 'create', pathMatch: 'full' },
+      { path: 'create', component: DebtorDocumentComponent },
+      { path: ':documentId', component: DebtorDocumentComponent },
     ]
   },
   { path: ':id/email', children: [

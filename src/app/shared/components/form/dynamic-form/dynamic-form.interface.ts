@@ -74,6 +74,7 @@ export type ControlTypes =
   | 'select'
   | 'text'
   | 'textarea'
+  | 'file'
 ;
 
 export interface IValue {

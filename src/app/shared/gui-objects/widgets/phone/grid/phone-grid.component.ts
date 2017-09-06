@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
 import { IPhone } from '../phone.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../components/grid/grid.service';
@@ -40,19 +40,19 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedPhone$)
         .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isBlocked),
-      action: () => this.setDialog(1)
+      action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
         .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isBlocked),
-      action: () => this.setDialog(2)
+      action: () => this.setDialog('unblock')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: Observable.combineLatest(this.canDelete$, this.selectedPhone$)
         .map(([ canDelete, phone ]) => canDelete && !!phone),
-      action: () => this.setDialog(3)
+      action: () => this.setDialog('delete')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -63,32 +63,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [];
 
+  dialog = null;
+
   phones: Array<IPhone> = [];
 
-  private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
 
-  private renderers: IRenderer = {
-    typeCode: [],
-    statusCode: [],
-    blockReasonCode: [],
-    blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'checkboxRenderer',
-    phone: 'phoneRenderer',
-  };
-
   private _columns: Array<IGridColumn> = [
-    { prop: 'typeCode' },
-    { prop: 'phone' },
-    { prop: 'statusCode' },
-    { prop: 'isBlocked', maxWidth: 90 },
-    { prop: 'blockReasonCode' },
-    { prop: 'blockDateTime' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
+    { prop: 'phone', renderer: 'phoneRenderer' },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
+    { prop: 'isBlocked', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
+    { prop: 'blockReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
+    { prop: 'blockDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'comment' },
   ];
-
-  private _dialog = null;
 
   private routeParams = (<any>this.route.params).value;
   private personId = this.routeParams.contactId || this.routeParams.id || null;
@@ -101,28 +91,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private phoneService: PhoneService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PHONE_TYPE,
-        UserDictionariesService.DICTIONARY_PHONE_STATUS,
-        UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING,
-      ]),
+    Observable.combineLatest(
+      this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
-    .subscribe(([ options, canViewBlock ]) => {
-      this.renderers = {
-        ...this.renderers,
-        typeCode: [ ...options[UserDictionariesService.DICTIONARY_PHONE_TYPE] ],
-        statusCode: [ ...options[UserDictionariesService.DICTIONARY_PHONE_STATUS] ],
-        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING] ],
-      }
-      const columns = this._columns.filter(column => {
+    .take(1)
+    .subscribe(([ columns, canViewBlock ]) => {
+      const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
-      this.columns = this.gridService.setRenderers(columns, this.renderers);
+      this.columns = this.gridService.setRenderers(filteredColumns);
       this.cdRef.markForCheck();
     });
 
@@ -145,7 +125,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
@@ -156,10 +135,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
-  }
-
-  get dialog(): number {
-    return this._dialog;
   }
 
   getRowClass(): any {
@@ -188,7 +163,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDialogClose(): void {
-    this.setDialog(null);
+    this.setDialog();
+  }
+
+  isDialog(dialog: string): boolean {
+    return this.dialog === dialog;
   }
 
   get selectedPhone$(): Observable<IPhone> {
@@ -196,31 +175,31 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_VIEW');
   }
 
   get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_BLOCK_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_BLOCK_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_ADD');
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.hasOne([ 'PHONE_EDIT', 'PHONE_COMMENT_EDIT' ]).distinctUntilChanged();
+    return this.userPermissionsService.hasOne([ 'PHONE_EDIT', 'PHONE_COMMENT_EDIT' ]);
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_DELETE').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_DELETE');
   }
 
   get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_BLOCK').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_BLOCK');
   }
 
   get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_UNBLOCK').distinctUntilChanged();
+    return this.userPermissionsService.has('PHONE_UNBLOCK');
   }
 
   private onAdd(): void {
@@ -233,12 +212,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private onSubmitSuccess(): void {
     this.fetch();
-    this.setDialog(null);
+    this.setDialog();
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): persist selection
-    // TODO(d.maltsev): pass entity type
     this.phoneService.fetchAll(18, this.personId)
       .subscribe(phones => {
         this.phones = phones;
@@ -251,8 +228,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private setDialog(dialog: number): void {
-    this._dialog = dialog;
+  private setDialog(dialog: string = null): void {
+    this.dialog = dialog;
     this.cdRef.markForCheck();
   }
 }

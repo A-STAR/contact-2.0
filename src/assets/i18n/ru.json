@@ -803,7 +803,8 @@
         "docTypeCode": "Тип документа",
         "docNumber": "Номер",
         "operatorName": "Оператор",
-        "comment": "Комментарий"
+        "comment": "Комментарий",
+        "file": "Файл"
       }
     },
     "email": {
@@ -1250,6 +1251,8 @@
         "endsWith": "заканчивается на",
         "selectAll": "Все",
         "copy": "Копировать",
+        "copyField": "Копировать {{ field }}",
+        "copyRow": "Копировать все",
         "copyWithHeaders": "Копировать c заголовками",
         "resetColumns": "Сбросить настройки",
         "paste": "Вставить",

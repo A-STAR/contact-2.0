@@ -7,7 +7,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
@@ -66,24 +66,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _addresses: Array<IAddress> = [];
 
-  private gridSubscription: Subscription;
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
 
-  private renderers: IRenderer = {
-    blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'checkboxRenderer',
-    isResidence: 'checkboxRenderer',
-  };
-
   private _columns: Array<IGridColumn> = [
-    { prop: 'typeCode' },
+    { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
     { prop: 'fullAddress' },
-    { prop: 'statusCode' },
-    { prop: 'isResidence' },
-    { prop: 'isBlocked', maxWidth: 90 },
-    { prop: 'blockReasonCode' },
-    { prop: 'blockDateTime' },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS },
+    { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
+    { prop: 'isBlocked', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
+    { prop: 'blockReasonCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING },
+    { prop: 'blockDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'comment' },
   ];
 
@@ -101,33 +94,22 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     // NOTE: on deper routes we should take the contactId
     this.personId = this.contactId || this.personId;
 
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
-        UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
-        UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING,
-      ]),
+    Observable.combineLatest(
+      this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ options, canViewBlock ]) => {
-      this.renderers = {
-        ...this.renderers,
-        typeCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_TYPE] ],
-        statusCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_STATUS] ],
-        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING] ],
-      }
-      const columns = this._columns.filter(column => {
+    .subscribe(([ columns, canViewBlock ]) => {
+      const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
       });
 
-      this.columns = this.gridService.setRenderers(columns, this.renderers);
+      this.columns = this.gridService.setRenderers(filteredColumns);
       this.cdRef.markForCheck();
     });
 
@@ -150,7 +132,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gridSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
@@ -246,8 +227,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): persist selection
-    // TODO(d.maltsev): pass entity type
     this.addressService.fetchAll(18, this.personId)
       .subscribe(addresses => {
         this._addresses = addresses;

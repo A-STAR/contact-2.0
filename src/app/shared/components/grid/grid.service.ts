@@ -81,14 +81,14 @@ export class GridService {
           switch (column.dataType) {
             case 2:
               // Date
-              column.renderer = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
+              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
               break;
             case 6:
               // Dictionary
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
-                column.renderer = (row: ITypeCodeItem) => {
+                column.$$valueGetter = (row: ITypeCodeItem) => {
                   const dictCode = row[column.name];
                   const dictValue = dictionaryHash[dictCode];
                   return  dictValue !== undefined ? dictValue : dictCode;
@@ -98,7 +98,7 @@ export class GridService {
               break;
             case 7:
               // Datetime
-              column.renderer = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
+              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
               break;
             case 1:
               // Number
@@ -140,6 +140,9 @@ export class GridService {
       : columns.map(column => {
           const { renderer } = column;
           const type = Object.prototype.toString.call(renderer);
+          if (column.dictCode) {
+            return column;
+          }
           if ( type === '[object String]') {
             // NOTE: here `renderFn` is a function of type Function(key: string) => Function(obj[key]) => render stuff
             const renderFn: Function = this.predefinedRenderers[renderer as string];
@@ -192,8 +195,13 @@ export class GridService {
         return String((rendererFn as Function)(entity, value));
       }
     };
-    // NOTE: for compatibility between grid & grid2
-    column.renderer = column.$$valueGetter;
+    /**
+     * @deprecated
+     * Since the renderer can bear a string (aka 'numberRenderer' or 'phoneRenderer'),
+     * it should be possible and safe to reinitialize the rendereres. This is why we have to keep
+     * the column's `renderer` property untouched, so that the renderer function should go to `$$valueGetter`
+     */
+    // column.renderer = column.$$valueGetter;
     return column;
   }
 
@@ -202,7 +210,7 @@ export class GridService {
     const isArray = Array.isArray(getterFn);
     const entities: ILabeledValue[] = isArray ? [].concat(getterFn) : [];
 
-    column.renderer = (entity: any, fieldName: string) => {
+    column.$$valueGetter = (entity: any, fieldName: string) => {
       const value: any = Reflect.get(entity, fieldName);
 
       if (isArray) {

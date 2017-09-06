@@ -19,6 +19,8 @@ export interface IAGridColumn {
   minWidth?: number;
   name?: string;
   renderer?: Function;
+  // compatibility between @swimlane/ngx-datatable and ag-grid
+  $$valueGetter?: Function;
   valueGetter?: (params: ValueGetterParams) => any | string;
   sort?: string;
   type?: string;
