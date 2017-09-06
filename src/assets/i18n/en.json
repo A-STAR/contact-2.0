@@ -57,6 +57,7 @@
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_IDENTITY": "Identity document",
@@ -803,6 +804,12 @@
         "operatorName": "Operator",
         "comment": "Comment",
         "file": "File"
+      },
+      "dialogs": {
+        "delete": {
+          "title": "Remove document?",
+          "confirmMessage": "Are you sure you want to remove document {{ docName }}?"
+        }
       }
     },
     "email": {

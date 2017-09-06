@@ -26,6 +26,7 @@ export class DocumentCardComponent {
 
   private id = (this.route.params as any).value.id || null;
   private documentId = (this.route.params as any).value.documentId || null;
+  private entityTypeCode = (this.route.queryParams as any).value.entityType || 18;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
@@ -42,18 +43,18 @@ export class DocumentCardComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
       this.userConstantsService.get('FileAttachment.MaxSize'),
-      this.documentId ? this.documentService.fetch(18, this.id, this.documentId) : Observable.of(null)
+      this.documentId ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, maxSize, document ]) => {
       const fileSizeValidator = maxFileSize(maxSize.valueN);
       this.controls = [
-        { label: 'widgets.document.grid.docTypeCode', controlName: 'docTypeCode', type: 'select', options },
-        { label: 'widgets.document.grid.docName', controlName: 'docName', type: 'text' },
-        { label: 'widgets.document.grid.docNumber', controlName: 'docNumber', type: 'text' },
-        { label: 'widgets.document.grid.comment', controlName: 'comment', type: 'textarea' },
-        { label: 'widgets.document.grid.file', controlName: 'file', type: 'file', validators: [ fileSizeValidator ] },
-      ];
+        { controlName: 'docTypeCode', type: 'select', options },
+        { controlName: 'docName', type: 'text' },
+        { controlName: 'docNumber', type: 'text' },
+        { controlName: 'comment', type: 'textarea' },
+        { controlName: 'file', type: 'file', fileName: document.fileName, validators: [ fileSizeValidator ] },
+      ].map(control => ({ ...control, label: `widgets.document.grid.${control.controlName}` } as IDynamicFormItem));
       this.document = document;
       this.cdRef.markForCheck();
     });
@@ -62,8 +63,8 @@ export class DocumentCardComponent {
   public onSubmit(): void {
     const { file, ...document } = this.form.requestValue;
     const action = this.documentId
-      ? this.documentService.update(18, this.id, this.documentId, document, file)
-      : this.documentService.create(18, this.id, document, file);
+      ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file)
+      : this.documentService.create(this.entityTypeCode, this.id, document, file);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);
