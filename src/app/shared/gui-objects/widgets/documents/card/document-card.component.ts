@@ -53,7 +53,7 @@ export class DocumentCardComponent {
         { controlName: 'docName', type: 'text' },
         { controlName: 'docNumber', type: 'text' },
         { controlName: 'comment', type: 'textarea' },
-        { controlName: 'file', type: 'file', fileName: document.fileName, validators: [ fileSizeValidator ] },
+        { controlName: 'file', type: 'file', fileName: document && document.fileName, validators: [ fileSizeValidator ] },
       ].map(control => ({ ...control, label: `widgets.document.grid.${control.controlName}` } as IDynamicFormItem));
       this.document = document;
       this.cdRef.markForCheck();
