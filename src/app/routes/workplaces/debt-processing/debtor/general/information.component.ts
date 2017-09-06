@@ -62,7 +62,11 @@ export class DebtorInformationComponent implements OnDestroy {
     this.personSubscription.unsubscribe();
   }
 
-  protected getControls(options: { [key: number]: Array<IOption> }, canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {
+  protected getControls(
+    options: { [key: number]: Array<IOption> },
+    canEdit: boolean,
+    canEditComment: boolean
+  ): IDynamicFormGroup[] {
     const genderOptions        = options[UserDictionariesService.DICTIONARY_GENDER];
     const maritalStatusOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
     const educationOptions     = options[UserDictionariesService.DICTIONARY_EDUCATION];

@@ -111,7 +111,6 @@ export class UserEditComponent {
       return;
     }
 
-    // const { image, ...user } = this.getRequestValues(this.form.value);
     const { image, ...user } = this.form.requestValue;
 
     if (this.userId) {
@@ -169,8 +168,8 @@ export class UserEditComponent {
       {
         children: [
           { children: nameBlock, width: 9 },
-          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: photoUrl, disabled: !this.permissions.canEditUser,
-              width: 3, height: 178, validators: [ photoValidator ] }
+          { label: 'users.edit.photo', controlName: 'image', type: 'image', url: photoUrl,
+            disabled: !this.permissions.canEditUser, width: 3, height: 178, validators: [ photoValidator ] }
         ],
         collapsible: true,
         title: 'users.edit.personalData'

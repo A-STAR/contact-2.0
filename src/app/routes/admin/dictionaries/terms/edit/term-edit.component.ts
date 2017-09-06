@@ -81,11 +81,6 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
         type: 'checkbox'
       }
     ];
-    // .filter(control => {
-    //   return this.isEditMode()
-    //     ? nameControlName !== control.controlName
-    //     : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
-    // });
 
     return this.filterControls(controls);
   }

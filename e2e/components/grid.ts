@@ -15,6 +15,7 @@ export class Grid {
 
   private getRow(id: number): WebElementPromise {
     // We are assuming that the first row cell corresponds to id
+    // tslint:disable-next-line
     const xpath = `//datatable-body-row[./div[contains(@class, "datatable-row-center")]/datatable-body-cell[1]/div/span[@title="${id}"]]`;
     return this.grid.findElement(by.xpath(xpath));
   }

@@ -55,6 +55,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   columnDefs: IGridColumn[];
   // Context Menu
   ctxColumn: any;
+  ctxFieldNameTranslation = { field: this.contextFieldName };
   ctxRow: any;
   ctxEvent: MouseEvent;
   ctxOutsideListener: Function;
@@ -97,6 +98,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
+
+    this.ctxFieldNameTranslation = {
+      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
+    };
   }
 
   @Input() rowClass = () => undefined;
@@ -141,6 +146,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         this.messages = { ...translations[gridMessagesKey] };
         if (this.columnTranslationKey) {
           this.translateColumns(translations[this.columnTranslationKey].grid);
+          if (this.contextMenuEnabled && this.contextFieldName) {
+            this.ctxFieldNameTranslation = {
+              field: translations[this.columnTranslationKey].grid[this.contextFieldName] || this.contextFieldName
+            };
+          }
         }
         if (this.emptyMessage) {
           this.messages.emptyMessage = translations[this.emptyMessage];
@@ -156,11 +166,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (emptyMessage) {
       if (emptyMessage.currentValue) {
         this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
+
       } else {
-        // TODO(d.maltsev): code duplication
         const gridMessagesKey = 'grid.messages';
-        const translationKeys = [gridMessagesKey];
-        this.translate.get(translationKeys)
+        this.translate.get([gridMessagesKey])
           .take(1)
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }

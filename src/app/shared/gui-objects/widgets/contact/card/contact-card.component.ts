@@ -19,6 +19,10 @@ import { EmploymentGridComponent } from '../../../../../shared/gui-objects/widge
 import { IdentityGridComponent } from '../../../../../shared/gui-objects/widgets/identity/grid/identity-grid.component';
 import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
 
+import { makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('widgets.contact.grid');
+
 @Component({
   selector: 'app-contact-card',
   templateUrl: './contact-card.component.html'
@@ -70,22 +74,22 @@ export class ContactCardComponent {
       const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
       const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_TYPE];
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.contact.grid.lastName', controlName: 'lastName', type: 'text', width: 4, required: true },
-        { label: 'widgets.contact.grid.firstName', controlName: 'firstName', type: 'text', width: 4 },
-        { label: 'widgets.contact.grid.middleName', controlName: 'middleName', type: 'text', width: 4 },
-        { label: 'widgets.contact.grid.birthDate', controlName: 'birthDate',  type: 'datepicker', width: 4 },
-        { label: 'widgets.contact.grid.genderCode', controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
-        { label: 'widgets.contact.grid.birthPlace', controlName: 'birthPlace',  type: 'text', width: 4 },
+        { label: labelKey('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
+        { label: labelKey('firstName'), controlName: 'firstName', type: 'text', width: 4 },
+        { label: labelKey('middleName'), controlName: 'middleName', type: 'text', width: 4 },
+        { label: labelKey('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
+        { label: labelKey('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
+        { label: labelKey('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
         {
-          label: 'widgets.contact.grid.familyStatusCode',
+          label: labelKey('familyStatusCode'),
           controlName: 'familyStatusCode',
           type: 'select',
           width: 4,
           options: familyOptions
         },
-        { label: 'widgets.contact.grid.educationCode', controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
-        { label: 'widgets.contact.grid.linkTypeCode', controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
-        { label: 'widgets.contact.grid.comment', controlName: 'comment', type: 'textarea', },
+        { label: labelKey('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
+        { label: labelKey('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
+        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.contact = contact;

@@ -128,7 +128,9 @@ export class UsersEffects {
         ])
         .catch(error => {
           const message = photo ? 'errors.default.upload' : 'errors.default.delete';
-          return [ this.notificationsService.error(message).entity('entities.users.photos.gen.singular').response(error).action() ];
+          return [
+            this.notificationsService.error(message).entity('entities.users.photos.gen.singular').response(error).action()
+          ];
         });
     });
 

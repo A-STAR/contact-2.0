@@ -96,9 +96,13 @@ export interface IAGridEventPayload {
 
 // need this, since ag-grid doesn't export this interface
 export interface IViewportDatasourceParams {
-    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
+    /** datasource calls this method when the total row count changes.
+     * This in turn sets the height of the grids vertical scroll.
+     */
     setRowCount: (count: number) => void;
-    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
+    /** datasource calls this when new data arrives. The grid then updates the provided rows.
+     * The rows are mapped [rowIndex]=>rowData].
+     */
     setRowData: (rowData: {
         [key: number]: any;
     }) => void;

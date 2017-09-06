@@ -1241,7 +1241,7 @@
         "selectAll": "Все",
         "copy": "Копировать",
         "copyField": "Копировать {{ field }}",
-        "copyRow": "Копировать все",
+        "copyRow": "Копировать строку",
         "copyWithHeaders": "Копировать c заголовками",
         "resetColumns": "Сбросить настройки",
         "paste": "Вставить",

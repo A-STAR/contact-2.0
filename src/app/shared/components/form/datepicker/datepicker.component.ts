@@ -135,7 +135,9 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     const contentRect: ClientRect = this.dropdown.nativeElement.children[0].getBoundingClientRect();
 
     // If the dropdown won't fit into the window below the input - place it above it.
-    const top = inputRect.bottom + contentRect.height > window.innerHeight ? inputRect.top - contentRect.height : inputRect.bottom;
+    const top = inputRect.bottom + contentRect.height > window.innerHeight
+      ? inputRect.top - contentRect.height
+      : inputRect.bottom;
     const left = inputRect.left;
 
     this.style$.next({

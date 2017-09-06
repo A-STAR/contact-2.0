@@ -22,7 +22,8 @@ export class LookupEffects {
         }))
         .catch(response => [
           { type: LookupService.LOOKUP_FETCH_FAILURE },
-          this.notificationService.error('errors.default.read').entity(`entities.lookup.${key}.gen.plural`).response(response).action(),
+          this.notificationService.error('errors.default.read')
+            .entity(`entities.lookup.${key}.gen.plural`).response(response).action(),
         ]);
     });
 

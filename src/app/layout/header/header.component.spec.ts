@@ -59,7 +59,9 @@ describe('Component: Header', () => {
   it('should create an instance', async(inject(
     [SettingsService, AuthService, TranslateService, NotificationsService, PersistenceService],
     (settingsService, authService, translateService, notificationsService, persistenceService) => {
-      const component = new HeaderComponent(authService, notificationsService, settingsService, persistenceService, translateService);
+      const component = new HeaderComponent(
+        authService, notificationsService, settingsService, persistenceService, translateService
+      );
       expect(component).toBeTruthy();
   })));
 });

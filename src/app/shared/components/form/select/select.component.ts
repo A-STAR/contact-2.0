@@ -247,7 +247,8 @@ export class SelectComponent implements ControlValueAccessor {
       }
     }
 
-    return this.sanitizer.bypassSecurityTrustHtml(this.renderer ? this.renderer(displayValue, item) : (displayValue || item.value));
+    return this.sanitizer
+      .bypassSecurityTrustHtml(this.renderer ? this.renderer(displayValue, item) : (displayValue || item.value));
   }
 
   clickedOutside(): void {

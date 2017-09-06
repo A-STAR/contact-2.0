@@ -11,6 +11,7 @@ export class EmploymentService {
   static MESSAGE_EMPLOYMENT_SAVED = 'MESSAGE_EMPLOYMENT_SAVED';
 
   private url = '/persons/{personId}/employments';
+  private errSingular = 'entities.employment.gen.singular';
 
   constructor(
     private dataService: DataService,
@@ -28,24 +29,24 @@ export class EmploymentService {
     return this.dataService
       .read(`${this.url}/{employmentId}`, { personId, employmentId })
       .map(resp => resp.employments[0] || {})
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employment.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
   }
 
   create(personId: number, employment: IEmployment): Observable<any> {
     return this.dataService
       .create(this.url, { personId }, employment)
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.employment.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.create').entity(this.errSingular).dispatchCallback());
   }
 
   update(personId: number, employmentId: number, employment: IEmployment): Observable<any> {
     return this.dataService
       .update(`${this.url}/{employmentId}`, { personId, employmentId }, employment)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.employment.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.update').entity(this.errSingular).dispatchCallback());
   }
 
   delete(personId: number, employmentId: number): Observable<any> {
     return this.dataService
       .delete(`${this.url}/{employmentId}`, { personId, employmentId })
-      .catch(this.notificationsService.error('errors.default.delete').entity('entities.employment.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
   }
 }

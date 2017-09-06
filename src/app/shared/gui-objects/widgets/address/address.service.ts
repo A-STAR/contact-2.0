@@ -33,13 +33,17 @@ export class AddressService {
   create(entityType: number, entityId: number, address: IAddress): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { entityType, entityId }, address)
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.addresses.gen.singular').dispatchCallback());
+      .catch(this.notificationsService
+        .error('errors.default.create').entity('entities.addresses.gen.singular').dispatchCallback()
+      );
   }
 
   update(entityType: number, entityId: number, addressId: number, address: Partial<IAddress>): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.addresses.gen.singular').dispatchCallback());
+      .catch(this.notificationsService
+        .error('errors.default.update').entity('entities.addresses.gen.singular').dispatchCallback()
+      );
   }
 
   block(entityType: number, entityId: number, addressId: number, blockReasonCode: number): Observable<void> {
@@ -53,6 +57,8 @@ export class AddressService {
   delete(entityType: number, entityId: number, addressId: number): Observable<void> {
     return this.dataService
       .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
-      .catch(this.notificationsService.error('errors.default.delete').entity('entities.addresses.gen.singular').dispatchCallback());
+      .catch(this.notificationsService
+        .error('errors.default.delete').entity('entities.addresses.gen.singular').dispatchCallback()
+      );
   }
 }

@@ -243,62 +243,68 @@ export class ContractorsAndPortfoliosEffects {
   ) {}
 
   private readContractors(): Observable<IContractorsResponse> {
-    return this.dataService.read('/api/contractors');
+    return this.dataService.read('/contractors');
   }
 
   private readContractor(contractorId: number): Observable<IContractorsResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}', { contractorId });
+    return this.dataService.read('/contractors/{contractorId}', { contractorId });
   }
 
   private createContractor(contractor: IContractor): Observable<any> {
-    return this.dataService.create('/api/contractors', {}, contractor);
+    return this.dataService.create('/contractors', {}, contractor);
   }
 
   private updateContractor(contractorId: number, contractor: IContractor): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}', { contractorId }, contractor);
+    return this.dataService.update('/contractors/{contractorId}', { contractorId }, contractor);
   }
 
   private deleteContractor(contractorId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}', { contractorId });
+    return this.dataService.delete('/contractors/{contractorId}', { contractorId });
   }
 
   private readManagers(contractorId: number): Observable<IContractorManagersResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/managers', { contractorId });
+    return this.dataService.read('/contractors/{contractorId}/managers', { contractorId });
   }
 
   private readManager(contractorId: number, managerId: number): Observable<IContractorManagersResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+    return this.dataService.read('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private createManager(contractorId: number, manager: IContractorManager): Observable<any> {
-    return this.dataService.create('/api/contractors/{contractorId}/managers', { contractorId }, manager);
+    return this.dataService.create('/contractors/{contractorId}/managers', { contractorId }, manager);
   }
 
   private updateManager(contractorId: number, managerId: number, manager: IContractorManager): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager);
+    return this.dataService.update('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager);
   }
 
   private deleteManager(contractorId: number, managerId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+    return this.dataService.delete('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
+    return this.dataService.read('/contractors/{contractorId}/portfolios', { contractorId });
   }
 
   private readPortfolio(contractorId: number, portfolioId: number): Observable<IPortfoliosResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+    return this.dataService.read('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 
   private createPortfolio(contractorId: number, portfolio: IPortfolio): Observable<any> {
-    return this.dataService.create('/api/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
+    return this.dataService.create('/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
   }
 
-  private updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio | IPortfolioMoveRequest): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
+  private updatePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioMoveRequest
+  ): Observable<any> {
+    return this.dataService
+    .update('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
   }
 
   private deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+    return this.dataService
+    .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 }

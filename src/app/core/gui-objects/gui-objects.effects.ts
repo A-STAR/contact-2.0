@@ -27,7 +27,8 @@ export class GuiObjectsEffects {
             this.router.navigate(['/connection-error']);
           }
           return [
-            this.notificationService.error('errors.default.read').entity('entities.guiObjects.gen.plural').response(error).action()
+            this.notificationService.error('errors.default.read')
+              .entity('entities.guiObjects.gen.plural').response(error).action()
           ];
         });
     });

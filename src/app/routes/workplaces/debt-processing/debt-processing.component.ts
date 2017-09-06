@@ -43,7 +43,8 @@ export class DebtProcessingComponent {
   onDblClick({ personId }: IDebt): void {
     this.router.navigate([ `${this.router.url}/${personId}` ]);
     // const { innerHeight: height, innerWidth: width} = window;
-    // const winConfig = `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
+    // const winConfig =
+    //  `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
     // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
     // if (win.focus) { win.focus() };
   }

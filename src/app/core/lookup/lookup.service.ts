@@ -110,7 +110,8 @@ export class LookupService {
 
   get userOptions(): Observable<Array<IOption>> {
     return this.getSlice('users')
-      .map(users => users.map((user: any) => ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })))
+      .map(users =>
+        users.map((user: any) => ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })))
       .distinctUntilChanged();
   }
 

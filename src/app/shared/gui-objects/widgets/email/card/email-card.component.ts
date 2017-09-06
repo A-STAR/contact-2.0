@@ -13,6 +13,10 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
+import { makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('widgets.email.card');
+
 @Component({
   selector: 'app-email-card',
   templateUrl: './email-card.component.html'
@@ -45,9 +49,9 @@ export class EmailCardComponent {
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, email ]) => {
       this.controls = [
-        { label: 'widgets.email.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
-        { label: 'widgets.email.card.email', controlName: 'email', type: 'text', required: true, disabled: !canEdit },
-        { label: 'widgets.email.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
+        { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
+        { label: labelKey('email'), controlName: 'email', type: 'text', required: true, disabled: !canEdit },
+        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
       this.email = email;
     });

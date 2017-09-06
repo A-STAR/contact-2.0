@@ -64,7 +64,8 @@ export class DebtorComponent implements OnDestroy {
   get canSubmit(): boolean {
     const formGeneral = this.form && this.form.form;
     const formInformation = this.information.form && this.information.form.form;
-    return formGeneral && formInformation && formGeneral.valid && formInformation.valid && (formGeneral.dirty || formInformation.dirty);
+    return formGeneral && formInformation && formGeneral.valid && formInformation.valid
+      && (formGeneral.dirty || formInformation.dirty);
   }
 
   onSubmit(): void {

@@ -54,6 +54,7 @@ export class UserPermissions {
   }
 
   private stringValueContainsAnyCustomNumber(name: string): boolean {
-    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > UserPermissions.CUSTOM_PERMISSION_THRESHOLD, false);
+    return this.getStringValueAsArray(name).reduce((acc, value) =>
+      acc || value > UserPermissions.CUSTOM_PERMISSION_THRESHOLD, false);
   }
 }

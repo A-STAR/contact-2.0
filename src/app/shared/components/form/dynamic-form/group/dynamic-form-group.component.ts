@@ -63,7 +63,8 @@ export class DynamicFormGroupComponent {
   getControlErrors(control: IDynamicFormControl): Array<any> {
     const errors = this.form.controls[control.controlName].errors;
     return Object.keys(errors).map(key => ({
-      message: control.validationMessages && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
+      message: control.validationMessages
+        && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
       data: errors[key]
     }));
   }

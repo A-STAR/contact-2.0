@@ -19,8 +19,8 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> im
 
   constructor(private userPermissionsService: UserPermissionsService) {
     super();
-    // TODO(d.maltsev): unsubscribe
     this.userPermissionsService.has('ORGANIZATION_EDIT')
+      .take(1)
       .subscribe(permission => {
         this.canEdit = permission;
       });
@@ -30,9 +30,7 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> im
     this.formData = {
       ...this.editedEntity,
       roleCode: [ this.employeeRoleOptions.find(roleOption => roleOption.value === this.editedEntity.roleCode) ],
-      fullName: `${this.editedEntity.lastName || ''} ${this.editedEntity.firstName || ''} ${this.editedEntity.middleName || ''}`
     };
-
     super.ngOnInit();
   }
 
@@ -52,7 +50,9 @@ export class EmployeeEditComponent extends EntityBaseComponent<IEmployeeUser> im
         width: 4,
         children: [
           { label: 'users.edit.photo', controlName: 'image', type: 'image',
-              url: this.editedEntity.userId ? `/users/${this.editedEntity.userId}/photo` : null, disabled: true, width: 12, height: 179 },
+            url: this.editedEntity.userId ? `/users/${this.editedEntity.userId}/photo` : null,
+            disabled: true, width: 12, height: 179
+          },
         ]
       },
       { label: 'users.edit.email', controlName: 'email', type: 'text', disabled: true },

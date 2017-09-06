@@ -13,6 +13,9 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('widgets.phone.card');
 
 @Component({
   selector: 'app-phone-card',
@@ -49,11 +52,11 @@ export class PhoneCardComponent {
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
       this.controls = [
-        { label: 'widgets.phone.card.typeCode', controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
-        { label: 'widgets.phone.card.phoneNumber', controlName: 'phone', type: 'text', required: true, disabled: !canEdit },
-        { label: 'widgets.phone.card.stopAutoSms', controlName: 'stopAutoSms', type: 'checkbox', disabled: !canEdit },
-        { label: 'widgets.phone.card.stopAutoInfo', controlName: 'stopAutoInfo', type: 'checkbox', disabled: !canEdit },
-        { label: 'widgets.phone.card.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
+        { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
+        { label: labelKey('phoneNumber'), controlName: 'phone', type: 'text', required: true, disabled: !canEdit },
+        { label: labelKey('stopAutoSms'), controlName: 'stopAutoSms', type: 'checkbox', disabled: !canEdit },
+        { label: labelKey('stopAutoInfo'), controlName: 'stopAutoInfo', type: 'checkbox', disabled: !canEdit },
+        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
       this.phone = phone;
     });

@@ -4,7 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IPermissionModel, IPermissionRole, IPermissionsDialogEnum, IPermissionsState, IValueEntity } from './permissions.interface';
+import {
+  IPermissionModel, IPermissionRole, IPermissionsDialogEnum,
+  IPermissionsState, IValueEntity
+} from './permissions.interface';
 
 @Injectable()
 export class PermissionsService {

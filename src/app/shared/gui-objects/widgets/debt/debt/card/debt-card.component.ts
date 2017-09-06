@@ -272,7 +272,9 @@ export class DebtCardComponent {
           label: 'widgets.debt.grid.dict1Code',
           controlName: 'dict1Code',
           type: 'select',
-          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1], permissions['DEBT_DICT1_EDIT_LIST']),
+          options: this.filterOptions(
+            dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1], permissions['DEBT_DICT1_EDIT_LIST']
+          ),
           disabled: !permissions['DEBT_DICT1_EDIT_LIST'].valueS,
           required: attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
           width: 3
@@ -283,7 +285,9 @@ export class DebtCardComponent {
           label: 'widgets.debt.grid.dict2Code',
           controlName: 'dict2Code',
           type: 'select',
-          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2], permissions['DEBT_DICT2_EDIT_LIST']),
+          options: this.filterOptions(
+            dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2], permissions['DEBT_DICT2_EDIT_LIST']
+          ),
           disabled: !permissions['DEBT_DICT2_EDIT_LIST'].valueS,
           required: attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
           width: 3
@@ -294,7 +298,9 @@ export class DebtCardComponent {
           label: 'widgets.debt.grid.dict3Code',
           controlName: 'dict3Code',
           type: 'select',
-          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3], permissions['DEBT_DICT3_EDIT_LIST']),
+          options: this.filterOptions(
+            dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3], permissions['DEBT_DICT3_EDIT_LIST']
+          ),
           disabled: !permissions['DEBT_DICT3_EDIT_LIST'].valueS,
           required: attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
           width: 3
@@ -305,7 +311,9 @@ export class DebtCardComponent {
           label: 'widgets.debt.grid.dict4Code',
           controlName: 'dict4Code',
           type: 'select',
-          options: this.filterOptions(dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4], permissions['DEBT_DICT4_EDIT_LIST']),
+          options: this.filterOptions(
+            dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4], permissions['DEBT_DICT4_EDIT_LIST']
+          ),
           disabled: !permissions['DEBT_DICT4_EDIT_LIST'].valueS,
           required: attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
           width: 3

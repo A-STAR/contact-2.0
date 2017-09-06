@@ -106,7 +106,8 @@ export class EmployeesComponent implements OnDestroy {
         this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
       });
 
-    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
+    this.employeeRoleOptions$ = this.userDictionariesService
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
 
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
@@ -123,7 +124,8 @@ export class EmployeesComponent implements OnDestroy {
     });
 
     this.employees$ = this.organizationsService.state.map(state => state.employees);
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
+    this.emptyMessage$ = this.hasViewPermission$
+      .map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {

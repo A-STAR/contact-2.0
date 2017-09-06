@@ -32,7 +32,8 @@ export class EntityAttributesService {
 
     return this.state$
       .map(state => ids.reduce((acc, id) => ({ ...acc, [id]: state[id] }), {}))
-      .filter(slice => Object.keys(slice).reduce((acc, key) => acc && slice[key].status === EntityAttributesStatusEnum.LOADED, true))
+      .filter(slice =>
+        Object.keys(slice).reduce((acc, key) => acc && slice[key].status === EntityAttributesStatusEnum.LOADED, true))
       .map(slice => Object.keys(slice).reduce((acc, key) => ({ ...acc, [key]: slice[key].attribute }), {}));
   }
 

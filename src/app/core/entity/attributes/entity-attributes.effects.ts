@@ -23,7 +23,8 @@ export class EntityAttributesEffects {
         }))
         .catch(response => [
           { type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE },
-          this.notificationService.error('errors.default.read').entity(`entities.attribute.gen.plural`).response(response).action(),
+          this.notificationService.error('errors.default.read')
+            .entity(`entities.attribute.gen.plural`).response(response).action(),
         ]);
     });
 

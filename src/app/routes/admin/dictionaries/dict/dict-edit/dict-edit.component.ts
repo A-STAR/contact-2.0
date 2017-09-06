@@ -87,12 +87,6 @@ export class DictEditComponent extends EntityTranslationComponent<IDictionary> {
         ]
       }
     ];
-    // .filter(
-    //   (control) => {
-    //     return this.isEditMode()
-    //       ? this.nameControlName !== control.controlName
-    //       : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
-    //   });
 
     return this.filterControls(controls);
   }
