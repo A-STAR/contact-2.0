@@ -15,6 +15,7 @@
 
 <app-debt-grid-call-dialog
   *ngIf="(dialog$ | async) === 3"
+  [debt]="selectedDebt$ | async"
   (submit)="onCallDialogSubmit()"
   (close)="onDialogClose()">
 </app-debt-grid-call-dialog>

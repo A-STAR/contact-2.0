@@ -24,3 +24,8 @@ export interface IDebt {
   dict3Code: number;
   dict4Code: number;
 }
+
+export interface IDebtNextCall {
+  nextCallDateTime: string;
+  forAllDebts: number;
+}

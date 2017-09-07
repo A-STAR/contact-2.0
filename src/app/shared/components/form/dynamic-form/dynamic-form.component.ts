@@ -176,9 +176,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'datepicker':
         return value === ''
           ? null
-          : control.dateOnly
-          ? this.valueConverterService.toDateOnly(value)
-          : this.valueConverterService.toISO(value);
+          : control.displayTime
+          ? this.valueConverterService.toISO(value)
+          : this.valueConverterService.toDateOnly(value);
       case 'boolean':
       case 'checkbox':
         return Number(value);

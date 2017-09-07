@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDebt } from './debt.interface';
+import { IDebt, IDebtNextCall } from './debt.interface';
 
 import { DataService } from '../../../../../core/data/data.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -49,4 +49,10 @@ export class DebtService {
       .update(`${this.extUrl}/statuschange`, { debtId, personId }, debt)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
+
+  setNextCallDate(debtId: number, call: IDebtNextCall): Observable<void> {
+    return this.dataService
+      .update('/debts/{debtId}/nextCall', { debtId }, call)
+      .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
+    }
 }
