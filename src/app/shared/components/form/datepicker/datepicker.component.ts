@@ -26,6 +26,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @Input() maxDate: Date = null;
   @Input() minDate: Date = null;
   @Input() required = false;
+  @Input() displayTime = false;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -65,7 +66,9 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   get formattedDate(): string {
-    return this.valueConverterService.toLocalDate(this.value);
+    return this.displayTime
+      ? this.valueConverterService.toLocalDateTime(this.value)
+      : this.valueConverterService.toLocalDate(this.value);
   }
 
   @HostListener('document:click', ['$event'])
@@ -105,14 +108,11 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   onValueChange(newValue: Date | Event): void {
-    if (this.isExpanded) {
+    if (this.isExpanded && !this.displayTime) {
       this.toggleCalendar(false);
     }
 
-    const newDate = newValue instanceof Date ?
-      newValue :
-      this.valueConverterService.fromLocalDate((newValue.target as HTMLInputElement).value);
-
+    const newDate = this.dateFromInput(newValue);
     if (Number(newDate) !== Number(this.value)) {
       this.value = newDate;
       this.propagateChange(newDate);
@@ -135,6 +135,15 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
       this.removeWheelListener();
     }
+  }
+
+  private dateFromInput(value: any): Date {
+    if (value instanceof Date) {
+      return value;
+    }
+
+    const date = (value.target as HTMLInputElement).value;
+    return this.displayTime ? this.valueConverterService.fromLocalDateTime(date) : this.valueConverterService.fromLocalDate(date);
   }
 
   private propagateChange: Function = () => {};

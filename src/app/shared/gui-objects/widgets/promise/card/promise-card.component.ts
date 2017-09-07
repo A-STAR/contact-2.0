@@ -43,7 +43,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       label: 'widgets.promise.grid.promiseDate',
       controlName: 'promiseDate',
       type: 'datepicker',
-      dateOnly: true,
       required: true
     },
     {

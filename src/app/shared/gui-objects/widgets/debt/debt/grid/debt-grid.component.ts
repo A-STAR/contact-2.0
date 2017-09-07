@@ -39,7 +39,7 @@ export class DebtGridComponent {
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
       enabled: combineLatestAnd([
-        this.selectedDebt$.map(debt => debt && !!debt.id),
+        this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
         this.userPermissionsService.bag().map(bag => (
           bag.containsOneOf('DEBT_STATUS_EDIT_LIST', [ 9, 12, 15 ]) ||
           bag.containsCustom('DEBT_STATUS_EDIT_LIST'))
@@ -48,11 +48,21 @@ export class DebtGridComponent {
       action: () => this.onChangeStatus()
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON,
+      label: 'widgets.debt.toolbar.call',
+      icon: 'fa fa-phone',
+      enabled: combineLatestAnd([
+        this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
+        this.userPermissionsService.has('DEBT_NEXT_CALL_DATE_SET'),
+      ]),
+      action: () => this.onNextCall()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_CLOSE,
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {
-          label: 'К возврату клиентом',
+          label: 'widgets.debt.toolbar.forRepayment',
           action: () => this.onClose(10),
           enabled: combineLatestAnd([
             this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
@@ -60,15 +70,15 @@ export class DebtGridComponent {
           ])
         },
         {
-          label: 'Отозван клиентом',
+          label: 'widgets.debt.toolbar.withdrawn',
           action: () => this.onClose(8),
           enabled: combineLatestAnd([
-            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
+            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8),
             this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 8),
           ])
         },
         {
-          label: 'Завершить',
+          label: 'widgets.debt.toolbar.terminate',
           action: () => this.onClose(6),
           enabled: combineLatestAnd([
             this.selectedDebt$.map(debt => debt && !!debt.id && !(debt.statusCode >= 6 && debt.statusCode <= 8)),
@@ -183,6 +193,10 @@ export class DebtGridComponent {
   private onClose(status: number): void {
     this.dialog$.next(2);
     this.debtCloseDialogStatus$.next(status);
+  }
+
+  private onNextCall(): void {
+    this.dialog$.next(3);
   }
 
   get canAdd$(): Observable<boolean> {
