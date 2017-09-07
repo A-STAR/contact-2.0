@@ -7,7 +7,9 @@
 
 <app-debt-grid-close-dialog
   *ngIf="(dialog$ | async) === 2"
-  (submit)="onChangeCloseDialogSubmit()"
+  [debt]="selectedDebt$ | async"
+  [statusCode]="debtCloseDialogStatus$ | async"
+  (submit)="onCloseDialogSubmit()"
   (close)="onDialogClose()">
 </app-debt-grid-close-dialog>
 

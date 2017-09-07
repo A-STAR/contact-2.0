@@ -38,7 +38,13 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
-      enabled: combineLatestAnd([ this.canChangeStatus$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
+      enabled: combineLatestAnd([
+        this.selectedDebt$.map(debt => debt && !!debt.id),
+        this.userPermissionsService.bag().map(bag => (
+          bag.containsOneOf('DEBT_STATUS_EDIT_LIST', [ 9, 12, 15 ]) ||
+          bag.containsCustom('DEBT_STATUS_EDIT_LIST'))
+        )
+      ]),
       action: () => this.onChangeStatus()
     },
     {
@@ -47,18 +53,27 @@ export class DebtGridComponent {
       children: [
         {
           label: 'К возврату клиентом',
-          action: () => this.onClose(1),
-          enabled: this.canCloseOption1$
+          action: () => this.onClose(10),
+          enabled: combineLatestAnd([
+            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
+            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 10),
+          ])
         },
         {
           label: 'Отозван клиентом',
-          action: () => this.onClose(2),
-          enabled: this.canCloseOption2$
+          action: () => this.onClose(8),
+          enabled: combineLatestAnd([
+            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
+            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 8),
+          ])
         },
         {
           label: 'Завершить',
-          action: () => this.onClose(3),
-          enabled: this.canCloseOption3$
+          action: () => this.onClose(6),
+          enabled: combineLatestAnd([
+            this.selectedDebt$.map(debt => debt && !!debt.id && !(debt.statusCode >= 6 && debt.statusCode <= 8)),
+            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 6),
+          ])
         },
       ]
     },
@@ -91,6 +106,7 @@ export class DebtGridComponent {
   private gridSubscription: Subscription;
 
   dialog$ = new BehaviorSubject<number>(null);
+  debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -148,6 +164,10 @@ export class DebtGridComponent {
     this.fetch();
   }
 
+  onCloseDialogSubmit(): void {
+    this.fetch();
+  }
+
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/debt/create` ]);
   }
@@ -160,8 +180,9 @@ export class DebtGridComponent {
     this.dialog$.next(1);
   }
 
-  private onClose(id: number): void {
+  private onClose(status: number): void {
     this.dialog$.next(2);
+    this.debtCloseDialogStatus$.next(status);
   }
 
   get canAdd$(): Observable<boolean> {
@@ -180,31 +201,6 @@ export class DebtGridComponent {
         bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
       ))
       .distinctUntilChanged();
-  }
-
-  get canChangeStatus$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', null);
-  }
-
-  get canCloseOption1$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
-      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 10)
-    ]);
-  }
-
-  get canCloseOption2$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8),
-      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 8)
-    ]);
-  }
-
-  get canCloseOption3$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode >= 6 && debt.statusCode <= 8),
-      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 6)
-    ]);
   }
 
   private fetch(): void {

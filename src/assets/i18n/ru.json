@@ -929,6 +929,11 @@
         "dict4Code": "Балл 4"
       },
       "dialogs": {
+        "closeDebt": {
+          "title": "Завершение работы с долгом",
+          "reasonCode": "Причина",
+          "comment": "Комментарий"
+        },
         "statusChange": {
           "title": "Смена статуса долга",
           "statusCode": "Выберите статус",
