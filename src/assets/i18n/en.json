@@ -912,6 +912,12 @@
       }
     },
     "debt": {
+      "toolbar": {
+        "call": "Call Back",
+        "forRepayment": "For Repayment",
+        "withdrawn": "Withdrawn by Client",
+        "terminate": "Terminate Work"
+      },
       "grid": {
         "id": "Id",
         "portfolioId": "Portfolio",
@@ -950,6 +956,11 @@
           "reasonCode": "Select Reason",
           "customStatusCode": "Custom Status",
           "comment": "Comments"
+        },
+        "nextCall": {
+          "title": "Set Next Call Date",
+          "nextCallDateTime": "Date",
+          "forAllDebts": "For All Debts"
         }
       },
       "component": {

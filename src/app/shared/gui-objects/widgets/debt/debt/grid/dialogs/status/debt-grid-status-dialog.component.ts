@@ -35,7 +35,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   @Input() debt: IDebt;
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
     { controlName: 'statusCode', type: 'radio', required: true, radioOptions: [] },

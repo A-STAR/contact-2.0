@@ -13,6 +13,12 @@
   (close)="onDialogClose()">
 </app-debt-grid-close-dialog>
 
+<app-debt-grid-call-dialog
+  *ngIf="(dialog$ | async) === 3"
+  (submit)="onCallDialogSubmit()"
+  (close)="onDialogClose()">
+</app-debt-grid-call-dialog>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid

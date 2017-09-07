@@ -47,7 +47,7 @@ export class DocumentCardComponent {
     )
     .take(1)
     .subscribe(([ options, maxSize, document ]) => {
-      const fileSizeValidator = maxFileSize(maxSize.valueN);
+      const fileSizeValidator = maxFileSize(1e3 * maxSize.valueN);
       this.controls = [
         { controlName: 'docTypeCode', type: 'select', options },
         { controlName: 'docName', type: 'text' },

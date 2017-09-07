@@ -912,6 +912,12 @@
       }
     },
     "debt": {
+      "toolbar": {
+        "call": "Необходимо перезвонить",
+        "forRepayment": "К возврату клиентом",
+        "withdrawn": "Отозван клиентом",
+        "terminate": "Завершить работу с долгом"
+      },
       "grid": {
         "id": "Ид долга",
         "portfolioId": "Портфель",
@@ -950,6 +956,11 @@
           "reasonCode": "Выберите причину",
           "customStatusCode": "Пользовательский статус",
           "comment": "Комментарий"
+        },
+        "nextCall": {
+          "title": "Установка даты следующего звонка",
+          "nextCallDateTime": "Дата",
+          "forAllDebts": "По всем долгам"
         }
       },
       "component": {
