@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
-import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserDictionary } from './user-dictionaries.interface';
+import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm } from './user-dictionaries.interface';
 
 @Injectable()
 export class UserDictionariesService {
@@ -71,7 +71,7 @@ export class UserDictionariesService {
     };
   }
 
-  getDictionary(id: number): Observable<IUserDictionary> {
+  getDictionary(id: number): Observable<Array<IUserTerm>> {
     return this.loadDictionaries([ id ], term => term).map(dictionaries => dictionaries[id]);
   }
 
