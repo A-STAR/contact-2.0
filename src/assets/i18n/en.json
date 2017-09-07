@@ -939,6 +939,11 @@
         "dict4Code": "Score 4"
       },
       "dialogs": {
+        "closeDebt": {
+          "title": "Debt Closure",
+          "reasonCode": "Reason",
+          "comment": "Comments"
+        },
         "statusChange": {
           "title": "Debt Status Update",
           "statusCode": "Select Status",

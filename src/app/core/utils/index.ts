@@ -11,11 +11,17 @@ export const makeKey = (prefix: string) => (fieldName: string) => `${prefix}.${f
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
+type IValueToOption<T> = (value: T) => IOption;
+
+export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
+  return value => ({
+    label: value[labelKey],
+    value: value[valueKey]
+  });
+}
+
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
-  return values.map(value => ({
-    label: value.name,
-    value: value.id
-  }));
+  return values.map(toOption('id', 'name'));
 }
 
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {
