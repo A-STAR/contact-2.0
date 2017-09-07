@@ -57,7 +57,7 @@ export class DocumentService {
     }
     const properties = new Blob(
       [ JSON.stringify({ ...document, fileName: file ? file.name : undefined }) ],
-      { type: 'application/json' }
+      { type: 'application/json;charset=UTF-8' }
     );
     data.append('properties', properties);
     return data;
