@@ -1,0 +1,7 @@
+<div class="container">
+  <ul #rowsContainer class="rows">
+    <li *ngFor="let row of rows; let i = index" [ngStyle]="getStyle(i)">
+      {{ row }}
+    </li>
+  </ul>
+</div>
