@@ -10,34 +10,50 @@ import 'rxjs/add/operator/auditTime';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridTreeComponent implements OnInit {
+  private static THROTTLE_INTERVAL = 100;
+
   @ViewChild('rowsContainer') rowsContainer: ElementRef;
 
   rows = Array(1000).fill(null).map((_, i) => `Item #${i}`);
 
   private rowHeight = 24;
   private iTop = 0;
-  private iBottom = Infinity;
+  private iHeight = 0;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const rowsContainerElement = this.rowsContainer.nativeElement;
+    this.iHeight = rowsContainerElement.offsetHeight / this.rowHeight;
     Observable
       .fromEvent(rowsContainerElement, 'scroll')
-      .auditTime(100)
+      .auditTime(GridTreeComponent.THROTTLE_INTERVAL)
       .subscribe((event: MouseEvent) => {
         const top = rowsContainerElement.scrollTop;
         this.iTop = top / this.rowHeight;
-        this.iBottom = (top + rowsContainerElement.offsetHeight) / this.rowHeight;
         this.cdRef.markForCheck();
       });
   }
 
+  get iMin(): number {
+    return Math.max(0, Math.floor(this.iTop - this.iHeight));
+  }
+
+  get iMax(): number {
+    return Math.min(this.rows.length, Math.ceil(this.iTop + 2 * this.iHeight));
+  }
+
+  get rowsForViewport(): Array<any> {
+    return this.rows.slice(this.iMin, this.iMax);
+  }
+
+  get height(): number {
+    return this.rowHeight * this.rows.length;
+  }
+
   getStyle(i: number): any {
-    const isWithinViewport = i >= this.iTop && i <= this.iBottom;
     return {
-      top: `${this.rowHeight * i}px`,
-      background: isWithinViewport ? '#fff' : '#f00'
+      top: `${this.rowHeight * i}px`
     }
   }
 }

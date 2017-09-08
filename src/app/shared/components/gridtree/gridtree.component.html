@@ -1,6 +1,8 @@
 <div class="container">
   <ul #rowsContainer class="rows">
-    <li *ngFor="let row of rows; let i = index" [ngStyle]="getStyle(i)">
+    <div class="overlay" [ngStyle]="{ height: height + 'px' }">
+    </div>
+    <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
       {{ row }}
     </li>
   </ul>
