@@ -473,7 +473,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
     this.translateOptionsMessages();
-    this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
+    // this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
     this.cdRef.markForCheck();
   }
