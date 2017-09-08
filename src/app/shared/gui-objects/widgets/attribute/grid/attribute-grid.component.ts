@@ -14,7 +14,7 @@ export class AttributeGridComponent {
     { label: 'Name', prop: 'name' },
     { label: 'Type', prop: 'type' },
   ];
-  private _rows = this.generateGridTreeRows(1e6);
+  private _rows = this.generateGridTreeRows(100);
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
     return this._columns;

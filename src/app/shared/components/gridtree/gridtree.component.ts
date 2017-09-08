@@ -25,6 +25,7 @@ export class GridTreeComponent<T> implements OnInit {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
   @Input() rows: Array<IGridTreeRow<T>> = [];
+  @Input() displayTreeProp: keyof T;
 
   @ViewChild('rowsContainer') rowsContainer: ElementRef;
 

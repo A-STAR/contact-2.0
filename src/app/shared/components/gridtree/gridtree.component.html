@@ -8,8 +8,10 @@
     <div class="gridtree-overlay" [ngStyle]="{ height: totalHeight + 'px' }">
     </div>
     <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
-      <div *ngFor="let column of columns; let first = first">
-        <i *ngIf="first && hasChildren(row)" class="fa fa-plus-square-o"></i>
+      <div *ngFor="let column of columns">
+        <span *ngIf="column.prop == displayTreeProp" style="display: inline-block; width: 15px;">
+          <i *ngIf="hasChildren(row)" class="fa fa-plus-square-o"></i>
+        </span>
         {{ row.data[column.prop] }}
       </div>
     </li>
