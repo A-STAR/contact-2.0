@@ -3,9 +3,9 @@
     <div class="gridtree-overlay" [ngStyle]="{ height: totalHeight + 'px' }">
     </div>
     <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
-      <i class="fa fa-plus-square-o"></i>
+      <i *ngIf="hasChildren(row)" class="fa fa-plus-square-o"></i>
       &nbsp;
-      {{ row | json }}
+      {{ row.data | json }}
     </li>
   </ul>
 </div>

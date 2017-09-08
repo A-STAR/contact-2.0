@@ -70,4 +70,8 @@ export class GridTreeComponent<T> implements OnInit {
       top: `${this.rowHeight * i}px`
     }
   }
+
+  hasChildren(row: IGridTreeRow<T>): boolean {
+    return row.children && row.children.length > 0;
+  }
 }
