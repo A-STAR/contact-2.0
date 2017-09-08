@@ -1,0 +1,16 @@
+<div>
+  <div *ngFor="let column of columns" style="display: inline-block; padding: 0 10px; width: 200px; border-right: 1px solid #e5e5e5;">
+    <span *ngIf="column.prop == displayTreeProp" style="display: inline-block; width: 15px;">
+      <i *ngIf="hasChildren" class="fa fa-plus-square-o"></i>
+    </span>
+    {{ row.data[column.prop] }}
+  </div>
+</div>
+
+<!--
+<ng-container *ngIf="hasChildren">
+  <ng-container *ngFor="let item of row.children">
+    <app-gridtree-row [columns]="columns" [displayTreeProp]="displayTreeProp" [row]="item"></app-gridtree-row>
+  </ng-container>
+</ng-container>
+-->
