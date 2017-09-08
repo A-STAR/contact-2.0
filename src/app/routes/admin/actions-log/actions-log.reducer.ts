@@ -4,7 +4,7 @@ import {
   IEmployee
 } from './actions-log.interface';
 
-import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { ActionsLogService } from './actions-log.service';
 
@@ -21,7 +21,7 @@ export function actionsLogReducer(state: IActionsLogState = defaultState, action
     case ActionsLogService.ACTION_TYPES_FETCH_SUCCESS:
       return {
         ...state,
-        actionTypes: action.payload as IUserDictionary
+        actionTypes: action.payload as IUserTerm[]
       };
 
     case ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS:

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
@@ -27,7 +26,6 @@ export class ActionsLogService {
 
   constructor(
     private dataService: DataService,
-    private actions: Actions,
     private gridService: GridService,
     private notifications: NotificationsService,
     private store: Store<IAppState>,

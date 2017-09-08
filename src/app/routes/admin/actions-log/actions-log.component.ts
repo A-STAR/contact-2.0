@@ -78,7 +78,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
             .subscribe();
           // load data
           if (this.grid.gridOptions.api) {
-            // this is a workaround for the filters firing the request automatically
             this.onRequest();
           }
         }

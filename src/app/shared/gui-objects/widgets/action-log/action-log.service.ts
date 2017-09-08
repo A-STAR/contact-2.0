@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Action } from '@ngrx/store';
 
 import { IAGridRequestParams, IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
 import { IDebtorActionLog } from './action-log.interface';
@@ -28,7 +27,7 @@ export class ActionLogService {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService
-      // .create('/list?name=personActions', {}, request)
+      // the url can be '/list?name=personActions' as well
       .create('/persons/{personId}/actions', { personId }, request)
       .catch(
         this.notifications.error('errors.default.read')

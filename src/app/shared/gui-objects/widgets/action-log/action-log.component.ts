@@ -4,15 +4,18 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
 import { IDebtorActionLog } from './action-log.interface';
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
-
 import { ActionLogService } from './action-log.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 import { Grid2Component } from '../../../../shared/components/grid2/grid2.component';
 
 @Component({
@@ -26,9 +29,13 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorActionLogComponent';
 
   @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private personId = (this.route.params as any).value.id || null;
-  private canViewSubscription: Subscription;
+  private canViewSub: Subscription;
+  private constantSub: Subscription;
+
+  private actionLogDays = 0;
   private hasViewPermission$: Observable<boolean>;
 
   data: any = {};
@@ -51,42 +58,26 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   constructor(
     private actionLogService: ActionLogService,
     private cdRef: ChangeDetectorRef,
-    private notifications: NotificationsService,
     private route: ActivatedRoute,
-    private notificationsService: NotificationsService,
+    private notifications: NotificationsService,
+    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // Observable.combineLatest(
-    //   this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
-    //   this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
-    //   this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
-    //   this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId) : Observable.of(null)
-    // )
-    // .take(1)
-    // .subscribe(([ options, canEdit, canEditComment, phone ]) => {
-    //   this.controls = [
-    //     { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
-    //     { label: labelKey('phoneNumber'), controlName: 'phone', type: 'text', required: true, disabled: !canEdit },
-    //     { label: labelKey('stopAutoSms'), controlName: 'stopAutoSms', type: 'checkbox', disabled: !canEdit },
-    //     { label: labelKey('stopAutoInfo'), controlName: 'stopAutoInfo', type: 'checkbox', disabled: !canEdit },
-    //     { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
-    //   ];
-    //   this.phone = phone;
-    // });
+    this.constantSub = this.userConstantsService.get('Person.ActionLog.Days')
+    .subscribe(( actionLogDays ) => {
+      this.actionLogDays = actionLogDays && actionLogDays.valueN || 0;
+    });
     this.hasViewPermission$ = this.userPermissionsService.has('PERSON_ACTION_LOG_VIEW');
   }
 
   ngAfterViewInit(): void {
-    this.canViewSubscription = this.hasViewPermission$
+    this.canViewSub = this.hasViewPermission$
       .subscribe(hasPermission => {
         if (!hasPermission) {
           this.rows = [];
           this.rowCount = 0;
-          this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
+          this.notifications.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
-          // this.actionLogService.getEmployeesAndActionTypes()
-          //   .take(1)
-          //   .subscribe();
           // load data
           if (this.grid.gridOptions.api) {
             this.onRequest();
@@ -96,11 +87,13 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.canViewSubscription.unsubscribe();
+    this.canViewSub.unsubscribe();
+    this.constantSub.unsubscribe();
   }
 
   onRequest(): void {
     const filters = this.grid.getFilters();
+    filters.addFilter(this.getFormFilters());
     const params = this.grid.getRequestParams();
     this.actionLogService.fetch(this.personId, filters, params)
       .subscribe((response: IAGridResponse<IDebtorActionLog>) => {
@@ -112,6 +105,57 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
 
   getRowNodeId(actionLog: IDebtorActionLog): number {
     return actionLog.id;
+  }
+
+  getFormFilters(): FilterObject {
+    const filterObject = FilterObject.create().and();
+    const { startDate, endDate } = this.form.value;
+
+    if (!startDate && !endDate && this.actionLogDays) {
+      const mStartDate = moment().subtract(this.actionLogDays, 'day')
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+      // pass the new value to the control
+      this.data = { startDate: mStartDate.toDate() };
+      this.cdRef.markForCheck();
+
+      return filterObject
+        .addFilter(
+          FilterObject.create()
+            .setName('createDateTime')
+            .setOperator('>=')
+            .setValues(mStartDate.toISOString())
+        );
+    }
+
+    if (!startDate && endDate) {
+      return filterObject
+        .addFilter(
+          FilterObject.create()
+            .setName('createDateTime')
+            .setOperator('<=')
+            .setValues(endDate.toISOString())
+        );
+    }
+
+    if (startDate && !endDate) {
+      return filterObject
+        .addFilter(
+          FilterObject.create()
+            .setName('createDateTime')
+            .setOperator('>=')
+            .setValues(startDate.toISOString())
+        );
+    }
+
+    return !startDate && !endDate
+      ? null
+      : filterObject
+        .addFilter(
+          FilterObject.create()
+            .setName('createDateTime')
+            .betweenOperator()
+            .setValues([ startDate.toISOString(), endDate.toISOString() ])
+        );
   }
 
 }

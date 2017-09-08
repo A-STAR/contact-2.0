@@ -118,7 +118,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
           ? this.controls.filter(control => control.disabled)
           : this.controls;
 
-        this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
+      this.promise = promise ? promise : { receiveDateTime: today, promiseAmount: minAmount };
 
       this.form.disableControls(disabledControls);
       this.cdRef.markForCheck();

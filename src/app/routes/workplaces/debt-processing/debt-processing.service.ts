@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Action } from '@ngrx/store';
 
 import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 import { IDebt } from './debt-processing.interface';

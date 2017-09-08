@@ -1,6 +1,7 @@
 import { hasDigits } from './hasDigits';
 import { hasLowerCaseChars } from './hasLowerCaseChars';
 import { hasUpperCaseChars } from './hasUpperCaseChars';
+import { isDate } from './isDate';
 import { max } from './max';
 import { maxFileSize } from './maxFileSize';
 import { min } from './min';
@@ -16,4 +17,5 @@ export {
   min,
   oneOfGroupRequired,
   password,
+  isDate,
 }
