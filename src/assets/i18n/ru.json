@@ -1140,6 +1140,7 @@
       "filterOperatorNotAllowedForDataType": "Для заданного типа данных не поддерживается оператор, переданный в фильтре",
       "guiIdNotFound": "Не найден запрошенный по ID объект интерфейса",
       "guiNameNotFound": "Не найден запрошенный по имени объект интерфейса",
+      "gridParametersNotFound": "Недопустимый набор параметров запроса загрузки данных",
       "incorrectContentType": "Недопустимый content-type {{ $1 }} загружаемого файла",
       "incorrectNullValueOperator": "Некорректный оператор {{ $1 }} для значения NULL в фильтре",
       "incorrectValuesForConstTypeBoolean": "Значение для константы булевого типа не соответствует формату",

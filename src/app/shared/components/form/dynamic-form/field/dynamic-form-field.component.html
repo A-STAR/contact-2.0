@@ -176,6 +176,16 @@
          class="form-control"
          [formControlName]="control.controlName">
 
+  <ng-container *ngSwitchCase="'button'">
+    <label><span class="form-label">&nbsp;</span></label>
+    <button class="btn btn-labeled btn-default" type="button" (click)="control.action()">
+      <span class="btn-label">
+        <i *ngIf="control.iconCls" class="fa" [ngClass]="control.iconCls" aria-hidden="true"></i>
+      </span>
+      {{ control.label | translate }}
+    </button>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'dynamic'">
 
     <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">

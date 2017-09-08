@@ -25,17 +25,11 @@ export interface IActionLog {
 }
 
 export interface IActionsLogState {
-  actionsLog: IActionsLogData;
   employees: IEmployee[];
   actionTypes: IUserDictionary;
 }
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IActionsLogData|IEmployee[]|IUserDictionary;
-}
-
-export interface IActionsLogData {
-  total: number;
-  data: IActionLog[];
+  payload?: IEmployee[]|IUserDictionary;
 }

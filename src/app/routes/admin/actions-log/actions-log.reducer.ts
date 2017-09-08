@@ -1,5 +1,4 @@
 import {
-  IActionsLogData,
   IActionsLogPayload,
   IActionsLogState,
   IEmployee
@@ -10,7 +9,6 @@ import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionari
 import { ActionsLogService } from './actions-log.service';
 
 const defaultState: IActionsLogState = {
-  actionsLog: { data: [], total: 0 },
   employees: [],
   actionTypes: [],
 };
@@ -32,11 +30,6 @@ export function actionsLogReducer(state: IActionsLogState = defaultState, action
         employees: action.payload as IEmployee[]
       };
 
-    case ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS:
-      return {
-        ...state,
-        actionsLog: action.payload as IActionsLogData
-      };
     default:
       return state;
   }

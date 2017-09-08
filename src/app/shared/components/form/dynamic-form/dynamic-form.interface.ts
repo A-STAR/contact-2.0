@@ -24,6 +24,7 @@ export interface IDynamicFormControl {
   displayTime?: boolean;
   dependsOn?: string;
   disabled?: boolean;
+  iconCls?: string;
   label: string;
   // markAsDirty if the control is passed a value
   markAsDirty?: boolean;
@@ -60,10 +61,12 @@ export interface IDynamicFormControl {
 
 export type ControlTypes =
     'boolean'
+  | 'button'
   | 'checkbox'
   | 'datepicker'
   | 'dialog'
   | 'dynamic'
+  | 'file'
   | 'gridselect'
   | 'hidden'
   | 'image'
@@ -74,7 +77,6 @@ export type ControlTypes =
   | 'select'
   | 'text'
   | 'textarea'
-  | 'file'
 ;
 
 export interface IValue {

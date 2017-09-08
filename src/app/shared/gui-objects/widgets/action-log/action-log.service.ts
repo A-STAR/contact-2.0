@@ -20,11 +20,19 @@ export class ActionLogService {
     private notifications: NotificationsService,
   ) {}
 
-  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebtorActionLog> | Action> {
+  fetch(
+    personId: number,
+    filters: FilterObject,
+    params: IAGridRequestParams
+  ): Observable<IAGridResponse<IDebtorActionLog>> {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService
-      .create('/list?name=debtsprocessingall', {}, request)
-      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
+      // .create('/list?name=personActions', {}, request)
+      .create('/persons/{personId}/actions', { personId }, request)
+      .catch(
+        this.notifications.error('errors.default.read')
+          .entity('entities.actionsLog.gen.plural').dispatchCallback()
+      );
   }
 }

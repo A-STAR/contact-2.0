@@ -7,9 +7,9 @@ import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
-import { IActionLog, IActionsLogData, IActionsLogPayload, IEmployee } from './actions-log.interface';
+import { IActionLog, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
-import { IAGridFilterRequest, IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
@@ -25,23 +25,6 @@ export class ActionsLogService {
   static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
   static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
 
-  @Effect() onSearchEffect = this.actions
-    .ofType(ActionsLogService.ACTIONS_LOG_FETCH)
-    .switchMap((action: Action): Observable<IActionsLogPayload> => {
-      const filterRequest: IAGridFilterRequest = action.payload;
-      const request = this.gridService.buildRequest(filterRequest, filterRequest.filters);
-
-      return this.dataService.create('/list?name=actions', {}, request)
-        .map((payload: { data: IActionLog[], total: number }): IActionsLogPayload => {
-          return {
-            type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
-            payload,
-          };
-        })
-        .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
-      }
-    );
-
   constructor(
     private dataService: DataService,
     private actions: Actions,
@@ -50,12 +33,6 @@ export class ActionsLogService {
     private store: Store<IAppState>,
     private userDictionariesService: UserDictionariesService,
   ) {}
-
-  get actionsLogRows(): Observable<IActionsLogData> {
-    return this.store
-      .select(state => state.actionsLog.actionsLog)
-      .distinctUntilChanged();
-  }
 
   get employeesRows(): Observable<IEmployee[]> {
     return this.store
@@ -86,11 +63,18 @@ export class ActionsLogService {
     );
   }
 
-  fetch(filters: FilterObject, params: IAGridRequestParams): void {
-    this.store.dispatch({
-      payload: { filters, ...params },
-      type: ActionsLogService.ACTIONS_LOG_FETCH,
-    });
+  // fetch(filters: FilterObject, params: IAGridRequestParams): void {
+  //   this.store.dispatch({
+  //     payload: { filters, ...params },
+  //     type: ActionsLogService.ACTIONS_LOG_FETCH,
+  //   });
+  // }
+
+  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IActionLog>> {
+    const request = this.gridService.buildRequest(params, filters);
+
+    return this.dataService.create('/list?name=actions', {}, request)
+      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
   }
 
   clear(): void {

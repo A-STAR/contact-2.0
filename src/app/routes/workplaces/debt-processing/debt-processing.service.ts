@@ -19,14 +19,13 @@ export class DebtProcessingService {
     private notifications: NotificationsService,
   ) {}
 
-  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt> | Action> {
+  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt>> {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create('/list?name=debtsprocessingall', {}, request)
-      // .map((response: IAGridResponse<IDebt>) => ({ ...response }))
-      // TODO(d.maltsev): the `.error` method should not return the error payload back to the component,
-      // but the default response like in the example below...
-      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback())
-      .map(response => !response.data ? { data: [], total: 0 } : response);
+      .catch(
+        this.notifications.error('errors.default.read')
+          .entity('entities.actionsLog.gen.plural').dispatchCallback()
+      );
   }
 }

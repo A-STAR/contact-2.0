@@ -1,14 +1,14 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy,
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
   Component, OnDestroy, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionsLogData, IEmployee } from './actions-log.interface';
+import { IEmployee, IActionLog } from './actions-log.interface';
 
-import { IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
@@ -36,7 +36,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   actionTypesRows: Observable<IUserDictionary>;
   employeesRows: Observable<IEmployee[]>;
   // grid
-  actionsLogData: Observable<IActionsLogData>;
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
 
@@ -46,8 +45,12 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   @ViewChild('filter') filter: ActionsLogFilterComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
 
+  rows: IActionLog[] = [];
+  rowCount = 0;
+
   constructor(
     private actionsLogService: ActionsLogService,
+    private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -55,7 +58,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.actionTypesRows = this.actionsLogService.actionTypesRows;
     this.employeesRows = this.actionsLogService.employeesRows;
     // grid
-    this.actionsLogData = this.actionsLogService.actionsLogRows;
     this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
   }
 
@@ -67,7 +69,8 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
     this.permissionSub = this.hasViewPermission$
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          this.actionsLogService.clear();
+          this.rows = [];
+          this.rowCount = 0;
           this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           this.actionsLogService.getEmployeesAndActionTypes()
@@ -88,11 +91,12 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   onRequest(): void {
     const filters = this.getCombinedFilters();
     const params = this.grid.getRequestParams();
-    this.actionsLogService.fetch(filters, params);
-  }
-
-  onSelect(selected: IAGridSelected): void {
-    // console.log(selected);
+    this.actionsLogService.fetch(filters, params)
+      .subscribe((response: IAGridResponse<IActionLog>) => {
+        this.rows = [...response.data];
+        this.rowCount = response.total;
+        this.cdRef.markForCheck();
+      });
   }
 
   doExport(): void {

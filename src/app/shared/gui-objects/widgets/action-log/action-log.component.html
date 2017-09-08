@@ -1,25 +1,18 @@
-<!-- <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2> -->
+<div class="form-wrapper">
+  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
+</div>
 
-<app-grid
-  columnTranslationKey="widgets.actionLog"
-  selectionType="single"
-  [styles]="{ height: '600px' }"
-  [columns]="columns"
+<app-grid2
+  metadataKey="personActions"
+  persistenceKey="personactionlog"
+  rowIdKey="id"
+  [ngClass]="'person-action-log-grid'"
   [rows]="rows"
+  [rowCount]="rowCount"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onFilter)="onRequest()"
   (onSelect)="onSelect($event)"
 >
-</app-grid>
-<!--
-<app-grid2
-metadataKey="debtsprocessingall"
-persistenceKey="debtsprocessingall"
-rowIdKey="debtId"
-[ngClass]="'debt-processing-grid'"
-[rows]="rows"
-[rowCount]="rowCount"
-(onPage)="onRequest()"
-(onPageSize)="onRequest()"
-(onSort)="onRequest()"
-(onFilter)="onRequest()"
-(onDblClick)="onDblClick($event)">
-</app-grid2> -->
+</app-grid2>

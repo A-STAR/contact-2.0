@@ -31,12 +31,11 @@
   ngClass="actions-log-grid"
   metadataKey="actions"
   persistenceKey="actionsLog"
-  [rows]="(actionsLogData | async).data"
-  [rowCount]="(actionsLogData | async)?.total"
+  [rows]="rows"
+  [rowCount]="rowCount"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onFilter)="onRequest()"
-  (onSelect)="onSelect($event)"
 >
 </app-grid2>

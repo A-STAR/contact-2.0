@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
+import { Grid2Module } from '../../../components/grid2/grid2.module';
+import { DynamicFormModule } from '../../../components/form/dynamic-form/dynamic-form.module';
 import { DebtorActionLogComponent } from './action-log.component';
-import { GridModule } from '../../../components/grid/grid.module';
 
 import { ActionLogService } from './action-log.service';
 
 @NgModule({
   imports: [
-    GridModule,
+    CommonModule,
+    DynamicFormModule,
+    Grid2Module,
   ],
   exports: [
     DebtorActionLogComponent
