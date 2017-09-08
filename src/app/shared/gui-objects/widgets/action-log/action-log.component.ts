@@ -1,5 +1,8 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-// import { Subscription } from 'rxjs/Subscription';
+import {
+  AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component,
+  OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute } from '@angular/router';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -8,6 +11,7 @@ import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynam
 
 import { ActionLogService } from './action-log.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { Grid2Component } from '../../../../shared/components/grid2/grid2.component';
 
@@ -18,13 +22,14 @@ import { Grid2Component } from '../../../../shared/components/grid2/grid2.compon
   templateUrl: './action-log.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class DebtorActionLogComponent {
+export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorActionLogComponent';
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   private personId = (this.route.params as any).value.id || null;
-  // private canViewSubscription: Subscription;
+  private canViewSubscription: Subscription;
+  private hasViewPermission$: Observable<boolean>;
 
   data: any = {};
   controls: IDynamicFormControl[] = [
@@ -48,6 +53,8 @@ export class DebtorActionLogComponent {
     private cdRef: ChangeDetectorRef,
     private notifications: NotificationsService,
     private route: ActivatedRoute,
+    private notificationsService: NotificationsService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     // Observable.combineLatest(
     //   this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
@@ -66,6 +73,30 @@ export class DebtorActionLogComponent {
     //   ];
     //   this.phone = phone;
     // });
+    this.hasViewPermission$ = this.userPermissionsService.has('PERSON_ACTION_LOG_VIEW');
+  }
+
+  ngAfterViewInit(): void {
+    this.canViewSubscription = this.hasViewPermission$
+      .subscribe(hasPermission => {
+        if (!hasPermission) {
+          this.rows = [];
+          this.rowCount = 0;
+          this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
+        } else {
+          // this.actionLogService.getEmployeesAndActionTypes()
+          //   .take(1)
+          //   .subscribe();
+          // load data
+          if (this.grid.gridOptions.api) {
+            this.onRequest();
+          }
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.canViewSubscription.unsubscribe();
   }
 
   onRequest(): void {
@@ -77,11 +108,6 @@ export class DebtorActionLogComponent {
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
-  }
-
-  onSelect(actionLog: IDebtorActionLog): void {
-    console.log(actionLog);
-    this.cdRef.markForCheck();
   }
 
   getRowNodeId(actionLog: IDebtorActionLog): number {

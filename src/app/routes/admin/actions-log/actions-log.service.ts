@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IActionLog, IEmployee } from './actions-log.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
@@ -40,7 +40,7 @@ export class ActionsLogService {
       .distinctUntilChanged();
   }
 
-  get actionTypesRows(): Observable<IUserDictionary> {
+  get actionTypesRows(): Observable<IUserTerm[]> {
     return this.store
       .select(state => state.actionsLog.actionTypes)
       .distinctUntilChanged();
@@ -63,13 +63,6 @@ export class ActionsLogService {
     );
   }
 
-  // fetch(filters: FilterObject, params: IAGridRequestParams): void {
-  //   this.store.dispatch({
-  //     payload: { filters, ...params },
-  //     type: ActionsLogService.ACTIONS_LOG_FETCH,
-  //   });
-  // }
-
   fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IActionLog>> {
     const request = this.gridService.buildRequest(params, filters);
 
@@ -77,18 +70,11 @@ export class ActionsLogService {
       .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
   }
 
-  clear(): void {
-    this.store.dispatch({
-      payload: { data: [], total: 0 },
-      type: ActionsLogService.ACTIONS_LOG_FETCH_SUCCESS,
-    });
-  }
-
   destroy(): void {
     this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
   }
 
-  getActionTypes(): Observable<IUserDictionary> {
+  getActionTypes(): Observable<IUserTerm[]> {
     return this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_ACTION_TYPES);
   }
 

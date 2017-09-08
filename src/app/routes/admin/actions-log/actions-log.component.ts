@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IEmployee, IActionLog } from './actions-log.interface';
 
 import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
-import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
@@ -33,7 +33,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
   // filter
-  actionTypesRows: Observable<IUserDictionary>;
+  actionTypesRows: Observable<IUserTerm[]>;
   employeesRows: Observable<IEmployee[]>;
   // grid
   hasViewPermission$: Observable<boolean>;
@@ -78,7 +78,8 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
             .subscribe();
           // load data
           if (this.grid.gridOptions.api) {
-            // this.onRequest();
+            // this is a workaround for the filters firing the request automatically
+            this.onRequest();
           }
         }
       });

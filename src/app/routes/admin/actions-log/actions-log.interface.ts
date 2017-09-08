@@ -1,4 +1,4 @@
-import { IUserDictionary } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 export interface IEmployee {
   id: number;
@@ -26,10 +26,10 @@ export interface IActionLog {
 
 export interface IActionsLogState {
   employees: IEmployee[];
-  actionTypes: IUserDictionary;
+  actionTypes: IUserTerm[];
 }
 
 export interface IActionsLogPayload {
   type?: any;
-  payload?: IEmployee[]|IUserDictionary;
+  payload?: IEmployee[]|IUserTerm[];
 }
