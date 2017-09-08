@@ -7,12 +7,11 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/auditTime';
 
-import { IGridTreeRow } from './gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow } from './gridtree.interface';
 
 @Component({
   selector: 'app-gridtree',
@@ -23,6 +22,7 @@ import { IGridTreeRow } from './gridtree.interface';
 export class GridTreeComponent<T> implements OnInit {
   private static THROTTLE_INTERVAL = 100;
 
+  @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
   @Input() rows: Array<IGridTreeRow<T>> = [];
 
@@ -32,9 +32,7 @@ export class GridTreeComponent<T> implements OnInit {
   private iTop = 0;
   private iHeight = 0;
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-  ) {}
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const rowsContainerElement = this.rowsContainer.nativeElement;

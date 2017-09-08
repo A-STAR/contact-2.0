@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { IAttribute } from '../attribute.interface';
-import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 
 @Component({
   selector: 'app-attribute-grid',
@@ -9,7 +9,16 @@ import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent {
-  private _rows = this.generateGridTreeRows(100);
+  private _columns: Array<IGridTreeColumn<IAttribute>> = [
+    { label: 'Id', prop: 'id' },
+    { label: 'Name', prop: 'name' },
+    { label: 'Type', prop: 'type' },
+  ];
+  private _rows = this.generateGridTreeRows(1e6);
+
+  get columns(): Array<IGridTreeColumn<IAttribute>> {
+    return this._columns;
+  }
 
   get rows(): Array<IGridTreeRow<IAttribute>> {
     return this._rows;

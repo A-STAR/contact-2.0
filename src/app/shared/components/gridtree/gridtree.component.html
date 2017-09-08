@@ -1,11 +1,17 @@
 <div class="gridtree-container">
+  <div class="gridtree-header">
+    <div *ngFor="let column of columns">
+      {{ column.label }}
+    </div>
+  </div>
   <ul #rowsContainer class="gridtree-rows" [ngStyle]="{ height: height + 'px' }">
     <div class="gridtree-overlay" [ngStyle]="{ height: totalHeight + 'px' }">
     </div>
     <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
-      <i *ngIf="hasChildren(row)" class="fa fa-plus-square-o"></i>
-      &nbsp;
-      {{ row.data | json }}
+      <div *ngFor="let column of columns; let first = first">
+        <i *ngIf="first && hasChildren(row)" class="fa fa-plus-square-o"></i>
+        {{ row.data[column.prop] }}
+      </div>
     </li>
   </ul>
 </div>
