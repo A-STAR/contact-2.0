@@ -1,7 +1,18 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/auditTime';
+
+import { IGridTreeRow } from './gridtree.interface';
 
 @Component({
   selector: 'app-gridtree',
@@ -9,26 +20,25 @@ import 'rxjs/add/operator/auditTime';
   styleUrls: [ './gridtree.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GridTreeComponent implements OnInit {
+export class GridTreeComponent<T> implements OnInit {
   private static THROTTLE_INTERVAL = 100;
 
-  @ViewChild('rowsContainer') rowsContainer: ElementRef;
+  @Input() height: number;
+  @Input() rows: Array<IGridTreeRow<T>> = [];
 
-  rows = Array(1000).fill(null).map((_, i) => ({
-    id: i + 1,
-    name: `Item #${i + 1}`,
-    color: ['Red', 'Green', 'Blue', 'Yellow'][Math.floor(4 * Math.random())]
-  }));
+  @ViewChild('rowsContainer') rowsContainer: ElementRef;
 
   private rowHeight = 24;
   private iTop = 0;
   private iHeight = 0;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     const rowsContainerElement = this.rowsContainer.nativeElement;
-    this.iHeight = rowsContainerElement.offsetHeight / this.rowHeight;
+    this.iHeight = this.height / this.rowHeight;
     Observable
       .fromEvent(rowsContainerElement, 'scroll')
       .auditTime(GridTreeComponent.THROTTLE_INTERVAL)
@@ -51,11 +61,11 @@ export class GridTreeComponent implements OnInit {
     return this.rows.slice(this.iMin, this.iMax);
   }
 
-  get height(): number {
+  get totalHeight(): number {
     return this.rowHeight * this.rows.length;
   }
 
-  getStyle(i: number): any {
+  getStyle(i: number): Object {
     return {
       top: `${this.rowHeight * i}px`
     }

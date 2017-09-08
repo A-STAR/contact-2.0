@@ -1,19 +1,11 @@
-<div class="container">
-  <ul #rowsContainer class="rows">
-    <div class="overlay" [ngStyle]="{ height: height + 'px' }">
+<div class="gridtree-container">
+  <ul #rowsContainer class="gridtree-rows" [ngStyle]="{ height: height + 'px' }">
+    <div class="gridtree-overlay" [ngStyle]="{ height: totalHeight + 'px' }">
     </div>
     <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
       <i class="fa fa-plus-square-o"></i>
       &nbsp;
-      <div>
-        {{ row.id }}
-      </div>
-      <div>
-        {{ row.name }}
-      </div>
-      <div>
-        {{ row.color }}
-      </div>
+      {{ row | json }}
     </li>
   </ul>
 </div>
