@@ -14,7 +14,11 @@ export class GridTreeComponent implements OnInit {
 
   @ViewChild('rowsContainer') rowsContainer: ElementRef;
 
-  rows = Array(1000).fill(null).map((_, i) => `Item #${i}`);
+  rows = Array(1000).fill(null).map((_, i) => ({
+    id: i + 1,
+    name: `Item #${i + 1}`,
+    color: ['Red', 'Green', 'Blue', 'Yellow'][Math.floor(4 * Math.random())]
+  }));
 
   private rowHeight = 24;
   private iTop = 0;

@@ -3,7 +3,17 @@
     <div class="overlay" [ngStyle]="{ height: height + 'px' }">
     </div>
     <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
-      {{ row }}
+      <i class="fa fa-plus-square-o"></i>
+      &nbsp;
+      <div>
+        {{ row.id }}
+      </div>
+      <div>
+        {{ row.name }}
+      </div>
+      <div>
+        {{ row.color }}
+      </div>
     </li>
   </ul>
 </div>
