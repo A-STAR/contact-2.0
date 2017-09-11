@@ -1,8 +1,19 @@
-import { Component, ElementRef, forwardRef, HostListener, Input, OnInit, OnDestroy, ViewChild, Renderer2 } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  HostListener,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  Renderer2
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
@@ -11,6 +22,7 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
   selector: 'app-input-datepicker',
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -36,12 +48,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   isDisabled = false;
   isExpanded = false;
   value: Date = null;
-  style$ = new BehaviorSubject<{ top: string; left: string; }>(null);
+  style = { top: '0', left: '0' };
 
   private subscription: Subscription;
   private wheelListener: Function;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private renderer: Renderer2,
     private translateService: TranslateService,
     private valueConverterService: ValueConverterService,
@@ -116,6 +129,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     if (Number(newDate) !== Number(this.value)) {
       this.value = newDate;
       this.propagateChange(newDate);
+      this.cdRef.markForCheck();
     }
   }
 
@@ -125,12 +139,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
+    this.cdRef.detectChanges();
     if (this.isExpanded) {
-      // TODO(d.maltsev): is there a better way to do this?
-      setTimeout(() => this.positionDropdown(), 0);
+      this.positionDropdown();
     } else {
       this.propagateTouch(true);
     }
+    this.cdRef.markForCheck();
 
     if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
       this.removeWheelListener();
@@ -159,10 +174,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
       : inputRect.bottom;
     const left = inputRect.left;
 
-    this.style$.next({
+    this.style = {
       top: `${top}px`,
       left: `${left}px`
-    });
+    };
 
     this.addWheelListener();
   }
