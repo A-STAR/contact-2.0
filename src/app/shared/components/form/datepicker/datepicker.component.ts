@@ -11,7 +11,7 @@ import {
   ViewChild,
   Renderer2
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -28,10 +28,15 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DatePickerComponent),
       multi: true
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true,
+    },
   ]
 })
-export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
   @Input() buttonClass = 'btn btn-default';
   @Input() inputClass = 'form-control';
   @Input() placeholder = 'default.date.datePicker.placeholder';
@@ -45,8 +50,10 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @ViewChild('dropdown') dropdown: ElementRef;
 
   locale = {};
+  formattedDate = '';
   isDisabled = false;
   isExpanded = false;
+  isValid = true;
   value: Date = null;
   style = { top: '0', left: '0' };
 
@@ -78,12 +85,6 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     });
   }
 
-  get formattedDate(): string {
-    return this.displayTime
-      ? this.valueConverterService.toLocalDateTime(this.value)
-      : this.valueConverterService.toLocalDate(this.value);
-  }
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.dropdown.nativeElement.contains(event.target)
@@ -106,6 +107,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.value = typeof value === 'string'
       ? this.valueConverterService.fromISO(value as string)
       : value;
+    this.updateFormattedDate();
+    this.cdRef.markForCheck();
   }
 
   registerOnChange(fn: Function): void {
@@ -120,17 +123,27 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.isDisabled = isDisabled;
   }
 
+  validate(): object {
+    return this.isValid ? null : { datepicker: false };
+  }
+
   onValueChange(newValue: Date | Event): void {
     if (this.isExpanded && !this.displayTime) {
       this.toggleCalendar(false);
     }
 
     const newDate = this.dateFromInput(newValue);
-    if (Number(newDate) !== Number(this.value)) {
-      this.value = newDate;
-      this.propagateChange(newDate);
-      this.cdRef.markForCheck();
+    if (newDate === false) {
+      this.isValid = false;
+      this.setValue(null);
+    } else {
+      this.isValid = true;
+      if (Number(newDate) !== Number(this.value)) {
+        this.setValue(newDate);
+        this.updateFormattedDate();
+      }
     }
+    this.cdRef.markForCheck();
   }
 
   onBlur(): void {
@@ -152,7 +165,18 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
   }
 
-  private dateFromInput(value: any): Date {
+  private updateFormattedDate(): void {
+    this.formattedDate = this.displayTime
+      ? this.valueConverterService.toLocalDateTime(this.value)
+      : this.valueConverterService.toLocalDate(this.value);
+  }
+
+  private setValue(value: Date): void {
+    this.value = value;
+    this.propagateChange(value);
+  }
+
+  private dateFromInput(value: any): Date | false {
     if (value instanceof Date) {
       return value;
     }

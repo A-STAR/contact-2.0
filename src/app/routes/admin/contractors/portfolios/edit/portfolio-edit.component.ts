@@ -80,7 +80,7 @@ export class PortfolioEditComponent {
   }
 
   onSubmit(): void {
-    const portfolio = this.getPortfolioFromFormData();
+    const portfolio = this.form.requestValue;
     if (this.contractorId && this.portfolioId) {
       this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio);
     } else {
@@ -110,18 +110,5 @@ export class PortfolioEditComponent {
       { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
       { label: 'portfolios.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
-  }
-
-  private getPortfolioFromFormData(): IPortfolio {
-    const data = this.form.value;
-    return {
-      ...data,
-      directionCode: Array.isArray(data.directionCode) ? data.directionCode[0].value : data.directionCode,
-      stageCode: Array.isArray(data.stageCode) ? data.stageCode[0].value : data.stageCode,
-      statusCode: Array.isArray(data.statusCode) ? data.statusCode[0].value : data.statusCode,
-      signDate: this.valueConverterService.fromLocalDate(data.signDate),
-      startWorkDate: this.valueConverterService.fromLocalDate(data.startWorkDate),
-      endWorkDate: this.valueConverterService.fromLocalDate(data.endWorkDate)
-    };
   }
 }
