@@ -1,16 +1,20 @@
 <div>
-  <div *ngFor="let column of columns" style="display: inline-block; padding: 0 10px; width: 200px; border-right: 1px solid #e5e5e5;">
-    <span *ngIf="column.prop == displayTreeProp" style="display: inline-block; width: 15px;">
-      <i *ngIf="hasChildren" class="fa fa-plus-square-o"></i>
+  <div *ngFor="let column of columns" class="gridtree-cell">
+    <span *ngIf="column.prop == displayTreeProp" class="gridtree-cell-expand" [ngStyle]="{ 'padding-left': 10 * nestingLevel + 'px' }">
+      <span class="gridtree-cell-expand-icon" (click)="toggle()">
+        <i *ngIf="hasChildren" class="fa fa-plus-square-o"></i>&nbsp;
+      </span>
     </span>
     {{ row.data[column.prop] }}
   </div>
 </div>
 
-<!--
-<ng-container *ngIf="hasChildren">
-  <ng-container *ngFor="let item of row.children">
-    <app-gridtree-row [columns]="columns" [displayTreeProp]="displayTreeProp" [row]="item"></app-gridtree-row>
-  </ng-container>
+<ng-container *ngIf="isExpanded">
+  <app-gridtree-row
+    *ngFor="let item of row.children"
+    [columns]="columns"
+    [displayTreeProp]="displayTreeProp"
+    [nestingLevel]="nestingLevel + 1"
+    [row]="item">
+  </app-gridtree-row>
 </ng-container>
--->

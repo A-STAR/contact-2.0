@@ -1,14 +1,11 @@
 <div class="gridtree-container">
-  <div class="gridtree-header">
-    <div *ngFor="let column of columns">
-      {{ column.label }}
-    </div>
-  </div>
-  <ul #rowsContainer class="gridtree-rows" [ngStyle]="{ height: height + 'px' }">
-    <div class="gridtree-overlay" [ngStyle]="{ height: totalHeight + 'px' }">
-    </div>
-    <li *ngFor="let row of rowsForViewport; let i = index" [ngStyle]="getStyle(i + iMin)">
-      <app-gridtree-row [columns]="columns" [displayTreeProp]="displayTreeProp" [row]="row"></app-gridtree-row>
-    </li>
-  </ul>
+  <app-gridtree-header
+    [columns]="columns">
+  </app-gridtree-header>
+  <app-gridtree-viewport
+    [columns]="columns"
+    [displayTreeProp]="displayTreeProp"
+    [height]="height"
+    [rows]="rows">
+  </app-gridtree-viewport>
 </div>

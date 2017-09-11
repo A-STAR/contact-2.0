@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { GridTreeComponent } from './gridtree.component';
+import { GridTreeHeaderComponent } from './header/gridtree-header.component';
 import { GridTreeRowComponent } from './row/gridtree-row.component';
+import { GridTreeViewportComponent } from './viewport/gridtree-viewport.component';
 
 @NgModule({
   imports: [
@@ -12,11 +14,15 @@ import { GridTreeRowComponent } from './row/gridtree-row.component';
   ],
   exports: [
     GridTreeComponent,
+    GridTreeHeaderComponent,
     GridTreeRowComponent,
+    GridTreeViewportComponent,
   ],
   declarations: [
     GridTreeComponent,
+    GridTreeHeaderComponent,
     GridTreeRowComponent,
+    GridTreeViewportComponent,
   ]
 })
 export class GridTreeModule { }

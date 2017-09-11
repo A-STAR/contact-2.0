@@ -1,0 +1,9 @@
+<ul class="gridtree-viewport">
+  <li *ngFor="let row of rows">
+    <app-gridtree-row
+      [columns]="columns"
+      [displayTreeProp]="displayTreeProp"
+      [row]="row">
+    </app-gridtree-row>
+  </li>
+</ul>
