@@ -1,3 +1,10 @@
+.gridtree-row {
+  user-select: none;
+  &.has-over {
+    outline: 1px dashed #bcd;
+  }
+}
+
 .gridtree-cell {
   border-bottom: 1px solid #e5e5e5;
   border-right: 1px solid #e5e5e5;
