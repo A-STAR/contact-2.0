@@ -90,6 +90,7 @@
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "Произошла ошибка",
+    "datepicker": "Неверный формат даты/времени",
     "fieldRequired": "Это обязательное поле",
     "fieldMin": "Значение поля должно быть больше, чем {{ minValue }}",
     "fieldMax": "Значение поля должно быть меньше, чем  {{ maxValue }}",

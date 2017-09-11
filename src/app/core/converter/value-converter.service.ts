@@ -115,11 +115,11 @@ export class ValueConverterService {
     return value ? new Date(value) : null;
   }
 
-  fromLocalDateTime(value: string): Date {
+  fromLocalDateTime(value: string): Date | false {
     return this.fromLocal(value, this.formats.dateTime);
   }
 
-  fromLocalDate(value: string): Date {
+  fromLocalDate(value: string): Date | false {
     return this.fromLocal(value, this.formats.date);
   }
 
@@ -143,19 +143,15 @@ export class ValueConverterService {
     return this.toLocalDate(this.fromISO(value));
   }
 
-  /**
-   * @deprecated
-   */
-  ISOFromLocalDateTime(value: string): string {
-    return this.toISO(this.fromLocalDateTime(value));
-  }
-
   private toLocal(date: Date, format: string): string {
     return date ? moment(date).format(format) : null;
   }
 
-  private fromLocal(value: string, format: string): Date {
+  private fromLocal(value: string, format: string): Date | false {
     const date = value && moment(value, format, true);
-    return date && date.isValid() ? date.toDate() : null;
+    if (!date) {
+      return null;
+    }
+    return date.isValid() ? date.toDate() : false;
   }
 }
