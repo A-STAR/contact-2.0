@@ -23,96 +23,102 @@ import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
-  { path: ':id', component: DebtorComponent },
-  { path: ':id/address', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorAddressComponent },
-      { path: ':addressId', component: DebtorAddressComponent },
-    ]
-  },
-  { path: ':id/contact', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorContactsComponent },
-      { path: ':contactId', component: DebtorContactsComponent },
-      { path: ':contactId/phone', children: [
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-          { path: 'create', component: DebtorPhoneComponent },
-          { path: ':phoneId', component: DebtorPhoneComponent },
-        ]
-      },
-      { path: ':contactId/address', children: [
+  { path: ':id', children: [
+      { path: '', pathMatch: 'full', component: DebtorComponent },
+      { path: 'address', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorAddressComponent },
           { path: ':addressId', component: DebtorAddressComponent },
         ]
       },
-      { path: ':contactId/identity', children: [
+      { path: 'contact', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
-          { path: 'create', component: DebtorIdentityComponent },
-          { path: ':identityId', component: DebtorIdentityComponent },
+          { path: 'create', component: DebtorContactsComponent },
+          { path: ':contactId', children: [
+              { path: '', component: DebtorContactsComponent },
+              { path: 'phone', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorPhoneComponent },
+                  { path: ':phoneId', component: DebtorPhoneComponent },
+                ]
+              },
+              { path: 'address', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorAddressComponent },
+                  { path: ':addressId', component: DebtorAddressComponent },
+                ]
+              },
+              { path: 'identity', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorIdentityComponent },
+                  { path: ':identityId', component: DebtorIdentityComponent },
+                ]
+              },
+              { path: 'employment', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorEmploymentComponent },
+                  { path: ':employmentId', component: DebtorEmploymentComponent },
+                ]
+              },
+            ]
+          },
         ]
       },
-      { path: ':contactId/employment', children: [
+      { path: 'document', children: [
+        { path: '', redirectTo: 'create', pathMatch: 'full' },
+        { path: 'create', component: DebtorDocumentComponent },
+        { path: ':documentId', component: DebtorDocumentComponent },
+        ]
+      },
+      { path: 'email', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
+          { path: 'create', component: DebtorEmailComponent },
+          { path: ':emailId', component: DebtorEmailComponent },
+        ]
+      },
+      { path: 'employment', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorEmploymentComponent },
           { path: ':employmentId', component: DebtorEmploymentComponent },
         ]
       },
-    ]
-  },
-  { path: ':id/document', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorDocumentComponent },
-      { path: ':documentId', component: DebtorDocumentComponent },
-    ]
-  },
-  { path: ':id/email', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorEmailComponent },
-      { path: ':emailId', component: DebtorEmailComponent },
-    ]
-  },
-  { path: ':id/employment', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorEmploymentComponent },
-      { path: ':employmentId', component: DebtorEmploymentComponent },
-    ]
-  },
-  { path: ':id/identity', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorIdentityComponent },
-      { path: ':identityId', component: DebtorIdentityComponent },
-    ]
-  },
-  { path: ':id/phone', children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorPhoneComponent },
-      { path: ':phoneId', component: DebtorPhoneComponent },
-    ]
-  },
-  { path: ':id/debt', children: [
-      { path: '', redirectTo: '..', pathMatch: 'full' },
-      { path: 'create', component: DebtorDebtComponent },
-      { path: ':debtId', children: [
-          { path: '', pathMatch: 'full', component: DebtorDebtComponent },
-          { path: 'debt-component', children: [
-              { path: '', redirectTo: 'create', pathMatch: 'full' },
-              { path: 'create', component: DebtorDebtComponentComponent },
-              { path: ':debtComponentId', component: DebtorDebtComponentComponent },
+      { path: 'identity', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
+          { path: 'create', component: DebtorIdentityComponent },
+          { path: ':identityId', component: DebtorIdentityComponent },
+        ]
+      },
+      { path: 'phone', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
+          { path: 'create', component: DebtorPhoneComponent },
+          { path: ':phoneId', component: DebtorPhoneComponent },
+        ]
+      },
+      { path: 'debt', children: [
+          { path: '', redirectTo: '..', pathMatch: 'full' },
+          { path: 'create', component: DebtorDebtComponent },
+          { path: ':debtId', children: [
+              { path: '', pathMatch: 'full', component: DebtorDebtComponent },
+              { path: 'debt-component', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorDebtComponentComponent },
+                  { path: ':debtComponentId', component: DebtorDebtComponentComponent },
+                ]
+              },
+              { path: 'promise', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorPromiseComponent },
+                  { path: ':promiseId', component: DebtorPromiseComponent },
+                ]
+              },
+              { path: 'payment', children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorPaymentComponent },
+                  { path: ':paymentId', component: DebtorPaymentComponent },
+                ]
+              }
             ]
           },
-          { path: 'promise', children: [
-              { path: '', redirectTo: 'create', pathMatch: 'full' },
-              { path: 'create', component: DebtorPromiseComponent },
-              { path: ':promiseId', component: DebtorPromiseComponent },
-            ]
-          },
-          { path: 'payment', children: [
-              { path: '', redirectTo: 'create', pathMatch: 'full' },
-              { path: 'create', component: DebtorPaymentComponent },
-              { path: ':paymentId', component: DebtorPaymentComponent },
-            ]
-          }
         ]
       },
     ]

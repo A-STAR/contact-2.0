@@ -5,7 +5,7 @@ export interface IPerson {
   middleName?: string;
   lastName?: string,
   type?: number;
-  responsible?: string;
+  responsibleFullName?: string;
   reward?: number;
   debtId?: number;
   product?: string;

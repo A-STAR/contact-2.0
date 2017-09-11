@@ -90,7 +90,7 @@ export class DebtorComponent implements OnDestroy {
           { width: 2, label: 'debtor.firstName', controlName: 'firstName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.type', controlName: 'typeCode', type: 'select', options: personTypeOptions, disabled: true },
-          { width: 2, label: 'debtor.responsible', controlName: 'responsible', type: 'text', disabled: true },
+          { width: 2, label: 'debtor.responsible', controlName: 'responsibleFullName', type: 'text', disabled: true },
         ]
       }
     ];

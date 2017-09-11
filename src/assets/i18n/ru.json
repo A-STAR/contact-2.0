@@ -756,6 +756,11 @@
         "fullName": "Оператор",
         "machine": "Компьютер",
         "typeCode": "Тип действия"
+      },
+      "form": {
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "searchBtn": "Найти"
       }
     },
     "address": {

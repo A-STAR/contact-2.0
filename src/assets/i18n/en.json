@@ -756,6 +756,11 @@
         "fullName": "Operator",
         "machine": "Computer",
         "typeCode": "Action type"
+      },
+      "form": {
+        "startDate": "From",
+        "endDate": "To",
+        "searchBtn": "Search"
       }
     },
     "address": {

@@ -18,6 +18,10 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 import { Grid2Component } from '../../../../shared/components/grid2/grid2.component';
 
+import { makeKey } from '../../../../core/utils';
+
+const labelKey = makeKey('widgets.actionLog.form');
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-debtor-action-log',
@@ -40,10 +44,10 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
 
   data: any = {};
   controls: IDynamicFormControl[] = [
-    { label: 'Начало', controlName: 'startDate', type: 'datepicker', displayTime: true, width: 5 },
-    { label: 'Окончание', controlName: 'endDate', type: 'datepicker', displayTime: true, width: 5 },
+    { label: labelKey('startDate'), controlName: 'startDate', type: 'datepicker', displayTime: true, width: 5 },
+    { label: labelKey('endDate'), controlName: 'endDate', type: 'datepicker', displayTime: true, width: 5 },
     {
-      label: 'Искать',
+      label: labelKey('searchBtn'),
       controlName: 'searchBtn',
       type: 'button',
       iconCls: 'fa-search',
