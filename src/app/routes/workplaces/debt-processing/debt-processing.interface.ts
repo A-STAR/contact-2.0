@@ -21,7 +21,3 @@ export interface IDebt {
   creditEndDate: Date | string;
 }
 
-export interface IDebtProcessingState {
-  data: Array<IDebt>;
-  total: number;
-}
