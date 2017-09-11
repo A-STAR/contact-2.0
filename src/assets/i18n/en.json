@@ -90,6 +90,7 @@
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "datepicker": "Invalid date/time format",
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
     "fieldMax": "The value must be less than {{ maxValue }}",

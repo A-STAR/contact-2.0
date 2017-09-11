@@ -25,7 +25,7 @@
   </span>
 
   <div #dropdown>
-    <div *ngIf="isExpanded" class="dropdown" [ngStyle]="style$ | async">
+    <div *ngIf="isExpanded" class="dropdown" [ngStyle]="style">
       <p-calendar
         [inline]="true"
         [locale]="locale"
