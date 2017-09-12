@@ -14,6 +14,7 @@ export class GridTreeRowContentComponent<T> {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() displayTreeProp: keyof T;
   @Input() isExpanded = false;
+  @Input() isHighlighted = false;
   @Input() nestingLevel = 0;
   @Input() row: IGridTreeRow<T>;
 

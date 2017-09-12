@@ -26,7 +26,6 @@ export class GridTreeService<T> {
 
   onMouseOver(event: IGridTreeRowEvent<T>): void {
     this._overRow = event.row;
-    // console.log(event);
   }
 
   onMouseUp(event: MouseEvent): void {

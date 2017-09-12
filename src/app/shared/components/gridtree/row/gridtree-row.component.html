@@ -1,5 +1,5 @@
 <div
-  [ngClass]="{ 'gridtree-row': true, 'highlighted': isMouseOver }"
+  class="gridtree-row"
   (mousedown)="onMouseDown($event)"
   (mousemove)="onMouseMove($event)"
   (mouseenter)="onMouseEnter($event)"
@@ -11,6 +11,7 @@
     [displayTreeProp]="displayTreeProp"
     [nestingLevel]="nestingLevel"
     [isExpanded]="isExpanded"
+    [isHighlighted]="isMouseOver"
     (toggle)="onToggle()"
   ></app-gridtree-row-content>
 </div>

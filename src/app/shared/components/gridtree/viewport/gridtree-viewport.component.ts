@@ -25,10 +25,6 @@ export class GridTreeViewportComponent<T> {
     private gridTreeService: GridTreeService<T>
   ) {}
 
-  get viewportRows(): Array<IGridTreeRow<T>> {
-    return this.rows.filter(row => row !== this.draggedRow);
-  }
-
   get draggedRow(): IGridTreeRow<T> {
     return this.gridTreeService.draggedRow;
   }

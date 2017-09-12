@@ -10,6 +10,7 @@
 
 .gridtree-dragged-row {
   background-color: #f5faff;
+  pointer-events: none;
   position: absolute;
   left: 0;
 }
