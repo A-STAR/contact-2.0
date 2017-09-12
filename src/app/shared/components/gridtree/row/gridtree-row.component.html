@@ -1,15 +1,8 @@
-<div
-  [ngClass]="{ 'gridtree-row': true, 'has-over': hasOver }"
-  draggable="true"
-  (dragstart)="onDragStart($event)"
-  (dragenter)="onDragEnter($event)"
-  (dragleave)="onDragLeave($event)"
-  (dragover)="onDragOver($event)"
->
+<div class="gridtree-row" (mousedown)="onMouseDown($event)">
   <div *ngFor="let column of columns" class="gridtree-cell">
     <span *ngIf="column.prop == displayTreeProp" class="gridtree-cell-expand" [ngStyle]="{ 'padding-left': 10 * nestingLevel + 'px' }">
-      <span class="gridtree-cell-expand-icon" (click)="toggle()">
-        <i *ngIf="hasChildren" class="fa fa-plus-square-o"></i>&nbsp;
+      <span class="gridtree-cell-expand-icon" (mousedown)="toggle($event)">
+        <i *ngIf="hasChildren" [ngClass]="isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'"></i>&nbsp;
       </span>
     </span>
     {{ row.data[column.prop] }}
@@ -22,6 +15,7 @@
     [columns]="columns"
     [displayTreeProp]="displayTreeProp"
     [nestingLevel]="nestingLevel + 1"
-    [row]="item">
+    [row]="item"
+    (mousedown)="onMouseDownPropagate($event)">
   </app-gridtree-row>
 </ng-container>

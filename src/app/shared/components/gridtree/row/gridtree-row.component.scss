@@ -1,4 +1,5 @@
 .gridtree-row {
+  position: relative;
   user-select: none;
   &.has-over {
     outline: 1px dashed #bcd;

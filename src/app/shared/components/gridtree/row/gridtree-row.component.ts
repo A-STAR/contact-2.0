@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow, IGridTreeRowEvent } from '../gridtree.interface';
 
 @Component({
   selector: 'app-gridtree-row',
@@ -14,7 +14,8 @@ export class GridTreeRowComponent<T> {
   @Input() nestingLevel = 0;
   @Input() row: IGridTreeRow<T>;
 
-  private _hasDraggableItemOver = false;
+  @Output() mousedown = new EventEmitter<IGridTreeRowEvent<T>>();
+
   private _isExpanded = false;
 
   get isExpanded(): boolean {
@@ -25,27 +26,17 @@ export class GridTreeRowComponent<T> {
     return this.row.children && this.row.children.length > 0;
   }
 
-  get hasOver(): boolean {
-    return this._hasDraggableItemOver;
-  }
-
-  toggle(): void {
+  toggle(event: MouseEvent): void {
+    event.stopPropagation();
     this._isExpanded = !this._isExpanded;
   }
 
-  onDragStart(event: DragEvent): void {
-    console.log(event);
+  onMouseDown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.mousedown.emit({ row: this.row, event });
   }
 
-  onDragEnter(event: DragEvent): void {
-    this._hasDraggableItemOver = true;
-  }
-
-  onDragLeave(event: DragEvent): void {
-    this._hasDraggableItemOver = false;
-  }
-
-  onDragOver(event: DragEvent): void {
-    console.log(event);
+  onMouseDownPropagate(event: IGridTreeRowEvent<T>): void {
+    this.mousedown.emit(event);
   }
 }

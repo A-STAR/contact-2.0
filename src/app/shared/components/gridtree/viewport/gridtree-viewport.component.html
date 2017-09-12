@@ -1,9 +1,17 @@
-<ul class="gridtree-viewport">
-  <li *ngFor="let row of rows">
+<ul class="gridtree-viewport" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)">
+  <li *ngFor="let row of viewportRows">
     <app-gridtree-row
       [columns]="columns"
       [displayTreeProp]="displayTreeProp"
-      [row]="row">
+      [row]="row"
+      (mousedown)="onMouseDown($event)">
     </app-gridtree-row>
   </li>
 </ul>
+
+<div *ngIf="draggedRow" class="gridtree-dragged-row">
+  <app-gridtree-row
+    [columns]="columns"
+    [row]="draggedRow">
+  </app-gridtree-row>
+</div>
