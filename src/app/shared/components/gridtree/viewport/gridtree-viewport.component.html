@@ -7,11 +7,11 @@
       (mousedown)="onMouseDown($event)">
     </app-gridtree-row>
   </li>
+  <div *ngIf="draggedRow" class="gridtree-dragged-row" [ngStyle]="draggedRowStyle">
+    <app-gridtree-row
+      [columns]="columns"
+      [displayTreeProp]="displayTreeProp"
+      [row]="draggedRow">
+    </app-gridtree-row>
+  </div>
 </ul>
-
-<div *ngIf="draggedRow" class="gridtree-dragged-row">
-  <app-gridtree-row
-    [columns]="columns"
-    [row]="draggedRow">
-  </app-gridtree-row>
-</div>
