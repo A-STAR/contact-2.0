@@ -7,10 +7,10 @@
     </app-gridtree-row>
   </li>
   <div *ngIf="draggedRow" class="gridtree-dragged-row" [ngStyle]="draggedRowStyle">
-    <app-gridtree-row
+    <app-gridtree-row-content
       [columns]="columns"
       [displayTreeProp]="displayTreeProp"
       [row]="draggedRow">
-    </app-gridtree-row>
+    </app-gridtree-row-content>
   </div>
 </ul>

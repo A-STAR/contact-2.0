@@ -4,8 +4,8 @@ import { IGridTreeRow, IGridTreeRowEvent } from './gridtree.interface';
 
 @Injectable()
 export class GridTreeService<T> {
-  private _draggedRow: IGridTreeRow<T>;
-  private _overRow: IGridTreeRow<T>;
+  private _draggedRow: IGridTreeRow<T> = null;
+  private _overRow: IGridTreeRow<T> = null;
   private _overMode: 'before' | 'on' | 'after';
   private _y0: number;
 
@@ -26,7 +26,7 @@ export class GridTreeService<T> {
 
   onMouseOver(event: IGridTreeRowEvent<T>): void {
     this._overRow = event.row;
-    console.log(event);
+    // console.log(event);
   }
 
   onMouseUp(event: MouseEvent): void {

@@ -1,25 +1,7 @@
 .gridtree-row {
   position: relative;
   user-select: none;
-  &.has-over {
+  &.highlighted {
     outline: 1px dashed #bcd;
   }
-}
-
-.gridtree-cell {
-  border-bottom: 1px solid #e5e5e5;
-  border-right: 1px solid #e5e5e5;
-  display: inline-block;
-  padding: 0 10px;
-  width: 200px;
-}
-
-.gridtree-cell-expand {
-  box-sizing: content-box;
-  display: inline-block;
-  width: 15px;
-}
-
-.gridtree-cell-expand-icon {
-  cursor: pointer;
 }

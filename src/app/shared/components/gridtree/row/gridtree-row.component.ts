@@ -17,6 +17,7 @@ export class GridTreeRowComponent<T> {
   @Input() row: IGridTreeRow<T>;
 
   private _isExpanded = false;
+  private _isMouseOver = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -27,17 +28,26 @@ export class GridTreeRowComponent<T> {
     return this._isExpanded;
   }
 
-  get hasChildren(): boolean {
-    return this.row.children && this.row.children.length > 0;
+  get isMouseOver(): boolean {
+    return this._isMouseOver && this.gridTreeService.draggedRow !== null;
   }
 
-  toggle(event: MouseEvent): void {
-    event.stopPropagation();
+  onToggle(event: MouseEvent): void {
     this._isExpanded = !this._isExpanded;
   }
 
   onMouseDown(event: MouseEvent): void {
     this.gridTreeService.onMouseDown({ row: this.row, event });
+    this.cdRef.markForCheck();
+  }
+
+  onMouseEnter(event: MouseEvent): void {
+    this._isMouseOver = true;
+    this.cdRef.markForCheck();
+  }
+
+  onMouseLeave(event: MouseEvent): void {
+    this._isMouseOver = false;
     this.cdRef.markForCheck();
   }
 
