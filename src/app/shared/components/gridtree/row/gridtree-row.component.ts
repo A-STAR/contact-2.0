@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow, IGridTreeRowEvent } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 
 import { GridTreeService } from '../gridtree.service';
 
@@ -16,12 +16,12 @@ export class GridTreeRowComponent<T> {
   @Input() nestingLevel = 0;
   @Input() row: IGridTreeRow<T>;
 
-  @Output() mousedown = new EventEmitter<IGridTreeRowEvent<T>>();
-  @Output() mousemove = new EventEmitter<IGridTreeRowEvent<T>>();
-
   private _isExpanded = false;
 
-  constructor(private gridTreeService: GridTreeService<T>) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridTreeService: GridTreeService<T>,
+  ) {}
 
   get isExpanded(): boolean {
     return this._isExpanded;
@@ -37,20 +37,12 @@ export class GridTreeRowComponent<T> {
   }
 
   onMouseDown(event: MouseEvent): void {
-    event.stopPropagation();
-    this.mousedown.emit({ row: this.row, event });
-  }
-
-  onMouseDownPropagate(event: IGridTreeRowEvent<T>): void {
-    this.mousedown.emit(event);
+    this.gridTreeService.onMouseDown({ row: this.row, event });
+    this.cdRef.markForCheck();
   }
 
   onMouseMove(event: MouseEvent): void {
-    event.stopPropagation();
-    this.mousemove.emit({ row: this.row, event });
-  }
-
-  onMouseMovePropagate(event: IGridTreeRowEvent<T>): void {
-    this.mousemove.emit(event);
+    this.gridTreeService.onMouseOver({ row: this.row, event });
+    this.cdRef.markForCheck();
   }
 }

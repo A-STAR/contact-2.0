@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChildren, QueryList } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow, IGridTreeRowEvent } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 
 import { GridTreeService } from '../gridtree.service';
-
-import { GridTreeRowComponent } from '../row/gridtree-row.component';
 
 @Component({
   selector: 'app-gridtree-viewport',
@@ -18,9 +16,9 @@ export class GridTreeViewportComponent<T> {
   @Input() height: number;
   @Input() rows: Array<IGridTreeRow<T>>;
 
-  private _draggedRow: IGridTreeRow<T>;
-  private _y0: number;
-  private _y1: number;
+  draggedRowStyle = {
+    top: '0px'
+  };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -28,38 +26,23 @@ export class GridTreeViewportComponent<T> {
   ) {}
 
   get viewportRows(): Array<IGridTreeRow<T>> {
-    return this.rows.filter(row => row !== this._draggedRow);
+    return this.rows.filter(row => row !== this.draggedRow);
   }
 
   get draggedRow(): IGridTreeRow<T> {
-    return this._draggedRow;
-  }
-
-  get draggedRowStyle(): Object {
-    return {
-      top: `${this._y1 - this._y0}px`
-    };
-  }
-
-  onMouseDown(rowEvent: IGridTreeRowEvent<T>): void {
-    if (rowEvent.event.button === 0) {
-      this._draggedRow = rowEvent.row;
-      this._y0 = rowEvent.event.clientY - ((rowEvent.event.target as any).closest('.gridtree-row') as any).offsetTop;
-      this.cdRef.markForCheck();
-    }
+    return this.gridTreeService.draggedRow;
   }
 
   onMouseMove(event: MouseEvent): void {
-    this._y1 = event.clientY;
+    const d = this.gridTreeService.onMouseMove(event);
+    this.draggedRowStyle = {
+      top: `${d}px`
+    };
     this.cdRef.markForCheck();
   }
 
   onMouseUp(event: MouseEvent): void {
-    this._draggedRow = null;
+    this.gridTreeService.onMouseUp(event);
     this.cdRef.markForCheck();
-  }
-
-  onMouseMoveOverRow(rowEvent: IGridTreeRowEvent<T>): void {
-    console.log(rowEvent);
   }
 }
