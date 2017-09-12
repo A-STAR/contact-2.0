@@ -1,4 +1,4 @@
-<div class="gridtree-row" (mousedown)="onMouseDown($event)">
+<div class="gridtree-row" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)">
   <div *ngFor="let column of columns" class="gridtree-cell">
     <span *ngIf="column.prop == displayTreeProp" class="gridtree-cell-expand" [ngStyle]="{ 'padding-left': 10 * nestingLevel + 'px' }">
       <span class="gridtree-cell-expand-icon" (mousedown)="toggle($event)">
@@ -16,6 +16,7 @@
     [displayTreeProp]="displayTreeProp"
     [nestingLevel]="nestingLevel + 1"
     [row]="item"
-    (mousedown)="onMouseDownPropagate($event)">
+    (mousedown)="onMouseDownPropagate($event)"
+    (mousemove)="onMouseMovePropagate($event)">
   </app-gridtree-row>
 </ng-container>

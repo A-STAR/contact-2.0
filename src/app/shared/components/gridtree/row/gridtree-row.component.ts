@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from 
 
 import { IGridTreeColumn, IGridTreeRow, IGridTreeRowEvent } from '../gridtree.interface';
 
+import { GridTreeService } from '../gridtree.service';
+
 @Component({
   selector: 'app-gridtree-row',
   templateUrl: './gridtree-row.component.html',
@@ -15,8 +17,11 @@ export class GridTreeRowComponent<T> {
   @Input() row: IGridTreeRow<T>;
 
   @Output() mousedown = new EventEmitter<IGridTreeRowEvent<T>>();
+  @Output() mousemove = new EventEmitter<IGridTreeRowEvent<T>>();
 
   private _isExpanded = false;
+
+  constructor(private gridTreeService: GridTreeService<T>) {}
 
   get isExpanded(): boolean {
     return this._isExpanded;
@@ -38,5 +43,14 @@ export class GridTreeRowComponent<T> {
 
   onMouseDownPropagate(event: IGridTreeRowEvent<T>): void {
     this.mousedown.emit(event);
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    event.stopPropagation();
+    this.mousemove.emit({ row: this.row, event });
+  }
+
+  onMouseMovePropagate(event: IGridTreeRowEvent<T>): void {
+    this.mousemove.emit(event);
   }
 }

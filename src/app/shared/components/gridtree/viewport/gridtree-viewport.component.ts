@@ -1,6 +1,10 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChildren, QueryList } from '@angular/core';
 
 import { IGridTreeColumn, IGridTreeRow, IGridTreeRowEvent } from '../gridtree.interface';
+
+import { GridTreeService } from '../gridtree.service';
+
+import { GridTreeRowComponent } from '../row/gridtree-row.component';
 
 @Component({
   selector: 'app-gridtree-viewport',
@@ -18,7 +22,10 @@ export class GridTreeViewportComponent<T> {
   private _y0: number;
   private _y1: number;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridTreeService: GridTreeService<T>
+  ) {}
 
   get viewportRows(): Array<IGridTreeRow<T>> {
     return this.rows.filter(row => row !== this._draggedRow);
@@ -50,5 +57,9 @@ export class GridTreeViewportComponent<T> {
   onMouseUp(event: MouseEvent): void {
     this._draggedRow = null;
     this.cdRef.markForCheck();
+  }
+
+  onMouseMoveOverRow(rowEvent: IGridTreeRowEvent<T>): void {
+    console.log(rowEvent);
   }
 }

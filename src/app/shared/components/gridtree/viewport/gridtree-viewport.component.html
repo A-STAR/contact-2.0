@@ -4,7 +4,8 @@
       [columns]="columns"
       [displayTreeProp]="displayTreeProp"
       [row]="row"
-      (mousedown)="onMouseDown($event)">
+      (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMoveOverRow($event)">
     </app-gridtree-row>
   </li>
   <div *ngIf="draggedRow" class="gridtree-dragged-row" [ngStyle]="draggedRowStyle">
