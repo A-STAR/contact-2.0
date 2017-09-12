@@ -37,7 +37,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemTypeEnum.BUTTON_OK,
       label: 'debtor.promisesTab.approve.buttonLabel',
       enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPromise$)
         .map(([ canConfirm, selectedPromise ]) => canConfirm && !!selectedPromise && selectedPromise.statusCode === 6),

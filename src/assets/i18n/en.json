@@ -128,7 +128,8 @@
       "unblock": "Unblock",
       "changeStatus": "Change Status",
       "close": "Close",
-      "undo": "Undo"
+      "undo": "Undo",
+      "ok": "OK"
     }
   },
   "queryBuilder": {
