@@ -4,8 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { GridTreeComponent } from './gridtree.component';
 import { GridTreeHeaderComponent } from './header/gridtree-header.component';
-import { GridTreeRowComponent } from './row/gridtree-row.component';
-import { GridTreeRowContentComponent } from './row-content/gridtree-row-content.component';
+import { GridTreeRowGroupComponent } from './rowgroup/gridtree-rowgroup.component';
 import { GridTreeViewportComponent } from './viewport/gridtree-viewport.component';
 
 @NgModule({
@@ -16,15 +15,13 @@ import { GridTreeViewportComponent } from './viewport/gridtree-viewport.componen
   exports: [
     GridTreeComponent,
     GridTreeHeaderComponent,
-    GridTreeRowComponent,
-    GridTreeRowContentComponent,
+    GridTreeRowGroupComponent,
     GridTreeViewportComponent,
   ],
   declarations: [
     GridTreeComponent,
     GridTreeHeaderComponent,
-    GridTreeRowComponent,
-    GridTreeRowContentComponent,
+    GridTreeRowGroupComponent,
     GridTreeViewportComponent,
   ]
 })

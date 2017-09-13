@@ -1,0 +1,14 @@
+<div>
+  <div *ngFor="let column of columns; let first = first;">
+    <span *ngIf="first" [ngStyle]="{ 'padding-left': 16 * nestingLevel + 'px' }">
+      <span style="display: inline-block; width: 16px;">
+        <i *ngIf="hasChildren" [ngClass]="isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'" (mousedown)="onToggle($event)"></i>
+      </span>
+    </span>
+    <span>{{ row.data[column.prop] }}</span>
+  </div>
+</div>
+
+<ng-container *ngIf="isExpanded">
+  <app-gridtree-rowgroup *ngFor="let child of row.children" [columns]="columns" [nestingLevel]="nestingLevel + 1" [row]="child"></app-gridtree-rowgroup>
+</ng-container>

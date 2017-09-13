@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
-import { IGridTreeColumn } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 
 @Component({
   selector: 'app-gridtree-header',
@@ -9,5 +9,5 @@ import { IGridTreeColumn } from '../gridtree.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridTreeHeaderComponent<T> {
-  @Input() columns: Array<IGridTreeColumn<T>> = [];
+  @Input() columns: Array<IGridTreeColumn<T>>;
 }

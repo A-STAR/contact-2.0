@@ -1,35 +1,32 @@
 import { Injectable } from '@angular/core';
 
-import { IGridTreeRow, IGridTreeRowEvent } from './gridtree.interface';
+import { IGridTreeRow } from './gridtree.interface';
 
 @Injectable()
 export class GridTreeService<T> {
   private _draggedRow: IGridTreeRow<T> = null;
-  private _overRow: IGridTreeRow<T> = null;
-  private _overMode: 'before' | 'on' | 'after';
-  private _y0: number;
+  private _latestOffset: number;
 
-  get draggedRow(): IGridTreeRow<T> {
-    return this._draggedRow;
+  get isDragging(): boolean {
+    return this._draggedRow !== null;
   }
 
-  onMouseDown(event: IGridTreeRowEvent<T>): void {
-    if (event.event.button === 0) {
-      this._draggedRow = event.row;
-      this._y0 = event.event.clientY - ((event.event.target as HTMLElement).closest('.gridtree-row') as HTMLElement).offsetTop;
+  onMouseDown(event: MouseEvent, row: IGridTreeRow<T>): void {
+    if (event.button === 0) {
+      this._draggedRow = row;
+      this._latestOffset = event.clientY - this.getRowOffsetTop(event);
     }
   }
 
   onMouseMove(event: MouseEvent): number {
-    return event.clientY - this._y0;
-  }
-
-  onMouseOver(event: IGridTreeRowEvent<T>): void {
-    this._overRow = event.row;
+    return event.clientY - this._latestOffset;
   }
 
   onMouseUp(event: MouseEvent): void {
     this._draggedRow = null;
-    this._overRow = null;
+  }
+
+  private getRowOffsetTop(event: MouseEvent): number {
+    return ((event.target as HTMLElement).closest('app-gridtree-rowgroup') as HTMLElement).offsetTop;
   }
 }

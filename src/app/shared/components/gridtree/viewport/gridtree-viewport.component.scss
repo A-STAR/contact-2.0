@@ -1,16 +1,5 @@
-.gridtree-viewport {
-  // TODO(d.maltsev) calculate height dynamically
+:host {
+  display: block;
   height: 300px;
-  list-style-type: none;
-  margin: 0;
   overflow: auto;
-  padding: 0;
-  position: relative;
-}
-
-.gridtree-dragged-row {
-  background-color: #f5faff;
-  pointer-events: none;
-  position: absolute;
-  left: 0;
 }
