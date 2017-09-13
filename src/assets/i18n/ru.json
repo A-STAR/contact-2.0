@@ -128,7 +128,8 @@
       "unblock": "Разблокировать",
       "changeStatus": "Сменить статус",
       "close": "Закрыть",
-      "undo": "Отменить"
+      "undo": "Отменить",
+      "ok": "OK"
     }
   },
   "queryBuilder": {
