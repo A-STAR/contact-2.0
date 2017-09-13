@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, HostListener, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, HostListener, Input } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 
@@ -11,30 +12,78 @@ import { GridTreeService } from '../gridtree.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridTreeRowGroupComponent<T> {
+  @HostBinding('attr.draggable') draggable = true;
+
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() nestingLevel = 0;
   @Input() row: IGridTreeRow<T>;
 
-  constructor(private gridTreeService: GridTreeService<T>) {}
-
+  private _isDragged = false;
+  private _isDraggedOver = false;
   private _isExpanded = false;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridTreeService: GridTreeService<T>,
+  ) {
+    this.gridTreeService.drop.subscribe(() => {
+      this._isDragged = false;
+      this._isDraggedOver = false;
+      this.cdRef.markForCheck();
+    });
+  }
 
   get hasChildren(): boolean {
     return this.row.children && this.row.children.length > 0;
+  }
+
+  get isDragged(): boolean {
+    return this._isDragged;
+  }
+
+  get isDraggedOver(): boolean {
+    return this._isDraggedOver;
   }
 
   get isExpanded(): boolean {
     return this._isExpanded;
   }
 
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent): void {
-    event.stopPropagation();
-    this.gridTreeService.onMouseDown(event, this.row);
+  @HostListener('dragstart', ['$event'])
+  onDragStart(event: DragEvent): void {
+    this._isDragged = true;
+    this.gridTreeService.onDragStart(event, this.row);
+    this.cdRef.markForCheck();
+  }
+
+  @HostListener('dragend', ['$event'])
+  onDragEnd(event: DragEvent): void {
+    this._isDragged = false;
+    this.cdRef.markForCheck();
+  }
+
+  onDrop(event: DragEvent): void {
+    this.gridTreeService.onDrop(event, this.row);
+    this.cdRef.markForCheck();
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDragEnter(event: DragEvent): void {
+    this._isDraggedOver = true;
+    this.cdRef.markForCheck();
+  }
+
+  onDragLeave(event: DragEvent): void {
+    this._isDraggedOver = false;
+    this.cdRef.markForCheck();
   }
 
   onToggle(event: MouseEvent): void {
     event.stopPropagation();
     this._isExpanded = !this._isExpanded;
+    this.cdRef.markForCheck();
   }
 }

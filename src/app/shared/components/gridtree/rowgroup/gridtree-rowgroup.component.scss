@@ -17,7 +17,13 @@
       border-right: 1px solid #e5e5e5;
       float: left;
       padding: 0 10px;
-      width: 200px;
+      width: 250px;
+      &.is-dragged {
+        background-color: #f5f9ff;
+      }
+      &.is-dragged-over {
+        background-color: #fff9f5;
+      }
     }
   }
 }

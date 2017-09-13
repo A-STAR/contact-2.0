@@ -9,6 +9,78 @@ import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/g
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent {
+  private words1 = [
+    'adorable',
+    'beautiful',
+    'clean',
+    'drab',
+    'elegant',
+    'fancy',
+    'glamorous',
+    'handsome',
+    'long',
+    'magnificent',
+    'old-fashioned',
+    'plain',
+    'quaint',
+    'sparkling',
+    'ugliest',
+    'unsightly',
+    'wide-eyed',
+  ];
+
+  private words2 = [
+    'angry',
+    'bewildered',
+    'clumsy',
+    'defeated',
+    'embarrassed',
+    'fierce',
+    'grumpy',
+    'helpless',
+    'itchy',
+    'jealous',
+    'lazy',
+    'mysterious',
+    'nervous',
+    'obnoxious',
+    'panicky',
+    'repulsive',
+    'scary',
+    'thoughtless',
+    'uptight',
+    'worried',
+  ];
+
+  private words3 = [
+    'bear',
+    'cat',
+    'chinchilla',
+    'collie',
+    'cow',
+    'coyote',
+    'crocodile',
+    'donkey',
+    'dragon',
+    'duck',
+    'fish',
+    'fox',
+    'gecko',
+    'hamster',
+    'hippopotamus',
+    'jaguar',
+    'lion',
+    'lynx',
+    'monkey',
+    'octopus',
+    'penguin',
+    'pig',
+    'squirrel',
+    'tiger',
+    'tortoise',
+    'wolf',
+  ];
+
   private _columns: Array<IGridTreeColumn<IAttribute>> = [
     { label: 'Id', prop: 'id' },
     { label: 'Name', prop: 'name' },
@@ -30,11 +102,14 @@ export class AttributeGridComponent {
 
   private generateRow(i: number, length: number, parentId: number, parentLength: number): IGridTreeRow<IAttribute> {
     const id = parentLength * parentId + i + 1;
+    const w1 = this.randomElement(this.words1);
+    const w2 = this.randomElement(this.words2);
+    const w3 = this.randomElement(this.words3);
     return {
       data: {
         id,
-        name: `Item #${id}`,
-        type: ['Red', 'Green', 'Blue', 'Yellow', 'Black'][this.random(5)]
+        name: this.capitalizeFirstLetter(`${w2} ${w3}`),
+        type: this.capitalizeFirstLetter(`${w1} ${w2} ${w3}`)
       },
       children: this.random(10) === 0 ? this.generateGridTreeRows(5, id, length) : undefined
     };
@@ -42,5 +117,19 @@ export class AttributeGridComponent {
 
   private random(max: number): number {
     return Math.floor(max * Math.random());
+  }
+
+  private randomElement<T>(array: Array<T>): T {
+    return array[this.random(array.length)];
+  }
+
+  private generateName(): string {
+    const a = [];
+    const b = [];
+    return '';
+  }
+
+  private capitalizeFirstLetter(s: string): string {
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 }
