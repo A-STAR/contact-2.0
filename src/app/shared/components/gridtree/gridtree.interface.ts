@@ -19,3 +19,5 @@ export interface IGridTreeDragAndDropEvent<T> {
   targetRow: IGridTreeRow<T>;
   type: GridTreeDragAndDropEventTypeEnum;
 }
+
+export type IUniqueIdGetter<T> = (row: IGridTreeRow<T>) => number | string;

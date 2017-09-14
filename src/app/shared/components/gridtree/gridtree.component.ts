@@ -1,6 +1,13 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IGridTreeColumn, IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventTypeEnum } from './gridtree.interface';
+import {
+  IGridTreeColumn,
+  IGridTreeRow,
+  IGridTreeDragAndDropEvent,
+  IUniqueIdGetter,
+  GridTreeDragAndDropEventTypeEnum
+} from './gridtree.interface';
 
 import { GridTreeService } from './gridtree.service';
 
@@ -11,72 +18,38 @@ import { GridTreeService } from './gridtree.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ GridTreeService ]
 })
-export class GridTreeComponent<T> {
+export class GridTreeComponent<T> implements OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
   @Input() rows: Array<IGridTreeRow<T>> = [];
   @Input() displayTreeProp: keyof T;
 
+  private gridTreeServiceSubscription: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridTreeService: GridTreeService<T>,
   ) {
-    this.gridTreeService.drop.subscribe((event: IGridTreeDragAndDropEvent<T>) => {
-      if (this.idGetter(event.draggedRow) === this.idGetter(event.targetRow) || this.isChild(event.targetRow, event.draggedRow)) {
+    this.gridTreeServiceSubscription = this.gridTreeService.drop.subscribe((event: IGridTreeDragAndDropEvent<T>) => {
+      if (
+        this.idGetter(event.draggedRow) === this.idGetter(event.targetRow) ||
+        this.gridTreeService.isChild(event.targetRow, event.draggedRow, this.idGetter)
+      ) {
         return;
       }
-      this.rows = this.removeRowFrom(this.rows, event.draggedRow);
+      this.rows = this.gridTreeService.removeRowFrom(this.rows, event.draggedRow, this.idGetter);
       if (event.type === GridTreeDragAndDropEventTypeEnum.INTO) {
-        this.rows = this.addRowTo(this.rows, event.draggedRow, event.targetRow);
+        this.rows = this.gridTreeService.addRowTo(this.rows, event.draggedRow, event.targetRow, this.idGetter);
       } else {
-        this.rows = this.addRowAfter(this.rows, event.draggedRow, event.targetRow);
+        this.rows = this.gridTreeService.addRowAfter(this.rows, event.draggedRow, event.targetRow, this.idGetter);
       }
       this.cdRef.markForCheck();
     });
   }
 
-  @Input() idGetter = (row: IGridTreeRow<T>) => row.data['id'];
+  @Input() idGetter: IUniqueIdGetter<T> = (row: IGridTreeRow<T>) => row.data['id'];
 
-  private addRowTo(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>, parent: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
-    return rows
-      .map(r => {
-        return this.idGetter(r) === this.idGetter(parent)
-          ? { ...r, isExpanded: true, children: [ ...(r.children || []), row ] }
-          : r;
-        })
-      .map(r => {
-        return r.children && r.children.length > 0
-          ? { ...r, children: this.addRowTo(r.children, row, parent) }
-          : r;
-      });
-  }
-
-  private addRowAfter(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>, parent: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
-    const i = rows.findIndex(r => this.idGetter(r) === this.idGetter(parent))
-    return i >= 0
-      ? [ ...rows.slice(0, i + 1), row, ...rows.slice(i + 1) ]
-      : rows.map(r => {
-          return r.children && r.children.length
-            ? { ...r, children: this.addRowAfter(r.children, row, parent) }
-            : r;
-        });
-  }
-
-  private removeRowFrom(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
-    return rows
-      .filter(r => this.idGetter(r) !== this.idGetter(row))
-      .map(r => {
-        return r.children && r.children.length > 0
-          ? { ...r, children: this.removeRowFrom(r.children, row) }
-          : r;
-      });
-  }
-
-  private isChild(row: IGridTreeRow<T>, parent: IGridTreeRow<T>): boolean {
-    return parent.children && parent.children.length > 0
-      ? parent.children.reduce((acc, child) => {
-          return acc || this.idGetter(child) === this.idGetter(row) || this.isChild(row, child);
-        }, false)
-      : false;
+  ngOnDestroy(): void {
+    this.gridTreeServiceSubscription.unsubscribe();
   }
 }
