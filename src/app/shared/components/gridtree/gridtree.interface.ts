@@ -1,6 +1,7 @@
 export interface IGridTreeRow<T> {
   data: T;
   children?: Array<IGridTreeRow<T>>;
+  isExpanded?: boolean;
 }
 
 export interface IGridTreeColumn<T> {
@@ -8,7 +9,7 @@ export interface IGridTreeColumn<T> {
   prop: keyof T;
 }
 
-export enum GridTreeDragAndDropEventType {
+export enum GridTreeDragAndDropEventTypeEnum {
   INTO,
   AFTER,
 }
@@ -16,5 +17,5 @@ export enum GridTreeDragAndDropEventType {
 export interface IGridTreeDragAndDropEvent<T> {
   draggedRow: IGridTreeRow<T>;
   targetRow: IGridTreeRow<T>;
-  type: GridTreeDragAndDropEventType;
+  type: GridTreeDragAndDropEventTypeEnum;
 }

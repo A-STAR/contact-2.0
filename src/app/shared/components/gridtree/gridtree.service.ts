@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-import { IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventType } from './gridtree.interface';
+import { IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventTypeEnum } from './gridtree.interface';
 
 @Injectable()
 export class GridTreeService<T> {
@@ -16,7 +16,7 @@ export class GridTreeService<T> {
     this.drop.emit({
       draggedRow: this._draggedRow,
       targetRow: row,
-      type: GridTreeDragAndDropEventType.INTO
+      type: GridTreeDragAndDropEventTypeEnum.INTO
     });
     this._draggedRow = null;
   }
@@ -25,7 +25,7 @@ export class GridTreeService<T> {
     this.drop.emit({
       draggedRow: this._draggedRow,
       targetRow: row,
-      type: GridTreeDragAndDropEventType.AFTER
+      type: GridTreeDragAndDropEventTypeEnum.AFTER
     });
     this._draggedRow = null;
   }

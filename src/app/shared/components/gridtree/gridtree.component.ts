@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventType } from './gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventTypeEnum } from './gridtree.interface';
 
 import { GridTreeService } from './gridtree.service';
 
@@ -26,7 +26,7 @@ export class GridTreeComponent<T> {
         return;
       }
       this.rows = this.removeRowFrom(this.rows, event.draggedRow);
-      if (event.type === GridTreeDragAndDropEventType.INTO) {
+      if (event.type === GridTreeDragAndDropEventTypeEnum.INTO) {
         this.rows = this.addRowTo(this.rows, event.draggedRow, event.targetRow);
       } else {
         this.rows = this.addRowAfter(this.rows, event.draggedRow, event.targetRow);
@@ -39,7 +39,11 @@ export class GridTreeComponent<T> {
 
   private addRowTo(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>, parent: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
     return rows
-      .map(r => this.idGetter(r) === this.idGetter(parent) ? { ...r, children: [ ...(r.children || []), row ] } : r)
+      .map(r => {
+        return this.idGetter(r) === this.idGetter(parent)
+          ? { ...r, isExpanded: true, children: [ ...(r.children || []), row ] }
+          : r;
+        })
       .map(r => {
         return r.children && r.children.length > 0
           ? { ...r, children: this.addRowTo(r.children, row, parent) }

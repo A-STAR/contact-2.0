@@ -20,7 +20,6 @@ export class GridTreeRowGroupComponent<T> {
   private _isDragged = false;
   private _isDraggedOver = false;
   private _isDraggedOverDivider = false;
-  private _isExpanded = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -48,10 +47,6 @@ export class GridTreeRowGroupComponent<T> {
 
   get isDraggedOverDivider(): boolean {
     return this._isDraggedOverDivider;
-  }
-
-  get isExpanded(): boolean {
-    return this._isExpanded;
   }
 
   @HostListener('dragstart', ['$event'])
@@ -119,7 +114,7 @@ export class GridTreeRowGroupComponent<T> {
 
   onToggle(event: MouseEvent): void {
     event.stopPropagation();
-    this._isExpanded = !this._isExpanded;
+    this.row.isExpanded = !this.row.isExpanded;
     this.cdRef.markForCheck();
   }
 }
