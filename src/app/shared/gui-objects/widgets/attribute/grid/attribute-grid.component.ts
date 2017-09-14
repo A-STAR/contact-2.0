@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/distinctUntilChanged';
 
-import { IAttribute } from '../attribute.interface';
+import { IAttribute, IAttributeResponse } from '../attribute.interface';
 import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
+
+import { AttributeService } from '../attribute.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-attribute-grid',
@@ -9,121 +15,52 @@ import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/g
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent {
-  private words1 = [
-    'adorable',
-    'beautiful',
-    'clean',
-    'drab',
-    'elegant',
-    'fancy',
-    'glamorous',
-    'handsome',
-    'long',
-    'magnificent',
-    'old-fashioned',
-    'plain',
-    'quaint',
-    'sparkling',
-    'ugliest',
-    'unsightly',
-    'wide-eyed',
-  ];
-
-  private words2 = [
-    'angry',
-    'bewildered',
-    'clumsy',
-    'defeated',
-    'embarrassed',
-    'fierce',
-    'grumpy',
-    'helpless',
-    'itchy',
-    'jealous',
-    'lazy',
-    'mysterious',
-    'nervous',
-    'obnoxious',
-    'panicky',
-    'repulsive',
-    'scary',
-    'thoughtless',
-    'uptight',
-    'worried',
-  ];
-
-  private words3 = [
-    'bear',
-    'cat',
-    'chinchilla',
-    'collie',
-    'cow',
-    'coyote',
-    'crocodile',
-    'donkey',
-    'dragon',
-    'duck',
-    'fish',
-    'fox',
-    'gecko',
-    'hamster',
-    'hippopotamus',
-    'jaguar',
-    'lion',
-    'lynx',
-    'monkey',
-    'octopus',
-    'penguin',
-    'pig',
-    'squirrel',
-    'tiger',
-    'tortoise',
-    'wolf',
-  ];
-
   private _columns: Array<IGridTreeColumn<IAttribute>> = [
     { label: 'Id', prop: 'id' },
     { label: 'Name', prop: 'name' },
-    { label: 'Type', prop: 'type' },
+    { label: 'Code', prop: 'code' },
   ];
-  private _rows = this.generateGridTreeRows(100);
+
+  private _attributes: IAttributeResponse[] = [];
+
+  constructor(
+    private attributeService: AttributeService,
+    private cdRef: ChangeDetectorRef,
+    private userDictionariesService: UserDictionariesService,
+  ) {
+    this.fetch(1);
+  }
+
+  get options$(): Observable<IOption[]> {
+    return this.userDictionariesService
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ATTRIBUTE_TREE_TYPE)
+      .distinctUntilChanged();
+  }
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
     return this._columns;
   }
 
   get rows(): Array<IGridTreeRow<IAttribute>> {
-    return this._rows;
+    return this.convertToGridTreeRow(this._attributes);
   }
 
-  private generateGridTreeRows(length: number, parentId: number = 0, parentLength: number = 0): Array<IGridTreeRow<IAttribute>> {
-    return Array(length).fill(null).map((_, i) => this.generateRow(i, length, parentId, parentLength));
+  onChange(event: Event): void {
+    this.fetch(Number((event.target as HTMLSelectElement).value));
   }
 
-  private generateRow(i: number, length: number, parentId: number, parentLength: number): IGridTreeRow<IAttribute> {
-    const id = parentLength * parentId + i + 1;
-    const w1 = this.randomElement(this.words1);
-    const w2 = this.randomElement(this.words2);
-    const w3 = this.randomElement(this.words3);
-    return {
-      data: {
-        id,
-        name: this.capitalizeFirstLetter(`${w2} ${w3}`),
-        type: this.capitalizeFirstLetter(`${w1} ${w2} ${w3}`)
-      },
-      children: this.random(10) === 0 ? this.generateGridTreeRows(5, id, length) : undefined
-    };
+  private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+    return attributes.map(attribute => {
+      const { children, ...rest } = attribute;
+      const hasChildren = children && children.length > 0;
+      return hasChildren
+        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: hasChildren }
+        : { data: rest };
+    });
   }
 
-  private random(max: number): number {
-    return Math.floor(max * Math.random());
-  }
-
-  private randomElement<T>(array: Array<T>): T {
-    return array[this.random(array.length)];
-  }
-
-  private capitalizeFirstLetter(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
+  private fetch(type: number): void {
+    this.attributeService.fetchAll(type).subscribe(attributes => this._attributes = attributes);
+    this.cdRef.markForCheck();
   }
 }

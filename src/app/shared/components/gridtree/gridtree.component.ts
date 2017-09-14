@@ -21,7 +21,6 @@ import { GridTreeService } from './gridtree.service';
 export class GridTreeComponent<T> implements OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
-  @Input() displayTreeProp: keyof T;
 
   private _rows: Array<IGridTreeRow<T>> = [];
 
