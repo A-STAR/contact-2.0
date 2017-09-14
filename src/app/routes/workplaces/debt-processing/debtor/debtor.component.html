@@ -13,10 +13,6 @@
 </app-dynamic-form>
 
 <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
-  <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
-    <app-attribute-grid></app-attribute-grid>
-  </app-tab>
-
   <app-tab [title]="'debtor.information.title'">
     <app-debtor-information #information [person]="person"></app-debtor-information>
   </app-tab>
@@ -67,4 +63,8 @@
   <app-tab [title]="'debtor.extrasDebtInfoTab.title'" [closable]="false">
   </app-tab>
   -->
+
+  <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
+    <app-attribute-grid></app-attribute-grid>
+  </app-tab>
 </app-tabstrip>
