@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -6,7 +6,6 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
@@ -17,12 +16,13 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 
 @Component({
   selector: 'app-portfolio-edit',
-  templateUrl: './portfolio-edit.component.html'
+  templateUrl: './portfolio-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent {
   static COMPONENT_NAME = 'ContractorEditComponent';
 
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IPortfolio = null;
@@ -32,14 +32,14 @@ export class PortfolioEditComponent {
 
   constructor(
     private actions: Actions,
-    private activatedRoute: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
     private valueConverterService: ValueConverterService,
   ) {
-    // TODO(d.maltsev): stronger typing
-    const { value } = this.activatedRoute.params as any;
+    const { value } = this.route.params as any;
     this.contractorId = value.id;
     this.portfolioId = value.portfolioId;
 
@@ -51,20 +51,34 @@ export class PortfolioEditComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
-      this.contractorId && this.portfolioId ?
-        this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS).map(action => action.payload.portfolio) :
-        Observable.of(null)
+      this.contractorId && this.portfolioId
+        ? this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIO_FETCH)
+            .switchMap(action => this.contractorsAndPortfoliosService.selectedPortfolio$)
+        : Observable.of(null)
     )
-    // TODO(d.maltsev): handle errors
     .take(1)
     .subscribe(([ directionOptions, stageOptions, statusOptions, portfolio ]) => {
-      this.initFormControls(portfolio, directionOptions, stageOptions, statusOptions);
       this.formData = portfolio ? {
         ...portfolio,
         signDate: this.valueConverterService.fromISO(portfolio.signDate),
         startWorkDate: this.valueConverterService.fromISO(portfolio.startWorkDate),
         endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
       } : null;
+      this.controls = [
+        { label: 'portfolios.grid.name', controlName: 'name', type: 'text', required: true },
+        { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,
+            disabled: !!portfolio, options: directionOptions },
+        { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select',
+          // NOTE: must be true, but the dictionary is empty
+          required: false, options: stageOptions },
+        { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true,
+            disabled: portfolio && portfolio.directionCode === 2, options: statusOptions },
+        { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'datepicker' },
+        { label: 'portfolios.grid.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
+        { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
+        { label: 'portfolios.grid.comment', controlName: 'comment', type: 'textarea' },
+      ];
+      this.cdRef.markForCheck();
     });
 
     this.actions.ofType(
@@ -90,25 +104,5 @@ export class PortfolioEditComponent {
 
   onBack(): void {
     this.contentTabService.navigate('/admin/contractors');
-  }
-
-  private initFormControls(
-    portfolio: IPortfolio,
-    directionOptions: Array<IOption>,
-    stageOptions: Array<IOption>,
-    statusOptions: Array<IOption>
-  ): void {
-    this.controls = [
-      { label: 'portfolios.grid.name', controlName: 'name', type: 'text', required: true },
-      { label: 'portfolios.grid.directionCode', controlName: 'directionCode', type: 'select', required: true,
-          disabled: !!portfolio, options: directionOptions },
-      { label: 'portfolios.grid.stageCode', controlName: 'stageCode', type: 'select', required: true, options: stageOptions },
-      { label: 'portfolios.grid.statusCode', controlName: 'statusCode', type: 'select', required: true,
-          disabled: portfolio && portfolio.directionCode === 2, options: statusOptions },
-      { label: 'portfolios.grid.signDate', controlName: 'signDate', type: 'datepicker' },
-      { label: 'portfolios.grid.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
-      { label: 'portfolios.grid.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
-      { label: 'portfolios.grid.comment', controlName: 'comment', type: 'textarea' },
-    ];
   }
 }

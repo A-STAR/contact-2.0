@@ -15,7 +15,7 @@ export class UserDictionariesService {
   static DICTIONARY_ACTION_TYPES                =  4;
   static DICTIONARY_TERM_TYPES                  =  5;
   static DICTIONARY_BRANCHES                    =  6;
-  static DICTIONARY_DEBT_STATUS                 =  7; // NOT READY
+  static DICTIONARY_DEBT_STATUS                 =  7;
   static DICTIONARY_EMPLOYEE_ROLE               =  8;
   static DICTIONARY_DICTIONARY_TYPE             =  9;
   static DICTIONARY_DICTIONARY_TERM_TYPE        = 10;
@@ -40,7 +40,7 @@ export class UserDictionariesService {
   static DICTIONARY_CONTRACTOR_TYPE             = 28;
   static DICTIONARY_PORTFOLIO_DIRECTION         = 29;
   static DICTIONARY_PORTFOLIO_STATUS            = 30;
-  static DICTIONARY_PORTFOLIO_STAGE             = 31;
+  static DICTIONARY_PORTFOLIO_STAGE             = 31;  // bloody EMPTY
   static DICTIONARY_CONTACT_TYPE                = 32;
   static DICTIONARY_DOCUMENT_TYPE               = 33;
   static DICTIONARY_DEBT_LIST_1                 = 34;
@@ -51,8 +51,13 @@ export class UserDictionariesService {
   static DICTIONARY_PROMISE_STATUS              = 39;
   static DICTIONARY_PAYMENT_STATUS              = 40;
   static DICTIONARY_PAYMENT_PURPOSE             = 41;
-  static DICTIONARY_MESSAGE_TEMPLATE_TYPE       = 42; // NOT READY
-  static DICTIONARY_ROLE_ACCESSIBLE_ENTITIES    = 43; // NOT READY
+  static DICTIONARY_MESSAGE_TEMPLATE_TYPE       = 42;
+  static DICTIONARY_ROLE_ENTITIES               = 43;
+  static DICTIONARY_PERSON_ROLE                 = 44;
+  static DICTIONARY_SMS_STATUS                  = 45;
+  static DICTIONARY_SMS_SENDER                  = 46;
+  static DICTIONARY_ATTRIBUTE_TREE_TYPE         = 47;
+  static DICTIONARY_CONTACT_TREE_TYPE           = 48;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
