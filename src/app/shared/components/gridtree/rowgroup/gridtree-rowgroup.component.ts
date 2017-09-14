@@ -15,7 +15,7 @@ export class GridTreeRowGroupComponent<T> {
 
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() nestingLevel = 0;
-  @Input() row: IGridTreeRow<T>;
+  @Input() row = null as IGridTreeRow<T>;
 
   private _isDragged = false;
   private _isDraggedOver = false;
@@ -27,13 +27,6 @@ export class GridTreeRowGroupComponent<T> {
     private gridTreeService: GridTreeService<T>,
   ) {
     this.gridTreeService.drop.subscribe(() => {
-      this._isDragged = false;
-      this._isDraggedOver = false;
-      this._isDraggedOverDivider = false;
-      this.cdRef.markForCheck();
-    });
-
-    this.gridTreeService.dropAfter.subscribe(() => {
       this._isDragged = false;
       this._isDraggedOver = false;
       this._isDraggedOverDivider = false;

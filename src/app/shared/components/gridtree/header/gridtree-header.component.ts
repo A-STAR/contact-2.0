@@ -9,5 +9,5 @@ import { IGridTreeColumn } from '../gridtree.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridTreeHeaderComponent<T> {
-  @Input() columns: Array<IGridTreeColumn<T>>;
+  @Input() columns: Array<IGridTreeColumn<T>> = [];
 }

@@ -8,7 +8,13 @@ export interface IGridTreeColumn<T> {
   prop: keyof T;
 }
 
-export interface IGridTreeRowEvent<T> {
-  row: IGridTreeRow<T>;
-  event: MouseEvent;
+export enum GridTreeDragAndDropEventType {
+  INTO,
+  AFTER,
+}
+
+export interface IGridTreeDragAndDropEvent<T> {
+  draggedRow: IGridTreeRow<T>;
+  targetRow: IGridTreeRow<T>;
+  type: GridTreeDragAndDropEventType;
 }

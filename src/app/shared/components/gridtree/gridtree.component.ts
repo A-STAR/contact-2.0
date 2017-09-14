@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow } from './gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventType } from './gridtree.interface';
 
 import { GridTreeService } from './gridtree.service';
 
@@ -17,27 +17,20 @@ export class GridTreeComponent<T> {
   @Input() rows: Array<IGridTreeRow<T>> = [];
   @Input() displayTreeProp: keyof T;
 
-  private _processedRows: Array<any>;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridTreeService: GridTreeService<T>,
   ) {
-    this.gridTreeService.drop.subscribe(([ row1, row2 ]: Array<IGridTreeRow<T>>) => {
-      if (row1 === row2 || this.isChild(row2, row1)) {
+    this.gridTreeService.drop.subscribe((event: IGridTreeDragAndDropEvent<T>) => {
+      if (this.idGetter(event.draggedRow) === this.idGetter(event.targetRow) || this.isChild(event.targetRow, event.draggedRow)) {
         return;
       }
-      this.rows = this.removeRowFrom(this.rows, row1);
-      this.rows = this.addRowTo(this.rows, row1, row2);
-      this.cdRef.markForCheck();
-    });
-
-    this.gridTreeService.dropAfter.subscribe(([ row1, row2 ]: Array<IGridTreeRow<T>>) => {
-      if (row1 === row2 || this.isChild(row2, row1)) {
-        return;
+      this.rows = this.removeRowFrom(this.rows, event.draggedRow);
+      if (event.type === GridTreeDragAndDropEventType.INTO) {
+        this.rows = this.addRowTo(this.rows, event.draggedRow, event.targetRow);
+      } else {
+        this.rows = this.addRowAfter(this.rows, event.draggedRow, event.targetRow);
       }
-      this.rows = this.removeRowFrom(this.rows, row1);
-      this.rows = this.addRowAfter(this.rows, row1, row2);
       this.cdRef.markForCheck();
     });
   }

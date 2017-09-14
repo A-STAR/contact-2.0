@@ -1,11 +1,10 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-import { IGridTreeRow } from './gridtree.interface';
+import { IGridTreeRow, IGridTreeDragAndDropEvent, GridTreeDragAndDropEventType } from './gridtree.interface';
 
 @Injectable()
 export class GridTreeService<T> {
-  drop = new EventEmitter<Array<IGridTreeRow<T>>>();
-  dropAfter = new EventEmitter<Array<IGridTreeRow<T>>>();
+  drop = new EventEmitter<IGridTreeDragAndDropEvent<T>>();
 
   private _draggedRow: IGridTreeRow<T> = null;
 
@@ -14,12 +13,20 @@ export class GridTreeService<T> {
   }
 
   onDrop(event: DragEvent, row: IGridTreeRow<T>): void {
-    this.drop.emit([this._draggedRow, row]);
+    this.drop.emit({
+      draggedRow: this._draggedRow,
+      targetRow: row,
+      type: GridTreeDragAndDropEventType.INTO
+    });
     this._draggedRow = null;
   }
 
   onDividerDrop(event: DragEvent, row: IGridTreeRow<T>): void {
-    this.dropAfter.emit([this._draggedRow, row]);
+    this.drop.emit({
+      draggedRow: this._draggedRow,
+      targetRow: row,
+      type: GridTreeDragAndDropEventType.AFTER
+    });
     this._draggedRow = null;
   }
 }
