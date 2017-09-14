@@ -57,7 +57,9 @@ export class GridTreeComponent<T> {
 
   private isChild(row: IGridTreeRow<T>, parent: IGridTreeRow<T>): boolean {
     return parent.children && parent.children.length > 0
-      ? parent.children.reduce((acc, child) => acc || child === row || this.isChild(row, child), false)
+      ? parent.children.reduce((acc, child) => {
+          return acc || this.idGetter(child) === this.idGetter(row) || this.isChild(row, child);
+        }, false)
       : false;
   }
 }
