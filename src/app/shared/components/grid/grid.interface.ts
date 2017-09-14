@@ -23,7 +23,7 @@ export interface IGridColumn {
   minWidth?: number;
   name?: string;
   prop: string;
-  renderer?: Function | string;
+  renderer?: Function | TRendererType;
   type?: string;
   // NOTE: technical use only by grid.service.ts, pls do NOT use directly
   $$valueGetter?: Function;

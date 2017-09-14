@@ -16,14 +16,24 @@ import { ContractorManagerEditComponent } from './contractors/managers/edit/cont
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 
 const routes: Routes = [
-  { path: '', component: ContractorsAndPortfoliosComponent },
+  { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
-  { path: ':id', component: ContractorEditComponent },
-  { path: ':id/managers', component: ContractorManagersComponent },
-  { path: ':id/managers/create', component: ContractorManagerEditComponent },
-  { path: ':id/managers/:managerId', component: ContractorManagerEditComponent },
-  { path: ':id/portfolios/create', component: PortfolioEditComponent },
-  { path: ':id/portfolios/:portfolioId', component: PortfolioEditComponent },
+  { path: ':id', children: [
+      { path: '', pathMatch: 'full', component: ContractorEditComponent },
+      { path: 'managers', children: [
+          { path: '', component: ContractorManagersComponent },
+          { path: 'create', component: ContractorManagerEditComponent },
+          { path: ':managerId', component: ContractorManagerEditComponent },
+        ]
+      },
+      { path: 'portfolios', children: [
+          { path: '', pathMatch: 'full', redirectTo: 'create' },
+          { path: 'create', component: PortfolioEditComponent },
+          { path: ':portfolioId', component: PortfolioEditComponent },
+        ]
+      },
+    ]
+  },
 ];
 
 @NgModule({
