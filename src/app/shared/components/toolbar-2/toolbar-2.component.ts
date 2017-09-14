@@ -71,6 +71,10 @@ export class Toolbar2Component {
       label: 'toolbar.action.undo',
       icon: 'fa fa-undo',
     },
+    [ToolbarItemTypeEnum.BUTTON_OK]: {
+      label: 'toolbar.action.ok',
+      icon: 'fa fa-check',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -89,6 +93,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
     ToolbarItemTypeEnum.BUTTON_CLOSE,
     ToolbarItemTypeEnum.BUTTON_UNDO,
+    ToolbarItemTypeEnum.BUTTON_OK,
   ];
 
   constructor(

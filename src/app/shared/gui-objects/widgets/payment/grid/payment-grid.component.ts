@@ -43,7 +43,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemTypeEnum.BUTTON_OK,
       label: 'debtor.paymentsTab.confirm.buttonLabel',
       enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPayment$)
       .map(([ canConfirm, selectedPayment ]) =>
