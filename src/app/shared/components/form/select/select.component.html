@@ -48,7 +48,7 @@
       [ngClass]="[ inputClass, 'app-select-unselectable' ]"
       (click)="onMatchClick($event)"
     >
-      <span *ngIf="active.length" [innerHTML]="toDisplayValue(active[0])"></span>
+      <span *ngIf="active" [innerHTML]="toDisplayValue(active[0])"></span>
       <i class="caret app-select-caret"></i>
     </span>
   </div>

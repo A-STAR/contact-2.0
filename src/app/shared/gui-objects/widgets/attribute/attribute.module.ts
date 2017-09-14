@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { AttributeGridModule } from './grid/attribute-grid.module';
 
+import { AttributeService } from './attribute.service';
+
 @NgModule({
   imports: [
     AttributeGridModule,
@@ -10,6 +12,9 @@ import { AttributeGridModule } from './grid/attribute-grid.module';
   ],
   exports: [
     AttributeGridModule,
+  ],
+  providers: [
+    AttributeService
   ]
 })
 export class AttributeModule { }

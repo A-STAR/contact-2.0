@@ -1,5 +1,7 @@
+@import '../../../styles/app/variables.scss';
+
 :host {
-  border-bottom: 1px solid #d5d5d5;
+  border-bottom: 1px solid $app-gridtree-border-color-dark;
   display: block;
   &:before,
   &:after {
@@ -12,7 +14,7 @@
 }
 
 div {
-  border-right: 1px solid #e5e5e5;
+  border-right: 1px solid $app-gridtree-border-color;
   float: left;
   font-weight: bold;
   padding: 5px 10px 4px;
