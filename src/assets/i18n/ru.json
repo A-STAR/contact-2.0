@@ -939,8 +939,8 @@
         "branchCode": "Филиал",
         "currencyId": "Валюта",
         "startDate": "Дата выхода на просрочку",
-        "debtSum": "Сумма просроченного долга",
-        "totalSum": "Общая сумма кредита",
+        "debtAmount": "Сумма просроченного долга",
+        "totalAmount": "Общая сумма кредита",
         "dpd": "Кол-во дней просрочки",
         "portfolio": "Портфель",
         "bank": "Банк",
@@ -974,7 +974,7 @@
         "title": "Компоненты долга",
         "grid": {
           "typeCode": "Тип",
-          "sum": "Сумма",
+          "amount": "Сумма",
           "currencyId": "Валюта"
         },
         "remove": {
@@ -986,7 +986,7 @@
         "title": "История задолженности",
         "grid": {
           "typeCode": "Тип",
-          "sum": "Сумма",
+          "amount": "Сумма",
           "currency": "Валюта",
           "fromDate": "Дата начала",
           "toDate": "Дата окончания",
@@ -1126,7 +1126,7 @@
       "currencyNotFound": "Не найдена валюта по id",
       "currencyRateNotFound": "Не найден курс валюты на определенную дату",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
-      "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_sum) по Id",
+      "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_amount) по Id",
       "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
@@ -1174,7 +1174,7 @@
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
-      "promiseSumMustBeGreaterThenPercentsDebtSum": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",

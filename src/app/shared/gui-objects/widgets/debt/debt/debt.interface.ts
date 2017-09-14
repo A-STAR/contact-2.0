@@ -10,8 +10,8 @@ export interface IDebt {
   creditStartDate: Date | string;
   creditEndDate: Date | string;
   currencyId: number;
-  debtSum: number;
-  totalSum: number;
+  debtAmount: number;
+  totalAmount: number;
   dpd: number;
   startDate: Date | string;
   regionCode: number;

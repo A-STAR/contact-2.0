@@ -15,7 +15,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 export class ComponentLogGridComponent {
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 250 },
-    { prop: 'sum', minWidth: 150, maxWidth: 250 },
+    { prop: 'amount', minWidth: 150, maxWidth: 250 },
     { prop: 'currency', minWidth: 150, maxWidth: 250 },
     { prop: 'fromDate', minWidth: 150, maxWidth: 250 },
     { prop: 'toDate', minWidth: 150, maxWidth: 250 },

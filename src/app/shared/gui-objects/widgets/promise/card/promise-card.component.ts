@@ -102,7 +102,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.debt = <IDebt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
       // Calculate the minimum promise amount
-      const minAmount = Math.round((minAmountPercent / 100) * debt.debtSum * 100) / 100;
+      const minAmount = Math.round((minAmountPercent / 100) * debt.debtAmount * 100) / 100;
       const today = new Date();
 
       if (!promise) {
@@ -183,7 +183,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    if (data.promiseAmount < this.debt.debtSum * this.minAmountPercent / 100) {
+    if (data.promiseAmount < this.debt.debtAmount * this.minAmountPercent / 100) {
       if (this.canAddInsufficientAmount) {
         this.setDialog('confirm');
       } else {
