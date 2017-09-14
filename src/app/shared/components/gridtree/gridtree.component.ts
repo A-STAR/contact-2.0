@@ -21,8 +21,9 @@ import { GridTreeService } from './gridtree.service';
 export class GridTreeComponent<T> implements OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
-  @Input() rows: Array<IGridTreeRow<T>> = [];
   @Input() displayTreeProp: keyof T;
+
+  private _rows: Array<IGridTreeRow<T>> = [];
 
   private gridTreeServiceSubscription: Subscription;
 
@@ -37,19 +38,29 @@ export class GridTreeComponent<T> implements OnDestroy {
       ) {
         return;
       }
-      this.rows = this.gridTreeService.removeRowFrom(this.rows, event.draggedRow, this.idGetter);
+      this._rows = this.gridTreeService.removeRowFrom(this._rows, event.draggedRow, this.idGetter);
       if (event.type === GridTreeDragAndDropEventTypeEnum.INTO) {
-        this.rows = this.gridTreeService.addRowTo(this.rows, event.draggedRow, event.targetRow, this.idGetter);
+        this._rows = this.gridTreeService.addRowTo(this._rows, event.draggedRow, event.targetRow, this.idGetter);
       } else {
-        this.rows = this.gridTreeService.addRowAfter(this.rows, event.draggedRow, event.targetRow, this.idGetter);
+        this._rows = this.gridTreeService.addRowAfter(this._rows, event.draggedRow, event.targetRow, this.idGetter);
       }
       this.cdRef.markForCheck();
     });
   }
 
-  @Input() idGetter = ((row: IGridTreeRow<T>) => row.data['id']) as IUniqueIdGetter<T>;
-
   ngOnDestroy(): void {
     this.gridTreeServiceSubscription.unsubscribe();
   }
+
+  get rows(): Array<IGridTreeRow<T>> {
+    return this._rows;
+  }
+
+  @Input('rows')
+  set rows(rows: Array<IGridTreeRow<T>>) {
+    this._rows = rows;
+    this.cdRef.markForCheck();
+  }
+
+  @Input() idGetter = ((row: IGridTreeRow<T>) => row.data['id']) as IUniqueIdGetter<T>;
 }
