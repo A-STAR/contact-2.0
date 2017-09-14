@@ -31,6 +31,12 @@ export class GridTreeComponent<T> {
       this.rows = this.addRowToParent(this.rows, row1, row2);
       this.cdRef.markForCheck();
     });
+
+    this.gridTreeService.dropAfter.subscribe(([ row1, row2 ]: Array<IGridTreeRow<T>>) => {
+      if (row1 === row2) {
+        return;
+      }
+    });
   }
 
   @Input() idGetter = (row: IGridTreeRow<T>) => row.data['id'];

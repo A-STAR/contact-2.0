@@ -1,29 +1,42 @@
 :host {
   display: block;
+  position: relative;
   user-select: none;
+}
+
+.content {
+  &:before,
+  &:after {
+    display: block;
+    content: '';
+  }
+  &:after {
+    clear: both;
+  }
 
   > div {
-    &:before,
-    &:after {
-      display: block;
-      content: '';
+    border-bottom: 1px solid #f5f5f5;
+    border-right: 1px solid #e5e5e5;
+    float: left;
+    padding: 0 10px;
+    width: 250px;
+    &.is-dragged {
+      background-color: #f5f9ff;
     }
-    &:after {
-      clear: both;
+    &.is-dragged-over {
+      background-color: #fff9f5;
     }
+  }
+}
 
-    > div {
-      border-bottom: 1px solid #f5f5f5;
-      border-right: 1px solid #e5e5e5;
-      float: left;
-      padding: 0 10px;
-      width: 250px;
-      &.is-dragged {
-        background-color: #f5f9ff;
-      }
-      &.is-dragged-over {
-        background-color: #fff9f5;
-      }
-    }
+.divider {
+  bottom: -2px;
+  height: 5px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 10000;
+  &.is-dragged-over {
+    background-color: #ffdeca;
   }
 }

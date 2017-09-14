@@ -5,6 +5,7 @@ import { IGridTreeRow } from './gridtree.interface';
 @Injectable()
 export class GridTreeService<T> {
   drop = new EventEmitter<Array<IGridTreeRow<T>>>();
+  dropAfter = new EventEmitter<Array<IGridTreeRow<T>>>();
 
   private _draggedRow: IGridTreeRow<T> = null;
 
@@ -14,6 +15,11 @@ export class GridTreeService<T> {
 
   onDrop(event: DragEvent, row: IGridTreeRow<T>): void {
     this.drop.emit([this._draggedRow, row]);
+    this._draggedRow = null;
+  }
+
+  onDividerDrop(event: DragEvent, row: IGridTreeRow<T>): void {
+    this.dropAfter.emit([this._draggedRow, row]);
     this._draggedRow = null;
   }
 }

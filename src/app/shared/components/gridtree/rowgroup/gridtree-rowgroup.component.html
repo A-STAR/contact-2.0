@@ -1,4 +1,10 @@
-<div (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+<div
+  class="content"
+  (dragenter)="onDragEnter($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+>
   <div *ngFor="let column of columns; let first = first;" [ngClass]="{ 'is-dragged': isDragged, 'is-dragged-over': isDraggedOver }">
     <span *ngIf="first" [ngStyle]="{ 'padding-left': 16 * nestingLevel + 'px' }">
       <span style="display: inline-block; width: 16px;">
@@ -7,6 +13,14 @@
     </span>
     <span>{{ row.data[column.prop] }}</span>
   </div>
+</div>
+
+<div
+  [ngClass]="{ 'divider': true, 'is-dragged-over': isDraggedOverDivider }"
+  (dragenter)="onDividerDragEnter($event)"
+  (dragleave)="onDividerDragLeave($event)"
+  (drop)="onDividerDrop($event)"
+  (dragover)="onDividerDragOver($event)">
 </div>
 
 <ng-container *ngIf="isExpanded">
