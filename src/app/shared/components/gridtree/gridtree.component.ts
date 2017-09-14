@@ -47,7 +47,7 @@ export class GridTreeComponent<T> implements OnDestroy {
     });
   }
 
-  @Input() idGetter: IUniqueIdGetter<T> = (row: IGridTreeRow<T>) => row.data['id'];
+  @Input() idGetter = ((row: IGridTreeRow<T>) => row.data['id']) as IUniqueIdGetter<T>;
 
   ngOnDestroy(): void {
     this.gridTreeServiceSubscription.unsubscribe();
