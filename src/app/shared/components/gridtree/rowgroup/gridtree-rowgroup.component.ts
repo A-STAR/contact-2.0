@@ -32,6 +32,13 @@ export class GridTreeRowGroupComponent<T> {
       this._isDraggedOverDivider = false;
       this.cdRef.markForCheck();
     });
+
+    this.gridTreeService.dropAfter.subscribe(() => {
+      this._isDragged = false;
+      this._isDraggedOver = false;
+      this._isDraggedOverDivider = false;
+      this.cdRef.markForCheck();
+    });
   }
 
   get hasChildren(): boolean {
