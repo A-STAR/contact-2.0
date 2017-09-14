@@ -594,6 +594,9 @@
     },
     "extrasDebtInfoTab": {
       "title": "Debt info"
+    },
+    "attributesTab": {
+      "title": "Attribute settings"
     }
   },
   "person": {

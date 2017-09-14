@@ -1,0 +1,28 @@
+<div
+  class="content"
+  (dragenter)="onDragEnter($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+>
+  <div *ngFor="let column of columns; let first = first;" [ngClass]="{ 'is-dragged': isDragged, 'is-dragged-over': isDraggedOver }">
+    <span *ngIf="first" [ngStyle]="{ 'padding-left': 16 * nestingLevel + 'px' }">
+      <span style="display: inline-block; width: 16px;">
+        <i *ngIf="hasChildren" [ngClass]="row.isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'" (mousedown)="onToggle($event)"></i>
+      </span>
+    </span>
+    <span>{{ row.data[column.prop] }}</span>
+  </div>
+</div>
+
+<div
+  [ngClass]="{ 'divider': true, 'is-dragged-over': isDraggedOverDivider }"
+  (dragenter)="onDividerDragEnter($event)"
+  (dragleave)="onDividerDragLeave($event)"
+  (drop)="onDividerDrop($event)"
+  (dragover)="onDividerDragOver($event)">
+</div>
+
+<ng-container *ngIf="row.isExpanded">
+  <app-gridtree-rowgroup *ngFor="let child of row.children" [columns]="columns" [nestingLevel]="nestingLevel + 1" [row]="child"></app-gridtree-rowgroup>
+</ng-container>

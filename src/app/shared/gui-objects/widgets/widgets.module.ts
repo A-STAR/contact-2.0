@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AddressModule } from './address/address.module';
+import { AttributeModule } from './attribute/attribute.module';
 import { ContactModule } from './contact/contact.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtModule } from './debt/debt.module';
@@ -17,6 +18,7 @@ import { PromiseModule } from './promise/promise.module';
   imports: [
     CommonModule,
     AddressModule,
+    AttributeModule,
     ContactModule,
     DebtorActionLogModule,
     DebtModule,
@@ -30,6 +32,7 @@ import { PromiseModule } from './promise/promise.module';
   ],
   exports: [
     AddressModule,
+    AttributeModule,
     ContactModule,
     DebtorActionLogModule,
     DebtModule,
