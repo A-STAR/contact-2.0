@@ -17,8 +17,7 @@ export class DebtorsService {
   constructor(
     private store: Store<IAppState>,
     private router: Router
-  ) {
-  }
+  ) {}
 
   fetchDebtors(): void {
     this.store.dispatch({

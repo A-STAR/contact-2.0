@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../core/state/state.interface';
 import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 import { IDebt } from './debt-processing.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { DebtorService } from './debtor/debtor.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
@@ -16,6 +19,7 @@ export class DebtProcessingService {
     private dataService: DataService,
     private gridService: GridService,
     private notifications: NotificationsService,
+    private store: Store<IAppState>,
   ) {}
 
   fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt>> {
@@ -26,5 +30,12 @@ export class DebtProcessingService {
         this.notifications.error('errors.default.read')
           .entity('entities.actionsLog.gen.plural').dispatchCallback()
       );
+  }
+
+  changeCurrentDebt(debtId: number): void {
+    this.store.dispatch({
+      type: DebtorService.FETCH_SELECTED_DEBT,
+      payload: debtId,
+    });
   }
 }

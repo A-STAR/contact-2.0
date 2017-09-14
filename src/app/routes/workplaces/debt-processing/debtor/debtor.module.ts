@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { DebtorAddressModule } from './address/address.module';
@@ -15,6 +15,7 @@ import { DebtorPhoneModule } from './phone/phone.module';
 import { DebtorPromiseModule } from './promise/promise.module';
 
 import { DebtorService } from './debtor.service';
+import { DebtorEffects } from './debtor.effects';
 
 import { DebtorComponent } from './debtor.component';
 import { DebtorInformationComponent } from './general/information.component';
@@ -32,6 +33,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorPaymentModule,
     DebtorPhoneModule,
     DebtorPromiseModule,
+    EffectsModule.run(DebtorEffects),
     SharedModule,
   ],
   declarations: [

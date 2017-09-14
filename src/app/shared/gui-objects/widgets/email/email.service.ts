@@ -9,6 +9,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class EmailService {
   static MESSAGE_EMAIL_SAVED = 'MESSAGE_EMAIL_SAVED';
+  baseUrl = '/entityTypes/{entityType}/entities/{entityId}/emails';
+  singularErr = 'entities.emails.gen.singular';
 
   constructor(
     private dataService: DataService,
@@ -17,28 +19,28 @@ export class EmailService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IEmail>> {
     return this.dataService
-      .read('/entityTypes/{entityType}/entities/{entityId}/emails', { entityType, entityId })
+      .read(this.baseUrl, { entityType, entityId })
       .map((response: IEmailsResponse) => response.emails)
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.emails.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.emails.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, emailId: number): Observable<IEmail> {
     return this.dataService
-      .read('/entityTypes/{entityType}/entities/{entityId}/emails/{emailId}', { entityType, entityId, emailId })
+      .read(`${this.baseUrl}/{emailId}`, { entityType, entityId, emailId })
       .map((response: IEmailsResponse) => response.emails[0])
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.emails.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(this.singularErr).dispatchCallback());
   }
 
   create(entityType: number, entityId: number, email: IEmail): Observable<void> {
     return this.dataService
-      .create('/entityTypes/{entityType}/entities/{entityId}/emails/', { entityType, entityId }, email)
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.emails.gen.singular').dispatchCallback());
+      .create(this.baseUrl, { entityType, entityId }, email)
+      .catch(this.notificationsService.createError().entity(this.singularErr).dispatchCallback());
   }
 
   update(entityType: number, entityId: number, emailId: number, email: Partial<IEmail>): Observable<void> {
     return this.dataService
-      .update('/entityTypes/{entityType}/entities/{entityId}/emails/{emailId}', { entityType, entityId, emailId }, email)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.emails.gen.singular').dispatchCallback());
+      .update(`${this.baseUrl}/{emailId}`, { entityType, entityId, emailId }, email)
+      .catch(this.notificationsService.updateError().entity(this.singularErr).dispatchCallback());
   }
 
   block(entityType: number, entityId: number, emailId: number, blockReasonCode: number): Observable<void> {
@@ -51,7 +53,7 @@ export class EmailService {
 
   delete(entityType: number, entityId: number, emailId: number): Observable<void> {
     return this.dataService
-      .delete('/entityTypes/{entityType}/entities/{entityId}/emails/{emailId}', { entityType, entityId, emailId })
-      .catch(this.notificationsService.error('errors.default.delete').entity('entities.emails.gen.singular').dispatchCallback());
+      .delete(`${this.baseUrl}/{emailId}`, { entityType, entityId, emailId })
+      .catch(this.notificationsService.deleteError().entity(this.singularErr).dispatchCallback());
   }
 }

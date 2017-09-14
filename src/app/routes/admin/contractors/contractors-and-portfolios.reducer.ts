@@ -23,11 +23,14 @@ export function contractorsAndPortfoliosReducer(
 
     // Contractors:
     case ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS:
+      const { contractors } = action.payload;
+      const selectedContractorId = contractors.find(c => c.id === state.selectedContractorId)
+        ? state.selectedContractorId : null;
+
       return {
         ...state,
-        contractors: action.payload.contractors,
-        // TODO(d.maltsev): preserve selected contractor row
-        selectedContractorId: null,
+        contractors: [...contractors],
+        selectedContractorId,
         portfolios: null,
         selectedPortfolioId: null
       };
@@ -47,7 +50,7 @@ export function contractorsAndPortfoliosReducer(
     case ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS:
       return {
         ...state,
-        managers: action.payload.managers,
+        managers: [...action.payload.managers],
         // TODO(d.maltsev): preserve selected contractor row
         selectedManagerId: null
       };
@@ -65,11 +68,14 @@ export function contractorsAndPortfoliosReducer(
 
     // Portfolios:
     case ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS:
+      const { portfolios } = action.payload;
+      const selectedPortfolioId = portfolios.find(p => p.id === state.selectedPortfolioId)
+        ? state.selectedPortfolioId : null;
+
       return {
         ...state,
-        portfolios: action.payload.portfolios,
-        // TODO(d.maltsev): preserve selected contractor row
-        selectedPortfolioId: null
+        portfolios: [...portfolios],
+        selectedPortfolioId
       };
     case ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR:
       return {
