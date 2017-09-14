@@ -21,8 +21,6 @@ export class AttributeGridComponent {
     { label: 'Code', prop: 'code' },
   ];
 
-  private _attributes: IAttributeResponse[] = [];
-
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
@@ -41,9 +39,7 @@ export class AttributeGridComponent {
     return this._columns;
   }
 
-  get rows(): Array<IGridTreeRow<IAttribute>> {
-    return this.convertToGridTreeRow(this._attributes);
-  }
+  rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
   onChange(event: Event): void {
     this.fetch(Number((event.target as HTMLSelectElement).value));
@@ -60,7 +56,7 @@ export class AttributeGridComponent {
   }
 
   private fetch(type: number): void {
-    this.attributeService.fetchAll(type).subscribe(attributes => this._attributes = attributes);
+    this.attributeService.fetchAll(type).subscribe(attributes => this.rows = this.convertToGridTreeRow(attributes));
     this.cdRef.markForCheck();
   }
 }
