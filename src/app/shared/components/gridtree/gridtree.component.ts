@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
 import { IGridTreeColumn, IGridTreeRow } from './gridtree.interface';
 
@@ -19,24 +19,45 @@ export class GridTreeComponent<T> {
 
   private _processedRows: Array<any>;
 
-  constructor(private gridTreeService: GridTreeService<T>) {
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridTreeService: GridTreeService<T>,
+  ) {
     this.gridTreeService.drop.subscribe(([ row1, row2 ]: Array<IGridTreeRow<T>>) => {
-      const id1 = this.idGetter(row1);
-      const id2 = this.idGetter(row2);
-
-      if (id1 === id2) {
+      if (row1 === row2 || this.isChild(row2, row1)) {
         return;
       }
-
-      this.rows = this.rows.filter(row => this.idGetter(row) !== id1);
-
-      if (row2.children) {
-        row2.children.push(row1);
-      } else {
-        row2.children = [ row1 ];
-      }
+      this.rows = this.removeRowFromParent(this.rows, row1);
+      this.rows = this.addRowToParent(this.rows, row1, row2);
+      this.cdRef.markForCheck();
     });
   }
 
   @Input() idGetter = (row: IGridTreeRow<T>) => row.data['id'];
+
+  private addRowToParent(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>, parent: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
+    return rows
+      .map(r => this.idGetter(r) === this.idGetter(parent) ? { ...r, children: [ ...(r.children || []), row ] } : r)
+      .map(r => {
+        return r.children && r.children.length > 0
+          ? { ...r, children: this.addRowToParent(r.children, row, parent) }
+          : r;
+      });
+  }
+
+  private removeRowFromParent(rows: Array<IGridTreeRow<T>>, row: IGridTreeRow<T>): Array<IGridTreeRow<T>> {
+    return rows
+      .filter(r => this.idGetter(r) !== this.idGetter(row))
+      .map(r => {
+        return r.children && r.children.length > 0
+          ? { ...r, children: this.removeRowFromParent(r.children, row) }
+          : r;
+      });
+  }
+
+  private isChild(row: IGridTreeRow<T>, parent: IGridTreeRow<T>): boolean {
+    return parent.children && parent.children.length > 0
+      ? parent.children.reduce((acc, child) => acc || child === row || this.isChild(row, child), false)
+      : false;
+  }
 }

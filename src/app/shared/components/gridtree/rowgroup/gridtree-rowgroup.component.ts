@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, HostListener, Input } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 
 import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 
@@ -51,6 +50,7 @@ export class GridTreeRowGroupComponent<T> {
 
   @HostListener('dragstart', ['$event'])
   onDragStart(event: DragEvent): void {
+    event.stopPropagation();
     this._isDragged = true;
     this.gridTreeService.onDragStart(event, this.row);
     this.cdRef.markForCheck();
@@ -58,25 +58,30 @@ export class GridTreeRowGroupComponent<T> {
 
   @HostListener('dragend', ['$event'])
   onDragEnd(event: DragEvent): void {
+    event.stopPropagation();
     this._isDragged = false;
     this.cdRef.markForCheck();
   }
 
   onDrop(event: DragEvent): void {
+    event.stopPropagation();
     this.gridTreeService.onDrop(event, this.row);
     this.cdRef.markForCheck();
   }
 
   onDragOver(event: DragEvent): void {
+    event.stopPropagation();
     event.preventDefault();
   }
 
   onDragEnter(event: DragEvent): void {
+    event.stopPropagation();
     this._isDraggedOver = true;
     this.cdRef.markForCheck();
   }
 
   onDragLeave(event: DragEvent): void {
+    event.stopPropagation();
     this._isDraggedOver = false;
     this.cdRef.markForCheck();
   }

@@ -123,12 +123,6 @@ export class AttributeGridComponent {
     return array[this.random(array.length)];
   }
 
-  private generateName(): string {
-    const a = [];
-    const b = [];
-    return '';
-  }
-
   private capitalizeFirstLetter(s: string): string {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
