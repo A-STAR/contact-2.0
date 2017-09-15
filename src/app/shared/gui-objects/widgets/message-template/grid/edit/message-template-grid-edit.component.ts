@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IMessageTemplate } from '../../message-template.interface';
