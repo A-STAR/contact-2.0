@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 

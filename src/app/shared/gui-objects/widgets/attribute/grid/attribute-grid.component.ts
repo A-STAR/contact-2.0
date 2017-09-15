@@ -58,7 +58,7 @@ export class AttributeGridComponent {
       const { children, ...rest } = attribute;
       const hasChildren = children && children.length > 0;
       return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: hasChildren }
+        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
         : { data: rest };
     });
   }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
