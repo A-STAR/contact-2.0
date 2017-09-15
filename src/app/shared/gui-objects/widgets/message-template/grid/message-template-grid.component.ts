@@ -8,26 +8,28 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { MessageTemplateService } from '../message-template.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { DialogFunctions } from '../../../../../core/dialog';
+
 @Component({
   selector: 'app-message-template-grid',
   templateUrl: './message-template-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessageTemplateGridComponent implements OnInit {
+export class MessageTemplateGridComponent extends DialogFunctions implements OnInit {
   @Input() typeCode: number;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('add'),
+      action: () => this.onAdd(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('edit'),
+      action: () => this.onEdit(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('delete'),
+      action: () => this.onDelete(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -43,11 +45,17 @@ export class MessageTemplateGridComponent implements OnInit {
 
   templates: IMessageTemplate[];
 
+  selectedTemplate: IMessageTemplate;
+
+  dialog: 'add' | 'edit' | 'delete';
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageTemplateService: MessageTemplateService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.initColumns();
@@ -55,6 +63,42 @@ export class MessageTemplateGridComponent implements OnInit {
       this.templates = templates;
       this.cdRef.markForCheck();
     });
+  }
+
+  onSelect(template: IMessageTemplate): void {
+    this.selectedTemplate = template;
+  }
+
+  onDblClick(template: IMessageTemplate): void {
+    this.selectedTemplate = template;
+    this.onEdit();
+  }
+
+  onAdd(): void {
+    this.dialog = 'add';
+    this.cdRef.markForCheck();
+  }
+
+  onEdit(): void {
+    this.dialog = 'edit';
+    this.cdRef.markForCheck();
+  }
+
+  onDelete(): void {
+    this.dialog = 'delete';
+    this.cdRef.markForCheck();
+  }
+
+  onAddDialogSubmit(): void {
+
+  }
+
+  onEditDialogSubmit(): void {
+
+  }
+
+  onDeleteDialogSubmit(): void {
+
   }
 
   private initColumns(): void {

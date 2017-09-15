@@ -884,6 +884,18 @@
       }
     },
     "messageTemplate": {
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template"
+        },
+        "delete": {
+          "title": "Remove Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
       "grid": {
         "id": "Id",
         "name": "Name",
