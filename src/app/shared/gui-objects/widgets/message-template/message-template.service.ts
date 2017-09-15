@@ -8,6 +8,12 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class MessageTemplateService {
+  static TYPE_PHONE_CALL = 1;
+  static TYPE_SMS = 2;
+  static TYPE_EMAIL = 3;
+  static TYPE_AUTO_COMMENT = 4;
+  static TYPE_CUSTOM = 5;
+
   private errorMessage = 'entities.messageTemplate.gen';
 
   constructor(

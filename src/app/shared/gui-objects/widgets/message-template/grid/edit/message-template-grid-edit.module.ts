@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
+import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
 
 import { MessageTemplateGridEditComponent } from './message-template-grid-edit.component';
 
@@ -10,6 +11,7 @@ import { MessageTemplateGridEditComponent } from './message-template-grid-edit.c
   imports: [
     CommonModule,
     DialogModule,
+    DynamicFormModule,
     TranslateModule,
   ],
   exports: [

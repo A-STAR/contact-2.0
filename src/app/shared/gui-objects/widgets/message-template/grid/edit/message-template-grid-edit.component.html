@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.messageTemplate.dialogs.edit.title' | translate }}</h3>
   </div>
   <div>
-    FORM
+    <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">

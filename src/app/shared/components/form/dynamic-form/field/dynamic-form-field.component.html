@@ -76,7 +76,7 @@
         [attr.placeholder]="(control.placeholder || '') | translate"
         [formControlName]="control.controlName"
         class="form-control"
-        rows="control.rows || 2"
+        [rows]="control.rows || 2"
       ></textarea>
     </label>
   </ng-container>

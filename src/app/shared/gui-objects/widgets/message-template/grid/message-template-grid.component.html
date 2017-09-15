@@ -1,13 +1,12 @@
 <app-message-template-grid-edit
   *ngIf="isDialog('add')"
-  [templateId]="selectedTemplate.id"
   (submit)="onAddDialogSubmit()"
   (cancel)="onCloseDialog()">
 </app-message-template-grid-edit>
 
 <app-message-template-grid-edit
   *ngIf="isDialog('edit')"
-  [templateId]="selectedTemplate.id"
+  [template]="selectedTemplate"
   (submit)="onEditDialogSubmit()"
   (cancel)="onCloseDialog()">
 </app-message-template-grid-edit>
