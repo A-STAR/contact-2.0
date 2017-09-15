@@ -1,6 +1,16 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  HostBinding,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree.interface';
 
 import { GridTreeService } from '../gridtree.service';
 
@@ -10,10 +20,11 @@ import { GridTreeService } from '../gridtree.service';
   styleUrls: [ './gridtree-rowgroup.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GridTreeRowGroupComponent<T> implements OnInit {
+export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   @HostBinding('attr.draggable') draggable = true;
 
   @Input() columns: Array<IGridTreeColumn<T>> = [];
+  @Input() idGetter = null as IUniqueIdGetter<T>;
   @Input() nestingLevel = 0;
   @Input() row = null as IGridTreeRow<T>;
 
@@ -22,13 +33,16 @@ export class GridTreeRowGroupComponent<T> implements OnInit {
   private _isDraggedOverDivider = false;
   private _isSelected = false;
 
+  private _dropSubscription: Subscription;
+  private _selectSubscription: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridTreeService: GridTreeService<T>,
   ) {}
 
   ngOnInit(): void {
-    this.gridTreeService.drop
+    this._dropSubscription = this.gridTreeService.drop
       .subscribe(() => {
         this._isDragged = false;
         this._isDraggedOver = false;
@@ -36,12 +50,17 @@ export class GridTreeRowGroupComponent<T> implements OnInit {
         this.cdRef.markForCheck();
       });
 
-    this.gridTreeService.select
+    this._selectSubscription = this.gridTreeService.select
       .startWith(this.gridTreeService.selectedRow)
       .subscribe((row: IGridTreeRow<T>) => {
-        this._isSelected = row && row.data['id'] === this.row.data['id'];
+        this._isSelected = row && this.idGetter(row) === this.idGetter(this.row);
         this.cdRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void {
+    this._dropSubscription.unsubscribe();
+    this._selectSubscription.unsubscribe();
   }
 
   get hasChildren(): boolean {
