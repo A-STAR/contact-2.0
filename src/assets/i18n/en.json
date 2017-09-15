@@ -883,6 +883,15 @@
         "comment": "Comment"
       }
     },
+    "messageTemplate": {
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Type",

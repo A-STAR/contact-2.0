@@ -883,6 +883,15 @@
         "comment": "Комментарий"
       }
     },
+    "messageTemplate": {
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "text": "Текст",
+        "isSingleSending": "Единичная рассылка",
+        "recipientTypeCode": "Получатель"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Тип",
