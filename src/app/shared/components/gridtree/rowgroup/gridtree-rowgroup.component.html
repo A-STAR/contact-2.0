@@ -26,5 +26,11 @@
 </div>
 
 <ng-container *ngIf="row.isExpanded">
-  <app-gridtree-rowgroup *ngFor="let child of row.children" [columns]="columns" [nestingLevel]="nestingLevel + 1" [row]="child"></app-gridtree-rowgroup>
+  <app-gridtree-rowgroup
+    *ngFor="let child of row.children"
+    [columns]="columns"
+    [idGetter]="idGetter"
+    [nestingLevel]="nestingLevel + 1"
+    [row]="child">
+  </app-gridtree-rowgroup>
 </ng-container>
