@@ -4,9 +4,29 @@ import { IGridTreeRow, IGridTreeDragAndDropEvent, IUniqueIdGetter, GridTreeDragA
 
 @Injectable()
 export class GridTreeService<T> {
+  dblclick = new EventEmitter<IGridTreeRow<T>>();
   drop = new EventEmitter<IGridTreeDragAndDropEvent<T>>();
+  select = new EventEmitter<IGridTreeRow<T>>();
 
   private _draggedRow: IGridTreeRow<T> = null;
+  private _selectedRow: IGridTreeRow<T> = null;
+
+  get draggedRow(): IGridTreeRow<T> {
+    return this._draggedRow;
+  }
+
+  get selectedRow(): IGridTreeRow<T> {
+    return this._selectedRow;
+  }
+
+  onSelect(row: IGridTreeRow<T>): void {
+    this._selectedRow = row;
+    this.select.emit(row);
+  }
+
+  onDoubleClick(row: IGridTreeRow<T>): void {
+    this.dblclick.emit(row);
+  }
 
   onDragStart(event: DragEvent, row: IGridTreeRow<T>): void {
     this._draggedRow = row;

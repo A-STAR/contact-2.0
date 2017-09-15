@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
-import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
+import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree.interface';
 
 @Component({
   selector: 'app-gridtree-viewport',
@@ -10,5 +10,6 @@ import { IGridTreeColumn, IGridTreeRow } from '../gridtree.interface';
 })
 export class GridTreeViewportComponent<T> {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
+  @Input() idGetter = null as IUniqueIdGetter<T>;
   @Input() rows: Array<IGridTreeRow<T>> = [];
 }

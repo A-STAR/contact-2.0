@@ -6,8 +6,12 @@
 
 <br>
 
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
 <app-gridtree
   [columns]="columns"
   [height]="300"
-  [rows]="rows">
+  [rows]="rows"
+  (dblclick)="onRowDblClick($event)"
+  (select)="onRowSelect($event)">
 </app-gridtree>
