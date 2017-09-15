@@ -38,6 +38,15 @@ export const routes: Route[] = [
           { path: 'debt-processing', loadChildren: './workplaces/debt-processing/debt-processing.module#DebtProcessingModule' },
         ]
       },
+      {
+        path: 'utilities',
+        children: [
+          {
+            path: 'message-templates',
+            loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
+          },
+        ]
+      },
     ]
   },
 

@@ -736,6 +736,22 @@
       "title": "move portfolio {{ name }}"
     }
   },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Phone Call"
+      },
+      "sms": {
+        "title": "SMS"
+      },
+      "custom": {
+        "title": "Custom"
+      },
+      "autoComment": {
+        "title": "Auto Comment"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {

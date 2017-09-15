@@ -736,6 +736,22 @@
       "title": "Переместить портфель {{ name }}"
     }
   },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Разговор"
+      },
+      "sms": {
+        "title": "SMS-сообщения"
+      },
+      "custom": {
+        "title": "Специальное"
+      },
+      "autoComment": {
+        "title": "Автоматический комментарий"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Удалить",
     "types": {

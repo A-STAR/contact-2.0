@@ -36,6 +36,7 @@ export class LayoutComponent {
     DebtProcessingComponent: 'DEBTS',
     DictionariesComponent: 'DICTIONARIES',
     HelpComponent: 'HELP',
+    MessageTemplatesComponent: 'MESSAGE_SCENARIOS',
     OrganizationsComponent: 'DEPARTMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
