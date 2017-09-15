@@ -1,13 +1,15 @@
 <app-message-template-grid-edit
   *ngIf="isDialog('add')"
-  (submit)="onAddDialogSubmit()"
+  [typeCode]="typeCode"
+  (submit)="onAddDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-message-template-grid-edit>
 
 <app-message-template-grid-edit
   *ngIf="isDialog('edit')"
-  [template]="selectedTemplate"
-  (submit)="onEditDialogSubmit()"
+  [typeCode]="typeCode"
+  [templateId]="selectedTemplate.id"
+  (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-message-template-grid-edit>
 

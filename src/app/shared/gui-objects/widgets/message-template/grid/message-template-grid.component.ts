@@ -33,7 +33,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => console.log('refresh'),
+      action: () => this.fetch(),
     }
   ];
 
@@ -59,10 +59,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   ngOnInit(): void {
     this.initColumns();
-    this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
-      this.templates = templates;
-      this.cdRef.markForCheck();
-    });
+    this.fetch();
   }
 
   onSelect(template: IMessageTemplate): void {
@@ -89,16 +86,16 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     this.cdRef.markForCheck();
   }
 
-  onAddDialogSubmit(): void {
-
+  onAddDialogSubmit(template: IMessageTemplate): void {
+    this.messageTemplateService.create(template).subscribe(() => this.onSubmitSuccess());
   }
 
-  onEditDialogSubmit(): void {
-
+  onEditDialogSubmit(template: IMessageTemplate): void {
+    this.messageTemplateService.update(this.selectedTemplate.id, template).subscribe(() => this.onSubmitSuccess());
   }
 
   onDeleteDialogSubmit(): void {
-
+    this.messageTemplateService.delete(this.selectedTemplate.id).subscribe(() => this.onSubmitSuccess());
   }
 
   private initColumns(): void {
@@ -114,5 +111,17 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
         .take(1)
         .subscribe();
     }
+  }
+
+  private onSubmitSuccess(): void {
+    this.onCloseDialog();
+    this.fetch();
+  }
+
+  private fetch(): void {
+    this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
+      this.templates = templates;
+      this.cdRef.markForCheck();
+    });
   }
 }

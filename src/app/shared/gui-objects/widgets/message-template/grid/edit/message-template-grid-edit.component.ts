@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -19,9 +28,10 @@ const labelKey = makeKey('widgets.messageTemplate.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateGridEditComponent implements OnInit {
-  @Input() template: IMessageTemplate;
+  @Input() templateId: number;
+  @Input() typeCode: number;
 
-  @Output() submit = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<Partial<IMessageTemplate>>();
   @Output() cancel = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -31,10 +41,22 @@ export class MessageTemplateGridEditComponent implements OnInit {
     { label: labelKey('text'), controlName: 'text', type: 'textarea', rows: 10, required: true },
   ];
 
-  constructor(private userDictionariesService: UserDictionariesService) {}
+  template: IMessageTemplate;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private messageTemplateService: MessageTemplateService,
+    private userDictionariesService: UserDictionariesService,
+  ) {}
 
   ngOnInit(): void {
     this.initControls();
+    if (this.templateId) {
+      this.messageTemplateService.fetch(this.templateId).subscribe(template => {
+        this.template = template;
+        this.cdRef.markForCheck();
+      });
+    }
   }
 
   get canSubmit(): boolean {
@@ -42,7 +64,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submit.emit();
+    this.submit.emit(this.form.requestValue);
   }
 
   onCancel(): void {
@@ -50,7 +72,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   private initControls(): void {
-    if (this.template.typeCode === MessageTemplateService.TYPE_SMS) {
+    if (this.typeCode === MessageTemplateService.TYPE_SMS) {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
         .subscribe(options => {
           this.controls = [
