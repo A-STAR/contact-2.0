@@ -1,11 +1,13 @@
 <div
   class="content"
+  (click)="onClick($event)"
+  (dblclick)="onDoubleClick($event)"
   (dragenter)="onDragEnter($event)"
   (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
 >
-  <div *ngFor="let column of columns; let first = first;" [ngClass]="{ 'is-dragged': isDragged, 'is-dragged-over': isDraggedOver }">
+  <div *ngFor="let column of columns; let first = first;" [ngClass]="rowClass">
     <span *ngIf="first" [ngStyle]="{ 'padding-left': 16 * nestingLevel + 'px' }">
       <span style="display: inline-block; width: 16px;">
         <i *ngIf="hasChildren" [ngClass]="row.isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'" (mousedown)="onToggle($event)"></i>
@@ -16,7 +18,7 @@
 </div>
 
 <div
-  [ngClass]="{ 'divider': true, 'is-dragged-over': isDraggedOverDivider }"
+  [ngClass]="dividerClass"
   (dragenter)="onDividerDragEnter($event)"
   (dragleave)="onDividerDragLeave($event)"
   (drop)="onDividerDrop($event)"

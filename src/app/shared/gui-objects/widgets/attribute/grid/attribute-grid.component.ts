@@ -45,6 +45,14 @@ export class AttributeGridComponent {
     this.fetch(Number((event.target as HTMLSelectElement).value));
   }
 
+  onRowDblClick(row: IAttribute): void {
+    console.log('double click', row);
+  }
+
+  onRowSelect(row: IAttribute): void {
+    console.log('select', row);
+  }
+
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
     return attributes.map(attribute => {
       const { children, ...rest } = attribute;

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -21,6 +21,9 @@ import { GridTreeService } from './gridtree.service';
 export class GridTreeComponent<T> implements OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() height: number;
+
+  @Output() select = this.gridTreeService.select.map(row => row.data);
+  @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
 
   private _rows: Array<IGridTreeRow<T>> = [];
 
