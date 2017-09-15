@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IMessageTemplate } from '../message-template.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { GridService } from '../../../../components/grid/grid.service';
 import { MessageTemplateService } from '../message-template.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -15,18 +16,38 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 export class MessageTemplateGridComponent implements OnInit {
   @Input() typeCode: number;
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
-    private messageTemplateService: MessageTemplateService,
-  ) {}
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => console.log('add'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => console.log('edit'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => console.log('delete'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => console.log('refresh'),
+    }
+  ];
 
   columns: IGridColumn[] = [
     { prop: 'id', maxWidth: 80 },
     { prop: 'name', maxWidth: 240 },
     { prop: 'text' },
   ];
+
   templates: IMessageTemplate[];
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private messageTemplateService: MessageTemplateService,
+  ) {}
 
   ngOnInit(): void {
     this.initColumns();
