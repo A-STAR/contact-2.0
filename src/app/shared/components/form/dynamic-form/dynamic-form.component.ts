@@ -90,10 +90,20 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     return Object.keys(this.form.value).reduce((acc, key) => {
       const control = this.form.get(key);
       if (control.dirty) {
-        acc[key] = this.toRequest(control.value, this.flatControls.find(c => c.controlName === key));
+        acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));
       }
       return acc;
     }, {});
+  }
+
+  /**
+   * This name is more explicit than `requestValue` getter. Please prefer this over da latter
+   *
+   * @returns {*}
+   * @memberof DynamicFormComponent
+   */
+  getSerializedUpdates(): any {
+    return this.requestValue;
   }
 
   onSelectItems(event: ISelectItemsPayload): void {
@@ -137,7 +147,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private createForm(flatControls: Array<IDynamicFormControl>): FormGroup {
     const controls = flatControls.reduce((acc, control: IDynamicFormControl) => {
-      acc[control.controlName] = this. createControl(control);
+      acc[control.controlName] = this.createControl(control);
       return acc;
     }, {} as IControls);
     return this.formBuilder.group(controls);
@@ -167,7 +177,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     }
   }
 
-  private toRequest(value: any, control: IDynamicFormControl): any {
+  private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
       case 'select':
         return ['nameTranslations', 'translatedName'].includes(control.controlName)
@@ -177,8 +187,8 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         return value === ''
           ? null
           : control.displayTime
-          ? this.valueConverterService.toISO(value)
-          : this.valueConverterService.toDateOnly(value);
+            ? this.valueConverterService.toISO(value)
+            : this.valueConverterService.toDateOnly(value);
       case 'boolean':
       case 'checkbox':
         return Number(value);
