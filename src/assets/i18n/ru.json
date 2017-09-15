@@ -736,6 +736,22 @@
       "title": "Переместить портфель {{ name }}"
     }
   },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Разговор"
+      },
+      "sms": {
+        "title": "SMS-сообщения"
+      },
+      "custom": {
+        "title": "Специальное"
+      },
+      "autoComment": {
+        "title": "Автоматический комментарий"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Удалить",
     "types": {
@@ -865,6 +881,27 @@
         "income": "Доход",
         "currencyId": "Валюта",
         "comment": "Комментарий"
+      }
+    },
+    "messageTemplate": {
+      "dialogs": {
+        "add": {
+          "title": "Новый шаблон"
+        },
+        "edit": {
+          "title": "Редактирование шаблона"
+        },
+        "delete": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "text": "Текст",
+        "isSingleSending": "Единичная рассылка",
+        "recipientTypeCode": "Получатель"
       }
     },
     "phone": {

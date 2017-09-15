@@ -736,6 +736,22 @@
       "title": "move portfolio {{ name }}"
     }
   },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Phone Call"
+      },
+      "sms": {
+        "title": "SMS"
+      },
+      "custom": {
+        "title": "Custom"
+      },
+      "autoComment": {
+        "title": "Auto Comment"
+      }
+    }
+  },
   "notifications": {
     "dismiss": "Dismiss",
     "types": {
@@ -865,6 +881,27 @@
         "income": "Income",
         "currencyId": "Currency",
         "comment": "Comment"
+      }
+    },
+    "messageTemplate": {
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template"
+        },
+        "delete": {
+          "title": "Remove Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient"
       }
     },
     "phone": {

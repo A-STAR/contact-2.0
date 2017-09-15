@@ -84,7 +84,7 @@ export const menuConfig: IMenuConfig = {
   },
   messages: {
     text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
-    link: '/utilities/message-scenarios',
+    link: '/utilities/message-templates',
     icon: 'icon-bubbles'
   },
   groups: {
