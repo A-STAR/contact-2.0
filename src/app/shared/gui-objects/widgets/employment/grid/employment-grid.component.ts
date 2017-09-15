@@ -6,12 +6,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IEmployment } from '../employment.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmploymentService } from '../employment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -56,13 +55,13 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'workTypeCode' },
+    { prop: 'workTypeCode', dictCode: UserDictionariesService.DICTIONARY_WORK_TYPE },
     { prop: 'company' },
     { prop: 'position' },
-    { prop: 'hireDate', maxWidth: 130 },
-    { prop: 'dismissDate', maxWidth: 130 },
-    { prop: 'income', maxWidth: 110 },
-    { prop: 'currencyId', maxWidth: 110 },
+    { prop: 'hireDate', maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'dismissDate', maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'income', maxWidth: 110, renderer: 'numberRenderer' },
+    { prop: 'currencyId', maxWidth: 110, lookupKey: 'currencies' },
     { prop: 'comment' },
   ];
 
@@ -76,43 +75,31 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private canViewSubscription: Subscription;
   private gridSubscription: Subscription;
 
-  private renderers: IRenderer = {
-    workTypeCode: [],
-    currencyId: [],
-    income: 'numberRenderer',
-    hireDate: 'dateTimeRenderer',
-    dismissDate: 'dateTimeRenderer',
-  };
-
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(
-        UserDictionariesService.DICTIONARY_WORK_TYPE
-      ),
-      this.lookupService.currencyOptions,
-    )
-    .subscribe(([ dictOptions, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
-        workTypeCode: [ ...dictOptions ],
-        currencyId: [ ...currencyOptions ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+    this.gridSubscription = this.gridService.setAllRenderers(this.columns)
+      // .subscribe(([ dictOptions, currencyOptions ]) => {
+      .subscribe(columns => {
+        console.log('yahoo!');
+        // const renderers = {
+        //   workTypeCode: [ ...dictOptions ],
+        //   currencyId: [ ...currencyOptions ],
+        // };
+        // this.columns = this.gridService.setRenderers(this.columns, renderers);
+        this.columns = columns;
+        this.cdRef.markForCheck();
+        this.gridSubscription.unsubscribe();
+      });
   }
 
   ngOnInit(): void {
@@ -136,7 +123,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     this.selectedEmployment$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.gridSubscription.unsubscribe();
   }
 
   onDoubleClick(employment: IEmployment): void {
