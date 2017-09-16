@@ -73,7 +73,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private gridSubscription: Subscription;
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
 
@@ -87,18 +86,11 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = this.gridService.setAllRenderers(this.columns)
-      // .subscribe(([ dictOptions, currencyOptions ]) => {
+    const subscription = this.gridService.setAllRenderers(this.columns)
       .subscribe(columns => {
-        console.log('yahoo!');
-        // const renderers = {
-        //   workTypeCode: [ ...dictOptions ],
-        //   currencyId: [ ...currencyOptions ],
-        // };
-        // this.columns = this.gridService.setRenderers(this.columns, renderers);
-        this.columns = columns;
+        this.columns = [...columns];
         this.cdRef.markForCheck();
-        this.gridSubscription.unsubscribe();
+        subscription.unsubscribe();
       });
   }
 
