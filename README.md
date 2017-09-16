@@ -1,6 +1,6 @@
 # Contact2.0
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 4.3.0.
 
 ## Development server
 
@@ -29,7 +29,7 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ### Clone this repo
 ```
 git clone http://repository2.luxbase.int/Contact-2.0/front-end.git
-cd front-end-prototype
+cd front-end
 touch README.md
 git add README.md
 git commit -m "add README"
