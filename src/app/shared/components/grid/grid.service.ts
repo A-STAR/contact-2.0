@@ -11,7 +11,7 @@ import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
-import { LookupService } from '../../../core/lookup/lookup.service';
+// import { LookupService } from '../../../core/lookup/lookup.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
@@ -25,7 +25,7 @@ export class GridService {
 
   constructor(
     private converterService: ValueConverterService,
-    private lookupService: LookupService,
+    // private lookupService: LookupService,
     private metadataService: MetadataService,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -169,15 +169,15 @@ export class GridService {
   }
 
   setAllRenderers(srcColumns: IGridColumn[]): Observable<IGridColumn[]> {
-    const lookupKeys = srcColumns.filter(col => !!col.lookupKey).map(col => col.lookupKey);
-    const lookupColumnPromises = lookupKeys.map(key => {
-      return this.lookupService.lookupAsOptions(key)
-        .map(options => {
-          console.log('options', options);
-          const column = srcColumns.find(col => col.lookupKey === key);
-          return this.setRenderer(column, options);
-        });
-    });
+    // const lookupKeys = srcColumns.filter(col => !!col.lookupKey).map(col => col.lookupKey);
+    // const lookupColumnPromises = lookupKeys.map(key => {
+    //   return this.lookupService.lookupAsOptions(key)
+    //     .map(options => {
+    //       console.log('options', options);
+    //       const column = srcColumns.find(col => col.lookupKey === key);
+    //       return this.setRenderer(column, options);
+    //     });
+    // });
     return Observable.of(srcColumns);
     // return Observable.combineLatest(this.setDictionaryRenderers(srcColumns), lookupColumnPromises)
     //   .map(([columns, lookupColumns]) => {
