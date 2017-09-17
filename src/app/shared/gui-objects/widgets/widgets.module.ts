@@ -10,6 +10,7 @@ import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { IdentityModule } from './identity/identity.module';
+import { MessageTemplateModule } from './message-template/message-template.module';
 import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
@@ -26,6 +27,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     IdentityModule,
+    MessageTemplateModule,
     PaymentModule,
     PhoneModule,
     PromiseModule,
@@ -40,6 +42,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     IdentityModule,
+    MessageTemplateModule,
     PaymentModule,
     PhoneModule,
     PromiseModule,

@@ -188,7 +188,7 @@ export class GridService {
         });
       })
       .map(columns => {
-        console.log('all cols', columns);
+        // console.log('all cols', columns);
         const renderers = columns.filter(col => typeof col.renderer === 'string')
           .reduce((acc, col) => {
             acc[col.prop] = col.renderer;

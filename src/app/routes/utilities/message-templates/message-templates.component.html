@@ -1,0 +1,18 @@
+<app-tabstrip [scrollerEnabled]="false" [inverse]="true">
+
+  <app-tab [title]="'utilities.messageTemplates.phoneCall.title'" [closable]="false">
+    <app-message-template-grid [typeCode]="1"></app-message-template-grid>
+  </app-tab>
+
+  <app-tab [title]="'utilities.messageTemplates.sms.title'" [closable]="false">
+    <app-message-template-grid [typeCode]="2"></app-message-template-grid>
+  </app-tab>
+
+  <app-tab [title]="'utilities.messageTemplates.custom.title'" [closable]="false">
+    <app-message-template-grid [typeCode]="4"></app-message-template-grid>
+  </app-tab>
+
+  <app-tab [title]="'utilities.messageTemplates.autoComment.title'" [closable]="false">
+    <app-message-template-grid [typeCode]="5"></app-message-template-grid>
+  </app-tab>
+</app-tabstrip>
