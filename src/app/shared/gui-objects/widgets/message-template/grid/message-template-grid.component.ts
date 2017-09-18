@@ -23,7 +23,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 export class MessageTemplateGridComponent extends DialogFunctions implements OnInit {
   @Input() typeCode: number;
 
-  selectedTemplate$ = new BehaviorSubject<IMessageTemplate>(null);
+  selectedTemplateId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -36,7 +36,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_EDIT'),
-        this.selectedTemplate$.map(Boolean)
+        this.selectedTemplateId$.map(Boolean)
       ]),
     },
     {
@@ -44,7 +44,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       action: () => this.onDelete(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_DELETE'),
-        this.selectedTemplate$.map(Boolean)
+        this.selectedTemplateId$.map(Boolean)
       ]),
     },
     {
@@ -72,8 +72,8 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     super();
   }
 
-  get selectedTemplateId$(): Observable<number> {
-    return this.selectedTemplate$.map(template => template && template.id);
+  get selectedTemplate$(): Observable<IMessageTemplate> {
+    return this.selectedTemplateId$.map(id => (this.templates || []).find(template => template.id === id));
   }
 
   ngOnInit(): void {
@@ -82,11 +82,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   onSelect(template: IMessageTemplate): void {
-    this.selectedTemplate$.next(template);
+    this.selectedTemplateId$.next(template.id);
   }
 
   onDblClick(template: IMessageTemplate): void {
-    this.selectedTemplate$.next(template);
+    this.selectedTemplateId$.next(template.id);
     this.onEdit();
   }
 
@@ -110,11 +110,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   onEditDialogSubmit(template: IMessageTemplate): void {
-    this.messageTemplateService.update(this.selectedTemplate$.value.id, template).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplateService.update(this.selectedTemplateId$.value, template).subscribe(() => this.onSubmitSuccess());
   }
 
   onDeleteDialogSubmit(): void {
-    this.messageTemplateService.delete(this.selectedTemplate$.value.id).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplateService.delete(this.selectedTemplateId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   private initColumns(): void {
@@ -140,7 +140,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   private fetch(): void {
     this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
       this.templates = templates;
-      this.selectedTemplate$.next(null);
+      this.selectedTemplateId$.next(null);
       this.cdRef.markForCheck();
     });
   }
