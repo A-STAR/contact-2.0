@@ -76,6 +76,10 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     return this.selectedTemplateId$.map(id => (this.templates || []).find(template => template.id === id));
   }
 
+  get selection$(): Observable<IMessageTemplate[]> {
+    return this.selectedTemplate$.map(template => template ? [ template ] : []);
+  }
+
   ngOnInit(): void {
     this.initColumns();
     this.fetch();
@@ -140,7 +144,9 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   private fetch(): void {
     this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
       this.templates = templates;
-      this.selectedTemplateId$.next(null);
+      if (!templates.find(template => template.id === this.selectedTemplateId$.value)) {
+        this.selectedTemplateId$.next(null);
+      }
       this.cdRef.markForCheck();
     });
   }
