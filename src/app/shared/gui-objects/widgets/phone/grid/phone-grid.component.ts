@@ -39,12 +39,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(Boolean)]),
+      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isBlocked)]),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(Boolean)]),
+      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isBlocked)]),
       action: () => this.setDialog('unblock')
     },
     {
@@ -159,6 +159,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onUnblockDialogSubmit(): void {
     this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+  }
+
+  onScheduleDialogSubmit(event: any): void {
+    console.log(event);
   }
 
   onRemoveDialogSubmit(): void {
