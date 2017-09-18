@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/zip';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../state/state.interface';

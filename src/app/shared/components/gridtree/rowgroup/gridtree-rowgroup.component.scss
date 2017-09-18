@@ -28,6 +28,9 @@
     &.is-dragged-over {
       background-color: $app-gridtree-dragged-over-row-bg-color;
     }
+    &.is-selected {
+      background-color: $app-gridtree-selection-color;
+    }
   }
 }
 

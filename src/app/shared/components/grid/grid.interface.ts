@@ -14,7 +14,7 @@ export type TRendererType = Function | Array<any>
 export interface IGridColumn {
   disabled?: boolean;
   dictCode?: number;
-  lookupOptions?: ILookupKey;
+  lookupKey?: ILookupKey;
   /**
    * @deprecated
    */

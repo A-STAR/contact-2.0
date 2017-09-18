@@ -7,12 +7,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPromise } from '../promise.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PromiseService } from '../promise.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -58,12 +57,14 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'promiseDate', minWidth: 110, maxWidth: 130 },
-    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130 },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130 },
-    { prop: 'statusCode' },
+    { prop: 'promiseDate', minWidth: 110, maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
     { prop: 'comment' },
     { prop: 'fullName' },
+    // TODO(atymchuk): the currency should appear in the promiseAmount column header
+    // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];
 
   rows: Array<IPromise> = [];
@@ -74,14 +75,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
   private debtSubscription: Subscription;
-  private gridSubscription: Subscription;
-
-  private renderers: IRenderer = {
-    promiseDate: 'dateRenderer',
-    promiseAmount: 'numberRenderer',
-    receiveDateTime: 'dateTimeRenderer',
-    statusCode: [],
-  };
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
 
@@ -89,28 +82,19 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private promiseService: PromiseService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userConstantsService: UserConstantsService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROMISE_STATUS),
-      this.lookupService.lookupAsOptions('currencies'),
-    )
-    .subscribe(([ dictOptions, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
-        statusCode: [ ...dictOptions ],
-        currencyId: [ ...currencyOptions ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+    const subscription = this.gridService.setAllRenderers(this.columns)
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+        subscription.unsubscribe();
+      });
   }
 
   ngOnInit(): void {
@@ -147,7 +131,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
-    this.gridSubscription.unsubscribe();
   }
 
   onSelect(promise: IPromise): void {

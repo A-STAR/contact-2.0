@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/toPromise';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
@@ -9,6 +11,7 @@ import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { ITypeCodeItem } from '../../../core/dictionaries/dictionaries.interface';
 import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
+import { LookupService } from '../../../core/lookup/lookup.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
@@ -18,10 +21,11 @@ import { renderers as gridRenderers } from '../../../core/utils/index';
 
 @Injectable()
 export class GridService {
-  predefinedRenderers: object;
+  private predefinedRenderers: object;
 
   constructor(
     private converterService: ValueConverterService,
+    private lookupService: LookupService,
     private metadataService: MetadataService,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -136,11 +140,11 @@ export class GridService {
           }
           return renderer ? this.setRenderer(column, renderer as Function) : column;
         })
-      // Syntax 2: provide renderers in a column's `renderer` property
+      // Syntax 2: provide renderers in the column's `renderer` property
       : columns.map(column => {
           const { renderer } = column;
           const type = Object.prototype.toString.call(renderer);
-          if (column.dictCode) {
+          if (type === 'function') {
             return column;
           }
           if ( type === '[object String]') {
@@ -148,7 +152,7 @@ export class GridService {
             const renderFn: Function = this.predefinedRenderers[renderer as string];
             return renderFn ? this.setRenderer(column, renderFn(column.prop)) : column;
           }
-          if (type === 'function') {
+          if (column.dictCode) {
             return column;
           }
           return renderer ? this.setRenderer(column, renderer as Function) : column;
@@ -162,6 +166,37 @@ export class GridService {
       const renderer = renderers[column.colId];
       return renderer ? this.setValueGetter(column, renderer) : column;
     });
+  }
+
+  setAllRenderers(srcColumns: IGridColumn[]): Observable<IGridColumn[]> {
+    const lookupKeys = srcColumns.filter(col => !!col.lookupKey).map(col => col.lookupKey);
+    // 1. Set the lookup renderers
+    const lookupColumnObs = Observable.combineLatest(lookupKeys.map(key => {
+      return this.lookupService.lookupAsOptions(key)
+        .map(options => {
+          const column = srcColumns.find(col => col.lookupKey === key);
+          return this.setRenderer(column, options);
+        });
+    }));
+
+    // 2. Set the dictionary renderers
+    return Observable.combineLatest(this.setDictionaryRenderers(srcColumns), lookupColumnObs)
+      .map(([columns, lookupColumns]) => {
+        return columns.map(column => {
+          const found = lookupColumns.find(col => col.lookupKey === column.lookupKey);
+          return found ? found : column;
+        });
+      })
+      .map(columns => {
+        // console.log('all cols', columns);
+        const renderers = columns.filter(col => typeof col.renderer === 'string')
+          .reduce((acc, col) => {
+            acc[col.prop] = col.renderer;
+            return acc;
+          }, {});
+        // 3. Set the predefined renderers
+        return this.setRenderers(columns, renderers);
+      });
   }
 
   setDictionaryRenderers(columns: IGridColumn[]): Observable<IGridColumn[]> {
@@ -196,9 +231,9 @@ export class GridService {
       }
     };
     /**
-     * @deprecated
-     * Since the renderer can bear a string (aka 'numberRenderer' or 'phoneRenderer'),
-     * it should be possible and safe to reinitialize the rendereres. This is why we have to keep
+     * NOTE
+     * The `renderer` can be a string (aka 'phoneRenderer'), a function or an array.
+     * It should be possible and safe to reinitialize the rendereres. This is why we have to keep
      * the column's `renderer` property untouched, so that the renderer function should go to `$$valueGetter`
      */
     // column.renderer = column.$$valueGetter;

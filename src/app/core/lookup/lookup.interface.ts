@@ -1,38 +1,28 @@
 export type ILookupKey = 'contractors' | 'currencies' | 'languages' | 'portfolios' | 'roles' | 'users';
 
-export interface ILookupContractor {
+export interface ILookupBase {
   id: number;
   name: string;
 }
 
-export interface ILookupCurrency {
-  id: number;
+export type ILookupContractor = ILookupBase;
+
+export type ILookupRole = ILookupBase;
+
+export type ILookupUser = ILookupBase;
+
+export interface ILookupCurrency extends ILookupBase {
   code: string;
-  name: string;
   shortName: string;
 }
 
-export interface ILookupLanguage {
-  id: number;
-  name: string;
+export interface ILookupLanguage extends ILookupBase {
   isMain: boolean;
 }
 
-export interface ILookupPortfolio {
-  id: number;
-  name: string;
+export interface ILookupPortfolio extends ILookupBase {
   contractorId: number;
   contractor: string;
-}
-
-export interface ILookupRole {
-  id: number;
-  name: string;
-}
-
-export interface ILookupUser {
-  id: number;
-  name: string;
 }
 
 export enum LookupStatusEnum {
