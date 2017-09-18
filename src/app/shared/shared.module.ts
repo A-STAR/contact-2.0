@@ -42,6 +42,7 @@ import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
+import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
@@ -94,6 +95,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
+    ListModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -165,6 +167,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
+    ListModule,
     MultiSelectModule,
     NumericInputComponent,
     PasswordModule,

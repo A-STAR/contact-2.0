@@ -51,15 +51,13 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
       const html = this.editor.nativeElement.children[0].innerHTML;
       const text = html === '<p><br></p>' ? null : html;
       this._value = text;
+      this.onSelectionChange();
       this.propagateChange(text);
       this.cdRef.markForCheck();
     });
 
     this._quill.on('selection-change', () => {
-      const selection = this._quill.getSelection();
-      if (selection) {
-        this._index = selection.index;
-      }
+      this.onSelectionChange();
     });
 
     this.init.emit(this);
@@ -84,6 +82,13 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
 
   insert(value: string): void {
     this._quill.insertText(this._index, value);
+  }
+
+  private onSelectionChange(): void {
+    const selection = this._quill.getSelection();
+    if (selection) {
+      this._index = selection.index;
+    }
   }
 
   private propagateChange: Function = () => {};

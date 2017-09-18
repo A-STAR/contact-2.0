@@ -4,9 +4,7 @@
   </div>
   <div>
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
-    <ul>
-      <li *ngFor="let variable of variables" (dblclick)="onInsert(variable)">{{ variable.userName }}</li>
-    </ul>
+    <app-list [items]="variables" [getName]="getName" (doubleClick)="onInsert($event)"></app-list>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
