@@ -39,6 +39,8 @@ export class MessageTemplateGridEditComponent implements OnInit {
   controls: IDynamicFormControl[];
   template: IMessageTemplate;
 
+  variables = [];
+
   private control: RichTextEditorComponent;
 
   constructor(
@@ -55,6 +57,11 @@ export class MessageTemplateGridEditComponent implements OnInit {
         this.cdRef.markForCheck();
       });
     }
+
+    this.messageTemplateService.fetchVariables(this.typeCode, 0).subscribe(data => {
+      this.variables = data;
+      this.cdRef.markForCheck();
+    });
   }
 
   get canSubmit(): boolean {
@@ -69,8 +76,8 @@ export class MessageTemplateGridEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  onInsert(): void {
-    this.control.insert('foo!');
+  onInsert(variable: any): void {
+    this.control.insert(variable.name);
   }
 
   private initControls(): void {

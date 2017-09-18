@@ -11,3 +11,8 @@ export interface IMessageTemplatesResponse {
   success: boolean;
   templates: IMessageTemplate[];
 }
+
+export interface IMessageTemplatesAttributesResponse {
+  success: boolean;
+  attributes: any[];
+}
