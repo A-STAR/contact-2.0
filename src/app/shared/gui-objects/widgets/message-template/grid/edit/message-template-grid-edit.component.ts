@@ -35,11 +35,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: IDynamicFormControl[] = [
-    { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
-    { label: labelKey('text'), controlName: 'text', type: 'richtexteditor', rows: 10, required: true },
-  ];
-
+  controls: IDynamicFormControl[];
   template: IMessageTemplate;
 
   constructor(
@@ -71,6 +67,15 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   private initControls(): void {
+    const textControlOptions = this.requiresRichTextEditor(this.typeCode)
+      ? { type: 'richtexteditor' }
+      : { type: 'textarea', rows: 10 };
+
+    this.controls = [
+      { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
+      { label: labelKey('text'), controlName: 'text', ...textControlOptions, required: true },
+    ] as IDynamicFormControl[];
+
     if (this.typeCode === MessageTemplateService.TYPE_SMS) {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
         .subscribe(options => {
@@ -81,5 +86,9 @@ export class MessageTemplateGridEditComponent implements OnInit {
           ];
         });
     }
+  }
+
+  private requiresRichTextEditor(typeCode: number): boolean {
+    return typeCode === MessageTemplateService.TYPE_AUTO_COMMENT || typeCode === MessageTemplateService.TYPE_PHONE_CALL;
   }
 }
