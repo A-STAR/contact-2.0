@@ -37,7 +37,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   controls: IDynamicFormControl[] = [
     { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
-    { label: labelKey('text'), controlName: 'text', type: 'textarea', rows: 10, required: true },
+    { label: labelKey('text'), controlName: 'text', type: 'richtexteditor', rows: 10, required: true },
   ];
 
   template: IMessageTemplate;

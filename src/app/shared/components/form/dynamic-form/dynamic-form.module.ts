@@ -10,6 +10,7 @@ import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
+import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
 import { SelectModule } from '../select/select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -27,6 +28,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     PopupInputModule,
     RadioGroupModule,
     ReactiveFormsModule,
+    RichTextEditorModule,
     TranslateModule,
     SelectModule,
   ],

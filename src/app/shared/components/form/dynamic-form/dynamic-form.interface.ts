@@ -77,6 +77,7 @@ export type ControlTypes =
   | 'select'
   | 'text'
   | 'textarea'
+  | 'richtexteditor'
 ;
 
 export interface IValue {
