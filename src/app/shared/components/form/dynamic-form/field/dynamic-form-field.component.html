@@ -197,7 +197,10 @@
         {{ control.label | translate }}
       </span>
     </label>
-    <app-rich-text-editor [formControlName]="control.controlName"></app-rich-text-editor>
+    <app-rich-text-editor
+      [formControlName]="control.controlName"
+      (init)="control.onInit ? control.onInit($event) : null">
+    </app-rich-text-editor>
   </ng-container>
 
   <ng-container *ngSwitchCase="'dynamic'">

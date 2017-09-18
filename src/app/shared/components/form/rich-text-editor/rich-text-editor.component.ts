@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as Quill from 'quill';
 
@@ -15,6 +25,8 @@ import * as Quill from 'quill';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
+  @Output() init = new EventEmitter<RichTextEditorComponent>();
+
   @ViewChild('editor') editor: ElementRef;
 
   private _value: string;
@@ -41,6 +53,8 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
       this.propagateChange(text);
       this.cdRef.markForCheck();
     });
+
+    this.init.emit(this);
   }
 
   writeValue(value: string): void {
@@ -58,6 +72,11 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
 
   get value(): string {
     return this._value;
+  }
+
+  insert(value: string): void {
+    const selection = this._quill.getSelection();
+    this._quill.insertText(selection ? selection.index : 0, value);
   }
 
   private propagateChange: Function = () => {};

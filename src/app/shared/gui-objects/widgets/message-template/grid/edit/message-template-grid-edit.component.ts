@@ -16,6 +16,7 @@ import { MessageTemplateService } from '../../message-template.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { RichTextEditorComponent } from '../../../../../components/form/rich-text-editor/rich-text-editor.component';
 
 import { makeKey } from '../../../../../../core/utils';
 
@@ -37,6 +38,8 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   controls: IDynamicFormControl[];
   template: IMessageTemplate;
+
+  private control: RichTextEditorComponent;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -66,9 +69,13 @@ export class MessageTemplateGridEditComponent implements OnInit {
     this.cancel.emit();
   }
 
+  onInsert(): void {
+    this.control.insert('foo!');
+  }
+
   private initControls(): void {
     const textControlOptions = this.requiresRichTextEditor(this.typeCode)
-      ? { type: 'richtexteditor' }
+      ? { type: 'richtexteditor', onInit: control => this.control = control }
       : { type: 'textarea', rows: 10 };
 
     this.controls = [
