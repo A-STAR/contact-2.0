@@ -4,7 +4,7 @@
   </div>
   <div>
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
-    <label style="margin-top: 12px;">Переменные</label>
+    <label class="mt">{{ 'widgets.messageTemplate.dialogs.edit.variables' | translate }}</label>
     <app-list
       [items]="variables"
       [getId]="getId"
