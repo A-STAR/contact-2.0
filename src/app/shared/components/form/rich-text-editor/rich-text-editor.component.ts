@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as Quill from 'quill';
 
 @Component({
   selector: 'app-rich-text-editor',
@@ -13,13 +14,38 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RichTextEditorComponent implements ControlValueAccessor {
+export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
+  @ViewChild('editor') editor: ElementRef;
+
   private _value: string;
+  private _quill: Quill;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
+  ngOnInit(): void {
+    this._quill = new Quill(this.editor.nativeElement, {
+      modules: {
+        toolbar: [
+          [ 'bold', 'italic', 'underline' ],
+          [ { 'size': [ 'small', false, 'large', 'huge' ] } ],
+          [ { 'color': [] } ],
+        ]
+      },
+      theme: 'snow'
+    });
+
+    this._quill.on('text-change', () => {
+      const html = this.editor.nativeElement.children[0].innerHTML;
+      const text = html === '<p><br></p>' ? null : html;
+      this._value = text;
+      this.propagateChange(text);
+      this.cdRef.markForCheck();
+    });
+  }
+
   writeValue(value: string): void {
     this._value = value;
+    this._quill.pasteHTML(value);
     this.cdRef.markForCheck();
   }
 
@@ -32,12 +58,6 @@ export class RichTextEditorComponent implements ControlValueAccessor {
 
   get value(): string {
     return this._value;
-  }
-
-  onChange(value: string): void {
-    console.log(value);
-    this._value = value;
-    this.propagateChange(value);
   }
 
   private propagateChange: Function = () => {};
