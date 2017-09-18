@@ -110,8 +110,6 @@
 .bl { border-left: 1px solid $border-color;}
 .bt { border-top: 1px solid $border-color;}
 .bb { border-bottom: 1px solid $border-color;}
-.bh { @extend .bl; @extend .br; }
-.bv { @extend .bt; @extend .bb; }
 .b, .ba  { @extend .br;@extend .bl;@extend .bt;@extend .bb; } // all borders
 
 // Border Radius Clear
