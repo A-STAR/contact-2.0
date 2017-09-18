@@ -57,11 +57,6 @@ export class MessageTemplateGridEditComponent implements OnInit {
         this.cdRef.markForCheck();
       });
     }
-
-    this.messageTemplateService.fetchVariables(this.typeCode, 0).subscribe(data => {
-      this.variables = data;
-      this.cdRef.markForCheck();
-    });
   }
 
   get canSubmit(): boolean {
@@ -95,18 +90,35 @@ export class MessageTemplateGridEditComponent implements OnInit {
     ] as IDynamicFormControl[];
 
     if (this.typeCode === MessageTemplateService.TYPE_SMS) {
+      this.controls = [
+        ...this.controls,
+        { label: labelKey('recipientTypeCode'), controlName: 'recipientTypeCode', type: 'select', options: [] },
+        { label: labelKey('isSingleSending'), controlName: 'isSingleSending', type: 'checkbox' },
+      ];
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
-        .subscribe(options => {
-          this.controls = [
-            ...this.controls,
-            { label: labelKey('recipientTypeCode'), controlName: 'recipientTypeCode', type: 'select', options },
-            { label: labelKey('isSingleSending'), controlName: 'isSingleSending', type: 'checkbox' },
-          ];
-        });
+        .subscribe(options => this.getControl('recipientTypeCode').options = options);
+
+      this.cdRef.detectChanges();
+      this.form.onCtrlValueChange('recipientTypeCode').subscribe(v => {
+        this.fetchVariables(this.form.requestValue.recipientTypeCode || v);
+      });
+    } else {
+      this.fetchVariables(0);
     }
   }
 
   private requiresRichTextEditor(typeCode: number): boolean {
     return typeCode === MessageTemplateService.TYPE_AUTO_COMMENT || typeCode === MessageTemplateService.TYPE_PHONE_CALL;
+  }
+
+  private getControl(controlName: string): IDynamicFormControl {
+    return this.controls.find(control => control.controlName === controlName);
+  }
+
+  private fetchVariables(recipientTypeCode: number): void {
+    this.messageTemplateService.fetchVariables(this.typeCode, recipientTypeCode).subscribe(data => {
+      this.variables = data;
+      this.cdRef.markForCheck();
+    });
   }
 }
