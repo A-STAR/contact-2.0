@@ -16,6 +16,8 @@ import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-phone-grid',
   templateUrl: './phone-grid.component.html',
@@ -32,26 +34,27 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedPhone$)
-        .map(([ canEdit, phone ]) => canEdit && !!phone),
+      enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onEdit(this.selectedPhoneId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: Observable.combineLatest(this.canBlock$, this.selectedPhone$)
-        .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isBlocked),
+      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
-        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isBlocked),
+      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('unblock')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      enabled: combineLatestAnd([this.canSchedule$, this.selectedPhone$.map(Boolean)]),
+      action: () => this.setDialog('schedule')
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedPhone$)
-        .map(([ canDelete, phone ]) => canDelete && !!phone),
+      enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
     },
     {
@@ -200,6 +203,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('PHONE_UNBLOCK');
+  }
+
+  get canSchedule$(): Observable<boolean> {
+    return Observable.of(true);
   }
 
   private onAdd(): void {
