@@ -4,7 +4,13 @@
   </div>
   <div>
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
-    <app-list [items]="variables" [getName]="getName" (doubleClick)="onInsert($event)"></app-list>
+    <label style="margin-top: 12px;">Переменные</label>
+    <app-list
+      [items]="variables"
+      [getId]="getId"
+      [getName]="getName"
+      (doubleClick)="onInsert($event)">
+    </app-list>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">

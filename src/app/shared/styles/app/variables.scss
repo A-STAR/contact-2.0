@@ -920,12 +920,20 @@ $app-dialog-close-color:        #aaa;
 $app-dialog-close-hover-color:  #333;
 
 
+// == App Widgtes
+//
+//##
+$app-widget-border-color: #e5e5e5;
+$app-widget-border-color-light: #f5f5f5;
+$app-widget-border-color-dark: #d5d5d5;
+
+
 //== App Grid Tree
 //
 //##
-$app-gridtree-border-color:       #e5e5e5;
-$app-gridtree-border-color-light: #f5f5f5;
-$app-gridtree-border-color-dark:  #d5d5d5;
+$app-gridtree-border-color:       $app-widget-border-color;
+$app-gridtree-border-color-light: $app-widget-border-color-light;
+$app-gridtree-border-color-dark:  $app-widget-border-color-dark;
 
 $app-gridtree-dragged-row-bg-color:           #f5f9ff;
 $app-gridtree-dragged-over-row-bg-color:      #fff9f5;

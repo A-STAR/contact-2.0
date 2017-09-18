@@ -77,9 +77,10 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   onInsert(variable: any): void {
-    console.log(variable);
     this.control.insert(variable.name);
   }
+
+  getId = variable => variable.id;
 
   getName = variable => variable.name;
 
