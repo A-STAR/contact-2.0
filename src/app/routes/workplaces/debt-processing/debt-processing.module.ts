@@ -23,7 +23,7 @@ import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
-  { path: ':personId', children: [
+  { path: ':personId/:debtId', children: [
       { path: '', pathMatch: 'full', component: DebtorComponent },
       { path: 'address', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
@@ -95,30 +95,26 @@ const routes: Routes = [
         ]
       },
       { path: 'debt', children: [
-          { path: '', redirectTo: '..', pathMatch: 'full' },
+          { path: '', component: DebtorDebtComponent },
           { path: 'create', component: DebtorDebtComponent },
-          { path: ':debtId', children: [
-              { path: '', pathMatch: 'full', component: DebtorDebtComponent },
-              { path: 'debt-component', children: [
-                  { path: '', redirectTo: 'create', pathMatch: 'full' },
-                  { path: 'create', component: DebtorDebtComponentComponent },
-                  { path: ':debtComponentId', component: DebtorDebtComponentComponent },
-                ]
-              },
-              { path: 'promise', children: [
-                  { path: '', redirectTo: 'create', pathMatch: 'full' },
-                  { path: 'create', component: DebtorPromiseComponent },
-                  { path: ':promiseId', component: DebtorPromiseComponent },
-                ]
-              },
-              { path: 'payment', children: [
-                  { path: '', redirectTo: 'create', pathMatch: 'full' },
-                  { path: 'create', component: DebtorPaymentComponent },
-                  { path: ':paymentId', component: DebtorPaymentComponent },
-                ]
-              }
+          { path: 'debt-component', children: [
+              { path: '', redirectTo: '', pathMatch: 'full' },
+              { path: 'create', component: DebtorDebtComponentComponent },
+              { path: ':debtComponentId', component: DebtorDebtComponentComponent },
             ]
           },
+          { path: 'promise', children: [
+              { path: '', redirectTo: '', pathMatch: 'full' },
+              { path: 'create', component: DebtorPromiseComponent },
+              { path: ':promiseId', component: DebtorPromiseComponent },
+            ]
+          },
+          { path: 'payment', children: [
+              { path: '', redirectTo: '', pathMatch: 'full' },
+              { path: 'create', component: DebtorPaymentComponent },
+              { path: ':paymentId', component: DebtorPaymentComponent },
+            ]
+          }
         ]
       },
     ]

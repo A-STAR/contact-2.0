@@ -50,7 +50,7 @@ export class DebtProcessingComponent {
     }
 
     this.debtProcessingService.changeCurrentDebt(debtId);
-    this.router.navigate([ `${this.router.url}/${personId}` ]);
+    this.router.navigate([ `${this.router.url}/${personId}/${debtId}` ]);
     // const { innerHeight: height, innerWidth: width} = window;
     // const winConfig =
     //  `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
