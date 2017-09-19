@@ -4,9 +4,9 @@ export interface IAddress {
   typeCode: number;
   postalCode: string;
   statusCode: number;
-  isBlocked: boolean | number;
-  blockReasonCode: number;
-  blockDateTime: Date | string;
+  isInactive: boolean | number;
+  inactiveReasonCode: number;
+  inactiveDateTime: Date | string;
   fullAddress: string;
   country: string;
   region: string;

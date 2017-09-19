@@ -14,8 +14,8 @@ export interface IDebt {
   branchCode: number;
   startDate: Date | string;
   dpd: number;
-  debtSum: number;
-  totalSum: number;
+  debtAmount: number;
+  totalAmount: number;
   currency: string;
   creditStartDate: Date | string;
   creditEndDate: Date | string;

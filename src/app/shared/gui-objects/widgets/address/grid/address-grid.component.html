@@ -1,7 +1,7 @@
 <app-block-dialog
   *ngIf="isDialog('block')"
   titleTranslationKey="widgets.address.dialogs.block.title"
-  labelTranslationKey="widgets.address.dialogs.block.blockReasonCode"
+  labelTranslationKey="widgets.address.dialogs.block.inactiveReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
   (close)="onCloseDialog()">

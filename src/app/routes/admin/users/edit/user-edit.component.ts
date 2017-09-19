@@ -146,7 +146,7 @@ export class UserEditComponent {
       { label: 'users.edit.password', controlName: 'password', type: 'password', validators: [ passwordValidators ] },
       { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', disabled: !this.permissions.canEditLdap,
           action: () => this.isLdapUserBeingSelected = true },
-      { label: 'users.edit.blocked', controlName: 'isBlocked', type: 'checkbox' },
+      { label: 'users.edit.inactive', controlName: 'isInactive', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.permissions.canEditRole,
           options: roles },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },

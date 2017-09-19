@@ -51,8 +51,8 @@ export class DebtComponentCardComponent {
           required: true
         },
         {
-          label: 'widgets.debt.component.grid.sum',
-          controlName: 'sum',
+          label: 'widgets.debt.component.grid.amount',
+          controlName: 'amount',
           type: 'text',
           required: true
         },

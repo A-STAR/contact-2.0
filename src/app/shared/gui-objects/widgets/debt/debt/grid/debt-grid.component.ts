@@ -101,8 +101,8 @@ export class DebtGridComponent {
     { prop: 'statusCode' },
     { prop: 'creditStartDate' },
     { prop: 'currencyId' },
-    { prop: 'debtSum' },
-    { prop: 'totalSum' },
+    { prop: 'debtAmount' },
+    { prop: 'totalAmount' },
     { prop: 'dpd' },
     { prop: 'portfolioId' },
     { prop: 'bankId' },
@@ -211,7 +211,7 @@ export class DebtGridComponent {
   get canEdit$(): Observable<boolean> {
     return this.userPermissionsService.bag()
       .map(bag => (
-        bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_SUM_EDIT' ]) ||
+        bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_AMOUNT_EDIT' ]) ||
         bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
       ))
       .distinctUntilChanged();

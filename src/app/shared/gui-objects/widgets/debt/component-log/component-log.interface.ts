@@ -1,6 +1,6 @@
 export interface IComponentLogEntry {
   typeCode: number;
-  sum: number;
+  amount: number;
   currency: string;
   fromDate: string;
   toDate: string;

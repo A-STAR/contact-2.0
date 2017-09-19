@@ -31,10 +31,10 @@ export class BlockDialogComponent implements OnInit {
       .take(1)
       .subscribe(options => {
         this.controls = [
-          { label: this.labelTranslationKey, controlName: 'blockReasonCode', type: 'select', required: true, options }
+          { label: this.labelTranslationKey, controlName: 'inactiveReasonCode', type: 'select', required: true, options }
         ];
         this.data = {
-          blockReasonCode: options[0].value
+          inactiveReasonCode: options[0].value
         };
       });
   }
@@ -44,6 +44,6 @@ export class BlockDialogComponent implements OnInit {
   }
 
   onSubmitHandle(): void {
-    this.action.emit(this.form.value.blockReasonCode);
+    this.action.emit(this.form.value.inactiveReasonCode);
   }
 }

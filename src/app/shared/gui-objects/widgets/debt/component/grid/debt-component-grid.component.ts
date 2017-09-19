@@ -33,7 +33,7 @@ export class DebtComponentGridComponent implements OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
-    { prop: 'sum', minWidth: 150, maxWidth: 200 },
+    { prop: 'amount', minWidth: 150, maxWidth: 200 },
     { prop: 'currencyId', minWidth: 150, maxWidth: 200 },
   ];
   components: Array<IDebtComponent> = [];
@@ -162,10 +162,10 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   private get canViewDebtComponent$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_VIEW');
+    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_VIEW');
   }
 
   private get canEditDebtComponent$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_EDIT');
+    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_EDIT');
   }
 }
