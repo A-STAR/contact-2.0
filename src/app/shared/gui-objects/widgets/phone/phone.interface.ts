@@ -1,3 +1,5 @@
+import { INamedValue } from '../../../../core/converter/value-converter.interface';
+
 // See: http://confluence.luxbase.int:8090/display/WEB20/Phones
 export interface IPhone {
   id: number;
@@ -22,4 +24,9 @@ export interface ISMSSchedule {
   senderCode: number;
   startDateTime: Date;
   text: string;
+}
+
+export interface IMessageTemplatesResponse {
+  success: boolean;
+  templates: INamedValue[];
 }
