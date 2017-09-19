@@ -175,7 +175,7 @@
       "employees": {
         "title": "Operators",
         "placeholder": "Select operator(s)",
-        "blocked": "Show blocked",
+        "inactive": "Show inactive",
         "grid": {
           "id": "Id",
           "position": "Position",
@@ -208,7 +208,7 @@
     "title": "Users",
     "toolbar": {
       "action": {
-        "show_blocked_users": "show blocked"
+        "show_inactive_users": "show inactive"
       }
     },
     "edit": {
@@ -219,7 +219,7 @@
       "firstName": "Name",
       "middleName": "Middle name",
       "photo": "Photo",
-      "blocked": "Blocked",
+      "inactive": "Inactive",
       "login": "Login",
       "password": "Password",
       "ldapLogin": "LDAP login",
@@ -251,7 +251,7 @@
       "middleName": "Middle name",
       "position": "Position",
       "roleId": "Role",
-      "isBlocked": "Blocked",
+      "isInactive": "Inactive",
       "mobPhone": "Mobile",
       "workPhone": "Work phone",
       "intPhone": "Extension",
@@ -270,7 +270,7 @@
         "grid": {
           "name": "Full name",
           "login": "Login",
-          "isBlocked": "Blocked",
+          "isInactive": "Inactive",
           "comment": "Comment"
         }
       }
@@ -480,9 +480,9 @@
           "typeCode": "Type",
           "statusCode": "Status",
           "isResidence": "Residence",
-          "isBlocked": "Blocked",
-          "blockReasonCode": "Reason for blocking",
-          "blockDateTime": "Date of blocking",
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking",
           "comment": "Comment"
         }
       },
@@ -491,9 +491,9 @@
         "grid": {
           "email": "Email",
           "typeCode": "Type",
-          "isBlocked": "Blocked",
-          "blockReasonCode": "Reason for blocking",
-          "blockDateTime": "Date of blocking"
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking"
         }
       },
       "phone": {
@@ -505,9 +505,9 @@
           "phone": "Number",
           "typeCode": "Type",
           "statusCode": "Status",
-          "isBlocked": "Blocked",
-          "blockReasonCode": "Reason for blocking",
-          "blockDateTime": "Date of blocking",
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking",
           "comment": "Comment"
         }
       }
@@ -641,7 +641,7 @@
         "grid": {
           "fullName": "Full name",
           "position": "Position",
-          "isBlocked": "Blocked"
+          "isInactive": "Inactive"
         }
       },
       "edit": {
@@ -658,7 +658,7 @@
         "position": "Position",
         "fullName": "Full name",
         "roleCode": "Role code",
-        "isBlocked": "Blocked"
+        "isInactive": "Inactive"
       },
       "errors": {
         "view": "Access to employees list denied"
@@ -787,7 +787,7 @@
       "dialogs": {
         "block": {
           "title": "Block address",
-          "blockReasonCode": "Reason for blocking"
+          "inactiveReasonCode": "Reason for blocking"
         },
         "unblock": {
           "title": "Unblock address",
@@ -840,7 +840,7 @@
       "dialogs": {
         "block": {
           "title": "Block email",
-          "blockReasonCode": "Reason for blocking"
+          "inactiveReasonCode": "Reason for blocking"
         },
         "unblock": {
           "title": "Unblock email",
@@ -875,7 +875,7 @@
       "dialogs": {
         "block": {
           "title": "Block phone number",
-          "blockReasonCode": "Reason for blocking"
+          "inactiveReasonCode": "Reason for blocking"
         },
         "unblock": {
           "title": "Unblock phone number",
@@ -1126,7 +1126,7 @@
       "currencyNotFound": "Не найдена валюта по id",
       "currencyRateNotFound": "Currency rate not found for this date",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
-      "debtComponentAmountNotFound": "Не найден объект DebtComponentSum (таблица debt_component_amount) по Id",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
       "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
@@ -1174,7 +1174,7 @@
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
-      "promiseSumMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",

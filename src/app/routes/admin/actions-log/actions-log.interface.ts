@@ -7,7 +7,7 @@ export interface IEmployee {
   middleName: string;
   position: string;
   organization: string;
-  isBlocked: number;
+  isInactive: number;
 }
 
 export interface IActionLog {

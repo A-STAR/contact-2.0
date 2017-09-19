@@ -41,7 +41,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
   employeesControl: IDynamicFormControl;
-  blockedEmployeesControl: IDynamicFormControl;
+  inactiveEmployeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
   endDateControl: IDynamicFormControl;
@@ -79,9 +79,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   private _dialog: string;
 
   get employeesRowsFilter(): Function {
-    return this.value[this.blockedEmployeesControl.controlName]
+    return this.value[this.inactiveEmployeesControl.controlName]
       ? () => true
-      : (record: IEmployee) => !record.isBlocked;
+      : (record: IEmployee) => !record.isInactive;
   };
 
   constructor(
@@ -103,9 +103,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         required: true,
         type: 'multiselect',
       },
-      this.blockedEmployeesControl = {
+      this.inactiveEmployeesControl = {
         controlName: 'blockingEmployees',
-        label: 'actionsLog.filter.employees.blocked',
+        label: 'actionsLog.filter.employees.inactive',
         type: 'checkbox',
       },
       this.actionTypesControl = {

@@ -39,13 +39,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedPhone$)
-        .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isBlocked),
+        .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isInactive),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
-        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isBlocked),
+        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isInactive),
       action: () => this.setDialog('unblock')
     },
     {
@@ -74,9 +74,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
     { prop: 'phone', renderer: 'phoneRenderer' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
-    { prop: 'isBlocked', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
-    { prop: 'blockReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
-    { prop: 'blockDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
+    { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
+    { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'comment' },
   ];
 
@@ -100,7 +100,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     .take(1)
     .subscribe(([ columns, canViewBlock ]) => {
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
       });
       this.columns = this.gridService.setRenderers(filteredColumns);
       this.cdRef.markForCheck();
@@ -138,7 +138,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (phone: IPhone) => ({ blocked: !!phone.isBlocked });
+    return (phone: IPhone) => ({ inactive: !!phone.isInactive });
   }
 
   onDoubleClick(phone: IPhone): void {
@@ -149,8 +149,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$.next(phone.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
-    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+  onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
     this.phoneService.block(18, this.personId, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 

@@ -40,13 +40,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
-        .map(([ canBlock, address ]) => canBlock && !!address && !address.isBlocked),
+        .map(([ canBlock, address ]) => canBlock && !!address && !address.isInactive),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isBlocked),
+        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isInactive),
       action: () => this.setDialog('unblock')
     },
     {
@@ -74,9 +74,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     { prop: 'fullAddress' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS },
     { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
-    { prop: 'isBlocked', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
-    { prop: 'blockReasonCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING },
-    { prop: 'blockDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'isInactive', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
+    { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING },
+    { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'comment' },
   ];
 
@@ -106,7 +106,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     .take(1)
     .subscribe(([ columns, canViewBlock ]) => {
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
       });
 
       this.columns = this.gridService.setRenderers(filteredColumns);
@@ -149,7 +149,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (address: IAddress) => ({ blocked: !!address.isBlocked });
+    return (address: IAddress) => ({ inactive: !!address.isInactive });
   }
 
   onDoubleClick(address: IAddress): void {
@@ -160,8 +160,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddressId$.next(address.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
-    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+  onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
     this.addressService.block(18, this.personId, this.selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 

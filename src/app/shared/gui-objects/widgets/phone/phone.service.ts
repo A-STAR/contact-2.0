@@ -43,12 +43,12 @@ export class PhoneService {
       .catch(this.notificationsService.error('errors.default.update').entity('entities.phones.gen.singular').dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, phoneId: number, blockReasonCode: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isBlocked: 1, blockReasonCode });
+  block(entityType: number, entityId: number, phoneId: number, inactiveReasonCode: number): Observable<void> {
+    return this.update(entityType, entityId, phoneId, { isInactive: 1, inactiveReasonCode });
   }
 
   unblock(entityType: number, entityId: number, phoneId: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isBlocked: 0 });
+    return this.update(entityType, entityId, phoneId, { isInactive: 0 });
   }
 
   delete(entityType: number, entityId: number, phoneId: number): Observable<void> {

@@ -175,7 +175,7 @@
       "employees": {
         "title": "Операторы",
         "placeholder": "Выберите операторов",
-        "blocked": "Отображать заблокированных",
+        "inactive": "Отображать заблокированных",
         "grid": {
           "id": "Ид",
           "position": "Должность",
@@ -208,7 +208,7 @@
     "title": "Пользователи",
     "toolbar": {
       "action": {
-        "show_blocked_users": "Отображать блокированных"
+        "show_inactive_users": "Отображать блокированных"
       }
     },
     "edit": {
@@ -219,7 +219,7 @@
       "firstName": "Имя",
       "middleName": "Отчество",
       "photo": "Фото",
-      "blocked": "Блокирован",
+      "inactive": "Блокирован",
       "login": "Логин",
       "password": "Пароль",
       "ldapLogin": "LDAP-логин",
@@ -251,7 +251,7 @@
       "middleName": "Отчество",
       "position": "Должность",
       "roleId": "Роль",
-      "isBlocked": "Блокирован",
+      "isInactive": "Блокирован",
       "mobPhone": "Мобильный телефон",
       "workPhone": "Рабочий телефон",
       "intPhone": "Внутренний номер",
@@ -270,7 +270,7 @@
         "grid": {
           "name": "ФИО",
           "login": "Логин",
-          "isBlocked": "Блокирован",
+          "isInactive": "Блокирован",
           "comment": "Комментарий"
         }
       }
@@ -480,9 +480,9 @@
           "typeCode": "Тип",
           "statusCode": "Статус",
           "isResidence": "Проживает",
-          "isBlocked": "Блокирован",
-          "blockReasonCode": "Причина блокировки",
-          "blockDateTime": "Дата блокировки",
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки",
           "comment": "Комментарий"
         }
       },
@@ -491,9 +491,9 @@
         "grid": {
           "email": "Email",
           "typeCode": "Тип",
-          "isBlocked": "Блокирован",
-          "blockReasonCode": "Причина блокировки",
-          "blockDateTime": "Дата блокировки"
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки"
         }
       },
       "phone": {
@@ -505,9 +505,9 @@
           "phone": "Номер",
           "typeCode": "Тип",
           "statusCode": "Статус",
-          "isBlocked": "Блокирован",
-          "blockReasonCode": "Причина блокировки",
-          "blockDateTime": "Дата блокировки",
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки",
           "comment": "Комментарий"
         }
       }
@@ -641,7 +641,7 @@
         "grid": {
           "fullName": "ФИО",
           "position": "Должность",
-          "isBlocked": "Блокирован"
+          "isInactive": "Блокирован"
         }
       },
       "edit": {
@@ -658,7 +658,7 @@
         "position": "Должность",
         "fullName": "ФИО",
         "roleCode": "Код роли",
-        "isBlocked": "Блокирован"
+        "isInactive": "Блокирован"
       },
       "errors": {
         "view": "Доступ к списку сотрудников ограничен"
@@ -787,7 +787,7 @@
       "dialogs": {
         "block": {
           "title": "Блокировать адрес",
-          "blockReasonCode": "Причина блокировки"
+          "inactiveReasonCode": "Причина блокировки"
         },
         "unblock": {
           "title": "Разблокировать адрес",
@@ -840,7 +840,7 @@
       "dialogs": {
         "block": {
           "title": "Блокировать email",
-          "blockReasonCode": "Причина блокировки"
+          "inactiveReasonCode": "Причина блокировки"
         },
         "unblock": {
           "title": "Разблокировать email",
@@ -875,7 +875,7 @@
       "dialogs": {
         "block": {
           "title": "Блокировать телефон",
-          "blockReasonCode": "Причина блокировки"
+          "inactiveReasonCode": "Причина блокировки"
         },
         "unblock": {
           "title": "Разблокировать телефон",
@@ -1126,7 +1126,7 @@
       "currencyNotFound": "Не найдена валюта по id",
       "currencyRateNotFound": "Не найден курс валюты на определенную дату",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
-      "debtComponentSumNotFound": "Не найден объект DebtComponentSum (таблица debt_component_amount) по Id",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
       "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",

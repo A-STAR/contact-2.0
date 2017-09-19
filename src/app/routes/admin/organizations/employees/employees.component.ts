@@ -62,11 +62,11 @@ export class EmployeesComponent implements OnDestroy {
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
     { prop: 'roleCode', minWidth: 100 },
-    { prop: 'isBlocked', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100 },
   ];
 
   renderers: IRenderer = {
-    isBlocked: 'checkboxRenderer',
+    isInactive: 'checkboxRenderer',
   };
 
   action: IOrganizationDialogActionEnum;
@@ -149,8 +149,8 @@ export class EmployeesComponent implements OnDestroy {
     return this.action === IOrganizationDialogActionEnum.EMPLOYEE_REMOVE;
   }
 
-  transformIsBlocked(isBlocked: number): string {
-    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
+  transformIsInactive(isInactive: number): string {
+    return this.translateService.instant(isInactive ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
   onSelect(employee: IEmployee): void {

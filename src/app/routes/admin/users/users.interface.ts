@@ -17,7 +17,7 @@ export interface IUser {
   startWorkDate: string | Date;
   endWorkDate: string | Date;
   languageId: number;
-  isBlocked: boolean;
+  isInactive: boolean;
 }
 
 export interface IUsersResponse {
@@ -34,5 +34,5 @@ export interface IUserEditPermissions {
 export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
-  displayBlocked: boolean;
+  displayInactive: boolean;
 }

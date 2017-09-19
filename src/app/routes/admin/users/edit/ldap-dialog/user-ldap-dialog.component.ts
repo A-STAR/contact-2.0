@@ -23,7 +23,7 @@ export class UserLdapDialogComponent {
   usersColumns: Array<IGridColumn> = [
     { prop: 'name' },
     { prop: 'login' },
-    { prop: 'isBlocked', renderer: 'checkboxRenderer' },
+    { prop: 'isInactive', renderer: 'checkboxRenderer' },
     { prop: 'comment' },
   ];
 
