@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -25,6 +24,10 @@ const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
+  @Input() debtId: number;
+  @Input() personId: number;
+  @Input() phoneId: number;
+
   private minStartDateTime = moment().subtract(3, 'd').toDate();
 
   controls: IDynamicFormControl[] = [
@@ -56,6 +59,8 @@ export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.debtId, this.personId, this.phoneId);
+
     this._formSubscription = Observable.combineLatest(
       this.userConstantsService.get('SMS.Sender.Default'),
       this.userConstantsService.get('SMS.Sender.Use'),

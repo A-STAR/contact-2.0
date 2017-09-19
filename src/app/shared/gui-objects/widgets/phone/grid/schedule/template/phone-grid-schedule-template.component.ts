@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-phone-grid-schedule-template',
@@ -6,5 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleTemplateComponent {
-
+  @Input() debtId: number;
+  @Input() personId: number;
+  @Input() phoneId: number;
 }

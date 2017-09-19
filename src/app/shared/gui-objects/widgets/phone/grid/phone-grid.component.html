@@ -20,6 +20,7 @@
 
 <app-phone-grid-schedule
   *ngIf="isDialog('schedule')"
+  [phoneId]="selectedPhoneId$ | async"
   (submit)="onScheduleDialogSubmit($event)"
   (cancel)="onDialogClose()">
 </app-phone-grid-schedule>

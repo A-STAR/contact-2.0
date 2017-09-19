@@ -6,12 +6,20 @@
     <app-tabstrip [disableScrollbar]="true" [inverse]="true">
       <app-tab [title]="'widgets.phone.dialogs.schedule.text'" [closable]="false">
         <div class="mt-lg">
-          <app-phone-grid-schedule-text></app-phone-grid-schedule-text>
+          <app-phone-grid-schedule-text
+            [debtId]="debtId$ | async"
+            [personId]="personId"
+            [phoneId]="phoneId">
+          </app-phone-grid-schedule-text>
         </div>
       </app-tab>
       <app-tab [title]="'widgets.phone.dialogs.schedule.template'" [closable]="false">
         <div class="mt-lg">
-          <app-phone-grid-schedule-template></app-phone-grid-schedule-template>
+          <app-phone-grid-schedule-template
+            [debtId]="debtId$ | async"
+            [personId]="personId"
+            [phoneId]="phoneId">
+          </app-phone-grid-schedule-template>
         </div>
       </app-tab>
     </app-tabstrip>
