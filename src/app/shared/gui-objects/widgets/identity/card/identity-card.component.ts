@@ -23,7 +23,7 @@ export class IdentityCardComponent {
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.id || null;
+  private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private identityId = this.routeParams.identityId || null;
 

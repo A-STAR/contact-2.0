@@ -35,7 +35,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private personId = (this.route.params as any).value.id || null;
+  private personId = (this.route.params as any).value.personId || null;
   private canViewSub: Subscription;
   private constantSub: Subscription;
 

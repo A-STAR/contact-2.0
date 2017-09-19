@@ -31,7 +31,7 @@ export class DebtorComponent implements OnDestroy {
   person: IPerson;
   controls: Array<IDynamicFormGroup>;
 
-  private personId = (this.route.params as any).value.id || null;
+  private personId = (this.route.params as any).value.personId || null;
   private personSubscription: Subscription;
 
   constructor(

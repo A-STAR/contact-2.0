@@ -111,7 +111,7 @@ export class DebtGridComponent {
 
   debts: Array<IDebt> = [];
 
-  private personId = (this.route.params as any).value.id || null;
+  private personId = (this.route.params as any).value.personId || null;
 
   private gridSubscription: Subscription;
 

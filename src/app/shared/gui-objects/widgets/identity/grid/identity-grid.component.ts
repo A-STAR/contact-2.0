@@ -28,7 +28,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   @ViewChild(GridComponent) grid: GridComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.id || null;
+  private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
 
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);

@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-
-import { DebtorService } from '../../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 
 @Component({
   selector: 'app-phone-grid-schedule',
@@ -15,16 +12,12 @@ export class PhoneGridScheduleComponent {
   @Output() cancel = new EventEmitter<void>();
 
   private routeParams = (<any>this.route.params).value;
-  personId = this.routeParams.contactId || this.routeParams.id || null;
+  personId = this.routeParams.contactId || this.routeParams.personId || null;
+  debtId = this.routeParams.debtId || null;
 
   constructor(
-    private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
-
-  get debtId$(): Observable<number> {
-    return this.debtorService.currentDebt$().map(debt => debt && debt.debtId);
-  }
 
   get canSubmit(): boolean {
     return true;
