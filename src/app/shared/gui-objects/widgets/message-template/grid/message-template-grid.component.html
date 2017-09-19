@@ -8,7 +8,7 @@
 <app-message-template-grid-edit
   *ngIf="isDialog('edit')"
   [typeCode]="typeCode"
-  [templateId]="selectedTemplate.id"
+  [templateId]="selectedTemplateId$ | async"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-message-template-grid-edit>
@@ -19,7 +19,7 @@
   actionTranslationKey="widgets.messageTemplate.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedTemplate"
+  [messageParams]="selectedTemplate$ | async"
   (action)="onDeleteDialogSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
@@ -34,6 +34,7 @@
   selectionType="single"
   [columns]="columns"
   [rows]="templates"
+  [selection]="selection$ | async"
   (onSelect)="onSelect($event)"
   (onDblClick)="onDblClick($event)">
 </app-grid>

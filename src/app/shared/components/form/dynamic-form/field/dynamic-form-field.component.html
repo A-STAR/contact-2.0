@@ -191,6 +191,18 @@
     </button>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'richtexteditor'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+      </span>
+    </label>
+    <app-rich-text-editor
+      [formControlName]="control.controlName"
+      (init)="control.onInit ? control.onInit($event) : null">
+    </app-rich-text-editor>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'dynamic'">
 
     <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">

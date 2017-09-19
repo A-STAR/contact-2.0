@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IMessageTemplate, IMessageTemplatesResponse } from './message-template.interface';
+import { IMessageTemplate, IMessageTemplatesResponse, IMessageTemplatesAttributesResponse } from './message-template.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -51,5 +51,12 @@ export class MessageTemplateService {
     return this.dataService
       .delete('/templates/{templateId}', { templateId })
       .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
+
+  fetchVariables(typeCode: number, recipientTypeCode: number): Observable<Array<any>> {
+    return this.dataService
+      .read('/templates/{typeCode}/recipients/{recipientTypeCode}/attributes', { typeCode, recipientTypeCode })
+      .map((response: IMessageTemplatesAttributesResponse) => response.attributes)
+      .catch(this.notificationsService.fetchError().entity(`entities.messageTemplate.attribute.gen.plural`).dispatchCallback());
   }
 }

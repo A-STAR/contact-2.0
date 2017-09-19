@@ -889,7 +889,8 @@
           "title": "Create Template"
         },
         "edit": {
-          "title": "Edit Template"
+          "title": "Edit Template",
+          "variables": "Variables"
         },
         "delete": {
           "title": "Remove Template",

@@ -4,6 +4,7 @@ import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
+import { RichTextEditorComponent } from '../rich-text-editor/rich-text-editor.component';
 
 export interface IValidationMessages {
   [key: string]: string;
@@ -57,6 +58,8 @@ export interface IDynamicFormControl {
   gridOnSelect?: Function;
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
+  // options for rich text editor
+  onInit?: (control: RichTextEditorComponent) => void;
 }
 
 export type ControlTypes =
@@ -77,6 +80,7 @@ export type ControlTypes =
   | 'select'
   | 'text'
   | 'textarea'
+  | 'richtexteditor'
 ;
 
 export interface IValue {

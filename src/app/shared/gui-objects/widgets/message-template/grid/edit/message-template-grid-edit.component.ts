@@ -16,6 +16,7 @@ import { MessageTemplateService } from '../../message-template.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { RichTextEditorComponent } from '../../../../../components/form/rich-text-editor/rich-text-editor.component';
 
 import { makeKey } from '../../../../../../core/utils';
 
@@ -35,12 +36,12 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: IDynamicFormControl[] = [
-    { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
-    { label: labelKey('text'), controlName: 'text', type: 'textarea', rows: 10, required: true },
-  ];
-
+  controls: IDynamicFormControl[];
   template: IMessageTemplate;
+
+  variables = [];
+
+  private control: RichTextEditorComponent;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -70,16 +71,54 @@ export class MessageTemplateGridEditComponent implements OnInit {
     this.cancel.emit();
   }
 
+  onInsert(variable: any): void {
+    this.control.insert(variable.name);
+  }
+
+  getId = variable => variable.id;
+
+  getName = variable => variable.name;
+
   private initControls(): void {
+    const textControlOptions = this.requiresRichTextEditor(this.typeCode)
+      ? { type: 'richtexteditor', onInit: control => this.control = control }
+      : { type: 'textarea', rows: 10 };
+
+    this.controls = [
+      { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
+      { label: labelKey('text'), controlName: 'text', ...textControlOptions, required: true },
+    ] as IDynamicFormControl[];
+
     if (this.typeCode === MessageTemplateService.TYPE_SMS) {
+      this.controls = [
+        ...this.controls,
+        { label: labelKey('recipientTypeCode'), controlName: 'recipientTypeCode', type: 'select', options: [] },
+        { label: labelKey('isSingleSending'), controlName: 'isSingleSending', type: 'checkbox' },
+      ];
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
-        .subscribe(options => {
-          this.controls = [
-            ...this.controls,
-            { label: labelKey('recipientTypeCode'), controlName: 'recipientTypeCode', type: 'select', options },
-            { label: labelKey('isSingleSending'), controlName: 'isSingleSending', type: 'checkbox' },
-          ];
-        });
+        .subscribe(options => this.getControl('recipientTypeCode').options = options);
+
+      this.cdRef.detectChanges();
+      this.form.onCtrlValueChange('recipientTypeCode').subscribe(v => {
+        this.fetchVariables(this.form.requestValue.recipientTypeCode || v);
+      });
+    } else {
+      this.fetchVariables(0);
     }
+  }
+
+  private requiresRichTextEditor(typeCode: number): boolean {
+    return typeCode === MessageTemplateService.TYPE_AUTO_COMMENT || typeCode === MessageTemplateService.TYPE_PHONE_CALL;
+  }
+
+  private getControl(controlName: string): IDynamicFormControl {
+    return this.controls.find(control => control.controlName === controlName);
+  }
+
+  private fetchVariables(recipientTypeCode: number): void {
+    this.messageTemplateService.fetchVariables(this.typeCode, recipientTypeCode).subscribe(data => {
+      this.variables = data;
+      this.cdRef.markForCheck();
+    });
   }
 }

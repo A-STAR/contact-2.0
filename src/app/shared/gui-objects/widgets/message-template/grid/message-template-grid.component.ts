@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IMessageTemplate } from '../message-template.interface';
@@ -7,8 +9,11 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolba
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageTemplateService } from '../message-template.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-message-template-grid',
@@ -18,18 +23,29 @@ import { DialogFunctions } from '../../../../../core/dialog';
 export class MessageTemplateGridComponent extends DialogFunctions implements OnInit {
   @Input() typeCode: number;
 
+  selectedTemplateId$ = new BehaviorSubject<number>(null);
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.onAdd(),
+      enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
+      enabled: combineLatestAnd([
+        this.userPermissionsService.has('TEMPLATE_EDIT'),
+        this.selectedTemplateId$.map(Boolean)
+      ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.onDelete(),
+      enabled: combineLatestAnd([
+        this.userPermissionsService.has('TEMPLATE_DELETE'),
+        this.selectedTemplateId$.map(Boolean)
+      ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -45,16 +61,23 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   templates: IMessageTemplate[];
 
-  selectedTemplate: IMessageTemplate;
-
   dialog: 'add' | 'edit' | 'delete';
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageTemplateService: MessageTemplateService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get selectedTemplate$(): Observable<IMessageTemplate> {
+    return this.selectedTemplateId$.map(id => (this.templates || []).find(template => template.id === id));
+  }
+
+  get selection$(): Observable<IMessageTemplate[]> {
+    return this.selectedTemplate$.map(template => template ? [ template ] : []);
   }
 
   ngOnInit(): void {
@@ -63,11 +86,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   onSelect(template: IMessageTemplate): void {
-    this.selectedTemplate = template;
+    this.selectedTemplateId$.next(template.id);
   }
 
   onDblClick(template: IMessageTemplate): void {
-    this.selectedTemplate = template;
+    this.selectedTemplateId$.next(template.id);
     this.onEdit();
   }
 
@@ -91,11 +114,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   onEditDialogSubmit(template: IMessageTemplate): void {
-    this.messageTemplateService.update(this.selectedTemplate.id, template).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplateService.update(this.selectedTemplateId$.value, template).subscribe(() => this.onSubmitSuccess());
   }
 
   onDeleteDialogSubmit(): void {
-    this.messageTemplateService.delete(this.selectedTemplate.id).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplateService.delete(this.selectedTemplateId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   private initColumns(): void {
@@ -121,6 +144,9 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   private fetch(): void {
     this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
       this.templates = templates;
+      if (!templates.find(template => template.id === this.selectedTemplateId$.value)) {
+        this.selectedTemplateId$.next(null);
+      }
       this.cdRef.markForCheck();
     });
   }

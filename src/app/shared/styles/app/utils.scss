@@ -1,7 +1,7 @@
 /* ========================================================================
      Component: utils
  ========================================================================== */
- 
+
 // Margins
 // --------------------
 
@@ -103,6 +103,8 @@
 .br0 { border-right-width: 0 !important; }
 .bt0 { border-top-width: 0 !important; }
 .bb0 { border-bottom-width: 0 !important; }
+.bh0 { @extend .bl0; @extend .br0; }
+.bv0 { @extend .bt0; @extend .bb0; }
 
 .br { border-right: 1px solid $border-color;}
 .bl { border-left: 1px solid $border-color;}
@@ -299,7 +301,7 @@
 }
 
 // Absolute center element
-// ----------------------------------- 
+// -----------------------------------
 
 .abs-center-container {
   position: relative;
@@ -311,12 +313,12 @@
   margin: auto;
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
-  
+
   &.abs-fixed {
     position: fixed;
     z-index: 999;
   }
-  
+
   &.abs-right {
     left: auto; right: 20px;
     text-align: right;
@@ -346,7 +348,7 @@
   min-width: 100%;
 }
 
-/** 
+/**
  * Displays hidden content on hover. Add this class to the parent element.
  * Markup
  *   <div class="hover-visible">
@@ -370,10 +372,10 @@
 
 //
 // MEDIA BOX CLASSIC
-// 
-// since BS 3.3.x it doesn't support fullwidth form-controls so we use 
+//
+// since BS 3.3.x it doesn't support fullwidth form-controls so we use
 // a copy to make possible the use of the classic component
-// ----------------------------------- 
+// -----------------------------------
 
 
 // Media objects
