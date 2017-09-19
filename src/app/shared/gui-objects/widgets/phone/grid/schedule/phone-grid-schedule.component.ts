@@ -1,18 +1,20 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { IPerson } from '../../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
+
 @Component({
   selector: 'app-phone-grid-schedule',
   templateUrl: './phone-grid-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleComponent {
+  @Input() person: IPerson;
   @Input() phoneId: number;
   @Output() submit = new EventEmitter<Partial<any>>();
   @Output() cancel = new EventEmitter<void>();
 
   private routeParams = (<any>this.route.params).value;
-  personId = this.routeParams.contactId || this.routeParams.personId || null;
   debtId = this.routeParams.debtId || null;
 
   constructor(

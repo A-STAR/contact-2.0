@@ -5,6 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IOption } from '../../../../../../../core/converter/value-converter.interface';
+import { IPerson } from '../../../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
 import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
@@ -25,27 +26,12 @@ const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
 })
 export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
   @Input() debtId: number;
-  @Input() personId: number;
+  @Input() person: IPerson;
   @Input() phoneId: number;
 
   private minStartDateTime = moment().subtract(3, 'd').toDate();
 
-  controls: IDynamicFormControl[] = [
-    {
-      label: labelKey('startDateTime'),
-      controlName: 'startDateTime',
-      type: 'datepicker',
-      displayTime: true,
-      minDate: this.minStartDateTime,
-      validators: [ minDate(this.minStartDateTime) ]
-    },
-    {
-      label: labelKey('text'),
-      controlName: 'text',
-      type: 'textarea',
-      rows: 5
-    },
-  ];
+  controls: IDynamicFormControl[];
   data: Partial<ISMSSchedule> = {
     startDateTime: new Date()
   };
@@ -59,7 +45,7 @@ export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.debtId, this.personId, this.phoneId);
+    console.log(this.debtId, this.person, this.phoneId);
 
     this._formSubscription = Observable.combineLatest(
       this.userConstantsService.get('SMS.Sender.Default'),
@@ -82,10 +68,28 @@ export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
   }
 
   private initControls(useSender: IUserConstant, options: IOption[]): void {
-    if (useSender.valueB) {
-      this.controls.unshift(
-        { label: labelKey('senderCode'), controlName: 'senderCode', type: 'select', required: true, options },
-      );
-    }
+    this.controls = [
+      {
+        label: labelKey('senderCode'),
+        controlName: 'senderCode',
+        type: useSender.valueB ? 'select' : 'hidden',
+        required: true,
+        options
+      },
+      {
+        label: labelKey('startDateTime'),
+        controlName: 'startDateTime',
+        type: 'datepicker',
+        displayTime: true,
+        minDate: this.minStartDateTime,
+        validators: [ minDate(this.minStartDateTime) ]
+      },
+      {
+        label: labelKey('text'),
+        controlName: 'text',
+        type: 'textarea',
+        rows: 5
+      },
+    ];
   }
 }

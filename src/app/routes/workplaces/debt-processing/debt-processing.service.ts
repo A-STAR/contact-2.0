@@ -26,10 +26,7 @@ export class DebtProcessingService {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create('/list?name=debtsprocessingall', {}, request)
-      .catch(
-        this.notifications.error('errors.default.read')
-          .entity('entities.actionsLog.gen.plural').dispatchCallback()
-      );
+      .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').dispatchCallback());
   }
 
   changeCurrentDebt(debtId: number): void {
