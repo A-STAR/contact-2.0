@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DynamicFormModule } from '../../../../../../components/form/dynamic-form/dynamic-form.module';
 
-import { PhoneGridScheduleTemplateComponent } from './phone-grid-schedule-template.component';
+import { PhoneGridScheduleFormComponent } from './phone-grid-schedule-form.component';
 
 @NgModule({
   imports: [
@@ -11,13 +11,13 @@ import { PhoneGridScheduleTemplateComponent } from './phone-grid-schedule-templa
     DynamicFormModule,
   ],
   exports: [
-    PhoneGridScheduleTemplateComponent,
+    PhoneGridScheduleFormComponent,
   ],
   declarations: [
-    PhoneGridScheduleTemplateComponent,
+    PhoneGridScheduleFormComponent,
   ],
   entryComponents: [
-    PhoneGridScheduleTemplateComponent,
+    PhoneGridScheduleFormComponent,
   ]
 })
-export class PhoneGridScheduleTemplateModule { }
+export class PhoneGridScheduleFormModule { }

@@ -20,11 +20,11 @@ import { minDate } from '../../../../../../../core/validators';
 const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
 
 @Component({
-  selector: 'app-phone-grid-schedule-text',
-  templateUrl: './phone-grid-schedule-text.component.html',
+  selector: 'app-phone-grid-schedule-form',
+  templateUrl: './phone-grid-schedule-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
+export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   @Input() debtId: number;
   @Input() person: IPerson;
   @Input() phoneId: number;
