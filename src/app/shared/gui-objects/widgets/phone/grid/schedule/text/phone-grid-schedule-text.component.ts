@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
+import * as moment from 'moment';
 
 import { IOption } from '../../../../../../../core/converter/value-converter.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
@@ -13,6 +15,7 @@ import { IDynamicFormControl } from '../../../../../../components/form/dynamic-f
 import { ISMSSchedule } from '../../../phone.interface';
 
 import { makeKey } from '../../../../../../../core/utils';
+import { minDate } from '../../../../../../../core/validators';
 
 const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
 
@@ -22,9 +25,23 @@ const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleTextComponent implements OnInit, OnDestroy {
+  private minStartDateTime = moment().subtract(3, 'd').toDate();
+
   controls: IDynamicFormControl[] = [
-    { label: labelKey('startDateTime'), controlName: 'startDateTime', type: 'datepicker', displayTime: true },
-    { label: labelKey('text'), controlName: 'text', type: 'textarea', rows: 5 },
+    {
+      label: labelKey('startDateTime'),
+      controlName: 'startDateTime',
+      type: 'datepicker',
+      displayTime: true,
+      minDate: this.minStartDateTime,
+      validators: [ minDate(this.minStartDateTime) ]
+    },
+    {
+      label: labelKey('text'),
+      controlName: 'text',
+      type: 'textarea',
+      rows: 5
+    },
   ];
   data: Partial<ISMSSchedule> = {
     startDateTime: new Date()
