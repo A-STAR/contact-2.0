@@ -17,3 +17,9 @@ export interface IPhonesResponse {
   success: boolean;
   phones: Array<IPhone>;
 }
+
+export interface ISMSSchedule {
+  senderCode: number;
+  startDateTime: Date;
+  text: string;
+}

@@ -922,6 +922,17 @@
           "title": "Unblock phone number",
           "confirmMessage": "Are you sure you want to unblock phone {{ phone }}?"
         },
+        "schedule": {
+          "title": "Schedule Single SMS",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "typeCode": "SMS",
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "text": "Message Text"
+          }
+        },
         "delete": {
           "title": "Remove phone number",
           "confirmMessage": "Are you sure you want to remove phone {{ phone }}?"

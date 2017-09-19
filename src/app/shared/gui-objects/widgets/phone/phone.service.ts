@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPhone, IPhonesResponse } from './phone.interface';
+import { IPhone, IPhonesResponse, ISMSSchedule } from './phone.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -50,6 +50,12 @@ export class PhoneService {
 
   unblock(entityType: number, entityId: number, phoneId: number): Observable<void> {
     return this.update(entityType, entityId, phoneId, { isBlocked: 0 });
+  }
+
+  scheduleSMS(debtId: number, schedule: ISMSSchedule): Observable<void> {
+    return this.dataService
+      .create('/debts/{debtId}/sms', { debtId }, schedule)
+      .catch(this.notificationsService.createError().entity('entities.sms.gen.singular').dispatchCallback());
   }
 
   delete(entityType: number, entityId: number, phoneId: number): Observable<void> {

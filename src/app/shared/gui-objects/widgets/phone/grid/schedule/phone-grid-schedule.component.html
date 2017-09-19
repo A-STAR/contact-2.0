@@ -1,16 +1,27 @@
 <app-dialog (onClose)="onCancel()">
-    <div dialog-header>
-      <h3>{{ 'widgets.phone.dialogs.schedule.title' | translate }}</h3>
-    </div>
-    <div>
-      FORM
-    </div>
-    <div dialog-footer>
-      <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
-        <i class="fa fa-ok"></i> {{ 'default.buttons.ok' | translate }}
-      </button>
-      <button class="btn btn-default" (click)="onCancel()">
-        <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-      </button>
-    </div>
-  </app-dialog>
+  <div dialog-header>
+    <h3>{{ 'widgets.phone.dialogs.schedule.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-tabstrip [disableScrollbar]="true" [inverse]="true">
+      <app-tab [title]="'widgets.phone.dialogs.schedule.text'" [closable]="false">
+        <div class="mt-lg">
+          <app-phone-grid-schedule-text></app-phone-grid-schedule-text>
+        </div>
+      </app-tab>
+      <app-tab [title]="'widgets.phone.dialogs.schedule.template'" [closable]="false">
+        <div class="mt-lg">
+          <app-phone-grid-schedule-template></app-phone-grid-schedule-template>
+        </div>
+      </app-tab>
+    </app-tabstrip>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>
