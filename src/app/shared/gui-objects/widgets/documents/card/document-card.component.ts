@@ -24,7 +24,7 @@ import { maxFileSize } from '../../../../../core/validators';
 export class DocumentCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private id = (this.route.params as any).value.id || null;
+  private id = (this.route.params as any).value.personId || null;
   private documentId = (this.route.params as any).value.documentId || null;
   private entityTypeCode = (this.route.queryParams as any).value.entityType || 18;
 

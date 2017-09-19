@@ -23,7 +23,7 @@ import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
-  { path: ':id', children: [
+  { path: ':personId', children: [
       { path: '', pathMatch: 'full', component: DebtorComponent },
       { path: 'address', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },

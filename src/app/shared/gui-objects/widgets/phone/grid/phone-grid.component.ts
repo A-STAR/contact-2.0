@@ -81,7 +81,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ];
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.id || null;
+  private personId = this.routeParams.contactId || this.routeParams.personId || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,

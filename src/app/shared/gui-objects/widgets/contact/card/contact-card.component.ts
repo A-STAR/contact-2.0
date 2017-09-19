@@ -31,7 +31,7 @@ export class ContactCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.id || null;
+  private personId = this.routeParams.personId || null;
   contactId = this.routeParams.contactId || null;
 
   controls: IDynamicFormControl[] = null;

@@ -69,7 +69,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.id || null;
+  private personId = this.routeParams.contactId || this.routeParams.personId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
