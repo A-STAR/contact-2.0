@@ -8,6 +8,7 @@ import 'rxjs/add/observable/of';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IPerson } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IPhone } from '../phone.interface';
+import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
@@ -170,8 +171,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
-  onScheduleDialogSubmit(event: any): void {
-    console.log(event);
+  onScheduleDialogSubmit(data: Partial<ISMSSchedule>): void {
+    console.log(data);
   }
 
   onRemoveDialogSubmit(): void {

@@ -3,10 +3,11 @@
     <h3>{{ 'widgets.phone.dialogs.schedule.title' | translate }}</h3>
   </div>
   <div>
-    <app-tabstrip [disableScrollbar]="true" [inverse]="true">
+    <app-tabstrip [disableScrollbar]="true" [inverse]="true" (select)="onTabSelect($event)">
       <app-tab [title]="'widgets.phone.dialogs.schedule.text'" [closable]="false">
         <div class="mt-lg">
           <app-phone-grid-schedule-form
+            #formText
             [debtId]="debtId"
             [phoneId]="phoneId"
             [person]="person"
@@ -17,6 +18,7 @@
       <app-tab [title]="'widgets.phone.dialogs.schedule.template'" [closable]="false">
         <div class="mt-lg">
           <app-phone-grid-schedule-form
+            #formTemplate
             [debtId]="debtId"
             [phoneId]="phoneId"
             [person]="person"

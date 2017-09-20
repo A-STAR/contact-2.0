@@ -62,6 +62,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.initControls(useSender, senderOptions, templates);
       this.cdRef.detectChanges();
       if (this.useTemplate) {
+        // TODO(d.maltsev): unsubscribe
         this.form.getControl('typeCode').valueChanges.subscribe(() => this.fetchTemplateText());
       }
       if (senderOptions.find(option => option.value === defaultSender.valueN)) {
@@ -106,14 +107,16 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
         type: 'datepicker',
         displayTime: true,
         minDate: this.minStartDateTime,
-        validators: [ minDate(this.minStartDateTime) ]
+        validators: [ minDate(this.minStartDateTime) ],
+        required: true
       },
       {
         label: labelKey('text'),
         controlName: 'text',
         type: 'textarea',
         rows: 5,
-        disabled: this.useTemplate
+        disabled: this.useTemplate,
+        required: true
       },
     ] as IDynamicFormControl[];
   }
