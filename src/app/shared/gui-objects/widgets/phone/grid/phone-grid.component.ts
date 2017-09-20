@@ -15,6 +15,7 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { PhoneService } from '../phone.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -99,6 +100,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private phoneService: PhoneService,
     private route: ActivatedRoute,
     private router: Router,
+    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
@@ -217,7 +219,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canSchedule$(): Observable<boolean> {
-    return Observable.of(true);
+    return this.selectedPhone$.flatMap(phone => {
+      return phone && !phone.isBlocked && !phone.stopAutoSms
+        ? combineLatestAnd([
+          this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
+          this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
+          this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST ', phone.statusCode)
+        ])
+        : Observable.of(false);
+    });
   }
 
   private onAdd(): void {

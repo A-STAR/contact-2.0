@@ -51,14 +51,12 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.debtId, this.person, this.phoneId);
-
     this._formSubscription = Observable.combineLatest(
       this.userConstantsService.get('SMS.Sender.Default'),
       this.userConstantsService.get('SMS.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
       this.useTemplate ?
-        this.phoneService.fetchSMSTemplates(2, this.person.id, true) :
+        this.phoneService.fetchSMSTemplates(2, 1, true) :
         Observable.of(null)
     ).subscribe(([ defaultSender, useSender, senderOptions, templates ]) => {
       this.initControls(useSender, senderOptions, templates);
