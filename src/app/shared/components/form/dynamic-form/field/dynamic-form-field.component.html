@@ -199,6 +199,7 @@
     </label>
     <app-rich-text-editor
       [formControlName]="control.controlName"
+      [toolbar]="control.toolbar"
       (init)="control.onInit ? control.onInit($event) : null">
     </app-rich-text-editor>
   </ng-container>

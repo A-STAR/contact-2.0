@@ -60,6 +60,7 @@ export interface IDynamicFormControl {
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor
   onInit?: (control: RichTextEditorComponent) => void;
+  toolbar?: boolean;
 }
 
 export type ControlTypes =
