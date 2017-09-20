@@ -43,6 +43,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   };
 
   private _formSubscription: Subscription;
+  private _templateIdSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -63,8 +64,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.initControls(useSender, senderOptions, templates);
       this.cdRef.detectChanges();
       if (this.useTemplate) {
-        // TODO(d.maltsev): unsubscribe
-        this.form.getControl('templateId').valueChanges.subscribe(() => this.fetchTemplateText());
+        this._templateIdSubscription = this.form.getControl('templateId').valueChanges.subscribe(() => this.fetchTemplateText());
       }
       if (senderOptions.find(option => option.value === defaultSender.valueN)) {
         this.data = {
@@ -78,6 +78,9 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._formSubscription.unsubscribe();
+    if (this.useTemplate) {
+      this._templateIdSubscription.unsubscribe();
+    }
   }
 
   private initControls(useSender: IUserConstant, senderOptions: IOption[], templates: INamedValue[]): void {
