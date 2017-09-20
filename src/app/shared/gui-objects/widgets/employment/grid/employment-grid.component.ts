@@ -69,7 +69,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.id || null;
+  private personId = this.routeParams.contactId || this.routeParams.personId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -86,11 +86,11 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-    const subscription = this.gridService.setAllRenderers(this.columns)
+    this.gridService.setAllRenderers(this.columns)
+      .take(1)
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
-        subscription.unsubscribe();
       });
   }
 

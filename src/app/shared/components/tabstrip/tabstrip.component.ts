@@ -7,7 +7,9 @@ import {
   ContentChildren,
   DoCheck,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   QueryList,
   ViewChild,
 } from '@angular/core';
@@ -31,6 +33,9 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
   @Input() inverse = false;
   @Input() disableScrollbar = false;
   @Input() scrollerEnabled = false;
+
+  @Output() select = new EventEmitter<number>();
+
   isToolsVisible: boolean;
 
   constructor(
@@ -67,11 +72,11 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
     this.tabs.toArray().forEach(el => el.active = false);
     // activate the tab the user has clicked on
     tab.active = true;
+    this.select.emit(this.getTabIndex(tab));
   }
 
   closeTab(tab: TabComponent): void {
-    const index = this.tabs.toArray().findIndex(el => el === tab);
-    tab.onClose.emit(index);
+    tab.onClose.emit(this.getTabIndex(tab));
   }
 
   refreshTools(): void {
@@ -90,5 +95,9 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
 
   onLeft(): void {
     this.ps.scrollToLeft();
+  }
+
+  private getTabIndex(tab: TabComponent): number {
+    return this.tabs.toArray().findIndex(el => el === tab);
   }
 }

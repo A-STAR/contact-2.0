@@ -68,7 +68,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   contacts: Array<IContact> = [];
 
   private dialog: string;
-  private personId = (this.route.params as any).value.id || null;
+  private personId = (this.route.params as any).value.personId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;

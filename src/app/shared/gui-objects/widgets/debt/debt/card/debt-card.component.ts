@@ -27,7 +27,7 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private id = (this.route.params as any).value.id || null;
+  private id = (this.route.params as any).value.personId || null;
   private debtId = (this.route.params as any).value.debtId || null;
 
   private contractorOptions: Array<IOption> = [];

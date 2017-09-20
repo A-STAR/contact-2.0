@@ -41,7 +41,7 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.closeDebt.${control.controlName}` }) as IDynamicFormControl);
 
-  private personId = (this.route.params as any).value.id || null;
+  private personId = (this.route.params as any).value.personId || null;
   private formDataSubscription: Subscription;
 
   constructor(

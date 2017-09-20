@@ -5,16 +5,22 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
-import { IPhone } from '../phone.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IPerson } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
+import { IPhone } from '../phone.interface';
+import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { PhoneService } from '../phone.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-phone-grid',
@@ -22,7 +28,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
-  private selectedPhoneId$ = new BehaviorSubject<number>(null);
+  selectedPhoneId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -32,26 +38,27 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedPhone$)
-        .map(([ canEdit, phone ]) => canEdit && !!phone),
+      enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onEdit(this.selectedPhoneId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: Observable.combineLatest(this.canBlock$, this.selectedPhone$)
-        .map(([ canBlock, phone ]) => canBlock && !!phone && !phone.isInactive),
+      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isInactive)]),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: Observable.combineLatest(this.canUnblock$, this.selectedPhone$)
-        .map(([ canUnblock, phone ]) => canUnblock && !!phone && !!phone.isInactive),
+      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isInactive)]),
       action: () => this.setDialog('unblock')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      enabled: this.canSchedule$,
+      action: () => this.setDialog('schedule')
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedPhone$)
-        .map(([ canDelete, phone ]) => canDelete && !!phone),
+      enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
     },
     {
@@ -67,6 +74,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   phones: Array<IPhone> = [];
 
+  person: IPerson;
+
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
 
@@ -81,24 +90,29 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ];
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.id || null;
+  private personId = this.routeParams.contactId || this.routeParams.personId || null;
+  private debtId = this.routeParams.debtId || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorService: DebtorService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private route: ActivatedRoute,
     private router: Router,
+    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
+      this.debtorService.fetch(this.personId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ columns, canViewBlock ]) => {
+    .subscribe(([ person, columns, canViewBlock ]) => {
+      this.person = person;
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
       });
@@ -158,6 +172,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
+  onScheduleDialogSubmit(schedule: ISMSSchedule): void {
+    const data = {
+      ...schedule,
+      personId: this.personId,
+      // personRole = 1 - debtor
+      // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
+      personRole: 1,
+      phoneId: this.selectedPhoneId$.value
+    }
+    this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
+  }
+
   onRemoveDialogSubmit(): void {
     this.phoneService.delete(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
@@ -200,6 +226,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('PHONE_UNBLOCK');
+  }
+
+  get canSchedule$(): Observable<boolean> {
+    return this.selectedPhone$.mergeMap(phone => {
+      return phone && !phone.isInactive && !phone.stopAutoSms
+        ? combineLatestAnd([
+          this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
+          this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
+          this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode)
+        ])
+        : Observable.of(false);
+    });
   }
 
   private onAdd(): void {

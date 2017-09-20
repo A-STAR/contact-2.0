@@ -24,8 +24,7 @@ const labelKey = makeKey('widgets.email.card');
 export class EmailCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  // TODO(d.maltsev): is there a better way to get route params?
-  private id = (this.route.params as any).value.id || null;
+  private id = (this.route.params as any).value.personId || null;
   private emailId = (this.route.params as any).value.emailId || null;
 
   controls: Array<IDynamicFormItem> = null;

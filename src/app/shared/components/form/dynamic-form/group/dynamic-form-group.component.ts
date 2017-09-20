@@ -58,7 +58,7 @@ export class DynamicFormGroupComponent {
 
   displayControlErrors(control: IDynamicFormControl): boolean {
     const formControl = this.form.controls[control.controlName];
-    return formControl.errors && (formControl.dirty || formControl.touched);
+    return formControl && formControl.errors && (formControl.dirty || formControl.touched);
   }
 
   getControlErrors(control: IDynamicFormControl): Array<any> {

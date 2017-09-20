@@ -87,13 +87,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
    * @memberof DynamicFormComponent
    */
   get requestValue(): any {
-    return Object.keys(this.form.value).reduce((acc, key) => {
-      const control = this.form.get(key);
-      if (control.dirty) {
-        acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));
-      }
-      return acc;
-    }, {});
+    return this.getValue(true);
   }
 
   /**
@@ -103,7 +97,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
    * @memberof DynamicFormComponent
    */
   getSerializedUpdates(): any {
-    return this.requestValue;
+    return this.getValue(true);
+  }
+
+  getSerializedValue(): any {
+    return this.getValue(false);
   }
 
   onSelectItems(event: ISelectItemsPayload): void {
@@ -177,12 +175,23 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     }
   }
 
+  private getValue(onlyUpdatedValues: boolean): any {
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (!onlyUpdatedValues || control.dirty) {
+        acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));
+      }
+      return acc;
+    }, {});
+  }
+
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
       case 'select':
-        return ['nameTranslations', 'translatedName'].includes(control.controlName)
-          ? value
-          : Array.isArray(value) && !control.multiple ? value[0].value : value.map(item => item.value);
+        if (['nameTranslations', 'translatedName'].includes(control.controlName) || !Array.isArray(value)) {
+          return value;
+        }
+        return control.multiple ? value.map(item => item.value) : value[0].value;
       case 'datepicker':
         return value === ''
           ? null

@@ -18,6 +18,14 @@
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
+<app-phone-grid-schedule
+  *ngIf="isDialog('schedule')"
+  [person]="person"
+  [phoneId]="selectedPhoneId$ | async"
+  (submit)="onScheduleDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-phone-grid-schedule>
+
 <app-dialog-action
   *ngIf="isDialog('delete')"
   titleTranslationKey="widgets.phone.dialogs.delete.title"

@@ -88,7 +88,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  private id = (this.route.params as any).value.id || null;
+  private id = (this.route.params as any).value.personId || null;
 
   constructor(
     private documentService: DocumentService,

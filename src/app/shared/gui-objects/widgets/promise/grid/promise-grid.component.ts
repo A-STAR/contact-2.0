@@ -141,7 +141,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     const { id: promiseId } = this.selectedPromise$.value;
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/${promiseId}` ]);
+    this.router.navigate([ `${this.router.url}/debt/promise/${promiseId}` ]);
   }
 
   onRemove(): void {
@@ -216,7 +216,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   private onAdd(): void {
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/${debtId}/promise/create` ]);
+    this.router.navigate([ `${this.router.url}/debt/promise/create` ]);
   }
 
   private fetch(): void {
