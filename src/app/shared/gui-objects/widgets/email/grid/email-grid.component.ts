@@ -39,13 +39,13 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
       enabled: Observable.combineLatest(this.canBlock$, this.selectedEmail$)
-        .map(([ canBlock, email ]) => canBlock && !!email && !email.isBlocked),
+        .map(([ canBlock, email ]) => canBlock && !!email && !email.isInactive),
       action: () => this.setDialog(1)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
       enabled: Observable.combineLatest(this.canUnblock$, this.selectedEmail$)
-        .map(([ canUnblock, email ]) => canUnblock && !!email && !!email.isBlocked),
+        .map(([ canUnblock, email ]) => canUnblock && !!email && !!email.isInactive),
       action: () => this.setDialog(2)
     },
     {
@@ -71,17 +71,17 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private renderers: IRenderer = {
     typeCode: [],
-    blockReasonCode: [],
-    blockDateTime: 'dateTimeRenderer',
-    isBlocked: 'checkboxRenderer',
+    inactiveReasonCode: [],
+    inactiveDateTime: 'dateTimeRenderer',
+    isInactive: 'checkboxRenderer',
   };
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode' },
     { prop: 'email' },
-    { prop: 'isBlocked', maxWidth: 90 },
-    { prop: 'blockReasonCode' },
-    { prop: 'blockDateTime' },
+    { prop: 'isInactive', maxWidth: 90 },
+    { prop: 'inactiveReasonCode' },
+    { prop: 'inactiveDateTime' },
   ];
 
   private _dialog = null;
@@ -110,10 +110,10 @@ export class EmailGridComponent implements OnInit, OnDestroy {
       this.renderers = {
         ...this.renderers,
         typeCode: [ ...options[UserDictionariesService.DICTIONARY_EMAIL_TYPE] ],
-        blockReasonCode: [ ...options[UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING] ],
+        inactiveReasonCode: [ ...options[UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING] ],
       }
       const columns = this._columns.filter(column => {
-        return canViewBlock ? true : ![ 'isBlocked', 'blockReasonCode', 'blockDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
       });
       this.columns = this.gridService.setRenderers(columns, this.renderers);
       this.cdRef.markForCheck();
@@ -160,7 +160,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (email: IEmail) => ({ blocked: !!email.isBlocked });
+    return (email: IEmail) => ({ inactive: !!email.isInactive });
   }
 
   onDoubleClick(email: IEmail): void {
@@ -171,8 +171,8 @@ export class EmailGridComponent implements OnInit, OnDestroy {
     this.selectedEmailId$.next(email.id);
   }
 
-  onBlockDialogSubmit(blockReasonCode: number | Array<{ value: number }>): void {
-    const code = Array.isArray(blockReasonCode) ? blockReasonCode[0].value : blockReasonCode;
+  onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
+    const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
     this.emailService.block(18, this.id, this.selectedEmailId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 

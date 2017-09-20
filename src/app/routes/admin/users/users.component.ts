@@ -30,7 +30,7 @@ export class UsersComponent implements OnDestroy {
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
     { prop: 'roleId', minWidth: 100 },
-    { prop: 'isBlocked', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100 },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
@@ -40,11 +40,11 @@ export class UsersComponent implements OnDestroy {
 
   renderers: IRenderer = {
     roleId: [],
-    isBlocked: 'checkboxRenderer',
+    isInactive: 'checkboxRenderer',
     languageId: [],
   };
 
-  displayBlockedUsers: boolean;
+  displayInactiveUsers: boolean;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -67,9 +67,9 @@ export class UsersComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.usersService.toggleBlockedFilter(),
-      label: 'users.toolbar.action.show_blocked_users',
-      state: this.usersService.state.map(state => state.displayBlocked)
+      action: () => this.usersService.toggleInactiveFilter(),
+      label: 'users.toolbar.action.show_inactive_users',
+      state: this.usersService.state.map(state => state.displayInactive)
     }
   ];
 
@@ -110,7 +110,7 @@ export class UsersComponent implements OnDestroy {
     this.usersSubscription = this.usersService.state.distinctUntilChanged()
       .subscribe(
         state => {
-          this.displayBlockedUsers = state.displayBlocked;
+          this.displayInactiveUsers = state.displayInactive;
           this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
         }
       );
@@ -136,7 +136,7 @@ export class UsersComponent implements OnDestroy {
   }
 
   filter(user: IUser): boolean {
-    return !user.isBlocked || this.displayBlockedUsers;
+    return !user.isInactive || this.displayInactiveUsers;
   }
 
   onAdd(): void {

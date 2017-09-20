@@ -3,9 +3,9 @@ export interface IEmail {
   id: number;
   typeCode: number;
   email: string;
-  isBlocked: boolean | number;
-  blockReasonCode: number;
-  blockDateTime: Date | string;
+  isInactive: boolean | number;
+  inactiveReasonCode: number;
+  inactiveDateTime: Date | string;
   comment: string;
 }
 

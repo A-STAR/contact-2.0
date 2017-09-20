@@ -46,12 +46,12 @@ export class AddressService {
       );
   }
 
-  block(entityType: number, entityId: number, addressId: number, blockReasonCode: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isBlocked: 1, blockReasonCode });
+  block(entityType: number, entityId: number, addressId: number, inactiveReasonCode: number): Observable<void> {
+    return this.update(entityType, entityId, addressId, { isInactive: 1, inactiveReasonCode });
   }
 
   unblock(entityType: number, entityId: number, addressId: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isBlocked: 0 });
+    return this.update(entityType, entityId, addressId, { isInactive: 0 });
   }
 
   delete(entityType: number, entityId: number, addressId: number): Observable<void> {

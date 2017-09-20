@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
 const defaultState: IUsersState = {
   users: [],
   selectedUserId: null,
-  displayBlocked: false
+  displayInactive: false
 };
 
 export function usersReducer(state: IUsersState = defaultState, action: Action): IUsersState {
@@ -28,10 +28,10 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
         users: [],
         selectedUserId: null
       };
-    case UsersService.USER_TOGGLE_BLOCKED:
+    case UsersService.USER_TOGGLE_INACTIVE:
       return {
         ...state,
-        displayBlocked: !state.displayBlocked
+        displayInactive: !state.displayInactive
       };
     default:
       return state;

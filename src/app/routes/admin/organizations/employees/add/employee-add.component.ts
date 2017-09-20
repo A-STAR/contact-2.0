@@ -27,11 +27,11 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
     // TODO: display column depending on filter
-    { prop: 'isBlocked', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100 },
   ];
 
   renderers: IRenderer = {
-    isBlocked: 'checkboxRenderer',
+    isInactive: 'checkboxRenderer',
   };
 
   get formData(): any {

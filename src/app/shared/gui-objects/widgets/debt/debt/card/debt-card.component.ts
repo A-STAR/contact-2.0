@@ -62,7 +62,7 @@ export class DebtCardComponent {
       this.userPermissionsService.get([
         'DEBT_EDIT',
         'DEBT_PORTFOLIO_EDIT',
-        'DEBT_COMPONENT_SUM_EDIT',
+        'DEBT_COMPONENT_AMOUNT_EDIT',
         'DEBT_DICT1_EDIT_LIST',
         'DEBT_DICT2_EDIT_LIST',
         'DEBT_DICT3_EDIT_LIST',
@@ -105,7 +105,7 @@ export class DebtCardComponent {
   }
 
   get canViewComponentLog$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_SUM_LOG_VIEW');
+    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   }
 
   get canViewPortfolioLog$(): Observable<boolean> {
@@ -252,18 +252,18 @@ export class DebtCardComponent {
         width: 2
       },
       {
-        label: 'widgets.debt.grid.debtSum',
-        controlName: 'debtSum',
+        label: 'widgets.debt.grid.debtAmount',
+        controlName: 'debtAmount',
         type: 'text',
-        disabled: !permissions['DEBT_COMPONENT_SUM_EDIT'].valueB,
+        disabled: !permissions['DEBT_COMPONENT_AMOUNT_EDIT'].valueB,
         required: true,
         width: 2
       },
       {
-        label: 'widgets.debt.grid.totalSum',
-        controlName: 'totalSum',
+        label: 'widgets.debt.grid.totalAmount',
+        controlName: 'totalAmount',
         type: 'text',
-        disabled: !permissions['DEBT_COMPONENT_SUM_EDIT'].valueB,
+        disabled: !permissions['DEBT_COMPONENT_AMOUNT_EDIT'].valueB,
         width: 2
       },
       // Row 5

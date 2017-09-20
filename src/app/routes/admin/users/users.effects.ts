@@ -41,8 +41,8 @@ export class UsersEffects {
     });
 
   @Effect()
-  toggleBlockedUsers$ = this.actions
-    .ofType(UsersService.USER_TOGGLE_BLOCKED)
+  toggleInactiveUsers$ = this.actions
+    .ofType(UsersService.USER_TOGGLE_INACTIVE)
     .switchMap((action: Action) => {
       return this.readUsers()
         .mergeMap(data => [

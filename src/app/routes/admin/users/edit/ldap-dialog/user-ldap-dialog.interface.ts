@@ -11,7 +11,7 @@ export interface ILdapGroupsResponse {
 export interface ILdapUser {
   login: string;
   name: string;
-  isBlocked: boolean;
+  isInactive: boolean;
   comment: string;
 }
 

@@ -7,9 +7,9 @@ export interface IPhone {
   phoneInternational: string;
   typeCode: number;
   statusCode: number;
-  isBlocked: boolean | number;
-  blockReasonCode: number;
-  blockDateTime: Date | string;
+  isInactive: boolean | number;
+  inactiveReasonCode: number;
+  inactiveDateTime: Date | string;
   stopAutoSms: number;
   stopAutoInfo: number;
   comment: string;
