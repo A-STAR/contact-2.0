@@ -80,13 +80,21 @@ export class MessageTemplateGridEditComponent implements OnInit {
   getName = variable => variable.name;
 
   private initControls(): void {
-    const textControlOptions = this.requiresRichTextEditor(this.typeCode)
-      ? { type: 'richtexteditor', onInit: control => this.control = control }
-      : { type: 'textarea', rows: 10 };
-
     this.controls = [
-      { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
-      { label: labelKey('text'), controlName: 'text', ...textControlOptions, required: true },
+      {
+        label: labelKey('name'),
+        controlName: 'name',
+        type: 'text',
+        required: true
+      },
+      {
+        label: labelKey('text'),
+        controlName: 'text',
+        required: true,
+        type: 'richtexteditor',
+        onInit: control => this.control = control,
+        toolbar: this.requiresRichTextEditor(this.typeCode)
+      },
     ] as IDynamicFormControl[];
 
     if (this.typeCode === MessageTemplateService.TYPE_SMS) {

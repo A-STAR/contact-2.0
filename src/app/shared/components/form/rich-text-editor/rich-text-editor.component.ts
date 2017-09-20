@@ -5,6 +5,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Input,
   OnInit,
   Output,
   ViewChild
@@ -25,6 +26,8 @@ import * as Quill from 'quill';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
+  @Input() toolbar: boolean;
+
   @Output() init = new EventEmitter<RichTextEditorComponent>();
 
   @ViewChild('editor') editor: ElementRef;
@@ -38,12 +41,15 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     this._quill = new Quill(this.editor.nativeElement, {
       modules: {
-        toolbar: [
-          [ 'bold', 'italic', 'underline' ],
-          [ { 'size': [ 'small', false, 'large', 'huge' ] } ],
-          [ { 'color': [] } ],
-        ]
+        toolbar: this.toolbar
+          ? [
+              [ 'bold', 'italic', 'underline' ],
+              [ { 'size': [ 'small', false, 'large', 'huge' ] } ],
+              [ { 'color': [] } ],
+            ]
+          : null,
       },
+      formats: this.toolbar ? undefined : [],
       theme: 'snow'
     });
 
