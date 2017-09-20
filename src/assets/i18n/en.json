@@ -1164,6 +1164,12 @@
     },
     "debtComponents": {
       "gen": { "singular": "debt component", "plural": "debt components" }
+    },
+    "sms": {
+      "gen": { "singular": "SMS", "plural": "SMS" }
+    },
+    "messageTemplate": {
+      "gen": { "singular": "message template", "plural": "message templates" }
     }
   },
   "errors": {

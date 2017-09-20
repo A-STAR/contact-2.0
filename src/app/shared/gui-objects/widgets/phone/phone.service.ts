@@ -64,14 +64,14 @@ export class PhoneService {
     return this.dataService
       .read(url, { typeCode, recipientTypeCode, isSingleSending: Number(isSingleSending) })
       .map((response: IMessageTemplatesResponse) => response.templates)
-      .catch(this.notificationsService.fetchError().entity('entities.template.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback());
   }
 
   fetchMessageTemplateText(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {
     const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
     return this.dataService
       .read(url, { debtId, personId, personRole, templateId })
-      // TODO(d.maltsev): response type & error handling
+      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback())
       .map(response => response.text)
   }
 

@@ -1163,7 +1163,13 @@
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
     "debtComponents": {
-      "gen": { "singular": "компонента долга ", "plural": "компонентов долга" }
+      "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
+    },
+    "sms": {
+      "gen": { "singular": "СМС", "plural": "СМС" }
+    },
+    "messageTemplate": {
+      "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
     }
   },
   "errors": {
