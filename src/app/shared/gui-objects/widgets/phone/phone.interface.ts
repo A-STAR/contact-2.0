@@ -21,9 +21,10 @@ export interface IPhonesResponse {
 }
 
 export interface ISMSSchedule {
+  templateId?: number;
   senderCode: number;
   startDateTime: Date;
-  text: string;
+  text?: string;
 }
 
 export interface IMessageTemplatesResponse {

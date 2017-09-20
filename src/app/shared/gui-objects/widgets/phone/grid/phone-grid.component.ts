@@ -91,6 +91,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private routeParams = (<any>this.route.params).value;
   private personId = this.routeParams.contactId || this.routeParams.personId || null;
+  private debtId = this.routeParams.debtId || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -171,8 +172,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
-  onScheduleDialogSubmit(data: Partial<ISMSSchedule>): void {
-    console.log(data);
+  onScheduleDialogSubmit(schedule: ISMSSchedule): void {
+    const data = {
+      ...schedule,
+      personId: this.personId,
+      // personRole = 1 - debtor
+      // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
+      personRole: 1,
+      phoneId: this.selectedPhoneId$.value
+    }
+    this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {

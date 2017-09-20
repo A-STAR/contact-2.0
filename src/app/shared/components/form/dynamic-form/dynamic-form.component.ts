@@ -176,15 +176,13 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   private getValue(onlyUpdatedValues: boolean): any {
-    return this.flatControls
-      .map(control => control.controlName)
-      .reduce((acc, key) => {
-        const control = this.form.get(key);
-        if (!onlyUpdatedValues || control.dirty) {
-          acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));
-        }
-        return acc;
-      }, {});
+    return Object.keys(this.form.value).reduce((acc, key) => {
+      const control = this.form.get(key);
+      if (!onlyUpdatedValues || control.dirty) {
+        acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));
+      }
+      return acc;
+    }, {});
   }
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {

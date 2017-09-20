@@ -37,7 +37,8 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   private minStartDateTime = moment().subtract(3, 'd').toDate();
 
   controls: IDynamicFormControl[];
-  data: Partial<ISMSSchedule> = {
+  data: ISMSSchedule = {
+    senderCode: null,
     startDateTime: new Date()
   };
 
@@ -63,7 +64,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
       if (this.useTemplate) {
         // TODO(d.maltsev): unsubscribe
-        this.form.getControl('typeCode').valueChanges.subscribe(() => this.fetchTemplateText());
+        this.form.getControl('templateId').valueChanges.subscribe(() => this.fetchTemplateText());
       }
       if (senderOptions.find(option => option.value === defaultSender.valueN)) {
         this.data = {
@@ -83,8 +84,8 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
     const smsControl = this.useTemplate
       ? [
           {
-            label: labelKey('typeCode'),
-            controlName: 'typeCode',
+            label: labelKey('templateId'),
+            controlName: 'templateId',
             type: 'select',
             options: valuesToOptions(templates),
             required: true
@@ -122,7 +123,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   private fetchTemplateText(): void {
-    this.phoneService.fetchMessageTemplateText(this.debtId, this.person.id, 1, this.form.requestValue.typeCode)
+    this.phoneService.fetchMessageTemplateText(this.debtId, this.person.id, 1, this.form.requestValue.templateId)
       .subscribe(text => {
         this.data = {
           ...this.data,

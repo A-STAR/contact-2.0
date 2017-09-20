@@ -5,7 +5,6 @@ import { IPerson } from '../../../../../../routes/workplaces/debt-processing/deb
 import { ISMSSchedule } from '../../phone.interface';
 
 import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.component';
-import { TabstripComponent } from '../../../../../components/tabstrip/tabstrip.component';
 
 @Component({
   selector: 'app-phone-grid-schedule',
@@ -16,7 +15,7 @@ export class PhoneGridScheduleComponent {
   @Input() person: IPerson;
   @Input() phoneId: number;
 
-  @Output() submit = new EventEmitter<Partial<ISMSSchedule>>();
+  @Output() submit = new EventEmitter<ISMSSchedule>();
   @Output() cancel = new EventEmitter<void>();
 
   @ViewChild('formText') formText: PhoneGridScheduleFormComponent;
@@ -58,7 +57,7 @@ export class PhoneGridScheduleComponent {
     return form && form.form && form.form.canSubmit;
   }
 
-  private getFormValue(form: PhoneGridScheduleFormComponent): Partial<ISMSSchedule> {
+  private getFormValue(form: PhoneGridScheduleFormComponent): ISMSSchedule {
     return form && form.form && form.form.getSerializedValue();
   }
 }
