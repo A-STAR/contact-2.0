@@ -1,11 +1,5 @@
 <br>
 
-<select class="form-control" (change)="onChange($event)">
-  <option *ngFor="let option of options$ | async" [value]="option.value">{{ option.label }}</option>
-</select>
-
-<br>
-
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-gridtree

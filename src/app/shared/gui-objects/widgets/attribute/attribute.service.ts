@@ -12,42 +12,42 @@ export class AttributeService {
   static MESSAGE_ATTRIBUTE_SAVED = 'MESSAGE_ATTRIBUTE_SAVED';
 
   private errorMessage = 'entities.attribute.gen';
-  private baseUrl = '/treeTypesCode/{treeTypeCode}/attributeTypes'
+  private baseUrl = '/attributeTypes'
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(treeTypeCode: number): Observable<IAttributeResponse[]> {
+  fetchAll(): Observable<IAttributeResponse[]> {
     return this.dataService
-      .read(this.baseUrl, { treeTypeCode })
+      .read(this.baseUrl)
       .map((response: IResponse<IAttributeResponse[]>) => response.data)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
-  fetch(treeTypeCode: number, attributeTypeId: number): Observable<IAttributeResponse> {
+  fetch(attributeTypeId: number): Observable<IAttributeResponse> {
     return this.dataService
-      .read(`${this.baseUrl}/{attributeTypeId}`, { treeTypeCode, attributeTypeId })
+      .read(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId })
       .map((response: IResponse<IAttributeResponse>) => response.data)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  create(treeTypeCode: number, attribute: IAttributeResponse): Observable<void> {
+  create(attribute: IAttributeResponse): Observable<void> {
     return this.dataService
-      .create(this.baseUrl, { treeTypeCode }, attribute)
+      .create(this.baseUrl, {}, attribute)
       .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  update(treeTypeCode: number, attributeTypeId: number, attribute: Partial<IAttributeResponse>): Observable<void> {
+  update(attributeTypeId: number, attribute: Partial<IAttributeResponse>): Observable<void> {
     return this.dataService
-      .update(`${this.baseUrl}/{attributeTypeId}`, { treeTypeCode, attributeTypeId }, attribute)
+      .update(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId }, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  delete(treeTypeCode: number, attributeTypeId: number): Observable<void> {
+  delete(attributeTypeId: number): Observable<void> {
     return this.dataService
-      .delete(`${this.baseUrl}/{attributeTypeId}`, { treeTypeCode, attributeTypeId })
+      .delete(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId })
       .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }

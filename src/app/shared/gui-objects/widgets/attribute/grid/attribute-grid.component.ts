@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -8,7 +8,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -17,7 +16,7 @@ import { DialogFunctions } from '../../../../../core/dialog';
   templateUrl: './attribute-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeGridComponent extends DialogFunctions {
+export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridTreeColumn<IAttribute>> = [
     { label: 'Name', prop: 'name' },
     { label: 'Code', prop: 'code' },
@@ -50,24 +49,16 @@ export class AttributeGridComponent extends DialogFunctions {
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
   ) {
     super();
-    this.fetch(1);
   }
 
-  get options$(): Observable<IOption[]> {
-    return this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ATTRIBUTE_TREE_TYPE)
-      .distinctUntilChanged();
+  ngOnInit(): void {
+    this.fetch();
   }
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
     return this._columns;
-  }
-
-  onChange(event: Event): void {
-    this.fetch(Number((event.target as HTMLSelectElement).value));
   }
 
   onRowDblClick(row: IAttribute): void {
@@ -88,8 +79,10 @@ export class AttributeGridComponent extends DialogFunctions {
     });
   }
 
-  private fetch(type: number): void {
-    this.attributeService.fetchAll(type).subscribe(attributes => this.rows = this.convertToGridTreeRow(attributes));
-    this.cdRef.markForCheck();
+  private fetch(): void {
+    this.attributeService.fetchAll().subscribe(attributes => {
+      this.rows = this.convertToGridTreeRow(attributes);
+      this.cdRef.markForCheck();
+    });
   }
 }
