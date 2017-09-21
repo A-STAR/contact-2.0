@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
 import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
