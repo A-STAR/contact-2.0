@@ -15,9 +15,11 @@ import { DialogFunctions } from '../../../../../core/dialog';
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridTreeColumn<IAttribute>> = [
-    { label: 'Name', prop: 'name' },
     { label: 'Code', prop: 'code' },
-    { label: 'TypeCode', prop: 'typeCode' },
+    { label: 'Name', prop: 'name' },
+    { label: 'UserFullName', prop: 'userFullName' },
+    { label: 'ChangeDateTime', prop: 'changeDateTime' },
+    { label: 'Comment', prop: 'comment' },
   ];
 
   toolbarItems: Array<IToolbarItem> = [
