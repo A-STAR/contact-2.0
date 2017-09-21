@@ -110,4 +110,8 @@ export class GridTreeService<T> {
         }, false)
       : false;
   }
+
+  loadDictionaries(dictCodes: number[]): void {
+    console.log(dictCodes);
+  }
 }

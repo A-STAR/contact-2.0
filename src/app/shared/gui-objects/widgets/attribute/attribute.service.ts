@@ -12,42 +12,30 @@ export class AttributeService {
   static MESSAGE_ATTRIBUTE_SAVED = 'MESSAGE_ATTRIBUTE_SAVED';
 
   private errorMessage = 'entities.attribute.gen';
-  private baseUrl = '/attributeTypes'
+  private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/attributes'
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(): Observable<IAttributeResponse[]> {
+  fetchAll(entityType: number, entityId: number): Observable<IAttributeResponse[]> {
     return this.dataService
-      .read(this.baseUrl)
+      .read(this.baseUrl, { entityType, entityId })
       .map((response: IResponse<IAttributeResponse[]>) => response.data)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
-  fetch(attributeTypeId: number): Observable<IAttributeResponse> {
+  fetch(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeResponse> {
     return this.dataService
-      .read(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId })
+      .read(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode })
       .map((response: IResponse<IAttributeResponse>) => response.data)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  create(attribute: IAttributeResponse): Observable<void> {
+  update(entityType: number, entityId: number, attributeCode: number, attribute: Partial<IAttributeResponse>): Observable<void> {
     return this.dataService
-      .create(this.baseUrl, {}, attribute)
-      .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
-  }
-
-  update(attributeTypeId: number, attribute: Partial<IAttributeResponse>): Observable<void> {
-    return this.dataService
-      .update(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId }, attribute)
+      .update(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode }, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
-  }
-
-  delete(attributeTypeId: number): Observable<void> {
-    return this.dataService
-      .delete(`${this.baseUrl}/{attributeTypeId}`, { attributeTypeId })
-      .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }

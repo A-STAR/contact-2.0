@@ -1,5 +1,4 @@
 export interface IAttribute {
-  id: number;
   code: number;
   name: string;
   typeCode: number;

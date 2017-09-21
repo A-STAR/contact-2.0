@@ -4,9 +4,12 @@ export interface IGridTreeRow<T> {
   isExpanded?: boolean;
 }
 
+type IValueGetter<T, R> = (data: T) => R;
+
 export interface IGridTreeColumn<T> {
   label: string;
-  prop: keyof T;
+  prop?: keyof T;
+  valueFormatter?: IValueGetter<T, string>;
 }
 
 export enum GridTreeDragAndDropEventTypeEnum {

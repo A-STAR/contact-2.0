@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
 import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
@@ -17,6 +18,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridTreeColumn<IAttribute>> = [
     { label: 'Code', prop: 'code' },
     { label: 'Name', prop: 'name' },
+    { label: 'Value', valueFormatter: data => this.getValueByTypeCode(data) },
     { label: 'UserFullName', prop: 'userFullName' },
     { label: 'ChangeDateTime', prop: 'changeDateTime' },
     { label: 'Comment', prop: 'comment' },
@@ -45,9 +47,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
+  private debtId = (<any>this.route.params).value.debtId;
+
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
   ) {
     super();
   }
@@ -68,6 +73,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     console.log('select', row);
   }
 
+  idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
+
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
     return attributes.map(attribute => {
       const { children, ...rest } = attribute;
@@ -79,9 +86,26 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll().subscribe(attributes => {
+    this.attributeService.fetchAll(19, this.debtId).subscribe(attributes => {
       this.rows = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });
+  }
+
+  private getValueByTypeCode(data: IAttribute): string {
+    switch (data.typeCode) {
+      case 1:
+      case 5:
+        return String(data.valueN);
+      case 2:
+      case 7:
+        return String(data.valueD);
+      case 3:
+        return data.valueS;
+      case 4:
+        return String(data.valueB);
+      case 6:
+        return `DICT_${data.dictNameCode}[${data.valueN}]`;
+    }
   }
 }

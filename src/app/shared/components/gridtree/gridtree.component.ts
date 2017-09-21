@@ -20,7 +20,6 @@ import { GridTreeService } from './gridtree.service';
 })
 export class GridTreeComponent<T> implements OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
-  @Input() height: number;
 
   @Output() select = this.gridTreeService.select.map(row => row.data);
   @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
