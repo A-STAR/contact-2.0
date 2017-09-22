@@ -34,8 +34,6 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   @Input() phoneId: number;
   @Input() useTemplate: boolean;
 
-  private minStartDateTime = moment().subtract(3, 'd').toDate();
-
   controls: IDynamicFormControl[];
   data: ISMSSchedule = {
     senderCode: null,
@@ -91,27 +89,33 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
             controlName: 'templateId',
             type: 'select',
             options: valuesToOptions(templates),
-            required: true
+            required: true,
+          }
+        ]
+      : [];
+
+    const useSenderControl = useSender.valueB
+      ? [
+          {
+            label: labelKey('senderCode'),
+            controlName: 'senderCode',
+            type: 'select',
+            required: true,
+            options: senderOptions,
           }
         ]
       : [];
 
     this.controls = [
       ...smsControl,
-      {
-        label: labelKey('senderCode'),
-        controlName: 'senderCode',
-        type: useSender.valueB ? 'select' : 'hidden',
-        required: true,
-        options: senderOptions
-      },
+      ...useSenderControl,
       {
         label: labelKey('startDateTime'),
         controlName: 'startDateTime',
         type: 'datepicker',
         displayTime: true,
-        minDate: this.minStartDateTime,
-        validators: [ minDate(this.minStartDateTime) ],
+        minDate: new Date(),
+        validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
         required: true
       },
       {
