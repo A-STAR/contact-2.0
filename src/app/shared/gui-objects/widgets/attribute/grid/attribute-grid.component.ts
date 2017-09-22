@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { ActivatedRoute } from '@angular/router';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
+import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
 import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
@@ -15,10 +16,10 @@ import { DialogFunctions } from '../../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
-  private _columns: Array<IGridTreeColumn<IAttribute>> = [
+  private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
     { label: 'Code', prop: 'code' },
     { label: 'Name', prop: 'name' },
-    { label: 'Value', valueFormatter: data => this.getValueByTypeCode(data) },
+    { label: 'Value', valueGetter: (_, data) => this.getValueByTypeCode(data), dictCode: data => data.dictNameCode },
     { label: 'UserFullName', prop: 'userFullName' },
     { label: 'ChangeDateTime', prop: 'changeDateTime' },
     { label: 'Comment', prop: 'comment' },
@@ -96,6 +97,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     switch (data.typeCode) {
       case 1:
       case 5:
+      case 6:
         return String(data.valueN);
       case 2:
       case 7:
@@ -104,8 +106,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
         return data.valueS;
       case 4:
         return String(data.valueB);
-      case 6:
-        return `DICT_${data.dictNameCode}[${data.valueN}]`;
     }
   }
 }
