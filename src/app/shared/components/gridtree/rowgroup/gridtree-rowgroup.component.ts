@@ -163,12 +163,14 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   }
 
   onClick(event: MouseEvent): void {
-    event.stopPropagation();
+    // event.stopPropagation();
+    console.log(1);
     this.gridTreeService.onSelect(this.row);
   }
 
   onDoubleClick(event: MouseEvent): void {
-    event.stopPropagation();
+    // event.stopPropagation();
+    console.log(2);
     this.gridTreeService.onDoubleClick(this.row);
   }
 }

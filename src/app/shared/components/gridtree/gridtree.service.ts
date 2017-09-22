@@ -25,6 +25,8 @@ export class GridTreeService<T> {
   }
 
   onDoubleClick(row: IGridTreeRow<T>): void {
+    console.log('onDoubleClick');
+    console.log(row);
     this.dblclick.emit(row);
   }
 

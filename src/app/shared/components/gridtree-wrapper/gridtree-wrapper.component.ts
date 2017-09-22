@@ -54,6 +54,7 @@ export class GridTreeWrapperComponent<T> {
   }
 
   onRowDblClick(row: IGridTreeRow<T>): void {
+    console.log(row);
     this.dblclick.emit(row);
   }
 

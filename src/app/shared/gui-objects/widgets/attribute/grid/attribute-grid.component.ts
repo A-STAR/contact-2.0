@@ -29,24 +29,16 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('add'),
-    },
-    {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('edit'),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('delete'),
+      action: () => this.setDialog('edit'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => console.log('fetch'),
+      action: () => this.fetch(),
     },
   ];
 
-  dialog: 'add' | 'edit' | 'delete';
+  dialog: 'edit';
 
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
@@ -69,11 +61,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onRowDblClick(row: IAttribute): void {
-    console.log('double click', row);
+    this.setDialog('edit');
+    this.cdRef.markForCheck();
   }
 
   onRowSelect(row: IAttribute): void {
-    console.log('select', row);
+  }
+
+  onEditDialogSubmit(attribute: Partial<IAttribute>): void {
+
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
