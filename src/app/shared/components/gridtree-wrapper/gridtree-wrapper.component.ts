@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output } from '@angular/core';
 
 import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree/gridtree.interface';
-import { IDataToValue, IGridWrapperTreeColumn } from './gridtree-wrapper.interface';
+import { IGridWrapperTreeColumn } from './gridtree-wrapper.interface';
 import { IOption } from '../../../core/converter/value-converter.interface';
 
 import { GridTreeWrapperService } from './gridtree-wrapper.service';
