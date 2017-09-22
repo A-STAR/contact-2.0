@@ -198,6 +198,7 @@
       </span>
     </label>
     <app-rich-text-editor
+      [disabled]="control.disabled"
       [formControlName]="control.controlName"
       [toolbar]="control.toolbar"
       (init)="control.onInit ? control.onInit($event) : null">

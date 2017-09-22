@@ -8,12 +8,14 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IMessageTemplate } from '../../message-template.interface';
 
 import { MessageTemplateService } from '../../message-template.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 import { RichTextEditorComponent } from '../../../../../components/form/rich-text-editor/rich-text-editor.component';
@@ -47,16 +49,21 @@ export class MessageTemplateGridEditComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private messageTemplateService: MessageTemplateService,
     private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
-    this.initControls();
+    this.canEdit$.subscribe(canEdit => this.initControls(canEdit));
     if (this.templateId) {
       this.messageTemplateService.fetch(this.templateId).subscribe(template => {
         this.template = template;
         this.cdRef.markForCheck();
       });
     }
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('TEMPLATE_EDIT');
   }
 
   get canSubmit(): boolean {
@@ -79,13 +86,14 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   getName = variable => variable.name;
 
-  private initControls(): void {
+  private initControls(canEdit: boolean): void {
     this.controls = [
       {
         label: labelKey('name'),
         controlName: 'name',
         type: 'text',
-        required: true
+        required: true,
+        disabled: !canEdit,
       },
       {
         label: labelKey('text'),
@@ -93,15 +101,27 @@ export class MessageTemplateGridEditComponent implements OnInit {
         required: true,
         type: 'richtexteditor',
         onInit: control => this.control = control,
-        toolbar: this.requiresRichTextEditor(this.typeCode)
+        toolbar: this.requiresRichTextEditor(this.typeCode),
+        disabled: !canEdit,
       },
     ] as IDynamicFormControl[];
 
     if (this.typeCode === MessageTemplateService.TYPE_SMS) {
       this.controls = [
         ...this.controls,
-        { label: labelKey('recipientTypeCode'), controlName: 'recipientTypeCode', type: 'select', options: [] },
-        { label: labelKey('isSingleSending'), controlName: 'isSingleSending', type: 'checkbox' },
+        {
+          label: labelKey('recipientTypeCode'),
+          controlName: 'recipientTypeCode',
+          type: 'select',
+          options: [],
+          disabled: !canEdit
+        },
+        {
+          label: labelKey('isSingleSending'),
+          controlName: 'isSingleSending',
+          type: 'checkbox',
+          disabled: !canEdit
+        },
       ];
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
         .subscribe(options => this.getControl('recipientTypeCode').options = options);

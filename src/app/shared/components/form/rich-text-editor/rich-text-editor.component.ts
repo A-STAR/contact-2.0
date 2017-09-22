@@ -35,6 +35,7 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
   private _value: string;
   private _quill: Quill;
   private _index = 0;
+  private _isDisabled = false;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -52,6 +53,8 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
       formats: this.toolbar ? undefined : [],
       theme: 'snow'
     });
+
+    this.updateDisabled();
 
     this._quill.on('text-change', () => {
       const html = this.editor.nativeElement.children[0].innerHTML;
@@ -82,6 +85,11 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(fn: Function): void {
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    this._isDisabled = isDisabled;
+    this.updateDisabled();
+  }
+
   get value(): string {
     return this._value;
   }
@@ -94,6 +102,17 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
     const selection = this._quill.getSelection();
     if (selection) {
       this._index = selection.index;
+    }
+  }
+
+  private updateDisabled(): void {
+    if (!this._quill) {
+      return;
+    }
+    if (this._isDisabled) {
+      this._quill.disable();
+    } else {
+      this._quill.enable();
     }
   }
 
