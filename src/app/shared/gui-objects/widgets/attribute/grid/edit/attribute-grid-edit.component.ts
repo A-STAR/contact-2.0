@@ -1,7 +1,18 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 import { IAttribute } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+
+import { AttributeService } from '../../attribute.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -14,7 +25,11 @@ const labelKey = makeKey('widgets.attribute.grid');
   templateUrl: './attribute-grid-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeGridEditComponent {
+export class AttributeGridEditComponent implements OnInit {
+  @Input() attributeCode: number;
+  @Input() debtId: number;
+  @Input() entityTypeId: number;
+
   @Output() submit = new EventEmitter<Partial<IAttribute>>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -22,13 +37,27 @@ export class AttributeGridEditComponent {
 
   controls: IDynamicFormControl[] = [
     {
-      label: labelKey('name'),
-      controlName: 'name',
+      label: labelKey('value'),
+      controlName: 'value',
       type: 'text',
-      required: true
+      required: true,
+    },
+    {
+      label: labelKey('comment'),
+      controlName: 'comment',
+      type: 'textarea',
     },
   ];
   attribute: IAttribute;
+
+  constructor(
+    private attributeService: AttributeService,
+    private cdRef: ChangeDetectorRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.fetch();
+  }
 
   get canSubmit(): boolean {
     return false;
@@ -40,5 +69,12 @@ export class AttributeGridEditComponent {
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  private fetch(): void {
+    this.attributeService.fetch(this.entityTypeId, this.debtId, this.attributeCode).subscribe(attribute => {
+      this.attribute = attribute;
+      this.cdRef.markForCheck();
+    });
   }
 }

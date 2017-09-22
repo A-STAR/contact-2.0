@@ -1,5 +1,8 @@
 <app-attribute-grid-edit
   *ngIf="isDialog('edit')"
+  [attributeCode]="selectedAttributeCode$ | async"
+  [debtId]="debtId"
+  [entityTypeId]="entityTypeId"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-attribute-grid-edit>

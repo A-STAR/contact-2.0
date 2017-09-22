@@ -49,9 +49,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
-  private debtId = (<any>this.route.params).value.debtId;
+  debtId = (<any>this.route.params).value.debtId;
   // TODO(d.maltsev): entityTypeId should be configurable
-  private entityTypeId = 19;
+  entityTypeId = 19;
 
   constructor(
     private attributeService: AttributeService,
@@ -68,6 +68,10 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
     return this._columns;
+  }
+
+  get selectedAttributeCode$(): Observable<number> {
+    return this.selectedAttribute$.map(attribute => attribute.code);
   }
 
   onRowDblClick(attribute: IAttribute): void {

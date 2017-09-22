@@ -29,7 +29,7 @@ export class AttributeService {
   fetch(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeResponse> {
     return this.dataService
       .read(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode })
-      .map((response: IResponse<IAttributeResponse>) => response.data)
+      .map((response: IResponse<IAttributeResponse>) => response.data[0])
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
