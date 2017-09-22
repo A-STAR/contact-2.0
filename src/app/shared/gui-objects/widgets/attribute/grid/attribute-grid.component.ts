@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
@@ -7,9 +9,11 @@ import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/g
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
 
 @Component({
@@ -27,10 +31,13 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     { label: 'Comment', prop: 'comment' },
   ];
 
+  selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
+      enabled: this.canEdit$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -43,11 +50,14 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
   private debtId = (<any>this.route.params).value.debtId;
+  // TODO(d.maltsev): entityTypeId should be configurable
+  private entityTypeId = 19;
 
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
   }
@@ -60,12 +70,19 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     return this._columns;
   }
 
-  onRowDblClick(row: IAttribute): void {
-    this.setDialog('edit');
-    this.cdRef.markForCheck();
+  onRowDblClick(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+    this.canEdit$
+      .take(1)
+      .filter(Boolean)
+      .subscribe(() => {
+        this.setDialog('edit');
+        this.cdRef.markForCheck();
+      });
   }
 
-  onRowSelect(row: IAttribute): void {
+  onRowSelect(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
@@ -73,6 +90,13 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
+
+  private get canEdit$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+      this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+    ]);
+  }
 
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
     return attributes.map(attribute => {
@@ -85,7 +109,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll(19, this.debtId).subscribe(attributes => {
+    this.attributeService.fetchAll(this.entityTypeId, this.debtId).subscribe(attributes => {
       this.rows = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });

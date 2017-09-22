@@ -12,6 +12,7 @@ export interface IAttribute {
   userFullName: string;
   changeDateTime: string;
   sortOrder: number;
+  disabledValue: number;
 }
 
 export interface IAttributeResponse extends IAttribute {
