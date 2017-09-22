@@ -83,9 +83,10 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   }
 
   getFormattedValue(column: IGridTreeColumn<T>): string {
+    const valueByProp = this.row.data[column.prop] as any;
     const value = column.valueGetter
-      ? column.valueGetter(null, this.row.data)
-      : this.row.data[column.prop] as any;
+      ? column.valueGetter(valueByProp, this.row.data)
+      : valueByProp;
     const formattedValue = column.valueFormatter
       ? column.valueFormatter(value, this.row.data)
       : value;
