@@ -190,7 +190,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_BLOCK_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
@@ -206,11 +206,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_BLOCK').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_SET_INACTIVE').distinctUntilChanged();
   }
 
   get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_UNBLOCK').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_SET_ACTIVE').distinctUntilChanged();
   }
 
   private onAdd(): void {
