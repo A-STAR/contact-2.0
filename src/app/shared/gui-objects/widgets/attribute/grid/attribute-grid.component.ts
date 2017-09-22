@@ -10,6 +10,8 @@ import { AttributeService } from '../attribute.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
+import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
+
 @Component({
   selector: 'app-attribute-grid',
   templateUrl: './attribute-grid.component.html',
@@ -19,7 +21,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
     { label: 'Code', prop: 'code' },
     { label: 'Name', prop: 'name' },
-    { label: 'Value', valueGetter: (_, data) => this.getValueByTypeCode(data), dictCode: data => data.dictNameCode },
+    { label: 'Value', valueGetter: (_, data) => getRawValue(data), dictCode: data => getDictCodeForValue(data) },
     { label: 'UserFullName', prop: 'userFullName' },
     { label: 'ChangeDateTime', prop: 'changeDateTime' },
     { label: 'Comment', prop: 'comment' },
@@ -91,21 +93,5 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
       this.rows = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });
-  }
-
-  private getValueByTypeCode(data: IAttribute): boolean | number | string | Date {
-    switch (data.typeCode) {
-      case 1:
-      case 5:
-      case 6:
-        return data.valueN;
-      case 2:
-      case 7:
-        return data.valueD;
-      case 3:
-        return data.valueS;
-      case 4:
-        return data.valueB;
-    }
   }
 }
