@@ -1,4 +1,4 @@
-export type IDataToValue<T, R> = (value: string | number | Date, data: T) => R;
+export type IDataToValue<T, R> = (value: boolean | number | string | Date, data: T) => R;
 
 export interface IGridWrapperTreeColumn<T> {
   label: string;

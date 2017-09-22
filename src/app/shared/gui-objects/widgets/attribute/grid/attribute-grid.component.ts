@@ -93,19 +93,19 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     });
   }
 
-  private getValueByTypeCode(data: IAttribute): string {
+  private getValueByTypeCode(data: IAttribute): boolean | number | string | Date {
     switch (data.typeCode) {
       case 1:
       case 5:
       case 6:
-        return String(data.valueN);
+        return data.valueN;
       case 2:
       case 7:
-        return String(data.valueD);
+        return data.valueD;
       case 3:
         return data.valueS;
       case 4:
-        return String(data.valueB);
+        return data.valueB;
     }
   }
 }

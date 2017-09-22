@@ -4,12 +4,12 @@ export interface IGridTreeRow<T> {
   isExpanded?: boolean;
 }
 
-type IDataToValue<T, R> = (value: string | number | Date, data: T) => R;
+type IDataToValue<T, R> = (value: boolean | number | string | Date, data: T) => R;
 
 export interface IGridTreeColumn<T> {
   label: string;
   prop?: keyof T;
-  valueGetter?: IDataToValue<T, string | number | Date>;
+  valueGetter?: IDataToValue<T, boolean | number | string | Date>;
   valueFormatter?: IDataToValue<T, string>;
 }
 
