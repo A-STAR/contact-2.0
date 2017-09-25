@@ -9,11 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IAttribute, IAttributeForm, IAttributeResponse } from '../../attribute.interface';
+import { IAttribute, IAttributeForm } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
-
-import { AttributeService } from '../../attribute.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -42,7 +40,6 @@ export class AttributeGridEditComponent implements OnInit {
   formData: IAttributeForm;
 
   constructor(
-    private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
     private userDictionariesService: UserDictionariesService,
   ) {}
