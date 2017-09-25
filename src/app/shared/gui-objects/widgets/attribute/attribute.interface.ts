@@ -15,6 +15,11 @@ export interface IAttribute {
   disabledValue: number;
 }
 
+export interface IAttributeForm {
+  value: number | string;
+  comment: string;
+}
+
 export interface IAttributeResponse extends IAttribute {
   children: IAttributeResponse[];
 }

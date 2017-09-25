@@ -90,7 +90,11 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
-
+    this.attributeService.update(this.entityTypeId, this.debtId, this.selectedAttribute$.value.code, attribute).subscribe(() => {
+      this.fetch();
+      this.setDialog(null);
+      this.cdRef.markForCheck();
+    });
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
