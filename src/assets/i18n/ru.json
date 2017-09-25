@@ -1074,6 +1074,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },

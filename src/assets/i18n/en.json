@@ -1074,6 +1074,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "attribute", "plural": "attribtues" }
+    },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },

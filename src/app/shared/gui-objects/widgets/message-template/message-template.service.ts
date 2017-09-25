@@ -57,6 +57,6 @@ export class MessageTemplateService {
     return this.dataService
       .read('/templates/{typeCode}/recipients/{recipientTypeCode}/attributes', { typeCode, recipientTypeCode })
       .map((response: IMessageTemplatesAttributesResponse) => response.attributes)
-      .catch(this.notificationsService.fetchError().entity(`entities.messageTemplate.attribute.gen.plural`).dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(`entities.attribute.gen.plural`).dispatchCallback());
   }
 }
