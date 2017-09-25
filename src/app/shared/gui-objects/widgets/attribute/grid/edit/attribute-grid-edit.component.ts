@@ -29,7 +29,7 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridEditComponent implements OnInit {
-  @Input() attributeCode: number;
+  @Input() selectedAttribute: IAttribute;
   @Input() debtId: number;
   @Input() entityTypeId: number;
 
@@ -39,7 +39,6 @@ export class AttributeGridEditComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
-  attribute: IAttribute;
   formData: IAttributeForm;
 
   constructor(
@@ -49,7 +48,12 @@ export class AttributeGridEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetch();
+    if (this.selectedAttribute.dictNameCode) {
+      this.userDictionariesService.getDictionaryAsOptions(this.selectedAttribute.dictNameCode)
+        .subscribe(options => this.onInit(options));
+    } else {
+      this.onInit();
+    }
   }
 
   get canSubmit(): boolean {
@@ -58,33 +62,22 @@ export class AttributeGridEditComponent implements OnInit {
 
   onSubmit(): void {
     const { value, ...rest } = this.form.getSerializedUpdates();
-    this.submit.emit({
+    const data = {
       ...rest,
-      ...(value ? getValue(this.attribute.typeCode, value) : {})
-    });
+      ...getValue(this.selectedAttribute.typeCode, value)
+    };
+    this.submit.emit(data);
   }
 
   onCancel(): void {
     this.cancel.emit();
   }
 
-  private fetch(): void {
-    this.attributeService.fetch(this.entityTypeId, this.debtId, this.attributeCode).subscribe(attribute => {
-      if (attribute.dictNameCode) {
-        this.userDictionariesService.getDictionaryAsOptions(attribute.dictNameCode)
-          .subscribe(options => this.onFetch(attribute, options));
-      } else {
-        this.onFetch(attribute);
-      }
-    });
-  }
-
-  private onFetch(attribute: IAttributeResponse, options: IOption[] = null): void {
-    this.controls = this.buildControls(attribute, options);
-    this.attribute = attribute;
+  private onInit(options: IOption[] = null): void {
+    this.controls = this.buildControls(this.selectedAttribute, options);
     this.formData = {
-      comment: this.attribute.comment,
-      value: getRawValue(this.attribute)
+      comment: this.selectedAttribute.comment,
+      value: getRawValue(this.selectedAttribute)
     };
     this.cdRef.markForCheck();
   }
