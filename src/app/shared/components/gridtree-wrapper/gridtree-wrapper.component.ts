@@ -14,13 +14,13 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
   providers: [ GridTreeWrapperService ]
 })
 export class GridTreeWrapperComponent<T> {
-  @Input() columns: Array<IGridWrapperTreeColumn<T>> = [];
-
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
   private _dictionaries: { [key: number]: IOption[] };
-  private _rows: Array<IGridTreeRow<T>> = [];
+  private _columns: IGridWrapperTreeColumn<T>[];
+  private _columnsForGrid: IGridTreeColumn<T>[];
+  private _rows: IGridTreeRow<T>[] = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -28,12 +28,24 @@ export class GridTreeWrapperComponent<T> {
   ) {}
 
   get columnsForGrid(): IGridTreeColumn<T>[] {
-    return this.columns.map(column => ({
+    return this._columnsForGrid;
+  }
+
+  get columns(): IGridWrapperTreeColumn<T>[] {
+    return this._columns;
+  }
+
+  @Input('columns')
+  set columns(columns: IGridWrapperTreeColumn<T>[]) {
+    this._columns = columns;
+    this._columnsForGrid = columns.map(column => ({
       label: column.label,
       prop: column.prop,
       valueGetter: column.valueGetter,
       valueFormatter: column.dictCode ? this.dictCodeFormatter(column.dictCode, column.valueFormatter) : column.valueFormatter,
     }));
+    this.loadDictionaries();
+    this.cdRef.markForCheck();
   }
 
   get rows(): Array<IGridTreeRow<T>> {
@@ -58,7 +70,7 @@ export class GridTreeWrapperComponent<T> {
   }
 
   private loadDictionaries(): void {
-    const dictCodes = this.columns
+    const dictCodes = this._columns
       .map(column => column.dictCode)
       .filter(Boolean)
       .reduce((acc, dictCode) => [ ...acc, ...this.getRowDictCodes(dictCode, this._rows) ], [])
