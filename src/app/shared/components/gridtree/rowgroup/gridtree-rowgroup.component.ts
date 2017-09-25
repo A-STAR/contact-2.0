@@ -24,6 +24,7 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   @HostBinding('attr.draggable') draggable = true;
 
   @Input() columns: Array<IGridTreeColumn<T>> = [];
+  @Input() dnd: boolean;
   @Input() idGetter = null as IUniqueIdGetter<T>;
   @Input() nestingLevel = 0;
   @Input() row = null as IGridTreeRow<T>;
@@ -82,8 +83,22 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
     };
   }
 
+  getFormattedValue(column: IGridTreeColumn<T>): string {
+    const valueByProp = this.row.data[column.prop] as any;
+    const value = column.valueGetter
+      ? column.valueGetter(valueByProp, this.row.data)
+      : valueByProp;
+    const formattedValue = column.valueFormatter
+      ? column.valueFormatter(value, this.row.data)
+      : value;
+    return formattedValue === undefined ? null : String(formattedValue);
+  }
+
   @HostListener('dragstart', ['$event'])
   onDragStart(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDragged = true;
     this.gridTreeService.onDragStart(event, this.row);
@@ -92,23 +107,35 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
 
   @HostListener('dragend', ['$event'])
   onDragEnd(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDragged = false;
     this.cdRef.markForCheck();
   }
 
   onDrop(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this.gridTreeService.onDrop(event, this.row);
     this.cdRef.markForCheck();
   }
 
   onDragOver(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     event.preventDefault();
   }
 
   onDragEnter(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDraggedOver = true;
     this._isDraggedOverDivider = false;
@@ -116,23 +143,35 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   }
 
   onDragLeave(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDraggedOver = false;
     this.cdRef.markForCheck();
   }
 
   onDividerDrop(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this.gridTreeService.onDividerDrop(event, this.row);
     this.cdRef.markForCheck();
   }
 
   onDividerDragOver(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     event.preventDefault();
   }
 
   onDividerDragEnter(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDraggedOver = false;
     this._isDraggedOverDivider = true;
@@ -140,6 +179,9 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
   }
 
   onDividerDragLeave(event: DragEvent): void {
+    if (!this.dnd) {
+      return;
+    }
     event.stopPropagation();
     this._isDraggedOverDivider = false;
     this.cdRef.markForCheck();

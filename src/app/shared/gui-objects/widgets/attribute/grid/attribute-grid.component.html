@@ -1,17 +1,18 @@
-<br>
-
-<select class="form-control" (change)="onChange($event)">
-  <option *ngFor="let option of options$ | async" [value]="option.value">{{ option.label }}</option>
-</select>
-
-<br>
+<app-attribute-grid-edit
+  *ngIf="isDialog('edit')"
+  [selectedAttribute]="selectedAttribute$ | async"
+  [debtId]="debtId"
+  [entityTypeId]="entityTypeId"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-attribute-grid-edit>
 
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
-<app-gridtree
+<app-gridtree-wrapper
   [columns]="columns"
-  [height]="300"
+  [idGetter]="idGetter"
   [rows]="rows"
   (dblclick)="onRowDblClick($event)"
   (select)="onRowSelect($event)">
-</app-gridtree>
+</app-gridtree-wrapper>

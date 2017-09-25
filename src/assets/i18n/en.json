@@ -600,7 +600,7 @@
       "title": "Debt info"
     },
     "attributesTab": {
-      "title": "Attribute settings"
+      "title": "Attributes"
     }
   },
   "person": {
@@ -820,6 +820,21 @@
           "title": "Remove address",
           "confirmMessage": "Are you sure you want to remove the address {{ fullAddress }}?"
         }
+      }
+    },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Edit Attribute"
+        }
+      },
+      "grid": {
+        "code": "Code",
+        "name": "Name",
+        "value": "Value",
+        "userFullName": "Operator",
+        "changeDateTime": "Change date/time",
+        "comment": "Comments"
       }
     },
     "contact": {
@@ -1063,6 +1078,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "attribute", "plural": "attribtues" }
+    },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },

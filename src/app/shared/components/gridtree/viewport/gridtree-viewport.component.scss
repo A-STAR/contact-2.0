@@ -1,6 +1,7 @@
 :host {
-  display: block;
-  height: 300px;
-  overflow: auto;
+  display: inline-block;
+  height: 320px;
+  overflow-x: visible;
+  overflow-y: auto;
   position: relative;
 }
