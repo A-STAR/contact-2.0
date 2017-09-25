@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IAttribute, IAttributeForm, IAttributeResponse } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
