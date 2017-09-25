@@ -10,6 +10,7 @@ import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree.inte
 })
 export class GridTreeViewportComponent<T> {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
+  @Input() dnd: boolean;
   @Input() idGetter = null as IUniqueIdGetter<T>;
   @Input() rows: Array<IGridTreeRow<T>> = [];
 }
