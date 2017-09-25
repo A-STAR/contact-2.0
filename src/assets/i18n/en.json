@@ -819,6 +819,11 @@
       }
     },
     "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Edit Attribute"
+        }
+      },
       "grid": {
         "code": "Code",
         "name": "Name",
