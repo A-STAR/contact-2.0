@@ -94,7 +94,6 @@ export class AttributeGridEditComponent implements OnInit {
       {
         label: labelKey('value'),
         controlName: 'value',
-        required: true,
         ...getFormControlConfig(attribute),
         ...(options ? { options } : {}),
       },
