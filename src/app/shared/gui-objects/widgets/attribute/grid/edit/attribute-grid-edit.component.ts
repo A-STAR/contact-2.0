@@ -8,12 +8,15 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
-import { IAttribute, IAttributeForm } from '../../attribute.interface';
+import { IAttribute, IAttributeForm, IAttributeResponse } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
 import { AttributeService } from '../../attribute.service';
 
+import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { getFormControlConfig, getRawValue, getValue } from '../../../../../../core/utils/value';
@@ -43,6 +46,7 @@ export class AttributeGridEditComponent implements OnInit {
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
@@ -68,25 +72,32 @@ export class AttributeGridEditComponent implements OnInit {
   private fetch(): void {
     this.attributeService.fetch(this.entityTypeId, this.debtId, this.attributeCode).subscribe(attribute => {
       if (attribute.dictNameCode) {
-        console.log(attribute.dictNameCode);
+        this.userDictionariesService.getDictionaryAsOptions(attribute.dictNameCode)
+          .subscribe(options => this.onFetch(attribute, options));
+      } else {
+        this.onFetch(attribute);
       }
-      this.controls = this.buildControls(attribute);
-      this.attribute = attribute;
-      this.formData = {
-        comment: this.attribute.comment,
-        value: getRawValue(this.attribute)
-      };
-      this.cdRef.markForCheck();
     });
   }
 
-  private buildControls(attribute: IAttribute): IDynamicFormControl[] {
+  private onFetch(attribute: IAttributeResponse, options: IOption[] = null): void {
+    this.controls = this.buildControls(attribute, options);
+    this.attribute = attribute;
+    this.formData = {
+      comment: this.attribute.comment,
+      value: getRawValue(this.attribute)
+    };
+    this.cdRef.markForCheck();
+  }
+
+  private buildControls(attribute: IAttribute, options: IOption[]): IDynamicFormControl[] {
     return [
       {
         label: labelKey('value'),
         controlName: 'value',
         required: true,
-        ...getFormControlConfig(attribute)
+        ...getFormControlConfig(attribute),
+        ...(options ? { options } : {}),
       },
       {
         label: labelKey('comment'),
