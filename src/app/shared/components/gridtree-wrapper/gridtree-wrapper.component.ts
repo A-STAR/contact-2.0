@@ -38,14 +38,8 @@ export class GridTreeWrapperComponent<T> {
   @Input('columns')
   set columns(columns: IGridWrapperTreeColumn<T>[]) {
     this._columns = columns;
-    this._columnsForGrid = columns.map(column => ({
-      label: column.label,
-      prop: column.prop,
-      valueGetter: column.valueGetter,
-      valueFormatter: column.dictCode ? this.dictCodeFormatter(column.dictCode, column.valueFormatter) : column.valueFormatter,
-    }));
+    this.updateColumnsForGrid();
     this.loadDictionaries();
-    this.cdRef.markForCheck();
   }
 
   get rows(): Array<IGridTreeRow<T>> {
@@ -56,7 +50,6 @@ export class GridTreeWrapperComponent<T> {
   set rows(rows: Array<IGridTreeRow<T>>) {
     this._rows = rows;
     this.loadDictionaries();
-    this.cdRef.markForCheck();
   }
 
   @Input() idGetter = ((row: IGridTreeRow<T>) => row.data['id']) as IUniqueIdGetter<T>;
@@ -80,6 +73,7 @@ export class GridTreeWrapperComponent<T> {
       .take(1)
       .subscribe(dictionaries => {
         this._dictionaries = dictionaries;
+        this.updateColumnsForGrid();
         this.cdRef.markForCheck();
       });
   }
@@ -103,5 +97,16 @@ export class GridTreeWrapperComponent<T> {
       const formattedValue = option ? option.label : value;
       return valueFormatter ? valueFormatter(formattedValue, data) : formattedValue;
     };
+  }
+
+  private updateColumnsForGrid(): void {
+    this._columnsForGrid = this._columns.map(column => ({
+      label: column.label,
+      prop: column.prop,
+      valueGetter: column.valueGetter,
+      valueFormatter: column.dictCode
+        ? this.dictCodeFormatter(column.dictCode, column.valueFormatter)
+        : column.valueFormatter,
+    }));
   }
 }
