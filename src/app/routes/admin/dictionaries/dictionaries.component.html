@@ -1,3 +1,10 @@
-<app-dict></app-dict>
-<br>
-<app-terms></app-terms>
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab [title]="'dictionaries.tabs.dictionaries'" [closable]="false">
+    <app-dict></app-dict>
+    <app-hdivider></app-hdivider>
+    <app-terms></app-terms>
+  </app-tab>
+  <app-tab [title]="'dictionaries.tabs.attributes'" [closable]="false">
+    ATTRIBUTES
+  </app-tab>
+</app-tabstrip>

@@ -33,7 +33,7 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
-        "DICTIONARIES": "Словари",
+        "DICTIONARIES": "Справочники",
         "PORTFOLIOS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -323,6 +323,10 @@
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
+    },
+    "tabs": {
+      "dictionaries": "Словари",
+      "attributes": "Атрибуты"
     }
   },
   "terms": {

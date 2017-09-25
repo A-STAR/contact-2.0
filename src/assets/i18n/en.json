@@ -33,7 +33,7 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
-        "DICTIONARIES": "Dictionaries",
+        "DICTIONARIES": "Reference",
         "PORTFOLIOS": "Portfolios",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
@@ -323,6 +323,10 @@
     },
     "errors": {
       "view": "Access to dictionaries list denied"
+    },
+    "tabs": {
+      "dictionaries": "Dictionaries",
+      "attributes": "Attributes"
     }
   },
   "terms": {
