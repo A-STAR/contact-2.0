@@ -818,6 +818,16 @@
         }
       }
     },
+    "attribute": {
+      "grid": {
+        "code": "Код",
+        "name": "Название",
+        "value": "Значение",
+        "userFullName": "Оператор",
+        "changeDateTime": "Дата/время изменения",
+        "comment": "Комментарий"
+      }
+    },
     "contact": {
       "grid": {
         "fullName": "ФИО",

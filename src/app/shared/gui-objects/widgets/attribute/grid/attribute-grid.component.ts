@@ -16,6 +16,10 @@ import { DialogFunctions } from '../../../../../core/dialog';
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
 
+import { makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('widgets.attribute.grid');
+
 @Component({
   selector: 'app-attribute-grid',
   templateUrl: './attribute-grid.component.html',
@@ -23,12 +27,12 @@ import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/valu
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
-    { label: 'Code', prop: 'code' },
-    { label: 'Name', prop: 'name' },
-    { label: 'Value', valueGetter: (_, data) => getRawValue(data), dictCode: data => getDictCodeForValue(data) },
-    { label: 'UserFullName', prop: 'userFullName' },
-    { label: 'ChangeDateTime', prop: 'changeDateTime' },
-    { label: 'Comment', prop: 'comment' },
+    { label: labelKey('code'), prop: 'code' },
+    { label: labelKey('name'), prop: 'name' },
+    { label: labelKey('value'), valueGetter: (_, data) => getRawValue(data), dictCode: data => getDictCodeForValue(data) },
+    { label: labelKey('userFullName'), prop: 'userFullName' },
+    { label: labelKey('changeDateTime'), prop: 'changeDateTime' },
+    { label: labelKey('comment'), prop: 'comment' },
   ];
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
