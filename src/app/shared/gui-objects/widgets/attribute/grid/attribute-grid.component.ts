@@ -27,12 +27,37 @@ const labelKey = makeKey('widgets.attribute.grid');
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
-    { label: labelKey('code'), prop: 'code' },
-    { label: labelKey('name'), prop: 'name' },
-    { label: labelKey('value'), valueGetter: (_, data) => getRawValue(data), dictCode: data => getDictCodeForValue(data) },
-    { label: labelKey('userFullName'), prop: 'userFullName' },
-    { label: labelKey('changeDateTime'), prop: 'changeDateTime' },
-    { label: labelKey('comment'), prop: 'comment' },
+    {
+      label: labelKey('code'),
+      prop: 'code',
+    },
+    {
+      label: labelKey('name'),
+      prop: 'name',
+    },
+    {
+      label: labelKey('value'),
+      valueGetter: (_, data) => getRawValue(data),
+      valueFormatter: (value, data) => {
+        if ([2, 7].includes(data.typeCode)) {
+          return value === undefined ? '' : 'Date: ' + value;
+        }
+        return value === undefined ? '' : String(value);
+      },
+      dictCode: data => getDictCodeForValue(data),
+    },
+    {
+      label: labelKey('userFullName'),
+      prop: 'userFullName',
+    },
+    {
+      label: labelKey('changeDateTime'),
+      prop: 'changeDateTime',
+    },
+    {
+      label: labelKey('comment'),
+      prop: 'comment',
+    },
   ];
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);

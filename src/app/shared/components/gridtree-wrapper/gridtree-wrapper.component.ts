@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output } from '@angular/core';
 
 import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree/gridtree.interface';
-import { IGridWrapperTreeColumn } from './gridtree-wrapper.interface';
+import { IDataToValue, IGridWrapperTreeColumn } from './gridtree-wrapper.interface';
 import { IOption } from '../../../core/converter/value-converter.interface';
 
 import { GridTreeWrapperService } from './gridtree-wrapper.service';
@@ -32,7 +32,7 @@ export class GridTreeWrapperComponent<T> {
       label: column.label,
       prop: column.prop,
       valueGetter: column.valueGetter,
-      valueFormatter: column.dictCode ? this.dictCodeFormatter(column.dictCode) : column.valueFormatter,
+      valueFormatter: column.dictCode ? this.dictCodeFormatter(column.dictCode, column.valueFormatter) : column.valueFormatter,
     }));
   }
 
@@ -61,12 +61,7 @@ export class GridTreeWrapperComponent<T> {
     const dictCodes = this.columns
       .map(column => column.dictCode)
       .filter(Boolean)
-      .reduce((acc, dictCode) => {
-        const dictCodesToAdd = dictCode instanceof Function
-          ? this._rows.map(row => dictCode(row.data)).filter(Boolean)
-          : [ dictCode ];
-        return [ ...acc, ...dictCodesToAdd ];
-      }, [])
+      .reduce((acc, dictCode) => [ ...acc, ...this.getRowDictCodes(dictCode, this._rows) ], [])
       .reduce((acc, dictCode) => acc.includes(dictCode) ? acc : [ ...acc, dictCode ], []);
 
     this.userDictionariesService.getDictionariesAsOptions(dictCodes)
@@ -77,16 +72,24 @@ export class GridTreeWrapperComponent<T> {
       });
   }
 
-  private dictCodeFormatter(dictCode: number | ((row: T) => number)): any {
-    // TODO(d.maltsev): compose value formatter
+  private getRowDictCodes(dictCode: any, rows: IGridTreeRow<T>[] = []): number[] {
+    return dictCode instanceof Function
+      ? rows
+          .reduce((acc, row) => [ ...acc, ...this.getRowDictCodes(dictCode, row.children), dictCode(row.data) ], [])
+          .filter(Boolean)
+      : [ dictCode ];
+  }
+
+  private dictCodeFormatter(dictCode: number | ((row: T) => number), valueFormatter: IDataToValue<T, string>): any {
     return (value, data) => {
       const dictCodeValue = dictCode instanceof Function ? dictCode(data) : dictCode;
       const dictionary = this._dictionaries[dictCodeValue];
       if (!dictionary) {
-        return value;
+        return valueFormatter ? valueFormatter(value, data) : value;
       }
       const option = dictionary.find(o => String(o.value) === String(value));
-      return option ? option.label : value;
+      const formattedValue = option ? option.label : value;
+      return valueFormatter ? valueFormatter(formattedValue, data) : formattedValue;
     };
   }
 }
