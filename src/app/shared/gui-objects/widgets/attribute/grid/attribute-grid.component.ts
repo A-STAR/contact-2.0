@@ -10,6 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolba
 
 import { AttributeService } from '../attribute.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -38,11 +39,16 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     {
       label: labelKey('value'),
       valueGetter: (_, data) => getRawValue(data),
+      // TODO(d.maltsev): predefined formatting options e.g. 'date', 'datetime', etc.
       valueFormatter: (value, data) => {
-        if ([2, 7].includes(data.typeCode)) {
-          return value === undefined ? '' : 'Date: ' + value;
+        switch (data.typeCode) {
+          case 2:
+            return this.valueConverterService.ISOToLocalDate(value as string) || '';
+          case 7:
+            return this.valueConverterService.ISOToLocalDateTime(value as string) || '';
+          default:
+            return value as string;
         }
-        return value === undefined ? '' : String(value);
       },
       dictCode: data => getDictCodeForValue(data),
     },
@@ -53,6 +59,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     {
       label: labelKey('changeDateTime'),
       prop: 'changeDateTime',
+      valueFormatter: value => this.valueConverterService.ISOToLocalDateTime(value as string) || '',
     },
     {
       label: labelKey('comment'),
@@ -87,6 +94,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
   ) {
     super();
   }
