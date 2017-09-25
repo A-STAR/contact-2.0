@@ -32,8 +32,9 @@ export const getRawValue = <T extends IValue>(value: T): number | string => {
       return value.valueD;
     case TYPE_CODES.STRING:
       return value.valueS;
+    // TODO(d.maltsev): maybe this should be boolean or at least number?
     case TYPE_CODES.BOOLEAN:
-      return value.valueB;
+      return String(value.valueB);
   };
 }
 

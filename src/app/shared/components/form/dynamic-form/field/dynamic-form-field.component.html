@@ -26,7 +26,7 @@
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
-      {{ control.label | translate }}
+      <b>{{ control.label | translate }}</b>
     </span>
     <label class="radio-inline">
       <input type="radio" [formControlName]="control.controlName" value="1">
