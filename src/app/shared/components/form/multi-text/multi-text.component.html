@@ -1,0 +1,11 @@
+<app-select
+  [ngModel]="options"
+  [multiple]="true"
+  [options]="options"
+  [nullable]="false"
+  (onSelect)="onSelectedValueChange($event)">
+</app-select>
+
+<input class="form-control mt-sm" type="text" [ngModel]="displayValue" (ngModelChange)="onValueChange($event)">
+
+{{ _values | json }}

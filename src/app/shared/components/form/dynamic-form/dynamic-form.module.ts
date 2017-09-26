@@ -7,6 +7,7 @@ import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
+import { MultiTextModule } from '../multi-text/multi-text.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
@@ -24,6 +25,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     DropdownInputModule,
     FileUploadModule,
     ImageUploadModule,
+    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     RadioGroupModule,

@@ -82,6 +82,7 @@ export type ControlTypes =
   | 'text'
   | 'textarea'
   | 'richtexteditor'
+  | 'multitext'
 ;
 
 export interface IValue {

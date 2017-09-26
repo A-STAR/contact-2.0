@@ -42,7 +42,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
+    { label: labelKey('name'), controlName: 'name', type: 'multitext', multiple: true, options: [{ label: 'Russian', value: 1 }, { label: 'English', value: 2 }], required: true },
     { label: labelKey('code'), controlName: 'code', type: 'text', required: true },
     { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', options: [], required: true },
     { label: labelKey('dictNameCode'), controlName: 'dictNameCode', type: 'hidden', options: [], required: true },
@@ -72,10 +72,13 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
         this.getControl('dictNameCode').options = dictionaries;
         this.getControl('dictNameCode').type = 'select';
       }
-      this.attribute = attribute;
+      this.attribute = {
+        ...attribute,
+        name: translations
+      };
       this.cdRef.markForCheck();
 
-      console.log(translations);
+      // console.log(translations);
     });
   }
 
