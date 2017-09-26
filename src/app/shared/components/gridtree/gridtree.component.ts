@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -18,7 +18,7 @@ import { GridTreeService } from './gridtree.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ GridTreeService ]
 })
-export class GridTreeComponent<T> implements OnDestroy {
+export class GridTreeComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() dnd = false;
 
@@ -32,7 +32,9 @@ export class GridTreeComponent<T> implements OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridTreeService: GridTreeService<T>,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     if (this.dnd) {
       this.gridTreeServiceSubscription = this.gridTreeService.drop.subscribe((event: IGridTreeDragAndDropEvent<T>) => {
         if (

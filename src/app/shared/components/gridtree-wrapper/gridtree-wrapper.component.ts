@@ -14,6 +14,7 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
   providers: [ GridTreeWrapperService ]
 })
 export class GridTreeWrapperComponent<T> {
+  @Input() dnd = false;
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
