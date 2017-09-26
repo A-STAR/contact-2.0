@@ -18,6 +18,10 @@ export class EntityTranslationsService {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_TERM_NAME);
   }
 
+  readAttributeNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_ATTRIBUTE_NAME);
+  }
+
   private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
     return this.dataService
       .read('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {

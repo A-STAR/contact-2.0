@@ -17,6 +17,7 @@ import { IAttribute } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { AttributeService } from '../../attribute.service';
+import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -54,6 +55,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private entityTranslationsService: EntityTranslationsService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -62,15 +64,18 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
     this._formSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VARIABLE_TYPE),
       this.lookupService.lookupAsOptions('dictionaries'),
-      this.attributeService.fetch(this.attributeId),
-    ).subscribe(([ types, dictionaries, attribute ]) => {
+      this.attributeId ? this.attributeService.fetch(this.attributeId) : Observable.of(null),
+      this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : Observable.of(null),
+    ).subscribe(([ types, dictionaries, attribute, translations ]) => {
       this.getControl('typeCode').options = types;
-      if (attribute.typeCode === TYPE_CODES.DICT) {
+      if (attribute && attribute.typeCode === TYPE_CODES.DICT) {
         this.getControl('dictNameCode').options = dictionaries;
         this.getControl('dictNameCode').type = 'select';
       }
       this.attribute = attribute;
       this.cdRef.markForCheck();
+
+      console.log(translations);
     });
   }
 
