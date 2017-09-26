@@ -20,6 +20,8 @@ const labelKey = makeKey('widgets.attribute.grid');
   templateUrl: './attribute-grid.component.html'
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
+  selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
+
   columns: Array<IGridWrapperTreeColumn<any>> = [
     {
       label: labelKey('name'),
@@ -68,6 +70,19 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   ngOnInit(): void {
     this.fetch();
+  }
+
+  get selectedAttributeId$(): Observable<number> {
+    return this.selectedAttribute$.map(attribute => attribute.id);
+  }
+
+  onSelect(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+  }
+
+  onEdit(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+    this.setDialog('edit');
   }
 
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {

@@ -1,5 +1,6 @@
 <app-attribute-grid-edit
   *ngIf="isDialog('edit')"
+  [attributeId]="selectedAttributeId$ | async"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-attribute-grid-edit>
@@ -9,5 +10,7 @@
 <app-gridtree-wrapper
   [columns]="columns"
   [dnd]="true"
-  [rows]="attributes">
+  [rows]="attributes"
+  (select)="onSelect($event)"
+  (dblclick)="onEdit($event)">
 </app-gridtree-wrapper>
