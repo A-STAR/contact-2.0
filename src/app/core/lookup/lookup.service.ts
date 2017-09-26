@@ -11,7 +11,6 @@ import {
   ILookupState,
   ILookupContractor,
   ILookupCurrency,
-  ILookupDictionary,
   ILookupLanguage,
   ILookupPortfolio,
   ILookupRole,
