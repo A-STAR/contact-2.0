@@ -13,6 +13,7 @@ import { IAttribute } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { AttributeService } from '../../attribute.service';
+import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -48,6 +49,7 @@ export class AttributeGridEditComponent implements OnInit {
       label: labelKey('typeCode'),
       controlName: 'typeCode',
       type: 'select',
+      options: []
     },
     // {
     //   label: labelKey('comment'),
@@ -65,9 +67,13 @@ export class AttributeGridEditComponent implements OnInit {
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
+    this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VARIABLE_TYPE).subscribe(options => {
+      this.getControl('typeCode').options = options;
+    });
     this.fetch(this.attributeId);
   }
 
@@ -88,5 +94,9 @@ export class AttributeGridEditComponent implements OnInit {
       this.attribute = attribute;
       this.cdRef.markForCheck();
     });
+  }
+
+  private getControl(controlName: string): IDynamicFormControl {
+    return this.controls.find(control => control.controlName === controlName);
   }
 }
