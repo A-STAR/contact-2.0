@@ -1,9 +1,26 @@
 <app-attribute-grid-edit
+  *ngIf="isDialog('add')"
+  (submit)="onAddDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-attribute-grid-edit>
+
+<app-attribute-grid-edit
   *ngIf="isDialog('edit')"
   [attributeId]="selectedAttributeId$ | async"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-attribute-grid-edit>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.attribute.dialogs.delete.title"
+  actionTranslationKey="widgets.attribute.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAttribute$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
 
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 

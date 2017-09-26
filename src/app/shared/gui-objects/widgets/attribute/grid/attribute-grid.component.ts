@@ -85,6 +85,18 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.setDialog('edit');
   }
 
+  onAddDialogSubmit(attribute: IAttribute): void {
+
+  }
+
+  onEditDialogSubmit(attribute: IAttribute): void {
+
+  }
+
+  onRemoveDialogSubmit(): void {
+
+  }
+
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
     return attributes.map(attribute => {
       const { children, ...rest } = attribute;
