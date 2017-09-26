@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 
-import { IAttribute, IAttributeResponse } from './attributes.interface';
-import { IGridTreeRow } from '../../../../shared/components/gridtree/gridtree.interface';
-import { IGridWrapperTreeColumn } from '../../../../shared/components/gridtree-wrapper/gridtree-wrapper.interface';
+import { IAttribute, IAttributeResponse } from '../attribute.interface';
+import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
+import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
 
-import { AttributesService } from './attributes.service';
+import { AttributeService } from '../attribute.service';
 
-import { makeKey } from '../../../../core/utils';
+import { makeKey } from '../../../../../core/utils';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
-  selector: 'app-dictionaries-attribtues',
-  templateUrl: 'attributes.component.html'
+  selector: 'app-attribute-grid',
+  templateUrl: './attribute-grid.component.html'
 })
-export class AttributesComponent {
+export class AttributeGridComponent {
   columns: Array<IGridWrapperTreeColumn<any>> = [
     {
       label: labelKey('name'),
@@ -33,8 +33,8 @@ export class AttributesComponent {
   ];
   attributes: IGridTreeRow<IAttribute>[] = [];
 
-  constructor(private attributesService: AttributesService) {
-    this.attributesService.fetchAll().subscribe(attributes => {
+  constructor(private attributeService: AttributeService) {
+    this.attributeService.fetchAll().subscribe(attributes => {
       this.attributes = this.convertToGridTreeRow(attributes);
     });
   }

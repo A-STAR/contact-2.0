@@ -1,11 +1,11 @@
-<app-attribute-grid-edit
+<app-entity-attribute-grid-edit
   *ngIf="isDialog('edit')"
   [selectedAttribute]="selectedAttribute$ | async"
   [debtId]="debtId"
   [entityTypeId]="entityTypeId"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
-</app-attribute-grid-edit>
+</app-entity-attribute-grid-edit>
 
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 

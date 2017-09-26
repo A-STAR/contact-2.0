@@ -22,7 +22,7 @@ import { makeKey } from '../../../../../../core/utils';
 const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
-  selector: 'app-attribute-grid-edit',
+  selector: 'app-entity-attribute-grid-edit',
   templateUrl: './attribute-grid-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
