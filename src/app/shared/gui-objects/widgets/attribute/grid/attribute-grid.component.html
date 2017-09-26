@@ -1,3 +1,11 @@
+<app-attribute-grid-edit
+  *ngIf="isDialog('edit')"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-attribute-grid-edit>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
 <app-gridtree-wrapper
   [columns]="columns"
   [dnd]="true"
