@@ -36,6 +36,10 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
     return this._options;
   }
 
+  get selection(): any {
+    return this._options;
+  }
+
   ngOnInit(): void {
     this._selectedId = this.options.length > 0 ? this.options[0].value : null;
     this.cdRef.markForCheck();
@@ -43,7 +47,7 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
 
   writeValue(values: IMultiTextValue[]): void {
     this._selection = (values || []).map(v => v.languageId);
-    this._values = values;
+    this._values = values || [];
     this.cdRef.markForCheck();
   }
 
@@ -67,15 +71,20 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   onValueChange(value: string): void {
-    (this._values || []).find(v => v.languageId === this._selectedId).value = value;
+    const item = (this._values || []).find(v => v.languageId === this._selectedId);
+    if (item) {
+      item.value = value;
+    } else {
+      this._values.push({ languageId: this._selectedId, value });
+    }
     this.propagateChange(this._value);
   }
 
   private get _value(): any {
-    return this._selection.reduce((acc, v) => ({
-      ...acc,
-      [v]: (this._values || []).find(val => val.languageId === v).value
-    }), {});
+    return this._selection.reduce((acc, v) => {
+      const item = (this._values || []).find(val => val.languageId === v);
+      return item ? { ...acc, [v]: item.value } : acc;
+    }, {});
   }
 
   private propagateChange: Function = () => {};

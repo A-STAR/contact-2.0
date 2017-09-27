@@ -1,5 +1,5 @@
 <app-select
-  [ngModel]="options"
+  [ngModel]="selection"
   [multiple]="true"
   [options]="options"
   [nullable]="false"
@@ -7,3 +7,5 @@
 </app-select>
 
 <input class="form-control mt-sm" type="text" [ngModel]="displayValue" (ngModelChange)="onValueChange($event)">
+
+{{ _value | json }}

@@ -86,15 +86,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onAddDialogSubmit(attribute: IAttribute): void {
-
+    this.attributeService.create(attribute).subscribe(() => this.onSuccess());
   }
 
   onEditDialogSubmit(attribute: IAttribute): void {
-
+    this.attributeService.update(this.selectedAttribute$.value.id, attribute).subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-
+    this.attributeService.delete(this.selectedAttribute$.value.id).subscribe(() => this.onSuccess());
   }
 
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
@@ -112,6 +112,11 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
       this.attributes = this.convertToGridTreeRow(attributes);
     });
   }
+
+  private onSuccess(): void {
+    this.setDialog(null);
+    this.fetch();
+ }
 
   private get canAdd$(): Observable<boolean> {
     return Observable.of(true);
