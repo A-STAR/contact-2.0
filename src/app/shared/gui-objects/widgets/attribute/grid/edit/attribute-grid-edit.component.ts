@@ -42,8 +42,8 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('name'), controlName: 'name', type: 'multitext', multiple: true, options: [], required: true },
-    { label: labelKey('code'), controlName: 'code', type: 'text', required: true },
+    { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
+    { label: labelKey('code'), controlName: 'code', type: 'number', required: true },
     { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', options: [] },
     { label: labelKey('dictNameCode'), controlName: 'dictNameCode', type: 'hidden', options: [] },
     { label: labelKey('disabledValue'), controlName: 'disabledValue', type: 'checkbox' },
@@ -69,7 +69,10 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
       this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : Observable.of(null),
     ).subscribe(([ types, dictionaries, languages, attribute, translations ]) => {
       this.cdRef.detectChanges();
-      this.getControl('name').options = languages;
+      if (this.attributeId) {
+        this.getControl('name').options = languages;
+        this.getControl('name').type = 'multitext';
+      }
       this.getControl('typeCode').options = types;
       this.getControl('typeCode').required = !!this.attributeId;
       this.form.onCtrlValueChange('typeCode').subscribe(typeCode => {
@@ -84,10 +87,12 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
           this.getControl('dictNameCode').required = false;
         }
       });
-      this.attribute = {
-        ...attribute,
-        name: translations
-      };
+      if (this.attributeId) {
+        this.attribute = {
+          ...attribute,
+          name: translations
+        };
+      }
       this.cdRef.markForCheck();
     });
   }
@@ -102,12 +107,12 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const formValue = this.form.getSerializedUpdates();
-    const data = {
+    const data = this.attributeId ? {
       ...formValue,
       name: formValue.name
         ? Object.keys(formValue.name).reduce((acc, k) => [ ...acc, { languageId: k, value: formValue.name[k] } ], [])
         : undefined
-    };
+    } : formValue;
     this.submit.emit(data);
   }
 
