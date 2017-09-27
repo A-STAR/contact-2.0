@@ -18,8 +18,9 @@ import { IMultiTextOption, IMultiTextOptionSelection, IMultiTextValue } from './
 export class MultiTextComponent implements ControlValueAccessor, OnInit {
   @Input() options: IMultiTextOption[] = [];
 
+  private _selection: number[] = [];
   private _selectedId: number;
-  private _values: IMultiTextValue[];
+  private _values: IMultiTextValue[] = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -29,6 +30,7 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   writeValue(values: IMultiTextValue[]): void {
+    this._selection = (values || []).map(v => v.languageId);
     this._values = values;
     this.cdRef.markForCheck();
   }
@@ -41,26 +43,23 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   get displayValue(): string {
-    return this.selectedSlice && this.selectedSlice.value;
+    return this._values && this._values.find(v => v.languageId === this._selectedId).value;
   }
 
   onSelectedValueChange(value: IMultiTextOptionSelection[]): void {
-    const presentValues = value.filter(v => !v.removed).map(v => v.value);
-    this._values = this._values.filter(v => presentValues.includes(v.languageId));
+    this._selection = value.filter(v => !v.removed).map(v => v.value);
     this._selectedId = value.find(v => v.selected).value;
+    this.propagateChange(this._value);
     this.cdRef.markForCheck();
   }
 
   onValueChange(value: string): void {
-    if (!this._values) {
-      this._values = [];
-    }
-    this.selectedSlice.value = value;
-    this.propagateChange(value);
+    this._values.find(v => v.languageId === this._selectedId).value = value;
+    this.propagateChange(this._value);
   }
 
-  private get selectedSlice(): IMultiTextValue {
-    return this._values && this._values.find(v => v.languageId === this._selectedId);
+  private get _value(): any {
+    return this._selection.reduce((acc, v) => ({ ...acc, [v]: this._values.find(val => val.languageId === v).value }), {});
   }
 
   private propagateChange: Function = () => {};
