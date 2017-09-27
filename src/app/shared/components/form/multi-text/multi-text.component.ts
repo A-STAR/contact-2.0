@@ -16,16 +16,28 @@ import { IMultiTextOption, IMultiTextOptionSelection, IMultiTextValue } from './
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiTextComponent implements ControlValueAccessor, OnInit {
-  @Input() options: IMultiTextOption[] = [];
-
+  private _options: IMultiTextOption[] = [];
   private _selection: number[] = [];
   private _selectedId: number;
   private _values: IMultiTextValue[] = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
+  @Input('options')
+  set options(options: IMultiTextOption[]) {
+    this._options = options;
+    if (this._options.length > 0) {
+      this._selectedId = this._options[0].value;
+    }
+    this.cdRef.markForCheck();
+  }
+
+  get options(): IMultiTextOption[] {
+    return this._options;
+  }
+
   ngOnInit(): void {
-    this._selectedId = this.options[0].value;
+    this._selectedId = this.options.length > 0 ? this.options[0].value : null;
     this.cdRef.markForCheck();
   }
 
@@ -43,7 +55,8 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   get displayValue(): string {
-    return this._values && this._values.find(v => v.languageId === this._selectedId).value;
+    const item = (this._values || []).find(v => v.languageId === this._selectedId);
+    return item && item.value;
   }
 
   onSelectedValueChange(value: IMultiTextOptionSelection[]): void {
@@ -54,12 +67,15 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   onValueChange(value: string): void {
-    this._values.find(v => v.languageId === this._selectedId).value = value;
+    (this._values || []).find(v => v.languageId === this._selectedId).value = value;
     this.propagateChange(this._value);
   }
 
   private get _value(): any {
-    return this._selection.reduce((acc, v) => ({ ...acc, [v]: this._values.find(val => val.languageId === v).value }), {});
+    return this._selection.reduce((acc, v) => ({
+      ...acc,
+      [v]: (this._values || []).find(val => val.languageId === v).value
+    }), {});
   }
 
   private propagateChange: Function = () => {};
