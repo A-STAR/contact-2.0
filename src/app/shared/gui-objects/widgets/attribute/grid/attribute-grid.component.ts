@@ -85,6 +85,10 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.setDialog('edit');
   }
 
+  onMove(rows: Array<IGridTreeRow<IAttribute>>): void {
+    this.updatePosition(rows);
+  }
+
   onAddDialogSubmit(attribute: IAttribute): void {
     this.attributeService.create(attribute).subscribe(() => this.onSuccess());
   }
@@ -97,13 +101,23 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.attributeService.delete(this.selectedAttribute$.value.id).subscribe(() => this.onSuccess());
   }
 
+  private updatePosition(rows: Array<IGridTreeRow<IAttribute>>): void {
+    rows.forEach(row => {
+      this.attributeService.update(row.data.id, { sortOrder: row.sortOrder } as any).subscribe();
+      if (row.children && row.children.length > 0) {
+        this.updatePosition(row.children);
+      }
+    });
+  }
+
   private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+    const sortByOrder = (a, b) => a.sortOrder - b.sortOrder;
     return attributes.map(attribute => {
-      const { children, ...rest } = attribute;
+      const { children, sortOrder, ...rest } = attribute;
       const hasChildren = children && children.length > 0;
       return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
-        : { data: rest };
+        ? { data: rest, children: this.convertToGridTreeRow(children).sort(sortByOrder), isExpanded: true, sortOrder }
+        : { data: rest, sortOrder };
     });
   }
 

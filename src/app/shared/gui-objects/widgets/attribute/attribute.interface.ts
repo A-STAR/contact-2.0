@@ -5,9 +5,9 @@ export interface IAttribute {
   typeCode: number;
   dictNameCode: number;
   disabledValue: number;
-  sortOrder: number;
 }
 
 export interface IAttributeResponse extends IAttribute {
   children: IAttributeResponse[];
+  sortOrder: number;
 }

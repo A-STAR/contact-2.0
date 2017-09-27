@@ -17,6 +17,7 @@ export class GridTreeWrapperComponent<T> {
   @Input() dnd = false;
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
+  @Output() move = new EventEmitter<Array<IGridTreeRow<T>>>();
 
   private _dictionaries: { [key: number]: IOption[] };
   private _columns: IGridWrapperTreeColumn<T>[];
@@ -61,6 +62,10 @@ export class GridTreeWrapperComponent<T> {
 
   onRowDblClick(row: IGridTreeRow<T>): void {
     this.dblclick.emit(row);
+  }
+
+  onMove(event: Array<IGridTreeRow<T>>): void {
+    this.move.emit(event);
   }
 
   private loadDictionaries(): void {

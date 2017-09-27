@@ -1,4 +1,13 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  EventEmitter,
+  Input,
+  Output,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -24,6 +33,7 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
 
   @Output() select = this.gridTreeService.select.map(row => row.data);
   @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
+  @Output() move = new EventEmitter<Array<IGridTreeRow<T>>>();
 
   private _rows: Array<IGridTreeRow<T>> = [];
 
@@ -50,6 +60,7 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
           this._rows = this.gridTreeService.addRowAfter(this._rows, event.draggedRow, event.targetRow, this.idGetter);
         }
         this.cdRef.markForCheck();
+        this.move.emit(this._rows);
       });
     }
   }

@@ -66,7 +66,8 @@ export class GridTreeService<T> {
         return r.children && r.children.length > 0
           ? { ...r, children: this.addRowTo(r.children, row, parent, idGetter) }
           : r;
-      });
+      })
+      .map((r, sortOrder) => ({ ...r, sortOrder }));
   }
 
   addRowAfter(
@@ -75,14 +76,14 @@ export class GridTreeService<T> {
     parent: IGridTreeRow<T>,
     idGetter: IUniqueIdGetter<T>,
   ): Array<IGridTreeRow<T>> {
-    const i = rows.findIndex(r => idGetter(r) === idGetter(parent))
-    return i >= 0
+    const i = rows.findIndex(r => idGetter(r) === idGetter(parent));
+    return (i >= 0
       ? [ ...rows.slice(0, i + 1), row, ...rows.slice(i + 1) ]
       : rows.map(r => {
           return r.children && r.children.length
             ? { ...r, children: this.addRowAfter(r.children, row, parent, idGetter) }
             : r;
-        });
+        })).map((r, sortOrder) => ({ ...r, sortOrder }));
   }
 
   removeRowFrom(
@@ -96,7 +97,8 @@ export class GridTreeService<T> {
         return r.children && r.children.length > 0
           ? { ...r, children: this.removeRowFrom(r.children, row, idGetter) }
           : r;
-      });
+      })
+      .map((r, sortOrder) => ({ ...r, sortOrder }));
   }
 
   isChild(
@@ -109,9 +111,5 @@ export class GridTreeService<T> {
           return acc || idGetter(child) === idGetter(row) || this.isChild(row, child, idGetter);
         }, false)
       : false;
-  }
-
-  loadDictionaries(dictCodes: number[]): void {
-    console.log(dictCodes);
   }
 }
