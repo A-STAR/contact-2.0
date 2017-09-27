@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,6 +13,7 @@ import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultEleme
 })
 export class Toolbar2Component {
   @Input() items: Array<IToolbarItem> = [];
+  @Output() action = new EventEmitter<IToolbarItem>();
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IToolbarDefaultElement } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: {
@@ -114,6 +115,7 @@ export class Toolbar2Component {
     } else if (item.action) {
       this.store.dispatch(item.action);
     }
+    this.action.emit(item);
   }
 
   getIcon(item: IToolbarButton): string {

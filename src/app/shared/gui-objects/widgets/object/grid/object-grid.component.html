@@ -1,0 +1,10 @@
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.object"
+  selectionType="single"
+  [columns]="columns"
+  [rows]="rows"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

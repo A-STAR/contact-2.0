@@ -905,6 +905,12 @@
         "recipientTypeCode": "Recipient"
       }
     },
+    "object": {
+      "grid": {
+        "id": "Id",
+        "name": "Name"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Type",
