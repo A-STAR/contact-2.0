@@ -3,10 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 
-import { ContactsComponent } from './contacts.component';
+import { ContactPropertiesComponent } from './contact-properties.component';
 
 const routes: Routes = [
-  { path: '', component: ContactsComponent },
+  { path: '', component: ContactPropertiesComponent },
 ];
 
 @NgModule({
@@ -15,7 +15,7 @@ const routes: Routes = [
     SharedModule,
   ],
   declarations: [
-    ContactsComponent,
+    ContactPropertiesComponent,
   ],
 })
-export class ContactsModule {}
+export class ContactPropertiesModule {}

@@ -14,7 +14,7 @@ export class LayoutComponent {
   titles = {
     ActionsLogComponent: 'ACTIONS_LOG',
     ConstantsComponent: 'CONSTANTS',
-    ContactsComponent: 'CONTACT_TREES',
+    ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
