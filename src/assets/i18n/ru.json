@@ -833,6 +833,10 @@
         "comment": "Комментарий"
       }
     },
+    "contactProperty": {
+      "contactType": "Тип контакта",
+      "treeType": "Тип дерева"
+    },
     "document": {
       "grid": {
         "docName": "Название документа",

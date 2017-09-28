@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
+import { SelectModule } from '../../../../components/form/select/select.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
 import { ContactPropertyTreeComponent } from './contact-property-tree.component';
@@ -10,7 +13,10 @@ import { ContactPropertyTreeComponent } from './contact-property-tree.component'
   imports: [
     CommonModule,
     DialogActionModule,
+    FormsModule,
+    SelectModule,
     Toolbar2Module,
+    TranslateModule,
   ],
   exports: [
     ContactPropertyTreeComponent,

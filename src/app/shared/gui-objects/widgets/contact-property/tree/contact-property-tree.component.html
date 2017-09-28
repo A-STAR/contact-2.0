@@ -1,1 +1,22 @@
-CONTACT PROPERTY TREE
+<div class="row">
+  <div class="col-md-6">
+    <label>
+      <span>{{ 'widgets.contactProperty.contactType' | translate }}</span>
+      <app-select
+        [ngModel]="contactType"
+        [nullable]="false"
+        [options]="contactTypeOptions">
+      </app-select>
+    </label>
+  </div>
+  <div class="col-md-6">
+    <label>
+      <span>{{ 'widgets.contactProperty.treeType' | translate }}</span>
+      <app-select
+        [ngModel]="treeType"
+        [nullable]="false"
+        [options]="treeTypeOptions">
+      </app-select>
+    </label>
+  </div>
+</div>
