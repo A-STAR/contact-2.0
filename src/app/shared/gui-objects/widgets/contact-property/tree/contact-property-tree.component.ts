@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
+import { ContactPropertyService } from '../contact-property.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
@@ -9,9 +10,10 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   templateUrl: './contact-property-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactPropertyTreeComponent implements OnInit, OnDestroy {
+export class ContactPropertyTreeComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactPropertyService: ContactPropertyService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -31,11 +33,18 @@ export class ContactPropertyTreeComponent implements OnInit, OnDestroy {
         this.initContactTypeSelect(dictionaries);
         this.initTreeTypeSelect(dictionaries);
         this.cdRef.markForCheck();
+        this.fetch();
       });
   }
 
-  ngOnDestroy(): void {
+  onContactTypeChange(selection: IOption[]): void {
+    this.contactType = Number(selection[0].value);
+    this.fetch();
+  }
 
+  onTreeTypeChange(selection: IOption[]): void {
+    this.treeType = Number(selection[0].value);
+    this.fetch();
   }
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
@@ -46,5 +55,11 @@ export class ContactPropertyTreeComponent implements OnInit, OnDestroy {
   private initTreeTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
     this.treeTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE];
     this.treeType = this.treeTypeOptions ? this.treeTypeOptions[0].value : null;
+  }
+
+  private fetch(): void {
+    this.contactPropertyService.fetchAll(this.contactType, this.treeType).subscribe(() => {
+      this.cdRef.markForCheck();
+    });
   }
 }

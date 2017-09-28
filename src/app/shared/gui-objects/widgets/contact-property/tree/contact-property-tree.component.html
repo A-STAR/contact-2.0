@@ -5,7 +5,8 @@
       <app-select
         [ngModel]="contactType"
         [nullable]="false"
-        [options]="contactTypeOptions">
+        [options]="contactTypeOptions"
+        (onSelect)="onContactTypeChange($event)">
       </app-select>
     </label>
   </div>
@@ -15,7 +16,8 @@
       <app-select
         [ngModel]="treeType"
         [nullable]="false"
-        [options]="treeTypeOptions">
+        [options]="treeTypeOptions"
+        (onSelect)="onTreeTypeChange($event)">
       </app-select>
     </label>
   </div>
