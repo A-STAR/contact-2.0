@@ -1,3 +1,31 @@
+<app-object-grid-add
+  *ngIf="isDialog('add')"
+  [roleId]="masterRoleId$ | async"
+  [typeCode]="selectedTypeCode"
+  (submit)="onAddDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-object-grid-add>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.object.dialogs.delete.title"
+  actionTranslationKey="widgets.object.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedObject$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<div class="panel m0 p ba">
+  <app-select
+    [ngModel]="selectedTypeCode"
+    [nullable]="false"
+    [options]="typeCodeOptions"
+    (onSelect)="onSelectType($event)">
+  </app-select>
+</div>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
@@ -5,6 +33,6 @@
   selectionType="single"
   [columns]="columns"
   [rows]="rows"
-  (onDblClick)="onDoubleClick($event)"
+  [styles]="{ height: '344px' }"
   (onSelect)="onSelect($event)">
 </app-grid>
