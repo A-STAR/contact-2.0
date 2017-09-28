@@ -42,6 +42,10 @@ export const routes: Route[] = [
         path: 'utilities',
         children: [
           {
+            path: 'contacts',
+            loadChildren: './utilities/contacts/contacts.module#ContactsModule',
+          },
+          {
             path: 'message-templates',
             loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
           },

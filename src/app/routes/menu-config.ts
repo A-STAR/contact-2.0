@@ -79,7 +79,7 @@ export const menuConfig: IMenuConfig = {
   },
   contacts: {
     text: 'sidebar.nav.menu.CONTACT_TREES',
-    link: '/utilities/contact-trees',
+    link: '/utilities/contacts',
     icon: 'icon-people'
   },
   messages: {
