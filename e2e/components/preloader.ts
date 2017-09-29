@@ -6,6 +6,7 @@ export class Preloader {
   }
 
   private get preloader(): ElementFinder {
+    // TODO(d.maltsev): get the first element if there is more than one
     return element(by.css('app-root ~ div'));
   }
 }
