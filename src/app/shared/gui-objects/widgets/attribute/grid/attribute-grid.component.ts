@@ -85,39 +85,35 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.setDialog('edit');
   }
 
-  onMove(rows: Array<IGridTreeRow<IAttribute>>): void {
-    this.updatePosition(rows);
+  onMove(row: IGridTreeRow<IAttribute>): void {
+    this.attributeService.update(row.data.id, { parentId: row.parentId, sortOrder: row.sortOrder } as any)
+      .subscribe(() => this.onSuccess());
   }
 
   onAddDialogSubmit(attribute: IAttribute): void {
-    this.attributeService.create(attribute).subscribe(() => this.onSuccess());
+    this.attributeService.create(attribute)
+      .subscribe(() => this.onSuccess());
   }
 
   onEditDialogSubmit(attribute: IAttribute): void {
-    this.attributeService.update(this.selectedAttribute$.value.id, attribute).subscribe(() => this.onSuccess());
+    this.attributeService.update(this.selectedAttribute$.value.id, attribute)
+      .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.attributeService.delete(this.selectedAttribute$.value.id).subscribe(() => this.onSuccess());
+    this.attributeService.delete(this.selectedAttribute$.value.id)
+      .subscribe(() => this.onSuccess());
   }
 
-  private updatePosition(rows: Array<IGridTreeRow<IAttribute>>): void {
-    rows.forEach(row => {
-      this.attributeService.update(row.data.id, { sortOrder: row.sortOrder } as any).subscribe();
-      if (row.children && row.children.length > 0) {
-        this.updatePosition(row.children);
-      }
-    });
-  }
-
-  private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+  private convertToGridTreeRow(attributes: IAttributeResponse[], parentId: number = null): IGridTreeRow<IAttribute>[] {
     const sortByOrder = (a, b) => a.sortOrder - b.sortOrder;
     return attributes.map(attribute => {
       const { children, sortOrder, ...rest } = attribute;
       const hasChildren = children && children.length > 0;
+      const node = { data: rest, sortOrder, parentId };
       return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children).sort(sortByOrder), isExpanded: true, sortOrder }
-        : { data: rest, sortOrder };
+        ? { ...node, children: this.convertToGridTreeRow(children, rest.id).sort(sortByOrder), isExpanded: true }
+        : node;
     });
   }
 

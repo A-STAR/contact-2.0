@@ -33,7 +33,7 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
 
   @Output() select = this.gridTreeService.select.map(row => row.data);
   @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
-  @Output() move = new EventEmitter<Array<IGridTreeRow<T>>>();
+  @Output() move = new EventEmitter<IGridTreeRow<T>>();
 
   private _rows: Array<IGridTreeRow<T>> = [];
 
@@ -60,7 +60,8 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
           this._rows = this.gridTreeService.addRowAfter(this._rows, event.draggedRow, event.targetRow, this.idGetter);
         }
         this.cdRef.markForCheck();
-        this.move.emit(this._rows);
+        const draggedRow = this.gridTreeService.findById(this._rows, this.idGetter(event.draggedRow), this.idGetter);
+        this.move.emit(draggedRow);
       });
     }
   }

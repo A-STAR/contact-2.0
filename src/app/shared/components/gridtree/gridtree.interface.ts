@@ -1,5 +1,6 @@
 export interface IGridTreeRow<T> {
   data: T;
+  parentId?: number | string;
   children?: Array<IGridTreeRow<T>>;
   isExpanded?: boolean;
   sortOrder?: number;

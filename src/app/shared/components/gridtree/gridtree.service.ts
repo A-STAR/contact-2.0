@@ -58,16 +58,17 @@ export class GridTreeService<T> {
   ): Array<IGridTreeRow<T>> {
     return rows
       .map(r => {
+        const lastChild = (r.children || []).slice(-1).pop();
+        const sortOrder = lastChild ? lastChild.sortOrder + 1 : 1;
         return idGetter(r) === idGetter(parent)
-          ? { ...r, isExpanded: true, children: [ ...(r.children || []), row ] }
+          ? { ...r, isExpanded: true, children: [ ...(r.children || []), { ...row, parentId: idGetter(parent), sortOrder } ] }
           : r;
         })
       .map(r => {
         return r.children && r.children.length > 0
           ? { ...r, children: this.addRowTo(r.children, row, parent, idGetter) }
           : r;
-      })
-      .map((r, sortOrder) => ({ ...r, sortOrder }));
+      });
   }
 
   addRowAfter(
@@ -77,13 +78,14 @@ export class GridTreeService<T> {
     idGetter: IUniqueIdGetter<T>,
   ): Array<IGridTreeRow<T>> {
     const i = rows.findIndex(r => idGetter(r) === idGetter(parent));
+    const sortOrder = i >= 0 ? rows[i].sortOrder + 1 : null;
     return (i >= 0
-      ? [ ...rows.slice(0, i + 1), row, ...rows.slice(i + 1) ]
+      ? [ ...rows.slice(0, i + 1), { ...row, sortOrder, parentId: rows[i].parentId }, ...rows.slice(i + 1) ]
       : rows.map(r => {
           return r.children && r.children.length
             ? { ...r, children: this.addRowAfter(r.children, row, parent, idGetter) }
             : r;
-        })).map((r, sortOrder) => ({ ...r, sortOrder }));
+        }));
   }
 
   removeRowFrom(
@@ -97,8 +99,15 @@ export class GridTreeService<T> {
         return r.children && r.children.length > 0
           ? { ...r, children: this.removeRowFrom(r.children, row, idGetter) }
           : r;
-      })
-      .map((r, sortOrder) => ({ ...r, sortOrder }));
+      });
+  }
+
+  findById(rows: Array<IGridTreeRow<T>>, id: number | string, idGetter: IUniqueIdGetter<T>): IGridTreeRow<T> {
+    const row = rows.find(r => idGetter(r) === id);
+    if (row) {
+      return row;
+    }
+    return rows.reduce((acc, r) => acc || (r.children ? this.findById(r.children, id, idGetter) : null), null);
   }
 
   isChild(
