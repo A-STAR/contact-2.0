@@ -1,4 +1,4 @@
-import { by, browser, element, ElementFinder } from 'protractor';
+import { by, element, ElementFinder } from 'protractor';
 
 export class Header {
   async logout(): Promise<void> {

@@ -1,4 +1,4 @@
-import { browser, by, element, ElementFinder, WebElementPromise } from 'protractor';
+import { by, element, ElementFinder } from 'protractor';
 
 import { AbstractPage } from '.';
 

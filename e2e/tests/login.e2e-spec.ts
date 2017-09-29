@@ -1,5 +1,3 @@
-import { browser } from 'protractor';
-
 import { LoginPage } from '../pages';
 
 describe('/login', () => {
