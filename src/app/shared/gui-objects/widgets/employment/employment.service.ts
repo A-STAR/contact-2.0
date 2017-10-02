@@ -22,31 +22,31 @@ export class EmploymentService {
     return this.dataService
       .read(this.url, { personId })
       .map(resp => resp.employments)
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employment.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, employmentId: number): Observable<IEmployment> {
     return this.dataService
       .read(`${this.url}/{employmentId}`, { personId, employmentId })
       .map(resp => resp.employments[0] || {})
-      .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
   create(personId: number, employment: IEmployment): Observable<any> {
     return this.dataService
       .create(this.url, { personId }, employment)
-      .catch(this.notificationsService.error('errors.default.create').entity(this.errSingular).dispatchCallback());
+      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
   update(personId: number, employmentId: number, employment: IEmployment): Observable<any> {
     return this.dataService
       .update(`${this.url}/{employmentId}`, { personId, employmentId }, employment)
-      .catch(this.notificationsService.error('errors.default.update').entity(this.errSingular).dispatchCallback());
+      .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 
   delete(personId: number, employmentId: number): Observable<any> {
     return this.dataService
       .delete(`${this.url}/{employmentId}`, { personId, employmentId })
-      .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
+      .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 }
