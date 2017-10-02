@@ -1,9 +1,10 @@
 <div class="input-group">
   <div class="input-group-btn">
-    <app-dropdown>
+    <app-dropdown [fullWidth]="true">
       <ng-container trigger>
         <button type="button" class="btn btn-default dropdown-toggle">
-          {{ label }} <span class="caret"></span>
+          <span style="display: inline-block; width: 200px; text-align: left;">{{ label }}</span>
+          <span class="caret"></span>
         </button>
       </ng-container>
       <div>

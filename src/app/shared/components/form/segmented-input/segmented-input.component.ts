@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { ISegmentedInputValue, ISegmentedInputOption } from './segmented-input.interface';
+
+import { DropdownComponent } from '../../dropdown/dropdown.component';
 
 @Component({
   selector: 'app-segmented-input',
@@ -18,6 +20,8 @@ import { ISegmentedInputValue, ISegmentedInputOption } from './segmented-input.i
 })
 export class SegmentedInputComponent implements ControlValueAccessor, OnInit {
   @Input() options: ISegmentedInputOption[];
+
+  @ViewChild(DropdownComponent) dropdown: DropdownComponent;
 
   private _value: ISegmentedInputValue;
 
@@ -59,6 +63,7 @@ export class SegmentedInputComponent implements ControlValueAccessor, OnInit {
       name: option.name
     }
     this.propagateChange(this._value);
+    this.dropdown.close();
   }
 
   private propagateChange: Function = () => {};
