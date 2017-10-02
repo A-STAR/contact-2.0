@@ -20,7 +20,7 @@ export class DebtorsEffects {
           type: DebtorsService.DEBTORS_FETCH_SUCCESS,
           payload: response.debtors
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.debtors.info.gen.plural').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.debtors.info.gen.plural').callback());
     });
 
   constructor(
@@ -42,7 +42,6 @@ export class DebtorsEffects {
                 middleName: 'Sergeevich',
                 lastName: 'Smirnov',
                 type: 1,
-                responsibleFullName: 'System administrator',
                 reward: 3180.78,
                 debtId: 19,
                 product: 'Autoexpress',
@@ -54,7 +53,6 @@ export class DebtorsEffects {
                 middleName: 'Pavlovich',
                 lastName: 'Mironov',
                 type: 1,
-                responsibleFullName: 'System administrator',
                 reward: 4994.11,
                 debtId: 20,
                 product: 'Autoexpress',

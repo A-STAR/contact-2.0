@@ -444,8 +444,10 @@
     "lastName": "Family name",
     "middleName": "Middle name",
     "type": "Type",
-    "responsible": "Manager",
+    "responsibleFullName": "Manager",
     "reward": "Remuneration",
+    "shortInfo": "Short info",
+    "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
       "add": {
@@ -1436,6 +1438,7 @@
       "orange": "Orange",
       "pink": "Pink",
       "yellow": "Yellow"
-    }
+    },
+    "NA": "N/A"
   }
 }
