@@ -38,6 +38,7 @@ import { FileUploadModule } from './components/form/file-upload/file-upload.modu
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GridTreeModule } from './components/gridtree/gridtree.module';
+import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
@@ -91,6 +92,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
     ImageUploadModule,
@@ -163,6 +165,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
     ImageUploadModule,

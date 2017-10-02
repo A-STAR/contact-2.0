@@ -596,7 +596,7 @@
       "title": "Доп. инфо"
     },
     "attributesTab": {
-      "title": "Настройка атрибутов"
+      "title": "Атрибуты"
     }
   },
   "person": {
@@ -816,6 +816,21 @@
           "title": "Удалить адрес",
           "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
         }
+      }
+    },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Редактирование атрибута"
+        }
+      },
+      "grid": {
+        "code": "Код",
+        "name": "Название",
+        "value": "Значение",
+        "userFullName": "Оператор",
+        "changeDateTime": "Дата/время изменения",
+        "comment": "Комментарий"
       }
     },
     "contact": {
@@ -1059,6 +1074,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },

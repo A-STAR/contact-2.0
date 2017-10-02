@@ -1,7 +1,7 @@
 <div
   class="content"
-  (click)="onClick($event)"
   (dblclick)="onDoubleClick($event)"
+  (click)="onClick($event)"
   (dragenter)="onDragEnter($event)"
   (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
@@ -13,7 +13,7 @@
         <i *ngIf="hasChildren" [ngClass]="row.isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'" (mousedown)="onToggle($event)"></i>
       </span>
     </span>
-    <span>{{ row.data[column.prop] || '&nbsp;' }}</span>
+    <span>{{ getFormattedValue(column) || '&nbsp;' }}</span>
   </div>
 </div>
 
