@@ -942,7 +942,7 @@
           "text": "Text",
           "template": "Template",
           "form": {
-            "typeCode": "SMS",
+            "templateId": "SMS",
             "senderCode": "Sender",
             "startDateTime": "Send Date/Time",
             "text": "Message Text"

@@ -12,6 +12,9 @@
 .nav-tabs > li {
   display: inline-block;
   float: none;
+  &.disabled > a {
+    cursor: default;
+  }
 }
 
 .inverse > li {

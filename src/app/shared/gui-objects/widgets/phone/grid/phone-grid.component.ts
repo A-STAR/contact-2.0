@@ -5,12 +5,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
+import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IPerson } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { DebtService } from '../../debt/debt/debt.service';
 import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -75,6 +77,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   phones: Array<IPhone> = [];
 
   person: IPerson;
+  debt: IDebt;
 
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
@@ -95,6 +98,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtService: DebtService,
     private debtorService: DebtorService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
@@ -106,12 +110,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
+      this.debtService.fetch(this.personId, this.debtId),
       this.debtorService.fetch(this.personId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ person, columns, canViewBlock ]) => {
+    .subscribe(([ debt, person, columns, canViewBlock ]) => {
+      this.debt = debt;
       this.person = person;
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
@@ -205,7 +211,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_BLOCK_VIEW');
+    return this.userPermissionsService.has('PHONE_INACTIVE_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
@@ -221,20 +227,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_BLOCK');
+    return this.userPermissionsService.has('PHONE_SET_INACTIVE');
   }
 
   get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_UNBLOCK');
+    return this.userPermissionsService.has('PHONE_SET_ACTIVE');
   }
 
   get canSchedule$(): Observable<boolean> {
     return this.selectedPhone$.mergeMap(phone => {
-      return phone && !phone.isInactive && !phone.stopAutoSms
+      return phone && !phone.isInactive && !phone.stopAutoSms && ![6, 7, 8, 17].includes(this.debt.statusCode)
         ? combineLatestAnd([
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
-          this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode)
+          this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
+          // personRole = 1 - debtor
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', 1),
         ])
         : Observable.of(false);
     });

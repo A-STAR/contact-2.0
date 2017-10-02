@@ -6,7 +6,7 @@
 
 <ng-template #tabsTemplate>
   <ul class="nav nav-tabs" [class.inverse]="inverse">
-    <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active">
+    <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class.disabled]="tab.disabled">
       <a>{{ tab.title | translate }}<i *ngIf="tab.closable && i > 0" (click)="closeTab(tab)" class="fa fa-close"></i></a>
     </li>
   </ul>
