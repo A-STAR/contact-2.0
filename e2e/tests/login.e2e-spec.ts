@@ -1,35 +1,29 @@
-import { browser } from 'protractor';
-
-import { Preloader } from '../components/preloader';
-import { LoginPage } from '../pages/login-page';
+import { LoginPage } from '../pages';
 
 describe('/login', () => {
-  const preloader = new Preloader();
   const loginPage = new LoginPage();
 
   beforeAll(async () => {
-    await loginPage.navigate();
-    await preloader.waitToFinish();
+    await loginPage.navigateToLogin();
   });
 
   it('should have login input', async () => {
-    expect(loginPage.isLoginInputPresent()).toBeTruthy();
+    expect(loginPage.loginForm.isLoginInputPresent()).toBeTruthy();
   });
 
   it('should have password input', async () => {
-    expect(loginPage.isPasswordInputPresent()).toBeTruthy();
+    expect(loginPage.loginForm.isPasswordInputPresent()).toBeTruthy();
   });
 
   it('should have submit button', async () => {
-    expect(loginPage.isSubmitButtonPresent()).toBeTruthy();
-  });
-
-  it('should handle click on submit button', async () => {
-    await loginPage.enterLogin('admin');
-    await loginPage.enterPassword('spring');
-    await loginPage.clickSubmit();
-    expect(browser.getCurrentUrl()).toMatch(LoginPage.URL_AFTER_REDIRECT);
+    expect(loginPage.loginForm.isSubmitButtonPresent()).toBeTruthy();
   });
 
   // TODO(d.maltsev): test login errors
+
+  it('should handle click on submit button', async () => {
+    await loginPage.loginForm.login('admin', 'spring');
+    const url = await loginPage.getCurrentUrl();
+    expect(url).toEqual('/home');
+  });
 });
