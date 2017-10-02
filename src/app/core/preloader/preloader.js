@@ -1,6 +1,6 @@
 (function(global) {
 
-  let counter = 0, timeout;
+  var counter = 0, timeout;
   const preloader = document.querySelector('.preloader');
   const progressBar = document.querySelector('.preloader-progress-bar');
   const body = document.querySelector('body');
@@ -11,7 +11,7 @@
   timeout = setTimeout(startCounter, 20);
 
   // main.ts will call this function once the app is boostrapped
-  global.appBootstrap = () => {
+  global.appBootstrap = function bootstrap() {
     setTimeout(endCounter, 1000);
   };
 
@@ -39,7 +39,7 @@
   }
 
   function removePreloader() {
-    preloader.addEventListener('transitionend', () => {
+    preloader.addEventListener('transitionend', function hidePreloader() {
       preloader.className = 'preloader-hidden';
     });
     preloader.className += ' preloader-hidden-add preloader-hidden-add-active';
