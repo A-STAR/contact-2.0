@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
+import { TabstripModule } from '../../../../../components/tabstrip/tabstrip.module';
 
 import { ContactPropertyTreeEditComponent } from './contact-property-tree-edit.component';
 
@@ -12,6 +13,7 @@ import { ContactPropertyTreeEditComponent } from './contact-property-tree-edit.c
     CommonModule,
     DialogModule,
     DynamicFormModule,
+    TabstripModule,
     TranslateModule,
   ],
   exports: [
