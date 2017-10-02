@@ -210,7 +210,10 @@
         {{ control.label | translate }}
       </span>
     </label>
-    <app-segmented-input [formControlName]="control.controlName"></app-segmented-input>
+    <app-segmented-input
+      [formControlName]="control.controlName"
+      [options]="control.segmentedInputOptions">
+    </app-segmented-input>
   </ng-container>
 
   <ng-container *ngSwitchCase="'dynamic'">

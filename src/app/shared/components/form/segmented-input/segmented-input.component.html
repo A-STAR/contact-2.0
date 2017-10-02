@@ -1,14 +1,19 @@
 <div class="input-group">
   <div class="input-group-btn">
-    <button type="button" class="btn btn-default dropdown-toggle">
-      Action <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-right">
-      <li><a href="#">Action</a></li>
-      <li><a href="#">Another action</a></li>
-      <li><a href="#">Something else here</a></li>
-      <li><a href="#">Separated link</a></li>
-    </ul>
+    <app-dropdown>
+      <ng-container trigger>
+        <button type="button" class="btn btn-default dropdown-toggle">
+          {{ label }} <span class="caret"></span>
+        </button>
+      </ng-container>
+      <div>
+        <ul class="list-group m0">
+          <li *ngFor="let option of options" class="list-group-item b0 clickable" (click)="onOptionSelect(option)">
+            {{ option.label }}
+          </li>
+        </ul>
+      </div>
+    </app-dropdown>
   </div>
-  <input type="text" class="form-control">
+  <input type="text" class="form-control" [ngModel]="value">
 </div>

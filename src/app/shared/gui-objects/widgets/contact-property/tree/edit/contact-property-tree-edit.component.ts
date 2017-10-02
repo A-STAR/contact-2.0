@@ -69,6 +69,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     const dict3Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3];
     const dict4Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4];
 
+    const segmentedInputOptions = [ { label: 'Foo', name: 'foo' }, { label: 'Bar', name: 'bar' } ];
+
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text' },
       // TODO(d.maltsev): multi-text
@@ -94,9 +96,9 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
       { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
       // TODO(d.maltsev): or templateFormula
-      { label: labelKey('templateId'), controlName: 'templateId', type: 'segmented' },
+      { label: labelKey('templateId'), controlName: 'templateId', type: 'segmented', segmentedInputOptions },
       // TODO(d.maltsev): or nextCallFormula
-      { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented' },
+      { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', segmentedInputOptions },
       { label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', options: dict1Options },
       { label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', options: dict2Options },
       { label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', options: dict3Options },
