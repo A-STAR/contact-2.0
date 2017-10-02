@@ -107,7 +107,7 @@ export class ContactPropertyTreeComponent implements OnInit {
           // label: node.name,
           bgColor: node.boxColor,
           id: node.id,
-          expanded: true,
+          expanded: node.children && node.children.length > 0,
         };
       });
   }
