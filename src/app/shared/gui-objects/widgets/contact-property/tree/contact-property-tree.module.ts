@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { SelectModule } from '../../../../components/form/select/select.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
+import { TreeModule } from '../../../../components/flowtree/tree.module';
 
 import { ContactPropertyTreeComponent } from './contact-property-tree.component';
 
@@ -17,6 +18,7 @@ import { ContactPropertyTreeComponent } from './contact-property-tree.component'
     SelectModule,
     Toolbar2Module,
     TranslateModule,
+    TreeModule,
   ],
   exports: [
     ContactPropertyTreeComponent,

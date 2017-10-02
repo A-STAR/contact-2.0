@@ -22,3 +22,20 @@
     </label>
   </div>
 </div>
+
+<!-- <pre>{{ _nodes | json }}</pre> -->
+
+<app-tree
+  layout="horizontal"
+  selectionMode="single"
+  [dndEnabled]="true"
+  [dblClickEnabled]="true"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="nodes"
+  [selection]="selectedNode$ | async"
+  (changeNodesLocation)="onNodeMove($event)"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeDblClick)="onNodeDoubleClick($event)"
+  (onNodeExpand)="onNodeSelect($event)">
+</app-tree>
