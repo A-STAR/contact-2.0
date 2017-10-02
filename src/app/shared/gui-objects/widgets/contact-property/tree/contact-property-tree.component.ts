@@ -96,6 +96,18 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     console.log(event);
   }
 
+  onAddDialogSubmit(event: any): void {
+    console.log(event);
+  }
+
+  onEditDialogSubmit(event: any): void {
+    console.log(event);
+  }
+
+  onDeleteDialogSubmit(event: any): void {
+    console.log(event);
+  }
+
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
     this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_PAYMENT_STATUS];
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;

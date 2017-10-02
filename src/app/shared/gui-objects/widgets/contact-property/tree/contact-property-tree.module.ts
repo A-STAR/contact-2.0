@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { ContactPropertyTreeEditModule } from './edit/contact-property-tree-edit.module';
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { SelectModule } from '../../../../components/form/select/select.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
@@ -13,6 +14,7 @@ import { ContactPropertyTreeComponent } from './contact-property-tree.component'
 @NgModule({
   imports: [
     CommonModule,
+    ContactPropertyTreeEditModule,
     DialogActionModule,
     FormsModule,
     SelectModule,
