@@ -25,7 +25,7 @@
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/ramda/dist/ramda.min.js",
-        "app/core/preloader/preloader.ts",
+        "app/core/preloader/preloader.js",
         "modernizr.js",
         "../node_modules/flot/jquery.flot.js",
         "../node_modules/jquery.flot.tooltip/js/jquery.flot.tooltip.js",

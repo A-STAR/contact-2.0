@@ -1,21 +1,21 @@
-(function(global: any): void {
+(function(global) {
 
   let counter = 0, timeout;
-  const preloader = <HTMLElement>document.querySelector('.preloader');
-  const progressBar = <HTMLElement>document.querySelector('.preloader-progress-bar');
-  const body = <HTMLElement>document.querySelector('body');
+  const preloader = document.querySelector('.preloader');
+  const progressBar = document.querySelector('.preloader-progress-bar');
+  const body = document.querySelector('body');
 
   // disables scrollbar
   body.style.overflow = 'hidden';
 
   timeout = setTimeout(startCounter, 20);
 
-  // main.ts call this function once the app is boostrapped
+  // main.ts will call this function once the app is boostrapped
   global.appBootstrap = () => {
     setTimeout(endCounter, 1000);
   };
 
-  function startCounter(): void {
+  function startCounter() {
     const remaining = 100 - counter;
     counter = counter + (0.015 * Math.pow(1 - Math.sqrt(remaining), 2));
 
@@ -24,13 +24,13 @@
     timeout = setTimeout(startCounter, 20);
   }
 
-  function endCounter(): void {
+  function endCounter() {
 
     clearTimeout(timeout);
 
     progressBar.style.width = '100%';
 
-    setTimeout(function(): void {
+    setTimeout(function() {
       // animate preloader hiding
       removePreloader();
       // retore scrollbar
@@ -38,11 +38,11 @@
     }, 300);
   }
 
-  function removePreloader(): void {
+  function removePreloader() {
     preloader.addEventListener('transitionend', () => {
       preloader.className = 'preloader-hidden';
     });
     preloader.className += ' preloader-hidden-add preloader-hidden-add-active';
   }
 
-})((<any>window));
+})(window);
