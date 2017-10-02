@@ -3,17 +3,20 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContactTreeNode } from '../contact-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '../../../../components/flowtree/treenode/treenode.interface';
 
 import { ContactPropertyService } from '../contact-property.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   selector: 'app-contact-property-tree',
   templateUrl: './contact-property-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactPropertyTreeComponent implements OnInit {
+export class ContactPropertyTreeComponent extends DialogFunctions implements OnInit {
   contactType: number = null;
   contactTypeOptions = [];
 
@@ -22,13 +25,36 @@ export class ContactPropertyTreeComponent implements OnInit {
 
   selectedNode$ = new BehaviorSubject<IContactTreeNode>(null);
 
+  toolbarItems: IToolbarItem[] = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.setDialog('add'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.setDialog('edit'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.setDialog('delete'),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.fetch(),
+    },
+  ];
+
+  dialog: 'add' | 'edit' | 'delete';
+
   private _nodes: ITreeNode[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private userDictionariesService: UserDictionariesService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.userDictionariesService
@@ -102,9 +128,7 @@ export class ContactPropertyTreeComponent implements OnInit {
           data,
           ...(children && children.length ? { children: this.convertToTreeNodes(children) } : {}),
           sortOrder,
-          label: String(node.id),
-          // TODO(d.maltsev): switch back to name when there is valid data in the DB
-          // label: node.name,
+          label: node.name || `Node #${node.id}`,
           bgColor: node.boxColor,
           id: node.id,
           expanded: node.children && node.children.length > 0,
