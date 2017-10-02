@@ -204,6 +204,15 @@
     </app-rich-text-editor>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'segmented'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+      </span>
+    </label>
+    <app-segmented-input [formControlName]="control.controlName"></app-segmented-input>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'dynamic'">
 
     <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">

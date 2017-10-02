@@ -94,9 +94,9 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
       { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
       // TODO(d.maltsev): or templateFormula
-      { label: labelKey('templateId'), controlName: 'templateId', type: 'text' },
+      { label: labelKey('templateId'), controlName: 'templateId', type: 'segmented' },
       // TODO(d.maltsev): or nextCallFormula
-      { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'text' },
+      { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented' },
       { label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', options: dict1Options },
       { label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', options: dict2Options },
       { label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', options: dict3Options },
