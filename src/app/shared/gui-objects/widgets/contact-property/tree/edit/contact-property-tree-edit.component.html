@@ -3,8 +3,7 @@
       <h3>{{ 'widgets.contactProperty.dialogs.edit.title' | translate }}</h3>
     </div>
     <div>
-      111
-      <!-- <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form> -->
+      <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
     </div>
     <div dialog-footer>
       <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
