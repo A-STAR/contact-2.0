@@ -1,6 +1,6 @@
 (function(global) {
 
-  let counter = 0, timeout;
+  var counter = 0, timeout;
   const preloader = document.querySelector('.preloader');
   const progressBar = document.querySelector('.preloader-progress-bar');
   const body = document.querySelector('body');
