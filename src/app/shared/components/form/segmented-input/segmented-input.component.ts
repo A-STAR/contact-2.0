@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { ISegmentedInputValue, ISegmentedInputOption } from './segmented-input.interface';
@@ -18,7 +18,7 @@ import { DropdownComponent } from '../../dropdown/dropdown.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SegmentedInputComponent implements ControlValueAccessor, OnInit {
+export class SegmentedInputComponent implements ControlValueAccessor {
   @Input() options: ISegmentedInputOption[];
 
   @ViewChild(DropdownComponent) dropdown: DropdownComponent;
@@ -27,17 +27,11 @@ export class SegmentedInputComponent implements ControlValueAccessor, OnInit {
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
-  ngOnInit(): void {
-    this._value = {
-      value: '',
-      name: this.options[0].name,
-    };
-    this.propagateChange(this._value);
-    this.cdRef.markForCheck();
-  }
-
   writeValue(value: ISegmentedInputValue): void {
-    this._value = value;
+    this._value = {
+      ...value,
+      name: value.name || this.options[0].name
+    }
     this.cdRef.markForCheck();
   }
 
