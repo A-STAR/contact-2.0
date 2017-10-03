@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 import { IPerson } from '../../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { ISMSSchedule } from '../../phone.interface';
+
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.component';
 
@@ -29,12 +32,17 @@ export class PhoneGridScheduleComponent {
   constructor(
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   get canSubmit(): boolean {
     return this.tabIndex === 0
       ? this.canSubmitForm(this.formText)
       : this.canSubmitForm(this.formTemplate);
+  }
+
+  get isTextTabDisabled$(): Observable<boolean> {
+    return this.userPermissionsService.has('SMS_TEXT_SINGLE_FORM').map(permission => !permission);
   }
 
   onSubmit(): void {

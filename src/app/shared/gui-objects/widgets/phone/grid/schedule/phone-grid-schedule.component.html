@@ -4,7 +4,7 @@
   </div>
   <div>
     <app-tabstrip [disableScrollbar]="true" [inverse]="true" (select)="onTabSelect($event)">
-      <app-tab [title]="'widgets.phone.dialogs.schedule.text'" [closable]="false">
+      <app-tab [title]="'widgets.phone.dialogs.schedule.text'" [closable]="false" [disabled]="isTextTabDisabled$ | async">
         <div class="mt-lg">
           <app-phone-grid-schedule-form
             #formText

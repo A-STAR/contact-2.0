@@ -53,7 +53,7 @@ export class AuthService implements CanActivate {
       .map(token => this.isTokenValid(token))
       .do(isTokenValid => {
         if (!isTokenValid) {
-          this.dispatchResetAction();
+          this.dispatchResetAction(state.url);
         }
       });
   }
@@ -73,8 +73,8 @@ export class AuthService implements CanActivate {
     this.store.dispatch(action);
   }
 
-  dispatchResetAction(): void {
-    const action = this.createAction(AuthService.AUTH_DESTROY_SESSION);
+  dispatchResetAction(url: string = null): void {
+    const action = this.createAction(AuthService.AUTH_DESTROY_SESSION, { url });
     this.store.dispatch(action);
   }
 

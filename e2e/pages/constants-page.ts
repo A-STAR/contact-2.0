@@ -1,11 +1,9 @@
-import { browser, by, element, ElementFinder, WebElementPromise } from 'protractor';
+import { by, element, ElementFinder } from 'protractor';
 
-export class ConstantsPage {
-  static URL = '/admin/constants';
+import { AbstractPage } from '.';
 
-  async navigate(): Promise<void> {
-    return browser.get(ConstantsPage.URL);
-  }
+export class ConstantsPage extends AbstractPage {
+  protected url = '/admin/constants';
 
   async isEditToolbarButtonPresent(): Promise<boolean> {
     return this.editToolbarButton.isPresent();
@@ -19,25 +17,25 @@ export class ConstantsPage {
     return this.grid.isPresent();
   }
 
-  async isEditToolbarButtonDisabled(): Promise<boolean> {
-    return this.editToolbarButton.getAttribute('disabled').then(Boolean);
-  }
+  // async isEditToolbarButtonDisabled(): Promise<boolean> {
+  //   return this.editToolbarButton.getAttribute('disabled').then(Boolean);
+  // }
 
-  async isRefreshToolbarButtonDisabled(): Promise<boolean> {
-    return this.refreshToolbarButton.getAttribute('disabled').then(Boolean);
-  }
+  // async isRefreshToolbarButtonDisabled(): Promise<boolean> {
+  //   return this.refreshToolbarButton.getAttribute('disabled').then(Boolean);
+  // }
 
-  async clickEditToolbarButton(): Promise<void> {
-    await this.editToolbarButton.click();
-  }
+  // async clickEditToolbarButton(): Promise<void> {
+  //   await this.editToolbarButton.click();
+  // }
 
-  async clickRefreshToolbarButton(): Promise<void> {
-    await this.refreshToolbarButton.click();
-  }
+  // async clickRefreshToolbarButton(): Promise<void> {
+  //   await this.refreshToolbarButton.click();
+  // }
 
-  get gridElement(): WebElementPromise {
-    return this.grid.getWebElement();
-  }
+  // get gridElement(): WebElementPromise {
+  //   return this.grid.getWebElement();
+  // }
 
   private get grid(): ElementFinder {
     return element(by.css('app-constants app-grid'));

@@ -5,7 +5,6 @@ export interface IPerson {
   middleName?: string;
   lastName?: string,
   type?: number;
-  responsibleFullName?: string;
   reward?: number;
   debtId?: number;
   product?: string;
@@ -29,4 +28,9 @@ export interface IDebtState {
 export interface IDebtorsFetchResponse {
   success: boolean;
   debtors: IPerson[];
+}
+
+export interface IDebtsFetchResponse {
+  success: boolean;
+  debts: IDebt[];
 }

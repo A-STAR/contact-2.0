@@ -88,7 +88,7 @@ export class AuthEffects {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
       if (!action.payload || action.payload.redirectToLogin !== false) {
-        this.authService.redirectToLogin();
+        this.authService.redirectToLogin(action.payload ? action.payload.url : null);
       }
     })
     .switchMap(() => [
