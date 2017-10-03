@@ -30,15 +30,15 @@ export class ObjectService {
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
-  create(roleId: number, typeCode: number, id: number): Observable<void> {
+  create(roleId: number, typeCode: number, ids: number[]): Observable<void> {
     return this.dataService
-      .update(this.baseUrl, { roleId }, { typeCode, id, value: true })
+      .update(this.baseUrl, { roleId }, { typeCode, objects: ids.map(id => ({ id, value: true })) })
       .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  delete(roleId: number, typeCode: number, id: number): Observable<void> {
+  delete(roleId: number, typeCode: number, ids: number[]): Observable<void> {
     return this.dataService
-      .update(this.baseUrl, { roleId }, { typeCode, id, value: false })
+      .update(this.baseUrl, { roleId }, { typeCode, objects: ids.map(id => ({ id, value: false })) })
       .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }

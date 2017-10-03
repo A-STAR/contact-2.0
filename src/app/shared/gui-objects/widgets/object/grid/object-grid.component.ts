@@ -99,13 +99,13 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
 
   onAddDialogSubmit(ids: number[]): void {
     this.objectService
-      .create(this.masterRoleId$.value, this.selectedTypeCode, ids[0])
+      .create(this.masterRoleId$.value, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
     this.objectService
-      .delete(this.masterRoleId$.value, this.selectedTypeCode, this.selectedObject$.value.id)
+      .delete(this.masterRoleId$.value, this.selectedTypeCode, [ this.selectedObject$.value.id ])
       .subscribe(() => this.onSuccess());
   }
 
