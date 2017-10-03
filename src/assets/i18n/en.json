@@ -839,7 +839,10 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
-        "comment": "Comments"
+        "comment": "Comments",
+        "typeCode": "Data Type",
+        "dictNameCode": "Dictionary",
+        "disabledValue": "No Value"
       }
     },
     "contact": {
@@ -1099,7 +1102,7 @@
   },
   "entities": {
     "attribute": {
-      "gen": { "singular": "attribute", "plural": "attribtues" }
+      "gen": { "singular": "attribute", "plural": "attributes" }
     },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }

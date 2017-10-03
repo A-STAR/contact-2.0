@@ -31,8 +31,8 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() dnd = false;
 
-  @Output() select = this.gridTreeService.select.map(row => row.data);
-  @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
+  @Output() select = this.gridTreeService.select.map(row => row && row.data);
+  @Output() dblclick = this.gridTreeService.dblclick.map(row => row && row.data);
   @Output() move = new EventEmitter<IGridTreeRow<T>>();
 
   private _rows: Array<IGridTreeRow<T>> = [];

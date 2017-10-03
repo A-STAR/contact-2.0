@@ -839,7 +839,10 @@
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
-        "comment": "Комментарий"
+        "comment": "Комментарий",
+        "typeCode": "Тип данных",
+        "dictNameCode": "Словарь",
+        "disabledValue": "Не содержит значение"
       }
     },
     "contact": {

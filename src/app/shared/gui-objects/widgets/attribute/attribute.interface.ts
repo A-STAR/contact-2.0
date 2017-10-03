@@ -5,6 +5,7 @@ export interface IAttribute {
   typeCode: number;
   dictNameCode: number;
   disabledValue: number;
+  parentId: number;
 }
 
 export interface IAttributeResponse extends IAttribute {

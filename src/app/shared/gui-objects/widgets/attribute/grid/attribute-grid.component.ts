@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -8,16 +8,19 @@ import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
 import { makeKey } from '../../../../../core/utils';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-attribute-grid',
-  templateUrl: './attribute-grid.component.html'
+  templateUrl: './attribute-grid.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
@@ -49,12 +52,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
-      enabled: this.canEdit$,
+      enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
-      enabled: this.canDelete$,
+      enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -64,7 +67,11 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   dialog: 'add' | 'edit' | 'delete';
 
-  constructor(private attributeService: AttributeService) {
+  constructor(
+    private attributeService: AttributeService,
+    private cdRef: ChangeDetectorRef,
+    private userPermissionsService: UserPermissionsService,
+  ) {
     super();
   }
 
@@ -76,13 +83,31 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     return this.selectedAttribute$.map(attribute => attribute.id);
   }
 
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_ADD');
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_EDIT');
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
+  }
+
   onSelect(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
   }
 
   onEdit(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
-    this.setDialog('edit');
+    this.canEdit$
+      .take(1)
+      .filter(Boolean)
+      .subscribe(() => {
+        this.setDialog('edit');
+        this.cdRef.markForCheck();
+      });
   }
 
   onMove(row: IGridTreeRow<IAttribute>): void {
@@ -91,7 +116,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onAddDialogSubmit(attribute: IAttribute): void {
-    this.attributeService.create(attribute)
+    const parentId = this.selectedAttribute$.value ? this.selectedAttribute$.value.id : null;
+    this.attributeService.create({ ...attribute, parentId })
       .subscribe(() => this.onSuccess());
   }
 
@@ -120,23 +146,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   private fetch(): void {
     this.attributeService.fetchAll().subscribe(attributes => {
       this.attributes = this.convertToGridTreeRow(attributes);
+      this.cdRef.markForCheck();
     });
   }
 
   private onSuccess(): void {
     this.setDialog(null);
     this.fetch();
- }
-
-  private get canAdd$(): Observable<boolean> {
-    return Observable.of(true);
-  }
-
-  private get canEdit$(): Observable<boolean> {
-    return Observable.of(true);
-  }
-
-  private get canDelete$(): Observable<boolean> {
-    return Observable.of(true);
   }
 }
