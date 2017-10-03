@@ -831,6 +831,10 @@
       "dialogs": {
         "edit": {
           "title": "Edit Attribute"
+        },
+        "delete": {
+          "title": "Delete attribute",
+          "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
         }
       },
       "grid": {

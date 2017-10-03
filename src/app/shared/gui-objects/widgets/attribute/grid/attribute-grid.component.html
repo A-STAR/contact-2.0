@@ -26,7 +26,7 @@
 
 <app-gridtree-wrapper
   [columns]="columns"
-  [dnd]="canEdit$ | async"
+  [dnd]="true"
   [rows]="attributes"
   (select)="onSelect($event)"
   (dblclick)="onEdit($event)"

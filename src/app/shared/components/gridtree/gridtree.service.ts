@@ -78,7 +78,7 @@ export class GridTreeService<T> {
     idGetter: IUniqueIdGetter<T>,
   ): Array<IGridTreeRow<T>> {
     const i = rows.findIndex(r => idGetter(r) === idGetter(parent));
-    const sortOrder = i >= 0 ? rows[i].sortOrder + 1 : null;
+    const sortOrder = i >= 0 ? rows[i].sortOrder + (rows[i].sortOrder > row.sortOrder ? 0 : 1) : null;
     return (i >= 0
       ? [ ...rows.slice(0, i + 1), { ...row, sortOrder, parentId: rows[i].parentId }, ...rows.slice(i + 1) ]
       : rows.map(r => {
