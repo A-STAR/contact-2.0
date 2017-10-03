@@ -1,0 +1,18 @@
+<app-entity-attribute-grid-edit
+  *ngIf="isDialog('edit')"
+  [selectedAttribute]="selectedAttribute$ | async"
+  [debtId]="debtId"
+  [entityTypeId]="entityTypeId"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-entity-attribute-grid-edit>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
+<app-gridtree-wrapper
+  [columns]="columns"
+  [idGetter]="idGetter"
+  [rows]="rows"
+  (dblclick)="onRowDblClick($event)"
+  (select)="onRowSelect($event)">
+</app-gridtree-wrapper>

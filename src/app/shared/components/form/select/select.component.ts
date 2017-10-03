@@ -205,9 +205,11 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   canCloseItem(item: ILabeledValue): boolean {
+    const option = this.lookupAtOptions(item.value);
     return this.closableSelectedItem
       && !!this._active.length
-      && this.lookupAtOptions(item.value).canRemove !== false;
+      && option
+      && option.canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {

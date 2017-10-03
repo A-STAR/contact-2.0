@@ -29,6 +29,7 @@
   <app-gridtree-rowgroup
     *ngFor="let child of row.children"
     [columns]="columns"
+    [dnd]="dnd"
     [idGetter]="idGetter"
     [nestingLevel]="nestingLevel + 1"
     [row]="child">

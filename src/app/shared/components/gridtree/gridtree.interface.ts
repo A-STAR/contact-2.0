@@ -1,7 +1,9 @@
 export interface IGridTreeRow<T> {
   data: T;
+  parentId?: number | string;
   children?: Array<IGridTreeRow<T>>;
   isExpanded?: boolean;
+  sortOrder?: number;
 }
 
 type IDataToValue<T, R> = (value: boolean | number | string | Date, data: T) => R;

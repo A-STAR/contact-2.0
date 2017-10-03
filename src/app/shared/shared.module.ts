@@ -45,6 +45,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
@@ -73,7 +74,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // Angle modules
     TranslateModule,
     TextMaskModule,
-    MultiSelectModule,
     PerfectScrollbarModule,
     // app modules
     AccordionModule,
@@ -98,6 +98,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
+    MultiSelectModule,
+    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -172,6 +174,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MultiSelectModule,
+    MultiTextModule,
     NumericInputComponent,
     PasswordModule,
     PopupInputModule,

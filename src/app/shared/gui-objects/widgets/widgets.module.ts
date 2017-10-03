@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AddressModule } from './address/address.module';
 import { AttributeModule } from './attribute/attribute.module';
+import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { ContactModule } from './contact/contact.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtModule } from './debt/debt.module';
@@ -27,6 +28,7 @@ import { PromiseModule } from './promise/promise.module';
     DocumentModule,
     EmailModule,
     EmploymentModule,
+    EntityAttributeModule,
     IdentityModule,
     MessageTemplateModule,
     ObjectModule,
@@ -43,6 +45,7 @@ import { PromiseModule } from './promise/promise.module';
     DocumentModule,
     EmailModule,
     EmploymentModule,
+    EntityAttributeModule,
     IdentityModule,
     MessageTemplateModule,
     ObjectModule,

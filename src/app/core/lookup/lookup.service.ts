@@ -5,7 +5,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
 
-import { valuesToOptions } from '../utils';
+import { valuesToOptions, toOption } from '../utils';
 
 import {
   ILookupState,
@@ -45,7 +45,9 @@ export class LookupService {
     const result = this.getSlice(entity);
     switch (entity) {
       case 'currencies':
-        return result.map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })));
+        return result.map(currencies => currencies.map(toOption('id', 'code')));
+      case 'dictionaries':
+        return result.map(dictionaries => dictionaries.map(toOption('code', 'name')));
       case 'users':
         return result.map(users => users.map((user: any) =>
           ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })));

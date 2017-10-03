@@ -1,4 +1,13 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  EventEmitter,
+  Input,
+  Output,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -18,12 +27,13 @@ import { GridTreeService } from './gridtree.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ GridTreeService ]
 })
-export class GridTreeComponent<T> implements OnDestroy {
+export class GridTreeComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Array<IGridTreeColumn<T>> = [];
   @Input() dnd = false;
 
-  @Output() select = this.gridTreeService.select.map(row => row.data);
-  @Output() dblclick = this.gridTreeService.dblclick.map(row => row.data);
+  @Output() select = this.gridTreeService.select.map(row => row && row.data);
+  @Output() dblclick = this.gridTreeService.dblclick.map(row => row && row.data);
+  @Output() move = new EventEmitter<IGridTreeRow<T>>();
 
   private _rows: Array<IGridTreeRow<T>> = [];
 
@@ -32,7 +42,9 @@ export class GridTreeComponent<T> implements OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridTreeService: GridTreeService<T>,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     if (this.dnd) {
       this.gridTreeServiceSubscription = this.gridTreeService.drop.subscribe((event: IGridTreeDragAndDropEvent<T>) => {
         if (
@@ -48,6 +60,8 @@ export class GridTreeComponent<T> implements OnDestroy {
           this._rows = this.gridTreeService.addRowAfter(this._rows, event.draggedRow, event.targetRow, this.idGetter);
         }
         this.cdRef.markForCheck();
+        const draggedRow = this.gridTreeService.findById(this._rows, this.idGetter(event.draggedRow), this.idGetter);
+        this.move.emit(draggedRow);
       });
     }
   }

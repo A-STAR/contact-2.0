@@ -1,79 +1,63 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
+import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
-import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
-
 import { makeKey } from '../../../../../core/utils';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-attribute-grid',
   templateUrl: './attribute-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
-  private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
-    {
-      label: labelKey('code'),
-      prop: 'code',
-    },
+  selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
+
+  columns: Array<IGridWrapperTreeColumn<any>> = [
     {
       label: labelKey('name'),
       prop: 'name',
     },
     {
-      label: labelKey('value'),
-      valueGetter: (_, data) => getRawValue(data),
-      // TODO(d.maltsev): predefined formatting options e.g. 'date', 'datetime', etc.
-      valueFormatter: (value, data) => {
-        switch (data.typeCode) {
-          case 2:
-            return this.valueConverterService.ISOToLocalDate(value as string) || '';
-          case 7:
-            return this.valueConverterService.ISOToLocalDateTime(value as string) || '';
-          default:
-            return value as string;
-        }
-      },
-      dictCode: data => getDictCodeForValue(data),
+      label: labelKey('code'),
+      prop: 'code',
     },
     {
-      label: labelKey('userFullName'),
-      prop: 'userFullName',
-    },
-    {
-      label: labelKey('changeDateTime'),
-      prop: 'changeDateTime',
-      valueFormatter: value => this.valueConverterService.ISOToLocalDateTime(value as string) || '',
-    },
-    {
-      label: labelKey('comment'),
-      prop: 'comment',
+      label: labelKey('typeCode'),
+      prop: 'typeCode',
+      // FIXME(d.maltsev): pass number instead of function
+      dictCode: () => 1,
     },
   ];
+  attributes: IGridTreeRow<IAttribute>[] = [];
 
-  selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
-
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.setDialog('add'),
+      enabled: this.canAdd$,
+    },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
-      enabled: this.canEdit$,
+      enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.setDialog('delete'),
+      enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -81,20 +65,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     },
   ];
 
-  dialog: 'edit';
-
-  rows: IGridTreeRow<Partial<IAttribute>>[] = [];
-
-  debtId = (<any>this.route.params).value.debtId;
-  // TODO(d.maltsev): entityTypeId should be configurable
-  entityTypeId = 19;
+  dialog: 'add' | 'edit' | 'delete';
 
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     super();
   }
@@ -103,15 +79,27 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.fetch();
   }
 
-  get columns(): Array<IGridTreeColumn<IAttribute>> {
-    return this._columns;
+  get selectedAttributeId$(): Observable<number> {
+    return this.selectedAttribute$.map(attribute => attribute.id);
   }
 
-  get selectedAttributeCode$(): Observable<number> {
-    return this.selectedAttribute$.map(attribute => attribute.code);
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_ADD');
   }
 
-  onRowDblClick(attribute: IAttribute): void {
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_EDIT');
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
+  }
+
+  onSelect(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+  }
+
+  onEdit(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
     this.canEdit$
       .take(1)
@@ -122,41 +110,48 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
       });
   }
 
-  onRowSelect(attribute: IAttribute): void {
-    this.selectedAttribute$.next(attribute);
+  onMove(row: IGridTreeRow<IAttribute>): void {
+    this.attributeService.update(row.data.id, { parentId: row.parentId, sortOrder: row.sortOrder } as any)
+      .subscribe(() => this.onSuccess());
   }
 
-  onEditDialogSubmit(attribute: Partial<IAttribute>): void {
-    this.attributeService.update(this.entityTypeId, this.debtId, this.selectedAttribute$.value.code, attribute).subscribe(() => {
-      this.fetch();
-      this.setDialog(null);
-      this.cdRef.markForCheck();
-    });
+  onAddDialogSubmit(attribute: IAttribute): void {
+    const parentId = this.selectedAttribute$.value ? this.selectedAttribute$.value.id : null;
+    this.attributeService.create({ ...attribute, parentId })
+      .subscribe(() => this.onSuccess());
   }
 
-  idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
-
-  private get canEdit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-      this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
-    ]);
+  onEditDialogSubmit(attribute: IAttribute): void {
+    this.attributeService.update(this.selectedAttribute$.value.id, attribute)
+      .subscribe(() => this.onSuccess());
   }
 
-  private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+  onRemoveDialogSubmit(): void {
+    this.attributeService.delete(this.selectedAttribute$.value.id)
+      .subscribe(() => this.onSuccess());
+  }
+
+  private convertToGridTreeRow(attributes: IAttributeResponse[], parentId: number = null): IGridTreeRow<IAttribute>[] {
+    const sortByOrder = (a, b) => a.sortOrder - b.sortOrder;
     return attributes.map(attribute => {
-      const { children, ...rest } = attribute;
+      const { children, sortOrder, ...rest } = attribute;
       const hasChildren = children && children.length > 0;
+      const node = { data: rest, sortOrder, parentId };
       return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
-        : { data: rest };
+        ? { ...node, children: this.convertToGridTreeRow(children, rest.id).sort(sortByOrder), isExpanded: true }
+        : node;
     });
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll(this.entityTypeId, this.debtId).subscribe(attributes => {
-      this.rows = this.convertToGridTreeRow(attributes);
+    this.attributeService.fetchAll().subscribe(attributes => {
+      this.attributes = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });
+  }
+
+  private onSuccess(): void {
+    this.setDialog(null);
+    this.fetch();
   }
 }
