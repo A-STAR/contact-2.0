@@ -12,8 +12,8 @@ import { ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
-import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
+import { SharedModule } from './shared/shared.module';
 
 // https://github.com/ocombe/ng2-translate/issues/218
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
@@ -27,13 +27,13 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    CoreModule,
     FormsModule,
     HttpClientModule,
     HttpModule,
-    CoreModule,
     LayoutModule,
-    SharedModule.forRoot(),
     RoutesModule,
+    SharedModule.forRoot(),
     ToasterModule,
     TranslateModule.forRoot({
       loader: {
