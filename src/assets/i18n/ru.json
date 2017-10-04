@@ -220,6 +220,7 @@
       "middleName": "Отчество",
       "photo": "Фото",
       "inactive": "Блокирован",
+      "isAutoReset": "Автоматическое перезакрепление",
       "login": "Логин",
       "password": "Пароль",
       "ldapLogin": "LDAP-логин",

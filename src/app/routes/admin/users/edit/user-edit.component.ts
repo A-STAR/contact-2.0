@@ -147,6 +147,7 @@ export class UserEditComponent {
       { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', disabled: !this.permissions.canEditLdap,
           action: () => this.isLdapUserBeingSelected = true },
       { label: 'users.edit.inactive', controlName: 'isInactive', type: 'checkbox' },
+      { label: 'users.edit.isAutoReset', controlName: 'isAutoReset', type: 'checkbox' },
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !this.permissions.canEditRole,
           options: roles },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
@@ -183,15 +184,17 @@ export class UserEditComponent {
   }
 
   private getFormData(user: IUser): Partial<IUser> {
-    return this.userId ? {
-      ...user,
-      startWorkDate: this.valueConverterService.fromISO(user.startWorkDate as string),
-      endWorkDate: this.valueConverterService.fromISO(user.endWorkDate as string),
-      languageId: user.languageId,
-      roleId: user.roleId,
-    } : {
-      roleId: 1,
-      languageId: 1
-    };
+    return this.userId
+      ? {
+        ...user,
+        startWorkDate: this.valueConverterService.fromISO(user.startWorkDate as string),
+        endWorkDate: this.valueConverterService.fromISO(user.endWorkDate as string),
+        languageId: user.languageId,
+        roleId: user.roleId,
+      }
+      : {
+        roleId: 1,
+        languageId: 1
+      };
   }
 }
