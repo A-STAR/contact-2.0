@@ -76,7 +76,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
+      .subscribe(canView => {
+        if (canView) {
+          this.fetch();
+        } else {
+          this.attributes = [];
+          this.cdRef.markForCheck();
+        }
+      });
   }
 
   get selectedAttributeId$(): Observable<number> {
