@@ -21,4 +21,20 @@ export class ContactPropertyService {
       .map(response => response.data)
       .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.plural').dispatchCallback());
   }
+
+  // TODO(d.maltsev): move to lookup service
+  fetchAttributeTypes(): Observable<any[]> {
+    const url = '/lookup/attributeTypes';
+    return this.dataService
+      .read(url)
+      .map(response => response.data);
+  }
+
+  // TODO(d.maltsev): move to lookup service
+  fetchTemplates(typeCode: number, recipientTypeCode: number, isSentOnce: boolean): Observable<any[]> {
+    const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSentOnce}';
+    return this.dataService
+      .read(url, { typeCode, recipientTypeCode, isSentOnce: Number(isSentOnce) })
+      .map(response => response.templates);
+  }
 }

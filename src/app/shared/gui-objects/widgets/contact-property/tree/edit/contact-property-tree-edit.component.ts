@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
+import { ContactPropertyService } from '../../contact-property.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { makeKey } from '../../../../../../core/utils';
@@ -21,27 +24,34 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   controls: IDynamicFormItem[];
   data = {};
+  attributeTypes = {};
 
   private _formSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactPropertyService: ContactPropertyService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = this.userDictionariesService.getDictionariesAsOptions([
-      UserDictionariesService.DICTIONARY_DEBT_STATUS,
-      UserDictionariesService.DICTIONARY_DEBT_LIST_1,
-      UserDictionariesService.DICTIONARY_DEBT_LIST_2,
-      UserDictionariesService.DICTIONARY_DEBT_LIST_3,
-      UserDictionariesService.DICTIONARY_DEBT_LIST_4,
-      UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
-      UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
-    ]).subscribe(dictionaries => {
-      this.controls = this.buildControls(dictionaries);
+    this._formSubscription = Observable.combineLatest(
+      this.userDictionariesService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_DEBT_STATUS,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_1,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_2,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_3,
+        UserDictionariesService.DICTIONARY_DEBT_LIST_4,
+        UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
+        UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
+      ]),
+      this.contactPropertyService.fetchTemplates(4, 0, true),
+    ).subscribe(([ dictionaries, templates ]) => {
+      this.controls = this.buildControls(dictionaries, templates);
       this.cdRef.markForCheck();
     });
+
+    this.contactPropertyService.fetchAttributeTypes().subscribe(attributeTypes => this.attributeTypes = attributeTypes);
   }
 
   ngOnDestroy(): void {
@@ -60,7 +70,13 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     this.cancel.emit();
   }
 
-  private buildControls(dictionaries: { [key: number]: IOption[] }): IDynamicFormItem[] {
+  private buildControls(
+    dictionaries: { [key: number]: IOption[] },
+    templates: any[],
+  ): IDynamicFormItem[] {
+
+    console.log(templates);
+
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
     const promiseModeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE];
