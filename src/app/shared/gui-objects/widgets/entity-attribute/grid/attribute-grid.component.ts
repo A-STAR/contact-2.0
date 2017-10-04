@@ -27,6 +27,10 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
+
+  // TODO(d.maltsev): entityTypeId should be configurable
+  entityTypeId = 19;
+
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
     {
       label: labelKey('code'),
@@ -73,7 +77,10 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
-      enabled: this.canEdit$,
+      enabled: combineLatestAnd([
+        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+        this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -86,8 +93,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
   debtId = (<any>this.route.params).value.debtId;
-  // TODO(d.maltsev): entityTypeId should be configurable
-  entityTypeId = 19;
 
   constructor(
     private attributeService: AttributeService,
@@ -100,7 +105,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      .subscribe(canView => {
+        if (canView) {
+          this.fetch();
+        } else {
+          this.rows = [];
+          this.cdRef.markForCheck();
+        }
+      });
   }
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
