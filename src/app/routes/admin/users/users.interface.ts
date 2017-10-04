@@ -1,23 +1,24 @@
 export interface IUser {
   id: number;
-  login: string;
-  roleId: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
   comment: string;
   email: string;
-  password: string;
-  ldapLogin: string;
-  workPhone: string;
-  mobPhone: string;
-  intPhone: string;
-  workAddress: string;
-  position: string;
-  startWorkDate: string | Date;
   endWorkDate: string | Date;
-  languageId: number;
+  intPhone: string;
+  isAutoReset: boolean;
   isInactive: boolean;
+  firstName: string;
+  middleName: string;
+  languageId: number;
+  lastName: string;
+  ldapLogin: string;
+  login: string;
+  mobPhone: string;
+  password: string;
+  position: string;
+  roleId: number;
+  startWorkDate: string | Date;
+  workAddress: string;
+  workPhone: string;
 }
 
 export interface IUsersResponse {

@@ -220,6 +220,7 @@
       "middleName": "Middle name",
       "photo": "Photo",
       "inactive": "Inactive",
+      "isAutoReset": "Auto reset",
       "login": "Login",
       "password": "Password",
       "ldapLogin": "LDAP login",
