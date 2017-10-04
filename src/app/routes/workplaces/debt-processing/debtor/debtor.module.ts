@@ -9,6 +9,7 @@ import { DebtorDebtModule } from './debt/debt.module';
 import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
+import { DebtorGuarantorModule } from './guarantor/guarantor.module';
 import { DebtorIdentityModule } from './identity/identity.module';
 import { DebtorPaymentModule } from './payment/payment.module';
 import { DebtorPhoneModule } from './phone/phone.module';
@@ -29,6 +30,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorDocumentModule,
     DebtorEmailModule,
     DebtorEmploymentModule,
+    DebtorGuarantorModule,
     DebtorIdentityModule,
     DebtorPaymentModule,
     DebtorPhoneModule,

@@ -528,6 +528,9 @@
     "propertyTab": {
       "title": "Имущество"
     },
+    "guarantorsTab": {
+      "title": "Поручители"
+    },
     "contactsTab": {
       "title": "Контакты",
       "remove": {
@@ -574,12 +577,6 @@
         "download": "Не удалось скачать документ"
       }
     },
-    "accountsTab": {
-      "title": "Счета"
-    },
-    "tasksTab": {
-      "title": "Задачи"
-    },
     "employmentRecordTab": {
       "title": "История трудоустройства",
       "remove": {
@@ -589,21 +586,6 @@
     },
     "actionLogTab": {
       "title": "Лог действий"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
-    },
-    "commentTab": {
-      "title": "Комментарий"
-    },
-    "promotionsTab": {
-      "title": "Акции"
-    },
-    "socialNetworksTab": {
-      "title": "Социальные сети"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Доп. инфо"
     },
     "attributesTab": {
       "title": "Атрибуты"

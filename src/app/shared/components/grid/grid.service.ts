@@ -157,7 +157,6 @@ export class GridService {
           }
           return renderer ? this.setRenderer(column, renderer as Function) : column;
         });
-
   }
 
   // NOTE: ag-grid only

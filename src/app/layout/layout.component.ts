@@ -28,6 +28,7 @@ export class LayoutComponent {
     DebtorDocumentComponent: 'DEBTOR_DOCUMENT',
     DebtorEmailComponent: 'DEBTOR_EMAIL',
     DebtorEmploymentComponent: 'DEBTOR_EMPLOYMENT',
+    DebtorGuarantorComponent: 'DEBTOR_GUARANTOR',
     DebtorIdentityComponent: 'DEBTOR_IDENTITY',
     DebtorPaymentComponent: 'DEBTOR_PAYMENT',
     DebtorPhoneComponent: 'DEBTOR_PHONE',

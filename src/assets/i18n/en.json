@@ -528,6 +528,9 @@
     "propertyTab": {
       "title": "Property"
     },
+    "guarantorsTab": {
+      "title": "Guarantors"
+    },
     "contactsTab": {
       "title": "Contacts",
       "remove": {
@@ -574,12 +577,6 @@
         "download": "Could not download document"
       }
     },
-    "accountsTab": {
-      "title": "Accounts"
-    },
-    "tasksTab": {
-      "title": "Tasks"
-    },
     "employmentRecordTab": {
       "title": "Employment record",
       "remove": {
@@ -589,21 +586,6 @@
     },
     "actionLogTab": {
       "title": "Actions log"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Arbitrary attributes"
-    },
-    "commentTab": {
-      "title": "Comments"
-    },
-    "promotionsTab": {
-      "title": "Promotions"
-    },
-    "socialNetworksTab": {
-      "title": "Social networks"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Debt info"
     },
     "attributesTab": {
       "title": "Attributes"
