@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AddressModule } from './address/address.module';
 import { AttributeModule } from './attribute/attribute.module';
+import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
@@ -12,6 +13,7 @@ import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { IdentityModule } from './identity/identity.module';
 import { MessageTemplateModule } from './message-template/message-template.module';
+import { ObjectModule } from './object/object.module';
 import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
@@ -28,8 +30,10 @@ import { PromiseModule } from './promise/promise.module';
     DocumentModule,
     EmailModule,
     EmploymentModule,
+    EntityAttributeModule,
     IdentityModule,
     MessageTemplateModule,
+    ObjectModule,
     PaymentModule,
     PhoneModule,
     PromiseModule,
@@ -44,8 +48,10 @@ import { PromiseModule } from './promise/promise.module';
     DocumentModule,
     EmailModule,
     EmploymentModule,
+    EntityAttributeModule,
     IdentityModule,
     MessageTemplateModule,
+    ObjectModule,
     PaymentModule,
     PhoneModule,
     PromiseModule,

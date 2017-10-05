@@ -2,10 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewC
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 import { IPerson } from './debtor.interface';
+import { IDebt } from '../debt-processing.interface';
 
 import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -28,16 +30,19 @@ export class DebtorComponent implements OnDestroy {
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
-  person: IPerson;
+  person: Partial<IPerson & IDebt>;
   controls: Array<IDynamicFormGroup>;
 
-  private personId = (this.route.params as any).value.personId || null;
+  private routeParams = (this.route.params as any).value;
+  private debtId = this.routeParams.debtId || null;
+  private personId = this.routeParams.personId || null;
   private personSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
+    private translate: TranslateService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
@@ -45,12 +50,16 @@ export class DebtorComponent implements OnDestroy {
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
-      this.debtorService.fetch(this.personId)
+      this.debtorService.fetch(this.personId),
+      this.debtorService.fetchDebt(this.debtId)
     )
-    .subscribe(([ personTypeOptions, canEdit, person ]) => {
+    .subscribe(([ personTypeOptions, canEdit, person, debt ]) => {
       this.person = {
         ...person,
-        birthDate: this.valueConverterService.fromISO(person.birthDate as string)
+        birthDate: this.valueConverterService.fromISO(person.birthDate as string),
+        responsibleFullName: debt.responsibleFullName || this.translate.instant('default.NA'),
+        utc: debt.utc,
+        shortInfo: debt.shortInfo,
       };
       this.controls = this.getControls(canEdit, personTypeOptions);
       this.cdRef.markForCheck();
@@ -62,10 +71,7 @@ export class DebtorComponent implements OnDestroy {
   }
 
   get canSubmit(): boolean {
-    const formGeneral = this.form && this.form.form;
-    const formInformation = this.information.form && this.information.form.form;
-    return formGeneral && formInformation && formGeneral.valid && formInformation.valid
-      && (formGeneral.dirty || formInformation.dirty);
+    return this.form && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
   }
 
   onSubmit(): void {
@@ -90,7 +96,8 @@ export class DebtorComponent implements OnDestroy {
           { width: 2, label: 'debtor.firstName', controlName: 'firstName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.type', controlName: 'typeCode', type: 'select', options: personTypeOptions, disabled: true },
-          { width: 2, label: 'debtor.responsible', controlName: 'responsibleFullName', type: 'text', disabled: true },
+          { width: 2, label: 'debtor.responsibleFullName', controlName: 'responsibleFullName', type: 'text', disabled: true },
+          { width: 12, label: 'debtor.shortInfo', controlName: 'shortInfo', type: 'textarea', disabled: true },
         ]
       }
     ];

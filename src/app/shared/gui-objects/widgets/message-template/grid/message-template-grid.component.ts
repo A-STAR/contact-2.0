@@ -91,10 +91,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   onDblClick(template: IMessageTemplate): void {
     this.selectedTemplateId$.next(template.id);
-    this.userPermissionsService.has('TEMPLATE_EDIT')
-      .take(1)
-      .filter(Boolean)
-      .subscribe(() => this.onEdit());
+    this.onEdit();
   }
 
   onAdd(): void {

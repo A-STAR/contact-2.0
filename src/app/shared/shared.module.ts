@@ -38,12 +38,14 @@ import { FileUploadModule } from './components/form/file-upload/file-upload.modu
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GridTreeModule } from './components/gridtree/gridtree.module';
+import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
@@ -72,7 +74,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // Angle modules
     TranslateModule,
     TextMaskModule,
-    MultiSelectModule,
     PerfectScrollbarModule,
     // app modules
     AccordionModule,
@@ -91,11 +92,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
+    MultiSelectModule,
+    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -163,12 +167,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
     MultiSelectModule,
+    MultiTextModule,
     NumericInputComponent,
     PasswordModule,
     PopupInputModule,

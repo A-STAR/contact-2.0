@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IDebt } from '../debt-processing.interface';
-import { IPerson, IPersonsResponse } from './debtor.interface';
+import { IPerson, IPersonsResponse, IDebtsFetchResponse } from './debtor.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -26,13 +26,20 @@ export class DebtorService {
     return this.dataService
       .read('/persons/{personId}', { personId })
       .map((response: IPersonsResponse) => response.persons[0])
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.persons.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.persons.gen.singular').dispatchCallback());
+  }
+
+  fetchDebt(debtId: number): Observable<IDebt> {
+    return this.dataService
+      .read('/debts/{debtId}', { debtId })
+      .map((response: IDebtsFetchResponse) => response.debts[0])
+      .catch(this.notificationsService.fetchError().entity('entities.persons.gen.singular').dispatchCallback());
   }
 
   update(personId: number, person: IPerson): Observable<void> {
     return this.dataService
       .update('/persons/{personId}', { personId }, person)
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.persons.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback());
   }
 
   currentDebt$(): Observable<IDebt> {

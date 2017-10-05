@@ -1,95 +1,165 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttribute, IAttributeResponse } from '../attribute.interface';
-import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
+import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+
+import { makeKey } from '../../../../../core/utils';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
+
+const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-attribute-grid',
   templateUrl: './attribute-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeGridComponent extends DialogFunctions {
-  private _columns: Array<IGridTreeColumn<IAttribute>> = [
-    { label: 'Name', prop: 'name' },
-    { label: 'Code', prop: 'code' },
-    { label: 'TypeCode', prop: 'typeCode' },
-  ];
+export class AttributeGridComponent extends DialogFunctions implements OnInit {
+  selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  columns: Array<IGridWrapperTreeColumn<any>> = [
+    {
+      label: labelKey('name'),
+      prop: 'name',
+    },
+    {
+      label: labelKey('code'),
+      prop: 'code',
+    },
+    {
+      label: labelKey('typeCode'),
+      prop: 'typeCode',
+      // FIXME(d.maltsev): pass number instead of function
+      dictCode: () => 1,
+    },
+  ];
+  attributes: IGridTreeRow<IAttribute>[] = [];
+
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => console.log('add'),
+      action: () => this.setDialog('add'),
+      enabled: this.canAdd$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => console.log('edit'),
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => console.log('delete'),
+      action: () => this.setDialog('delete'),
+      enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => console.log('fetch'),
+      action: () => this.fetch(),
     },
   ];
 
   dialog: 'add' | 'edit' | 'delete';
 
-  rows: IGridTreeRow<Partial<IAttribute>>[] = [];
-
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
-    this.fetch(1);
   }
 
-  get options$(): Observable<IOption[]> {
-    return this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ATTRIBUTE_TREE_TYPE)
-      .distinctUntilChanged();
+  ngOnInit(): void {
+    this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
+      .subscribe(canView => {
+        if (canView) {
+          this.fetch();
+        } else {
+          this.attributes = [];
+          this.cdRef.markForCheck();
+        }
+      });
   }
 
-  get columns(): Array<IGridTreeColumn<IAttribute>> {
-    return this._columns;
+  get selectedAttributeId$(): Observable<number> {
+    return this.selectedAttribute$.map(attribute => attribute.id);
   }
 
-  onChange(event: Event): void {
-    this.fetch(Number((event.target as HTMLSelectElement).value));
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_ADD');
   }
 
-  onRowDblClick(row: IAttribute): void {
-    console.log('double click', row);
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_EDIT');
   }
 
-  onRowSelect(row: IAttribute): void {
-    console.log('select', row);
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
   }
 
-  private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+  onSelect(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+  }
+
+  onEdit(attribute: IAttribute): void {
+    this.selectedAttribute$.next(attribute);
+    this.canEdit$
+      .take(1)
+      .filter(Boolean)
+      .subscribe(() => {
+        this.setDialog('edit');
+        this.cdRef.markForCheck();
+      });
+  }
+
+  onMove(row: IGridTreeRow<IAttribute>): void {
+    this.attributeService.update(row.data.id, { parentId: row.parentId, sortOrder: row.sortOrder } as any)
+      .subscribe(() => this.onSuccess());
+  }
+
+  onAddDialogSubmit(attribute: IAttribute): void {
+    const parentId = this.selectedAttribute$.value ? this.selectedAttribute$.value.id : null;
+    this.attributeService.create({ ...attribute, parentId })
+      .subscribe(() => this.onSuccess());
+  }
+
+  onEditDialogSubmit(attribute: IAttribute): void {
+    this.attributeService.update(this.selectedAttribute$.value.id, attribute)
+      .subscribe(() => this.onSuccess());
+  }
+
+  onRemoveDialogSubmit(): void {
+    this.attributeService.delete(this.selectedAttribute$.value.id)
+      .subscribe(() => this.onSuccess());
+  }
+
+  private convertToGridTreeRow(attributes: IAttributeResponse[], parentId: number = null): IGridTreeRow<IAttribute>[] {
+    const sortByOrder = (a, b) => a.sortOrder - b.sortOrder;
     return attributes.map(attribute => {
-      const { children, ...rest } = attribute;
+      const { children, sortOrder, ...rest } = attribute;
       const hasChildren = children && children.length > 0;
+      const node = { data: rest, sortOrder, parentId };
       return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
-        : { data: rest };
+        ? { ...node, children: this.convertToGridTreeRow(children, rest.id).sort(sortByOrder), isExpanded: true }
+        : node;
     });
   }
 
-  private fetch(type: number): void {
-    this.attributeService.fetchAll(type).subscribe(attributes => this.rows = this.convertToGridTreeRow(attributes));
-    this.cdRef.markForCheck();
+  private fetch(): void {
+    this.attributeService.fetchAll().subscribe(attributes => {
+      this.attributes = this.convertToGridTreeRow(attributes);
+      this.cdRef.markForCheck();
+    });
+  }
+
+  private onSuccess(): void {
+    this.setDialog(null);
+    this.fetch();
   }
 }

@@ -9,6 +9,7 @@ export class TabComponent {
   @Input() title: string;
   @Input() active = false;
   @Input() closable = true;
+  @Input() disabled = false;
   @Output() onClose = new EventEmitter<number>();
 
   constructor() {}

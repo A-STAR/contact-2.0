@@ -68,7 +68,7 @@ export class DebtComponentCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const value = this.form.dirtyValue;
     const data = {
       ...value,
@@ -86,11 +86,11 @@ export class DebtComponentCardComponent {
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

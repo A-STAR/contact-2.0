@@ -4,24 +4,18 @@
   display: block;
   position: relative;
   user-select: none;
+  overflow: visible;
 }
 
 .content {
-  &:before,
-  &:after {
-    display: block;
-    content: '';
-  }
-  &:after {
-    clear: both;
-  }
-
+  overflow: visible;
+  white-space: nowrap;
   > div {
     border-bottom: 1px solid $app-gridtree-border-color-light;
     border-right: 1px solid $app-gridtree-border-color;
-    float: left;
+    display: inline-block;
     padding: 0 10px;
-    width: 250px;
+    width: 200px;
     &.is-dragged {
       background-color: $app-gridtree-dragged-row-bg-color;
     }

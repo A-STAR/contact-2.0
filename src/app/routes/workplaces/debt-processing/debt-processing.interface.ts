@@ -1,23 +1,26 @@
 export interface IDebt {
+  bankName: string;
+  branchCode: number;
+  creditEndDate: Date | string;
+  creditName: string;
+  creditStartDate: Date | string;
+  creditTypeCode: number;
+  contract: string;
+  currency: string;
+  debtAmount: number;
   debtId: number;
+  dpd: number;
   personId: number;
   personFullName: string;
   personTypeCode: number;
   personBirthDate: Date | string;
-  creditTypeCode: number;
-  creditName: string;
   portfolioName: string;
-  bankName: string;
-  contract: string;
-  statusCode: number;
   regionCode: number;
-  branchCode: number;
+  responsibleFullName?: string;
+  shortInfo?: string;
   startDate: Date | string;
-  dpd: number;
-  debtAmount: number;
+  statusCode: number;
   totalAmount: number;
-  currency: string;
-  creditStartDate: Date | string;
-  creditEndDate: Date | string;
+  utc?: Date | string;
 }
 

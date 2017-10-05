@@ -33,7 +33,7 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
-        "DICTIONARIES": "Dictionaries",
+        "DICTIONARIES": "Reference",
         "PORTFOLIOS": "Portfolios",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
@@ -115,7 +115,7 @@
     "action": {
       "add": "Create",
       "edit": "Edit",
-      "remove": "Remove",
+      "remove": "Delete",
       "copy": "Copy",
       "refresh": "Refresh",
       "search": "Search",
@@ -136,11 +136,11 @@
     "title": "Query Builder",
     "buttons": {
       "addCondition": "Add condition",
-      "removeCondition": "Remove contition",
+      "removeCondition": "Delete contition",
       "addGroup": "Add group",
-      "removeGroup": "Remove group",
+      "removeGroup": "Delete group",
       "addValue": "Add value",
-      "removeValue": "Remove value"
+      "removeValue": "Delete value"
     }
   },
   "login": {
@@ -220,6 +220,7 @@
       "middleName": "Middle name",
       "photo": "Photo",
       "inactive": "Inactive",
+      "isAutoReset": "Auto reset",
       "login": "Login",
       "password": "Password",
       "ldapLogin": "LDAP login",
@@ -308,8 +309,8 @@
       "termTypeCode": "Term type"
     },
     "remove": {
-      "title": "Remove dictionary",
-      "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
+      "title": "Delete dictionary",
+      "confirmMessage": "Do you really want to delete the dictionary {{ name }}?"
     },
     "types": {
       "system": "System",
@@ -323,6 +324,10 @@
     },
     "errors": {
       "view": "Access to dictionaries list denied"
+    },
+    "tabs": {
+      "dictionaries": "Dictionaries",
+      "attributes": "Attributes"
     }
   },
   "terms": {
@@ -348,8 +353,8 @@
       "isClosed": "Unused term"
     },
     "remove": {
-      "title": "Remove term",
-      "confirmMessage": "Do you really want to remove the term {{ name }}?"
+      "title": "Delete term",
+      "confirmMessage": "Do you really want to delete the term {{ name }}?"
     },
     "errors": {
       "view": "Access to dictionary terms list denied"
@@ -375,8 +380,8 @@
         "title": "New role"
       },
       "remove": {
-        "title": "Remove the role",
-        "confirmMessage": "Do you really want to remove the role {{ name }}?"
+        "title": "Delete the role",
+        "confirmMessage": "Do you really want to delete the role {{ name }}?"
       },
       "grid": {
         "id": "Id",
@@ -393,6 +398,9 @@
       },
       "access": {
         "title": "Access settings"
+      },
+      "objects": {
+        "title": "Objects"
       },
       "add": {
         "title": "Choose a permission",
@@ -413,8 +421,8 @@
         "access_denied": "Access to GUI objects permission tree denied"
       },
       "remove": {
-        "title": "Remove role permission",
-        "confirmMessage": "Do you really want to remove the permission {{ name }}?"
+        "title": "Delete role permission",
+        "confirmMessage": "Do you really want to delete the permission {{ name }}?"
       },
       "grid": {
         "id": "Id",
@@ -427,7 +435,7 @@
         "no_view": "You do not have the rights '{{ permission }}' for viewing records",
         "no_add": "You do not have the rights '{{ permission }}' for adding records",
         "no_edit": "You do not have the rights '{{ permission }}' for editing records",
-        "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
+        "no_delete": "You do not have the rights '{{ permission }}' for removing records"
       },
       "errors": {
         "view": "Access to permissions list denied"
@@ -441,8 +449,10 @@
     "lastName": "Family name",
     "middleName": "Middle name",
     "type": "Type",
-    "responsible": "Manager",
+    "responsibleFullName": "Manager",
     "reward": "Remuneration",
+    "shortInfo": "Short info",
+    "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
       "add": {
@@ -596,7 +606,7 @@
       "title": "Debt info"
     },
     "attributesTab": {
-      "title": "Attribute settings"
+      "title": "Attributes"
     }
   },
   "person": {
@@ -813,9 +823,31 @@
           "confirmMessage": "Are you sure you want to unblock the address {{ fullAddress }}?"
         },
         "delete": {
-          "title": "Remove address",
-          "confirmMessage": "Are you sure you want to remove the address {{ fullAddress }}?"
+          "title": "Delete address",
+          "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
         }
+      }
+    },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Edit Attribute"
+        },
+        "delete": {
+          "title": "Delete attribute",
+          "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        }
+      },
+      "grid": {
+        "code": "Code",
+        "name": "Name",
+        "value": "Value",
+        "userFullName": "Operator",
+        "changeDateTime": "Change date/time",
+        "comment": "Comments",
+        "typeCode": "Data Type",
+        "dictNameCode": "Dictionary",
+        "disabledValue": "No Value"
       }
     },
     "contact": {
@@ -888,8 +920,8 @@
       },
       "dialogs": {
         "delete": {
-          "title": "Remove document?",
-          "confirmMessage": "Are you sure you want to remove document {{ docName }}?"
+          "title": "Delete document?",
+          "confirmMessage": "Are you sure you want to delete document {{ docName }}?"
         }
       }
     },
@@ -909,8 +941,8 @@
           "confirmMessage": "Are you sure you want to unblock email {{ email }}?"
         },
         "delete": {
-          "title": "Remove email",
-          "confirmMessage": "Are you sure you want to remove email {{ email }}?"
+          "title": "Delete email",
+          "confirmMessage": "Are you sure you want to delete email {{ email }}?"
         }
       }
     },
@@ -936,7 +968,7 @@
           "variables": "Variables"
         },
         "delete": {
-          "title": "Remove Template",
+          "title": "Delete Template",
           "confirmMessage": "Are you sure you want to delete template {{ name }}?"
         }
       },
@@ -946,6 +978,21 @@
         "text": "Text",
         "isSingleSending": "Send Once",
         "recipientTypeCode": "Recipient"
+      }
+    },
+    "object": {
+      "dialogs": {
+        "add": {
+          "title": "Create object"
+        },
+        "delete": {
+          "title": "Delete object",
+          "confirmMessage": "Are you sure you want to delete object {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name"
       }
     },
     "phone": {
@@ -970,15 +1017,15 @@
           "text": "Text",
           "template": "Template",
           "form": {
-            "typeCode": "SMS",
+            "templateId": "SMS",
             "senderCode": "Sender",
             "startDateTime": "Send Date/Time",
             "text": "Message Text"
           }
         },
         "delete": {
-          "title": "Remove phone number",
-          "confirmMessage": "Are you sure you want to remove phone {{ phone }}?"
+          "title": "Delete phone number",
+          "confirmMessage": "Are you sure you want to delete phone {{ phone }}?"
         }
       }
     },
@@ -1073,8 +1120,8 @@
           "currencyId": "Currency"
         },
         "remove": {
-          "title": "Remove debt component",
-          "confirmMessage": "Are you sure you want to remove the debt component?"
+          "title": "Delete debt component",
+          "confirmMessage": "Are you sure you want to delete the debt component?"
         }
       },
       "componentLog": {
@@ -1102,6 +1149,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "attribute", "plural": "attributes" }
+    },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },
@@ -1352,7 +1402,7 @@
       "ok": "OK",
       "save": "Save",
       "cancel": "Cancel",
-      "remove": "Remove",
+      "remove": "Delete",
       "close": "Close",
       "clear": "Clear",
       "search": "Search",
@@ -1443,6 +1493,7 @@
       "orange": "Orange",
       "pink": "Pink",
       "yellow": "Yellow"
-    }
+    },
+    "NA": "N/A"
   }
 }

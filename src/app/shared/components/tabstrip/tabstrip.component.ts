@@ -57,7 +57,7 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
 
     // if there is no active tab set, activate the first
     if (!activeTabs.length) {
-      this.selectTab(this.tabs.first);
+      this.selectTab(this.tabs.filter(tab => !tab.disabled)[0]);
     }
   }
 
@@ -68,6 +68,9 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
   }
 
   selectTab(tab: TabComponent): void {
+    if (tab.disabled) {
+      return;
+    }
     // deactivate all tabs
     this.tabs.toArray().forEach(el => el.active = false);
     // activate the tab the user has clicked on

@@ -3,12 +3,12 @@ export interface IAttribute {
   code: number;
   name: string;
   typeCode: number;
-  // TODO(d.maltsev): typings typings typings
-  dict: any[];
+  dictNameCode: number;
   disabledValue: number;
-  sortOrder: number;
+  parentId: number;
 }
 
 export interface IAttributeResponse extends IAttribute {
   children: IAttributeResponse[];
+  sortOrder: number;
 }

@@ -33,7 +33,7 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
-        "DICTIONARIES": "Словари",
+        "DICTIONARIES": "Справочники",
         "PORTFOLIOS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -220,6 +220,7 @@
       "middleName": "Отчество",
       "photo": "Фото",
       "inactive": "Блокирован",
+      "isAutoReset": "Автоматическое перезакрепление",
       "login": "Логин",
       "password": "Пароль",
       "ldapLogin": "LDAP-логин",
@@ -323,6 +324,10 @@
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
+    },
+    "tabs": {
+      "dictionaries": "Словари",
+      "attributes": "Атрибуты"
     }
   },
   "terms": {
@@ -394,6 +399,9 @@
       "access": {
         "title": "Текущие настройки доступов"
       },
+      "objects": {
+        "title": "Объекты"
+      },
       "add": {
         "title": "Выберите доступ",
         "grid": {
@@ -441,8 +449,10 @@
     "lastName": "Фамилия",
     "middleName": "Отчество",
     "type": "Тип",
-    "responsible": "Ответственный",
+    "responsibleFullName": "Ответственный",
     "reward": "Размер вознаграждения",
+    "shortInfo": "Краткая иформация",
+    "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
       "add": {
@@ -596,7 +606,7 @@
       "title": "Доп. инфо"
     },
     "attributesTab": {
-      "title": "Настройка атрибутов"
+      "title": "Атрибуты"
     }
   },
   "person": {
@@ -818,6 +828,28 @@
         }
       }
     },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Редактирование атрибута"
+        },
+        "delete": {
+          "title": "Удалить атрибут",
+          "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
+        }
+      },
+      "grid": {
+        "code": "Код",
+        "name": "Название",
+        "value": "Значение",
+        "userFullName": "Оператор",
+        "changeDateTime": "Дата/время изменения",
+        "comment": "Комментарий",
+        "typeCode": "Тип данных",
+        "dictNameCode": "Словарь",
+        "disabledValue": "Не содержит значение"
+      }
+    },
     "contact": {
       "grid": {
         "fullName": "ФИО",
@@ -948,6 +980,21 @@
         "recipientTypeCode": "Получатель"
       }
     },
+    "object": {
+      "dialogs": {
+        "add": {
+          "title": "Новый объект"
+        },
+        "delete": {
+          "title": "Удаление объекта",
+          "confirmMessage": "Вы действительно хотите удалить объект {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название"
+      }
+    },
     "phone": {
       "card": {
         "typeCode": "Тип",
@@ -970,7 +1017,7 @@
           "text": "Текст",
           "template": "Сценарий",
           "form": {
-            "typeCode": "СМС-сообщение",
+            "templateId": "СМС-сообщение",
             "senderCode": "Отправитель",
             "startDateTime": "Дата и время отправки",
             "text": "Текст сообщения"
@@ -1102,6 +1149,9 @@
     }
   },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
@@ -1443,6 +1493,7 @@
       "orange": "Оранжевый",
       "pink": "Розовый",
       "yellow": "Желтый"
-    }
+    },
+    "NA": "Не установлен"
   }
 }
