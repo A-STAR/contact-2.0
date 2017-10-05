@@ -87,6 +87,7 @@ export type ControlTypes =
   | 'richtexteditor'
   | 'segmented'
   | 'multitext'
+  | 'colorpicker'
 ;
 
 export interface IValue {

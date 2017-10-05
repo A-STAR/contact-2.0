@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
@@ -21,6 +22,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
 
 @NgModule({
   imports: [
+    ColorPickerModule,
     CommonModule,
     DatePickerModule,
     DropdownInputModule,

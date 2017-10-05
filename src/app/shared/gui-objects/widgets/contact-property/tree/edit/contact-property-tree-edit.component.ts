@@ -77,12 +77,12 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.attributeTypes = this.convertToNodes(attributeTypes);
       this.data = {
         ...data,
-        template: data.templateFormula
-          ? { name: 'templateFormula', value: data.templateFormula }
-          : { name: 'templateId', value: data.templateId },
-        nextCallDays: data.nextCallFormula
-          ? { name: 'nextCallFormula', value: data.nextCallFormula }
-          : { name: 'nextCallDays', value: data.nextCallDays },
+        template: data && data.templateFormula
+          ? { name: 'templateFormula', value: data && data.templateFormula }
+          : { name: 'templateId', value: data && data.templateId },
+        nextCallDays: data && data.nextCallFormula
+          ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
+          : { name: 'nextCallDays', value: data && data.nextCallDays },
       };
       console.log(attributeTypes);
       console.log(data);
@@ -188,8 +188,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3 },
       // TODO(d.maltsev): multi-text
       { label: labelKey('name'), controlName: 'name', type: 'text', required: true, width: 6 },
-      // TODO(d.maltsev): color picker
-      { label: labelKey('boxColor'), controlName: 'boxColor', type: 'text', width: 3 },
+      { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [
           {

@@ -229,6 +229,15 @@
     </label>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'colorpicker'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+      </span>
+      <app-colorpicker-input [formControlName]="control.controlName"></app-colorpicker-input>
+    </label>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'dynamic'">
 
     <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
