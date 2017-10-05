@@ -93,8 +93,8 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     console.log(event);
   }
 
-  onNodeSelect(node: ITreeNode): void {
-    this.selectedNode$.next(node);
+  onNodeSelect(event: { node: ITreeNode }): void {
+    this.selectedNode$.next(event.node);
   }
 
   onNodeDoubleClick(node: ITreeNode): void {

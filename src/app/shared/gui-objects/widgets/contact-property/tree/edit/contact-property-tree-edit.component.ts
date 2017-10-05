@@ -185,7 +185,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     };
 
     return [
-      { label: labelKey('code'), controlName: 'code', type: 'text', width: 3 },
+      { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
       // TODO(d.maltsev): multi-text
       { label: labelKey('name'), controlName: 'name', type: 'text', required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
@@ -195,7 +195,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             width: 6,
             children: [
               { label: labelKey('commentMode'), controlName: 'commentMode', type: 'select', options: modeOptions },
-              // TODO(d.maltsev): options from lookup
+              // TODO(d.maltsev): options from lookup (templates)
               { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', options: [] },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'select', options: modeOptions },
               { label: labelKey('nextCallMode'), controlName: 'nextCallMode', type: 'select', options: modeOptions },
