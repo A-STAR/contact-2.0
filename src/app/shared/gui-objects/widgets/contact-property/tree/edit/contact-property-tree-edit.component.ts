@@ -94,9 +94,11 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;
+        const hasChildren = children && children.length > 0;
         return {
           data,
-          ...(children && children.length ? { children: this.convertToNodes(children) } : {}),
+          ...(hasChildren ? { children: this.convertToNodes(children) } : {}),
+          expanded: hasChildren,
         };
       })
       .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
