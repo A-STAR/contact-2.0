@@ -11,7 +11,21 @@
       </app-tab>
       <app-tab [title]="'2'" [closable]="false">
         <div class="mt">
-          <pre>{{ attributeTypes | json }}</pre>
+          <p-treeTable selectionMode="none" [value]="attributeTypes">
+            <p-column field="code" header="Code"></p-column>
+            <p-column field="name" header="Name"></p-column>
+            <p-column field="isDisplayed" header="Display">
+              <ng-template let-node="rowData" pTemplate="body">
+                <input type="checkbox" [ngModel]="node.data.isDisplayed" (ngModelChange)="onIsDisplayedChange($event, node)">
+              </ng-template>
+            </p-column>
+            <p-column field="isMandatory" header="Mandatory">
+              <ng-template let-node="rowData" pTemplate="body">
+                <input type="checkbox" [ngModel]="node.data.isMandatory" (ngModelChange)="onIsMandatoryChange($event, node)">
+              </ng-template>
+            </p-column>
+          </p-treeTable>
+          <!-- <pre>{{ attributeTypes | json }}</pre> -->
         </div>
       </app-tab>
     </app-tabstrip>

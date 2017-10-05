@@ -24,7 +24,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   controls: IDynamicFormItem[];
   data = {};
-  attributeTypes = {};
+  attributeTypes = [];
 
   private _formSubscription: Subscription;
 
@@ -51,7 +51,23 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.contactPropertyService.fetchAttributeTypes().subscribe(attributeTypes => this.attributeTypes = attributeTypes);
+    this.contactPropertyService.fetchAttributeTypes().subscribe(attributeTypes => {
+      console.log(attributeTypes);
+      this.attributeTypes = this.convertToNodes(attributeTypes);
+      this.cdRef.markForCheck();
+    });
+  }
+
+  convertToNodes(attributeTypes: any[]): any[] {
+    return attributeTypes
+      .map(attribute => {
+        const { children, ...data } = attribute;
+        return {
+          data,
+          ...(children && children.length ? { children: this.convertToNodes(children) } : {}),
+        };
+      })
+      .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
   }
 
   ngOnDestroy(): void {
@@ -68,6 +84,30 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  onIsDisplayedChange(value: boolean, node: any, traverseUp: boolean = true, traverseDown: boolean = true): void {
+    node.data.isDisplayed = value;
+    if (!value && node.data.isMandatory) {
+      node.data.isMandatory = false;
+    }
+    if (traverseUp && node.parent) {
+      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || child.data.isDisplayed, false);
+      this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
+    }
+    if (traverseDown && node.children) {
+      node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
+    }
+    if (traverseUp && traverseDown) {
+      this.cdRef.markForCheck();
+    }
+  }
+
+  onIsMandatoryChange(value: boolean, node: any): void {
+    node.data.isMandatory = value;
+    if (value && !node.data.isDisplayed) {
+      this.onIsDisplayedChange(true, node);
+    }
   }
 
   private buildControls(
