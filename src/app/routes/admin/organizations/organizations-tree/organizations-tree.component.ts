@@ -59,6 +59,8 @@ export class OrganizationsTreeComponent implements OnDestroy {
       ? this.organizationsService.fetchOrganizations()
       : this.organizationsService.clearOrganizations()
     );
+
+    this.organizations.subscribe(console.log);
   }
 
   ngOnDestroy(): void {

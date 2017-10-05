@@ -133,6 +133,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
           children: this.convertToTreeNodes(nodes)
         }
       ]);
+      // console.log(this._nodes);
       this.cdRef.markForCheck();
     });
   }
