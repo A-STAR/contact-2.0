@@ -870,7 +870,17 @@
       "treeType": "Tree Type",
       "dialogs": {
         "add": {
-          "title": "Create Contact Outcome"
+          "title": "Create Contact Outcome",
+          "mainSettings": "Main Settings",
+          "attributesSettings": "Attribtues Settings",
+          "value": "Value",
+          "formula": "Formula",
+          "attributes": {
+            "code": "Code",
+            "name": "Name",
+            "display": "Display",
+            "mandatory": "Required"
+          }
         },
         "edit": {
           "title": "Contact Outcome"
@@ -894,8 +904,8 @@
         "debtStatusCode": "Custom Status",
         "statusReasonMode": "Reason for Changing Status",
         "debtReasonMode": "Debt Reason Input",
-        "template": "Script Type Input (Template/Formula)",
-        "nextCallDays": "Days Until Next Call (Days/Formula)",
+        "template": "Script Type Input",
+        "nextCallDays": "Days Until Next Call",
         "dictValue1": "Dictionary Attribute 1",
         "dictValue2": "Dictionary Attribute 2",
         "dictValue3": "Dictionary Attribute 3",

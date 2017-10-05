@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { IContactTreeNode } from '../contact-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
@@ -23,7 +24,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   treeType: number = null;
   treeTypeOptions = [];
 
-  selectedNode$ = new BehaviorSubject<IContactTreeNode>(null);
+  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -74,6 +75,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     return this._nodes;
   }
 
+  get selectedNodeId$(): Observable<number> {
+    return this.selectedNode$.map(node => node.id);
+  }
+
   onContactTypeChange(selection: IOption[]): void {
     this.contactType = Number(selection[0].value);
     this.fetch();
@@ -88,12 +93,13 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     console.log(event);
   }
 
-  onNodeSelect(event: any): void {
-    console.log(event);
+  onNodeSelect(node: ITreeNode): void {
+    this.selectedNode$.next(node);
   }
 
-  onNodeDoubleClick(event: any): void {
-    console.log(event);
+  onNodeDoubleClick(node: ITreeNode): void {
+    this.selectedNode$.next(node);
+    this.setDialog('edit');
   }
 
   onAddDialogSubmit(event: any): void {

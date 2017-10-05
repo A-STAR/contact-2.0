@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -19,6 +28,10 @@ const labelKey = makeKey('widgets.contactProperty.edit');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
+  @Input() contactType: number;
+  @Input() treeType: number;
+  @Input() selectedId: number;
+
   @Output() submit = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -46,14 +59,24 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
       ]),
       this.contactPropertyService.fetchTemplates(4, 0, true),
-    ).subscribe(([ dictionaries, templates ]) => {
+      this.contactPropertyService.fetchAttributeTypes(),
+      this.selectedId
+        ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
+        : Observable.of(null),
+    ).subscribe(([ dictionaries, templates, attributeTypes, data ]) => {
       this.controls = this.buildControls(dictionaries, templates);
-      this.cdRef.markForCheck();
-    });
-
-    this.contactPropertyService.fetchAttributeTypes().subscribe(attributeTypes => {
-      console.log(attributeTypes);
       this.attributeTypes = this.convertToNodes(attributeTypes);
+      this.data = {
+        ...data,
+        template: data.templateFormula
+          ? { name: 'templateFormula', value: data.templateFormula }
+          : { name: 'templateId', value: data.templateId },
+        nextCallDays: data.nextCallFormula
+          ? { name: 'nextCallFormula', value: data.nextCallFormula }
+          : { name: 'nextCallDays', value: data.nextCallDays },
+      };
+      console.log(attributeTypes);
+      console.log(data);
       this.cdRef.markForCheck();
     });
   }
@@ -114,9 +137,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     dictionaries: { [key: number]: IOption[] },
     templates: any[],
   ): IDynamicFormItem[] {
-
-    console.log(templates);
-
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
     const promiseModeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE];
@@ -125,7 +145,18 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     const dict3Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3];
     const dict4Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4];
 
-    const segmentedInputOptions = [ { label: 'Foo', name: 'foo' }, { label: 'Bar', name: 'bar' } ];
+    const templateInputOptions = {
+      segmentedInputOptions: [
+        { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value' },
+        { name: 'templateFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
+      ]
+    };
+    const nextCallInputOptions = {
+      segmentedInputOptions: [
+        { name: 'nextCallDays', label: 'widgets.contactProperty.dialogs.edit.value' },
+        { name: 'nextCallFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
+      ]
+    };
 
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3 },
@@ -154,10 +185,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           {
             width: 6,
             children: [
-              // TODO(d.maltsev): or templateFormula
-              { label: labelKey('template'), controlName: 'template', type: 'segmented', segmentedInputOptions },
-              // TODO(d.maltsev): or nextCallFormula
-              { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', segmentedInputOptions },
+              { label: labelKey('template'), controlName: 'template', type: 'segmented', ...templateInputOptions },
+              { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
               { label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', options: dict1Options },
               { label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', options: dict2Options },
               { label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', options: dict3Options },
@@ -174,7 +203,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           }
         ]
       },
-      // TODO(d.maltsev): attributes tree on a separate tab
     ];
   }
 }

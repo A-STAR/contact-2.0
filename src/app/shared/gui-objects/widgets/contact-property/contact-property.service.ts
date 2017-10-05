@@ -22,6 +22,13 @@ export class ContactPropertyService {
       .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.plural').dispatchCallback());
   }
 
+  fetch(contactType: number, treeType: number, resultId: number): Observable<IContactTreeNode> {
+    return this.dataService
+      .read(`${this.baseUrl}/{resultId}`, { contactType, treeType, resultId })
+      .map(response => response.data[0])
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.singular').dispatchCallback());
+  }
+
   // TODO(d.maltsev): move to lookup service
   fetchAttributeTypes(): Observable<any[]> {
     const url = '/lookup/attributeTypes';

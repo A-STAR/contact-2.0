@@ -1,31 +1,30 @@
-<app-dialog [styles]="{ width: '80%' }" (onClose)="onCancel()">
+<app-dialog [styles]="{ width: '70%' }" (onClose)="onCancel()">
   <div dialog-header>
     <h3>{{ 'widgets.contactProperty.dialogs.edit.title' | translate }}</h3>
   </div>
   <div>
     <app-tabstrip [disableScrollbar]="true" [inverse]="true">
-      <app-tab [title]="'1'" [closable]="false">
+      <app-tab [title]="'widgets.contactProperty.dialogs.edit.mainSettings'" [closable]="false">
         <div class="mt">
           <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
         </div>
       </app-tab>
-      <app-tab [title]="'2'" [closable]="false">
+      <app-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'" [closable]="false">
         <div class="mt">
           <p-treeTable selectionMode="none" [value]="attributeTypes">
-            <p-column field="code" header="Code"></p-column>
-            <p-column field="name" header="Name"></p-column>
-            <p-column field="isDisplayed" header="Display">
+            <p-column field="code" [header]="'widgets.contactProperty.dialogs.edit.attributes.code' | translate"></p-column>
+            <p-column field="name" [header]="'widgets.contactProperty.dialogs.edit.attributes.name' | translate"></p-column>
+            <p-column field="isDisplayed" [header]="'widgets.contactProperty.dialogs.edit.attributes.display' | translate">
               <ng-template let-node="rowData" pTemplate="body">
                 <input type="checkbox" [ngModel]="node.data.isDisplayed" (ngModelChange)="onIsDisplayedChange($event, node)">
               </ng-template>
             </p-column>
-            <p-column field="isMandatory" header="Mandatory">
+            <p-column field="isMandatory" [header]="'widgets.contactProperty.dialogs.edit.attributes.mandatory' | translate">
               <ng-template let-node="rowData" pTemplate="body">
                 <input type="checkbox" [ngModel]="node.data.isMandatory" (ngModelChange)="onIsMandatoryChange($event, node)">
               </ng-template>
             </p-column>
           </p-treeTable>
-          <!-- <pre>{{ attributeTypes | json }}</pre> -->
         </div>
       </app-tab>
     </app-tabstrip>
