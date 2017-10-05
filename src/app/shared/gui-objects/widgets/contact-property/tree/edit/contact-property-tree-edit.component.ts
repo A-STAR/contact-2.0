@@ -13,9 +13,11 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
 import { ContactPropertyService } from '../../contact-property.service';
+import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { makeKey } from '../../../../../../core/utils';
@@ -44,6 +46,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
+    private entityAttributesService: EntityAttributesService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -58,13 +61,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
         UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
       ]),
+      this.entityAttributesService.getAttributes([
+        EntityAttributesService.DICT_VALUE_1,
+        EntityAttributesService.DICT_VALUE_2,
+        EntityAttributesService.DICT_VALUE_3,
+        EntityAttributesService.DICT_VALUE_4,
+      ]),
       this.contactPropertyService.fetchTemplates(4, 0, true),
       this.contactPropertyService.fetchAttributeTypes(),
       this.selectedId
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : Observable.of(null),
-    ).subscribe(([ dictionaries, templates, attributeTypes, data ]) => {
-      this.controls = this.buildControls(dictionaries, templates);
+    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, data ]) => {
+      this.controls = this.buildControls(dictionaries, templates, attributes);
       this.attributeTypes = this.convertToNodes(attributeTypes);
       this.data = {
         ...data,
@@ -136,14 +145,31 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
     templates: any[],
+    attributes: IEntityAttributes,
   ): IDynamicFormItem[] {
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
     const promiseModeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE];
-    const dict1Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1];
-    const dict2Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2];
-    const dict3Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3];
-    const dict4Options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4];
+    const dict1Attributes = attributes[EntityAttributesService.DICT_VALUE_1];
+    const dict2Attributes = attributes[EntityAttributesService.DICT_VALUE_2];
+    const dict3Attributes = attributes[EntityAttributesService.DICT_VALUE_3];
+    const dict4Attributes = attributes[EntityAttributesService.DICT_VALUE_4];
+    const dict1 = {
+      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1],
+      required: dict1Attributes.isMandatory,
+    }
+    const dict2 = {
+      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2],
+      required: dict2Attributes.isMandatory,
+    }
+    const dict3 = {
+      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3],
+      required: dict3Attributes.isMandatory,
+    }
+    const dict4 = {
+      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4],
+      required: dict4Attributes.isMandatory,
+    }
 
     const templateInputOptions = {
       segmentedInputOptions: [
@@ -187,10 +213,22 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             children: [
               { label: labelKey('template'), controlName: 'template', type: 'segmented', ...templateInputOptions },
               { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
-              { label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', options: dict1Options },
-              { label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', options: dict2Options },
-              { label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', options: dict3Options },
-              { label: labelKey('dictValue4'), controlName: 'dictValue4', type: 'select', options: dict4Options },
+              ...(dict1Attributes.isUsed
+                ? [{ label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', ...dict1 }]
+                : []
+              ),
+              ...(dict2Attributes.isUsed
+                ? [{ label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', ...dict2 }]
+                : []
+              ),
+              ...(dict3Attributes.isUsed
+                ? [{ label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', ...dict3 }]
+                : []
+              ),
+              ...(dict4Attributes.isUsed
+                ? [{ label: labelKey('dictValue4'), controlName: 'dictValue4', type: 'select', ...dict4 }]
+                : []
+              ),
               { label: labelKey('isInvalidContact'), controlName: 'isInvalidContact', type: 'checkbox' },
               { label: labelKey('addPhone'), controlName: 'addPhone', type: 'checkbox' },
               { label: labelKey('isRefusal'), controlName: 'isRefusal', type: 'checkbox' },
@@ -203,6 +241,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           }
         ]
       },
-    ];
+    ] as IDynamicFormItem[];
   }
 }
