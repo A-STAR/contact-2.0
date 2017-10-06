@@ -2,6 +2,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
+import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { RichTextEditorComponent } from '../rich-text-editor/rich-text-editor.component';
@@ -61,6 +62,8 @@ export interface IDynamicFormControl {
   // options for rich text editor
   onInit?: (control: RichTextEditorComponent) => void;
   toolbar?: boolean;
+  // options for segmented input
+  segmentedInputOptions?: ISegmentedInputOption[];
 }
 
 export type ControlTypes =
@@ -82,7 +85,9 @@ export type ControlTypes =
   | 'text'
   | 'textarea'
   | 'richtexteditor'
+  | 'segmented'
   | 'multitext'
+  | 'colorpicker'
 ;
 
 export interface IValue {

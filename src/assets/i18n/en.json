@@ -847,6 +847,59 @@
         "comment": "Comment"
       }
     },
+    "contactProperty": {
+      "contactType": "Contact Type",
+      "treeType": "Tree Type",
+      "dialogs": {
+        "add": {
+          "title": "Create Contact Outcome",
+          "mainSettings": "Main Settings",
+          "attributesSettings": "Attribtues Settings",
+          "value": "Value",
+          "formula": "Formula",
+          "attributes": {
+            "code": "Code",
+            "name": "Name",
+            "display": "Display",
+            "mandatory": "Required"
+          }
+        },
+        "edit": {
+          "title": "Contact Outcome"
+        },
+        "delete": {
+          "title": "Delete Contact Outcome",
+          "confirmMessage": "Are you sure you want to remove contact outcome?"
+        }
+      },
+      "edit": {
+        "code": "Code",
+        "name": "Name",
+        "boxColor": "Color",
+        "commentMode": "Comment Input Mode",
+        "autoCommentIds": "Autocomment input",
+        "regInvisible": "Uploading Files",
+        "nextCallMode": "Next Call Date",
+        "promiseMode": "Promis Input",
+        "paymentMode": "Unverified Payment Input",
+        "callReasonMode": "Reason for Calling",
+        "debtStatusCode": "Custom Status",
+        "statusReasonMode": "Reason for Changing Status",
+        "debtReasonMode": "Debt Reason Input",
+        "template": "Script Type Input",
+        "nextCallDays": "Days Until Next Call",
+        "dictValue1": "Dictionary Attribute 1",
+        "dictValue2": "Dictionary Attribute 2",
+        "dictValue3": "Dictionary Attribute 3",
+        "dictValue4": "Dictionary Attribute 4",
+        "isInvalidContact": "Invalid Phone Number/Address",
+        "addPhone": "New Debtor's Phone Number Input",
+        "isRefusal": "Payment Refusal Flag",
+        "isSuccess": "Successful Outcome",
+        "changeResponsible": "Changing Operator",
+        "contactInvisible": "Don't Display in Contacts"
+      }
+    },
     "document": {
       "grid": {
         "docName": "Document Name",

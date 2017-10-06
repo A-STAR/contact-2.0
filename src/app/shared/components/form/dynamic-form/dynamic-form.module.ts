@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
@@ -12,6 +13,7 @@ import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
+import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -20,6 +22,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
 
 @NgModule({
   imports: [
+    ColorPickerModule,
     CommonModule,
     DatePickerModule,
     DropdownInputModule,
@@ -32,6 +35,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ReactiveFormsModule,
     RichTextEditorModule,
     TranslateModule,
+    SegmentedInputModule,
     SelectModule,
   ],
   exports: [
