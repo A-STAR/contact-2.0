@@ -6,21 +6,29 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
+import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
+import { IContactTreeAttribute } from '../../contact-property.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
+import { ILookupAttributeType } from '../../../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
+import { ITreeNode } from '../../../../../components/flowtree/treenode/treenode.interface';
 
 import { ContactPropertyService } from '../../contact-property.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
+import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { makeKey } from '../../../../../../core/utils';
+import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+
+import { flatten, makeKey } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -34,19 +42,24 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   @Input() treeType: number;
   @Input() selectedId: number;
 
-  @Output() submit = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
+
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[];
   data = {};
-  attributeTypes = [];
+  attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
+  private _attributeTypesChanged = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private entityAttributesService: EntityAttributesService,
+    private entityTranslationsService: EntityTranslationsService,
+    private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -68,15 +81,20 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_4,
       ]),
       this.contactPropertyService.fetchTemplates(4, 0, true),
-      this.contactPropertyService.fetchAttributeTypes(),
+      this.lookupService.attributeTypes,
+      this.lookupService.lookupAsOptions('languages'),
       this.selectedId
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : Observable.of(null),
-    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, data ]) => {
-      this.controls = this.buildControls(dictionaries, templates, attributes);
-      this.attributeTypes = this.convertToNodes(attributeTypes);
+      this.selectedId
+        ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
+        : Observable.of([]),
+    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
+      this.controls = this.buildControls(dictionaries, templates, attributes, languages);
+      this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
+        name: nameTranslations,
         template: data && data.templateFormula
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
@@ -84,20 +102,24 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
           : { name: 'nextCallDays', value: data && data.nextCallDays },
       };
-      console.log(attributeTypes);
-      console.log(data);
+      // console.log(this.attributeTypes);
       this.cdRef.markForCheck();
     });
   }
 
-  convertToNodes(attributeTypes: any[]): any[] {
+  convertToNodes(attributeTypes: ILookupAttributeType[], attributeData: IContactTreeAttribute[]): ITreeNode[] {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;
         const hasChildren = children && children.length > 0;
+        const attributeDataItem = attributeData ? attributeData.find(item => item.code === attribute.code) : null;
         return {
-          data,
-          ...(hasChildren ? { children: this.convertToNodes(children) } : {}),
+          data: {
+            ...data,
+            isMandatory: !!attributeDataItem && !!attributeDataItem.mandatory,
+            isDisplayed: !!attributeDataItem,
+          },
+          ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
           expanded: hasChildren,
         };
       })
@@ -109,27 +131,38 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return true;
+    return this.form && this.form.form.valid && (this.form.form.dirty || this._attributeTypesChanged);
   }
 
   onSubmit(): void {
-    this.submit.emit();
+    const { template, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    const attribute = flatten(this.attributeTypes, 'data')
+      .filter(attr => attr.isDisplayed)
+      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
+    const data = {
+      ...formData,
+      ...(template ? { [template.name]: template.value } : {}),
+      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
+      attribute,
+    };
+    this.submit.emit(data);
   }
 
   onCancel(): void {
     this.cancel.emit();
   }
 
-  onIsDisplayedChange(value: boolean, node: any, traverseUp: boolean = true, traverseDown: boolean = true): void {
+  onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
+    this._attributeTypesChanged = true;
     node.data.isDisplayed = value;
     if (!value && node.data.isMandatory) {
       node.data.isMandatory = false;
     }
-    if (traverseUp && node.parent) {
-      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || child.data.isDisplayed, false);
+    if (traverseUp && !!node.parent) {
+      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
       this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
     }
-    if (traverseDown && node.children) {
+    if (traverseDown && !!node.children) {
       node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
     }
     if (traverseUp && traverseDown) {
@@ -137,7 +170,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onIsMandatoryChange(value: boolean, node: any): void {
+  onIsMandatoryChange(value: boolean, node: ITreeNode): void {
+    this._attributeTypesChanged = true;
     node.data.isMandatory = value;
     if (value && !node.data.isDisplayed) {
       this.onIsDisplayedChange(true, node);
@@ -146,8 +180,10 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
+    // TODO(d.maltsev): type when the API is ready
     templates: any[],
     attributes: IEntityAttributes,
+    languages: IOption[],
   ): IDynamicFormItem[] {
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
@@ -188,8 +224,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
-      // TODO(d.maltsev): multi-text
-      { label: labelKey('name'), controlName: 'name', type: 'text', required: true, width: 6 },
+      { label: labelKey('name'), controlName: 'name', type: 'multitext', options: languages, required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [

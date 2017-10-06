@@ -16,5 +16,5 @@
       </div>
     </app-dropdown>
   </div>
-  <input type="text" class="form-control" [ngModel]="value">
+  <input type="text" class="form-control" [ngModel]="value" (ngModelChange)="onChange($event)">
 </div>

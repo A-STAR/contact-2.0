@@ -39,6 +39,7 @@ export class LookupEffects {
 
   private getResponseKey(key: ILookupKey): string {
     switch (key) {
+      case 'attributeTypes':
       case 'dictionaries':
         return 'data';
       default:
