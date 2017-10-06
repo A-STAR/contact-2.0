@@ -58,5 +58,13 @@ export class SegmentedInputComponent implements ControlValueAccessor {
     this.dropdown.close();
   }
 
+  onChange(value: string): void {
+    this._value = {
+      ...this._value,
+      value,
+    }
+    this.propagateChange(this._value);
+  }
+
   private propagateChange: Function = () => {};
 }

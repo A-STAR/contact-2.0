@@ -27,7 +27,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../../core/utils';
+import { flatten, makeKey } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -41,7 +41,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   @Input() treeType: number;
   @Input() selectedId: number;
 
-  @Output() submit = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -127,9 +127,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const data = this.form.getSerializedUpdates();
-    console.log(data);
-    this.submit.emit();
+    const { template, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    const attribute = flatten(this.attributeTypes, 'data')
+      .filter(attr => attr.isDisplayed)
+      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
+    const data = {
+      ...formData,
+      ...(template ? { [template.name]: template.value } : {}),
+      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
+      attribute,
+    };
+    this.submit.emit(data);
   }
 
   onCancel(): void {

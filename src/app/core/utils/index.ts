@@ -71,6 +71,14 @@ export const numberRenderer = (key: string) => ({ [key]: num }) => {
   return parts.join('.');
 }
 
+export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T = null) => {
+  return items.reduce((acc, item) => [
+    ...acc,
+    key ? item[key] : item,
+    ...(item.children ? flatten(item.children, key) : []),
+  ], []);
+}
+
 export const renderers = {
   checkboxRenderer,
   phoneRenderer,

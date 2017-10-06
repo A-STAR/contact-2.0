@@ -103,15 +103,15 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   onAddDialogSubmit(event: any): void {
-    // console.log(event);
+    console.log(event);
   }
 
   onEditDialogSubmit(event: any): void {
-    // console.log(event);
+    console.log(event);
   }
 
   onDeleteDialogSubmit(event: any): void {
-    // console.log(event);
+    console.log(event);
   }
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
