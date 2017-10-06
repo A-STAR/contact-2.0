@@ -79,6 +79,8 @@ export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T =
   ], []);
 }
 
+export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
+
 export const renderers = {
   checkboxRenderer,
   phoneRenderer,

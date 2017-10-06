@@ -9,8 +9,12 @@ import { ITreeNode } from '../../../../components/flowtree/treenode/treenode.int
 
 import { ContactPropertyService } from '../contact-property.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+
+import { combineLatestAnd, doOnceIf } from '../../../../../core/utils/helpers';
+import { isEmpty } from '../../../../../core/utils';
 
 @Component({
   selector: 'app-contact-property-tree',
@@ -30,14 +34,17 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.setDialog('add'),
+      enabled: this.canAdd$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
+      enabled: this.canEdit$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
+      enabled: this.canDelete$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -53,6 +60,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -99,7 +107,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   onNodeDoubleClick(node: ITreeNode): void {
     this.selectedNode$.next(node);
-    this.setDialog('edit');
+    doOnceIf(this.canEdit$, () => this.setDialog('edit'));
   }
 
   onAddDialogSubmit(event: any): void {
@@ -138,6 +146,24 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     });
   }
 
+  private get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTACT_TREE_ADD');
+  }
+
+  private get canEdit$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('CONTACT_TREE_EDIT'),
+      this.selectedNode$.map(Boolean),
+    ]);
+  }
+
+  private get canDelete$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('CONTACT_TREE_DELETE'),
+      this.selectedNode$.map(node => node && isEmpty(node.children)),
+    ]);
+  }
+
   private convertToTreeNodes(nodes: IContactTreeNode[]): ITreeNode[] {
     return nodes
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -145,12 +171,12 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
         const { children, sortOrder, ...data } = node;
         return {
           data,
-          ...(children && children.length ? { children: this.convertToTreeNodes(children) } : {}),
+          ...(!isEmpty(children) ? { children: this.convertToTreeNodes(children) } : {}),
           sortOrder,
           label: node.name || `Node #${node.id}`,
           bgColor: node.boxColor,
           id: node.id,
-          expanded: node.children && node.children.length > 0,
+          expanded: !isEmpty(children),
         };
       });
   }
@@ -160,7 +186,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
       const { children } = node;
       return {
         ...node,
-        ...(children && children.length ? { children: this.addParents(children, node) } : {}),
+        ...(!isEmpty(children) ? { children: this.addParents(children, node) } : {}),
         parent,
       };
     });

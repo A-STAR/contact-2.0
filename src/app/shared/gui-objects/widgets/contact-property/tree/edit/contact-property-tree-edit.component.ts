@@ -51,6 +51,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
+  private _attributeTypesChanged = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -84,7 +85,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         : Observable.of(null),
     ).subscribe(([ dictionaries, attributes, templates, attributeTypes, data ]) => {
       this.controls = this.buildControls(dictionaries, templates, attributes);
-      this.attributeTypes = this.convertToNodes(attributeTypes, data.attributes);
+      this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
         template: data && data.templateFormula
@@ -123,7 +124,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.form && this.form.form.valid && (this.form.form.dirty || this._attributeTypesChanged);
   }
 
   onSubmit(): void {
@@ -145,15 +146,16 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
+    this._attributeTypesChanged = true;
     node.data.isDisplayed = value;
     if (!value && node.data.isMandatory) {
       node.data.isMandatory = false;
     }
-    if (traverseUp && node.parent) {
-      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || child.data.isDisplayed, false);
+    if (traverseUp && !!node.parent) {
+      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
       this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
     }
-    if (traverseDown && node.children) {
+    if (traverseDown && !!node.children) {
       node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
     }
     if (traverseUp && traverseDown) {
@@ -162,6 +164,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onIsMandatoryChange(value: boolean, node: ITreeNode): void {
+    this._attributeTypesChanged = true;
     node.data.isMandatory = value;
     if (value && !node.data.isDisplayed) {
       this.onIsDisplayedChange(true, node);
