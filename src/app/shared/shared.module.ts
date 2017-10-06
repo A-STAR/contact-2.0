@@ -25,6 +25,7 @@ import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { AttachmentsModule } from './components/attachments/attachments.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
+import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
@@ -80,6 +81,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
@@ -154,6 +156,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,

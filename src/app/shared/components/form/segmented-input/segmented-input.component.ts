@@ -28,10 +28,8 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   writeValue(value: ISegmentedInputValue): void {
-    this._value = {
-      ...value,
-      name: value.name || this.options[0].name
-    }
+    const name = value && value.name || this.options[0].name;
+    this._value = { ...value, name };
     this.cdRef.markForCheck();
   }
 
