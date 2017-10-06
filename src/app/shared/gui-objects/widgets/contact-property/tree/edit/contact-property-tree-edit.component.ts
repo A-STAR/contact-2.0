@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
+import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
 import { IContactTreeAttribute } from '../../contact-property.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
@@ -57,6 +58,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private entityAttributesService: EntityAttributesService,
+    private entityTranslationsService: EntityTranslationsService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -80,14 +82,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ]),
       this.contactPropertyService.fetchTemplates(4, 0, true),
       this.lookupService.attributeTypes,
+      this.lookupService.lookupAsOptions('languages'),
       this.selectedId
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : Observable.of(null),
-    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, data ]) => {
-      this.controls = this.buildControls(dictionaries, templates, attributes);
+      this.selectedId
+        ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
+        : Observable.of([]),
+    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
+      this.controls = this.buildControls(dictionaries, templates, attributes, languages);
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
+        name: nameTranslations,
         template: data && data.templateFormula
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
@@ -176,6 +183,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): type when the API is ready
     templates: any[],
     attributes: IEntityAttributes,
+    languages: IOption[],
   ): IDynamicFormItem[] {
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
@@ -216,8 +224,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
-      // TODO(d.maltsev): multi-text
-      { label: labelKey('name'), controlName: 'name', type: 'text', required: true, width: 6 },
+      { label: labelKey('name'), controlName: 'name', type: 'multitext', options: languages, required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [
