@@ -6,20 +6,26 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
+import { IContactTreeAttribute } from '../../contact-property.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
+import { ILookupAttributeType } from '../../../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
+import { ITreeNode } from '../../../../../components/flowtree/treenode/treenode.interface';
 
 import { ContactPropertyService } from '../../contact-property.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../../core/utils';
 
@@ -38,9 +44,11 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   @Output() submit = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls: IDynamicFormItem[];
   data = {};
-  attributeTypes = [];
+  attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
 
@@ -91,7 +99,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  convertToNodes(attributeTypes: any[], attributeData: any[]): any[] {
+  convertToNodes(attributeTypes: ILookupAttributeType[], attributeData: IContactTreeAttribute[]): ITreeNode[] {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;
@@ -115,10 +123,12 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return true;
+    return this.form && this.form.canSubmit;
   }
 
   onSubmit(): void {
+    const data = this.form.getSerializedUpdates();
+    console.log(data);
     this.submit.emit();
   }
 
@@ -126,7 +136,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     this.cancel.emit();
   }
 
-  onIsDisplayedChange(value: boolean, node: any, traverseUp: boolean = true, traverseDown: boolean = true): void {
+  onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
     node.data.isDisplayed = value;
     if (!value && node.data.isMandatory) {
       node.data.isMandatory = false;
@@ -143,7 +153,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onIsMandatoryChange(value: boolean, node: any): void {
+  onIsMandatoryChange(value: boolean, node: ITreeNode): void {
     node.data.isMandatory = value;
     if (value && !node.data.isDisplayed) {
       this.onIsDisplayedChange(true, node);
@@ -152,6 +162,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
+    // TODO(d.maltsev): type when the API is ready
     templates: any[],
     attributes: IEntityAttributes,
   ): IDynamicFormItem[] {

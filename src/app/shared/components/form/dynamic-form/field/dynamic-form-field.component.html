@@ -4,6 +4,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <input type="number"
              class="form-control"
@@ -16,6 +17,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <input type="text"
              class="form-control"
@@ -27,6 +29,7 @@
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
       <b>{{ control.label | translate }}</b>
+      <b *ngIf="control.required" class="text-danger">*</b>
     </span>
     <label class="radio-inline">
       <input type="radio" [formControlName]="control.controlName" value="1">
@@ -43,6 +46,7 @@
       <label>
         <input type="checkbox" [formControlName]="control.controlName"/>
         {{ control.label | translate}}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </label>
     </div>
   </ng-container>
@@ -51,6 +55,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-select [formControlName]="control.controlName"
                   [actions]="control.optionsActions"
@@ -71,6 +76,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <textarea
         [attr.placeholder]="(control.placeholder || '') | translate"
@@ -85,6 +91,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-input-datepicker
@@ -100,6 +107,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-image-upload
@@ -113,6 +121,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <!-- TODO(d.maltsev): can we somehow use app-popup-input here? -->
       <div class="popupinput">
@@ -132,6 +141,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-grid-dropdown
@@ -148,6 +158,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-password-input [formControlName]="control.controlName"></app-password-input>
     </label>
@@ -157,6 +168,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-radio-group [formControlName]="control.controlName" [options]="control.radioOptions"></app-radio-group>
@@ -166,6 +178,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
@@ -188,6 +201,7 @@
         <i *ngIf="control.iconCls" class="fa" [ngClass]="control.iconCls" aria-hidden="true"></i>
       </span>
       {{ control.label | translate }}
+      <b *ngIf="control.required" class="text-danger">*</b>
     </button>
   </ng-container>
 
@@ -195,6 +209,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-rich-text-editor
@@ -209,6 +224,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-segmented-input
@@ -221,6 +237,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-multitext-input
         [formControlName]="control.controlName"
@@ -233,6 +250,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-colorpicker-input [formControlName]="control.controlName"></app-colorpicker-input>
     </label>
@@ -246,6 +264,7 @@
         <label>
           <span class="form-label">
             {{ control.label | translate }}
+            <b *ngIf="control.required" class="text-danger">*</b>
           </span>
           <input type="number"
                  class="form-control"
@@ -257,6 +276,7 @@
       <ng-container *ngSwitchCase="2">
         <label class="form-label">
           {{ control.label | translate }}
+          <b *ngIf="control.required" class="text-danger">*</b>
         </label>
         <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
       </ng-container>
@@ -264,6 +284,7 @@
       <ng-container *ngSwitchCase="4">
         <span class="form-label">
           {{ control.label | translate }}
+          <b *ngIf="control.required" class="text-danger">*</b>
         </span>
         <label class="radio-inline">
           <input type="radio" [formControlName]="control.controlName" value="1">
@@ -279,6 +300,7 @@
         <label>
           <span class="form-label">
             {{ control.label | translate }}
+            <b *ngIf="control.required" class="text-danger">*</b>
           </span>
           <input type="text"
                  class="form-control"
