@@ -1,8 +1,24 @@
-export type ILookupKey = 'contractors' | 'currencies' | 'dictionaries' | 'languages' | 'portfolios' | 'roles' | 'users';
+export type ILookupKey =
+  'attributeTypes' |
+  'contractors' |
+  'currencies' |
+  'dictionaries' |
+  'languages' |
+  'portfolios' |
+  'roles' |
+  'users';
 
 export interface ILookupBase {
   id: number;
   name: string;
+}
+
+export interface ILookupAttributeType extends ILookupBase {
+  code: number;
+  disabledValue: boolean;
+  sortOrder: number;
+  typeCode: number;
+  children: ILookupAttributeType[];
 }
 
 export type ILookupContractor = ILookupBase;
@@ -42,6 +58,7 @@ export interface ILookupSlice<T> {
 }
 
 export interface ILookupState {
+  attributeTypes: ILookupSlice<ILookupAttributeType>;
   contractors: ILookupSlice<ILookupContractor>;
   currencies: ILookupSlice<ILookupCurrency>;
   dictionaries: ILookupSlice<ILookupDictionary>;

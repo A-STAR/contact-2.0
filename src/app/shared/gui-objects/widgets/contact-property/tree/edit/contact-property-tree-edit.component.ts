@@ -18,6 +18,7 @@ import { IOption } from '../../../../../../core/converter/value-converter.interf
 
 import { ContactPropertyService } from '../../contact-property.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
+import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { makeKey } from '../../../../../../core/utils';
@@ -47,6 +48,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private entityAttributesService: EntityAttributesService,
+    private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -68,13 +70,13 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_4,
       ]),
       this.contactPropertyService.fetchTemplates(4, 0, true),
-      this.contactPropertyService.fetchAttributeTypes(),
+      this.lookupService.attributeTypes,
       this.selectedId
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : Observable.of(null),
     ).subscribe(([ dictionaries, attributes, templates, attributeTypes, data ]) => {
       this.controls = this.buildControls(dictionaries, templates, attributes);
-      this.attributeTypes = this.convertToNodes(attributeTypes);
+      this.attributeTypes = this.convertToNodes(attributeTypes, data.attributes);
       this.data = {
         ...data,
         template: data && data.templateFormula
@@ -84,20 +86,24 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
           : { name: 'nextCallDays', value: data && data.nextCallDays },
       };
-      console.log(attributeTypes);
-      console.log(data);
+      // console.log(this.attributeTypes);
       this.cdRef.markForCheck();
     });
   }
 
-  convertToNodes(attributeTypes: any[]): any[] {
+  convertToNodes(attributeTypes: any[], attributeData: any[]): any[] {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;
         const hasChildren = children && children.length > 0;
+        const attributeDataItem = attributeData ? attributeData.find(item => item.code === attribute.code) : null;
         return {
-          data,
-          ...(hasChildren ? { children: this.convertToNodes(children) } : {}),
+          data: {
+            ...data,
+            isMandatory: !!attributeDataItem && !!attributeDataItem.mandatory,
+            isDisplayed: !!attributeDataItem,
+          },
+          ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
           expanded: hasChildren,
         };
       })
