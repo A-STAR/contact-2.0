@@ -938,6 +938,29 @@
         }
       }
     },
+    "guarantor": {
+      "grid": {
+        "id": "Ид",
+        "birthDate": "Дата рождения",
+        "genderCode": "Пол",
+        "birthPlace": "Место рождения",
+        "familyStatusCode": "Семейное положение",
+        "educationCode": "Образование",
+        "comment": "Комментарий"
+      }
+    },
+    "guaranteeContract": {
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Дата заключения договора",
+        "contractEndDate": "Дата окончания договора",
+        "contractTypeCode": "Тип ответственности",
+        "comment": "Комментарий"
+      }
+    },
     "employment": {
       "grid": {
         "workTypeCode": "Тип работы",

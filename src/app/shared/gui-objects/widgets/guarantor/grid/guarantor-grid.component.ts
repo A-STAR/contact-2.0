@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IEmployment } from '../guarantor.interface';
+import { IEmployment, IGuaranteeContract } from '../guarantor.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -23,7 +23,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 })
 export class GuarantorGridComponent implements OnInit, OnDestroy {
 
-  private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
+  private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -33,19 +33,19 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedEmployment$.value.id),
+      action: () => this.onEdit(this.selectedContract$.value.id),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        this.selectedEmployment$
-      ).map(([canEdit, selectedEmployment]) => !!canEdit && !!selectedEmployment)
+        this.selectedContract$
+      ).map(([canEdit, selectedContract]) => !!canEdit && !!selectedContract)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeEmployment'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.selectedEmployment$
-      ).map(([canDelete, selectedEmployment]) => !!canDelete && !!selectedEmployment),
+        this.selectedContract$
+      ).map(([canDelete, selectedContract]) => !!canDelete && !!selectedContract),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -55,26 +55,27 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'workTypeCode', dictCode: UserDictionariesService.DICTIONARY_WORK_TYPE },
-    { prop: 'company' },
-    { prop: 'position' },
-    { prop: 'hireDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'dismissDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'income', maxWidth: 110, renderer: 'numberRenderer' },
-    { prop: 'currencyId', maxWidth: 110, lookupKey: 'currencies' },
+    { prop: 'id', width: 70, minWidth: 40 },
+    { prop: 'contractNumber' },
+    { prop: 'fullName' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
+    { prop: 'contractStartDate', maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'contractEndDate', maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'contractTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACT_TYPE },
     { prop: 'comment' },
   ];
 
-  employments: Array<IEmployment> = [];
+  contracts: Array<IGuaranteeContract> = [];
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.personId || null;
+  private personId = this.routeParams.personId || null;
+  private debtId = this.routeParams.debtId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -112,7 +113,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.selectedEmployment$.complete();
+    this.selectedContract$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
   }
@@ -122,11 +123,11 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(employment: IEmployment): void {
-    this.selectedEmployment$.next(employment)
+    this.selectedContract$.next(employment)
   }
 
   onRemove(): void {
-    const { id: employmentId } = this.selectedEmployment$.value;
+    const { id: employmentId } = this.selectedContract$.value;
     this.employmentService.delete(this.personId, employmentId)
       .subscribe(() => {
         this.setDialog(null);
@@ -155,33 +156,33 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('GUARANTEE_VIEW').distinctUntilChanged();
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('GUARANTEE_ADD').distinctUntilChanged();
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_EDIT').distinctUntilChanged();
+    return this.userPermissionsService.has('GUARANTEE_EDIT').distinctUntilChanged();
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMPLOYMENT_DELETE').distinctUntilChanged();
+    return this.userPermissionsService.has('GUARANTEE_DELETE').distinctUntilChanged();
   }
 
   private fetch(): void {
-    this.employmentService.fetchAll(this.personId)
-      .subscribe(employments => {
-        this.employments = [].concat(employments);
-        this.selectedEmployment$.next(null);
+    this.employmentService.fetchAll(this.debtId)
+      .subscribe(contracts => {
+        this.contracts = [...contracts];
+        this.selectedContract$.next(null);
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this.employments = [];
-    this.selectedEmployment$.next(null);
+    this.contracts = [];
+    this.selectedContract$.next(null);
     this.cdRef.markForCheck();
   }
 

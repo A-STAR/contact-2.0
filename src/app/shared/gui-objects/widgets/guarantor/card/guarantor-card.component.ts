@@ -14,6 +14,9 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('widgets.employment.grid');
 
 @Component({
   selector: 'app-guarantor-card',
@@ -53,14 +56,14 @@ export class GuarantorCardComponent {
     .take(1)
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
       const controls: IDynamicFormControl[] = [
-        { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },
-        { label: 'widgets.employment.grid.company', controlName: 'company',  type: 'text', required: true },
-        { label: 'widgets.employment.grid.position', controlName: 'position',  type: 'text', },
-        { label: 'widgets.employment.grid.hireDate', controlName: 'hireDate', type: 'datepicker', },
-        { label: 'widgets.employment.grid.dismissDate', controlName: 'dismissDate', type: 'datepicker', },
-        { label: 'widgets.employment.grid.income', controlName: 'income',  type: 'number', },
-        { label: 'widgets.employment.grid.currencyId', controlName: 'currencyId', type: 'select', options: currencyOptions },
-        { label: 'widgets.employment.grid.comment', controlName: 'comment', type: 'textarea', },
+        { label: labelKey('workTypeCode'), controlName: 'workTypeCode', type: 'select', options, required: true },
+        { label: labelKey('company'), controlName: 'company',  type: 'text', required: true },
+        { label: labelKey('position'), controlName: 'position',  type: 'text', },
+        { label: labelKey('hireDate'), controlName: 'hireDate', type: 'datepicker', },
+        { label: labelKey('dismissDate'), controlName: 'dismissDate', type: 'datepicker', },
+        { label: labelKey('income'), controlName: 'income',  type: 'number', },
+        { label: labelKey('currencyId'), controlName: 'currencyId', type: 'select', options: currencyOptions },
+        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.employment = employment;

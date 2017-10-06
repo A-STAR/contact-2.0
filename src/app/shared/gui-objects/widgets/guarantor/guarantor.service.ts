@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IEmployment } from './guarantor.interface';
+import { IEmployment, IGuaranteeContract } from './guarantor.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -10,7 +10,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 export class GuarantorService {
   static MESSAGE_EMPLOYMENT_SAVED = 'MESSAGE_EMPLOYMENT_SAVED';
 
-  private url = '/persons/{personId}/employments';
+  private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.employment.gen.singular';
 
   constructor(
@@ -18,17 +18,17 @@ export class GuarantorService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(personId: number): Observable<IEmployment[]> {
+  fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
-      .read(this.url, { personId })
-      .map(resp => resp.employments)
+      .read(this.url, { debtId })
+      .map(resp => resp.guarantorWithContract)
       .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, employmentId: number): Observable<IEmployment> {
     return this.dataService
       .read(`${this.url}/{employmentId}`, { personId, employmentId })
-      .map(resp => resp.employments[0] || {})
+      .map(resp => resp.guarantorWithContract[0] || {})
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 

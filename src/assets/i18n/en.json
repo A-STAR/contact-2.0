@@ -838,7 +838,7 @@
         "firstName": "First name",
         "middleName": "Middle name",
         "lastName": "Last name",
-        "birthDate": "Birth date",
+        "birthDate": "Date of birth",
         "birthPlace": "Place of birth",
         "genderCode": "Gender",
         "familyStatusCode": "Family status",
@@ -936,6 +936,29 @@
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
         }
+      }
+    },
+    "guarantor": {
+      "grid": {
+        "id": "Id",
+        "birthDate": "Date of birth",
+        "genderCode": "Gender",
+        "birthPlace": "Place of birth",
+        "familyStatusCode": "Marital status",
+        "educationCode": "Education",
+        "comment": "Comment"
+      }
+    },
+    "guaranteeContract": {
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "contractTypeCode": "Contract type",
+        "comment": "Comment"
       }
     },
     "employment": {
