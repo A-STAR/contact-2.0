@@ -77,7 +77,8 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   ) {
     this.columns = this.gridService.setRenderers(this.columns);
     this.rows$ = this.constantsService.state
-      .map(state => this.valueConverterService.deserializeSet(state.constants)) as Observable<IConstant[]>;
+      .map(state => state.constants).distinctUntilChanged()
+      .map(constants => this.valueConverterService.deserializeSet(constants)) as Observable<IConstant[]>;
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 

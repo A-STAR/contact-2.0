@@ -528,6 +528,9 @@
     "propertyTab": {
       "title": "Property"
     },
+    "guarantorsTab": {
+      "title": "Guarantors"
+    },
     "contactsTab": {
       "title": "Contacts",
       "remove": {
@@ -574,12 +577,6 @@
         "download": "Could not download document"
       }
     },
-    "accountsTab": {
-      "title": "Accounts"
-    },
-    "tasksTab": {
-      "title": "Tasks"
-    },
     "employmentRecordTab": {
       "title": "Employment record",
       "remove": {
@@ -589,21 +586,6 @@
     },
     "actionLogTab": {
       "title": "Actions log"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Arbitrary attributes"
-    },
-    "commentTab": {
-      "title": "Comments"
-    },
-    "promotionsTab": {
-      "title": "Promotions"
-    },
-    "socialNetworksTab": {
-      "title": "Social networks"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Debt info"
     },
     "attributesTab": {
       "title": "Attributes"
@@ -856,7 +838,7 @@
         "firstName": "First name",
         "middleName": "Middle name",
         "lastName": "Last name",
-        "birthDate": "Birth date",
+        "birthDate": "Date of birth",
         "birthPlace": "Place of birth",
         "genderCode": "Gender",
         "familyStatusCode": "Family status",
@@ -954,6 +936,29 @@
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
         }
+      }
+    },
+    "guarantor": {
+      "grid": {
+        "id": "Id",
+        "birthDate": "Date of birth",
+        "genderCode": "Gender",
+        "birthPlace": "Place of birth",
+        "familyStatusCode": "Marital status",
+        "educationCode": "Education",
+        "comment": "Comment"
+      }
+    },
+    "guaranteeContract": {
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "contractTypeCode": "Contract type",
+        "comment": "Comment"
       }
     },
     "employment": {

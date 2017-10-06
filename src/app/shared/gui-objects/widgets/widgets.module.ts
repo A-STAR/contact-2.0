@@ -11,6 +11,7 @@ import { DebtModule } from './debt/debt.module';
 import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
+import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
 import { MessageTemplateModule } from './message-template/message-template.module';
 import { ObjectModule } from './object/object.module';
@@ -31,6 +32,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     EntityAttributeModule,
+    GuarantorModule,
     IdentityModule,
     MessageTemplateModule,
     ObjectModule,
@@ -49,6 +51,7 @@ import { PromiseModule } from './promise/promise.module';
     EmailModule,
     EmploymentModule,
     EntityAttributeModule,
+    GuarantorModule,
     IdentityModule,
     MessageTemplateModule,
     ObjectModule,

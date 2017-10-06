@@ -528,6 +528,9 @@
     "propertyTab": {
       "title": "Имущество"
     },
+    "guarantorsTab": {
+      "title": "Поручители"
+    },
     "contactsTab": {
       "title": "Контакты",
       "remove": {
@@ -574,12 +577,6 @@
         "download": "Не удалось скачать документ"
       }
     },
-    "accountsTab": {
-      "title": "Счета"
-    },
-    "tasksTab": {
-      "title": "Задачи"
-    },
     "employmentRecordTab": {
       "title": "История трудоустройства",
       "remove": {
@@ -589,21 +586,6 @@
     },
     "actionLogTab": {
       "title": "Лог действий"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
-    },
-    "commentTab": {
-      "title": "Комментарий"
-    },
-    "promotionsTab": {
-      "title": "Акции"
-    },
-    "socialNetworksTab": {
-      "title": "Социальные сети"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Доп. инфо"
     },
     "attributesTab": {
       "title": "Атрибуты"
@@ -954,6 +936,29 @@
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
         }
+      }
+    },
+    "guarantor": {
+      "grid": {
+        "id": "Ид",
+        "birthDate": "Дата рождения",
+        "genderCode": "Пол",
+        "birthPlace": "Место рождения",
+        "familyStatusCode": "Семейное положение",
+        "educationCode": "Образование",
+        "comment": "Комментарий"
+      }
+    },
+    "guaranteeContract": {
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Дата заключения договора",
+        "contractEndDate": "Дата окончания договора",
+        "contractTypeCode": "Тип ответственности",
+        "comment": "Комментарий"
       }
     },
     "employment": {

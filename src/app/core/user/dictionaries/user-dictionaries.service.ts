@@ -22,7 +22,7 @@ export class UserDictionariesService {
   static DICTIONARY_PERSON_TYPE                 = 12;
   static DICTIONARY_GENDER                      = 13;
   // static DICTIONARY_MARITAL_STATUS           = 14;
-  static DICTIONARY_FAMILY_STATUS               = 14; // WTF, this is not english => google
+  static DICTIONARY_FAMILY_STATUS               = 14; // WTF, this is not english
   static DICTIONARY_EDUCATION                   = 15;
   static DICTIONARY_IDENTITY_TYPE               = 16;
   static DICTIONARY_PHONE_TYPE                  = 17;
@@ -59,6 +59,7 @@ export class UserDictionariesService {
   static DICTIONARY_CONTACT_TREE_TYPE           = 48;
   static DICTIONARY_CONTACT_INPUT_MODE          = 51;
   static DICTIONARY_CONTACT_PROMISE_INPUT_MODE  = 52;
+  static DICTIONARY_CONTRACT_TYPE               = 53;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
