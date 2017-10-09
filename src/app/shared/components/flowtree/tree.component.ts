@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -25,6 +26,7 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+  @Input() contextMenuEnabled = false;
   @Input() dblClickEnabled = true;
   @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
@@ -47,6 +49,11 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() propagateSelectionDown = true;
 
   private dragAndDropPlugin: DragAndDropComponentPlugin;
+  private _ctxMenu: { node: ITreeNode, style: { left: string, top: string } } = null;
+
+  get ctxMenu(): any {
+    return this._ctxMenu;
+  }
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
@@ -86,6 +93,31 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.dndEnabled) {
       this.dragAndDropPlugin.ngOnDestroy();
+    }
+  }
+
+  // TODO(d.maltsev): use renderer, only when contextMenu is enabled
+  @HostListener('document:click', [ '$event' ])
+  onDocumentClick(): void {
+    this._ctxMenu = null;
+  }
+
+  // TODO(d.maltsev): use renderer, only when contextMenu is enabled
+  @HostListener('document:wheel', [ '$event' ])
+  onDocumentWheel(): void {
+    this._ctxMenu = null;
+  }
+
+  onContextMenu(event: MouseEvent, node: ITreeNode): void {
+    if (this.contextMenuEnabled) {
+      event.preventDefault();
+      this._ctxMenu = {
+        node,
+        style: {
+          left: `${event.pageX}px`,
+          top: `${event.pageY}px`,
+        },
+      };
     }
   }
 
