@@ -170,13 +170,15 @@ export class GridService {
   setAllRenderers(srcColumns: IGridColumn[]): Observable<IGridColumn[]> {
     const lookupKeys = srcColumns.filter(col => !!col.lookupKey).map(col => col.lookupKey);
     // 1. Set the lookup renderers
-    const lookupColumnObs = Observable.combineLatest(lookupKeys.map(key => {
-      return this.lookupService.lookupAsOptions(key)
-        .map(options => {
-          const column = srcColumns.find(col => col.lookupKey === key);
-          return this.setRenderer(column, options);
-        });
-    }));
+    const lookupColumnObs = !lookupKeys.length
+      ? Observable.of([])
+      : Observable.combineLatest(lookupKeys.map(key => {
+          return this.lookupService.lookupAsOptions(key)
+            .map(options => {
+              const column = srcColumns.find(col => col.lookupKey === key);
+              return this.setRenderer(column, options);
+            });
+        }));
 
     // 2. Set the dictionary renderers
     return Observable.combineLatest(this.setDictionaryRenderers(srcColumns), lookupColumnObs)
@@ -187,7 +189,6 @@ export class GridService {
         });
       })
       .map(columns => {
-        // console.log('all cols', columns);
         const renderers = columns.filter(col => typeof col.renderer === 'string')
           .reduce((acc, col) => {
             acc[col.prop] = col.renderer;

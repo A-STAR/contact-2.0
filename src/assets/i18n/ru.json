@@ -60,6 +60,7 @@
         "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
+        "DEBTOR_GUARANTEE": "Договор поручительства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",

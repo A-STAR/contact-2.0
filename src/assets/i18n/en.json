@@ -60,6 +60,7 @@
         "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
+        "DEBTOR_GUARANTEE": "Guarantee contract",
         "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",

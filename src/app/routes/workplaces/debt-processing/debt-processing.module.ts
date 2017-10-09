@@ -16,6 +16,7 @@ import { DebtorDebtComponentComponent } from './debtor/debt-component/debt-compo
 import { DebtorDocumentComponent } from './debtor/document/document.component';
 import { DebtorEmploymentComponent } from './debtor/employment/employment.component';
 import { DebtorEmailComponent } from './debtor/email/email.component';
+import { DebtorGuarantorComponent } from './debtor/guarantor/guarantor.component';
 import { DebtorIdentityComponent } from './debtor/identity/identity.component';
 import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
@@ -25,10 +26,10 @@ const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
   { path: ':personId/:debtId', children: [
       { path: '', pathMatch: 'full', component: DebtorComponent },
-      { path: 'address', children: [
+      { path: 'guaranteeContract', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
-          { path: 'create', component: DebtorAddressComponent },
-          { path: ':addressId', component: DebtorAddressComponent },
+          { path: 'create', component: DebtorGuarantorComponent },
+          { path: ':contractId', component: DebtorGuarantorComponent },
         ]
       },
       { path: 'contact', children: [
@@ -68,6 +69,12 @@ const routes: Routes = [
         { path: '', redirectTo: 'create', pathMatch: 'full' },
         { path: 'create', component: DebtorDocumentComponent },
         { path: ':documentId', component: DebtorDocumentComponent },
+        ]
+      },
+      { path: 'address', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
+          { path: 'create', component: DebtorAddressComponent },
+          { path: ':addressId', component: DebtorAddressComponent },
         ]
       },
       { path: 'email', children: [

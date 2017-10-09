@@ -5,7 +5,7 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IEmployment, IGuaranteeContract } from '../guarantor.interface';
+import { IGuaranteeContract } from '../guarantor.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -108,7 +108,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.messageBusService
-      .select(GuarantorService.MESSAGE_EMPLOYMENT_SAVED)
+      .select(GuarantorService.MESSAGE_GUARANTOR_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -118,12 +118,12 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription.unsubscribe();
   }
 
-  onDoubleClick(employment: IEmployment): void {
-    this.onEdit(employment.id);
+  onDoubleClick(contract: IGuaranteeContract): void {
+    this.onEdit(contract.id);
   }
 
-  onSelect(employment: IEmployment): void {
-    this.selectedContract$.next(employment)
+  onSelect(contract: IGuaranteeContract): void {
+    this.selectedContract$.next(contract);
   }
 
   onRemove(): void {
@@ -148,11 +148,11 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/employment/create` ]);
+    this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
   }
 
-  private onEdit(employmentId: number): void {
-    this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
+  private onEdit(contractId: number): void {
+    this.router.navigate([ `${this.router.url}/guaranteeContract/${contractId}` ]);
   }
 
   get canView$(): Observable<boolean> {
