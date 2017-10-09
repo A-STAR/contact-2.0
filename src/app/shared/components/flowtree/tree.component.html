@@ -43,5 +43,12 @@
 </div>
 
 <div class="context-menu" *ngIf="ctxMenu" [ngStyle]="ctxMenu.style">
-  CONTEXT MENU
+  <div class="list-group m0">
+    <a class="list-group-item" (click)="onCopyClick(false)">
+      {{ 'default.contextMenu.copy' | translate }}
+    </a>
+    <a class="list-group-item" (click)="onCopyClick(true)">
+      {{ 'default.contextMenu.copyWithChildren' | translate }}
+    </a>
+  </div>
 </div>

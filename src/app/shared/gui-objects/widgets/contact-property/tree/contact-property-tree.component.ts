@@ -28,6 +28,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   treeType: number = null;
   treeTypeOptions = [];
 
+  copiedNode$ = new BehaviorSubject<ITreeNode>(null);
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   toolbarItems: IToolbarItem[] = [
@@ -108,6 +109,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   onNodeDoubleClick(node: ITreeNode): void {
     this.selectedNode$.next(node);
     doOnceIf(this.canEdit$, () => this.setDialog('edit'));
+  }
+
+  onNodeCopy(node: ITreeNode): void {
+    this.copiedNode$.next(node);
   }
 
   onAddDialogSubmit(data: any): void {

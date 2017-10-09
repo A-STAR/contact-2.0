@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import './crossvent.patch';
 import { TreeComponent } from './tree.component';
@@ -10,6 +11,7 @@ import { DragAndDropModule } from '../dnd/drag-and-drop.module';
   imports: [
     CommonModule,
     DragAndDropModule,
+    TranslateModule,
   ],
   exports: [
     TreeComponent,

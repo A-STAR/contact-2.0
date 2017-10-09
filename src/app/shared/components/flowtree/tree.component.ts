@@ -41,6 +41,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
   @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
+  @Output() copy = new EventEmitter<ITreeNode>();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() layout = 'vertical';
@@ -119,6 +120,14 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
         },
       };
     }
+  }
+
+  onCopyClick(copyChildren: boolean): void {
+    const { children, ...rest } = this._ctxMenu.node;
+    this.copy.emit({
+      ...rest,
+      children: copyChildren ? children : null
+    });
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {

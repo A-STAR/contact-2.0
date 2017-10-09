@@ -64,6 +64,7 @@
   [value]="nodes"
   [selection]="selectedNode$ | async"
   (changeNodesLocation)="onNodeMove($event)"
+  (copy)="onNodeCopy($event)"
   (onNodeSelect)="onNodeSelect($event)"
   (onNodeDblClick)="onNodeDoubleClick($event)"
   (onNodeExpand)="onNodeSelect($event)">
