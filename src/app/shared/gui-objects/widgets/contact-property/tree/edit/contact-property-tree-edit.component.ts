@@ -28,7 +28,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, makeKey } from '../../../../../../core/utils';
+import { flatten, isEmpty, makeKey } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -80,7 +80,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_3,
         EntityAttributesService.DICT_VALUE_4,
       ]),
-      this.contactPropertyService.fetchTemplates(4, 0, true),
+      this.contactPropertyService.fetchTemplatesAsOptions(4, 0, true),
       this.lookupService.attributeTypes,
       this.lookupService.lookupAsOptions('languages'),
       this.selectedId
@@ -94,15 +94,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
+        autoCommentIds: data && data.autoCommentIds
+          ? data.autoCommentIds.split(',').map(value => ({ value, canRemove: true }))
+          : null,
         name: nameTranslations,
-        template: data && data.templateFormula
-          ? { name: 'templateFormula', value: data && data.templateFormula }
-          : { name: 'templateId', value: data && data.templateId },
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
           : { name: 'nextCallDays', value: data && data.nextCallDays },
+        template: data && data.templateFormula
+          ? { name: 'templateFormula', value: data && data.templateFormula }
+          : { name: 'templateId', value: data && data.templateId },
       };
-      // console.log(this.attributeTypes);
       this.cdRef.markForCheck();
     });
   }
@@ -135,15 +137,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { template, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    const { template, name, nextCallDays, ...formData } = this.form.getSerializedUpdates();
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
     const data = {
       ...formData,
+      ...(name ? { name: this.selectedId ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
-      attribute,
+      ...(isEmpty(attribute) ? {} : { attribute }),
+      parentId: this.selectedId || null,
     };
     this.submit.emit(data);
   }
@@ -181,7 +185,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
     // TODO(d.maltsev): type when the API is ready
-    templates: any[],
+    templates: IOption[],
     attributes: IEntityAttributes,
     languages: IOption[],
   ): IDynamicFormItem[] {
@@ -221,10 +225,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         { name: 'nextCallFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
+    const autoCommentOptions = {
+      multiple: true,
+      nullable: false,
+      options: templates,
+    };
+    const nameOptions = {
+      type: this.selectedId ? 'multitext' : 'text',
+      options: languages,
+    };
 
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
-      { label: labelKey('name'), controlName: 'name', type: 'multitext', options: languages, required: true, width: 6 },
+      { label: labelKey('name'), controlName: 'name', ...nameOptions, required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [
@@ -232,8 +245,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             width: 6,
             children: [
               { label: labelKey('commentMode'), controlName: 'commentMode', type: 'select', options: modeOptions },
-              // TODO(d.maltsev): options from lookup (templates)
-              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', options: [] },
+              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', ...autoCommentOptions },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'select', options: modeOptions },
               { label: labelKey('nextCallMode'), controlName: 'nextCallMode', type: 'select', options: modeOptions },
               { label: labelKey('promiseMode'), controlName: 'promiseMode', type: 'select', options: promiseModeOptions },
