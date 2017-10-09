@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IContactTreeNode } from './contact-property.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+
+import { valuesToOptions } from '../../../../core/utils';
 
 @Injectable()
 export class ContactPropertyService {
@@ -30,7 +33,7 @@ export class ContactPropertyService {
   }
 
   // TODO(d.maltsev): move to lookup service
-  fetchTemplates(typeCode: number, recipientTypeCode: number, isSentOnce: boolean): Observable<any[]> {
+  fetchTemplatesAsOptions(typeCode: number, recipientTypeCode: number, isSentOnce: boolean): Observable<IOption[]> {
     const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSentOnce}';
     return this.dataService
       .read(url, { typeCode, recipientTypeCode, isSentOnce: Number(isSentOnce) })

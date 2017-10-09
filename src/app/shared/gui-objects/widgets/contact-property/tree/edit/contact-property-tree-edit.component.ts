@@ -80,7 +80,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_3,
         EntityAttributesService.DICT_VALUE_4,
       ]),
-      this.contactPropertyService.fetchTemplates(4, 0, true),
+      this.contactPropertyService.fetchTemplatesAsOptions(4, 0, true),
       this.lookupService.attributeTypes,
       this.lookupService.lookupAsOptions('languages'),
       this.selectedId
@@ -94,15 +94,15 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
+        autoCommentIds: data.autoCommentIds.split(',').map(value => ({ value })),
         name: nameTranslations,
-        template: data && data.templateFormula
-          ? { name: 'templateFormula', value: data && data.templateFormula }
-          : { name: 'templateId', value: data && data.templateId },
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
           : { name: 'nextCallDays', value: data && data.nextCallDays },
+        template: data && data.templateFormula
+          ? { name: 'templateFormula', value: data && data.templateFormula }
+          : { name: 'templateId', value: data && data.templateId },
       };
-      // console.log(this.attributeTypes);
       this.cdRef.markForCheck();
     });
   }
@@ -181,7 +181,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
     // TODO(d.maltsev): type when the API is ready
-    templates: any[],
+    templates: IOption[],
     attributes: IEntityAttributes,
     languages: IOption[],
   ): IDynamicFormItem[] {
@@ -222,6 +222,11 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ]
     };
 
+    const autoCommentOptions = {
+      multiple: true,
+      options: templates,
+    }
+
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
       { label: labelKey('name'), controlName: 'name', type: 'multitext', options: languages, required: true, width: 6 },
@@ -232,8 +237,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             width: 6,
             children: [
               { label: labelKey('commentMode'), controlName: 'commentMode', type: 'select', options: modeOptions },
-              // TODO(d.maltsev): options from lookup (templates)
-              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', options: [] },
+              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', ...autoCommentOptions },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'select', options: modeOptions },
               { label: labelKey('nextCallMode'), controlName: 'nextCallMode', type: 'select', options: modeOptions },
               { label: labelKey('promiseMode'), controlName: 'promiseMode', type: 'select', options: promiseModeOptions },
