@@ -55,7 +55,7 @@
     "ng2-validation": "^4.2.0",
     "ngx-perfect-scrollbar": "4.4.0",
     "primeng": "^4.1.3",
-    "quill": "^1.3.2",
+    "quill": "^1.3.3",
     "ramda": "^0.24.1",
     "rxjs": "^5.4.3",
     "simple-line-icons": "^2.4.1",
@@ -65,11 +65,11 @@
     "zone.js": "^0.8.17"
   },
   "devDependencies": {
-    "@angular/cli": "^1.4.4",
+    "@angular/cli": "^1.4.5",
     "@angular/compiler-cli": "^4.4.4",
     "@ngrx/store-devtools": "^3.2.4",
     "@types/jasmine": "^2.6.0",
-    "@types/node": "^8.0.32",
+    "@types/node": "^8.0.33",
     "@types/ramda": "^0.24.16",
     "codelyzer": "~3.1.2",
     "jasmine-core": "~2.6.2",

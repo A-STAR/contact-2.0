@@ -89,11 +89,11 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    const subscription = this.gridService.setAllRenderers(this.columns)
+    this.gridService.setAllRenderers(this.columns)
+      .take(1)
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
-        subscription.unsubscribe();
       });
   }
 
