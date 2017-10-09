@@ -28,7 +28,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   treeType: number = null;
   treeTypeOptions = [];
 
-  copiedNode$ = new BehaviorSubject<ITreeNode>(null);
+  copiedNode$ = new BehaviorSubject<{ node: ITreeNode, contactType: number, treeType: number }>(null);
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   toolbarItems: IToolbarItem[] = [
@@ -116,13 +116,19 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   onNodeCopy(node: ITreeNode): void {
-    this.copiedNode$.next(node);
+    this.copiedNode$.next({ node, contactType: this.contactType, treeType: this.treeType });
   }
 
   onNodePaste(node: ITreeNode): void {
     const copiedNode = this.copiedNode$.value;
-    this.contactPropertyService.paste(this.contactType, this.treeType, copiedNode.id, node.id, !isEmpty(copiedNode.children))
-      .subscribe(() => this.onSuccess());
+    this.contactPropertyService.paste(
+      copiedNode.contactType,
+      copiedNode.treeType,
+      copiedNode.node.id,
+      node.id,
+      !isEmpty(copiedNode.node.children)
+    )
+    .subscribe(() => this.onSuccess());
   }
 
   onAddDialogSubmit(data: any): void {
