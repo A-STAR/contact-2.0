@@ -26,6 +26,7 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+  @Input() canPaste = false;
   @Input() contextMenuEnabled = false;
   @Input() dblClickEnabled = true;
   @Input() dndEnabled = false;
@@ -42,6 +43,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Output() copy = new EventEmitter<ITreeNode>();
+  @Output() paste = new EventEmitter<ITreeNode>();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() layout = 'vertical';
@@ -128,6 +130,10 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
       ...rest,
       children: copyChildren ? children : null
     });
+  }
+
+  onPasteClick(): void {
+    this.paste.emit(this._ctxMenu.node);
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {

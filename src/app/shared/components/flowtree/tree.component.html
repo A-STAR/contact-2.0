@@ -48,7 +48,10 @@
       {{ 'default.contextMenu.copy' | translate }}
     </a>
     <a class="list-group-item" (click)="onCopyClick(true)">
-      {{ 'default.contextMenu.copyWithChildren' | translate }}
+        {{ 'default.contextMenu.copyWithChildren' | translate }}
+    </a>
+    <a *ngIf="canPaste" class="list-group-item" (click)="onPasteClick()">
+      {{ 'default.contextMenu.paste' | translate }}
     </a>
   </div>
 </div>

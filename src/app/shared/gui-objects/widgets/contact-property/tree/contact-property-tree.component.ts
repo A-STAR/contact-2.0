@@ -84,6 +84,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     return this._nodes;
   }
 
+  get hasCopiedNode$(): Observable<boolean> {
+    return this.copiedNode$.map(Boolean);
+  }
+
   get selectedNodeId$(): Observable<number> {
     return this.selectedNode$.map(node => node.id);
   }
@@ -115,6 +119,12 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     this.copiedNode$.next(node);
   }
 
+  onNodePaste(node: ITreeNode): void {
+    const copiedNode = this.copiedNode$.value;
+    this.contactPropertyService.paste(this.contactType, this.treeType, copiedNode.id, node.id, !isEmpty(copiedNode.children))
+      .subscribe(() => this.onSuccess());
+  }
+
   onAddDialogSubmit(data: any): void {
     this.contactPropertyService.create(this.contactType, this.treeType, data)
       .subscribe(() => this.onSuccess());
@@ -127,7 +137,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   onDeleteDialogSubmit(): void {
     this.contactPropertyService.delete(this.contactType, this.treeType, this.selectedNode$.value.id)
-      .subscribe(() => this.onSuccess());
+      .subscribe(() => this.onSuccess(true));
   }
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
@@ -200,8 +210,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     });
   }
 
-  private onSuccess(): void {
-    this.selectedNode$.next(null);
+  private onSuccess(clearSelection: boolean = false): void {
+    if (clearSelection) {
+      this.selectedNode$.next(null);
+    }
     this.fetch();
     this.closeDialog();
   }

@@ -1407,7 +1407,8 @@
     },
     "contextMenu": {
       "copy": "Копировать",
-      "copyWithChildren": "Копировать с дочерними элементами"
+      "copyWithChildren": "Копировать с дочерними элементами",
+      "paste": "Вставить"
     },
     "typeCode": {
       "number": "Число",

@@ -1407,7 +1407,8 @@
     },
     "contextMenu": {
       "copy": "Copy",
-      "copyWithChildren": "Copy with child elements"
+      "copyWithChildren": "Copy with child elements",
+      "paste": "Paste"
     },
     "typeCode": {
       "number": "Number",
