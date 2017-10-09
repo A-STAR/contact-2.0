@@ -28,7 +28,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, makeKey } from '../../../../../../core/utils';
+import { flatten, isEmpty, makeKey } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -94,7 +94,9 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
-        autoCommentIds: data.autoCommentIds.split(',').map(value => ({ value })),
+        autoCommentIds: data && data.autoCommentIds
+          ? data.autoCommentIds.split(',').map(value => ({ value, canRemove: true }))
+          : null,
         name: nameTranslations,
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
@@ -135,15 +137,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { template, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    const { template, name, nextCallDays, ...formData } = this.form.getSerializedUpdates();
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
     const data = {
       ...formData,
+      ...(name ? { name: this.selectedId ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
-      attribute,
+      ...(isEmpty(attribute) ? {} : { attribute }),
+      parentId: this.selectedId || null,
     };
     this.submit.emit(data);
   }
@@ -221,15 +225,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         { name: 'nextCallFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
-
     const autoCommentOptions = {
       multiple: true,
+      nullable: false,
       options: templates,
-    }
+    };
+    const nameOptions = {
+      type: this.selectedId ? 'multitext' : 'text',
+      options: languages,
+    };
 
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
-      { label: labelKey('name'), controlName: 'name', type: 'multitext', options: languages, required: true, width: 6 },
+      { label: labelKey('name'), controlName: 'name', ...nameOptions, required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [

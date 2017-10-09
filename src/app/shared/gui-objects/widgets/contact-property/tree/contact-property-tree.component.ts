@@ -110,16 +110,19 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     doOnceIf(this.canEdit$, () => this.setDialog('edit'));
   }
 
-  onAddDialogSubmit(event: any): void {
-    console.log(event);
+  onAddDialogSubmit(data: any): void {
+    this.contactPropertyService.create(this.contactType, this.treeType, data)
+      .subscribe(() => this.onSuccess());
   }
 
-  onEditDialogSubmit(event: any): void {
-    console.log(event);
+  onEditDialogSubmit(data: any): void {
+    this.contactPropertyService.update(this.contactType, this.treeType, this.selectedNode$.value.id, data)
+      .subscribe(() => this.onSuccess());
   }
 
-  onDeleteDialogSubmit(event: any): void {
-    console.log(event);
+  onDeleteDialogSubmit(): void {
+    this.contactPropertyService.delete(this.contactType, this.treeType, this.selectedNode$.value.id)
+      .subscribe(() => this.onSuccess());
   }
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
@@ -190,5 +193,11 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
         parent,
       };
     });
+  }
+
+  private onSuccess(): void {
+    this.selectedNode$.next(null);
+    this.fetch();
+    this.closeDialog();
   }
 }
