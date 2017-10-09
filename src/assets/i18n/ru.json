@@ -1405,6 +1405,11 @@
       "TRUE": "Истина",
       "FALSE": "Ложь"
     },
+    "contextMenu": {
+      "copy": "Копировать",
+      "copyWithChildren": "Копировать с дочерними элементами",
+      "paste": "Вставить"
+    },
     "typeCode": {
       "number": "Число",
       "date": "Дата",

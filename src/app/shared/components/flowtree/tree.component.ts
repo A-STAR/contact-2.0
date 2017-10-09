@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -24,7 +26,9 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, OnDestroy {
+  @Input() canPaste = false;
+  @Input() contextMenuEnabled = false;
   @Input() dblClickEnabled = true;
   @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
@@ -39,6 +43,8 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
   @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
+  @Output() copy = new EventEmitter<ITreeNode>();
+  @Output() paste = new EventEmitter<ITreeNode>();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() layout = 'vertical';
@@ -47,6 +53,13 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() propagateSelectionDown = true;
 
   private dragAndDropPlugin: DragAndDropComponentPlugin;
+  private _ctxMenu: { node: ITreeNode, style: { left: string, top: string } } = null;
+  private _clickListener: Function;
+  private _wheelListener: Function;
+
+  get ctxMenu(): any {
+    return this._ctxMenu;
+  }
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
@@ -66,11 +79,11 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   };
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.dndEnabled) {
@@ -83,10 +96,51 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    if (this.contextMenuEnabled) {
+      this._clickListener = this.renderer.listen('document', 'click', () => this.hideMenu());
+      this._wheelListener = this.renderer.listen('document', 'wheel', () => this.hideMenu());
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.dndEnabled) {
       this.dragAndDropPlugin.ngOnDestroy();
     }
+    if (this.contextMenuEnabled) {
+      this._clickListener();
+      this._wheelListener();
+    }
+  }
+
+  hideMenu(): void {
+    this._ctxMenu = null;
+    this.cdRef.markForCheck();
+  }
+
+  onContextMenu(event: MouseEvent, node: ITreeNode): void {
+    if (this.contextMenuEnabled) {
+      event.preventDefault();
+      this._ctxMenu = {
+        node,
+        style: {
+          left: `${event.pageX}px`,
+          top: `${event.pageY}px`,
+        },
+      };
+    }
+  }
+
+  onCopyClick(copyChildren: boolean): void {
+    const { children, ...rest } = this._ctxMenu.node;
+    this.copy.emit({
+      ...rest,
+      children: copyChildren ? children : null
+    });
+  }
+
+  onPasteClick(): void {
+    this.paste.emit(this._ctxMenu.node);
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {

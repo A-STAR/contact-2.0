@@ -28,6 +28,7 @@
             class="app-treenode-content"
             (click)="delegateClick($event)"
             (dblclick)="delegateClick($event)"
+            (contextmenu)="onContextMenu($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
                 class="app-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
@@ -84,6 +85,7 @@
               [ngClass]="{ 'ui-treenode-selectable': tree.selectionMode, 'selected': isSelected() }"
               (click)="delegateClick($event)"
               (dblclick)="delegateClick($event)"
+              (contextmenu)="onContextMenu($event)"
             >
               <span
                 *ngIf="!isLeaf()"

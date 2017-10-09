@@ -58,4 +58,14 @@ export class ContactPropertyService {
       .delete(`${this.baseUrl}/{resultId}`, { contactType, treeType, resultId })
       .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
+
+  paste(contactType: number, treeType: number, resultId: number, parentId: number, copyAllChildren: boolean): Observable<void> {
+    const data = {
+      parentId,
+      copyAllChildren: Number(copyAllChildren)
+    };
+    return this.dataService
+      .create(`${this.baseUrl}/{resultId}/copy`, { contactType, treeType, resultId }, data)
+      .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
 }

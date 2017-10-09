@@ -1405,6 +1405,11 @@
       "TRUE": "True",
       "FALSE": "False"
     },
+    "contextMenu": {
+      "copy": "Copy",
+      "copyWithChildren": "Copy with child elements",
+      "paste": "Paste"
+    },
     "typeCode": {
       "number": "Number",
       "date": "Date",

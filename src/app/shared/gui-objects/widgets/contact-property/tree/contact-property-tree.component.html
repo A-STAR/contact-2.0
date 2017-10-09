@@ -56,6 +56,8 @@
 <app-tree
   layout="horizontal"
   selectionMode="single"
+  [canPaste]="hasCopiedNode$ | async"
+  [contextMenuEnabled]="true"
   [dndEnabled]="true"
   [dblClickEnabled]="true"
   [collapseAdjacentNodes]="true"
@@ -63,6 +65,8 @@
   [value]="nodes"
   [selection]="selectedNode$ | async"
   (changeNodesLocation)="onNodeMove($event)"
+  (copy)="onNodeCopy($event)"
+  (paste)="onNodePaste($event)"
   (onNodeSelect)="onNodeSelect($event)"
   (onNodeDblClick)="onNodeDoubleClick($event)"
   (onNodeExpand)="onNodeSelect($event)">
