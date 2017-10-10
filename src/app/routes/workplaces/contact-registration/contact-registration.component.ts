@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { MenuItem } from 'primeng/primeng';
@@ -6,6 +6,8 @@ import { MenuItem } from 'primeng/primeng';
 @Component({
   selector: 'app-contact-registration',
   templateUrl: './contact-registration.component.html',
+  styleUrls: [ './contact-registration.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactRegistrationComponent {
   static COMPONENT_NAME = 'ContactRegistrationComponent';
