@@ -26,8 +26,6 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
-
   controls: IDynamicFormControl[] = [
     { label: labelKey('template'), controlName: 'template', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [] },
@@ -70,6 +68,10 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
 
   onNodeSelect(event: { node: ITreeNode }): void {
     this.selectedNode$.next(event.node);
+  }
+
+  get selectedNode$(): BehaviorSubject<ITreeNode> {
+    return this.contactRegistrationService.selectedNode$;
   }
 
   private updateData(key: string, value: any): void {

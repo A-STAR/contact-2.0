@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContactTreeNode } from '../../../shared/gui-objects/widgets/contact-property/contact-property.interface';
+import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../core/data/data.service';
 // import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -12,6 +14,8 @@ export class ContactRegistrationService {
     private dataService: DataService,
     // private notificationsService: NotificationsService,
   ) {}
+
+  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
