@@ -2,7 +2,6 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, I
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
 
-import { IContactTreeNode } from '../../../../shared/gui-objects/widgets/contact-property/contact-property.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
@@ -82,47 +81,10 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
     this.cdRef.markForCheck();
   }
 
-  // TODO(d.maltsev): make a helper for this
   private fetchNodes(): void {
     this.contactRegistrationService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
-      const root = { id: 0 };
-      this.nodes = this.addParents([
-        {
-          ...root,
-          children: this.convertToTreeNodes(nodes)
-        }
-      ]);
+      this.nodes = nodes;
       this.cdRef.markForCheck();
-    });
-  }
-
-  // TODO(d.maltsev): make a helper for this
-  private convertToTreeNodes(nodes: IContactTreeNode[]): ITreeNode[] {
-    return nodes
-      .sort((a, b) => a.sortOrder - b.sortOrder)
-      .map(node => {
-        const { children, sortOrder, ...data } = node;
-        return {
-          data,
-          ...(!isEmpty(children) ? { children: this.convertToTreeNodes(children) } : {}),
-          sortOrder,
-          label: node.name || `Node #${node.id}`,
-          bgColor: node.boxColor,
-          id: node.id,
-          expanded: false,
-        };
-      });
-  }
-
-  // TODO(d.maltsev): make a helper for this
-  private addParents(nodes: ITreeNode[], parent: ITreeNode = null): ITreeNode[] {
-    return nodes.map(node => {
-      const { children } = node;
-      return {
-        ...node,
-        ...(!isEmpty(children) ? { children: this.addParents(children, node) } : {}),
-        parent,
-      };
     });
   }
 }

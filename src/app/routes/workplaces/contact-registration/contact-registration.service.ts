@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IContactTreeNode } from '../../../shared/gui-objects/widgets/contact-property/contact-property.interface';
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../core/data/data.service';
 // import { NotificationsService } from '../../../core/notifications/notifications.service';
+
+import { toTreeNodes } from '../../../core/utils/tree';
 
 @Injectable()
 export class ContactRegistrationService {
@@ -21,7 +22,8 @@ export class ContactRegistrationService {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
       .read(url, { debtId, contactType, treeResultId })
-      .map(response => response.data);
+      .map(response => response.data)
+      .map(toTreeNodes())
   }
 
   fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
@@ -38,9 +40,10 @@ export class ContactRegistrationService {
       .map(response => response.text);
   }
 
-  fetchContactTree(debtId: number, contactType: number): Observable<IContactTreeNode[]> {
+  fetchContactTree(debtId: number, contactType: number): Observable<ITreeNode[]> {
     return this.dataService
       .read('/debts/{debtId}/contactTypes/{contactType}/treeResults', { debtId, contactType })
-      .map(response => response.data);
+      .map(response => response.data)
+      .map(toTreeNodes());
   }
 }
