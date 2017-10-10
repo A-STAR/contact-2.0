@@ -9,6 +9,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class GuarantorService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
+  static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
   private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.employment.gen.singular';

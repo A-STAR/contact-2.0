@@ -60,7 +60,7 @@ export class ContactCardComponent {
         UserDictionariesService.DICTIONARY_GENDER,
         UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         UserDictionariesService.DICTIONARY_EDUCATION,
-        UserDictionariesService.DICTIONARY_CONTACT_TYPE,
+        UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
       ]),
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
@@ -72,7 +72,7 @@ export class ContactCardComponent {
       const genderOptions = options[UserDictionariesService.DICTIONARY_GENDER];
       const familyOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
       const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
-      const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_TYPE];
+      const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE];
       const controls: IDynamicFormControl[] = [
         { label: labelKey('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
         { label: labelKey('firstName'), controlName: 'firstName', type: 'text', width: 4 },

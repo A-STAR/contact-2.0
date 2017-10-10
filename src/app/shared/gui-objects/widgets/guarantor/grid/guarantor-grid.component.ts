@@ -61,7 +61,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
     { prop: 'contractStartDate', maxWidth: 130, renderer: 'dateRenderer' },
     { prop: 'contractEndDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'contractTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACT_TYPE },
+    { prop: 'contractTypeCode', dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE },
     { prop: 'comment' },
   ];
 
