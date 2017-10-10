@@ -8,6 +8,7 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
+import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,7 +37,8 @@ export class OutcomeFormComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contactRegistrationService: ContactRegistrationService
+    private contactRegistrationService: ContactRegistrationService,
+    private userTemplatesService: UserTemplatesService,
   ) {
     Observable.combineLatest(
       this.contactRegistrationService.fetchScenario(1, 1, 4),
@@ -48,6 +50,8 @@ export class OutcomeFormComponent {
       };
       this.cdRef.markForCheck();
     });
+
+    this.userTemplatesService.getTemplates(1, 1).subscribe(console.log);
 
     this.fetchNodes();
   }

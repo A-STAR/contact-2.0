@@ -14,6 +14,7 @@ import { IPermissionsState } from '../../routes/admin/roles/permissions.interfac
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.interface';
 import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';
+import { IUserTemplatesState } from '../user/templates/user-templates.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 import { IMetadataState } from '../metadata/metadata.interface';
 
@@ -35,5 +36,6 @@ export interface IAppState {
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;
   readonly userPermissions: IUserPermissionsState;
+  readonly userTemplates: IUserTemplatesState;
   readonly users: IUsersState;
 }
