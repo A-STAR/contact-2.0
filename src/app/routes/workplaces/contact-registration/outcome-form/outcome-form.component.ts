@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
@@ -12,7 +12,7 @@ import { UserTemplatesService } from '../../../../core/user/templates/user-templ
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { isEmpty, makeKey } from '../../../../core/utils';
+import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.outcomeForm')
 
@@ -21,48 +21,70 @@ const labelKey = makeKey('modules.contactRegistration.outcomeForm')
   templateUrl: './outcome-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutcomeFormComponent {
+export class OutcomeFormComponent implements OnInit, AfterViewInit {
+  @Input() debtId: number;
+  @Input() contactTypeCode: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   controls: IDynamicFormControl[] = [
     { label: labelKey('template'), controlName: 'template', type: 'textarea', rows: 3, disabled: true },
-    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'selectwrapper', lookupKey: 'currencies' },
+    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [] },
     { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3 },
   ];
   data = {};
   nodes: ITreeNode[];
 
+  private debtorId = 1;
+  private selectedTemplateId = null;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private userTemplatesService: UserTemplatesService,
-  ) {
-    Observable.combineLatest(
-      this.contactRegistrationService.fetchScenario(1, 1, 4),
-      this.contactRegistrationService.fetchAutoComment(1, 1, 4, 1),
-    ).subscribe(([ template, autoComment ]) => {
-      this.data = {
-        template,
-        autoComment,
-      };
-      this.cdRef.markForCheck();
-    });
+  ) {}
 
-    this.userTemplatesService.getTemplates(1, 1).subscribe(console.log);
-
+  ngOnInit(): void {
+    this.userTemplatesService.getTemplates(4, 0)
+      .map(valuesToOptions)
+      .subscribe(autoCommentId => {
+        this.controls.find(control => control.controlName === 'autoCommentId').options = autoCommentId;
+        this.cdRef.markForCheck();
+      });
     this.fetchNodes();
+  }
+
+  ngAfterViewInit(): void {
+    // TODO(d.maltsev): subscription
+    this.form.onCtrlValueChange('autoCommentId')
+      .flatMap(([{ value }]) => this.contactRegistrationService.fetchAutoComment(this.debtId, this.debtorId, 1, value))
+      .subscribe(autoComment => this.updateData('autoComment', autoComment));
+
+    // TODO(d.maltsev): subscription
+    this.selectedNode$
+      .filter(selectedNode => selectedNode && isEmpty(selectedNode.children))
+      .flatMap(selectedNode => this.contactRegistrationService.fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id))
+      .subscribe(template => this.updateData('template', template));
   }
 
   onNodeSelect(event: { node: ITreeNode }): void {
     this.selectedNode$.next(event.node);
   }
 
+  private updateData(key: string, value: any): void {
+    this.data = {
+      ...this.data,
+      [key]: value,
+    };
+    this.cdRef.markForCheck();
+  }
+
   // TODO(d.maltsev): make a helper for this
   private fetchNodes(): void {
-    this.contactRegistrationService.fetchContactTree(1, 1).subscribe(nodes => {
+    this.contactRegistrationService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
       const root = { id: 0 };
       this.nodes = this.addParents([
         {
@@ -70,7 +92,6 @@ export class OutcomeFormComponent {
           children: this.convertToTreeNodes(nodes)
         }
       ]);
-      // console.log(this._nodes);
       this.cdRef.markForCheck();
     });
   }

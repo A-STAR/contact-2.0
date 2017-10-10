@@ -10,7 +10,7 @@ import { ContactRegistrationService } from './contact-registration.service';
 import { ContactRegistrationComponent } from './contact-registration.component';
 
 const routes: Routes = [
-  { path: '', component: ContactRegistrationComponent },
+  { path: ':debtId/:contactTypeCode', component: ContactRegistrationComponent },
 ];
 
 @NgModule({

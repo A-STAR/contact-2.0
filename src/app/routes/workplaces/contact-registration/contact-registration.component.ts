@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { MenuItem } from 'primeng/primeng';
 
@@ -13,4 +14,13 @@ export class ContactRegistrationComponent {
     { label: 'Step 1' },
     { label: 'Step 2' },
   ]
+
+  debtId = this.routeParams.debtId;
+  contactTypeCode = this.routeParams.contactTypeCode;
+
+  constructor(private route: ActivatedRoute) {}
+
+  get routeParams(): any {
+    return (this.route.params as any).value;
+  }
 }
