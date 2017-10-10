@@ -5,6 +5,8 @@ import { StepsModule } from 'primeng/primeng';
 import { OutcomeFormModule } from './outcome-form/outcome-form.module';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { ContactRegistrationService } from './contact-registration.service';
+
 import { ContactRegistrationComponent } from './contact-registration.component';
 
 const routes: Routes = [
@@ -20,6 +22,9 @@ const routes: Routes = [
   ],
   declarations: [
     ContactRegistrationComponent,
+  ],
+  providers: [
+    ContactRegistrationService,
   ],
 })
 export class ContactRegistrationModule {}
