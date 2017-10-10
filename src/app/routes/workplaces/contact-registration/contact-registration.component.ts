@@ -15,6 +15,8 @@ export class ContactRegistrationComponent {
     { label: 'Step 2' },
   ]
 
+  step = 0;
+
   debtId = this.routeParams.debtId;
   contactTypeCode = this.routeParams.contactTypeCode;
 
