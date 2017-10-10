@@ -10,19 +10,18 @@ interface IResponseTreeNode {
   sortOrder: number;
 }
 
-const convertToTreeNodes = (nodes: IResponseTreeNode[], expand: boolean) => {
+const convertToTreeNodes = (nodes: IResponseTreeNode[], table: boolean, expand: boolean) => {
   return nodes
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map(node => {
       const { children, sortOrder, ...data } = node;
       return {
         data,
-        ...(!isEmpty(children) ? { children: convertToTreeNodes(children, expand) } : {}),
+        ...(!isEmpty(children) ? { children: convertToTreeNodes(children, table, expand) } : {}),
+        ...(table ? {} : { label: node.name || `Node #${node.id}`, bgColor: node.boxColor }),
         sortOrder,
-        label: node.name || `Node #${node.id}`,
-        bgColor: node.boxColor,
         id: node.id,
-        expanded: expand && !isEmpty(node.children),
+        expanded: expand && !isEmpty(children),
       };
     });
 }
@@ -38,13 +37,11 @@ const addParents = (nodes: ITreeNode[], parent: ITreeNode = null) => {
   });
 }
 
-export const toTreeNodes = (expand: boolean = false) => {
+export const toTreeNodes = (table: boolean = false, expand: boolean = false) => {
   return (nodes: IResponseTreeNode[]): ITreeNode[] => {
-    return addParents([
-      {
-        id: 0,
-        children: convertToTreeNodes(nodes, expand)
-      }
-    ]);
+    const children = convertToTreeNodes(nodes, table, expand);
+    return table
+      ? addParents(children)
+      : addParents([{ id: 0, children }]);
   }
 }

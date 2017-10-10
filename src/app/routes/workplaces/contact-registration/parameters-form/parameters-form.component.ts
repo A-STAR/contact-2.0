@@ -99,8 +99,6 @@ export class ParametersFormComponent implements OnInit {
         { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
       ]
     },
-    // TODO(d.maltsev) Дополнительные атрибуты долга
-    // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=121733180
   ]
   .map(group => ({
     ...group,

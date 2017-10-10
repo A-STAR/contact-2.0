@@ -23,7 +23,7 @@ export class ContactRegistrationService {
     return this.dataService
       .read(url, { debtId, contactType, treeResultId })
       .map(response => response.data)
-      .map(toTreeNodes())
+      .map(toTreeNodes(true, true))
   }
 
   fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
