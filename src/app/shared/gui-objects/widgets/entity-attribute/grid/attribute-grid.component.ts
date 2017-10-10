@@ -105,7 +105,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+    this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 19)
       .subscribe(canView => {
         if (canView) {
           this.fetch();
