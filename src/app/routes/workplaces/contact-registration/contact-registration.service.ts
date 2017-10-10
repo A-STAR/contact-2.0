@@ -17,6 +17,13 @@ export class ContactRegistrationService {
 
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
+  fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<any[]> {
+    const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
+    return this.dataService
+      .read(url, { debtId, contactType, treeResultId })
+      .map(response => response.data);
+  }
+
   fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
     return this.dataService

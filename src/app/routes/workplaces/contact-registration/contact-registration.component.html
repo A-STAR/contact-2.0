@@ -10,5 +10,8 @@
 </div>
 
 <div [hidden]="step != 1">
-  <app-parameters-form></app-parameters-form>
+  <app-parameters-form
+    [debtId]="debtId"
+    [contactTypeCode]="contactTypeCode">
+  </app-parameters-form>
 </div>

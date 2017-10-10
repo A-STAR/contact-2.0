@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -15,7 +15,10 @@ const labelKey = makeKey('modules.contactRegistration.parametersForm')
   templateUrl: './parameters-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ParametersFormComponent {
+export class ParametersFormComponent implements OnInit {
+  @Input() debtId: number;
+  @Input() contactTypeCode: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[] = [
@@ -107,9 +110,25 @@ export class ParametersFormComponent {
     }))
   }));
 
+  data = {};
+
+  attributes: any[];
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {
-    this.contactRegistrationService.selectedNode$.subscribe(console.log);
+    // this.contactRegistrationService.selectedNode$.subscribe(console.log);
+  }
+
+  ngOnInit(): void {
+    this.contactRegistrationService.selectedNode$
+      .filter(Boolean)
+      .map(node => node.id)
+      .flatMap(nodeId => this.contactRegistrationService.fetchAttributes(this.debtId, this.contactTypeCode, nodeId))
+      .subscribe(attributes => {
+        this.attributes = attributes;
+        this.cdRef.markForCheck();
+      });
   }
 }
