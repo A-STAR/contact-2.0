@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -108,7 +108,6 @@ export class ParametersFormComponent {
   }));
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {
     this.contactRegistrationService.selectedNode$.subscribe(console.log);
