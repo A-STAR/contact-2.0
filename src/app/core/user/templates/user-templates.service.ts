@@ -14,7 +14,6 @@ export class UserTemplatesService {
   static USER_TEMPLATES_FETCH_FAILURE = 'USER_TEMPLATES_FETCH_FAILURE';
 
   private templates: IUserTemplates;
-  private isInitialized = false;
 
   constructor(private store: Store<IAppState>) {
     this.templates$.subscribe(templates => this.templates = templates);
@@ -37,7 +36,7 @@ export class UserTemplatesService {
 
   getTemplates(typeCode: number, recipientTypeCode: number): Observable<IUserTemplate[]> {
     const key = `${typeCode}/${recipientTypeCode}`;
-    const status = this.templates && this.templates[key] && this.templates[key].status;
+    const status = this.templates[key] && this.templates[key].status;
     if (status !== TemplateStatusEnum.PENDING && status !== TemplateStatusEnum.LOADED) {
       this.refresh(typeCode, recipientTypeCode);
     }
