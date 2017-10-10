@@ -2,6 +2,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
+import { ILookupKey } from '../../../../core/lookup/lookup.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
@@ -42,6 +43,9 @@ export interface IDynamicFormControl {
   options?: ILabeledValue[];
   optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
+  // options for select wrapper
+  dictCode?: number;
+  lookupKey?: ILookupKey;
   // number of rows for textarea
   rows?: number;
   validators?: Array<ValidatorFn>;
@@ -82,6 +86,7 @@ export type ControlTypes =
   | 'password'
   | 'radio'
   | 'select'
+  | 'selectwrapper'
   | 'text'
   | 'textarea'
   | 'richtexteditor'

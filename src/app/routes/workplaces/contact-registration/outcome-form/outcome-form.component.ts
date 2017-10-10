@@ -17,7 +17,7 @@ export class OutcomeFormComponent {
 
   controls: IDynamicFormControl[] = [
     { label: labelKey('template'), controlName: 'template', type: 'textarea', disabled: true },
-    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [] },
+    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'selectwrapper', lookupKey: 'currencies' },
     { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', disabled: true },
     { label: labelKey('comment'), controlName: 'comment', type: 'textarea' },
   ];
