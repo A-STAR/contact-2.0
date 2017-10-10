@@ -36,7 +36,7 @@ export class UserTemplatesService {
 
   getTemplates(typeCode: number, recipientTypeCode: number): Observable<IUserTemplate[]> {
     const key = `${typeCode}/${recipientTypeCode}`;
-    const status = this.templates[key] && this.templates[key].status;
+    const status = this.templates && this.templates[key] && this.templates[key].status;
     if (status !== TemplateStatusEnum.PENDING && status !== TemplateStatusEnum.LOADED) {
       this.refresh(typeCode, recipientTypeCode);
     }
