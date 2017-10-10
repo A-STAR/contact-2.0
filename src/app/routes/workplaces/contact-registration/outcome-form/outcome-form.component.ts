@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
 
@@ -39,7 +38,6 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
   nodes: ITreeNode[];
 
   private debtorId = 1;
-  private selectedTemplateId = null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
