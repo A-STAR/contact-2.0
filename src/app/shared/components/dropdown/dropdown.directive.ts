@@ -41,6 +41,10 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
     this.removeListener(this.triggerClickListener);
   }
 
+  close(): void {
+    this.collapse();
+  }
+
   private toggle(): void {
     this.isExpanded ? this.collapse() : this.expand();
   }
@@ -119,7 +123,9 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private get parentElement(): any {
-    return this.parent.nativeElement;
+    return this.parent
+      ? this.parent.nativeElement
+      : this.trigger.nativeElement;
   }
 
   private get triggerElement(): any {
