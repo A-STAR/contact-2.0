@@ -6,15 +6,7 @@
   <p-column field="name" header="Name"></p-column>
   <p-column field="value" header="Value">
     <ng-template let-node="rowData" pTemplate="body">
-      <ng-container *ngIf="node.data.typeCode !== 6">
-        <input class="form-control" [ngModel]="getRawValue(node.data)">
-      </ng-container>
-      <ng-container *ngIf="node.data.typeCode === 6">
-        <app-select-wrapper
-          [(ngModel)]="node.data.valueN"
-          [dictCode]="node.data.dictNameCode">
-        </app-select-wrapper>
-      </ng-container>
+      <app-value-input [(ngModel)]="node.data"></app-value-input>
     </ng-template>
   </p-column>
   <p-column field="mandatory" header="Mandatory">

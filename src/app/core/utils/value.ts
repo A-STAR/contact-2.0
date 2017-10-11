@@ -2,7 +2,7 @@ import { IDynamicFormControl } from '../../shared/components/form/dynamic-form/d
 
 import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
 
-interface IValue {
+export interface IValue {
   dictNameCode?: number;
   typeCode: number;
   valueN: number;

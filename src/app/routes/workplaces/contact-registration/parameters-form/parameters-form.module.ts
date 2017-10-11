@@ -3,6 +3,7 @@ import { TreeTableModule } from 'primeng/primeng';
 
 import { SelectModule } from '../../../../shared/components/form/select/select.module';
 import { SharedModule } from '../../../../shared/shared.module';
+import { ValueInputModule } from '../../../../shared/components/form/value/value.module';
 
 import { ParametersFormComponent } from './parameters-form.component';
 
@@ -11,6 +12,7 @@ import { ParametersFormComponent } from './parameters-form.component';
     SelectModule,
     SharedModule,
     TreeTableModule,
+    ValueInputModule,
   ],
   exports: [
     ParametersFormComponent,
