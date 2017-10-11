@@ -84,7 +84,11 @@ export class ParametersFormComponent implements OnInit {
     {
       title: 'Прикрепление файла',
       children: [
-        { controlName: 'foo', type: 'textarea' },
+        { controlName: 'fileAttach.docTypeCode', type: 'selectwrapper', dictCode: 33 },
+        { controlName: 'fileAttach.docName', type: 'text' },
+        { controlName: 'fileAttach.docNumber', type: 'text' },
+        { controlName: 'fileAttach.comment', type: 'textarea' },
+        { controlName: 'fileAttach.file', type: 'file' },
       ]
     },
     {
