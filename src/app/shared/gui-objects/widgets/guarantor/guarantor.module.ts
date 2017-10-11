@@ -17,7 +17,7 @@ import { GuarantorService } from './guarantor.service';
     GuarantorGridModule,
   ],
   providers: [
-    GuarantorService,
+    GuarantorService
   ]
 })
 export class GuarantorModule { }

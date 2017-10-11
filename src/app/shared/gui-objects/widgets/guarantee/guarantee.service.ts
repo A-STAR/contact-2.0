@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IGuarantor } from '../guarantee/guarantee.interface';
+import { IGuaranteeContract } from './guarantee.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class GuarantorService {
+export class GuaranteeService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
   static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
-  private url = '/debts/{debtId}/guaranteeContract/{contractId}/guarantor';
+  private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.employment.gen.singular';
 
   constructor(
@@ -19,29 +19,35 @@ export class GuarantorService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number): Observable<IGuarantor[]> {
+  fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
       .read(this.url, { debtId })
       .map(resp => resp.data)
       .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
   }
 
-  fetch(debtId: number, contractId: number): Observable<IGuarantor> {
+  fetch(debtId: number, contractId: number): Observable<IGuaranteeContract> {
     return this.dataService
-      .read(`${this.url}`, { debtId, contractId })
+      .read(`${this.url}/{contractId}`, { debtId, contractId })
       .map(resp => resp.data[0] || {})
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
-  create(debtId: number, contractId: number, personId: number): Observable<any> {
+  create(debtId: number, contract: IGuaranteeContract): Observable<any> {
     return this.dataService
-      .create(this.url, { debtId, contractId, personId }, {})
+      .create(this.url, { debtId }, contract)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  delete(debtId: number, contractId: number, personId: number): Observable<any> {
+  update(debtId: number, contractId: number, contract: IGuaranteeContract): Observable<any> {
     return this.dataService
-      .delete(`${this.url}/{personId}`, { debtId, contractId, personId })
+      .update(`${this.url}/{contractId}`, { debtId, contractId }, contract)
+      .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
+  }
+
+  delete(debtId: number, contractId: number): Observable<any> {
+    return this.dataService
+      .delete(`${this.url}/{contractId}`, { debtId, contractId })
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 }

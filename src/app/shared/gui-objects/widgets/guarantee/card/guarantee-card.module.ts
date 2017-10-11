@@ -2,28 +2,26 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DialogModule } from '../../../../components/dialog/dialog.module';
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
-import { GuarantorGridModule } from '../grid/guarantor-grid.module';
 
-import { GuarantorCardComponent } from './guarantor-card.component';
+import { GuaranteeCardComponent } from './guarantee-card.component';
+import { GuarantorModule } from '../../guarantor/guarantor.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DialogModule,
     DynamicFormModule,
-    GuarantorGridModule,
+    GuarantorModule,
     TranslateModule,
   ],
   exports: [
-    GuarantorCardComponent,
+    GuaranteeCardComponent,
   ],
   declarations: [
-    GuarantorCardComponent,
+    GuaranteeCardComponent,
   ],
   entryComponents: [
-    GuarantorCardComponent,
+    GuaranteeCardComponent,
   ]
 })
-export class GuarantorCardModule { }
+export class GuaranteeCardModule { }

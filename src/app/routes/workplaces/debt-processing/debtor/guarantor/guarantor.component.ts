@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
-import { GuarantorCardComponent } from '../../../../../shared/gui-objects/widgets/guarantor/card/guarantor-card.component';
+import { GuaranteeCardComponent } from '../../../../../shared/gui-objects/widgets/guarantee/card/guarantee-card.component';
 
 @Component({
   selector: 'app-debtor-guarantor',
@@ -13,7 +13,7 @@ export class DebtorGuarantorComponent {
 
   get node(): INode {
     return {
-      component: GuarantorCardComponent
+      component: GuaranteeCardComponent
     };
   }
 }

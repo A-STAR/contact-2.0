@@ -5,11 +5,11 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGuaranteeContract } from '../../guarantee/guarantee.interface';
+import { IGuaranteeContract } from '../guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { GuarantorService } from '../../guarantor/guarantor.service';
+import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -17,11 +17,11 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
-  selector: 'app-guarantor-grid',
-  templateUrl: './guarantor-grid.component.html',
+  selector: 'app-guarantee-grid',
+  templateUrl: './guarantee-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuarantorGridComponent implements OnInit, OnDestroy {
+export class GuaranteeGridComponent implements OnInit, OnDestroy {
 
   private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
 
@@ -41,7 +41,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeEmployment'),
+      action: () => this.setDialog('removeGuarantee'),
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.selectedContract$
@@ -79,7 +79,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private guarantorService: GuarantorService,
+    private guaranteeService: GuaranteeService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
@@ -108,7 +108,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.messageBusService
-      .select(GuarantorService.MESSAGE_GUARANTOR_SAVED)
+      .select(GuaranteeService.MESSAGE_GUARANTOR_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -127,8 +127,8 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   onRemove(): void {
-    const { id: contractId } = this.selectedContract$.value;
-    this.guarantorService.delete(this.debtId, contractId, this.personId)
+    const { id: employmentId } = this.selectedContract$.value;
+    this.guaranteeService.delete(this.personId, employmentId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -172,7 +172,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.guarantorService.fetchAll(this.debtId)
+    this.guaranteeService.fetchAll(this.debtId)
       .subscribe(contracts => {
         this.contracts = [...contracts];
         this.selectedContract$.next(null);

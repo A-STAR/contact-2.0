@@ -4,28 +4,27 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract } from '../guarantor.interface';
+import { IGuarantor } from '../../guarantee/guarantee.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { GuarantorService } from '../guarantor.service';
+import { GuarantorService } from '../../guarantor/guarantor.service';
 // import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+// import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
 
-const cLabelKey = makeKey('widgets.guaranteeContract.grid');
-const gLabelKey = makeKey('widgets.guarantor.grid');
+const labelKey = makeKey('widgets.guarantor.grid');
 
 @Component({
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent implements OnInit {
-  @ViewChild('form') form: DynamicFormComponent;
+export class GuarantorCardComponent extends DialogFunctions implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
   // private personId = this.routeParams.personId || null;
@@ -33,7 +32,8 @@ export class GuarantorCardComponent implements OnInit {
   private debtId = this.routeParams.debtId || null;
 
   controls: IDynamicFormGroup[] = null;
-  contract: IGuaranteeContract;
+  dialog: string = null;
+  guarantor: IGuarantor;
   attrListConstants: object = {
     '1' : 'Person.Individual.AdditionalAttribute.List',
     '2' : 'Person.LegalEntity.AdditionalAttribute.List',
@@ -41,19 +41,17 @@ export class GuarantorCardComponent implements OnInit {
   };
 
   constructor(
-    private contentTabService: ContentTabService,
     private guarantorService: GuarantorService,
     // private lookupService: LookupService,
-    private messageBusService: MessageBusService,
+    // private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-
+    super();
     Observable.combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
@@ -64,46 +62,33 @@ export class GuarantorCardComponent implements OnInit {
       this.contractId ? this.guarantorService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ attributeList, respTypeOpts, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, contract ]) => {
+    .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
       const addControls = attributeList.valueS
       ? (<string>attributeList.valueS).split(/,\s?/g)
         .filter(Boolean)
         .map(attr => `stringValue${attr}`)
-        .map(attr => ({ label: gLabelKey(attr), controlName: attr, type: 'text' }))
+        .map(attr => ({ label: labelKey(attr), controlName: attr, type: 'text' }))
       : [];
 
       const controls = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
-            { label: cLabelKey('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
-            { label: cLabelKey('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
-            { label: cLabelKey('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
-            {
-              label: cLabelKey('contractTypeCode'), controlName: 'contractTypeCode',
-              type: 'select', options: respTypeOpts, required: true
-            },
-            { label: cLabelKey('comment'), controlName: 'comment', type: 'textarea', },
-          ]
-        },
-        {
-          title: 'widgets.guarantor.title', collapsible: true,
-          children: [
-            { label: gLabelKey('lastName'), controlName: 'lastName', type: 'text', required: true },
-            { label: gLabelKey('firstName'), controlName: 'firstName', type: 'text' },
-            { label: gLabelKey('middleName'), controlName: 'firstName', type: 'text' },
-            { label: gLabelKey('birthDate'), controlName: 'birthDate', type: 'datepicker' },
-            { label: gLabelKey('birthPlace'), controlName: 'birthPlace',  type: 'text' },
-            { label: gLabelKey('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
-            { label: gLabelKey('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
-            { label: gLabelKey('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
-            { label: gLabelKey('typeCode'), controlName: 'typeCode', type: 'select', options: typeOpts, required: true },
-            { label: gLabelKey('comment'), controlName: 'comment', type: 'textarea' },
+            { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', options: typeOpts, required: true },
+            { label: labelKey('lastName'), controlName: 'lastName', type: 'text', required: true },
+            { label: labelKey('firstName'), controlName: 'firstName', type: 'text' },
+            { label: labelKey('middleName'), controlName: 'firstName', type: 'text' },
+            { label: labelKey('birthDate'), controlName: 'birthDate', type: 'datepicker' },
+            { label: labelKey('birthPlace'), controlName: 'birthPlace',  type: 'text' },
+            { label: labelKey('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
+            { label: labelKey('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
+            { label: labelKey('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
+            { label: labelKey('comment'), controlName: 'comment', type: 'textarea' },
           ].concat(addControls)
         },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
-      this.contract = contract;
+      this.guarantor = guarantor;
     });
   }
 
@@ -115,19 +100,24 @@ export class GuarantorCardComponent implements OnInit {
     return this.form && this.form.canSubmit;
   }
 
-  onBack(): void {
-    this.contentTabService.back();
+  onClear(): void {
+    this.form.form.reset();
   }
 
-  onSubmit(): void {
-    const data = this.form.requestValue;
-    const action = this.debtId
-      ? this.guarantorService.update(this.debtId, this.contractId, data)
-      : this.guarantorService.create(this.debtId, data);
+  onClose(event: UIEvent): void {
+    this.closeDialog();
+  }
 
-    action.subscribe(() => {
-      this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SAVED);
-      this.onBack();
-    });
+  onSearch(): void {
+    const data = this.form.requestValue;
+    console.log('search for', data);
+    this.setDialog('findGuarantor');
+    // const action = this.debtId
+    //   ? this.guarantorService.update(this.debtId, this.personId, data)
+    //   : this.guarantorService.create(this.debtId, data);
+
+    // action.subscribe(() => {
+    //   this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SAVED);
+    // });
   }
 }

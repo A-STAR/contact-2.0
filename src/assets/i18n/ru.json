@@ -942,6 +942,9 @@
     },
     "guarantor": {
       "title": "Поручитель",
+      "search": {
+        "title": "Поиск поручителей"
+      },
       "grid": {
         "id": "Ид",
         "firstName": "Имя",
