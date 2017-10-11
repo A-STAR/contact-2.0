@@ -36,6 +36,10 @@ export const routes: Route[] = [
         children: [
           // { path: 'debts', loadChildren: './workplaces/debtors/debtors.module#DebtorsModule' },
           { path: 'debt-processing', loadChildren: './workplaces/debt-processing/debt-processing.module#DebtProcessingModule' },
+          {
+            path: 'contact-registration',
+            loadChildren: './workplaces/contact-registration/contact-registration.module#ContactRegistrationModule'
+          },
         ]
       },
       {

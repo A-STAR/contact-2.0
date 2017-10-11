@@ -8,6 +8,8 @@ import { UserDictionariesEffects } from './dictionaries/user-dictionaries.effect
 import { UserDictionariesService } from './dictionaries/user-dictionaries.service';
 import { UserPermissionsEffects } from './permissions/user-permissions.effects';
 import { UserPermissionsService } from './permissions/user-permissions.service';
+import { UserTemplatesEffects } from './templates/user-templates.effects';
+import { UserTemplatesService } from './templates/user-templates.service';
 
 @NgModule({
   imports: [
@@ -15,11 +17,13 @@ import { UserPermissionsService } from './permissions/user-permissions.service';
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserDictionariesEffects),
     EffectsModule.run(UserPermissionsEffects),
+    EffectsModule.run(UserTemplatesEffects),
   ],
   providers: [
     UserConstantsService,
     UserDictionariesService,
     UserPermissionsService,
+    UserTemplatesService,
   ]
 })
 export class UserModule { }

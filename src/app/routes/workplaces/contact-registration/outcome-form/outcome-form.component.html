@@ -1,0 +1,14 @@
+<div class="mb">
+  <app-dynamic-form #form [controls]="controls" [data]="data"></app-dynamic-form>
+</div>
+
+<app-tree
+  layout="horizontal"
+  selectionMode="single"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="nodes"
+  [selection]="selectedNode$ | async"
+  (onNodeSelect)="onNodeSelect($event)"
+  (onNodeExpand)="onNodeSelect($event)">
+</app-tree>

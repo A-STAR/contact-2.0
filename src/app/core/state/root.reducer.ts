@@ -19,6 +19,7 @@ import { usersReducer } from '../../routes/admin/users/users.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userDictionariesReducer } from '../user/dictionaries/user-dictionaries.reducer';
 import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
+import { userTemplatesReducer } from '../user/templates/user-templates.reducer';
 import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
 import { metadataReducer } from '../metadata/metadata.reducer';
 
@@ -39,6 +40,7 @@ export const reducers = {
   userConstants: userConstantsReducer,
   userDictionaries: userDictionariesReducer,
   userPermissions: userPermissionsReducer,
+  userTemplates: userTemplatesReducer,
   metadata: metadataReducer,
   constants: constantsReducer,
 };
