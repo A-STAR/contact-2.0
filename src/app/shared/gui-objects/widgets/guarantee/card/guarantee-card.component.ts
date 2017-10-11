@@ -8,24 +8,21 @@ import { IGuaranteeContract } from '../guarantee.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
-// import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey } from '../../../../../core/utils';
 
-const cLabelKey = makeKey('widgets.guaranteeContract.grid');
-const gLabelKey = makeKey('widgets.guarantor.grid');
+const labelKey = makeKey('widgets.guaranteeContract.grid');
 
 @Component({
   selector: 'app-guarantee-card',
   templateUrl: './guarantee-card.component.html'
 })
 export class GuaranteeCardComponent implements OnInit {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
   // private personId = this.routeParams.personId || null;
@@ -34,72 +31,39 @@ export class GuaranteeCardComponent implements OnInit {
 
   controls: IDynamicFormGroup[] = null;
   contract: IGuaranteeContract;
-  attrListConstants: object = {
-    '1' : 'Person.Individual.AdditionalAttribute.List',
-    '2' : 'Person.LegalEntity.AdditionalAttribute.List',
-    '3' : 'Person.SoleProprietorship.AdditionalAttribute.List',
-  };
 
   constructor(
     private contentTabService: ContentTabService,
     private guaranteeService: GuaranteeService,
-    // private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
-    private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
     Observable.combineLatest(
-      this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.contractId
         ? this.userPermissionsService.has('GUARANTEE_EDIT')
         : this.userPermissionsService.has('GUARANTEE_ADD'),
       this.contractId ? this.guaranteeService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ attributeList, respTypeOpts, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, contract ]) => {
-      const addControls = attributeList.valueS
-      ? (<string>attributeList.valueS).split(/,\s?/g)
-        .filter(Boolean)
-        .map(attr => `stringValue${attr}`)
-        .map(attr => ({ label: gLabelKey(attr), controlName: attr, type: 'text' }))
-      : [];
+    .subscribe(([ respTypeOpts, canEdit, contract ]) => {
 
       const controls = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
-            { label: cLabelKey('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
-            { label: cLabelKey('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
-            { label: cLabelKey('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
+            { label: labelKey('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
+            { label: labelKey('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
+            { label: labelKey('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
             {
-              label: cLabelKey('contractTypeCode'), controlName: 'contractTypeCode',
+              label: labelKey('contractTypeCode'), controlName: 'contractTypeCode',
               type: 'select', options: respTypeOpts, required: true
             },
-            { label: cLabelKey('comment'), controlName: 'comment', type: 'textarea', },
+            { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
           ]
-        },
-        {
-          title: 'widgets.guarantor.title', collapsible: true,
-          children: [
-            { label: gLabelKey('lastName'), controlName: 'lastName', type: 'text', required: true },
-            { label: gLabelKey('firstName'), controlName: 'firstName', type: 'text' },
-            { label: gLabelKey('middleName'), controlName: 'firstName', type: 'text' },
-            { label: gLabelKey('birthDate'), controlName: 'birthDate', type: 'datepicker' },
-            { label: gLabelKey('birthPlace'), controlName: 'birthPlace',  type: 'text' },
-            { label: gLabelKey('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
-            { label: gLabelKey('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
-            { label: gLabelKey('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
-            { label: gLabelKey('typeCode'), controlName: 'typeCode', type: 'select', options: typeOpts, required: true },
-            { label: gLabelKey('comment'), controlName: 'comment', type: 'textarea' },
-          ].concat(addControls)
         },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];

@@ -9,7 +9,7 @@ import { IGuaranteeContract } from '../../guarantee/guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { GuaranteeService } from '../../guarantee/guarantee.service';
+import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -79,7 +79,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private guaranteeService: GuaranteeService,
+    private guarantorService: GuarantorService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
@@ -108,7 +108,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.messageBusService
-      .select(GuaranteeService.MESSAGE_GUARANTOR_SAVED)
+      .select(GuarantorService.MESSAGE_GUARANTOR_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -127,8 +127,8 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   onRemove(): void {
-    const { id: employmentId } = this.selectedContract$.value;
-    this.guaranteeService.delete(this.personId, employmentId)
+    const { id: contractId } = this.selectedContract$.value;
+    this.guarantorService.delete(this.debtId, contractId, this.personId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -172,7 +172,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.guaranteeService.fetchAll(this.debtId)
+    this.guarantorService.fetchAll(this.debtId)
       .subscribe(contracts => {
         this.contracts = [...contracts];
         this.selectedContract$.next(null);

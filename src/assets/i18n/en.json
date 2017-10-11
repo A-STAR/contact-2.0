@@ -942,6 +942,9 @@
     },
     "guarantor": {
       "title": "Guarantor",
+      "search": {
+        "title": "Find guarantors"
+      },
       "grid": {
         "id": "Id",
         "firstName": "First name",

@@ -5,11 +5,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 
 import { GuaranteeCardComponent } from './guarantee-card.component';
+import { GuarantorModule } from '../../guarantor/guarantor.module';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicFormModule,
+    GuarantorModule,
     TranslateModule,
   ],
   exports: [
