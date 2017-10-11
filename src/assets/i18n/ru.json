@@ -61,6 +61,7 @@
         "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
+        "DEBTOR_GUARANTEE": "Договор поручительства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",
@@ -940,17 +941,33 @@
       }
     },
     "guarantor": {
+      "title": "Поручитель",
       "grid": {
         "id": "Ид",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
         "birthDate": "Дата рождения",
-        "genderCode": "Пол",
         "birthPlace": "Место рождения",
-        "familyStatusCode": "Семейное положение",
         "educationCode": "Образование",
-        "comment": "Комментарий"
+        "familyStatusCode": "Семейное положение",
+        "genderCode": "Пол",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "stringValue1": "Доп. значение 1",
+        "stringValue2": "Доп. значение 2",
+        "stringValue3": "Доп. значение 3",
+        "stringValue4": "Доп. значение 4",
+        "stringValue5": "Доп. значение 5",
+        "stringValue6": "Доп. значение 6",
+        "stringValue7": "Доп. значение 7",
+        "stringValue8": "Доп. значение 8",
+        "stringValue9": "Доп. значение 9",
+        "stringValue10": "Доп. значение 10"
       }
     },
     "guaranteeContract": {
+      "title": "Договор поручительства",
       "grid": {
         "id": "Ид",
         "contractNumber": "Номер договора",

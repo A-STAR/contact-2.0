@@ -1,73 +1,114 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '../guarantor.interface';
+import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IGuaranteeContract } from '../guarantor.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuarantorService } from '../guarantor.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
+// import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('widgets.employment.grid');
+const cLabelKey = makeKey('widgets.guaranteeContract.grid');
+const gLabelKey = makeKey('widgets.guarantor.grid');
 
 @Component({
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent {
+export class GuarantorCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
-  private employmentId = this.routeParams.employmentId || null;
+  // private personId = this.routeParams.personId || null;
+  private contractId = this.routeParams.contractId || null;
+  private debtId = this.routeParams.debtId || null;
 
-  controls: IDynamicFormControl[] = null;
-  employment: IEmployment;
+  controls: IDynamicFormGroup[] = null;
+  contract: IGuaranteeContract;
+  attrListConstants: object = {
+    '1' : 'Person.Individual.AdditionalAttribute.List',
+    '2' : 'Person.LegalEntity.AdditionalAttribute.List',
+    '3' : 'Person.SoleProprietorship.AdditionalAttribute.List',
+  };
 
   constructor(
     private contentTabService: ContentTabService,
-    private employmentService: GuarantorService,
-    private lookupService: LookupService,
+    private guarantorService: GuarantorService,
+    // private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
+    private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
-      this.lookupService.currencyOptions,
-      this.employmentId
-        ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
-        : this.userPermissionsService.has('EMPLOYMENT_ADD'),
-      this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
+      this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
+      this.contractId
+        ? this.userPermissionsService.has('GUARANTEE_EDIT')
+        : this.userPermissionsService.has('GUARANTEE_ADD'),
+      this.contractId ? this.guarantorService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
-      const controls: IDynamicFormControl[] = [
-        { label: labelKey('workTypeCode'), controlName: 'workTypeCode', type: 'select', options, required: true },
-        { label: labelKey('company'), controlName: 'company',  type: 'text', required: true },
-        { label: labelKey('position'), controlName: 'position',  type: 'text', },
-        { label: labelKey('hireDate'), controlName: 'hireDate', type: 'datepicker', },
-        { label: labelKey('dismissDate'), controlName: 'dismissDate', type: 'datepicker', },
-        { label: labelKey('income'), controlName: 'income',  type: 'number', },
-        { label: labelKey('currencyId'), controlName: 'currencyId', type: 'select', options: currencyOptions },
-        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
+    .subscribe(([ attributeList, respTypeOpts, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, contract ]) => {
+      const addControls = attributeList.valueS
+      ? (<string>attributeList.valueS).split(/,\s?/g)
+        .filter(Boolean)
+        .map(attr => `stringValue${attr}`)
+        .map(attr => ({ label: gLabelKey(attr), controlName: attr, type: 'text' }))
+      : [];
+
+      const controls = [
+        {
+          title: 'widgets.guaranteeContract.title', collapsible: true,
+          children: [
+            { label: cLabelKey('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
+            { label: cLabelKey('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
+            { label: cLabelKey('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
+            {
+              label: cLabelKey('contractTypeCode'), controlName: 'contractTypeCode',
+              type: 'select', options: respTypeOpts, required: true
+            },
+            { label: cLabelKey('comment'), controlName: 'comment', type: 'textarea', },
+          ]
+        },
+        {
+          title: 'widgets.guarantor.title', collapsible: true,
+          children: [
+            { label: gLabelKey('lastName'), controlName: 'lastName', type: 'text', required: true },
+            { label: gLabelKey('firstName'), controlName: 'firstName', type: 'text' },
+            { label: gLabelKey('middleName'), controlName: 'firstName', type: 'text' },
+            { label: gLabelKey('birthDate'), controlName: 'birthDate', type: 'datepicker' },
+            { label: gLabelKey('birthPlace'), controlName: 'birthPlace',  type: 'text' },
+            { label: gLabelKey('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
+            { label: gLabelKey('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
+            { label: gLabelKey('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
+            { label: gLabelKey('typeCode'), controlName: 'typeCode', type: 'select', options: typeOpts, required: true },
+            { label: gLabelKey('comment'), controlName: 'comment', type: 'textarea' },
+          ].concat(addControls)
+        },
       ];
-      this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
-      this.employment = employment;
+      this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+      this.contract = contract;
     });
+  }
+
+  ngOnInit(): void {
+    // Set default value
   }
 
   get canSubmit(): boolean {
@@ -80,12 +121,12 @@ export class GuarantorCardComponent {
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    const action = this.employmentId
-      ? this.employmentService.update(this.personId, this.employmentId, data)
-      : this.employmentService.create(this.personId, data);
+    const action = this.debtId
+      ? this.guarantorService.update(this.debtId, this.contractId, data)
+      : this.guarantorService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(GuarantorService.MESSAGE_EMPLOYMENT_SAVED);
+      this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SAVED);
       this.onBack();
     });
   }
