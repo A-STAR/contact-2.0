@@ -18,7 +18,7 @@ export class ContactRegistrationService {
 
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
-  fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<any[]> {
+  fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
       .read(url, { debtId, contactType, treeResultId })
