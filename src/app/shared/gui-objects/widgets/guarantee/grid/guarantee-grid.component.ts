@@ -5,11 +5,11 @@ import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGuaranteeContract } from '../../guarantee/guarantee.interface';
+import { IGuaranteeContract } from '../guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { GuaranteeService } from '../../guarantee/guarantee.service';
+import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -17,11 +17,11 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
-  selector: 'app-guarantor-grid',
-  templateUrl: './guarantor-grid.component.html',
+  selector: 'app-guarantee-grid',
+  templateUrl: './guarantee-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuarantorGridComponent implements OnInit, OnDestroy {
+export class GuaranteeGridComponent implements OnInit, OnDestroy {
 
   private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
 
@@ -41,7 +41,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeEmployment'),
+      action: () => this.setDialog('removeGuarantee'),
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.selectedContract$

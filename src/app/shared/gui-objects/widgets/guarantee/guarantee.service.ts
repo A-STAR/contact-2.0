@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IGuaranteeContract } from './guarantor.interface';
+import { IGuaranteeContract } from './guarantee.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class GuarantorService {
+export class GuaranteeService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
   static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 

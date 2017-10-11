@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract } from '../guarantor.interface';
+import { IGuaranteeContract } from '../../guarantee/guarantee.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { GuarantorService } from '../guarantor.service';
+import { GuaranteeService } from '../../guarantee/guarantee.service';
 // import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -42,7 +42,7 @@ export class GuarantorCardComponent implements OnInit {
 
   constructor(
     private contentTabService: ContentTabService,
-    private guarantorService: GuarantorService,
+    private guaranteeService: GuaranteeService,
     // private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
@@ -61,7 +61,7 @@ export class GuarantorCardComponent implements OnInit {
       this.contractId
         ? this.userPermissionsService.has('GUARANTEE_EDIT')
         : this.userPermissionsService.has('GUARANTEE_ADD'),
-      this.contractId ? this.guarantorService.fetch(this.debtId, this.contractId) : Observable.of(null)
+      this.contractId ? this.guaranteeService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ attributeList, respTypeOpts, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, contract ]) => {
@@ -122,11 +122,11 @@ export class GuarantorCardComponent implements OnInit {
   onSubmit(): void {
     const data = this.form.requestValue;
     const action = this.debtId
-      ? this.guarantorService.update(this.debtId, this.contractId, data)
-      : this.guarantorService.create(this.debtId, data);
+      ? this.guaranteeService.update(this.debtId, this.contractId, data)
+      : this.guaranteeService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SAVED);
+      this.messageBusService.dispatch(GuaranteeService.MESSAGE_GUARANTOR_SAVED);
       this.onBack();
     });
   }
