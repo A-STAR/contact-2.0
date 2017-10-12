@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
-import { IValue, getRawValue } from '../../../../core/utils/value';
+import { IValue } from '../../../../core/utils/value';
 
 @Component({
   selector: 'app-value-input',
