@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -55,13 +56,23 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // TODO(d.maltsev): subscription
     this.form.onCtrlValueChange('autoCommentId')
-      .flatMap(([{ value }]) => this.contactRegistrationService.fetchAutoComment(this.debtId, this.debtorId, 1, value))
+      .flatMap(([{ value }]) => {
+        return this.contactRegistrationService
+          .fetchAutoComment(this.debtId, this.debtorId, 1, value)
+          .catch(() => Observable.of(null));
+      })
+      .filter(Boolean)
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 
     // TODO(d.maltsev): subscription
     this.selectedNode$
       .filter(selectedNode => selectedNode && isEmpty(selectedNode.children))
-      .flatMap(selectedNode => this.contactRegistrationService.fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id))
+      .flatMap(selectedNode => {
+        return this.contactRegistrationService
+          .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
+          .catch(() => Observable.of(null));
+      })
+      .filter(Boolean)
       .subscribe(template => this.updateData('template', template));
   }
 
