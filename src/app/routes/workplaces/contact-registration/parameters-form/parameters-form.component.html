@@ -1,32 +1,5 @@
 <app-dynamic-form #form [controls]="controls" [data]="data"></app-dynamic-form>
 
-<div class="row">
-  <div class="col-md-6">
-    <div appDropdown>
-      <div #dropdownParent style="width: 320px;">
-        <input/>
-        <button #dropdownTrigger>+</button>
-      </div>
-      <div #dropdownContent style="background: #fff; border: 1px solid #d5d5d5; padding: 10px; z-index: 10000;">
-        CONTENT<br>
-        123
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div appDropdown>
-      <div #dropdownParent style="width: 320px;">
-        <input/>
-        <button #dropdownTrigger>+</button>
-      </div>
-      <div #dropdownContent style="background: #fff; border: 1px solid #d5d5d5; padding: 10px; z-index: 10000;">
-        CONTENT<br>
-        123
-      </div>
-    </div>
-  </div>
-</div>
-
 <h4>Дополнительные атрибуты долга</h4>
 <p-treeTable selectionMode="none" [value]="attributes">
   <p-column field="code" header="Code"></p-column>
