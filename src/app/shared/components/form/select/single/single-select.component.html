@@ -1,0 +1,15 @@
+<div appDropdown>
+  <div #dropdownTrigger class="form-control clickable">
+    {{ label }}
+    <i class="caret"></i>
+  </div>
+  <div #dropdownContent style="z-index: 10000;">
+    <app-list
+      [hideSearchBar]="true"
+      [getId]="getId"
+      [getName]="getName"
+      [items]="options"
+      (select)="onSelect($event)">
+    </app-list>
+  </div>
+</div>

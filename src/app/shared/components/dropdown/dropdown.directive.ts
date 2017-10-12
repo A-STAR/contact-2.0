@@ -15,7 +15,7 @@ type IListener = () => void;
   selector: '[appDropdown]',
 })
 export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
-  static OFFSET = 2;
+  static OFFSET = -1;
 
   @ContentChild('dropdownContent') content: ElementRef;
   @ContentChild('dropdownParent') parent: ElementRef;

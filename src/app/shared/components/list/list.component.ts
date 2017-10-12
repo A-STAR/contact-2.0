@@ -9,7 +9,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 export class ListComponent<T> {
   @Input() items: T[];
   @Input() height = 120;
+  @Input() hideSearchBar = false;
   @Output() doubleClick = new EventEmitter<T>();
+  @Output() select = new EventEmitter<T>();
 
   private _search = '';
   private _selectedId: string = null;
@@ -36,7 +38,7 @@ export class ListComponent<T> {
 
   getItemClass(item: T): object {
     return {
-      'list-group-item p-sm bh0': true,
+      'list-group-item p-sm b0': true,
       'active': this.getId(item) === this._selectedId
     };
   }
@@ -48,6 +50,7 @@ export class ListComponent<T> {
 
   onClick(item: T): void {
     this._selectedId = this.getId(item);
+    this.select.emit(item);
     this.cdRef.markForCheck();
   }
 

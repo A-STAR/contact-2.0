@@ -15,6 +15,7 @@ import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
+import { SingleSelectModule } from '../select/single/single-select.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormGroupComponent } from './group/dynamic-form-group.component';
@@ -37,6 +38,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     TranslateModule,
     SegmentedInputModule,
     SelectModule,
+    SingleSelectModule,
   ],
   exports: [
     DynamicFormComponent,

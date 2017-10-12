@@ -30,6 +30,8 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
     { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [] },
     { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3 },
+
+    { label: labelKey('foo'), controlName: 'foo', type: 'singleselect', options: Array(10).fill(null).map((_, i) => ({ label: `Item #${i}`, value: i })) },
   ];
   data = {};
   nodes: ITreeNode[];

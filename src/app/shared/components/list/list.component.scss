@@ -9,10 +9,9 @@
   border-bottom: 1px solid $app-widget-border-color;
 }
 
-.list-group-item:first-child {
-  border-top: none;
-}
-
-.list-group-item:last-child {
-  border-bottom: none;
+.list-group {
+  cursor: pointer;
+  .list-group-item:not(.active):hover {
+    background: $dropdown-link-hover-bg;
+  }
 }
