@@ -20,7 +20,7 @@ import { DropdownDirective } from '../../../dropdown/dropdown.directive';
 })
 export class SingleSelectComponent implements ControlValueAccessor {
   @Input() nullable = false;
-  @Input() options: IOption[];
+  @Input() options: IOption[] = [];
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   private _isDisabled = false;
@@ -29,7 +29,7 @@ export class SingleSelectComponent implements ControlValueAccessor {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   get label(): string {
-    const option = this.options.find(o => o.value === this._value);
+    const option = (this.options || []).find(o => o.value === this._value);
     return option ? option.label : null;
   }
 

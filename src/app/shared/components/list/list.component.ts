@@ -22,7 +22,7 @@ export class ListComponent<T> {
   @Input() getName: (item: T) => string = () => null;
 
   get filteredItems(): T[] {
-    return this.items.filter(item => this.getName(item).includes(this._search));
+    return (this.items || []).filter(item => this.getName(item).toLowerCase().includes(this._search));
   }
 
   get search(): string {
@@ -31,7 +31,7 @@ export class ListComponent<T> {
 
   get style(): object {
     return {
-      height: `${this.height}px`,
+      maxHeight: `${this.height}px`,
       overflow: 'auto'
     };
   }
@@ -44,7 +44,7 @@ export class ListComponent<T> {
   }
 
   onSearch(value: string): void {
-    this._search = value;
+    this._search = value.toLowerCase();
     this.cdRef.markForCheck();
   }
 
