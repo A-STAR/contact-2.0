@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IUserTemplatesResponse } from './user-templates.interface';
+import { IUserTemplate } from './user-templates.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -20,13 +20,13 @@ export class UserTemplatesEffects {
     .mergeMap((action: Action) => {
       const { typeCode, recipientTypeCode } = action.payload;
       return this.read(typeCode, recipientTypeCode)
-        .map(response => {
+        .map(templates => {
           return {
             type: UserTemplatesService.USER_TEMPLATES_FETCH_SUCCESS,
             payload: {
               typeCode,
               recipientTypeCode,
-              templates: response.templates
+              templates
             }
           };
         })
@@ -50,7 +50,7 @@ export class UserTemplatesEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(typeCode: number, recipientTypeCode: number): Observable<IUserTemplatesResponse> {
-    return this.dataService.read(this.url, { typeCode, recipientTypeCode });
+  private read(typeCode: number, recipientTypeCode: number): Observable<IUserTemplate[]> {
+    return this.dataService.readAll(this.url, { typeCode, recipientTypeCode });
   }
 }

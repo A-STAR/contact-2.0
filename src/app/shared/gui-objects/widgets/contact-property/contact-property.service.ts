@@ -21,23 +21,20 @@ export class ContactPropertyService {
 
   fetchAll(contactType: number, treeType: number): Observable<IContactTreeNode[]> {
     return this.dataService
-      .read(this.baseUrl, { contactType, treeType })
-      .map(response => response.data)
+      .readAll(this.baseUrl, { contactType, treeType })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
   fetch(contactType: number, treeType: number, resultId: number): Observable<IContactTreeNode> {
     return this.dataService
       .read(`${this.baseUrl}/{resultId}`, { contactType, treeType, resultId })
-      .map(response => response.data[0])
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
   fetchTemplatesAsOptions(typeCode: number, recipientTypeCode: number, isSentOnce: boolean): Observable<IOption[]> {
     const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSentOnce}';
     return this.dataService
-      .read(url, { typeCode, recipientTypeCode, isSentOnce: Number(isSentOnce) })
-      .map(response => response.templates)
+      .readAll(url, { typeCode, recipientTypeCode, isSentOnce: Number(isSentOnce) })
       .map(valuesToOptions);
   }
 

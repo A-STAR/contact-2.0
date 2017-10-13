@@ -33,9 +33,9 @@ export class PermissionsEffects {
     .ofType(PermissionsService.ROLE_FETCH)
     .switchMap((action: Action) => {
       return this.readRoles()
-        .map(response => ({
+        .map(roles => ({
           type: PermissionsService.ROLE_FETCH_SUCCESS,
-          payload: response.roles
+          payload: roles
         }))
         .catch(this.notifications.error('errors.default.read').entity('entities.roles.gen.plural').callback());
     });
@@ -101,11 +101,9 @@ export class PermissionsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readPermissions(store.permissions.currentRole.id)
-        .map(response => ({
+        .map(permissions => ({
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: {
-            permissions: response.permits
-          }
+          payload: { permissions }
         }))
         .catch(this.notifications.error('errors.default.read').entity('entities.permissions.gen.plural').callback());
     });
@@ -164,7 +162,7 @@ export class PermissionsEffects {
   ) {}
 
   private readPermissions(roleId: number): Observable<any> {
-    return this.dataService.read('/roles/{roleId}/permits', { roleId });
+    return this.dataService.readAll('/roles/{roleId}/permits', { roleId });
   }
 
   private add(role: IPermissionRole, permissionIds: number[]): Observable<any> {
@@ -184,7 +182,7 @@ export class PermissionsEffects {
   }
 
   private readRoles(): Observable<any> {
-    return this.dataService.read('/roles');
+    return this.dataService.readAll('/roles');
   }
 
   private addRole(role: any): Observable<any> {

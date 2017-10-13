@@ -12,11 +12,6 @@ export interface IConstant {
   value?: any;
 }
 
-export interface IConstantsResponse {
-  success: boolean;
-  constants: Array<IConstant>;
-}
-
 export interface IConstantsState {
   constants: Array<IConstant>;
   currentConstant: IConstant;

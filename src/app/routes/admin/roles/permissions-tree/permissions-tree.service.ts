@@ -19,8 +19,8 @@ export class PermissionsTreeService {
   ) {}
 
   load(currentRole: IPermissionRole, selection: ITreeNode[]): Observable<ITreeNode[]> {
-    return this.dataService.read('/roles/{id}/guiobjects', currentRole)
-      .map(data => this.convertToTreeNodes(data.appGuiObjects, selection));
+    return this.dataService.readAll('/roles/{id}/guiobjects', currentRole)
+      .map(data => this.convertToTreeNodes(data, selection));
   }
 
   save(currentRole: IPermissionRole, removed: ITreeNode[], added: ITreeNode[]): Observable<any> {

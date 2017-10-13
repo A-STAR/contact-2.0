@@ -40,7 +40,7 @@ export class ContactCardComponent {
   node: INode = {
     container: 'tabs',
     children: [
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
+      { component: PhoneGridComponent, title: 'debtor.information.phone.title', inject: { personRole: 4 } },
       { component: AddressGridComponent, title: 'debtor.information.address.title' },
       { component: IdentityGridComponent, title: 'debtor.identityDocs.title' },
       { component: EmploymentGridComponent, title: 'debtor.employmentRecordTab.title' },

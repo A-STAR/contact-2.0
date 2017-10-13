@@ -8,11 +8,6 @@ export interface IPermissionRole {
   comment: string;
 }
 
-export interface IPermissionRolesResponse {
-  success: boolean;
-  roles: Array<IPermissionRole>;
-}
-
 export interface IPermissionsRequest {
   permitIds: number[];
 }
@@ -23,15 +18,6 @@ export interface IPermissionModel extends IValueEntity {
   dsc: string;
   name: string;
   comment?: string;
-}
-
-export interface IPermissionsResponse {
-  permits: IPermissionModel[];
-}
-
-export interface IPermissionsResponse {
-  success: boolean;
-  userPermits: IRawPermission[];
 }
 
 export interface IRawPermission {

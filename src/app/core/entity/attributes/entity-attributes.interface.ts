@@ -7,10 +7,6 @@ export interface IEntityAttributes {
   [key: number]: IEntityAttribute;
 }
 
-export interface IEntityAttributeResponse extends IEntityAttribute {
-  success: boolean;
-}
-
 export enum EntityAttributesStatusEnum {
   PENDING,
   LOADED,

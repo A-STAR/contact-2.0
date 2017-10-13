@@ -34,16 +34,6 @@ export class LookupEffects {
   ) {}
 
   private readData(key: ILookupKey): any {
-    return this.dataService.read(`/lookup/${key}`).map(response => response[this.getResponseKey(key)]);
-  }
-
-  private getResponseKey(key: ILookupKey): string {
-    switch (key) {
-      case 'attributeTypes':
-      case 'dictionaries':
-        return 'data';
-      default:
-        return key;
-    }
+    return this.dataService.readAll(`/lookup/${key}`);
   }
 }

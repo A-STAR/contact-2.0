@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IMessageTemplate, IMessageTemplatesResponse, IMessageTemplatesAttributesResponse } from './message-template.interface';
+import { IMessageTemplate } from './message-template.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -23,15 +23,13 @@ export class MessageTemplateService {
 
   fetchAll(typeCode: number): Observable<Array<IMessageTemplate>> {
     return this.dataService
-      .read('/templates?typeCodes={typeCode}', { typeCode })
-      .map((response: IMessageTemplatesResponse) => response.templates)
+      .readAll('/templates?typeCodes={typeCode}', { typeCode })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
   fetch(templateId: number): Observable<IMessageTemplate> {
     return this.dataService
       .read('/templates/{templateId}', { templateId })
-      .map((response: IMessageTemplatesResponse) => response.templates[0])
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
@@ -55,8 +53,7 @@ export class MessageTemplateService {
 
   fetchVariables(typeCode: number, recipientTypeCode: number): Observable<Array<any>> {
     return this.dataService
-      .read('/templates/{typeCode}/recipients/{recipientTypeCode}/attributes', { typeCode, recipientTypeCode })
-      .map((response: IMessageTemplatesAttributesResponse) => response.attributes)
+      .readAll('/templates/{typeCode}/recipients/{recipientTypeCode}/attributes', { typeCode, recipientTypeCode })
       .catch(this.notificationsService.fetchError().entity(`entities.attribute.gen.plural`).dispatchCallback());
   }
 }

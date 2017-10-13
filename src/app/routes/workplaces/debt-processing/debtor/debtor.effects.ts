@@ -33,7 +33,6 @@ export class DebtorEffects {
 
   private fetchDebt(debtId: number): Observable<IDebt> {
     return this.dataService.read('/debts/{debtId}', { debtId })
-    .map(response => response.debts[0])
-    .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

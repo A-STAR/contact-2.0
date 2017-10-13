@@ -18,11 +18,6 @@ export interface IMetadata {
   data: IMetadataColumn[];
 }
 
-export interface IMetadataResponse {
-  success: boolean;
-  lists: IMetadata[];
-}
-
 export interface IMetadataState {
   [key: string]: {
     columns: Array<IMetadataColumn>,

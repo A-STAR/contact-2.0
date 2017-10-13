@@ -26,22 +26,22 @@ const convertToTreeNodes = (nodes: IResponseTreeNode[], table: boolean, expand: 
     });
 }
 
-const addParents = (nodes: ITreeNode[], parent: ITreeNode = null) => {
-  return nodes.map(node => {
-    const { children } = node;
-    return {
-      ...node,
-      ...(!isEmpty(children) ? { children: addParents(children, node) } : {}),
-      parent,
-    };
+const addParents = (nodes: ITreeNode[], parent: ITreeNode = null): void => {
+  // Because there are circular references in nodes, it is not possible to use spread operator here
+  // (it would create new references)
+  nodes.forEach(node => {
+    node.parent = parent;
+    if (node.children) {
+      addParents(node.children, node);
+    }
   });
 }
 
 export const toTreeNodes = (table: boolean = false, expand: boolean = false) => {
   return (nodes: IResponseTreeNode[]): ITreeNode[] => {
     const children = convertToTreeNodes(nodes, table, expand);
-    return table
-      ? addParents(children)
-      : addParents([{ id: 0, children }]);
+    const res = table ? children : [{ id: 0, children }];
+    addParents(res);
+    return res;
   }
 }

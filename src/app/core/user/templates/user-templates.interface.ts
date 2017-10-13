@@ -3,11 +3,6 @@ export interface IUserTemplate {
   name: string;
 }
 
-export interface IUserTemplatesResponse {
-  success: boolean;
-  templates: IUserTemplate[];
-}
-
 export enum TemplateStatusEnum {
   PENDING,
   LOADED,

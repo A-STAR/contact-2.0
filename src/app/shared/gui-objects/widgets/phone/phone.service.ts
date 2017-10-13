@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IMessageTemplatesResponse, IPhone, IPhonesResponse, ISMSSchedule } from './phone.interface';
+import { IPhone, ISMSSchedule } from './phone.interface';
 import { INamedValue } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
@@ -21,15 +21,13 @@ export class PhoneService {
 
   fetchAll(entityType: number, entityId: number): Observable<IPhone[]> {
     return this.dataService
-      .read(this.baseUrl, { entityType, entityId })
-      .map((response: IPhonesResponse) => response.phones)
+      .readAll(this.baseUrl, { entityType, entityId })
       .catch(this.notificationsService.fetchError().entity('entities.phones.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, phoneId: number): Observable<IPhone> {
     return this.dataService
       .read(this.extUrl, { entityType, entityId, phoneId })
-      .map((response: IPhonesResponse) => response.phones[0])
       .catch(this.notificationsService.fetchError().entity(this.singular).dispatchCallback());
   }
 
@@ -62,8 +60,7 @@ export class PhoneService {
   fetchSMSTemplates(typeCode: number, recipientTypeCode: number, isSingleSending: boolean): Observable<INamedValue[]> {
     const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSingleSending}';
     return this.dataService
-      .read(url, { typeCode, recipientTypeCode, isSingleSending: Number(isSingleSending) })
-      .map((response: IMessageTemplatesResponse) => response.templates)
+      .readAll(url, { typeCode, recipientTypeCode, isSingleSending: Number(isSingleSending) })
       .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback());
   }
 
@@ -72,7 +69,7 @@ export class PhoneService {
     return this.dataService
       .read(url, { debtId, personId, personRole, templateId })
       .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback())
-      .map(response => response.text)
+      .map(response => response.text);
   }
 
   delete(entityType: number, entityId: number, phoneId: number): Observable<void> {

@@ -13,13 +13,10 @@ export interface IAttribute {
   changeDateTime: string;
   sortOrder: number;
   disabledValue: number;
+  children?: IAttribute[];
 }
 
 export interface IAttributeForm {
   value: number | string;
   comment: string;
-}
-
-export interface IAttributeResponse extends IAttribute {
-  children: IAttributeResponse[];
 }

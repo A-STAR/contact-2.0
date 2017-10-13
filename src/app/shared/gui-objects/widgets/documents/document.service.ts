@@ -20,7 +20,7 @@ export class DocumentService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IDocument>> {
     return this.dataService
-      .read(DocumentService.BASE_URL, { entityType, entityId })
+      .readAll(DocumentService.BASE_URL, { entityType, entityId })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.plural').dispatchCallback());
   }
 

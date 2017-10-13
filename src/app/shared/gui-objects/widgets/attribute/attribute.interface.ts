@@ -6,9 +6,6 @@ export interface IAttribute {
   dictNameCode: number;
   disabledValue: number;
   parentId: number;
-}
-
-export interface IAttributeResponse extends IAttribute {
-  children: IAttributeResponse[];
-  sortOrder: number;
+  sortOrder?: number;
+  children?: IAttribute[];
 }
