@@ -184,6 +184,11 @@ export class SelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
+    this.cdRef.markForCheck();
+  }
+
   isItemContextExist(item: ILabeledValue): boolean {
     return item.context && !!Object.keys(item.context).length;
   }

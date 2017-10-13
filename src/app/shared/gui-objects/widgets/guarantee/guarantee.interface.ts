@@ -30,6 +30,7 @@ export interface IGuaranteeContract {
   contractEndDate?: Date | string;
   contractTypeCode?: number;
   comment?: string;
+  personId?: number;
 }
 
 export interface IEmployment {
