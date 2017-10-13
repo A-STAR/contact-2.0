@@ -21,11 +21,6 @@ export interface IUser {
   workPhone: string;
 }
 
-export interface IUsersResponse {
-  success: boolean;
-  users: Array<IUser>;
-}
-
 export interface IUserEditPermissions {
   canEditUser: boolean;
   canEditRole: boolean;

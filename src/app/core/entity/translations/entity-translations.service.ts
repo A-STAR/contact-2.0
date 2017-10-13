@@ -28,10 +28,9 @@ export class EntityTranslationsService {
 
   private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
     return this.dataService
-      .read('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
+      .readAll('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
         entityAttributesId: entityAttributesId,
         entitiesId: entityId
-      })
-      .map(data => data.translations);
+      });
   }
 }

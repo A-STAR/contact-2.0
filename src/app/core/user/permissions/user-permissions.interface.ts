@@ -5,11 +5,6 @@ export interface IUserPermission {
   valueS: string;
 }
 
-export interface IUserPermissionsResponse {
-  success: boolean;
-  userPermits: Array<IUserPermission>;
-}
-
 export interface IUserPermissions {
   [key: string]: IUserPermission;
 }

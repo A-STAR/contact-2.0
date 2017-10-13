@@ -17,15 +17,12 @@ export class IdentityService {
   ) {}
 
   fetchAll(personId: number): Observable<any> {
-    return this.dataService.read('/persons/{personId}/identitydocuments', { personId })
-      .map(response => response.identityDocuments)
+    return this.dataService.readAll('/persons/{personId}/identitydocuments', { personId })
       .do(identityDocs => this.checkForMain(identityDocs));
   }
 
   fetch(personId: number, docId: number): Observable<IIdentityDoc> {
-    return this.dataService.read(`${this.url}/{docId}`, { personId, docId })
-      .map(response => response.identityDocuments)
-      .map(identity => identity[0] || {});
+    return this.dataService.read(`${this.url}/{docId}`, { personId, docId });
   }
 
   create(personId: number, doc: IIdentityDoc): Observable<boolean> {

@@ -78,6 +78,6 @@ export class ActionsLogService {
 
   // TODO(a.tymchuk): use the user API
   getEmployees(): Observable<IEmployee[]> {
-    return this.dataService.read('/users').map(data => data.users);
+    return this.dataService.readAll('/users');
   }
 }

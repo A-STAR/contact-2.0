@@ -24,10 +24,10 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARIES_FETCH)
     .switchMap((action: Action) => {
       return this.readDictionaries()
-        .map(response => ({
+        .map(dictionaries => ({
           type: DictionariesService.DICTIONARIES_FETCH_SUCCESS,
           payload: {
-            dictionaries: response.dictNames
+            dictionaries
           }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.dictionaries.gen.plural').callback());
@@ -158,10 +158,10 @@ export class DictionariesEffects {
       // NOTE: this is hardcoded, otherwise we would need to get this number from user-dictionaries.service
       // TODO(a.tymchuk): see if there is a way to make it comme il faut
       return this.readTerms(5)
-        .map((response: any) => {
+        .map((terms: any) => {
           return {
             type: DictionariesService.TERMS_TYPES_FETCH_SUCCESS,
-            payload: response.terms
+            payload: terms
           };
         });
     });
@@ -212,10 +212,10 @@ export class DictionariesEffects {
       const [_, store]: [Action, IAppState] = data;
       return store.dictionaries.selectedDictionary
         ? this.readTerms(store.dictionaries.selectedDictionary.code)
-          .map((response: any) => {
+          .map((terms: any) => {
             return {
               type: DictionariesService.TERMS_FETCH_SUCCESS,
-              payload: response.terms
+              payload: terms
             };
           })
           .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback())
@@ -238,10 +238,10 @@ export class DictionariesEffects {
       const [_, store]: [Action, IAppState] = data;
       const code = store.dictionaries.selectedDictionary.parentCode || store.dictionaries.selectedDictionary.code;
       return this.readTerms(code as number)
-            .map((response: any) => {
+            .map((terms: any) => {
               return {
                 type: DictionariesService.TERMS_PARENT_FETCH_SUCCESS,
-                payload: response.terms
+                payload: terms
               };
             })
             .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback());
@@ -328,7 +328,7 @@ export class DictionariesEffects {
   ) {}
 
   private readDictionaries(): Observable<any> {
-    return this.dataService.read('/dictionaries');
+    return this.dataService.readAll('/dictionaries');
   }
 
   private createDictionary(dictionary: IDictionary): Observable<any> {
@@ -356,7 +356,7 @@ export class DictionariesEffects {
   }
 
   private readTerms(code: string|number): Observable<any> {
-    return this.dataService.read('/dictionaries/{code}/terms', { code });
+    return this.dataService.readAll('/dictionaries/{code}/terms', { code });
   }
 
   private createTerm(code: number, term: ITerm): Observable<any> {

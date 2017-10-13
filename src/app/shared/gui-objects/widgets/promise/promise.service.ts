@@ -22,15 +22,13 @@ export class PromiseService {
 
   fetchAll(debtId: number): Observable<IPromise[]> {
     return this.dataService
-      .read(this.baseUrl, { debtId })
-      .map(resp => resp.promises)
+      .readAll(this.baseUrl, { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
   }
 
   fetch(debtId: number, promiseId: number): Observable<IPromise> {
     return this.dataService
       .read(this.extUrl, { debtId, promiseId })
-      .map(resp => resp.promises[0] || {})
       .catch(this.notificationsService.fetchError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
@@ -61,7 +59,6 @@ export class PromiseService {
   fetchDebt(debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { debtId })
-      .map(result => result.debts[0] || {})
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

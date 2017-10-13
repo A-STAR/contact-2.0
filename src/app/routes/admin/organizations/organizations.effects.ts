@@ -10,7 +10,7 @@ import { IAppState } from '../../../core/state/state.interface';
 import {
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
-  IEmployeesResponse,
+  IEmployee,
   IOrganization
 } from './organizations.interface';
 
@@ -29,11 +29,11 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readOrganizations()
-        .map(response => ({
+        .map(organizations => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
           payload: {
             organizations: this.converterService.toTreeNodes(
-              response.organizations,
+              organizations,
               this.organizationsService.getExpandedNodes(store.organizations.organizations)
             )
           }
@@ -147,11 +147,9 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readEmployees(store.organizations.selectedOrganization.id)
-        .map((response: IEmployeesResponse) => ({
+        .map((employees: IEmployee[]) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
-          payload: {
-            employees: response.users
-          }
+          payload: { employees }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
@@ -173,11 +171,9 @@ export class OrganizationsEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readNotAddedEmployees(store.organizations.selectedOrganization.id)
-        .map((response: IEmployeesResponse) => ({
+        .map((employees: IEmployee[]) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
-          payload: {
-            employees: response.users
-          }
+          payload: { employees }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
     });
@@ -258,8 +254,8 @@ export class OrganizationsEffects {
     private organizationsService: OrganizationsService,
   ) {}
 
-  private readOrganizations(): Observable<any> {
-    return this.dataService.read('/organizations');
+  private readOrganizations(): Observable<IOrganization[]> {
+    return this.dataService.readAll('/organizations');
   }
 
   private createOrganization(parentId: number, organization: any): Observable<any> {
@@ -274,12 +270,12 @@ export class OrganizationsEffects {
     return this.dataService.delete('/organizations/{organizationId}', { organizationId });
   }
 
-  private readEmployees(organizationId: number): Observable<any> {
-    return this.dataService.read('/organizations/{organizationId}/users', { organizationId });
+  private readEmployees(organizationId: number): Observable<IEmployee[]> {
+    return this.dataService.readAll('/organizations/{organizationId}/users', { organizationId });
   }
 
-  private readNotAddedEmployees(organizationId: number): Observable<any> {
-    return this.dataService.read('/organizations/{organizationId}/users/notadded', { organizationId });
+  private readNotAddedEmployees(organizationId: number): Observable<IEmployee[]> {
+    return this.dataService.readAll('/organizations/{organizationId}/users/notadded', { organizationId });
   }
 
   private createEmployee(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {

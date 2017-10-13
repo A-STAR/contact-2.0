@@ -18,15 +18,13 @@ export class ObjectService {
 
   fetchAll(roleId: number, typeCode: number): Observable<IObject[]> {
     return this.dataService
-      .read(`${this.baseUrl}?typeCodes={typeCode}`, { roleId, typeCode })
-      .map(response => response.objectRoles)
+      .readAll(`${this.baseUrl}?typeCodes={typeCode}`, { roleId, typeCode })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
   fetchNotAdded(roleId: number, typeCode: number): Observable<IObject[]> {
     return this.dataService
-      .read(`${this.baseUrl}/notadded?typeCodes={typeCode}`, { roleId, typeCode })
-      .map(response => response.objectRoles)
+      .readAll(`${this.baseUrl}/notadded?typeCodes={typeCode}`, { roleId, typeCode })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 

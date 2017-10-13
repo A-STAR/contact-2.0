@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IAttribute, IAttributeResponse } from '../attribute.interface';
+import { IAttribute } from '../attribute.interface';
 import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
@@ -139,7 +139,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
       .subscribe(() => this.onSuccess());
   }
 
-  private convertToGridTreeRow(attributes: IAttributeResponse[], parentId: number = null): IGridTreeRow<IAttribute>[] {
+  private convertToGridTreeRow(attributes: IAttribute[], parentId: number = null): IGridTreeRow<IAttribute>[] {
     const sortByOrder = (a, b) => a.sortOrder - b.sortOrder;
     return attributes.map(attribute => {
       const { children, sortOrder, ...rest } = attribute;

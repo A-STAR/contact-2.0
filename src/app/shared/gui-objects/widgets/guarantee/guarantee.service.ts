@@ -21,15 +21,13 @@ export class GuaranteeService {
 
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
-      .read(this.url, { debtId })
-      .map(resp => resp.data)
+      .readAll(this.url, { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
   }
 
   fetch(debtId: number, contractId: number): Observable<IGuaranteeContract> {
     return this.dataService
       .read(`${this.url}/{contractId}`, { debtId, contractId })
-      .map(resp => resp.data[0] || {})
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 

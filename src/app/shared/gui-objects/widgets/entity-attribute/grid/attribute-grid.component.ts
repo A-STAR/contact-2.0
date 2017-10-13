@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IAttribute, IAttributeResponse } from '../attribute.interface';
+import { IAttribute } from '../attribute.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
 import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
@@ -156,7 +156,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     ]);
   }
 
-  private convertToGridTreeRow(attributes: IAttributeResponse[]): IGridTreeRow<IAttribute>[] {
+  private convertToGridTreeRow(attributes: IAttribute[]): IGridTreeRow<IAttribute>[] {
     return attributes.map(attribute => {
       const { children, ...rest } = attribute;
       const hasChildren = children && children.length > 0;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttributeResponse } from './attribute.interface';
+import { IAttribute } from './attribute.interface';
 import { IResponse } from '../../../../core/data/data.interface';
 
 import { DataService } from '../../../../core/data/data.service';
@@ -19,21 +19,19 @@ export class AttributeService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number): Observable<IAttributeResponse[]> {
+  fetchAll(entityType: number, entityId: number): Observable<IAttribute[]> {
     return this.dataService
-      .read(this.baseUrl, { entityType, entityId })
-      .map((response: IResponse<IAttributeResponse[]>) => response.data)
+      .readAll(this.baseUrl, { entityType, entityId })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeResponse> {
+  fetch(entityType: number, entityId: number, attributeCode: number): Observable<IAttribute> {
     return this.dataService
       .read(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode })
-      .map((response: IResponse<IAttributeResponse>) => response.data[0])
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, attributeCode: number, attribute: Partial<IAttributeResponse>): Observable<void> {
+  update(entityType: number, entityId: number, attributeCode: number, attribute: Partial<IAttribute>): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode }, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());

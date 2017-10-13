@@ -112,7 +112,7 @@ export class PermissionsComponent implements OnDestroy {
     )
     .subscribe(([ hasViewPermission, currentRole ]) => {
       if (!hasViewPermission) {
-        this.permissionsService.clearPremissions();
+        this.permissionsService.clearPermissions();
       } else if (currentRole) {
         this.permissionsService.fetchPermissions();
       }
@@ -128,9 +128,9 @@ export class PermissionsComponent implements OnDestroy {
 
   onBeforeAddPermissions(): void {
     this.dataService
-      .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
-      .subscribe(data => {
-        this.availablePermissions = data.permits;
+      .readAll('/roles/{id}/permits/notadded', { id: this.currentRole.id })
+      .subscribe(permits => {
+        this.availablePermissions = permits;
         this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
       });
   }

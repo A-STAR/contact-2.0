@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ILdapGroupsResponse, ILdapUsersResponse } from './user-ldap-dialog.interface';
+import { ILdapGroup, ILdapUser } from './user-ldap-dialog.interface';
 
 import { DataService } from '../../../../../core/data/data.service';
 
@@ -9,11 +9,11 @@ import { DataService } from '../../../../../core/data/data.service';
 export class UserLdapDialogService {
   constructor(private dataService: DataService) {}
 
-  readLdapGroups(): Observable<ILdapGroupsResponse> {
-    return this.dataService.read('/ldapgroups');
+  readLdapGroups(): Observable<ILdapGroup[]> {
+    return this.dataService.readAll('/ldapgroups');
   }
 
-  readLdapUsers(groupName: string): Observable<ILdapUsersResponse> {
-    return this.dataService.read('/ldapgroups/{groupName}/users', { groupName });
+  readLdapUsers(groupName: string): Observable<ILdapUser[]> {
+    return this.dataService.readAll('/ldapgroups/{groupName}/users', { groupName });
   }
 }

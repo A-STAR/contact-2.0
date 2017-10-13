@@ -123,7 +123,7 @@ export class PermissionsService {
     });
   }
 
-  clearPremissions(): void {
+  clearPermissions(): void {
     this.store.dispatch({
       type: PermissionsService.PERMISSION_CLEAR
     });

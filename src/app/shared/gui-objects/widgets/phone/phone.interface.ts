@@ -15,19 +15,9 @@ export interface IPhone {
   comment: string;
 }
 
-export interface IPhonesResponse {
-  success: boolean;
-  phones: Array<IPhone>;
-}
-
 export interface ISMSSchedule {
   templateId?: number;
   senderCode: number;
   startDateTime: Date;
   text?: string;
-}
-
-export interface IMessageTemplatesResponse {
-  success: boolean;
-  templates: INamedValue[];
 }

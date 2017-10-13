@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IUserConstantsResponse } from './user-constants.interface';
+import { IUserConstant } from './user-constants.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -17,10 +17,10 @@ export class UserConstantsEffects {
     .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
     .mergeMap((action: Action) => {
       return this.read()
-        .map((response: IUserConstantsResponse) => ({
+        .map((constants: IUserConstant[]) => ({
           type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
           payload: {
-            data: response.data
+            data: constants
           }
         }))
         .catch(this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback());
@@ -32,7 +32,7 @@ export class UserConstantsEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(): Observable<IUserConstantsResponse> {
-    return this.dataService.read('/constants/values');
+  private read(): Observable<IUserConstant[]> {
+    return this.dataService.readAll('/constants/values');
   }
 }

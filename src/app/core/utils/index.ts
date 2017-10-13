@@ -21,7 +21,7 @@ export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T)
 }
 
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
-  return values.map(toOption('id', 'name'));
+  return (values || []).map(toOption('id', 'name'));
 }
 
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {

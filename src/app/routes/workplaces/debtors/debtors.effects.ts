@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-import { IDebtorsFetchResponse } from './debtors.interface';
+import { IPerson } from './debtors.interface';
 
 import { DebtorsService } from './debtors.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -16,9 +16,9 @@ export class DebtorsEffects {
     .ofType(DebtorsService.DEBTORS_FETCH)
     .switchMap((action: Action) => {
       return this.readDebtors()
-        .map(response => ({
+        .map(debtors => ({
           type: DebtorsService.DEBTORS_FETCH_SUCCESS,
-          payload: response.debtors
+          payload: debtors
         }))
         .catch(this.notificationsService.fetchError().entity('entities.debtors.info.gen.plural').callback());
     });
@@ -28,38 +28,35 @@ export class DebtorsEffects {
     private notificationsService: NotificationsService,
   ) {}
 
-  private readDebtors(): Observable<IDebtorsFetchResponse> {
+  private readDebtors(): Observable<IPerson[]> {
     // TODO(a.tymchuk) STUB
     return new Observable(observer => {
       setTimeout(() => {
         observer.next(
-          {
-            success: true,
-            debtors: [
-              {
-                id: 23,
-                firstName: 'Pavel',
-                middleName: 'Sergeevich',
-                lastName: 'Smirnov',
-                type: 1,
-                reward: 3180.78,
-                debtId: 19,
-                product: 'Autoexpress',
-                city: 'London'
-              },
-              {
-                id: 24,
-                firstName: 'Alexey',
-                middleName: 'Pavlovich',
-                lastName: 'Mironov',
-                type: 1,
-                reward: 4994.11,
-                debtId: 20,
-                product: 'Autoexpress',
-                city: 'London'
-              },
-            ]
-          }
+          [
+            {
+              id: 23,
+              firstName: 'Pavel',
+              middleName: 'Sergeevich',
+              lastName: 'Smirnov',
+              type: 1,
+              reward: 3180.78,
+              debtId: 19,
+              product: 'Autoexpress',
+              city: 'London'
+            },
+            {
+              id: 24,
+              firstName: 'Alexey',
+              middleName: 'Pavlovich',
+              lastName: 'Mironov',
+              type: 1,
+              reward: 4994.11,
+              debtId: 20,
+              product: 'Autoexpress',
+              city: 'London'
+            },
+          ]
         );
       }, 1000);
     });

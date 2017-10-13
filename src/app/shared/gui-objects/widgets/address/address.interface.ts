@@ -22,8 +22,3 @@ export interface IAddress {
   isResidence: boolean | number;
   comment: string;
 }
-
-export interface IAddressesResponse {
-  success: boolean;
-  addresses: Array<IAddress>;
-}

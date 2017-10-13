@@ -23,15 +23,13 @@ export class PaymentService {
   fetchAll(debtId: number, displayCanceled: boolean = false): Observable<IPayment[]> {
     const url = !displayCanceled ? `${this.baseUrl}?isCanceled=0` : this.baseUrl;
     return this.dataService
-      .read(url, { debtId })
-      .map(resp => resp.payments)
+      .readAll(url, { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.payments.gen.plural').dispatchCallback());
   }
 
   fetch(debtId: number, paymentId: number): Observable<IPayment> {
     return this.dataService
       .read(this.extUrl, { debtId, paymentId })
-      .map(resp => resp.payments[0] || {})
       .catch(this.notificationsService.fetchError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 
@@ -50,7 +48,6 @@ export class PaymentService {
   fetchDebt(debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { debtId })
-      .map(result => result.debts[0] || {})
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

@@ -8,16 +8,12 @@ import 'rxjs/add/operator/finally';
 
 @Injectable()
 export class DataService {
-  // defines whether the request should fetch a resource from the server's root
-  private _localRequest = false;
-
   private nRequests$ = new BehaviorSubject<number>(0);
-
   private rootUrl$: Observable<string>;
 
   constructor(private http: AuthHttp) {
-    this.rootUrl$ = this.localRequest()
-      .read('./assets/server/root.json')
+    this.rootUrl$ = this
+      .readLocal('./assets/server/root.json')
       .publishReplay(1)
       .refCount()
       .map(response => response.url);
@@ -29,9 +25,8 @@ export class DataService {
       .distinctUntilChanged();
   }
 
-  localRequest(): DataService {
-    this._localRequest = true;
-    return this;
+  readLocal(url: string): Observable<any> {
+    return this.http.get(url).map(data => data.json());
   }
 
   /**
@@ -41,14 +36,13 @@ export class DataService {
    *  route = '/roles/5/permits
    */
   read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    if (this._localRequest) {
-      // this would not be a default value, so clear the flag for further requests
-      this._localRequest = false;
-      return this.http.get(url, options)
-        .map(data => data.json());
-    }
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+      .map(response => response.data && response.data[0] || null);
+  }
 
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get });
+  readAll(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any[]> {
+    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+      .map(response => response.data || null);
   }
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
