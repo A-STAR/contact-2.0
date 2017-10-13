@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -108,6 +108,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
+    @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
@@ -182,9 +183,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const data = {
       ...schedule,
       personId: this.personId,
-      // personRole = 1 - debtor
-      // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
-      personRole: 1,
+      personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
     }
     this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
@@ -241,8 +240,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          // personRole = 1 - debtor
-          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', 1),
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
         ])
         : Observable.of(false);
     });

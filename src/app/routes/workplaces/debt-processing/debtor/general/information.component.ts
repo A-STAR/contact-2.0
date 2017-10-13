@@ -29,7 +29,7 @@ export class DebtorInformationComponent implements OnDestroy {
     container: 'tabs',
     children: [
       { component: AddressGridComponent, title: 'debtor.information.address.title' },
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
+      { component: PhoneGridComponent, title: 'debtor.information.phone.title', inject: { personRole: 1 } },
       { component: EmailGridComponent, title: 'debtor.information.email.title' },
     ]
   };
