@@ -69,7 +69,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   ngOnInit(): void {
     this.userDictionariesService
       .getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PAYMENT_STATUS,
+        UserDictionariesService.DICTIONARY_CONTACT_TYPE,
         UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
       ])
       .subscribe(dictionaries => {
@@ -147,7 +147,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
-    this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_PAYMENT_STATUS];
+    this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE];
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;
   }
 
