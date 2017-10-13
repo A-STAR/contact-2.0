@@ -945,6 +945,9 @@
       "search": {
         "title": "Find guarantors"
       },
+      "dialog": {
+        "title": "Select a guarantor"
+      },
       "grid": {
         "id": "Id",
         "firstName": "First name",
@@ -955,6 +958,7 @@
         "educationCode": "Education",
         "familyStatusCode": "Marital status",
         "genderCode": "Gender",
+        "passportNumber": "Passport No",
         "typeCode": "Type",
         "comment": "Comment",
         "stringValue1": "Add. attribute 1",
@@ -1227,6 +1231,9 @@
     "payments": {
       "gen": { "singular": "payment", "plural": "payments" }
     },
+    "guarantors": {
+      "gen": { "singular": "guarantor", "plural": "guarantors" }
+    },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
@@ -1440,18 +1447,19 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Save",
-      "cancel": "Cancel",
-      "remove": "Delete",
-      "close": "Close",
-      "clear": "Clear",
-      "search": "Search",
       "add": "Add",
-      "change": "Change",
-      "excel": "Export to Excel",
       "back": "Back",
-      "block": "Block"
+      "block": "Block",
+      "change": "Change",
+      "clear": "Clear",
+      "close": "Close",
+      "cancel": "Cancel",
+      "excel": "Export to Excel",
+      "ok": "OK",
+      "remove": "Delete",
+      "save": "Save",
+      "search": "Search",
+      "select": "Select"
     },
     "dateTimeRange": {
       "from": "From",

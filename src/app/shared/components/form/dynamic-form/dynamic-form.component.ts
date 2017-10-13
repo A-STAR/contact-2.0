@@ -154,10 +154,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private flattenFormControls(formControls: Array<IDynamicFormItem>): Array<IDynamicFormControl> {
     return formControls.reduce((acc, control: IDynamicFormItem) => {
       const controls = control.children ? this.flattenFormControls(control.children) : [ control ];
-      return [
-        ...acc,
-        ...controls
-      ];
+      return acc.concat(controls);
     }, []);
   }
 
@@ -193,7 +190,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         }
         return control.multiple ? value.map(item => item.value) : value[0].value;
       case 'datepicker':
-        return value === ''
+        return ['', null].includes(value)
           ? null
           : control.displayTime
             ? this.valueConverterService.toISO(value)

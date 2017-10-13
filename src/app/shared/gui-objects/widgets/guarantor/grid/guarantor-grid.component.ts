@@ -1,20 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGuaranteeContract } from '../../guarantee/guarantee.interface';
+import { IGuarantor } from '../../guarantee/guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { GridComponent } from '../../../../components/grid/grid.component';
 
 @Component({
   selector: 'app-guarantor-grid',
@@ -22,71 +22,38 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuarantorGridComponent implements OnInit, OnDestroy {
+  @ViewChild(GridComponent) grid: GridComponent;
 
-  private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
-
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedContract$.value.id),
-      enabled: Observable.combineLatest(
-        this.canEdit$,
-        this.selectedContract$
-      ).map(([canEdit, selectedContract]) => !!canEdit && !!selectedContract)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeEmployment'),
-      enabled: Observable.combineLatest(
-        this.canDelete$,
-        this.selectedContract$
-      ).map(([canDelete, selectedContract]) => !!canDelete && !!selectedContract),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-      enabled: this.canView$
-    },
-  ];
+  @Input() searchParams: object;
+  @Output() close = new EventEmitter<null>();
+  @Output() select = new EventEmitter<IGuarantor>();
 
   columns: Array<IGridColumn> = [
-    { prop: 'id', width: 70, minWidth: 40 },
-    { prop: 'contractNumber' },
-    { prop: 'fullName' },
-    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
-    { prop: 'contractStartDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'contractEndDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'contractTypeCode', dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE },
-    { prop: 'comment' },
+    { prop: 'id', width: 70, minWidth: 40, type: 'number' },
+    { prop: 'lastName', type: 'string' },
+    { prop: 'firstName', type: 'string' },
+    { prop: 'middleName', type: 'string' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
+    { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
+    { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
+    { prop: 'passportNumber', type: 'string' },
+    { prop: 'stringValue1', type: 'string' },
   ];
 
-  contracts: Array<IGuaranteeContract> = [];
+  dialog: string;
+  gridStyles = { height: '500px' };
+  persons: Array<IGuarantor> = [];
 
-  private dialog: string;
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private debtId = this.routeParams.debtId || null;
-
-  private busSubscription: Subscription;
   private canViewSubscription: Subscription;
-
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private guarantorService: GuarantorService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
-    private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
+
     this.gridService.setAllRenderers(this.columns)
       .take(1)
       .subscribe(columns => {
@@ -97,92 +64,50 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
-          this.fetch();
+          this.fetch(this.searchParams);
         } else {
           this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
           this.clear();
         }
       });
-
-    this.busSubscription = this.messageBusService
-      .select(GuarantorService.MESSAGE_GUARANTOR_SAVED)
-      .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
-    this.selectedContract$.complete();
-    this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
   }
 
-  onDoubleClick(contract: IGuaranteeContract): void {
-    this.onEdit(contract.id);
+  onDoubleClick(guarantor: IGuarantor): void {
+    this.select.emit(guarantor);
+    this.onClose();
   }
 
-  onSelect(contract: IGuaranteeContract): void {
-    this.selectedContract$.next(contract);
-  }
-
-  onRemove(): void {
-    const { id: contractId } = this.selectedContract$.value;
-    this.guarantorService.delete(this.debtId, contractId, this.personId)
-      .subscribe(() => {
-        this.setDialog(null);
-        this.fetch();
-      });
-  }
-
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  setDialog(dialog: string): void {
-    this.dialog = dialog;
-  }
-
-  onCancel(): void {
-    this.setDialog(null);
-  }
-
-  private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
-  }
-
-  private onEdit(contractId: number): void {
-    this.router.navigate([ `${this.router.url}/guaranteeContract/${contractId}` ]);
+  onClose(): void {
+    this.close.emit();
   }
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
 
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('GUARANTEE_ADD');
+  get hasSelection(): boolean {
+    return this.grid && this.grid.hasSingleSelection;
   }
 
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('GUARANTEE_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('GUARANTEE_DELETE');
-  }
-
-  private fetch(): void {
-    this.guarantorService.fetchAll(this.debtId)
-      .subscribe(contracts => {
-        this.contracts = [...contracts];
-        this.selectedContract$.next(null);
+  private fetch(searchParams: object = {}): void {
+    const filter = this.guarantorService.makeFilter(searchParams, this.columns);
+    const params = { sorters: [{ colId: 'lastName', sort: 'asc' }] };
+    this.guarantorService.fetchAll(filter, params)
+      .subscribe(response => {
+        const { data: persons } = response;
+        this.persons = persons ? [...persons] : [];
         this.cdRef.markForCheck();
       });
   }
 
   private clear(): void {
-    this.contracts = [];
-    this.selectedContract$.next(null);
+    this.persons = [];
     this.cdRef.markForCheck();
   }
 

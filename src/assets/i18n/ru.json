@@ -945,6 +945,9 @@
       "search": {
         "title": "Поиск поручителей"
       },
+      "dialog": {
+        "title": "Выбор поручителя"
+      },
       "grid": {
         "id": "Ид",
         "firstName": "Имя",
@@ -955,6 +958,7 @@
         "educationCode": "Образование",
         "familyStatusCode": "Семейное положение",
         "genderCode": "Пол",
+        "passportNumber": "№ паспорта",
         "typeCode": "Тип",
         "comment": "Комментарий",
         "stringValue1": "Доп. значение 1",
@@ -1227,6 +1231,9 @@
     "payments": {
       "gen": { "singular": "платежа", "plural": "списка платежей" }
     },
+    "guarantors": {
+      "gen": { "singular": "поручителя", "plural": "списка поручителей" }
+    },
     "promises": {
       "gen": { "singular": "обещания", "plural": "списка обещаний" }
     },
@@ -1440,18 +1447,19 @@
       "dictionary": "Словарь"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Сохранить",
-      "cancel": "Отменить",
-      "remove": "Удалить",
-      "close": "Закрыть",
-      "clear": "Очистить",
-      "search": "Искать",
       "add": "Добавить",
-      "change": "Изменить",
       "back": "Назад",
+      "block": "Блокировать",
+      "change": "Изменить",
+      "clear": "Очистить",
+      "close": "Закрыть",
+      "cancel": "Отменить",
       "excel": "Экспорт в Excel",
-      "block": "Блокировать"
+      "ok": "OK",
+      "remove": "Удалить",
+      "save": "Сохранить",
+      "search": "Искать",
+      "select": "Выбрать"
     },
     "dateTimeRange": {
       "from": "Начало",

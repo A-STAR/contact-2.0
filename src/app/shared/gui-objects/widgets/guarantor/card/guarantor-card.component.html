@@ -1,27 +1,17 @@
-<app-dialog *ngIf="isDialog('findGuarantor')" (displayChange)="onClose($event)">
-  <div dialog-header>
-    <h3>{{ 'roles.permissions.add.title' | translate }}</h3>
-  </div>
-
-  <div>SEARCH DIALOG THAT'LL DISPLAY THE GRID</div>
-  <!-- <app-guarantor-grid></app-guarantor-grid> -->
-  <div dialog-footer>
-    <!-- <button class="btn btn-success" [disabled]="!canAddPermissions()" (click)="onAddPermissions()"> -->
-    <button class="btn btn-success" [disabled]="true" (click)="onCloseDialog()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCloseDialog()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
-  </div>
-</app-dialog>
+<app-guarantor-grid
+  *ngIf="isDialog('findGuarantor')"
+  [searchParams]="searchParams"
+  (close)="onCloseDialog()"
+  (select)="onSelect($event)"
+>
+</app-guarantor-grid>
 
 <div>
   <button class="btn btn-default" (click)="onClear()">
     <i class="fa fa-times"></i> {{ 'default.buttons.clear' | translate }}
   </button>
   <button class="btn btn-default" (click)="onSearch()" [disabled]="!canSubmit">
-    <i class="fa fa-search"></i> {{ 'default.buttons.search' | translate }}
+    <i class="fa fa-search"></i> {{ 'widgets.guarantor.search.title' | translate }}
   </button>
 </div>
 

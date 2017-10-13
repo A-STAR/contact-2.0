@@ -1,10 +1,10 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract } from '../guarantee.interface';
+import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
@@ -15,19 +15,20 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('widgets.guaranteeContract.grid');
+const label = makeKey('widgets.guaranteeContract.grid');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-guarantee-card',
   templateUrl: './guarantee-card.component.html'
 })
-export class GuaranteeCardComponent implements OnInit {
+export class GuaranteeCardComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  // private personId = this.routeParams.personId || null;
   private contractId = this.routeParams.contractId || null;
   private debtId = this.routeParams.debtId || null;
+  private personId: number;
 
   controls: IDynamicFormGroup[] = null;
   contract: IGuaranteeContract;
@@ -37,6 +38,7 @@ export class GuaranteeCardComponent implements OnInit {
     private guaranteeService: GuaranteeService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -50,19 +52,18 @@ export class GuaranteeCardComponent implements OnInit {
     )
     .take(1)
     .subscribe(([ respTypeOpts, canEdit, contract ]) => {
-
       const controls = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
-            { label: labelKey('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
-            { label: labelKey('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
-            { label: labelKey('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
+            { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
+            { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
+            { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
             {
-              label: labelKey('contractTypeCode'), controlName: 'contractTypeCode',
+              label: label('contractTypeCode'), controlName: 'contractTypeCode',
               type: 'select', options: respTypeOpts, required: true
             },
-            { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
+            { label: label('comment'), controlName: 'comment', type: 'textarea', },
           ]
         },
       ];
@@ -71,26 +72,27 @@ export class GuaranteeCardComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    // Set default value
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit && !!this.personId;
   }
 
-  get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+  onGuarantorChanged(guarantor: IGuarantor): void {
+    this.personId = guarantor.id;
+    console.log(guarantor);
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.contentTabService.gotoParent(this.router, 2);
   }
 
   onSubmit(): void {
     const data = this.form.requestValue;
-    const action = this.debtId
-      ? this.guaranteeService.update(this.debtId, this.contractId, data)
-      : this.guaranteeService.create(this.debtId, data);
+    const action = this.personId
+      ? this.guaranteeService.create(this.debtId, Object.assign(data, { personId: this.personId }))
+      : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(GuaranteeService.MESSAGE_GUARANTOR_SAVED);
+      this.messageBusService.dispatch(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
   }
