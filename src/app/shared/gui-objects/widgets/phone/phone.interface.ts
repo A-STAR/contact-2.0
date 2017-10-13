@@ -1,5 +1,3 @@
-import { INamedValue } from '../../../../core/converter/value-converter.interface';
-
 // See: http://confluence.luxbase.int:8090/display/WEB20/Phones
 export interface IPhone {
   id: number;
