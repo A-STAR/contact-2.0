@@ -23,12 +23,10 @@ export class UsersEffects {
     .ofType(UsersService.USERS_FETCH)
     .switchMap((action: Action) => {
       return this.readUsers()
-        .mergeMap(data => [
+        .mergeMap(users => [
           {
             type: UsersService.USERS_FETCH_SUCCESS,
-            payload: {
-              users: data.users
-            }
+            payload: { users }
           },
           {
             type: UsersService.USER_SELECT,
@@ -45,7 +43,7 @@ export class UsersEffects {
     .ofType(UsersService.USER_TOGGLE_INACTIVE)
     .switchMap((action: Action) => {
       return this.readUsers()
-        .mergeMap(data => [
+        .mergeMap(() => [
           {
             type: UsersService.USERS_FETCH,
           },
@@ -58,11 +56,9 @@ export class UsersEffects {
     .ofType(UsersService.USER_FETCH)
     .switchMap((action: Action) => {
       return this.readUser(action.payload.userId)
-        .map(response => ({
+        .map(user => ({
           type: UsersService.USER_FETCH_SUCCESS,
-          payload: {
-            user: response.users[0]
-          }
+          payload: { user }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.singular').callback());
     });
@@ -141,7 +137,7 @@ export class UsersEffects {
   ) {}
 
   private readUsers(): Observable<any> {
-    return this.dataService.read('/users');
+    return this.dataService.readAll('/users');
   }
 
   private readUser(id: number): Observable<any> {

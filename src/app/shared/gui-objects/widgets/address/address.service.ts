@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAddress, IAddressesResponse } from './address.interface';
+import { IAddress } from './address.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -18,15 +18,13 @@ export class AddressService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IAddress>> {
     return this.dataService
-      .read(this.baseUrl, { entityType, entityId })
-      .map((response: IAddressesResponse) => response.addresses)
+      .readAll(this.baseUrl, { entityType, entityId })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.addresses.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, addressId: number): Observable<IAddress> {
     return this.dataService
       .read(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
-      .map((response: IAddressesResponse) => response.addresses[0])
       .catch(this.notificationsService.error('errors.default.read').entity('entities.addresses.gen.singular').dispatchCallback());
   }
 

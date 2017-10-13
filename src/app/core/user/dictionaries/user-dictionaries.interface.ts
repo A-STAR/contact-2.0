@@ -6,11 +6,6 @@ export interface IUserTerm {
   parentCode: number;
 }
 
-export interface IUserTermsResponse {
-  success: boolean;
-  userTerms: IUserTerm[];
-}
-
 export interface IUserDictionary {
   [key: number]: IUserTerm;
 }

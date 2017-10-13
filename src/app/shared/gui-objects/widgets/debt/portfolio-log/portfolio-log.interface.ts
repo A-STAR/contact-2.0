@@ -8,8 +8,3 @@ export interface IPortfolioLogEntry {
   firstName: string;
   middleName: string;
 }
-
-export interface IPortfolioLogsResponse {
-  success: boolean;
-  portfolioLogs: Array<IPortfolioLogEntry>;
-}

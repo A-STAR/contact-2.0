@@ -5,7 +5,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IGuiObjectsResponse } from './gui-objects.interface';
+import { IGuiObject } from './gui-objects.interface';
 
 import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data/data.service';
@@ -19,7 +19,7 @@ export class GuiObjectsEffects {
     .ofType(GuiObjectsService.GUI_OBJECTS_FETCH)
     .switchMap((action: Action) => {
       return this.readGuiObjects()
-        .map(response => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: response }))
+        .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
         .catch(error => {
           if (error.status === 401) {
             this.authService.redirectToLogin();
@@ -41,7 +41,7 @@ export class GuiObjectsEffects {
     private router: Router,
   ) {}
 
-  private readGuiObjects(): Observable<IGuiObjectsResponse> {
-    return this.dataService.read('/guiconfigurations');
+  private readGuiObjects(): Observable<IGuiObject[]> {
+    return this.dataService.readAll('/guiconfigurations');
   }
 }

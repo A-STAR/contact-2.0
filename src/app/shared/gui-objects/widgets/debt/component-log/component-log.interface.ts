@@ -9,8 +9,3 @@ export interface IComponentLogEntry {
   firstName: string;
   middleName: string;
 }
-
-export interface IComponentLogsResponse {
-  success: boolean;
-  componentLogs: Array<IComponentLogEntry>;
-}

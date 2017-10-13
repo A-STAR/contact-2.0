@@ -20,15 +20,13 @@ export class DebtService {
 
   fetchAll(personId: number): Observable<Array<IDebt>> {
     return this.dataService
-      .read(this.baseUrl, { personId })
-      .map(resp => resp.debts)
+      .readAll(this.baseUrl, { personId })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { personId, debtId })
-      .map(resp => resp.debts[0] || {})
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 

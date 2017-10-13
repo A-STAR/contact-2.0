@@ -10,11 +10,6 @@ export interface IContractor {
   comment: string;
 }
 
-export interface IContractorsResponse {
-  success: boolean;
-  contractors: Array<IContractor>;
-}
-
 export interface IPortfolio {
   id: number;
   name: string;
@@ -31,11 +26,6 @@ export interface IPortfolioMoveRequest {
   newContractorId: number;
 }
 
-export interface IPortfoliosResponse {
-  success: boolean;
-  portfolios: Array<IPortfolio>;
-}
-
 export interface IContractorManager {
   id: number;
   fullName: string;
@@ -50,11 +40,6 @@ export interface IContractorManager {
   intPhone: string;
   workAddress: string;
   comment: string;
-}
-
-export interface IContractorManagersResponse {
-  success: boolean;
-  managers: Array<IContractorManager>;
 }
 
 export interface IContractorsAndPortfoliosState {

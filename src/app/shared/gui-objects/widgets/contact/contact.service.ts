@@ -20,15 +20,13 @@ export class ContactService {
 
   fetchAll(personId: number): Observable<IContact[]> {
     return this.dataService
-      .read(this.baseUrl, { personId })
-      .map(resp => resp.contactPersons)
+      .readAll(this.baseUrl, { personId })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, contactId: number): Observable<IContact> {
     return this.dataService
       .read(this.extUrl, { personId, contactId })
-      .map(resp => resp.contactPersons[0] || {})
       .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.singular').dispatchCallback());
   }
 

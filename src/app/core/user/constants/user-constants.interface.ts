@@ -7,11 +7,6 @@ export interface IUserConstant {
   valueS: string;
 }
 
-export interface IUserConstantsResponse {
-  success: boolean;
-  data: Array<IUserConstant>;
-}
-
 export interface IUserConstantsState {
   constants: Array<IUserConstant>;
 }

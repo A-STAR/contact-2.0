@@ -19,8 +19,7 @@ export class DebtComponentService {
 
   fetchAll(debtId: number): Observable<Array<IDebtComponent>> {
     return this.dataService
-      .read('/debts/{debtId}/components', { debtId })
-      .map(response => response.components)
+      .readAll('/debts/{debtId}/components', { debtId })
       .catch(this.notificationsService
         .error('errors.default.read').entity('entities.debtComponents.gen.plural').dispatchCallback()
       );
@@ -29,7 +28,6 @@ export class DebtComponentService {
   fetch(debtId: number, debtComponentId: number): Observable<IDebtComponent> {
     return this.dataService
       .read('/debts/{debtId}/components/{debtComponentId}', { debtId, debtComponentId })
-      .map(response => response.components[0])
       .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
   }
 

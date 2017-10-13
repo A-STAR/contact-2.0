@@ -21,8 +21,7 @@ export class ContactRegistrationService {
   fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<any[]> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
-      .read(url, { debtId, contactType, treeResultId })
-      .map(response => response.data)
+      .readAll(url, { debtId, contactType, treeResultId })
       .map(toTreeNodes(true, true))
   }
 
@@ -42,8 +41,7 @@ export class ContactRegistrationService {
 
   fetchContactTree(debtId: number, contactType: number): Observable<ITreeNode[]> {
     return this.dataService
-      .read('/debts/{debtId}/contactTypes/{contactType}/treeResults', { debtId, contactType })
-      .map(response => response.data)
+      .readAll('/debts/{debtId}/contactTypes/{contactType}/treeResults', { debtId, contactType })
       .map(toTreeNodes());
   }
 }

@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-import { IEntityAttribute, IEntityAttributeResponse } from './entity-attributes.interface';
+import { IEntityAttribute } from './entity-attributes.interface';
 
 import { DataService } from '../../data/data.service';
 import { EntityAttributesService } from './entity-attributes.service';
@@ -35,8 +35,6 @@ export class EntityAttributesEffects {
   ) {}
 
   private read(id: number): Observable<IEntityAttribute> {
-    return this.dataService
-      .read('/entityAttributes/{id}', { id })
-      .map((response: IEntityAttributeResponse) => ({ isMandatory: response.isMandatory, isUsed: response.isUsed }));
+    return this.dataService.read('/entityAttributes/{id}', { id });
   }
 }

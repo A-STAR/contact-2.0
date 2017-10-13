@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttribute, IAttributeResponse } from './attribute.interface';
-import { IResponse } from '../../../../core/data/data.interface';
+import { IAttribute } from './attribute.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -17,17 +16,15 @@ export class AttributeService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(): Observable<IAttributeResponse[]> {
+  fetchAll(): Observable<IAttribute[]> {
     return this.dataService
-      .read(this.baseUrl)
-      .map((response: IResponse<IAttributeResponse[]>) => response.data)
+      .readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
   fetch(attributeId: number): Observable<IAttribute> {
     return this.dataService
       .read(`${this.baseUrl}/{attributeId}`, { attributeId })
-      .map((response: IResponse<IAttributeResponse>) => response.data[0])
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
