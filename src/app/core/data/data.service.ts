@@ -42,7 +42,7 @@ export class DataService {
 
   readAll(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any[]> {
     return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
-      .map(response => response.data || null);
+      .map(response => response.data || []);
   }
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
