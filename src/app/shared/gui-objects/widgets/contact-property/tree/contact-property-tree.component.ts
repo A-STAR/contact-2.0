@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { IContactTreeNode } from '../contact-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '../../../../components/flowtree/treenode/treenode.interface';
@@ -15,6 +14,7 @@ import { DialogFunctions } from '../../../../../core/dialog';
 
 import { combineLatestAnd, doOnceIf } from '../../../../../core/utils/helpers';
 import { isEmpty } from '../../../../../core/utils';
+import { toTreeNodes } from '../../../../../core/utils/tree';
 
 @Component({
   selector: 'app-contact-property-tree',
@@ -157,17 +157,12 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   private fetch(): void {
-    this.contactPropertyService.fetchAll(this.contactType, this.treeType).subscribe(nodes => {
-      const root = { id: 0 };
-      this._nodes = this.addParents([
-        {
-          ...root,
-          children: this.convertToTreeNodes(nodes)
-        }
-      ]);
-      // console.log(this._nodes);
-      this.cdRef.markForCheck();
-    });
+    this.contactPropertyService.fetchAll(this.contactType, this.treeType)
+      .map(toTreeNodes(false, true))
+      .subscribe(nodes => {
+        this._nodes = nodes;
+        this.cdRef.markForCheck();
+      });
   }
 
   private get canAdd$(): Observable<boolean> {
@@ -186,34 +181,6 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
       this.userPermissionsService.has('CONTACT_TREE_DELETE'),
       this.selectedNode$.map(node => node && isEmpty(node.children)),
     ]);
-  }
-
-  private convertToTreeNodes(nodes: IContactTreeNode[]): ITreeNode[] {
-    return nodes
-      .sort((a, b) => a.sortOrder - b.sortOrder)
-      .map(node => {
-        const { children, sortOrder, ...data } = node;
-        return {
-          data,
-          ...(!isEmpty(children) ? { children: this.convertToTreeNodes(children) } : {}),
-          sortOrder,
-          label: node.name || `Node #${node.id}`,
-          bgColor: node.boxColor,
-          id: node.id,
-          expanded: !isEmpty(children),
-        };
-      });
-  }
-
-  private addParents(nodes: ITreeNode[], parent: ITreeNode = null): ITreeNode[] {
-    return nodes.map(node => {
-      const { children } = node;
-      return {
-        ...node,
-        ...(!isEmpty(children) ? { children: this.addParents(children, node) } : {}),
-        parent,
-      };
-    });
   }
 
   private onSuccess(clearSelection: boolean = false): void {
