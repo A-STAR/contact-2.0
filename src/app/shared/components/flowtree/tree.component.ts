@@ -358,8 +358,6 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
     }
 
     const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: ITreeNode, index: number) => {
-      console.log(node);
-      console.log(node.parent);
       return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
     }, (payload.swap ? targetElement : sourceElement).parent.children);
 
