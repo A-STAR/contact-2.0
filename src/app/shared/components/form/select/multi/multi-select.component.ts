@@ -79,9 +79,5 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this.cdRef.markForCheck();
   }
 
-  private containsValue(value: number|string): boolean {
-    return (this.list.selection || []).includes(value);
-  }
-
   private propagateChange: Function = () => {};
 }
