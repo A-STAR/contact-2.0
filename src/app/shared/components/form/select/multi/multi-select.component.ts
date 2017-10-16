@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
+
+import { MultiListComponent } from '../../../list/multi/multi-list.component';
 
 import { isEmpty } from '../../../../../core/utils';
 
@@ -24,19 +26,21 @@ export class MultiSelectComponent implements ControlValueAccessor {
   @Input() nullable = false;
   @Input() options: IOption[] = [];
 
+  @ViewChild(MultiListComponent) list: MultiListComponent<IOption>;
+
   private _isDisabled = false;
-  private _value: IMultiSelectValue = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
   get label(): string {
-    if (isEmpty(this._value)) {
+    if (isEmpty(this.selection)) {
       return null;
     }
-    if (this._value.length > 1) {
-      return `Выбрано элементов: ${this._value.length}`;
+    if (this.selection.length > 1) {
+      // TODO(d.maltsev): i18n
+      return `Выбрано элементов: ${this.selection.length}`;
     }
-    const option = this.options.find(o => o.value === this._value[0]);
+    const option = this.options.find(o => o.value === this.selection[0]);
     return option ? option.label : null;
   }
 
@@ -44,10 +48,7 @@ export class MultiSelectComponent implements ControlValueAccessor {
   getName = (option: IOption) => option.label;
 
   onSelect(item: IOption): void {
-    this._value = this.containsValue(item.value)
-      ? this._value.filter(v => v !== item.value)
-      : [ ...this._value, item.value ];
-    this.propagateChange(this._value);
+    this.propagateChange(this.selection);
   }
 
   writeValue(value: IMultiSelectValue): void {
@@ -65,13 +66,21 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this._isDisabled = isDisabled;
   }
 
+  private get selection(): IMultiSelectValue {
+    return this.list.selection;
+  }
+
+  private set selection(selection: IMultiSelectValue) {
+    this.list.selection = selection;
+  }
+
   private set value(value: IMultiSelectValue) {
-    this._value = value;
+    this.selection = value;
     this.cdRef.markForCheck();
   }
 
   private containsValue(value: number|string): boolean {
-    return (this._value || []).includes(value);
+    return (this.list.selection || []).includes(value);
   }
 
   private propagateChange: Function = () => {};
