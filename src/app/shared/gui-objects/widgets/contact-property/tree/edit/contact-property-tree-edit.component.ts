@@ -186,14 +186,10 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   private buildControls(
     dictionaries: { [key: number]: IOption[] },
-    // TODO(d.maltsev): type when the API is ready
     templates: IOption[],
     attributes: IEntityAttributes,
     languages: IOption[],
   ): IDynamicFormItem[] {
-
-    console.log(templates);
-
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
     const dict1Attributes = attributes[EntityAttributesService.DICT_VALUE_1];
     const dict2Attributes = attributes[EntityAttributesService.DICT_VALUE_2];
@@ -232,11 +228,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         { name: 'nextCallFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
-    const autoCommentOptions = {
-      multiple: true,
-      nullable: false,
-      options: templates,
-    };
     const nameOptions = {
       type: this.selectedId ? 'multitext' : 'text',
       options: languages,
@@ -261,8 +252,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             width: 6,
             children: [
               { label: labelKey('commentMode'), controlName: 'commentMode', ...modeOptions },
-              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', ...autoCommentOptions },
-              { label: labelKey('regInvisible'), controlName: 'regInvisible', ...modeOptions },
+              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'multiselect', options: templates },
+              { label: labelKey('fileAttachMode'), controlName: 'fileAttachMode', ...modeOptions },
               { label: labelKey('nextCallMode'), controlName: 'nextCallMode', ...modeOptions },
               { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
               { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
@@ -299,8 +290,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('isSuccess'), controlName: 'isSuccess', type: 'checkbox' },
               { label: labelKey('changeResponsible'), controlName: 'changeResponsible', type: 'checkbox' },
               { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
-              // TODO(d.maltsev): duplicate name (see http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=121077805)
-              // { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
+              { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
             ]
           }
         ]

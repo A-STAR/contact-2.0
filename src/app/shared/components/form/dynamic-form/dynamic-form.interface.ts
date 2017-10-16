@@ -88,6 +88,7 @@ export type ControlTypes =
   | 'select'
   | 'selectwrapper'
   | 'singleselectwrapper'
+  | 'multiselect'
   | 'text'
   | 'textarea'
   | 'richtexteditor'
