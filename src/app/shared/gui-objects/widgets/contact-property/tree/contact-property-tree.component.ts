@@ -72,6 +72,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
         UserDictionariesService.DICTIONARY_CONTACT_TYPE,
         UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
       ])
+      .take(1)
       .subscribe(dictionaries => {
         this.initContactTypeSelect(dictionaries);
         this.initTreeTypeSelect(dictionaries);
@@ -103,7 +104,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   onNodeMove(event: any): void {
-    console.log(event);
+    const { parentId, sortOrder, id } = event[0];
+    const data = { parentId, sortOrder };
+    this.contactPropertyService.update(this.contactType, this.treeType, id, data)
+      .subscribe(() => this.onSuccess());
   }
 
   onNodeSelect(event: { node: ITreeNode }): void {
