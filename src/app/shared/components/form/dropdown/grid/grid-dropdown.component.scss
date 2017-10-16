@@ -1,3 +1,5 @@
+@import "../../../../styles/app/variables.scss";
+
 .caret {
   cursor: pointer;
   margin-top: -2px;
@@ -9,5 +11,5 @@
 .dropdown {
   background: #fff;
   border: 1px solid #d5d5d5;
-  z-index: 10000;
+  z-index: $zindex-dropdown;
 }
