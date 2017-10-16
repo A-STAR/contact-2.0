@@ -1,0 +1,60 @@
+<ng-container [ngSwitch]="value && value.typeCode">
+
+  <!-- Number -->
+  <input
+    *ngSwitchCase="1"
+    type="number"
+    class="form-control"
+    [ngModel]="value.valueN"
+    (ngModelChange)="onNumberChange($event)"
+  />
+
+  <!-- Date -->
+  <app-input-datepicker
+    *ngSwitchCase="2"
+    [ngModel]="date"
+    (ngModelChange)="onDateChange($event)">
+  </app-input-datepicker>
+
+  <!-- String -->
+  <input
+    *ngSwitchCase="3"
+    type="text"
+    class="form-control"
+    [ngModel]="value.valueS"
+    (ngModelChange)="onStringChange($event)"
+  />
+
+  <!-- Boolean -->
+  <app-single-select-wrapper
+    *ngSwitchCase="4"
+    [dictCode]="2"
+    [ngModel]="value.valueB"
+    (ngModelChange)="onBooleanChange($event)">
+  </app-single-select-wrapper>
+
+  <!-- Float -->
+  <input
+    *ngSwitchCase="5"
+    type="number"
+    class="form-control"
+    [ngModel]="value.valueN"
+    (ngModelChange)="onNumberChange($event)"
+  />
+
+  <!-- Dictionary -->
+  <app-single-select-wrapper
+    *ngSwitchCase="6"
+    [dictCode]="value.dictNameCode"
+    [ngModel]="value.valueN"
+    (ngModelChange)="onNumberChange($event)">
+  </app-single-select-wrapper>
+
+  <!-- DateTime -->
+  <app-input-datepicker
+    *ngSwitchCase="7"
+    [displayTime]="true"
+    [ngModel]="date"
+    (ngModelChange)="onDateChange($event)">
+  </app-input-datepicker>
+</ng-container>

@@ -1,12 +1,12 @@
-<app-dropdown #dropdown [enabled]="!isDisabled" [fullWidth]="true">
-  <ng-container trigger>
-    <span [ngClass]="controlClass">
+<div appDropdown>
+  <div #dropdownTrigger>
+    <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }">
       {{ label }}
       <i class="caret"></i>
     </span>
     <input type="hidden" [ngModel]="value">
-  </ng-container>
-  <div>
+  </div>
+  <div #dropdownContent class="dropdown">
     <app-grid
       [columns]="columns"
       [footerHeight]="false"
@@ -22,4 +22,4 @@
       </button>
     </div>
   </div>
-</app-dropdown>
+</div>

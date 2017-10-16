@@ -1,5 +1,5 @@
-<div class="panel">
-  <div class="panel-heading p-sm">
+<div class="panel m0">
+  <div *ngIf="!hideSearchBar" class="panel-heading p-sm">
     <input type="text" class="form-control input-sm" [ngModel]="search" (ngModelChange)="onSearch($event)">
   </div>
   <div [ngStyle]="style">
