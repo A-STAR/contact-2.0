@@ -87,7 +87,7 @@ export type ControlTypes =
   | 'radio'
   | 'select'
   | 'selectwrapper'
-  | 'singleselectwrapper'
+  | 'singleselect'
   | 'multiselect'
   | 'text'
   | 'textarea'
