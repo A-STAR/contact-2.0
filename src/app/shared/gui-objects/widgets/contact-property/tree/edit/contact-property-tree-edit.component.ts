@@ -25,10 +25,11 @@ import { ContactPropertyService } from '../../contact-property.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '../../../../../../core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, makeKey } from '../../../../../../core/utils';
+import { flatten, isEmpty, makeKey, valuesToOptions } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -61,6 +62,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     private entityTranslationsService: EntityTranslationsService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
+    private userTemplatesService: UserTemplatesService,
   ) {}
 
   ngOnInit(): void {
@@ -71,8 +73,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         UserDictionariesService.DICTIONARY_DEBT_LIST_2,
         UserDictionariesService.DICTIONARY_DEBT_LIST_3,
         UserDictionariesService.DICTIONARY_DEBT_LIST_4,
-        UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
-        UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
       ]),
       this.entityAttributesService.getAttributes([
         EntityAttributesService.DICT_VALUE_1,
@@ -80,7 +80,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_3,
         EntityAttributesService.DICT_VALUE_4,
       ]),
-      this.contactPropertyService.fetchTemplatesAsOptions(4, 0, true),
+      this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
       this.lookupService.attributeTypes,
       this.lookupService.lookupAsOptions('languages'),
       this.selectedId
@@ -89,7 +89,9 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.selectedId
         ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
         : Observable.of([]),
-    ).subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
+    )
+    .take(1)
+    .subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
       this.controls = this.buildControls(dictionaries, templates, attributes, languages);
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
@@ -189,27 +191,32 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     attributes: IEntityAttributes,
     languages: IOption[],
   ): IDynamicFormItem[] {
+
+    console.log(templates);
+
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
-    const modeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE];
-    const promiseModeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE];
     const dict1Attributes = attributes[EntityAttributesService.DICT_VALUE_1];
     const dict2Attributes = attributes[EntityAttributesService.DICT_VALUE_2];
     const dict3Attributes = attributes[EntityAttributesService.DICT_VALUE_3];
     const dict4Attributes = attributes[EntityAttributesService.DICT_VALUE_4];
     const dict1 = {
-      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1],
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_1,
       required: dict1Attributes.isMandatory,
     }
     const dict2 = {
-      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2],
+      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_2,
+      type: 'selectwrapper',
       required: dict2Attributes.isMandatory,
     }
     const dict3 = {
-      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3],
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_3,
       required: dict3Attributes.isMandatory,
     }
     const dict4 = {
-      options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4],
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_4,
       required: dict4Attributes.isMandatory,
     }
 
@@ -235,6 +242,15 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       options: languages,
     };
 
+    const modeOptions = {
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
+    };
+    const promiseOptions = {
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
+    };
+
     return [
       { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
       { label: labelKey('name'), controlName: 'name', ...nameOptions, required: true, width: 6 },
@@ -244,16 +260,16 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           {
             width: 6,
             children: [
-              { label: labelKey('commentMode'), controlName: 'commentMode', type: 'select', options: modeOptions },
+              { label: labelKey('commentMode'), controlName: 'commentMode', ...modeOptions },
               { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'select', ...autoCommentOptions },
-              { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'select', options: modeOptions },
-              { label: labelKey('nextCallMode'), controlName: 'nextCallMode', type: 'select', options: modeOptions },
-              { label: labelKey('promiseMode'), controlName: 'promiseMode', type: 'select', options: promiseModeOptions },
-              { label: labelKey('paymentMode'), controlName: 'paymentMode', type: 'select', options: promiseModeOptions },
-              { label: labelKey('callReasonMode'), controlName: 'callReasonMode', type: 'select', options: modeOptions },
+              { label: labelKey('regInvisible'), controlName: 'regInvisible', ...modeOptions },
+              { label: labelKey('nextCallMode'), controlName: 'nextCallMode', ...modeOptions },
+              { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
+              { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
+              { label: labelKey('callReasonMode'), controlName: 'callReasonMode', ...modeOptions },
               { label: labelKey('debtStatusCode'), controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
-              { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', type: 'select', options: modeOptions },
-              { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', type: 'select', options: modeOptions },
+              { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', ...modeOptions },
+              { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', ...modeOptions },
             ]
           },
           {
@@ -262,19 +278,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('template'), controlName: 'template', type: 'segmented', ...templateInputOptions },
               { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
               ...(dict1Attributes.isUsed
-                ? [{ label: labelKey('dictValue1'), controlName: 'dictValue1', type: 'select', ...dict1 }]
+                ? [{ label: labelKey('dictValue1'), controlName: 'dictValue1', ...dict1 }]
                 : []
               ),
               ...(dict2Attributes.isUsed
-                ? [{ label: labelKey('dictValue2'), controlName: 'dictValue2', type: 'select', ...dict2 }]
+                ? [{ label: labelKey('dictValue2'), controlName: 'dictValue2', ...dict2 }]
                 : []
               ),
               ...(dict3Attributes.isUsed
-                ? [{ label: labelKey('dictValue3'), controlName: 'dictValue3', type: 'select', ...dict3 }]
+                ? [{ label: labelKey('dictValue3'), controlName: 'dictValue3', ...dict3 }]
                 : []
               ),
               ...(dict4Attributes.isUsed
-                ? [{ label: labelKey('dictValue4'), controlName: 'dictValue4', type: 'select', ...dict4 }]
+                ? [{ label: labelKey('dictValue4'), controlName: 'dictValue4', ...dict4 }]
                 : []
               ),
               { label: labelKey('isInvalidContact'), controlName: 'isInvalidContact', type: 'checkbox' },
