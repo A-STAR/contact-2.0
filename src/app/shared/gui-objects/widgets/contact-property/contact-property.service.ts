@@ -31,20 +31,13 @@ export class ContactPropertyService {
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  fetchTemplatesAsOptions(typeCode: number, recipientTypeCode: number, isSentOnce: boolean): Observable<IOption[]> {
-    const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSentOnce}';
-    return this.dataService
-      .readAll(url, { typeCode, recipientTypeCode, isSentOnce: Number(isSentOnce) })
-      .map(valuesToOptions);
-  }
-
   create(contactType: number, treeType: number, data: IContactTreeNode): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { contactType, treeType }, data)
       .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  update(contactType: number, treeType: number, resultId: number, data: IContactTreeNode): Observable<void> {
+  update(contactType: number, treeType: number, resultId: number, data: Partial<IContactTreeNode>): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{resultId}`, { contactType, treeType, resultId }, data)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
