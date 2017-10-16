@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IContactTreeNode } from './contact-property.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-
-import { valuesToOptions } from '../../../../core/utils';
 
 @Injectable()
 export class ContactPropertyService {
