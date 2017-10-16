@@ -1,0 +1,10 @@
+.form-control {
+  font-weight: normal;
+  position: relative;
+  .caret {
+    margin-top: -2px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+  }
+}

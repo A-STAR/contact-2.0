@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
+import { getRawValue } from '../../../../core/utils/value';
 
 const labelKey = makeKey('modules.contactRegistration.parametersForm')
 
@@ -114,7 +116,7 @@ export class ParametersFormComponent implements OnInit {
 
   data = {};
 
-  attributes: any[];
+  attributes: ITreeNode[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -133,4 +135,6 @@ export class ParametersFormComponent implements OnInit {
         this.cdRef.markForCheck();
       });
   }
+
+  getRawValue = getRawValue;
 }

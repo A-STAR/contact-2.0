@@ -17,6 +17,9 @@ import { IDropdownPosition } from './dropdown.interface';
     )
   ]
 })
+/**
+ * @deprecated
+ */
 export class DropdownComponent {
   private _isOpen = false;
 
