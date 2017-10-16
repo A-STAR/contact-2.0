@@ -40,6 +40,7 @@ const labelKey = makeKey('widgets.contactProperty.edit');
 })
 export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   @Input() contactType: number;
+  @Input() isEditing: boolean;
   @Input() treeType: number;
   @Input() selectedId: number;
 
@@ -83,10 +84,10 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
       this.lookupService.attributeTypes,
       this.lookupService.lookupAsOptions('languages'),
-      this.selectedId
+      this.isEditing
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : Observable.of(null),
-      this.selectedId
+      this.isEditing
         ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
         : Observable.of([]),
     )
@@ -139,19 +140,19 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { autoCommentIds, template, name, nextCallDays, ...formData } = this.form.getSerializedUpdates();
-    console.log(formData);
+    const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.getSerializedUpdates();
+
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
     const data = {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
-      ...(name ? { name: this.selectedId ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
+      ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
       ...(isEmpty(attribute) ? {} : { attribute }),
-      parentId: this.selectedId || null,
+      ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };
     this.submit.emit(data);
   }
@@ -231,7 +232,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ]
     };
     const nameOptions = {
-      type: this.selectedId ? 'multitext' : 'text',
+      type: this.isEditing ? 'multitext' : 'text',
       options: languages,
     };
 
@@ -245,7 +246,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     };
 
     return [
-      { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: !!this.selectedId },
+      { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: this.isEditing },
       { label: labelKey('name'), controlName: 'name', ...nameOptions, required: true, width: 6 },
       { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {

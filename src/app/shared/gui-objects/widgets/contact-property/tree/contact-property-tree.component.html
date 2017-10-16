@@ -2,6 +2,8 @@
   *ngIf="isDialog('add')"
   [contactType]="contactType"
   [treeType]="treeType"
+  [selectedId]="selectedNodeId$ | async"
+  [isEditing]="false"
   (submit)="onAddDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-contact-property-tree-edit>
@@ -11,6 +13,7 @@
   [contactType]="contactType"
   [treeType]="treeType"
   [selectedId]="selectedNodeId$ | async"
+  [isEditing]="true"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-contact-property-tree-edit>
