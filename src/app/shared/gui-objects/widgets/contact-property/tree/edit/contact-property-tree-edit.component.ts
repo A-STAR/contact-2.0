@@ -97,7 +97,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
-          ? data.autoCommentIds.split(',').map(value => ({ value, canRemove: true }))
+          ? data.autoCommentIds.split(',')
           : null,
         name: nameTranslations,
         nextCallDays: data && data.nextCallFormula
@@ -139,12 +139,14 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { template, name, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    const { autoCommentIds, template, name, nextCallDays, ...formData } = this.form.getSerializedUpdates();
+    console.log(formData);
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
     const data = {
       ...formData,
+      ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.selectedId ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),

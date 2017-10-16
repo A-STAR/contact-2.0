@@ -67,11 +67,11 @@ export class MultiSelectComponent implements ControlValueAccessor {
   }
 
   private get selection(): IMultiSelectValue {
-    return this.list.selection;
+    return this.list.selection.map(Number);
   }
 
   private set selection(selection: IMultiSelectValue) {
-    this.list.selection = selection;
+    this.list.selection = selection.map(Number);
   }
 
   private set value(value: IMultiSelectValue) {
