@@ -35,6 +35,8 @@ export const getRawValue = <T extends IValue>(value: T): number | string => {
     // TODO(d.maltsev): maybe this should be boolean or at least number?
     case TYPE_CODES.BOOLEAN:
       return String(value.valueB);
+    default:
+      return null;
   };
 }
 
@@ -60,6 +62,8 @@ export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynam
     case TYPE_CODES.BOOLEAN:
       // TODO(d.maltsev): double check that boolean type uses corresponding dictionary
       return { type: 'boolean' };
+    default:
+      return null;
   };
 }
 
@@ -76,5 +80,7 @@ export const getValue = (typeCode: number, value: string | number): Partial<IVal
       return { valueS: value as string };
     case TYPE_CODES.BOOLEAN:
       return { valueB: value as number };
+    default:
+      return null;
   };
 }

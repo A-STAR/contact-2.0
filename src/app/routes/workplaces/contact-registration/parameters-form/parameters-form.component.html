@@ -1,6 +1,6 @@
-<app-dynamic-form #form [controls]="controls" [data]="data"></app-dynamic-form>
+<app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
-<h4>Дополнительные атрибуты долга</h4>
+<h4>{{ 'modules.contactRegistration.parametersForm.attributesTitle' | translate }}</h4>
 <p-treeTable selectionMode="none" [value]="attributes">
   <p-column field="code" header="Code"></p-column>
   <p-column field="name" header="Name"></p-column>
@@ -11,7 +11,9 @@
   </p-column>
   <p-column field="mandatory" header="Mandatory">
     <ng-template let-node="rowData" pTemplate="body">
-      <input type="checkbox" [(ngModel)]="node.data.mandatory">
+      <input type="checkbox" [ngModel]="node.data.mandatory" [disabled]="true">
     </ng-template>
   </p-column>
 </p-treeTable>
+
+<button [disabled]="!canSubmit" (click)="onSubmit()">OK</button>

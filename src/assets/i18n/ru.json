@@ -152,6 +152,54 @@
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
         "comment": "Комментарий для ввода"
+      },
+      "parametersForm": {
+        "promise": {
+          "title": "Регистрация обещания",
+          "date": "Дата",
+          "amount": "Сумма",
+          "isUnconfirmed": "Неподтвержден",
+          "percentage": "Процент от остатка"
+        },
+        "payment": {
+          "title": "Регистрация неподтвержденного платежа",
+          "date": "Дата",
+          "amount": "Сумма",
+          "currencyId": "Валюта",
+          "percentage": "Процент от остатка"
+        },
+        "nextCallDateTimeTitle": "Ввод даты повторного звонка",
+        "nextCallDateTime": "Дата повторного звонка",
+        "commentTitle": "Ввод комментария",
+        "comment": "Комментарий",
+        "autoCommentTitle": "Ввод автокомментария",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "phone": {
+          "title": "Ввод нового номера должника",
+          "typeCode": "Тип",
+          "phoneNumber": "Номер телефона",
+          "stopAutoSms": "Не отправлять автоматические SMS",
+          "stopAutoInfo": "Запретить голосовое информирование",
+          "comment": "Комментарий"
+        },
+        "debtReasonCodeTitle": "Ввод причины возникновения задолженности",
+        "debtReasonCode": "Причина возникновения задолженности",
+        "refusalReasonCodeTitle": "Регистрация отказа от оплаты",
+        "refusalReasonCode": "Регистрация отказа от оплаты",
+        "fileAttach": {
+          "title": "Прикрепление файла",
+          "docTypeCode": "Тип",
+          "docName": "Название",
+          "docNumber": "Номер",
+          "comment": "Комментарий",
+          "file": "Выберите файл"
+        },
+        "callReasonCodeTitle": "Ввод причины звонка",
+        "callReasonCode": "Причина звонка",
+        "statusReasonCodeTitle": "Ввод причины смены статуса на пользовательский",
+        "statusReasonCode": "Причина смены статуса на пользовательский",
+        "attributesTitle": "Дополнительные атрибуты"
       }
     }
   },

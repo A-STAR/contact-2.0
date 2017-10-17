@@ -8,7 +8,7 @@ import { ContactRegistrationService } from '../contact-registration.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
-import { getRawValue } from '../../../../core/utils/value';
+import { getRawValue, getValue } from '../../../../core/utils/value';
 
 const labelKey = makeKey('modules.contactRegistration.parametersForm')
 
@@ -25,7 +25,7 @@ export class ParametersFormComponent implements OnInit {
 
   controls: IDynamicFormItem[] = [
     {
-      title: 'Регистрация обещания',
+      title: labelKey('promise.title'),
       children: [
         { controlName: 'promise.date', type: 'datepicker' },
         { controlName: 'promise.amount', type: 'number' },
@@ -34,7 +34,7 @@ export class ParametersFormComponent implements OnInit {
       ]
     },
     {
-      title: 'Регистрация неподтвержденного платежа',
+      title: labelKey('payment.title'),
       children: [
         { controlName: 'payment.date', type: 'datepicker' },
         { controlName: 'payment.amount', type: 'number' },
@@ -43,26 +43,26 @@ export class ParametersFormComponent implements OnInit {
       ]
     },
     {
-      title: 'Ввод даты повторного звонка',
+      title: labelKey('nextCallDateTimeTitle'),
       children: [
         { controlName: 'nextCallDateTime', type: 'datepicker' },
       ]
     },
     {
-      title: 'Ввод комментария',
+      title: labelKey('commentTitle'),
       children: [
         { controlName: 'comment', type: 'textarea' },
       ]
     },
     {
-      title: 'Ввод автокомментария',
+      title: labelKey('autoCommentTitle'),
       children: [
         { controlName: 'autoCommentId', type: 'select', options: [] },
-        { controlName: 'autoComment', type: 'autoComment', disabled: true },
+        { controlName: 'autoComment', type: 'textarea', disabled: true },
       ]
     },
     {
-      title: 'Ввод нового номера должника',
+      title: labelKey('phone.title'),
       children: [
         { controlName: 'phone.typeCode', type: 'selectwrapper', dictCode: 17 },
         { controlName: 'phone.phoneNumber', type: 'text' },
@@ -72,19 +72,19 @@ export class ParametersFormComponent implements OnInit {
       ]
     },
     {
-      title: 'Ввод причины возникновения задолженности',
+      title: labelKey('debtReasonCodeTitle'),
       children: [
         { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
       ]
     },
     {
-      title: 'Регистрация отказа от оплаты',
+      title: labelKey('refusalReasonCodeTitle'),
       children: [
         { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19 },
       ]
     },
     {
-      title: 'Прикрепление файла',
+      title: labelKey('fileAttach.title'),
       children: [
         { controlName: 'fileAttach.docTypeCode', type: 'selectwrapper', dictCode: 33 },
         { controlName: 'fileAttach.docName', type: 'text' },
@@ -94,13 +94,13 @@ export class ParametersFormComponent implements OnInit {
       ]
     },
     {
-      title: 'Ввод причины звонка',
+      title: labelKey('callReasonCodeTitle'),
       children: [
         { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
       ]
     },
     {
-      title: 'Ввод причины смены статуса на пользовательский',
+      title: labelKey('statusReasonCodeTitle'),
       children: [
         { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
       ]
@@ -121,9 +121,7 @@ export class ParametersFormComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-  ) {
-    // this.contactRegistrationService.selectedNode$.subscribe(console.log);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.contactRegistrationService.selectedNode$
@@ -136,5 +134,18 @@ export class ParametersFormComponent implements OnInit {
       });
   }
 
-  getRawValue = getRawValue;
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onSubmit(): void {
+    const data = {
+      ...this.form.getSerializedUpdates(),
+      attributes: this.attributes.map(row => ({
+        ...getValue(row.data.typeCode, getRawValue(row.data)),
+        code: row.data.code
+      })),
+    }
+    console.log(data);
+  }
 }
