@@ -6,12 +6,12 @@
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
     <ng-container *ngIf="canEdit$ | async">
       <label class="mt">{{ 'widgets.messageTemplate.dialogs.edit.variables' | translate }}</label>
-      <app-list
+      <app-single-list
         [items]="variables"
         [getId]="getId"
         [getName]="getName"
         (doubleClick)="onInsert($event)">
-      </app-list>
+      </app-single-list>
     </ng-container>
   </div>
   <div dialog-footer>
