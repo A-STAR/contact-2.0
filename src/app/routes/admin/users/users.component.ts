@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -21,6 +21,9 @@ import { UsersService } from './users.service';
 })
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
+
+  private _users: Array<IUser> = [];
+  private _selectedUserId: number;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -62,23 +65,19 @@ export class UsersComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.usersService.fetch(),
+      action: () => this.fetch(),
       enabled: this.userPermissionsService.has('USER_VIEW')
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.usersService.toggleInactiveFilter(),
+      action: () => this.toggleInactiveFilter(),
       label: 'users.toolbar.action.show_inactive_users',
       state: this.usersService.state.map(state => state.displayInactive)
     }
   ];
 
-  editedEntity: IUser;
-
   roleOptions$: Observable<IOption[]>;
   languageOptions$: Observable<Array<IOption>>;
-
-  users$: Observable<Array<IUser>>;
 
   emptyMessage$: Observable<string>;
 
@@ -94,6 +93,7 @@ export class UsersComponent implements OnDestroy {
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.roleOptions$ = this.lookupService.roleOptions;
     this.languageOptions$ = this.lookupService.languageOptions;
@@ -107,20 +107,19 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    this.usersSubscription = this.usersService.state.distinctUntilChanged()
+    this.usersSubscription = this.state.distinctUntilChanged()
       .subscribe(
         state => {
           this.displayInactiveUsers = state.displayInactive;
-          this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
+          this._selectedUserId = state.selectedUserId;
+          this.refresh();
         }
       );
 
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission ? this.usersService.fetch() : this.usersService.clear()
+      hasViewPermission ? this.fetch() : this.clear()
     );
-
-    this.users$ = this.usersService.state.map(state => state.users);
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
   }
@@ -135,8 +134,26 @@ export class UsersComponent implements OnDestroy {
     return this.usersService.state;
   }
 
+  get users(): any[] {
+    return this._users;
+  }
+
+  get editedUser(): IUser {
+    return (this._users || []).find(users => users.id === this._selectedUserId);
+  }
+
+  get selection(): Array<IUser> {
+    const selectedUser = this.editedUser;
+    return selectedUser ? [ selectedUser ] : [];
+  }
+
   filter(user: IUser): boolean {
     return !user.isInactive || this.displayInactiveUsers;
+  }
+
+  toggleInactiveFilter(): void {
+    this.usersService.select(null);
+    this.usersService.toggleInactiveFilter();
   }
 
   onAdd(): void {
@@ -144,7 +161,7 @@ export class UsersComponent implements OnDestroy {
   }
 
   onEdit(user?: IUser): void {
-    const id = user ? user.id : this.editedEntity.id;
+    const id = user ? user.id : this.editedUser.id;
     this.contentTabService.navigate(`/admin/users/${id}`);
   }
 
@@ -152,5 +169,22 @@ export class UsersComponent implements OnDestroy {
     if (user) {
       this.usersService.select(user.id);
     }
+  }
+
+  private fetch(): void {
+    this.usersService.fetch().subscribe(users => {
+      this._users = users;
+      this.cdRef.markForCheck();
+    });
+  }
+
+  private refresh(): void {
+    this._users = [].concat(this._users);
+    this.cdRef.markForCheck();
+  }
+
+  private clear(): void {
+    this._users = [];
+    this.cdRef.markForCheck();
   }
 }

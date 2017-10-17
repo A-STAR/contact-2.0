@@ -4,16 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
+import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState } from './users.interface';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
 export class UsersService {
-  static USERS_FETCH          = 'USERS_FETCH';
-  static USERS_FETCH_SUCCESS  = 'USERS_FETCH_SUCCESS';
   static USER_FETCH           = 'USER_FETCH';
   static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
-  static USERS_CLEAR          = 'USERS_CLEAR';
   static USER_CREATE          = 'USER_CREATE';
   static USER_UPDATE          = 'USER_UPDATE';
   static USER_UPDATE_PHOTO    = 'USER_UPDATE_PHOTO';
@@ -22,7 +21,9 @@ export class UsersService {
   static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
 
   constructor(
+    private dataService: DataService,
     private store: Store<IAppState>,
+    private notificationsService: NotificationsService,
   ) {}
 
   get state(): Observable<IUsersState> {
@@ -31,8 +32,10 @@ export class UsersService {
       .filter(Boolean);
   }
 
-  fetch(): void {
-    this.dispatchAction(UsersService.USERS_FETCH);
+  fetch(): Observable<Array<IUser>> {
+    return this.dataService
+      .readAll('/users')
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').dispatchCallback());
   }
 
   fetchOne(userId: number): void {
@@ -45,10 +48,6 @@ export class UsersService {
 
   update(user: IUser, photo: File | false, userId: number): void {
     this.dispatchAction(UsersService.USER_UPDATE, { user, photo, userId });
-  }
-
-  clear(): void {
-    this.dispatchAction(UsersService.USERS_CLEAR);
   }
 
   select(userId: number): void {

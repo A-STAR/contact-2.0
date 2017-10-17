@@ -14,43 +14,6 @@ import { UsersService } from './users.service';
 @Injectable()
 export class UsersEffects {
 
-  private fetchAction = {
-    type: UsersService.USERS_FETCH
-  };
-
-  @Effect()
-  fetchUsers$ = this.actions
-    .ofType(UsersService.USERS_FETCH)
-    .switchMap((action: Action) => {
-      return this.readUsers()
-        .mergeMap(users => [
-          {
-            type: UsersService.USERS_FETCH_SUCCESS,
-            payload: { users }
-          },
-          {
-            type: UsersService.USER_SELECT,
-            payload: {
-              userId: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
-    });
-
-  @Effect()
-  toggleInactiveUsers$ = this.actions
-    .ofType(UsersService.USER_TOGGLE_INACTIVE)
-    .switchMap((action: Action) => {
-      return this.readUsers()
-        .mergeMap(() => [
-          {
-            type: UsersService.USERS_FETCH,
-          },
-        ])
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
-    });
-
   @Effect()
   fetchUser$ = this.actions
     .ofType(UsersService.USER_FETCH)
@@ -71,7 +34,6 @@ export class UsersEffects {
       return this.createUser(user)
         .mergeMap(response => {
           const actions = [
-            this.fetchAction,
             {
               type: UsersService.USER_UPDATE_SUCCESS
             }
@@ -95,7 +57,6 @@ export class UsersEffects {
       return this.updateUser(userId, user)
         .mergeMap(() => {
           const actions = [
-            this.fetchAction,
             {
               type: UsersService.USER_UPDATE_SUCCESS
             }
@@ -135,10 +96,6 @@ export class UsersEffects {
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
-
-  private readUsers(): Observable<any> {
-    return this.dataService.readAll('/users');
-  }
 
   private readUser(id: number): Observable<any> {
     return this.dataService.read('/users/{id}', { id });
