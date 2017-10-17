@@ -6,36 +6,38 @@
     </span>
   </h4>
   <div class="row" *ngIf="!isCollapsed" [@isCollapsed]>
-    <ng-container *ngFor="let control of items" >
-      <div [ngClass]="'form-column col-xs-' + (control.width || 12)">
-        <div *ngIf="!control.children" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
-          <app-dynamic-form-field
-            [control]="control"
-            [form]="form"
-            (onSelect)="onSelectItems($event)"
-          >
-          </app-dynamic-form-field>
+    <ng-container *ngFor="let control of items">
+      <ng-container *ngIf="control.display != false">
+        <div [ngClass]="'form-column col-xs-' + (control.width || 12)">
+          <div *ngIf="!control.children" [ngClass]="{'form-group': control.type !== 'hidden', 'has-error': displayControlErrors(control)}">
+            <app-dynamic-form-field
+              [control]="control"
+              [form]="form"
+              (onSelect)="onSelectItems($event)"
+            >
+            </app-dynamic-form-field>
 
-          <div *ngIf="displayControlErrors(control)" class="error-messages">
-            <ul class="alert alert-danger">
-              <li *ngFor="let error of getControlErrors(control)">
-                {{ error.message | translate:error.data }}
-              </li>
-            </ul>
+            <div *ngIf="displayControlErrors(control)" class="error-messages">
+              <ul class="alert alert-danger">
+                <li *ngFor="let error of getControlErrors(control)">
+                  {{ error.message | translate:error.data }}
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <ng-container *ngIf="control.children">
-          <app-dynamic-form-group
-            [form]="form"
-            [items]="control.children"
-            [collapsible]="control.collapsible"
-            [title]="control.title"
-            [width]="control.width"
-            (onSelect)="onSelectItems($event)">
-          </app-dynamic-form-group>
-        </ng-container>
-      </div>
+          <ng-container *ngIf="control.children">
+            <app-dynamic-form-group
+              [form]="form"
+              [items]="control.children"
+              [collapsible]="control.collapsible"
+              [title]="control.title"
+              [width]="control.width"
+              (onSelect)="onSelectItems($event)">
+            </app-dynamic-form-group>
+          </ng-container>
+        </div>
+      </ng-container>
     </ng-container>
   </div>
 </fieldset>

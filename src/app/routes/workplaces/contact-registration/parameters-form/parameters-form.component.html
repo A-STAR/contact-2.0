@@ -1,4 +1,4 @@
-<app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
+<app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
 
 <h4>{{ 'modules.contactRegistration.parametersForm.attributesTitle' | translate }}</h4>
 <p-treeTable selectionMode="none" [value]="attributes">

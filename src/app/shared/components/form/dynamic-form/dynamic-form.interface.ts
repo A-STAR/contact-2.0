@@ -15,13 +15,15 @@ export interface IValidationMessages {
 export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 
 export interface IDynamicFormGroup {
-  children: Array<IDynamicFormItem>;
+  display?: boolean;
+  children: IDynamicFormItem[];
   collapsible?: boolean;
   title?: string;
   width?: number;
 }
 
 export interface IDynamicFormControl {
+  display?: boolean;
   children?: IDynamicFormControl[];
   controlName?: string;
   displayTime?: boolean;
