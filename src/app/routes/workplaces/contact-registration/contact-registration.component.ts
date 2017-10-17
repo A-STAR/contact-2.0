@@ -6,8 +6,6 @@ import { ContactRegistrationService } from './contact-registration.service';
 
 import { MenuItem } from 'primeng/primeng';
 
-import { isEmpty } from '../../../core/utils';
-
 @Component({
   selector: 'app-contact-registration',
   templateUrl: './contact-registration.component.html',
@@ -18,8 +16,8 @@ export class ContactRegistrationComponent {
   static COMPONENT_NAME = 'ContactRegistrationComponent';
 
   steps: MenuItem[] = [
-    { label: 'Step 1' },
-    { label: 'Step 2' },
+    { label: null },
+    { label: null },
   ]
 
   debtId = Number(this.routeParams.debtId);

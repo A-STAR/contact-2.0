@@ -145,6 +145,16 @@
       "removeValue": "Delete value"
     }
   },
+  "modules": {
+    "contactRegistration": {
+      "outcomeForm": {
+        "template": "Scenario",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "comment": "Comments"
+      }
+    }
+  },
   "login": {
     "please_authenticate": "Please, authenticate",
     "login_placeholder": "Login",

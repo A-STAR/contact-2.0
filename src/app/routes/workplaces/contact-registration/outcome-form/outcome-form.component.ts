@@ -40,9 +40,9 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   controls: IDynamicFormControl[] = [
     { label: labelKey('template'), controlName: 'template', type: 'textarea', rows: 3, disabled: true },
-    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [] },
+    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [], disabled: true },
     { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
-    { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3 },
+    { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3, disabled: true },
   ];
   data = {};
   nodes: ITreeNode[];
@@ -83,11 +83,12 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 
     this.selectedNodeSubscription = this.selectedNode$
-      .filter(selectedNode => selectedNode && isEmpty(selectedNode.children))
       .flatMap(selectedNode => {
-        return this.contactRegistrationService
-          .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
-          .catch(() => Observable.of(null));
+        return selectedNode && isEmpty(selectedNode.children)
+          ? this.contactRegistrationService
+            .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
+            .catch(() => Observable.of(null))
+          : Observable.of(null);
       })
       .subscribe(template => this.updateData('template', template));
   }
@@ -98,20 +99,22 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onNodeSelect(event: { node: ITreeNode }): void {
-    this.selectedNode$.next(event.node);
+    const { node } = event;
 
-    if ([2, 3].includes(event.node.data.commentMode)) {
-      this.disableField('comment');
-    } else {
+    this.selectedNode$.next(node);
+
+    if ([2, 3].includes(node.data.commentMode) && isEmpty(node.children)) {
       this.enableField('comment');
+    } else {
+      this.disableField('comment');
     }
 
-    if (event.node.data.autoCommentIds) {
-      this.disableField('autoCommentId');
-      this.disableField('autoComment');
-    } else {
+    if (node.data.autoCommentIds && isEmpty(node.children)) {
       this.enableField('autoCommentId');
       this.enableField('autoComment');
+    } else {
+      this.disableField('autoCommentId');
+      this.disableField('autoComment');
     }
   }
 

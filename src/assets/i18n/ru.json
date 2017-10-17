@@ -145,6 +145,16 @@
       "removeValue": "Удалить значение"
     }
   },
+  "modules": {
+    "contactRegistration": {
+      "outcomeForm": {
+        "template": "Сценарий разговора",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "comment": "Комментарий для ввода"
+      }
+    }
+  },
   "login": {
     "please_authenticate": "Пожалуйста, авторизуйтесь",
     "login_placeholder": "Логин",
