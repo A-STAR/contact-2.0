@@ -1,5 +1,5 @@
 <div class="mb">
-  <p-steps [model]="steps" [(activeIndex)]="step" [readonly]="false"></p-steps>
+  <p-steps [model]="steps" [(activeIndex)]="step" [readonly]="isInvalid$ | async"></p-steps>
 </div>
 
 <div [hidden]="step != 0">

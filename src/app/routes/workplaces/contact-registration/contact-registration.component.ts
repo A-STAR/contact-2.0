@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+import { ContactRegistrationService } from './contact-registration.service';
 
 import { MenuItem } from 'primeng/primeng';
+
+import { isEmpty } from '../../../core/utils';
 
 @Component({
   selector: 'app-contact-registration',
@@ -17,14 +22,27 @@ export class ContactRegistrationComponent {
     { label: 'Step 2' },
   ]
 
-  step = 0;
-
   debtId = this.routeParams.debtId;
   contactTypeCode = this.routeParams.contactTypeCode;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private contactRegistrationService: ContactRegistrationService,
+    private route: ActivatedRoute,
+  ) {}
 
   get routeParams(): any {
     return (this.route.params as any).value;
+  }
+
+  get step(): number {
+    return this.contactRegistrationService.step;
+  }
+
+  set step(step: number) {
+    this.contactRegistrationService.step = step;
+  }
+
+  get isInvalid$(): Observable<boolean> {
+    return this.contactRegistrationService.isInvalid$;
   }
 }

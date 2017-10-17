@@ -7,6 +7,7 @@ import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode
 import { DataService } from '../../../core/data/data.service';
 // import { NotificationsService } from '../../../core/notifications/notifications.service';
 
+import { isEmpty } from '../../../core/utils';
 import { toTreeNodes } from '../../../core/utils/tree';
 
 @Injectable()
@@ -16,7 +17,12 @@ export class ContactRegistrationService {
     // private notificationsService: NotificationsService,
   ) {}
 
+  step = 0;
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+
+  get isInvalid$(): Observable<boolean> {
+    return this.selectedNode$.map(node => !(node && isEmpty(node.children)));
+  }
 
   fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';

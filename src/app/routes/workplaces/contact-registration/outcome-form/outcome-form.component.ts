@@ -46,8 +46,8 @@ export class OutcomeFormComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
-      .subscribe(autoCommentId => {
-        this.controls.find(control => control.controlName === 'autoCommentId').options = autoCommentId;
+      .subscribe(autoCommentOptions => {
+        this.controls.find(control => control.controlName === 'autoCommentId').options = autoCommentOptions;
         this.cdRef.markForCheck();
       });
     this.fetchNodes();
