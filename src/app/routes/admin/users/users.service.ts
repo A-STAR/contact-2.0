@@ -11,12 +11,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Injectable()
 export class UsersService {
-  static USER_FETCH           = 'USER_FETCH';
-  static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
-  static USER_CREATE          = 'USER_CREATE';
-  static USER_UPDATE          = 'USER_UPDATE';
-  static USER_UPDATE_PHOTO    = 'USER_UPDATE_PHOTO';
-  static USER_UPDATE_SUCCESS  = 'USER_UPDATE_SUCCESS';
   static USER_SELECT          = 'USER_SELECT';
   static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
 
@@ -38,20 +32,37 @@ export class UsersService {
       .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').dispatchCallback());
   }
 
-  fetchOne(userId: number): void {
-    this.dispatchAction(UsersService.USER_FETCH, { userId });
+  fetchOne(id: number): Observable<IUser> {
+    return this.dataService.read('/users/{id}', { id })
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.singular').dispatchCallback());
   }
 
-  create(user: IUser, photo: File | false): void {
-    this.dispatchAction(UsersService.USER_CREATE, { user, photo });
+  create(user: IUser, photo: File | false): Observable<any> {
+    return Observable.combineLatest(
+      this.dataService.create('/users', {}, user),
+      !photo && photo !== false ? Observable.of(null) : this.updatePhoto(user.id, photo)
+    ).catch(this.notificationsService.error('errors.default.create').entity('entities.users.gen.singular').dispatchCallback());
   }
 
-  update(user: IUser, photo: File | false, userId: number): void {
-    this.dispatchAction(UsersService.USER_UPDATE, { user, photo, userId });
+  update(user: IUser, photo: File | false, userId: number): Observable<any> {
+    return Observable.combineLatest(
+      this.dataService.update('/users/{userId}', { userId }, user),
+      !photo && photo !== false ? Observable.of(null) : this.updatePhoto(userId, photo)
+    ).catch(this.notificationsService.error('errors.default.update').entity('entities.users.gen.singular').dispatchCallback());
   }
 
   select(userId: number): void {
     this.dispatchAction(UsersService.USER_SELECT, { userId });
+  }
+
+  createPhoto(userId: number, photo: File): Observable<any> {
+    const data = new FormData();
+    data.append('file', photo);
+    return this.dataService.create('/users/{userId}/photo', { userId }, data);
+  }
+
+  deletePhoto(userId: number): Observable<any> {
+    return this.dataService.delete('/users/{userId}/photo', { userId });
   }
 
   toggleInactiveFilter(): void {
@@ -60,5 +71,9 @@ export class UsersService {
 
   private dispatchAction(type: string, payload: object = {}): void {
     return this.store.dispatch({ type, payload });
+  }
+
+  private updatePhoto(userId: number, photo: File | false): Observable<any> {
+    return photo === false ? this.deletePhoto(userId) : this.createPhoto(userId, photo);
   }
 }

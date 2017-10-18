@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
@@ -40,7 +39,6 @@ export class UserEditComponent {
   private permissions: IUserEditPermissions;
 
   constructor(
-    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
@@ -50,15 +48,6 @@ export class UserEditComponent {
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
   ) {
-    if (this.userId) {
-      this.usersService.fetchOne(this.userId);
-    }
-
-    this.actions.ofType(UsersService.USER_UPDATE_SUCCESS)
-      .take(1)
-      .do(() => this.onClose())
-      .subscribe();
-
     Observable.combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
       this.userPermissionsService.has('USER_ROLE_EDIT'),
@@ -68,9 +57,7 @@ export class UserEditComponent {
       this.userConstantsService.get('UserPhoto.MaxSize'),
       this.lookupService.languageOptions,
       this.lookupService.roleOptions,
-      this.userId
-        ? this.actions.ofType(UsersService.USER_FETCH_SUCCESS).map(action => action.payload.user)
-        : Observable.of(null),
+      this.userId ? this.usersService.fetchOne(this.userId) : Observable.of(null),
       (canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user) =>
         ({ canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user })
     )
@@ -113,11 +100,13 @@ export class UserEditComponent {
 
     const { image, ...user } = this.form.requestValue;
 
+    let operation: Observable<IUser> = null;
     if (this.userId) {
-      this.usersService.update(user, image, this.userId);
+      operation = this.usersService.update(user, image, this.userId);
     } else {
-      this.usersService.create(user, image);
+      operation = this.usersService.create(user, image);
     }
+    operation.subscribe(() => this.onClose());
   }
 
   onClose(): void {
