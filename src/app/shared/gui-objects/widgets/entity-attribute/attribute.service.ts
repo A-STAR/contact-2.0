@@ -11,7 +11,7 @@ export class AttributeService {
   static MESSAGE_ATTRIBUTE_SAVED = 'MESSAGE_ATTRIBUTE_SAVED';
 
   private errorMessage = 'entities.attribute.gen';
-  private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/attributes'
+  private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/attributes';
 
   constructor(
     private dataService: DataService,

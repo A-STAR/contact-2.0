@@ -21,4 +21,4 @@ export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action
     default:
       return state;
   }
-};
+}

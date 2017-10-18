@@ -5,7 +5,7 @@ export interface IPerson {
   birthDate?: string | Date;
   firstName?: string;
   middleName?: string;
-  lastName?: string,
+  lastName?: string;
   type?: number;
   reward?: number;
   debtId?: number;

@@ -121,7 +121,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.debt = debt;
       this.person = person;
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
       this.columns = this.gridService.setRenderers(filteredColumns);
       this.cdRef.markForCheck();
@@ -185,7 +185,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       personId: this.personId,
       personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
-    }
+    };
     this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
   }
 

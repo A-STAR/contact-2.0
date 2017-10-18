@@ -27,4 +27,4 @@ export interface ICondition {
 
 export interface IMetadata {
   fields: Array<IField>;
-};
+}

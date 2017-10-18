@@ -33,4 +33,4 @@ export function actionsLogReducer(state: IActionsLogState = defaultState, action
     default:
       return state;
   }
-};
+}

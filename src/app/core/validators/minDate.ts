@@ -5,4 +5,4 @@ export const minDate = (minValue: Date): ValidatorFn => {
     const value = control.value as Date;
     return value && value <= minValue ? { min: { minValue } } : null;
   };
-}
+};

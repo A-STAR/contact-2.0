@@ -18,4 +18,4 @@ export function userPermissionsReducer(state: IUserPermissionsState = defaultSta
     default:
       return state;
   }
-};
+}

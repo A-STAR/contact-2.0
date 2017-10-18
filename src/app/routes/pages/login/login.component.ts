@@ -36,7 +36,6 @@ export class LoginComponent {
     return (control.dirty || control.touched);
   }
 
-  control
   submitForm(event: UIEvent, value: any): void {
     event.preventDefault();
 

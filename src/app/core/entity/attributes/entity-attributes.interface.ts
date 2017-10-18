@@ -17,5 +17,5 @@ export interface IEntityAttributesState {
   [key: number]: {
     attribute: IEntityAttribute;
     status: EntityAttributesStatusEnum;
-  }
+  };
 }

@@ -69,7 +69,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
     this._masterRoleSubscription = this.actions
       .ofType(PermissionsService.ROLE_SELECTED, PermissionsService.ROLE_FETCH_SUCCESS)
       .subscribe(action => {
-        const { role } = action.payload
+        const { role } = action.payload;
         this.masterRoleId$.next(role ? role.id : null);
         this.cdRef.markForCheck();
         this.fetch();

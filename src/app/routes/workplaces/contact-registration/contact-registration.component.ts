@@ -15,7 +15,7 @@ export class ContactRegistrationComponent {
   steps: MenuItem[] = [
     { label: 'Step 1' },
     { label: 'Step 2' },
-  ]
+  ];
 
   step = 0;
 

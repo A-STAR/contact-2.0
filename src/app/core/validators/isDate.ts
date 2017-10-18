@@ -6,4 +6,4 @@ export const isDate: ValidatorFn = control => {
     : Object.prototype.toString.call(control.value) !== '[object Date]'
       ? { isDate: false }
       : null;
-}
+};

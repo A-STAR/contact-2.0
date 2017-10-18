@@ -13,7 +13,7 @@ export interface IUserTemplates {
   [key: string]: {
     templates: IUserTemplate[];
     status: TemplateStatusEnum;
-  }
+  };
 }
 
 export interface IUserTemplatesState {
