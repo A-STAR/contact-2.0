@@ -6,12 +6,12 @@
     <i class="caret"></i>
   </div>
   <div #dropdownContent style="z-index: 10000;">
-    <app-single-list
+    <app-multi-list
       [hideSearchBar]="true"
       [getId]="getId"
       [getName]="getName"
       [items]="options"
       (select)="onSelect($event)">
-    </app-single-list>
+    </app-multi-list>
   </div>
 </div>

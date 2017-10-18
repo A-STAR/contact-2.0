@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: [ './list.component.scss' ],
+  selector: 'app-single-list',
+  templateUrl: './single-list.component.html',
+  styleUrls: [ './single-list.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent<T> {
+export class SingleListComponent<T> {
   @Input() items: T[];
   @Input() height = 120;
   @Input() hideSearchBar = false;

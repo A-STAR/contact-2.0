@@ -185,6 +185,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
       case 'select':
+      case 'selectwrapper':
         if (['nameTranslations', 'translatedName'].includes(control.controlName) || !Array.isArray(value)) {
           return value;
         }
