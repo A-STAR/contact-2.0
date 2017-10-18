@@ -1,32 +1,34 @@
 <app-accordion>
-  <app-accordion-item title="modules.contactRegistration.outcome.title">
+  <app-accordion-item [title]="'modules.contactRegistration.outcome.title'">
     <app-contact-registration-outcome
       [debtId]="debtId"
       [contactTypeCode]="contactTypeCode">
     </app-contact-registration-outcome>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.promise.title">
-    <app-contact-registration-promise></app-contact-registration-promise>
+  <app-accordion-item [title]="'modules.contactRegistration.promise.title'">
+    <app-contact-registration-promise
+      [debtId]="debtId">
+    </app-contact-registration-promise>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.payment.title">
+  <app-accordion-item [title]="'modules.contactRegistration.payment.title'">
     <app-contact-registration-payment></app-contact-registration-payment>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.phone.title">
+  <app-accordion-item [title]="'modules.contactRegistration.phone.title'">
     <app-contact-registration-phone></app-contact-registration-phone>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.attachment.title">
+  <app-accordion-item [title]="'modules.contactRegistration.attachment.title'">
     <app-contact-registration-attachment></app-contact-registration-attachment>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.misc.title">
+  <app-accordion-item [title]="'modules.contactRegistration.misc.title'">
     <app-contact-registration-misc></app-contact-registration-misc>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.attributes.title">
+  <app-accordion-item [title]="'modules.contactRegistration.attributes.title'">
     <app-contact-registration-attributes
       [debtId]="debtId"
       [contactTypeCode]="contactTypeCode">
     </app-contact-registration-attributes>
   </app-accordion-item>
-  <app-accordion-item title="modules.contactRegistration.comment.title">
+  <app-accordion-item [title]="'modules.contactRegistration.comment.title'">
     <app-contact-registration-comment></app-contact-registration-comment>
   </app-accordion-item>
 </app-accordion>
