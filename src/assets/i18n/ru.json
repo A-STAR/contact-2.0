@@ -147,59 +147,58 @@
   },
   "modules": {
     "contactRegistration": {
-      "outcomeForm": {
+      "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
         "comment": "Комментарий для ввода"
       },
-      "parametersForm": {
-        "promise": {
-          "title": "Регистрация обещания",
-          "date": "Дата",
-          "amount": "Сумма",
-          "percentage": "Процент от остатка"
-        },
-        "payment": {
-          "title": "Регистрация неподтвержденного платежа",
-          "date": "Дата",
-          "amount": "Сумма",
-          "currencyId": "Валюта",
-          "percentage": "Процент от остатка"
-        },
-        "nextCallDateTimeTitle": "Ввод даты повторного звонка",
-        "nextCallDateTime": "Дата повторного звонка",
-        "commentTitle": "Ввод комментария",
+      "promise": {
+        "title": "Регистрация обещания",
+        "date": "Дата",
+        "amount": "Сумма",
+        "percentage": "Процент от остатка"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Дата",
+        "amount": "Сумма",
+        "currencyId": "Валюта",
+        "percentage": "Процент от остатка"
+      },
+      "comment": {
+        "title": "Ввод комментария",
+        "comment": "Комментарий"
+      },
+      "phone": {
+        "title": "Ввод нового номера должника",
+        "typeCode": "Тип",
+        "phoneNumber": "Номер телефона",
+        "stopAutoSms": "Не отправлять автоматические SMS",
+        "stopAutoInfo": "Запретить голосовое информирование",
+        "comment": "Комментарий"
+      },
+      "attachment": {
+        "title": "Прикрепление файла",
+        "docTypeCode": "Тип",
+        "docName": "Название",
+        "docNumber": "Номер",
         "comment": "Комментарий",
-        "autoCommentTitle": "Ввод автокомментария",
+        "file": "Выберите файл"
+      },
+      "attributes": {
+        "title": "Дополнительные атрибуты"
+      },
+      "misc": {
+        "title": "Дополнительно",
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
-        "phone": {
-          "title": "Ввод нового номера должника",
-          "typeCode": "Тип",
-          "phoneNumber": "Номер телефона",
-          "stopAutoSms": "Не отправлять автоматические SMS",
-          "stopAutoInfo": "Запретить голосовое информирование",
-          "comment": "Комментарий"
-        },
-        "debtReasonCodeTitle": "Ввод причины возникновения задолженности",
-        "debtReasonCode": "Причина возникновения задолженности",
-        "refusalReasonCodeTitle": "Регистрация отказа от оплаты",
-        "refusalReasonCode": "Регистрация отказа от оплаты",
-        "fileAttach": {
-          "title": "Прикрепление файла",
-          "docTypeCode": "Тип",
-          "docName": "Название",
-          "docNumber": "Номер",
-          "comment": "Комментарий",
-          "file": "Выберите файл"
-        },
-        "callReasonCodeTitle": "Ввод причины звонка",
         "callReasonCode": "Причина звонка",
-        "statusReasonCodeTitle": "Ввод причины смены статуса на пользовательский",
-        "statusReasonCode": "Причина смены статуса на пользовательский",
-        "attributesTitle": "Дополнительные атрибуты"
+        "debtReasonCode": "Причина возникновения задолженности",
+        "nextCallDateTime": "Дата повторного звонка",
+        "refusalReasonCode": "Причина отказа от оплаты",
+        "statusReasonCode": "Причина смены статуса на пользовательский"
       }
     }
   },

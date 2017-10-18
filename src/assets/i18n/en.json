@@ -147,59 +147,58 @@
   },
   "modules": {
     "contactRegistration": {
-      "outcomeForm": {
+      "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",
         "comment": "Comments"
       },
-      "parametersForm": {
-        "promise": {
-          "title": "Promise Registration",
-          "date": "Date",
-          "amount": "Amount",
-          "percentage": "Remainder Percentage"
-        },
-        "payment": {
-          "title": "Регистрация неподтвержденного платежа",
-          "date": "Date",
-          "amount": "Amount",
-          "currencyId": "Currency",
-          "percentage": "Remainder Percentage"
-        },
-        "nextCallDateTimeTitle": "Next Call Date",
-        "nextCallDateTime": "Next Call Date",
-        "commentTitle": "Comments",
+      "promise": {
+        "title": "Promise Registration",
+        "date": "Date",
+        "amount": "Amount",
+        "percentage": "Remainder Percentage"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Date",
+        "amount": "Amount",
+        "currencyId": "Currency",
+        "percentage": "Remainder Percentage"
+      },
+      "comment": {
+        "title": "Comments",
+        "comment": "Comments"
+      },
+      "phone": {
+        "title": "New Debtor Phone Number",
+        "typeCode": "Type",
+        "phoneNumber": "Phone Number",
+        "stopAutoSms": "Disable Auto SMS",
+        "stopAutoInfo": "Disable Audo Voicemail",
+        "comment": "Comments"
+      },
+      "attachment": {
+        "title": "File Attachment",
+        "docTypeCode": "Type",
+        "docName": "Name",
+        "docNumber": "Number",
         "comment": "Comments",
-        "autoCommentTitle": "Auto Comments",
+        "file": "Select File"
+      },
+      "attributes": {
+        "title": "Additional Attributes"
+      },
+      "misc": {
+        "title": "Misc",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",
-        "phone": {
-          "title": "New Debtor Phone Number",
-          "typeCode": "Type",
-          "phoneNumber": "Phone Number",
-          "stopAutoSms": "Disable Auto SMS",
-          "stopAutoInfo": "Disable Audo Voicemail",
-          "comment": "Comments"
-        },
-        "debtReasonCodeTitle": "Reason for Debt",
-        "debtReasonCode": "Reason for Debt",
-        "refusalReasonCodeTitle": "Reason for Refusal",
-        "refusalReasonCode": "Reason for Refusal",
-        "fileAttach": {
-          "title": "File Attachment",
-          "docTypeCode": "Type",
-          "docName": "Name",
-          "docNumber": "Number",
-          "comment": "Comments",
-          "file": "Select File"
-        },
-        "callReasonCodeTitle": "Reason for Call",
         "callReasonCode": "Reason for Call",
-        "statusReasonCodeTitle": "Reason for Status Change",
-        "statusReasonCode": "Reason for Status Change",
-        "attributesTitle": "Attributes"
+        "debtReasonCode": "Reason for Debt",
+        "nextCallDateTime": "Next Call Date",
+        "refusalReasonCode": "Reason for Refusal",
+        "statusReasonCode": "Reason for Status Change"
       }
     }
   },
