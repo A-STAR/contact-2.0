@@ -121,7 +121,7 @@ export class ContentTabService {
     this.lastTabEvent = {
       timestamp: Date.now(),
       stage: TabEventStageEnum.NAVIGATION_START
-    }
+    };
   }
 
   private onSectionLoadEnd(event: NavigationEnd): void {

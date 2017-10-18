@@ -122,7 +122,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(employment: IEmployment): void {
-    this.selectedEmployment$.next(employment)
+    this.selectedEmployment$.next(employment);
   }
 
   onRemove(): void {

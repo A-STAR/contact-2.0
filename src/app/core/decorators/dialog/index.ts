@@ -27,26 +27,26 @@ export function Dialog(): any {
       const C: any = function (): any {
         this.dialog = null;
         return constructor.apply(this, args);
-      }
+      };
 
       C.prototype = constructor.prototype;
 
       C.prototype.setDialog = function(dialog: string): void {
         this.dialog = dialog;
-      }
+      };
       C.prototype.isDialog = function(dialog: string): boolean {
         return this.dialog === dialog;
-      }
+      };
       C.prototype.closeDialog = function(): boolean {
         return this.dialog = null;
-      }
+      };
 
       return new C();
     }
 
     const F: any = function (...args: any[]): any {
       return construct(original, args);
-    }
+    };
 
     F.prototype = original.prototype;
 

@@ -36,4 +36,4 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
     default:
       return state;
   }
-};
+}

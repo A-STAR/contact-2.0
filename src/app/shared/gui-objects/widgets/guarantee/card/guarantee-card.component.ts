@@ -78,7 +78,6 @@ export class GuaranteeCardComponent {
 
   onGuarantorChanged(guarantor: IGuarantor): void {
     this.personId = guarantor.id;
-    console.log(guarantor);
   }
 
   onBack(): void {

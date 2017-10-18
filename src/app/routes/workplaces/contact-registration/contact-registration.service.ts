@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../core/data/data.service';
-// import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 import { toTreeNodes } from '../../../core/utils/tree';
 
@@ -13,7 +12,6 @@ import { toTreeNodes } from '../../../core/utils/tree';
 export class ContactRegistrationService {
   constructor(
     private dataService: DataService,
-    // private notificationsService: NotificationsService,
   ) {}
 
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
@@ -22,7 +20,7 @@ export class ContactRegistrationService {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
       .readAll(url, { debtId, contactType, treeResultId })
-      .map(toTreeNodes(true, true))
+      .map(toTreeNodes(true, true));
   }
 
   fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {

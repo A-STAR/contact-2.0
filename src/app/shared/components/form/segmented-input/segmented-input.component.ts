@@ -53,7 +53,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
     this._value = {
       ...(this._value || { value: '' }),
       name: option.name
-    }
+    };
     this.propagateChange(this._value);
     this.dropdown.close();
   }
@@ -62,7 +62,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
     this._value = {
       ...this._value,
       value,
-    }
+    };
     this.propagateChange(this._value);
   }
 

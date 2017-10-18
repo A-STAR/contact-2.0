@@ -36,4 +36,4 @@ export function constantsReducer(
     default:
       return state;
   }
-};
+}
