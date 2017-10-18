@@ -28,11 +28,11 @@ import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
 const labelKey = makeKey('modules.contactRegistration.outcomeForm')
 
 @Component({
-  selector: 'app-outcome-form',
-  templateUrl: './outcome-form.component.html',
+  selector: 'app-contact-registration-outcome',
+  templateUrl: './outcome.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutcomeFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() debtId: number;
   @Input() contactTypeCode: number;
 

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from './contact-registration.service';
 
-import { MenuItem } from 'primeng/primeng';
+// import { MenuItem } from 'primeng/primeng';
 
 @Component({
   selector: 'app-contact-registration',
@@ -15,10 +15,10 @@ import { MenuItem } from 'primeng/primeng';
 export class ContactRegistrationComponent {
   static COMPONENT_NAME = 'ContactRegistrationComponent';
 
-  steps: MenuItem[] = [
-    { label: null },
-    { label: null },
-  ]
+  // steps: MenuItem[] = [
+  //   { label: null },
+  //   { label: null },
+  // ]
 
   debtId = Number(this.routeParams.debtId);
   contactTypeCode = Number(this.routeParams.contactTypeCode);

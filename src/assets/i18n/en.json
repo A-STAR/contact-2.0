@@ -148,6 +148,7 @@
   "modules": {
     "contactRegistration": {
       "outcomeForm": {
+        "title": "Contact Outcome",
         "template": "Scenario",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",

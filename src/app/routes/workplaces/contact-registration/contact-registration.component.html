@@ -1,3 +1,52 @@
+<app-accordion>
+  <app-accordion-item title="modules.contactRegistration.outcomeForm.title">
+    <app-contact-registration-outcome
+      [debtId]="debtId"
+      [contactTypeCode]="contactTypeCode">
+    </app-contact-registration-outcome>
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.promise.title">
+    <app-contact-registration-promise></app-contact-registration-promise>
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.payment.title">
+    Step 3 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.nextCallDateTimeTitle">
+    Step 4 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.commentTitle">
+    Step 5 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.autoCommentTitle">
+    Step 6 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.phone.title">
+    Step 7 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.debtReasonCodeTitle">
+    Step 8 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.refusalReasonCodeTitle">
+    Step 9 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.fileAttach.title">
+    Step 10 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.callReasonCodeTitle">
+    Step 11 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.statusReasonCodeTitle">
+    Step 12 contents
+  </app-accordion-item>
+  <app-accordion-item title="modules.contactRegistration.parametersForm.attributesTitle">
+    <app-contact-registration-attributes
+      [debtId]="debtId"
+      [contactTypeCode]="contactTypeCode">
+    </app-contact-registration-attributes>
+  </app-accordion-item>
+</app-accordion>
+
+<!--
 <div class="mb">
   <p-steps [model]="steps" [(activeIndex)]="step" [readonly]="isInvalid$ | async"></p-steps>
 </div>
@@ -15,3 +64,4 @@
     [contactTypeCode]="contactTypeCode">
   </app-parameters-form>
 </div>
+-->

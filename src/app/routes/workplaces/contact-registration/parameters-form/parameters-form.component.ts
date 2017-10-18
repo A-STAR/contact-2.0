@@ -46,6 +46,8 @@ export class ParametersFormComponent implements OnInit {
       this.promiseService.getPromiseLimit(this.debtId),
     )
     .subscribe(([ debt, limit ]) => {
+      console.log(debt);
+      console.log(limit);
       this.controls = this.buildControls(debt, limit);
     });
 

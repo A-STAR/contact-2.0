@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
+import { TreeTableModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { OutcomeFormComponent } from './outcome-form.component';
+import { PromiseComponent } from './promise.component';
 
 @NgModule({
   imports: [
     SharedModule,
+    TreeTableModule,
   ],
   exports: [
-    OutcomeFormComponent,
+    PromiseComponent,
   ],
   declarations: [
-    OutcomeFormComponent,
+    PromiseComponent,
   ],
 })
-export class OutcomeFormModule {}
+export class PromiseModule {}

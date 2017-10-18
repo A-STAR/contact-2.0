@@ -148,6 +148,7 @@
   "modules": {
     "contactRegistration": {
       "outcomeForm": {
+        "title": "Выбор исхода",
         "template": "Сценарий разговора",
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
