@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
@@ -40,6 +40,7 @@ export class AttributesComponent implements OnInit {
         code: row.data.code
       })),
     }
+    console.log(data);
   }
 
   private get selectedContact(): any {

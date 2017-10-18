@@ -80,10 +80,6 @@ export class ParametersFormComponent implements OnInit {
     return this.contactRegistrationService.selectedNode$.value.data;
   }
 
-  private getControl(index: number, name: string): IDynamicFormControl {
-    return (this.controls[index].children as IDynamicFormControl[]).find(item => item.controlName === name);
-  }
-
   private buildControls(debt: IDebt, limit: IPromiseLimit): IDynamicFormItem[] {
     const { promiseMode } = this.selectedContact;
     return [
