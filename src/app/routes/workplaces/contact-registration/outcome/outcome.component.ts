@@ -25,7 +25,7 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 
 import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.outcome')
+const labelKey = makeKey('modules.contactRegistration.outcome');
 
 @Component({
   selector: 'app-contact-registration-outcome',
@@ -78,7 +78,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
             return this.contactRegistrationService
               .fetchAutoComment(this.debtId, personId, 1, templateId)
               .catch(() => Observable.of(null));
-          })
+          });
       })
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 

@@ -39,7 +39,7 @@ export class AttributesComponent implements OnInit {
         ...getValue(row.data.typeCode, getRawValue(row.data)),
         code: row.data.code
       })),
-    }
+    };
     console.log(data);
   }
 
