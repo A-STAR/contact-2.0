@@ -1413,6 +1413,10 @@
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
       },
+      "upload": {
+        "403": "You don't have permissions to upload {{ entity }}",
+        "*": "Could not upload {{ entity }}"
+      },
       "delete": {
         "403": "You don't have permissions to delete {{ entity }}",
         "*": "Could not delete {{ entity }}"

@@ -39,30 +39,50 @@ export class UsersService {
 
   create(user: IUser, photo: File | false): Observable<any> {
     return Observable.combineLatest(
-      this.dataService.create('/users', {}, user),
+      this.createUser(user),
       !photo && photo !== false ? Observable.of(null) : this.updatePhoto(user.id, photo)
-    ).catch(this.notificationsService.error('errors.default.create').entity('entities.users.gen.singular').dispatchCallback());
+    );
   }
 
   update(user: IUser, photo: File | false, userId: number): Observable<any> {
     return Observable.combineLatest(
-      this.dataService.update('/users/{userId}', { userId }, user),
+      this.updateUser(userId, user),
       !photo && photo !== false ? Observable.of(null) : this.updatePhoto(userId, photo)
-    ).catch(this.notificationsService.error('errors.default.update').entity('entities.users.gen.singular').dispatchCallback());
+    );
   }
 
   select(userId: number): void {
     this.dispatchAction(UsersService.USER_SELECT, { userId });
   }
 
+  createUser(user: IUser): Observable<any> {
+    return this.dataService.create('/users', {}, user)
+      .catch(this.notificationsService.error('errors.default.create').entity('entities.users.gen.singular').dispatchCallback());
+  }
+
+  updateUser(userId: number, user: IUser): Observable<any> {
+    return this.dataService.update('/users/{userId}', { userId }, user)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.users.gen.singular').dispatchCallback());
+  }
+
   createPhoto(userId: number, photo: File): Observable<any> {
     const data = new FormData();
     data.append('file', photo);
-    return this.dataService.create('/users/{userId}/photo', { userId }, data);
+    return this.dataService.create('/users/{userId}/photo', { userId }, data)
+      .catch(this.notificationsService
+        .error('errors.default.upload')
+        .entity('entities.users.photos.gen.singular')
+        .dispatchCallback()
+      );
   }
 
   deletePhoto(userId: number): Observable<any> {
-    return this.dataService.delete('/users/{userId}/photo', { userId });
+    return this.dataService.delete('/users/{userId}/photo', { userId })
+      .catch(this.notificationsService
+        .error('errors.default.delete')
+        .entity('entities.users.photos.gen.singular')
+        .dispatchCallback()
+      );
   }
 
   toggleInactiveFilter(): void {
