@@ -39,6 +39,7 @@ export interface IDynamicFormControl {
   readonly?: boolean;
   required?: boolean;
   type: ControlTypes;
+  onChange?: (value: any) => void;
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;

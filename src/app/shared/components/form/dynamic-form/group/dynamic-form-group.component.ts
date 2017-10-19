@@ -73,4 +73,8 @@ export class DynamicFormGroupComponent {
   onSelectItems(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
   }
+
+  trackByFn(index: number): number {
+    return index;
+  }
 }

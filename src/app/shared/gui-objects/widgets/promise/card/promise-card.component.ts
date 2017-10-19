@@ -17,7 +17,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { min } from '../../../../../core/validators';
+import { minStrict } from '../../../../../core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +51,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       type: 'number',
       required: true,
       markAsDirty: true,
-      validators: [min(0)]
+      validators: [minStrict(0)]
     },
     {
       label: 'widgets.promise.grid.receiveDateTime',

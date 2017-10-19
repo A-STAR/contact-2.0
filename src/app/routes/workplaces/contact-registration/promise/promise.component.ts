@@ -13,8 +13,8 @@ import { PromiseService } from '../../../../shared/gui-objects/widgets/promise/p
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { min, max } from '../../../../core/validators';
-import { isEmpty, makeKey } from '../../../../core/utils';
+import { minStrict, max } from '../../../../core/validators';
+import { isEmpty, makeKey, round } from '../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.promise');
 
@@ -52,18 +52,6 @@ export class PromiseComponent implements OnInit {
         }
         this.controls = this.buildControls(promiseMode, debt, limit);
         this.cdRef.detectChanges();
-        // TODO(d.maltsev): subscription
-        // this.form.onCtrlValueChange('amount').subscribe(amount => {
-        //   console.log('amount = ' + amount);
-        //   this.data = { ...this.data, percentage: 50 };
-        //   this.cdRef.markForCheck();
-        // });
-        // TODO(d.maltsev): subscription
-        // this.form.onCtrlValueChange('percentage').subscribe(percentage => {
-        //   console.log('percentage = ' + percentage);
-        //   this.data = { ...this.data, amount: 5000 };
-        //   this.cdRef.markForCheck();
-        // });
       } else {
         this.controls = null;
       }
@@ -76,13 +64,50 @@ export class PromiseComponent implements OnInit {
     const maxDate = limit.maxDays == null
       ? null
       : moment().add(limit.maxDays, 'day').toDate();
-    const amountValidators = promiseMode === 2
-      ? [ min(limit.minAmountPercent * debt.debtAmount / 100), max(debt.debtAmount) ]
-      : null;
     return [
-      { controlName: 'date', type: 'datepicker', minDate, maxDate },
-      { controlName: 'amount', type: 'number', disabled: promiseMode === 3, validators: amountValidators },
-      { controlName: 'percentage', type: 'number', disabled: promiseMode === 3 },
+      {
+        controlName: 'date',
+        type: 'datepicker',
+        minDate,
+        maxDate
+      },
+      {
+        controlName: 'amount',
+        type: 'number',
+        validators: [
+          minStrict(promiseMode === 2 ? limit.minAmountPercent * debt.debtAmount / 100.0 : 0),
+          max(debt.debtAmount),
+        ],
+        disabled: promiseMode === 3,
+        onChange: event => this.onAmountChange(event, debt.debtAmount)
+      },
+      {
+        controlName: 'percentage',
+        type: 'number',
+        validators: [
+          minStrict(promiseMode === 2 ? limit.minAmountPercent : 0),
+          max(100),
+        ],
+        disabled: promiseMode === 3,
+        onChange: event => this.onPercentageChange(event, debt.debtAmount)
+      },
     ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
+  }
+
+  private onAmountChange(event: Event, total: number): void {
+    const { value } = event.target as HTMLInputElement;
+    const amount = Number(value);
+    this.setAmount(amount, 100.0 * amount / total);
+  }
+
+  private onPercentageChange(event: Event, total: number): void {
+    const { value } = event.target as HTMLInputElement;
+    const percentage = Number(value);
+    this.setAmount(total * percentage / 100.0, percentage);
+  }
+
+  private setAmount(amount: number, percentage: number): void {
+    this.data = { ...this.data, amount: round(amount, 2) || null, percentage: round(percentage, 2) || null };
+    this.cdRef.markForCheck();
   }
 }
