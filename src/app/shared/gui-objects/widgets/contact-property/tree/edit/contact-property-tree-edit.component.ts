@@ -144,7 +144,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
-      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }))
+      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }));
     const data = {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
@@ -202,22 +202,22 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_1,
       required: dict1Attributes.isMandatory,
-    }
+    };
     const dict2 = {
       dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_2,
       type: 'selectwrapper',
       required: dict2Attributes.isMandatory,
-    }
+    };
     const dict3 = {
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_3,
       required: dict3Attributes.isMandatory,
-    }
+    };
     const dict4 = {
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_4,
       required: dict4Attributes.isMandatory,
-    }
+    };
 
     const templateInputOptions = {
       segmentedInputOptions: [

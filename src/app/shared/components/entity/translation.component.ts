@@ -67,7 +67,7 @@ export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implem
     return controls.filter(control => {
         return this.isEditMode()
         ? this.nameControlName !== control.controlName
-        : ![this.translatedControlName, this.displayControlName].includes(control.controlName)
+        : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
     });
   }
 

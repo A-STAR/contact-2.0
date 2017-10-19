@@ -274,7 +274,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
       document.execCommand('copy');
       body.removeChild(copyFrom);
-    }
+    };
 
     const formattedData = prop
       ? data

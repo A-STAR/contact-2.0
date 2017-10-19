@@ -5,4 +5,4 @@ export const max = (maxValue: number): ValidatorFn => {
     const value = Number(control.value);
     return typeof value === 'number' && value >= maxValue ? { max: { maxValue } } : null;
   };
-}
+};

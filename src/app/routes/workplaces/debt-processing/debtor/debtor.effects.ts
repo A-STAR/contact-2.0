@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
 
-import { IDebt } from '../debt-processing.interface';
-
-import { DataService } from '../../../../core/data/data.service';
 import { DebtorService } from './debtor.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-
 
 @Injectable()
 export class DebtorEffects {
@@ -17,7 +12,7 @@ export class DebtorEffects {
   fetchDebtor$ = this.actions
     .ofType(DebtorService.FETCH_SELECTED_DEBT)
     .switchMap((action: Action) => {
-      return this.fetchDebt(action.payload)
+      return this.debtorService.fetchDebt(action.payload)
         .map(debt => ({
           type: DebtorService.CHANGE_CURRENT_DEBT,
           payload: debt
@@ -27,12 +22,8 @@ export class DebtorEffects {
 
   constructor(
     private actions: Actions,
-    private dataService: DataService,
+    private debtorService: DebtorService,
     private notificationsService: NotificationsService,
   ) {}
 
-  private fetchDebt(debtId: number): Observable<IDebt> {
-    return this.dataService.read('/debts/{debtId}', { debtId })
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.debts.gen.singular').dispatchCallback());
-  }
 }

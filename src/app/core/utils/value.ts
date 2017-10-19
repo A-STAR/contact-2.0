@@ -37,14 +37,14 @@ export const getRawValue = <T extends IValue>(value: T): number | string => {
       return String(value.valueB);
     default:
       return null;
-  };
-}
+  }
+};
 
 export const getDictCodeForValue = <T extends IValue>(value: T): number => {
   return value.typeCode === TYPE_CODES.BOOLEAN
     ? UserDictionariesService.DICTIONARY_BOOLEAN_TYPE
     : value.dictNameCode;
-}
+};
 
 export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynamicFormControl> => {
   switch (value.typeCode) {
@@ -64,8 +64,8 @@ export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynam
       return { type: 'boolean' };
     default:
       return null;
-  };
-}
+  }
+};
 
 export const getValue = (typeCode: number, value: string | number): Partial<IValue> => {
   switch (typeCode) {
@@ -82,5 +82,5 @@ export const getValue = (typeCode: number, value: string | number): Partial<IVal
       return { valueB: value as number };
     default:
       return null;
-  };
-}
+  }
+};

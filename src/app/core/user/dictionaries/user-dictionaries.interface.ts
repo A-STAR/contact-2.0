@@ -20,4 +20,4 @@ export interface IUserDictionariesState {
   };
 }
 
-export type ITransformCallback<T> = (dictionary: IUserTerm) => T
+export type ITransformCallback<T> = (dictionary: IUserTerm) => T;

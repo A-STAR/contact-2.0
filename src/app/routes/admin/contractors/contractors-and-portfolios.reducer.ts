@@ -92,4 +92,4 @@ export function contractorsAndPortfoliosReducer(
     default:
       return state;
   }
-};
+}

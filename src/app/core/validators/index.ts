@@ -22,4 +22,4 @@ export {
   oneOfGroupRequired,
   password,
   isDate,
-}
+};

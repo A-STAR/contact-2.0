@@ -47,7 +47,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
     { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', options: [] },
     { label: labelKey('dictNameCode'), controlName: 'dictNameCode', type: 'hidden', options: [] },
     { label: labelKey('disabledValue'), controlName: 'disabledValue', type: 'checkbox' },
-  ]
+  ];
   attribute: IAttribute;
 
   private _formSubscription: Subscription;

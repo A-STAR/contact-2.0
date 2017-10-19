@@ -78,7 +78,7 @@ export class DebtorComponent implements OnDestroy {
     const value = {
       ...this.form.requestValue,
       ...this.information.form.requestValue,
-    }
+    };
 
     this.debtorService.update(this.personId, value).subscribe(() => {
       this.form.form.markAsPristine();

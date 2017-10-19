@@ -98,5 +98,4 @@ export function permissionReducer(
     default:
       return state;
   }
-};
-
+}

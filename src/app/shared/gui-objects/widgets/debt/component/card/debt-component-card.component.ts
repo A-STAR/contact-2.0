@@ -74,7 +74,7 @@ export class DebtComponentCardComponent {
       ...value,
       typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
       currencyId: Array.isArray(value.currencyId) ? value.currencyId[0].value : value.currencyId
-    }
+    };
 
     const action = this.debtComponentId
       ? this.debtComponentService.update(this.debtId, this.debtComponentId, data)

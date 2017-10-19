@@ -5,4 +5,4 @@ export const maxDate = (maxValue: Date): ValidatorFn => {
     const value = control.value as Date;
     return value && value >= maxValue ? { max: { maxValue } } : null;
   };
-}
+};

@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IDebt } from '../debt.interface';
-import { IGridColumn, IRenderer } from '../../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtService } from '../debt.service';
 import { GridService } from '../../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -95,25 +93,23 @@ export class DebtGridComponent {
 
   columns: Array<IGridColumn> = [
     { prop: 'id' },
-    { prop: 'creditTypeCode' },
+    { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
     { prop: 'creditName' },
     { prop: 'contract' },
-    { prop: 'statusCode' },
-    { prop: 'creditStartDate' },
-    { prop: 'currencyId' },
-    { prop: 'debtAmount' },
-    { prop: 'totalAmount' },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
+    { prop: 'creditStartDate', renderer: 'dateRenderer' },
+    { prop: 'currencyId', lookupKey: 'currencies' },
+    { prop: 'debtAmount', renderer: 'numberRenderer' },
+    { prop: 'totalAmount', renderer: 'numberRenderer' },
     { prop: 'dpd' },
-    { prop: 'portfolioId' },
-    { prop: 'bankId' },
-    { prop: 'debtReasonCode' },
+    { prop: 'portfolioId', lookupKey: 'portfolios' },
+    { prop: 'bankId', lookupKey: 'contractors' },
+    { prop: 'debtReasonCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON },
   ];
 
   debts: Array<IDebt> = [];
 
   private personId = (this.route.params as any).value.personId || null;
-
-  private gridSubscription: Subscription;
 
   dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
@@ -122,37 +118,18 @@ export class DebtGridComponent {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
-        UserDictionariesService.DICTIONARY_DEBT_STATUS,
-        UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
-      ]),
-      this.lookupService.currencyOptions,
-      this.lookupService.portfolioOptions,
-      this.lookupService.contractorOptions,
-    )
-    .take(1)
-    .subscribe(([ dictionariesOptions, currencyOptions, portfolioOptions, contractorOptions ]) => {
-      const renderers: IRenderer = {
-        creditStartDate: 'dateRenderer',
-        creditTypeCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_PRODUCT_TYPE] ],
-        statusCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_STATUS] ],
-        debtReasonCode: [ ...dictionariesOptions[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON] ],
-        currencyId: [ ...currencyOptions ],
-        portfolioId: [ ...portfolioOptions ],
-        bankId: [ ...contractorOptions ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, renderers);
-      this.cdRef.markForCheck();
-    });
+
+    this.gridService.setAllRenderers(this.columns)
+      .take(1)
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
 
     this.fetch();
   }

@@ -43,9 +43,9 @@ export function lookupReducer(state: ILookupState = defaultState, action: Action
         [key]: {
           status: LookupStatusEnum.ERROR
         }
-      }
+      };
     }
     default:
       return state;
   }
-};
+}

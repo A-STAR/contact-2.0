@@ -30,7 +30,7 @@ export function authReducer(
     default:
       return state;
   }
-};
+}
 
 export function resetReducer(reducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
   return (state: IAppState, action: Action): IAppState => {

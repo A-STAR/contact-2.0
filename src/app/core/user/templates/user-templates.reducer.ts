@@ -50,9 +50,9 @@ export function userTemplatesReducer(state: IUserTemplatesState = defaultState, 
             templates: state.templates && state.templates[key] ? state.templates[key].templates : [],
           }
         }
-      }
+      };
     }
     default:
       return state;
   }
-};
+}

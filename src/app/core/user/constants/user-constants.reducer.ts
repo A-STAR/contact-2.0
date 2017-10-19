@@ -18,4 +18,4 @@ export function userConstantsReducer(state: IUserConstantsState = defaultState, 
     default:
       return state;
   }
-};
+}

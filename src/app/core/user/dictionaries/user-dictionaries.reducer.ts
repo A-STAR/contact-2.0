@@ -23,4 +23,4 @@ export function userDictionariesReducer(state: IUserDictionariesState = defaultS
     default:
       return state;
   }
-};
+}

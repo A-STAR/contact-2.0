@@ -37,7 +37,7 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
   }
 
   get selection(): any {
-    return this._options;
+    return this.options;
   }
 
   ngOnInit(): void {

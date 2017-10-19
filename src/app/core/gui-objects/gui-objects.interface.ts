@@ -9,7 +9,7 @@ export interface IMenuItem {
   link: string;
   icon: string;
   children: Array<IMenuItem>;
-};
+}
 
 export interface IGuiObjectsState {
   data: Array<IGuiObject>;

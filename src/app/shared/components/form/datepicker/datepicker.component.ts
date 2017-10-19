@@ -92,7 +92,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     ) {
       this.toggleCalendar(false);
     }
-  };
+  }
 
   ngOnInit(): void {
     document.body.appendChild(this.dropdown.nativeElement);
