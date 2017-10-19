@@ -11,12 +11,10 @@ import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { SharedModule } from '../../../shared/shared.module';
 
-import { ContactRegistrationService } from './contact-registration.service';
-
 import { ContactRegistrationComponent } from './contact-registration.component';
 
 const routes: Routes = [
-  { path: ':debtId/:contactTypeCode', component: ContactRegistrationComponent },
+  { path: ':debtId/:contactTypeCode/:contactId', component: ContactRegistrationComponent },
 ];
 
 @NgModule({
@@ -34,9 +32,6 @@ const routes: Routes = [
   ],
   declarations: [
     ContactRegistrationComponent,
-  ],
-  providers: [
-    ContactRegistrationService,
-  ],
+  ]
 })
 export class ContactRegistrationModule {}

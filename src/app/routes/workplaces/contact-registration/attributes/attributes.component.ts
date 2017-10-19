@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
+import { AttributesService } from './attributes.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 
 import { getRawValue, getValue } from '../../../../core/utils/value';
@@ -18,6 +19,7 @@ export class AttributesComponent implements OnInit {
   attributes: ITreeNode[];
 
   constructor(
+    private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
@@ -26,7 +28,7 @@ export class AttributesComponent implements OnInit {
     this.contactRegistrationService.selectedNode$
       .filter(Boolean)
       .map(node => node.id)
-      .flatMap(nodeId => this.contactRegistrationService.fetchAttributes(this.debtId, this.contactTypeCode, nodeId))
+      .flatMap(nodeId => this.attributesService.fetchAttributes(this.debtId, this.contactTypeCode, nodeId))
       .subscribe(attributes => {
         this.attributes = attributes;
         this.cdRef.markForCheck();

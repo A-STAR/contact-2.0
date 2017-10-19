@@ -10,6 +10,7 @@ import { IPromiseLimit } from '../../../../shared/gui-objects/widgets/promise/pr
 import { ContactRegistrationService } from '../contact-registration.service';
 import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { PromiseService } from '../../../../shared/gui-objects/widgets/promise/promise.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,6 +37,7 @@ export class PromiseComponent implements OnInit {
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private promiseService: PromiseService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +45,10 @@ export class PromiseComponent implements OnInit {
       this.contactRegistrationService.selectedNode$,
       this.debtService.fetch(null, this.debtId),
       this.promiseService.getPromiseLimit(this.debtId),
+      this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
     )
-    .subscribe(([ node, debt, limit ]) => {
+    .subscribe(([ node, debt, limit, canAddInsufficientAmount ]) => {
+      console.log(canAddInsufficientAmount);
       if (node && isEmpty(node.children)) {
         const { promiseMode } = node.data;
         if (promiseMode === 3) {

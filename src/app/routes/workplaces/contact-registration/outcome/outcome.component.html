@@ -14,3 +14,8 @@
     (onNodeExpand)="onNodeSelect($event)">
   </app-tree>
 </div>
+
+<button class="btn btn-default" (click)="onNextClick()">
+  {{ 'default.buttons.next' | translate }}
+  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+</button>

@@ -1516,7 +1516,8 @@
       "remove": "Delete",
       "save": "Save",
       "search": "Search",
-      "select": "Select"
+      "select": "Select",
+      "next": "Next"
     },
     "dateTimeRange": {
       "from": "From",

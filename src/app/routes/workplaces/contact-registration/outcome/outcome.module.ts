@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { OutcomeService } from './outcome.service';
+
 import { OutcomeComponent } from './outcome.component';
 
 @NgModule({
@@ -14,5 +16,8 @@ import { OutcomeComponent } from './outcome.component';
   declarations: [
     OutcomeComponent,
   ],
+  providers: [
+    OutcomeService,
+  ]
 })
 export class OutcomeModule {}

@@ -19,6 +19,7 @@ import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treen
 
 import { ContactRegistrationService } from '../contact-registration.service';
 import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
+import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -33,8 +34,9 @@ const labelKey = makeKey('modules.contactRegistration.outcome');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() debtId: number;
+  @Input() contactId: number;
   @Input() contactTypeCode: number;
+  @Input() debtId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -54,6 +56,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private contactRegistrationService: ContactRegistrationService,
+    private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
   ) {}
 
@@ -75,7 +78,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.getPersonId()
           .flatMap(personId => {
             const templateId = Array.isArray(value) ? value[0].value : value;
-            return this.contactRegistrationService
+            return this.outcomeService
               .fetchAutoComment(this.debtId, personId, 1, templateId)
               .catch(() => Observable.of(null));
           });
@@ -85,7 +88,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedNodeSubscription = this.selectedNode$
       .flatMap(selectedNode => {
         return selectedNode && isEmpty(selectedNode.children)
-          ? this.contactRegistrationService
+          ? this.outcomeService
             .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
             .catch(() => Observable.of(null))
           : Observable.of(null);
@@ -96,6 +99,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
     this.selectedNodeSubscription.unsubscribe();
+  }
+
+  get selectedNode$(): BehaviorSubject<ITreeNode> {
+    return this.contactRegistrationService.selectedNode$;
   }
 
   onNodeSelect(event: { node: ITreeNode }): void {
@@ -118,8 +125,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  get selectedNode$(): BehaviorSubject<ITreeNode> {
-    return this.contactRegistrationService.selectedNode$;
+  onNextClick(): void {
+    this.outcomeService.initRegistration(this.debtId, { code: 1, phoneId: this.contactId }).subscribe(console.log);
   }
 
   private enableField(key: string): void {
@@ -140,7 +147,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private fetchNodes(): void {
-    this.contactRegistrationService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
+    this.outcomeService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
       this.nodes = nodes;
       this.cdRef.markForCheck();
     });

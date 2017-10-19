@@ -3,6 +3,8 @@ import { TreeTableModule } from 'primeng/primeng';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { AttributesService } from './attributes.service';
+
 import { AttributesComponent } from './attributes.component';
 
 @NgModule({
@@ -16,5 +18,8 @@ import { AttributesComponent } from './attributes.component';
   declarations: [
     AttributesComponent,
   ],
+  providers: [
+    AttributesService,
+  ]
 })
 export class AttributesModule {}
