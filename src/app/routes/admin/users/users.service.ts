@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/filter';
 
 import { DataService } from '../../../core/data/data.service';
@@ -38,16 +38,14 @@ export class UsersService {
   }
 
   create(user: IUser, photo: File | false): Observable<any> {
-    return Observable.combineLatest(
-      this.createUser(user),
-      !photo && photo !== false ? Observable.of(null) : this.updatePhoto(user.id, photo)
+    return this.createUser(user).concatMap(
+      () => !photo && photo !== false ? Observable.of(null) : this.updatePhoto(user.id, photo)
     );
   }
 
   update(user: IUser, photo: File | false, userId: number): Observable<any> {
-    return Observable.combineLatest(
-      this.updateUser(userId, user),
-      !photo && photo !== false ? Observable.of(null) : this.updatePhoto(userId, photo)
+    return this.updateUser(userId, user).concatMap(
+      () => !photo && photo !== false ? Observable.of(null) : this.updatePhoto(userId, photo)
     );
   }
 

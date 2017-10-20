@@ -173,9 +173,9 @@ export class UsersComponent implements OnDestroy {
 
   private fetch(): void {
     this.usersService.fetch().subscribe(users => {
-        this._users = users;
-        this.cdRef.markForCheck();
-      });
+      this._users = users;
+      this.cdRef.markForCheck();
+    });
   }
 
   private refresh(): void {
