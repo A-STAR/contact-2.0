@@ -12,7 +12,6 @@
     "test": "ng test",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
-    "modernizr": "modernizr -c modernizr-config.json -d src/modernizr.js",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/http @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli"
   },
   "private": true,
@@ -49,7 +48,6 @@
     "jquery.browser": "^0.1.0",
     "jquery.flot.spline": "git://github.com/atymchuk/jquery.flot.spline.git",
     "jquery.flot.tooltip": "github:krzysu/flot.tooltip",
-    "modernizr": "^3.5.0",
     "moment": "^2.18.1",
     "ng2-dragula": "^1.5.0",
     "ng2-validation": "^4.2.0",
