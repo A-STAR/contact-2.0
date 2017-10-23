@@ -106,4 +106,4 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
     default:
       return state;
   }
-};
+}

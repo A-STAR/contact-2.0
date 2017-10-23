@@ -106,7 +106,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     .take(1)
     .subscribe(([ columns, canViewBlock ]) => {
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
 
       this.columns = this.gridService.setRenderers(filteredColumns);

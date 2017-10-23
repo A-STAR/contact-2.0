@@ -40,7 +40,7 @@ export class AppComponent {
 
   @HostBinding('class.aside-collapsed') get isCollapsed(): boolean {
     return this.settings.layout.isCollapsed as boolean;
-  };
+  }
 
   get isLoading$(): any {
     return this._isLoading$;

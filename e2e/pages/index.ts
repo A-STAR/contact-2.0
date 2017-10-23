@@ -6,4 +6,4 @@ export {
   AbstractPage,
   ConstantsPage,
   LoginPage,
-}
+};

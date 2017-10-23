@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Actions } from '@ngrx/effects';
 
 import { IGuaranteeContract } from '../guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -11,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -72,16 +72,16 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
   private personId = this.routeParams.personId || null;
   private debtId = this.routeParams.debtId || null;
 
-  private busSubscription: Subscription;
+  private actionSubscription: Subscription;
   private canViewSubscription: Subscription;
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
+    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -97,7 +97,6 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();
@@ -107,14 +106,14 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(GuaranteeService.MESSAGE_GUARANTOR_SAVED)
+    this.actionSubscription = this.actions
+      .ofType(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.selectedContract$.complete();
-    this.busSubscription.unsubscribe();
+    this.actionSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
   }
 

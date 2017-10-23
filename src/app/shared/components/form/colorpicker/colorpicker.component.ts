@@ -49,7 +49,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   renderer = (label, item) => {
     return `<span style="background: ${item.value}; display: inline-block; width: 10px; height: 10px;"></span> ${label}`;
-  };
+  }
 
   get value(): string {
     return this._value;

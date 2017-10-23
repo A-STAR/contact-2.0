@@ -10,7 +10,7 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 import { makeKey } from '../../../../core/utils';
 import { getRawValue } from '../../../../core/utils/value';
 
-const labelKey = makeKey('modules.contactRegistration.parametersForm')
+const labelKey = makeKey('modules.contactRegistration.parametersForm');
 
 @Component({
   selector: 'app-parameters-form',

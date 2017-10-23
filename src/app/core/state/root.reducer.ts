@@ -47,4 +47,4 @@ export const reducers = {
 
 export function rootReducer(state: IAppState, action: Action): IAppState {
   return compose(resetReducer, combineReducers)(reducers)(state, action);
-};
+}

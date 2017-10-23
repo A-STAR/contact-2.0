@@ -531,7 +531,11 @@
       "title": "Property"
     },
     "guarantorsTab": {
-      "title": "Guarantors"
+      "title": "Guarantors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this guarantee contract?"
+      }
     },
     "contactsTab": {
       "title": "Contacts",

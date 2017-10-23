@@ -14,7 +14,7 @@ export function entityAttributesReducer(state: IEntityAttributesState = {}, acti
           ...state[id],
           status: EntityAttributesStatusEnum.PENDING
         }
-      }
+      };
     }
     case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_SUCCESS: {
       const { id, attribute } = action.payload;
@@ -24,7 +24,7 @@ export function entityAttributesReducer(state: IEntityAttributesState = {}, acti
           attribute,
           status: EntityAttributesStatusEnum.LOADED
         }
-      }
+      };
     }
     case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE: {
       const { id } = action.payload;
@@ -34,9 +34,9 @@ export function entityAttributesReducer(state: IEntityAttributesState = {}, acti
           ...state[id],
           status: EntityAttributesStatusEnum.ERROR
         }
-      }
+      };
     }
     default:
       return state;
   }
-};
+}

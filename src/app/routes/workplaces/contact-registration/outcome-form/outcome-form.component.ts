@@ -13,7 +13,7 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 
 import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.outcomeForm')
+const labelKey = makeKey('modules.contactRegistration.outcomeForm');
 
 @Component({
   selector: 'app-outcome-form',

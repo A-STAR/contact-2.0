@@ -123,7 +123,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(contact: IContact): void {
-    this.selectedContact$.next(contact)
+    this.selectedContact$.next(contact);
   }
 
   onRemove(): void {

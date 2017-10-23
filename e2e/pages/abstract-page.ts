@@ -53,7 +53,7 @@ export abstract class AbstractPage {
         await this.loginForm.login('admin', 'spring');
         if (this.url !== await this.getCurrentUrl()) {
           throw new Error(`Expected ${url} to be equal '${this.url}'`);
-        };
+        }
         break;
       case this.url:
         break;

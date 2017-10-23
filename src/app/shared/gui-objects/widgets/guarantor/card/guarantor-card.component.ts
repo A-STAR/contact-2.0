@@ -6,10 +6,12 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor } from '../../guarantee/guarantee.interface';
 
-import { GuarantorService } from '../../guarantor/guarantor.service';
+// import { GuarantorService } from '../../guarantor/guarantor.service';
+import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { parseStringValueAttrs } from '../../../../../core/utils';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { DialogFunctions } from '../../../../../core/dialog';
@@ -27,9 +29,9 @@ export class GuarantorCardComponent extends DialogFunctions {
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  // private contractId = this.routeParams.contractId || null;
-  // private debtId = this.routeParams.debtId || null;
+  // private personId = this.routeParams.personId || null;
+  private debtId = this.routeParams.debtId || null;
+  private contractId = this.routeParams.contractId || null;
 
   attrListConstants: object = {
     '1' : 'Person.Individual.AdditionalAttribute.List',
@@ -43,7 +45,8 @@ export class GuarantorCardComponent extends DialogFunctions {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private guarantorService: GuarantorService,
+    // private guarantorService: GuarantorService,
+    private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -56,19 +59,17 @@ export class GuarantorCardComponent extends DialogFunctions {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      this.personId
+      this.contractId
         ? this.userPermissionsService.has('GUARANTEE_EDIT')
         : this.userPermissionsService.has('GUARANTEE_ADD'),
-      this.personId && false ? this.guarantorService.fetch(this.personId) : Observable.of(null)
+      this.contractId ? this.guaranteeService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
       const addControls = attributeList.valueS
-      ? (<string>attributeList.valueS).split(/,\s?/g)
-        .filter(Boolean)
-        .map(attr => `stringValue${attr}`)
-        .map(attr => ({ label: label(attr), controlName: attr, type: 'text' }))
-      : [];
+        ? parseStringValueAttrs(<string>attributeList.valueS)
+            .map(attr => ({ label: label(attr), controlName: attr, type: 'text' }))
+        : [];
 
       const controls = [
         {
@@ -116,9 +117,9 @@ export class GuarantorCardComponent extends DialogFunctions {
   }
 
   onSelect(guarantor: IGuarantor): void {
-    this.guarantorChanged.emit(guarantor);
     this.form.form.patchValue(guarantor);
     this.form.form.disable();
+    this.guarantorChanged.emit(guarantor);
     this.cdRef.markForCheck();
   }
 }

@@ -76,7 +76,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
         // prevent any drags by default
         invalid: () => true
       };
-  };
+  }
 
   constructor(
     private cdRef: ChangeDetectorRef,
