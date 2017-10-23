@@ -10,6 +10,7 @@ import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UsersService } from '../users.service';
@@ -41,6 +42,7 @@ export class UserEditComponent extends DialogFunctions {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
+    private messageBusService: MessageBusService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
@@ -99,11 +101,14 @@ export class UserEditComponent extends DialogFunctions {
     const operation = this.userId
       ? this.usersService.update(user, image, this.userId)
       : this.usersService.create(user, image);
-    operation.subscribe(() => this.onClose());
+    operation.subscribe(() => {
+      this.messageBusService.dispatch(UsersService.USER_SAVED);
+      this.onClose();
+    });
   }
 
   onClose(): void {
-    this.contentTabService.navigate('/admin/users');
+    this.contentTabService.back();
   }
 
   private getFormControls(

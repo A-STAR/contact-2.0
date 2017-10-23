@@ -9,6 +9,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/to
 import { IUser, IUsersState } from './users.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { MessageBusService } from '../../../core/message-bus/message-bus.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
@@ -70,14 +71,15 @@ export class UsersComponent implements OnDestroy {
 
   emptyMessage$: Observable<string>;
 
+  private busSubscription: Subscription;
   private hasViewPermission$: Observable<boolean>;
-
   private usersSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
@@ -105,6 +107,10 @@ export class UsersComponent implements OnDestroy {
     );
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
+
+    this.busSubscription = this.messageBusService
+      .select(UsersService.USER_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {

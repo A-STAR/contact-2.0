@@ -13,6 +13,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class UsersService {
   static USER_SELECT          = 'USER_SELECT';
   static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
+  static USER_SAVED           = 'USER_SAVED';
 
   constructor(
     private dataService: DataService,
