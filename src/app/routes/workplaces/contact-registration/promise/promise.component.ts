@@ -14,6 +14,8 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { DialogFunctions } from '../../../../core/dialog';
+
 import { minStrict, max } from '../../../../core/validators';
 import { isEmpty, makeKey, round } from '../../../../core/utils';
 
@@ -24,13 +26,17 @@ const labelKey = makeKey('modules.contactRegistration.promise');
   templateUrl: './promise.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PromiseComponent implements OnInit {
+export class PromiseComponent extends DialogFunctions implements OnInit {
   @Input() debtId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
-  data = {};
+  data: any = {};
+  dialog: 'confirm' | 'info' = null;
+
+  private debt: IDebt;
+  private limit: IPromiseLimit;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -38,23 +44,26 @@ export class PromiseComponent implements OnInit {
     private debtService: DebtService,
     private promiseService: PromiseService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     Observable.combineLatest(
       this.contactRegistrationService.selectedNode$,
       this.debtService.fetch(null, this.debtId),
       this.promiseService.getPromiseLimit(this.debtId),
-      this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
+      this.canAddInsufficientAmount$,
     )
     .subscribe(([ node, debt, limit, canAddInsufficientAmount ]) => {
-      console.log(canAddInsufficientAmount);
+      this.debt = debt;
+      this.limit = limit;
       if (node && isEmpty(node.children)) {
         const { promiseMode } = node.data;
         if (promiseMode === 3) {
           this.data = { ...this.data, amount: debt.debtAmount, percentage: 100 };
         }
-        this.controls = this.buildControls(promiseMode, debt, limit);
+        this.controls = this.buildControls(promiseMode, canAddInsufficientAmount);
         this.cdRef.detectChanges();
       } else {
         this.controls = null;
@@ -63,11 +72,38 @@ export class PromiseComponent implements OnInit {
     });
   }
 
-  private buildControls(promiseMode: number, debt: IDebt, limit: IPromiseLimit): IDynamicFormControl[] {
+  get minAmountPercent(): number {
+    return this.limit.minAmountPercent;
+  }
+
+  onNextClick(): void {
+    this.canAddInsufficientAmount$
+      .take(1)
+      .subscribe(canAddInsufficientAmount => {
+        if (this.data.amount < this.minDebtAmount) {
+          this.setDialog(canAddInsufficientAmount ? 'confirm' : 'info');
+          this.cdRef.markForCheck();
+        }
+      });
+  }
+
+  onConfirm(): void {
+    console.log(this.data);
+  }
+
+  private get canAddInsufficientAmount$(): Observable<boolean> {
+    return this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD');
+  }
+
+  private get minDebtAmount(): number {
+    return this.limit.minAmountPercent * this.debt.debtAmount / 100;
+  }
+
+  private buildControls(promiseMode: number, canAddInsufficientAmount: boolean): IDynamicFormControl[] {
     const minDate = moment().toDate();
-    const maxDate = limit.maxDays == null
+    const maxDate = this.limit.maxDays == null
       ? null
-      : moment().add(limit.maxDays, 'day').toDate();
+      : moment().add(this.limit.maxDays, 'day').toDate();
     return [
       {
         controlName: 'date',
@@ -79,21 +115,21 @@ export class PromiseComponent implements OnInit {
         controlName: 'amount',
         type: 'number',
         validators: [
-          minStrict(promiseMode === 2 ? limit.minAmountPercent * debt.debtAmount / 100.0 : 0),
-          max(debt.debtAmount),
+          minStrict(promiseMode === 2 && !canAddInsufficientAmount ? this.minDebtAmount : 0),
+          max(this.debt.debtAmount),
         ],
         disabled: promiseMode === 3,
-        onChange: event => this.onAmountChange(event, debt.debtAmount)
+        onChange: event => this.onAmountChange(event, this.debt.debtAmount)
       },
       {
         controlName: 'percentage',
         type: 'number',
         validators: [
-          minStrict(promiseMode === 2 ? limit.minAmountPercent : 0),
+          minStrict(promiseMode === 2 && !canAddInsufficientAmount ? this.limit.minAmountPercent : 0),
           max(100),
         ],
         disabled: promiseMode === 3,
-        onChange: event => this.onPercentageChange(event, debt.debtAmount)
+        onChange: event => this.onPercentageChange(event, this.debt.debtAmount)
       },
     ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
   }
