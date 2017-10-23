@@ -127,7 +127,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNextClick(): void {
     this.outcomeService.initRegistration(this.debtId, { code: 1, phoneId: this.contactId })
-      .subscribe(() => {
+      .subscribe(guid => {
+        this.contactRegistrationService.guid = guid;
         this.contactRegistrationService.nextStep();
         this.cdRef.markForCheck();
       });

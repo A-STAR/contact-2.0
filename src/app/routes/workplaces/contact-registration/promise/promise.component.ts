@@ -5,11 +5,13 @@ import * as moment from 'moment';
 
 import { IDebt } from '../../../../shared/gui-objects/widgets/debt/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPromise, IPromiseFormData } from './promise.interface';
 import { IPromiseLimit } from '../../../../shared/gui-objects/widgets/promise/promise.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
 import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { PromiseService } from '../../../../shared/gui-objects/widgets/promise/promise.service';
+import { PromiseService as ContactPromiseService } from './promise.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -32,7 +34,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
-  data: any = {};
+  data: IPromiseFormData;
   dialog: 'confirm' | 'info' = null;
 
   private debt: IDebt;
@@ -40,6 +42,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactPromiseService: ContactPromiseService,
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private promiseService: PromiseService,
@@ -83,14 +86,25 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
         if (this.data.amount < this.minDebtAmount) {
           this.setDialog(canAddInsufficientAmount ? 'confirm' : 'info');
           this.cdRef.markForCheck();
+        } else {
+          this.submit({ isUnconfirmed: 0 });
         }
       });
   }
 
   onConfirm(): void {
-    console.log(this.data);
-    this.contactRegistrationService.nextStep();
-    this.cdRef.markForCheck();
+    this.submit({ isUnconfirmed: 1 });
+  }
+
+  private submit(data: Partial<IPromise>): void {
+    const { guid } = this.contactRegistrationService;
+    const { percentage, ...rest } = this.form.getSerializedUpdates();
+    this.contactPromiseService.createPromise(this.debtId, guid, { ...data, ...rest })
+      .subscribe(() => {
+        this.contactRegistrationService.nextStep();
+        this.cdRef.markForCheck();
+        this.closeDialog();
+      });
   }
 
   private get canAddInsufficientAmount$(): Observable<boolean> {

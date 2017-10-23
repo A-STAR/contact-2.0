@@ -4,6 +4,8 @@ import { TreeTableModule } from 'primeng/primeng';
 import { DialogModule } from '../../../../shared/components/dialog/dialog.module';
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { PromiseService  } from './promise.service';
+
 import { PromiseComponent } from './promise.component';
 
 @NgModule({
@@ -18,5 +20,8 @@ import { PromiseComponent } from './promise.component';
   declarations: [
     PromiseComponent,
   ],
+  providers: [
+    PromiseService,
+  ]
 })
 export class PromiseModule {}

@@ -8,8 +8,9 @@ import { isEmpty } from '../../../core/utils';
 
 @Injectable()
 export class ContactRegistrationService {
-  step = 0;
+  guid: string;
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+  step = 0;
 
   get isInvalid$(): Observable<boolean> {
     return this.selectedNode$.map(node => !(node && isEmpty(node.children)));
