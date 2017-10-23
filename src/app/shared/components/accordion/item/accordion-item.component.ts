@@ -22,6 +22,7 @@ import { AccordionComponent } from '../accordion.component';
   ]
 })
 export class AccordionItemComponent {
+  @Input() clickable = true;
   @Input() title: string;
 
   private _isCollapsed = true;
@@ -35,10 +36,12 @@ export class AccordionItemComponent {
   }
 
   onClick(): void {
-    const isCollapsed = this.isCollapsed;
-    this.accordion.tabs.forEach(tab => tab.hide());
-    this.toggle(!isCollapsed);
-    this.accordion.selectedIndexChange.emit(this.index);
+    if (this.clickable) {
+      const isCollapsed = this.isCollapsed;
+      this.accordion.tabs.forEach(tab => tab.hide());
+      this.toggle(!isCollapsed);
+      this.accordion.selectedIndexChange.emit(this.index);
+    }
   }
 
   toggle(isCollapsed: boolean): void {
