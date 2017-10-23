@@ -1,11 +1,11 @@
 <app-action-dialog
-  *ngIf="isLdapUserBeingSelected"
+  *ngIf="isDialog('editLdap')"
   titleTranslationKey="users.ldap.title"
   actionTranslationKey="default.buttons.ok"
   [canSubmit]="!!ldapDialog.selectedUser"
   [styles]="{ width: '80%', 'max-width': '80%' }"
   (action)="onLdapDialogAction(ldapDialog.selectedUser.login)"
-  (cancel)="onLdapDialogClose()"
+  (cancel)="onCloseDialog()"
 >
   <app-user-ldap-dialog #ldapDialog (submit)="onLdapDialogAction($event)">
   </app-user-ldap-dialog>
@@ -20,4 +20,4 @@
   </button>
 </div>
 
-<app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>
+<app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>

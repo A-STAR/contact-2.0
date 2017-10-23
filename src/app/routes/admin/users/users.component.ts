@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IOption } from '../../../core/converter/value-converter.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
@@ -32,20 +30,14 @@ export class UsersComponent implements OnDestroy {
     { prop: 'firstName', minWidth: 120 },
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
-    { prop: 'roleId', minWidth: 100 },
-    { prop: 'isInactive', minWidth: 100 },
+    { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
+    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    { prop: 'languageId', minWidth: 120 },
+    { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
   ];
-
-  renderers: IRenderer = {
-    roleId: [],
-    isInactive: 'checkboxRenderer',
-    languageId: [],
-  };
 
   displayInactiveUsers: boolean;
 
@@ -76,33 +68,24 @@ export class UsersComponent implements OnDestroy {
     }
   ];
 
-  roleOptions$: Observable<IOption[]>;
-  languageOptions$: Observable<Array<IOption>>;
-
   emptyMessage$: Observable<string>;
 
   private hasViewPermission$: Observable<boolean>;
 
   private usersSubscription: Subscription;
-  private optionsSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
-    private contentTabService: ContentTabService,
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private lookupService: LookupService,
+    private router: Router,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
-    private cdRef: ChangeDetectorRef
   ) {
-    this.roleOptions$ = this.lookupService.roleOptions;
-    this.languageOptions$ = this.lookupService.languageOptions;
 
-    this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
-      .subscribe(([ roleOptions, languageOptions ]) => {
-        this.renderers.roleId = [].concat(roleOptions);
-        this.renderers.languageId = [].concat(languageOptions);
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.gridService.setAllRenderers(this.columns)
+      .subscribe(columns => {
+        this.columns = [ ...columns ];
       });
 
     this.filter = this.filter.bind(this);
@@ -126,7 +109,6 @@ export class UsersComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.usersSubscription.unsubscribe();
-    this.optionsSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 
@@ -157,12 +139,12 @@ export class UsersComponent implements OnDestroy {
   }
 
   onAdd(): void {
-    this.contentTabService.navigate('/admin/users/create');
+    this.router.navigate([ '/admin/users/create' ]);
   }
 
   onEdit(user?: IUser): void {
     const id = user ? user.id : this.editedUser.id;
-    this.contentTabService.navigate(`/admin/users/${id}`);
+    this.router.navigate([ `/admin/users/${id}` ]);
   }
 
   onSelect(user: IUser): void {
