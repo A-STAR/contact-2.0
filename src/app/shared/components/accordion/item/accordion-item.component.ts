@@ -38,13 +38,22 @@ export class AccordionItemComponent {
     const isCollapsed = this.isCollapsed;
     this.accordion.tabs.forEach(tab => tab.hide());
     this.toggle(!isCollapsed);
+    this.accordion.selectedIndexChange.emit(this.index);
   }
 
   toggle(isCollapsed: boolean): void {
     this._isCollapsed = isCollapsed === undefined ? !this._isCollapsed : isCollapsed;
   }
 
+  show(): void {
+    this._isCollapsed = false;
+  }
+
   hide(): void {
     this._isCollapsed = true;
+  }
+
+  private get index(): number {
+    return this.accordion.tabs.findIndex(tab => tab === this);
   }
 }

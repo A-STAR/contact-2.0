@@ -89,6 +89,8 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
 
   onConfirm(): void {
     console.log(this.data);
+    this.contactRegistrationService.nextStep();
+    this.cdRef.markForCheck();
   }
 
   private get canAddInsufficientAmount$(): Observable<boolean> {

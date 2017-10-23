@@ -14,4 +14,12 @@ export class ContactRegistrationService {
   get isInvalid$(): Observable<boolean> {
     return this.selectedNode$.map(node => !(node && isEmpty(node.children)));
   }
+
+  nextStep(): void {
+    this.step++;
+  }
+
+  prevStep(): void {
+    this.step--;
+  }
 }

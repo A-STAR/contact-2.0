@@ -20,6 +20,8 @@ export class ContactRegistrationComponent {
   contactTypeCode = Number(this.routeParams.contactTypeCode);
   contactId = Number(this.routeParams.contactId);
 
+  selectedIndex = 0;
+
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private route: ActivatedRoute,
