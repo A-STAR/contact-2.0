@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPromise } from './promise.interface';
+import { IPayment } from './payment.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
-export class PromiseService {
+export class PaymentService {
   constructor(
     private dataService: DataService,
   ) {}
 
-  create(debtId: number, guid: string, promise: IPromise): Observable<any> {
+  create(debtId: number, guid: string, payment: IPayment): Observable<any> {
     return this.dataService
       // TODO(d.maltsev): error handling
-      .create('/debts/{debtId}/contactRequest/{guid}/promise', { debtId, guid }, promise);
+      .create('/debts/{debtId}/contactRequest/{guid}/payment', { debtId, guid }, payment);
   }
 }

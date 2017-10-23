@@ -99,7 +99,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   private submit(data: Partial<IPromise>): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.getSerializedUpdates();
-    this.contactPromiseService.createPromise(this.debtId, guid, { ...data, ...rest })
+    this.contactPromiseService.create(this.debtId, guid, { ...data, ...rest })
       .subscribe(() => {
         this.contactRegistrationService.nextStep();
         this.cdRef.markForCheck();

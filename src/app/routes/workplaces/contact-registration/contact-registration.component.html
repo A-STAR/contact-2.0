@@ -12,7 +12,9 @@
     </app-contact-registration-promise>
   </app-accordion-item>
   <app-accordion-item [title]="'modules.contactRegistration.payment.title'">
-    <app-contact-registration-payment></app-contact-registration-payment>
+    <app-contact-registration-payment
+      [debtId]="debtId">
+    </app-contact-registration-payment>
   </app-accordion-item>
   <app-accordion-item [title]="'modules.contactRegistration.phone.title'">
     <app-contact-registration-phone></app-contact-registration-phone>

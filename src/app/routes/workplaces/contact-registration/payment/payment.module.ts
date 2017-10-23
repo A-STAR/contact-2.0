@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { PaymentService } from './payment.service';
+
 import { PaymentComponent } from './payment.component';
 
 @NgModule({
@@ -14,5 +16,8 @@ import { PaymentComponent } from './payment.component';
   declarations: [
     PaymentComponent,
   ],
+  providers: [
+    PaymentService,
+  ]
 })
 export class PaymentModule {}
