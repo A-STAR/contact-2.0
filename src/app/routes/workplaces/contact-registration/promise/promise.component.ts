@@ -75,6 +75,10 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
     });
   }
 
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
   get minAmountPercent(): number {
     return this.limit.minAmountPercent;
   }
@@ -125,7 +129,8 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
         controlName: 'date',
         type: 'datepicker',
         minDate,
-        maxDate
+        maxDate,
+        required: true,
       },
       {
         controlName: 'amount',
@@ -134,6 +139,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
           minStrict(promiseMode === 2 && !canAddInsufficientAmount ? this.minDebtAmount : 0),
           max(this.debt.debtAmount),
         ],
+        required: true,
         disabled: promiseMode === 3,
         onChange: event => this.onAmountChange(event, this.debt.debtAmount)
       },

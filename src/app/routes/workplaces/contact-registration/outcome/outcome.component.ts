@@ -101,6 +101,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedNodeSubscription.unsubscribe();
   }
 
+  get canSubmit$(): Observable<boolean> {
+    return this.selectedNode$.map(node => node && isEmpty(node.children));
+  }
+
   get selectedNode$(): BehaviorSubject<ITreeNode> {
     return this.contactRegistrationService.selectedNode$;
   }

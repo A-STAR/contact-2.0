@@ -57,6 +57,10 @@ export class PaymentComponent implements OnInit {
     });
   }
 
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.getSerializedUpdates();
@@ -74,11 +78,13 @@ export class PaymentComponent implements OnInit {
       {
         controlName: 'date',
         type: 'datepicker',
+        required: true,
         maxDate
       },
       {
         controlName: 'amount',
         type: 'number',
+        required: true,
         disabled: promiseMode === 3,
         validators: [ minStrict(0), max(debtAmount) ],
         onChange: event => this.onAmountChange(event, debtAmount)
@@ -93,7 +99,8 @@ export class PaymentComponent implements OnInit {
       {
         controlName: 'currencyId',
         type: 'selectwrapper',
-        lookupKey: 'currencies'
+        lookupKey: 'currencies',
+        required: true
       },
     ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
   }
