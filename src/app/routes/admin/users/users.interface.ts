@@ -28,7 +28,6 @@ export interface IUserEditPermissions {
 }
 
 export interface IUsersState {
-  users: Array<IUser>;
   selectedUserId: number;
   displayInactive: boolean;
 }
