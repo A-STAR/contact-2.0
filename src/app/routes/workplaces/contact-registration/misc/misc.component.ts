@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -59,6 +60,81 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // TODO(d.maltsev): we need to do smth with the boilerplate below
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddAutoComment$.subscribe(canAddAutoComment => {
+      if (canAddAutoComment) {
+        this.getControl('autoCommentId').type = 'select';
+        this.getControl('autoComment').type = 'textarea';
+      } else {
+        this.getControl('autoCommentId').type = 'hidden';
+        this.getControl('autoComment').type = 'hidden';
+        this.updateData('autoCommentId', null);
+        this.updateData('autoComment', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddCallReason$.subscribe(canAddCallReason => {
+      if (canAddCallReason) {
+        this.getControl('callReasonCode').type = 'select';
+      } else {
+        this.getControl('callReasonCode').type = 'hidden';
+        this.updateData('callReasonCode', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddComment$.subscribe(canAddComment => {
+      if (canAddComment) {
+        this.getControl('comment').type = 'textarea';
+      } else {
+        this.getControl('comment').type = 'hidden';
+        this.updateData('comment', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddDebtReason$.subscribe(canAddDebtReason => {
+      if (canAddDebtReason) {
+        this.getControl('debtReasonCode').type = 'select';
+      } else {
+        this.getControl('debtReasonCode').type = 'hidden';
+        this.updateData('debtReasonCode', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddNextCall$.subscribe(canAddNextCall => {
+      if (canAddNextCall) {
+        this.getControl('nextCallDateTime').type = 'datepicker';
+      } else {
+        this.getControl('nextCallDateTime').type = 'hidden';
+        this.updateData('nextCallDateTime', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddRefusal$.subscribe(canAddRefusal => {
+      if (canAddRefusal) {
+        this.getControl('refusalReasonCode').type = 'select';
+      } else {
+        this.getControl('refusalReasonCode').type = 'hidden';
+        this.updateData('refusalReasonCode', null);
+      }
+    });
+
+    // TODO(d.maltsev): subscription
+    this.contactRegistrationService.canAddStatusChangeReason$.subscribe(canAddStatusChangeReason => {
+      if (canAddStatusChangeReason) {
+        this.getControl('statusReasonCode').type = 'select';
+      } else {
+        this.getControl('statusReasonCode').type = 'hidden';
+        this.updateData('statusReasonCode', null);
+      }
+    });
+
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
       .subscribe(autoCommentOptions => {
@@ -92,7 +168,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const data = this.form.getSerializedUpdates();
+    const { autoComment, ...data } = this.form.getSerializedUpdates();
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
         this.contactRegistrationService.nextStep();
