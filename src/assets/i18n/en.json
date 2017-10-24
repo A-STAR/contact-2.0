@@ -167,14 +167,10 @@
         "currencyId": "Currency",
         "percentage": "Remainder Percentage"
       },
-      "comment": {
-        "title": "Comments",
-        "comment": "Comments"
-      },
       "phone": {
         "title": "New Debtor Phone Number",
         "typeCode": "Type",
-        "phoneNumber": "Phone Number",
+        "phone": "Phone Number",
         "stopAutoSms": "Disable Auto SMS",
         "stopAutoInfo": "Disable Audo Voicemail",
         "comment": "Comments"
@@ -198,7 +194,11 @@
         "debtReasonCode": "Reason for Debt",
         "nextCallDateTime": "Next Call Date",
         "refusalReasonCode": "Reason for Refusal",
-        "statusReasonCode": "Reason for Status Change"
+        "statusReasonCode": "Reason for Status Change",
+        "comment": "Comments"
+      },
+      "confirm": {
+        "title": "Confirmation"
       }
     }
   },

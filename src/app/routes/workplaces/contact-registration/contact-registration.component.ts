@@ -42,4 +42,9 @@ export class ContactRegistrationComponent {
   get isInvalid$(): Observable<boolean> {
     return this.contactRegistrationService.isInvalid$;
   }
+
+  onSubmit(): void {
+    this.contactRegistrationService.confirm(this.debtId)
+      .subscribe(console.log);
+  }
 }

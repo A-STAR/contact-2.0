@@ -66,8 +66,11 @@
 
   <app-accordion-item
     [clickable]="false"
-    [title]="'modules.contactRegistration.misc.confirm'"
+    [title]="'modules.contactRegistration.confirm.title'"
   >
-    CONFIRM
+    <button class="btn btn-default" (click)="onSubmit()">
+      <i class="fa fa-arrow-check" aria-hidden="true"></i>
+      {{ 'default.buttons.save' | translate }}
+    </button>
   </app-accordion-item>
 </app-accordion>
