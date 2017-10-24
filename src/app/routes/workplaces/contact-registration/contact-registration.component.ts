@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from './contact-registration.service';
 
+import { combineLatestOr } from '../../../core/utils/helpers';
+
 @Component({
   selector: 'app-contact-registration',
   templateUrl: './contact-registration.component.html',
@@ -43,8 +45,43 @@ export class ContactRegistrationComponent {
     return this.contactRegistrationService.isInvalid$;
   }
 
+  get canAddPromise$(): Observable<boolean> {
+    return this.contactRegistrationService.canAddPromise$;
+  }
+
+  get canAddPayment$(): Observable<boolean> {
+    return this.contactRegistrationService.canAddPayment$;
+  }
+
+  get canAddPhone$(): Observable<boolean> {
+    return this.contactRegistrationService.canAddPhone$;
+  }
+
+  get canAddFile$(): Observable<boolean> {
+    return this.contactRegistrationService.canAddFile$;
+  }
+
+  get canAddAttributes$(): Observable<boolean> {
+    return this.contactRegistrationService.isInvalid$.map(isInvalid => !isInvalid);
+  }
+
+  get canAddMisc$(): Observable<boolean> {
+    return combineLatestOr([
+      this.contactRegistrationService.canAddNextCall$,
+      this.contactRegistrationService.canAddComment$,
+      this.contactRegistrationService.canAddAutoComment$,
+      this.contactRegistrationService.canAddDebtReason$,
+      this.contactRegistrationService.canAddRefusal$,
+      this.contactRegistrationService.canAddCallReason$,
+      this.contactRegistrationService.canAddStatusChangeReason$,
+    ]);
+  }
+
+  get canConfirm$(): Observable<boolean> {
+    return this.contactRegistrationService.isInvalid$.map(isInvalid => !isInvalid);
+  }
+
   onSubmit(): void {
-    this.contactRegistrationService.confirm(this.debtId)
-      .subscribe(console.log);
+    this.contactRegistrationService.confirm(this.debtId).subscribe(console.log);
   }
 }

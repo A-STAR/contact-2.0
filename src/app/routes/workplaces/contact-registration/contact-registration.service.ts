@@ -19,7 +19,52 @@ export class ContactRegistrationService {
   ) {}
 
   get isInvalid$(): Observable<boolean> {
-    return this.selectedNode$.map(node => !(node && isEmpty(node.children)));
+    return this.selectedNode$.map(node => !this.isNodeValid(node));
+  }
+
+  get canAddPromise$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.promiseMode));
+  }
+
+  get canAddPayment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.payment));
+  }
+
+  get canAddNextCall$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.nextCallMode));
+  }
+
+  get canAddComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.commentMode));
+  }
+
+  get canAddAutoComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && !!node.data.autoCommentIds);
+  }
+
+  get canAddPhone$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.addPhone) === 1);
+  }
+
+  get canAddDebtReason$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.debtReasonMode));
+  }
+
+  get canAddRefusal$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.isRefusal) === 1);
+  }
+
+  get canAddFile$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.fileAttachMode));
+  }
+
+  get canAddCallReason$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.callReasonMode));
+  }
+
+  get canAddStatusChangeReason$(): Observable<boolean> {
+    return this.selectedNode$
+      .map(node => this.isNodeValid(node) && [2, 3].includes(node.data.statusReasonMode) && !!node.data.statusCode);
   }
 
   nextStep(): void {
@@ -34,5 +79,9 @@ export class ContactRegistrationService {
     return this.dataService
       // TODO(d.maltsev): error handling
       .create('/debts/{debtId}/contactRequest/{guid}/save', { debtId, guid: this.guid }, {});
+  }
+
+  private isNodeValid(node: ITreeNode): boolean {
+    return node && isEmpty(node.children);
   }
 }
