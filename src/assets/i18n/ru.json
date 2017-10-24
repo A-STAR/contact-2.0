@@ -131,7 +131,8 @@
       "changeStatus": "Сменить статус",
       "close": "Закрыть",
       "undo": "Отменить",
-      "ok": "OK"
+      "ok": "OK",
+      "registerCall": "Зарегистрировать звонок"
     }
   },
   "queryBuilder": {

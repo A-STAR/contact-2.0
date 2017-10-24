@@ -131,7 +131,8 @@
       "changeStatus": "Change Status",
       "close": "Close",
       "undo": "Undo",
-      "ok": "OK"
+      "ok": "OK",
+      "registerCall": "Register Call"
     }
   },
   "queryBuilder": {

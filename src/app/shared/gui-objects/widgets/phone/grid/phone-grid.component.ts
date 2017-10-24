@@ -59,6 +59,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('schedule')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CALL,
+      enabled: this.canRegisterCall$,
+      action: () => this.registerCall()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
@@ -201,6 +206,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
+  registerCall(): void {
+    this.selectedPhone$
+      .take(1)
+      .subscribe(phone => {
+        this.router.navigate([ `/workplaces/contact-registration/${this.debtId}/${phone.typeCode}/${phone.id}` ]);
+      });
+  }
+
   get selectedPhone$(): Observable<IPhone> {
     return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
   }
@@ -244,6 +257,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         ])
         : Observable.of(false);
     });
+  }
+
+  get canRegisterCall$(): Observable<boolean> {
+    // TODO(d.maltsev): http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=122880040
+    return this.selectedPhone$.map(phone => phone && !phone.isInactive);
   }
 
   private onAdd(): void {

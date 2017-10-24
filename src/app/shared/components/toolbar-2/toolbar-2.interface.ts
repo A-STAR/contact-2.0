@@ -18,6 +18,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_CLOSE,
   BUTTON_UNDO,
   BUTTON_OK,
+  BUTTON_REGISTER_CALL,
   CHECKBOX,
 }
 
