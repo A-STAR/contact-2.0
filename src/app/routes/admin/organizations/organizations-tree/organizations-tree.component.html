@@ -40,4 +40,6 @@
   (onNodeDblClick)="onNodeEdit($event)"
   (onNodeExpand)="onNodeSelect($event)">
 </app-tree>
-
+<span *ngIf="!(canViewOrganization | async)">
+  {{ 'organizations.organizations.errors.view' | translate }}
+</span>

@@ -1,12 +1,9 @@
-<app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
-</app-toolbar-2>
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   selectionType="single"
   [columns]="columns"
-  [columnTranslationKey]="'users'"
+  columnTranslationKey="users"
   [emptyMessage]="emptyMessage$ | async"
   [filter]="filter"
   [rows]="users$ | async"

@@ -1,22 +1,22 @@
 <app-dict-edit
   *ngIf="isReadyForCreating | async"
-  [mode]="'create'"
-  [title]="'dictionaries.create.title'"
-  [languages]="languages | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
+  [languages]="languages | async"
+  [mode]="'create'"
+  [title]="'dictionaries.create.title'"
   (submit)="onCreateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
 
 <app-dict-edit
   *ngIf="isReadyForEditing | async"
-  [mode]="'update'"
-  [title]="'dictionaries.edit.title'"
-  [editedEntity]="selectedDictionary | async"
-  [languages]="languages | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
+  [editedEntity]="selectedDictionary | async"
+  [languages]="languages | async"
+  [mode]="'update'"
+  [title]="'dictionaries.edit.title'"
   (submit)="onUpdateEntity($event)"
   (cancel)="cancelAction()">
 </app-dict-edit>
@@ -32,18 +32,19 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered"
+<app-toolbar-2
+  class="bordered"
   [items]="toolbarItems">
 </app-toolbar-2>
 
 <app-grid
   selectionType="single"
-  [emptyMessage]="emptyMessage$ | async"
-  [styles]="{height: '200px'}"
+  [allowDblClick]="canEdit | async"
   [columns]="columns"
   [columnTranslationKey]="'dictionaries'"
+  [emptyMessage]="emptyMessage$ | async"
   [rows]="dictionaries | async"
-  [allowDblClick]="canEdit | async"
+  [styles]="{height: '300px'}"
   (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

@@ -5,8 +5,7 @@ import { IUserConstantsState } from './user-constants.interface';
 import { UserConstantsService } from './user-constants.service';
 
 const defaultState: IUserConstantsState = {
-  constants: [],
-  isResolved: null
+  constants: null
 };
 
 export function userConstantsReducer(state: IUserConstantsState = defaultState, action: Action): IUserConstantsState {
@@ -15,14 +14,8 @@ export function userConstantsReducer(state: IUserConstantsState = defaultState, 
       return {
         ...state,
         constants: action.payload.data,
-        isResolved: true
-      };
-    case UserConstantsService.USER_CONSTANTS_FETCH_FAILURE:
-      return {
-        ...state,
-        isResolved: false
       };
     default:
       return state;
   }
-};
+}

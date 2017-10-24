@@ -9,6 +9,7 @@ const defaultState: IDictionariesState = {
   selectedDictionary: null,
   selectedTerm: null,
   terms: [],
+  parentTerms: [],
   dictionaryTermTypes: null,
   dialogAction: null
 };
@@ -36,6 +37,17 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
         ...state,
         terms: action.payload
       };
+    case DictionariesService.TERMS_PARENT_FETCH_SUCCESS:
+      return {
+        ...state,
+        parentTerms: action.payload
+      };
+    case DictionariesService.TERMS_PARENT_CLEAR: {
+      return {
+        ...state,
+        parentTerms: []
+      };
+    }
     case DictionariesService.TERMS_TYPES_FETCH_SUCCESS: {
       return {
         ...state,
@@ -94,4 +106,4 @@ export function dictionariesReducer(state: IDictionariesState = defaultState, ac
     default:
       return state;
   }
-};
+}

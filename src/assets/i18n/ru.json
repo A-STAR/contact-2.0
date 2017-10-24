@@ -6,6 +6,11 @@
     "license": {
       "title": "Лицензия",
       "info": "Номер Вашей лицензии"
+    },
+    "account": {
+      "title": "Аккаунт",
+      "logout": "Выйти",
+      "reset": "Сбросить настройки"
     }
   },
   "offsidebar": {
@@ -18,7 +23,6 @@
       "HEADER": "Меню"
     },
     "nav": {
-      "SINGLEVIEW": "Single View",
       "menu": {
         "HOME": "Главная",
         "WORKFLOW": "Процесс",
@@ -29,8 +33,8 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
-        "DICTIONARIES": "Словари",
-        "BANKS": "Клиенты и портфели",
+        "DICTIONARIES": "Справочники",
+        "PORTFOLIOS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
         "CONTRACTOR_MANAGER": "Менеджер контрагента",
@@ -40,6 +44,7 @@
         "DATA_UPLOAD": "Загрузка данных",
         "ARBITRARY_VALUES": "Произвольные атрибуты",
         "CONTACT_TREES": "Дерево контактов",
+        "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
         "CAMPAIGNS": "Кампании обзвона",
@@ -49,6 +54,18 @@
         "WORKPLACES": "Рабочие места",
         "DEBT_LIST": "Список долгов",
         "DEBTOR_CARD": "Карточка должника",
+        "DEBTOR_ADDRESS": "Адрес должника",
+        "DEBTOR_CONTACTS": "Контактные лица должника",
+        "DEBTOR_DEBT": "Долг должника",
+        "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
+        "DEBTOR_DOCUMENT": "Документ",
+        "DEBTOR_EMAIL": "Email должника",
+        "DEBTOR_EMPLOYMENT": "История трудоустройства",
+        "DEBTOR_GUARANTEE": "Договор поручительства",
+        "DEBTOR_IDENTITY": "Удостоверение личности",
+        "DEBTOR_PAYMENT": "Платеж",
+        "DEBTOR_PHONE": "Телефон должника",
+        "DEBTOR_PROMISE": "Обещание платежа",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -75,12 +92,16 @@
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "Произошла ошибка",
+    "datepicker": "Неверный формат даты/времени",
     "fieldRequired": "Это обязательное поле",
+    "fieldMin": "Значение поля должно быть больше, чем {{ minValue }}",
+    "fieldMax": "Значение поля должно быть меньше, чем  {{ maxValue }}",
     "fieldMinLength": "Это поле должно быть не короче {{ requiredLength }} символов",
     "fieldDigits": "Это поле должно содержать хотя бы одну цифру",
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
-    "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}"
+    "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
+    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено"
   },
   "network": {
     "CONNECTION_ERROR": "Ошибка соединения"
@@ -94,7 +115,7 @@
   },
   "toolbar": {
     "action": {
-      "add": "Добавить",
+      "add": "Создать",
       "edit": "Изменить",
       "remove": "Удалить",
       "copy": "Копировать",
@@ -104,26 +125,32 @@
       "sms": "Отправить SMS",
       "move": "Переместить",
       "download": "Скачать",
-      "upload": "Загрузить"
+      "upload": "Загрузить",
+      "block": "Заблокировать",
+      "unblock": "Разблокировать",
+      "changeStatus": "Сменить статус",
+      "close": "Закрыть",
+      "undo": "Отменить",
+      "ok": "OK"
     }
   },
   "queryBuilder": {
-    "TITLE": "Построитель запросов",
-    "ADD_CONDITION": "Добавить условие",
-    "ADD_GROUP": "Добавить группу",
-    "REMOVE_GROUP": "Удалить группу",
+    "title": "Построитель запросов",
     "buttons": {
-      "GET_QUERY": "Получить запрос",
-      "BACK": "Вернуться к построителю запросов"
+      "addCondition": "Добавить условие",
+      "removeCondition": "Удалить условие",
+      "addGroup": "Добавить группу",
+      "removeGroup": "Удалить группу",
+      "addValue": "Добавить значение",
+      "removeValue": "Удалить значение"
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Пожалуйста, авторизуйтесь",
-    "LOGIN_PLACEHOLDER": "Логин",
-    "PASSWORD_PLACEHOLDER": "Пароль",
-    "REMEMBER_ME": "Запомнить логин",
-    "FORGOT_PASSWORD": "Забыли пароль?",
-    "LOGIN_BUTTON": "Войти"
+    "please_authenticate": "Пожалуйста, авторизуйтесь",
+    "login_placeholder": "Логин",
+    "password_placeholder": "Пароль",
+    "remember_me": "Запомнить логин",
+    "login_button": "Войти"
   },
   "constants": {
     "title": "Константы",
@@ -150,7 +177,7 @@
       "employees": {
         "title": "Операторы",
         "placeholder": "Выберите операторов",
-        "blocking": "Отображать заблокированных операторов",
+        "inactive": "Отображать заблокированных",
         "grid": {
           "id": "Ид",
           "position": "Должность",
@@ -183,7 +210,7 @@
     "title": "Пользователи",
     "toolbar": {
       "action": {
-        "show_blocked_users": "Отображать блокированных"
+        "show_inactive_users": "Отображать блокированных"
       }
     },
     "edit": {
@@ -194,7 +221,8 @@
       "firstName": "Имя",
       "middleName": "Отчество",
       "photo": "Фото",
-      "blocked": "Блокирован",
+      "inactive": "Блокирован",
+      "isAutoReset": "Автоматическое перезакрепление",
       "login": "Логин",
       "password": "Пароль",
       "ldapLogin": "LDAP-логин",
@@ -226,7 +254,7 @@
       "middleName": "Отчество",
       "position": "Должность",
       "roleId": "Роль",
-      "isBlocked": "Блокирован",
+      "isInactive": "Блокирован",
       "mobPhone": "Мобильный телефон",
       "workPhone": "Рабочий телефон",
       "intPhone": "Внутренний номер",
@@ -245,7 +273,7 @@
         "grid": {
           "name": "ФИО",
           "login": "Логин",
-          "isBlocked": "Блокирован",
+          "isInactive": "Блокирован",
           "comment": "Комментарий"
         }
       }
@@ -279,7 +307,8 @@
       "code": "Код",
       "name": "Название",
       "parentCode": "Родительский словарь",
-      "typeCode": "Тип словаря"
+      "typeCode": "Тип словаря",
+      "termTypeCode": "Тип терминов"
     },
     "remove": {
       "title": "Удаление словаря",
@@ -297,6 +326,10 @@
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
+    },
+    "tabs": {
+      "dictionaries": "Словари",
+      "attributes": "Атрибуты"
     }
   },
   "terms": {
@@ -365,8 +398,11 @@
       "tab": {
         "title": "Доступы"
       },
-      "tab2": {
+      "access": {
         "title": "Текущие настройки доступов"
+      },
+      "objects": {
+        "title": "Объекты"
       },
       "add": {
         "title": "Выберите доступ",
@@ -415,55 +451,77 @@
     "lastName": "Фамилия",
     "middleName": "Отчество",
     "type": "Тип",
-    "responsible": "Ответственный",
+    "responsibleFullName": "Ответственный",
     "reward": "Размер вознаграждения",
-    "generalInformationTab": {
-      "title": "Общая",
-      "generalInformation": "Общая информация",
-      "birthDate": "Дата рождения",
-      "company": "Компания",
-      "position": "Должность",
-      "income": "Доход",
-      "citizenship": "Гражданство",
-      "sex": "Пол",
-      "workplaceChecked": "Место работы проверено",
-      "importance": "Важность",
-      "stage": "Стадия",
-      "decency": "Порядочность",
-      "maritalStatus": "Семейное положение",
-      "education": "Образование",
-      "email": "Эл. почта",
-      "passport": "Паспорт",
-      "series": "Серия",
-      "number": "№",
-      "issueDate": "Дата выдачи",
-      "issuedBy": "Кем выдан",
-      "birthPlace": "Место рождения",
-      "phonesTab": {
-        "title": "Телефоны",
-        "contactsVerification": "Верификация контактных данных",
+    "shortInfo": "Краткая иформация",
+    "utc": "Местное время должника",
+    "identityDocs": {
+      "title": "Удостоверения личности",
+      "add": {
+        "title": "Новый документ"
+      },
+      "edit": {
+        "title": "Редактирование документа"
+      },
+      "remove": {
+        "title": "Удалить документ",
+        "confirmMessage": "Вы действительно хотите удалить документ {{ docNumber }}?"
+      },
+      "changeMain": {
+        "title": "Подтверждение",
+        "confirmMessage": "Для должника уже создан документ с признаком \"Основной\". Вы действительно хотите установить данный документ в качестве основного?"
+      },
+      "grid": {
+        "id": "Ид",
+        "docTypeCode": "Тип",
+        "docNumber": "№",
+        "issueDate": "Дата выдачи",
+        "issuePlace": "Где выдан",
+        "expiryDate": "Дата окончания",
+        "citizenship": "Гражданство",
+        "comment": "Комментарий",
+        "isMain": "Основной"
+      }
+    },
+    "information": {
+      "title": "Общая информация",
+      "address": {
+        "title": "Адреса",
         "grid": {
-          "type": "Тип",
-          "number": "Номер",
-          "status": "Статус",
-          "lastCall": "Посл. звонок",
-          "contactPerson": "Контактное лицо",
-          "comment": "Комментарий",
-          "region": "Регион",
-          "active": "Активен",
-          "qualityCode": "Код качества",
-          "numberExists": "Номер существует",
-          "qualityCodeByDataQ": "Код качества по DataQ",
-          "verified": "Верифицирован",
-          "blockingDate": "Дата блокировки",
-          "blockingReason": "Причина блокировки"
+          "fullAddress": "Адрес",
+          "typeCode": "Тип",
+          "statusCode": "Статус",
+          "isResidence": "Проживает",
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки",
+          "comment": "Комментарий"
         }
       },
-      "addressesTab": {
-        "title": "Адреса"
+      "email": {
+        "title": "Email",
+        "grid": {
+          "email": "Email",
+          "typeCode": "Тип",
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки"
+        }
       },
-      "emailTab": {
-        "title": "Эл. почта"
+      "phone": {
+        "title": "Телефоны",
+        "toolbar": {
+          "verification": "Верификация контактных данных"
+        },
+        "grid": {
+          "phone": "Номер",
+          "typeCode": "Тип",
+          "statusCode": "Статус",
+          "isInactive": "Блокирован",
+          "inactiveReasonCode": "Причина блокировки",
+          "inactiveDateTime": "Дата блокировки",
+          "comment": "Комментарий"
+        }
       }
     },
     "debtsTab": {
@@ -473,47 +531,79 @@
       "title": "Имущество"
     },
     "guarantorsTab": {
-      "title": "Поручители"
+      "title": "Поручители",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранный договор поручительства?"
+      }
     },
     "contactsTab": {
-      "title": "Контакты"
+      "title": "Контакты",
+      "remove": {
+        "title": "Удалить контактное лицо",
+        "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
+      }
     },
-    "planningTab": {
-      "title": "Планирование"
+    "paymentsTab": {
+      "title": "Платежи",
+      "confirm": {
+        "title": "Подтвердить платеж",
+        "buttonLabel": "Подтвердить платеж",
+        "message": "Вы действительно хотите подтвердить этот платеж?"
+      },
+      "cancel": {
+        "title": "Отменить платеж",
+        "buttonLabel": "Отменить",
+        "message": "Вы действительно хотите отменить этот платеж?"
+      }
     },
-    "documentationTab": {
+    "promisesTab": {
+      "title": "Обещания",
+      "approve": {
+        "title": "Подтвердить обещание",
+        "buttonLabel": "Разрешить обещание",
+        "message": "Вы действительно хотите подтвердить это обещание?"
+      },
+      "remove": {
+        "title": "Удалить обещание",
+        "message": "Вы действительно хотите удалить это обещание?"
+      },
+      "confirmInsufficient": {
+        "title": "Подтверждение суммы обещания",
+        "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению, иначе данное действие будет отправлено на рассмотрение. Сохранить обещание?"
+      },
+      "infoIncreaseAmount": {
+        "title": "Информация",
+        "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению."
+      }
+    },
+    "documentsTab": {
       "title": "Документы",
       "errors": {
         "download": "Не удалось скачать документ"
       }
     },
-    "accountsTab": {
-      "title": "Счета"
-    },
-    "tasksTab": {
-      "title": "Задачи"
-    },
-    "workHistoryTab": {
-      "title": "История работы (полная)"
+    "employmentRecordTab": {
+      "title": "История трудоустройства",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранную запись о трудоустройстве?"
+      }
     },
     "actionLogTab": {
       "title": "Лог действий"
     },
-    "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
-    },
-    "commentTab": {
-      "title": "Комментарий"
-    },
-    "promotionsTab": {
-      "title": "Акции"
-    },
-    "socialNetworksTab": {
-      "title": "Социальные сети"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Доп. инфо о долге"
+    "attributesTab": {
+      "title": "Атрибуты"
     }
+  },
+  "person": {
+    "gender": "Пол",
+    "birthDate": "Дата рождения",
+    "birthPlace": "Место рождения",
+    "familyStatusCode": "Семейное положение",
+    "educationCode": "Образование",
+    "comment": "Комментарий"
   },
   "debtors": {
     "grid": {
@@ -552,7 +642,7 @@
         "grid": {
           "fullName": "ФИО",
           "position": "Должность",
-          "isBlocked": "Блокирован"
+          "isInactive": "Блокирован"
         }
       },
       "edit": {
@@ -569,7 +659,7 @@
         "position": "Должность",
         "fullName": "ФИО",
         "roleCode": "Код роли",
-        "isBlocked": "Блокирован"
+        "isInactive": "Блокирован"
       },
       "errors": {
         "view": "Доступ к списку сотрудников ограничен"
@@ -580,7 +670,7 @@
     "managers": {
       "remove": {
         "title": "Удаление менеджера",
-        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }}?"
+        "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }} ?"
       },
       "grid": {
         "fullName": "ФИО",
@@ -594,6 +684,7 @@
         "workPhone": "Рабочий телефон",
         "intPhone": "Внутренний номер",
         "workAddress": "Адрес",
+        "email": "Email",
         "comment": "Комментарий"
       },
       "messages": {
@@ -605,6 +696,7 @@
       "confirmMessage": "Вы действительно хотите удалить контрагента {{ name }}?"
     },
     "grid": {
+      "id": "Ид",
       "name": "Краткое название",
       "fullName": "Полное название",
       "smsName": "Название для СМС",
@@ -624,6 +716,7 @@
   },
   "portfolios": {
     "grid": {
+      "id": "Ид",
       "name": "Название",
       "directionCode": "Направление",
       "stageCode": "Стадия",
@@ -639,6 +732,22 @@
     },
     "move": {
       "title": "Переместить портфель {{ name }}"
+    }
+  },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Разговор"
+      },
+      "sms": {
+        "title": "SMS-сообщения"
+      },
+      "custom": {
+        "title": "Специальное"
+      },
+      "autoComment": {
+        "title": "Автоматический комментарий"
+      }
     }
   },
   "notifications": {
@@ -657,7 +766,436 @@
       "refresh": "Не удалось обновить сессию"
     }
   },
+  "widgets": {
+    "actionLog": {
+      "grid": {
+        "createDateTime": "Дата",
+        "dsc": "Описание",
+        "guiObject": "Модуль",
+        "fullName": "Оператор",
+        "machine": "Компьютер",
+        "typeCode": "Тип действия"
+      },
+      "form": {
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "searchBtn": "Найти"
+      }
+    },
+    "address": {
+      "card": {
+        "fullAddress": "Адрес",
+        "fullAddressLabel": "Полный адрес",
+        "postalCode": "Индекс",
+        "country": "Страна",
+        "region": "Регион",
+        "area": "Район в регионе",
+        "city": "Город",
+        "settlement": "Населенный пункт",
+        "cityDistrict": "Район города",
+        "street": "Улица",
+        "house": "Дом",
+        "building": "Корпус",
+        "flat": "Квартира",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "isResidence": "Проживает по данному адресу"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать адрес",
+          "inactiveReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать адрес",
+          "confirmMessage": "Вы действительно хотите разблокировать адрес {{ fullAddress }}?"
+        },
+        "delete": {
+          "title": "Удалить адрес",
+          "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        }
+      }
+    },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Редактирование атрибута"
+        },
+        "delete": {
+          "title": "Удалить атрибут",
+          "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
+        }
+      },
+      "grid": {
+        "code": "Код",
+        "name": "Название",
+        "value": "Значение",
+        "userFullName": "Оператор",
+        "changeDateTime": "Дата/время изменения",
+        "comment": "Комментарий",
+        "typeCode": "Тип данных",
+        "dictNameCode": "Словарь",
+        "disabledValue": "Не содержит значение"
+      }
+    },
+    "contact": {
+      "grid": {
+        "fullName": "ФИО",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "genderCode": "Пол",
+        "familyStatusCode": "Семейное положение",
+        "educationCode": "Образование",
+        "linkTypeCode": "Тип",
+        "comment": "Комментарий"
+      }
+    },
+    "contactProperty": {
+      "contactType": "Тип контакта",
+      "treeType": "Тип дерева",
+      "dialogs": {
+        "add": {
+          "title": "Новый результат контакта"
+        },
+        "edit": {
+          "title": "Результат контакта",
+          "mainSettings": "Основные настройки",
+          "attributesSettings": "Настройки атрибутов",
+          "value": "Значение",
+          "formula": "Формула",
+          "attributes": {
+            "code": "Код",
+            "name": "Название",
+            "display": "Отображать",
+            "mandatory": "Обязательно к заполнению"
+          }
+        },
+        "delete": {
+          "title": "Удалить результат контакта",
+          "confirmMessage": "Вы действительно хотите удалить результат контакта?"
+        }
+      },
+      "edit": {
+        "code": "Код",
+        "name": "Название",
+        "boxColor": "Цвет",
+        "commentMode": "Ввод комментария",
+        "autoCommentIds": "Ввод автокомментария",
+        "regInvisible": "Добавление файла",
+        "nextCallMode": "Дата повторного звонка",
+        "promiseMode": "Ввод обещания",
+        "paymentMode": "Ввод неподтверженного платежа",
+        "callReasonMode": "Причина звонка должника",
+        "debtStatusCode": "Пользовательский статус",
+        "statusReasonMode": "Причина смены статуса",
+        "debtReasonMode": "Ввод причины возникновения задолженности",
+        "template": "Тип настройки сценария",
+        "nextCallDays": "Кол-во дней до следующего звонка",
+        "dictValue1": "Словарный атрибут 1",
+        "dictValue2": "Словарный атрибут 2",
+        "dictValue3": "Словарный атрибут 3",
+        "dictValue4": "Словарный атрибут 4",
+        "isInvalidContact": "Неверный номер/адрес",
+        "addPhone": "Ввод нового номера должника",
+        "isRefusal": "Признак отказа от оплаты",
+        "isSuccess": "Считать результат успешным",
+        "changeResponsible": "Перераспределение на оператора",
+        "contactInvisible": "Не отображать в списке контактов"
+      }
+    },
+    "document": {
+      "grid": {
+        "docName": "Название документа",
+        "fileName": "Имя файла",
+        "docTypeCode": "Тип документа",
+        "docNumber": "Номер",
+        "operatorName": "Оператор",
+        "comment": "Комментарий",
+        "file": "Файл"
+      },
+      "dialogs": {
+        "delete": {
+          "title": "Удалить документ",
+          "confirmMessage": "Вы действительно хотите удалить документ {{ docName }}?"
+        }
+      }
+    },
+    "email": {
+      "card": {
+        "typeCode": "Тип",
+        "email": "Email",
+        "comment": "Комментарий"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать email",
+          "inactiveReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать email",
+          "confirmMessage": "Вы действительно хотите разблокировать email {{ email }}?"
+        },
+        "delete": {
+          "title": "Удалить email",
+          "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        }
+      }
+    },
+    "guarantor": {
+      "title": "Поручитель",
+      "search": {
+        "title": "Поиск поручителей"
+      },
+      "dialog": {
+        "title": "Выбор поручителя"
+      },
+      "grid": {
+        "id": "Ид",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "educationCode": "Образование",
+        "familyStatusCode": "Семейное положение",
+        "genderCode": "Пол",
+        "passportNumber": "№ паспорта",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "stringValue1": "Доп. значение 1",
+        "stringValue2": "Доп. значение 2",
+        "stringValue3": "Доп. значение 3",
+        "stringValue4": "Доп. значение 4",
+        "stringValue5": "Доп. значение 5",
+        "stringValue6": "Доп. значение 6",
+        "stringValue7": "Доп. значение 7",
+        "stringValue8": "Доп. значение 8",
+        "stringValue9": "Доп. значение 9",
+        "stringValue10": "Доп. значение 10"
+      }
+    },
+    "guaranteeContract": {
+      "title": "Договор поручительства",
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Дата заключения договора",
+        "contractEndDate": "Дата окончания договора",
+        "contractTypeCode": "Тип ответственности",
+        "comment": "Комментарий"
+      }
+    },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Тип работы",
+        "company": "Компания",
+        "position": "Должность",
+        "hireDate": "Дата приема",
+        "dismissDate": "Дата увольнения",
+        "income": "Доход",
+        "currencyId": "Валюта",
+        "comment": "Комментарий"
+      }
+    },
+    "messageTemplate": {
+      "dialogs": {
+        "add": {
+          "title": "Новый шаблон"
+        },
+        "edit": {
+          "title": "Редактирование шаблона",
+          "variables": "Переменные"
+        },
+        "delete": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "text": "Текст",
+        "isSingleSending": "Единичная рассылка",
+        "recipientTypeCode": "Получатель"
+      }
+    },
+    "object": {
+      "dialogs": {
+        "add": {
+          "title": "Новый объект"
+        },
+        "delete": {
+          "title": "Удаление объекта",
+          "confirmMessage": "Вы действительно хотите удалить объект {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название"
+      }
+    },
+    "phone": {
+      "card": {
+        "typeCode": "Тип",
+        "phoneNumber": "Номер телефона",
+        "stopAutoSms": "Не отправлять автоматические SMS",
+        "stopAutoInfo": "Запретить голосовое информирование",
+        "comment": "Комментарий"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Блокировать телефон",
+          "inactiveReasonCode": "Причина блокировки"
+        },
+        "unblock": {
+          "title": "Разблокировать телефон",
+          "confirmMessage": "Вы действительно хотите разблокировать телефон {{ phone }}?"
+        },
+        "schedule": {
+          "title": "Сформировать единичное СМС-сообщение",
+          "text": "Текст",
+          "template": "Сценарий",
+          "form": {
+            "templateId": "СМС-сообщение",
+            "senderCode": "Отправитель",
+            "startDateTime": "Дата и время отправки",
+            "text": "Текст сообщения"
+          }
+        },
+        "delete": {
+          "title": "Удалить телефон",
+          "confirmMessage": "Вы действительно хотите удалить телефон {{ phone }}?"
+        }
+      }
+    },
+    "payment": {
+      "grid": {
+        "amount": "Сумма",
+        "amountMainCurrency": "Сумма в валюте",
+        "comment": "Комментарий",
+        "commission": "Комиссия",
+        "currencyName": "Валюта",
+        "isConfirmed": "Подтвержден",
+        "payerName": "ФИО плательщика",
+        "paymentDateTime": "Дата платежа",
+        "purposeCode": "Назначение",
+        "receiveDateTime": "Дата получения",
+        "reqUserFullName": "Оператор (заявка)",
+        "receiptNumber": "№ квитанции",
+        "statusCode": "Статус",
+        "userFullName": "Оператор (факт)"
+      },
+      "toolbar": {
+        "showCanceled": "Показывать отмененные"
+      }
+    },
+    "promise": {
+      "grid": {
+        "promiseDate": "Обещанная дата",
+        "promiseAmount": "Сумма в валюте",
+        "receiveDateTime": "Дата получения",
+        "statusCode": "Статус",
+        "comment": "Комментарий",
+        "fullName": "Оператор"
+      }
+    },
+    "debt": {
+      "toolbar": {
+        "call": "Необходимо перезвонить",
+        "forRepayment": "К возврату клиентом",
+        "withdrawn": "Отозван клиентом",
+        "terminate": "Завершить работу с долгом"
+      },
+      "grid": {
+        "id": "Ид долга",
+        "portfolioId": "Портфель",
+        "bankId": "Банк",
+        "creditTypeCode": "Тип продукта",
+        "creditName": "Название продукта",
+        "contract": "Номер договора",
+        "statusCode": "Статус",
+        "creditStartDate": "Дата выдачи",
+        "creditEndDate": "Дата окончания кредитного срока",
+        "regionCode": "Регион",
+        "branchCode": "Филиал",
+        "currencyId": "Валюта",
+        "startDate": "Дата выхода на просрочку",
+        "debtAmount": "Сумма просроченного долга",
+        "totalAmount": "Общая сумма кредита",
+        "dpd": "Кол-во дней просрочки",
+        "portfolio": "Портфель",
+        "bank": "Банк",
+        "debtReasonCode": "Причина просрочки",
+        "comment": "Комментарий",
+        "dict1Code": "Интервал",
+        "dict2Code": "Стратегия",
+        "dict3Code": "Балл 3",
+        "dict4Code": "Балл 4"
+      },
+      "dialogs": {
+        "closeDebt": {
+          "title": "Завершение работы с долгом",
+          "reasonCode": "Причина",
+          "comment": "Комментарий"
+        },
+        "statusChange": {
+          "title": "Смена статуса долга",
+          "statusCode": "Выберите статус",
+          "reasonCode": "Выберите причину",
+          "customStatusCode": "Пользовательский статус",
+          "comment": "Комментарий"
+        },
+        "nextCall": {
+          "title": "Установка даты следующего звонка",
+          "nextCallDateTime": "Дата",
+          "forAllDebts": "По всем долгам"
+        }
+      },
+      "component": {
+        "title": "Компоненты долга",
+        "grid": {
+          "typeCode": "Тип",
+          "amount": "Сумма",
+          "currencyId": "Валюта"
+        },
+        "remove": {
+          "title": "Удаление компонента долга",
+          "confirmMessage": "Вы действительно хотите удалить компонент долга?"
+        }
+      },
+      "componentLog": {
+        "title": "История задолженности",
+        "grid": {
+          "typeCode": "Тип",
+          "amount": "Сумма",
+          "currency": "Валюта",
+          "fromDate": "Дата начала",
+          "toDate": "Дата окончания",
+          "fullName": "Оператор"
+        }
+      },
+      "portfolioLog": {
+        "title": "История смены портфеля",
+        "incoming": "Входящий",
+        "outgoing": "Исходящий",
+        "grid": {
+          "portfolioName": "Портфель",
+          "fromDate": "Дата начала",
+          "toDate": "Дата окончания",
+          "fullName": "Оператор"
+        }
+      }
+    }
+  },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
@@ -694,6 +1232,18 @@
     "portfolios": {
       "gen": { "singular": "портфеля", "plural": "списка портфелей" }
     },
+    "payments": {
+      "gen": { "singular": "платежа", "plural": "списка платежей" }
+    },
+    "guarantors": {
+      "gen": { "singular": "поручителя", "plural": "списка поручителей" }
+    },
+    "promises": {
+      "gen": { "singular": "обещания", "plural": "списка обещаний" }
+    },
+    "promisesLimit": {
+      "gen": { "plural": "ограничений обещания" }
+    },
     "organizations": {
       "gen": { "singular": "организации", "plural": "списка организаций" }
     },
@@ -704,10 +1254,13 @@
       "gen": { "singular": "должника", "plural": "списка должников" },
       "info": {
         "gen": { "plural": "общей информации о должнике" }
-      },
-      "phones": {
-        "gen": { "plural": "телефонов должника" }
       }
+    },
+    "debts": {
+      "gen": { "singular": "долга", "plural": "списка долгов" }
+    },
+    "metadata": {
+      "gen": { "plural": "метаданных" }
     },
     "user": {
       "constants": {
@@ -730,19 +1283,61 @@
       "users": {
         "gen": { "plural": "lookup данных пользователей" }
       }
+    },
+    "addresses": {
+      "gen": { "singular": "адреса", "plural": "списка адресов" }
+    },
+    "emails": {
+      "gen": { "singular": "email-адреса", "plural": "списка email-адресов " }
+    },
+    "phones": {
+      "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
+    },
+    "contacts": {
+      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
+    },
+    "identityDocs": {
+      "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
+    },
+    "employment": {
+      "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
+    },
+    "sms": {
+      "gen": { "singular": "СМС", "plural": "СМС" }
+    },
+    "messageTemplate": {
+      "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
     }
   },
   "errors": {
     "server": {
+      "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
+      "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
+      "contactPersonNotFound": "Не найдено контактное лицо по Id",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
+      "currencyNotFound": "Не найдена валюта по id",
+      "currencyRateNotFound": "Не найден курс валюты на определенную дату",
+      "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
+      "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
       "dictionaryTermNotFound": "Словарный термин не найден",
+      "emailNotFound": "Не найден email по id",
+      "employmentNotFound": "Не найдена запись о занятости по id",
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
+      "entityNotFound": "Не найдена сущность при обращении по entityTypeId или entityAttributeId",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
+      "entityTypeIsNotSupportedForEntity": "Для заданного entityTypeId не поддерживаются операции с заданной сущностью",
+      "fieldMustBeGreaterThan": "Значение поля должно быть больше заданного значения {{ $1 }}",
+      "fieldMustBeGreaterOrEqualThan": "Значение поля должно быть больше или равно заданному значению {{ $1 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
       "fieldSizeMustBeBetween": "Длина поля {{ $1 }} должна быть в диапазоне от {{ $2 }} до {{ $3 }} символов",
       "fileExtentionIsRequired": "В имени сохраняемого файла отсутствует расширение",
@@ -750,6 +1345,7 @@
       "filterOperatorNotAllowedForDataType": "Для заданного типа данных не поддерживается оператор, переданный в фильтре",
       "guiIdNotFound": "Не найден запрошенный по ID объект интерфейса",
       "guiNameNotFound": "Не найден запрошенный по имени объект интерфейса",
+      "gridParametersNotFound": "Недопустимый набор параметров запроса загрузки данных",
       "incorrectContentType": "Недопустимый content-type {{ $1 }} загружаемого файла",
       "incorrectNullValueOperator": "Некорректный оператор {{ $1 }} для значения NULL в фильтре",
       "incorrectValuesForConstTypeBoolean": "Значение для константы булевого типа не соответствует формату",
@@ -759,18 +1355,25 @@
       "incorrectValuesForPermitRoleTypeBoolean": "Некорректное значение булевого параметра доступа",
       "incorrectValuesForPermitRoleTypeNumber": "Некорректное значение числового параметра доступа",
       "incorrectValuesForPermitRoleTypeString": "Некорректное значение строкового параметра доступа",
+      "incorrectStatusCodeValue": "Некорректное значение кода статуса долга",
       "invalidDateFormat": "Некорректный формат даты {{ $1 }}",
       "invalidDateTimeFormat": "Некорректный формат даты и времени {{ $1 }}",
       "invalidDoubleFormat": "Некорректный формат дробного числового параметра {{ $1 }}",
+      "invalidEmailFormat": "Формат email не удовлетворяет заданному шаблону",
       "invalidInputFileStream": "Ошибка при обработке и/или преобразовании входного бинарного потока",
       "invalidInputModel": "Некорректная/пустая входная модель данных",
       "invalidIntegerFormat": "Некорректный формат целочисленного числового параметра {{ $1 }}",
+      "invalidPhoneFormat": "Формат телефона не удовлетворяет заданному шаблону",
       "invalidPortfolioDirection": "Некорректное направление портфеля",
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
-      "login.invalidCredentials": "Неверный логин или пароль",
+      "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
+      "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
+      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",
       "organizationRootDeleteAttempt": "Запрошено удаление организации, членом которой является инициатор запроса",
@@ -781,7 +1384,9 @@
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
+      "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
+      "tempalteNotFound": "Не найден шаблон по Id",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
@@ -832,6 +1437,11 @@
       "TRUE": "Истина",
       "FALSE": "Ложь"
     },
+    "contextMenu": {
+      "copy": "Копировать",
+      "copyWithChildren": "Копировать с дочерними элементами",
+      "paste": "Вставить"
+    },
     "typeCode": {
       "number": "Число",
       "date": "Дата",
@@ -841,19 +1451,21 @@
       "dictionary": "Словарь"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Сохранить",
-      "cancel": "Отменить",
-      "remove": "Удалить",
-      "close": "Закрыть",
-      "clear": "Очистить",
-      "search": "Искать",
       "add": "Добавить",
-      "change": "Изменить",
       "back": "Назад",
-      "excel": "Экспорт в Excel"
+      "block": "Блокировать",
+      "change": "Изменить",
+      "clear": "Очистить",
+      "close": "Закрыть",
+      "cancel": "Отменить",
+      "excel": "Экспорт в Excel",
+      "ok": "OK",
+      "remove": "Удалить",
+      "save": "Сохранить",
+      "search": "Искать",
+      "select": "Выбрать"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "Начало",
       "to": "Окончание"
     },
@@ -865,8 +1477,8 @@
         "and": "И",
         "or": "Или"
       },
-      "groupDndTitle": "Группировка",
       "groupColumn": "Группировка",
+      "groupDndTitle": "Группировка",
       "loading": "Загрузка данных...",
       "selectedCounts": "{{ selected }} выбрано / {{ length }} всего",
       "localeText": {
@@ -884,7 +1496,10 @@
         "endsWith": "заканчивается на",
         "selectAll": "Все",
         "copy": "Копировать",
+        "copyField": "Копировать {{ field }}",
+        "copyRow": "Копировать строку",
         "copyWithHeaders": "Копировать c заголовками",
+        "resetColumns": "Сбросить настройки",
         "paste": "Вставить",
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",
@@ -896,6 +1511,9 @@
       "equal": "равно",
       "notEqual": "не равно",
       "empty": "пусто"
+    },
+    "select" : {
+      "empty": "[пустое значение]"
     },
     "sex": {
       "m": "м",
@@ -917,6 +1535,18 @@
       "datePicker": {
         "placeholder": "Выберите дату"
       }
-    }
+    },
+    "colors": {
+      "transparent": "Прозрачный",
+      "azure": "Голубой",
+      "violet": "Фиолетовый",
+      "olive": "Оливковый",
+      "lime": "Зеленый",
+      "fuchsia": "Фуксия",
+      "orange": "Оранжевый",
+      "pink": "Розовый",
+      "yellow": "Желтый"
+    },
+    "NA": "Не установлен"
   }
 }

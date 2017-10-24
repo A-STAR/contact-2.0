@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { ILdapGroup, ILdapUser } from './user-ldap-dialog.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
@@ -13,6 +13,8 @@ import { UserLdapDialogService } from './user-ldap-dialog.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserLdapDialogComponent {
+  @Output() submit = new EventEmitter<string>();
+
   groupsColumns: Array<IGridColumn> = [
     { prop: 'name' },
     { prop: 'comment' },
@@ -21,13 +23,9 @@ export class UserLdapDialogComponent {
   usersColumns: Array<IGridColumn> = [
     { prop: 'name' },
     { prop: 'login' },
-    { prop: 'isBlocked', localized: true },
+    { prop: 'isInactive', renderer: 'checkboxRenderer' },
     { prop: 'comment' },
   ];
-
-  userRenderers: IRenderer = {
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
-  };
 
   groups$: Observable<Array<ILdapGroup>>;
   users$: Observable<Array<ILdapUser>>;
@@ -38,9 +36,8 @@ export class UserLdapDialogComponent {
     private gridService: GridService,
     private userLdapDialogService: UserLdapDialogService
   ) {
-    this.usersColumns = this.gridService.setRenderers(this.usersColumns, this.userRenderers);
-    this.groups$ = this.userLdapDialogService.readLdapGroups()
-      .map(response => response.groups);
+    this.usersColumns = this.gridService.setRenderers(this.usersColumns);
+    this.groups$ = this.userLdapDialogService.readLdapGroups();
   }
 
   get selectedUser(): ILdapUser {
@@ -48,11 +45,14 @@ export class UserLdapDialogComponent {
   }
 
   onGroupSelect(group: ILdapGroup): void {
-    this.users$ = this.userLdapDialogService.readLdapUsers(group.name)
-      .map(response => response.users);
+    this.users$ = this.userLdapDialogService.readLdapUsers(group.name);
   }
 
   onUserSelect(user: ILdapUser): void {
     this._selectedUser = user;
+  }
+
+  onSubmit(user: ILdapUser): void {
+    this.submit.emit(user.login);
   }
 }

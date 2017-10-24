@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { MenuService } from '../core/menu/menu.service';
-import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
-
 import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.interface';
+
+import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-layout',
@@ -13,25 +12,41 @@ import { ITab } from '../shared/components/content-tabstrip/tab/content-tab.inte
 })
 export class LayoutComponent {
   titles = {
+    ActionsLogComponent: 'ACTIONS_LOG',
     ConstantsComponent: 'CONSTANTS',
-    DashboardComponent: 'HOME',
-    DictAndTermsComponent: 'DICTIONARIES',
-    OrganizationsComponent: 'DEPARTMENTS',
-    RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
-    ContractorsAndPortfoliosComponent: 'BANKS',
+    ContactRegistrationComponent: 'CONTACT_REGISTRATION',
+    ContactPropertiesComponent: 'CONTACT_TREES',
+    ContractorsAndPortfoliosComponent: 'PORTFOLIOS',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
+    DashboardComponent: 'HOME',
+    DebtorComponent: 'DEBTOR_CARD',
+    DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
+    DebtorAddressComponent: 'DEBTOR_ADDRESS',
+    DebtorContactsComponent: 'DEBTOR_CONTACTS',
+    DebtorDebtComponent: 'DEBTOR_DEBT',
+    DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
+    DebtorDocumentComponent: 'DEBTOR_DOCUMENT',
+    DebtorEmailComponent: 'DEBTOR_EMAIL',
+    DebtorEmploymentComponent: 'DEBTOR_EMPLOYMENT',
+    DebtorGuarantorComponent: 'DEBTOR_GUARANTEE',
+    DebtorIdentityComponent: 'DEBTOR_IDENTITY',
+    DebtorPaymentComponent: 'DEBTOR_PAYMENT',
+    DebtorPhoneComponent: 'DEBTOR_PHONE',
+    DebtorPromiseComponent: 'DEBTOR_PROMISE',
+    DebtorsComponent: 'DEBT_LIST',
+    DebtProcessingComponent: 'DEBTS',
+    DictionariesComponent: 'DICTIONARIES',
+    HelpComponent: 'HELP',
+    MessageTemplatesComponent: 'MESSAGE_SCENARIOS',
+    OrganizationsComponent: 'DEPARTMENTS',
+    RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     UserEditComponent: 'USER_EDIT',
-    HelpComponent: 'HELP',
-    ActionsLogComponent: 'ACTIONS_LOG',
-    DebtorComponent: 'DEBTOR_CARD',
-    DebtorsComponent: 'DEBT_LIST',
   };
 
   constructor(
-    private menuService: MenuService,
     private router: Router,
     private tabService: ContentTabService,
   ) {}

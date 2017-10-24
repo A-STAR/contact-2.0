@@ -12,10 +12,16 @@ export enum ToolbarItemTypeEnum {
   BUTTON_SAVE,
   BUTTON_SMS,
   BUTTON_UPLOAD,
+  BUTTON_BLOCK,
+  BUTTON_UNBLOCK,
+  BUTTON_CHANGE_STATUS,
+  BUTTON_CLOSE,
+  BUTTON_UNDO,
+  BUTTON_OK,
   CHECKBOX,
 }
 
-export type IToolbarActionCreator = () => void;
+export type IToolbarAction = () => void;
 
 export interface IToolbarDefaultElement {
   icon: string;
@@ -23,14 +29,15 @@ export interface IToolbarDefaultElement {
 }
 
 export interface IToolbarElement {
-  action: IToolbarActionCreator | Action;
+  action?: IToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
 }
 
 export interface IToolbarButton extends IToolbarElement {
-  icon?: string;
   type: ToolbarItemTypeEnum;
+  icon?: string;
+  children?: Array<IToolbarElement>;
 }
 
 export interface IToolbarCheckbox extends IToolbarElement {

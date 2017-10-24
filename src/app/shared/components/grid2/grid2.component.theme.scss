@@ -201,7 +201,7 @@
     background-color: #fff;
   }
   .ag-row-selected {
-    background-color: #23b7e5;
+    background-color: #6bd3f3;
   }
   .ag-row-stub {
     background-color: #f0f0f0;
@@ -335,8 +335,9 @@
   }
   .ag-filter-checkbox {
     position: relative;
-    top: 2px;
+    top: 0;
     left: 2px;
+    display: inline;
   }
   .ag-filter-header-container {
     border-bottom: 1px solid #d3d3d3;
@@ -346,7 +347,7 @@
     padding: 2px;
   }
   .ag-filter-value {
-    margin-left: 4px;
+    margin-left: 6px;
     font-weight: normal;
   }
   .ag-ltr .ag-selection-checkbox {

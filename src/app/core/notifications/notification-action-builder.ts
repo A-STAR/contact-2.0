@@ -1,6 +1,8 @@
 import { Response } from '@angular/http';
 import { Action, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 
 import { IAppState } from '../state/state.interface';
 import {
@@ -10,8 +12,6 @@ import {
   INotificationActionPayload,
   NotificationTypeEnum
 } from './notifications.interface';
-
-import { NotificationsService } from '../notifications/notifications.service';
 
 export class NotificationActionBuilder {
   private _prefix: string;
@@ -60,7 +60,7 @@ export class NotificationActionBuilder {
       alert: this._alert
     };
 
-    return this.createAction(NotificationsService.NOTIFICATION_PUSH, {
+    return this.createAction('NOTIFICATION_PUSH', {
       notification: {
         type: this._type,
         message: this.translateMessage(messageOptions),
@@ -78,6 +78,13 @@ export class NotificationActionBuilder {
     return (response: Response) => [ this.response(response).action() ];
   }
 
+  dispatchCallback(): (response: Response) => Observable<null> {
+    return (response: Response) => {
+      this.response(response).dispatch();
+      return Observable.throw(response);
+    };
+  }
+
   private translateMessage(message: string | IMessageOptions): string {
     if (message instanceof String) {
       return this.translateService.instant(message);
@@ -90,13 +97,17 @@ export class NotificationActionBuilder {
 
     if (message.response) {
       const { status } = message.response;
-      const { code, payload } = message.response.json().message;
-      const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
 
-      const translatedMessageKey = `errors.server.${code}`;
-      const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
-      if (translatedMessage !== translatedMessageKey) {
-        return translatedMessage;
+      const json = message.response.json();
+      if (json.message) {
+        const { code, payload } = json.message;
+        const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
+
+        const translatedMessageKey = `errors.server.${code}`;
+        const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
+        if (translatedMessage !== translatedMessageKey) {
+          return translatedMessage;
+        }
       }
 
       const translatedFallbackMessageKey = `${message.text}.${status}`;

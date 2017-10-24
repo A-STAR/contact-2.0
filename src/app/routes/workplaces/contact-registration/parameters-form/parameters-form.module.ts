@@ -1,0 +1,24 @@
+import { NgModule } from '@angular/core';
+import { TreeTableModule } from 'primeng/primeng';
+
+import { SelectModule } from '../../../../shared/components/form/select/select.module';
+import { SharedModule } from '../../../../shared/shared.module';
+import { ValueInputModule } from '../../../../shared/components/form/value/value.module';
+
+import { ParametersFormComponent } from './parameters-form.component';
+
+@NgModule({
+  imports: [
+    SelectModule,
+    SharedModule,
+    TreeTableModule,
+    ValueInputModule,
+  ],
+  exports: [
+    ParametersFormComponent,
+  ],
+  declarations: [
+    ParametersFormComponent,
+  ],
+})
+export class ParametersFormModule {}

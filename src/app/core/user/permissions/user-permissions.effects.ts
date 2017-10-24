@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IUserPermissionsResponse } from './user-permissions.interface';
+import { IUserPermission } from './user-permissions.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -17,25 +17,13 @@ export class UserPermissionsEffects {
     .ofType(UserPermissionsService.USER_PERMISSIONS_FETCH)
     .switchMap((action: Action) => {
       return this.read()
-        .map((response: IUserPermissionsResponse) => {
-          return {
-            type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,
-            payload: {
-              data: response.userPermits.reduce((acc, permission) => {
-                acc[permission.name] = permission;
-                return acc;
-              }, {})
-            }
-          };
-        })
-        .catch(() => {
-          return [
-            {
-              type: UserPermissionsService.USER_PERMISSIONS_FETCH_FAILURE
-            },
-            this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').action()
-          ];
-        });
+        .map((permissions: IUserPermission[]) => ({
+          type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,
+          payload: {
+            data: permissions.reduce((acc, permission) => ({ ...acc, [permission.name]: permission }), {})
+          }
+        }))
+        .catch(this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').callback());
     });
 
   constructor(
@@ -44,7 +32,7 @@ export class UserPermissionsEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(): Observable<IUserPermissionsResponse> {
-    return this.dataService.read('/userpermits');
+  private read(): Observable<IUserPermission[]> {
+    return this.dataService.readAll('/userpermits');
   }
 }

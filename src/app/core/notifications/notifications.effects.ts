@@ -28,7 +28,6 @@ export class NotificationsEffects {
 
   constructor(
     private actions: Actions,
-    private notificationsService: NotificationsService,
     private toasterService: ToasterService,
   ) {}
 }

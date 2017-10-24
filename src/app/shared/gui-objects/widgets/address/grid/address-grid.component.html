@@ -1,0 +1,46 @@
+<app-block-dialog
+  *ngIf="isDialog('block')"
+  titleTranslationKey="widgets.address.dialogs.block.title"
+  labelTranslationKey="widgets.address.dialogs.block.inactiveReasonCode"
+  [dictionaryId]="blockDialogDictionaryId"
+  (action)="onBlockDialogSubmit($event)"
+  (close)="onCloseDialog()">
+</app-block-dialog>
+
+<app-dialog-action
+  *ngIf="isDialog('unblock')"
+  titleTranslationKey="widgets.address.dialogs.unblock.title"
+  actionTranslationKey="widgets.address.dialogs.unblock.confirmMessage"
+  actionMessage="default.yesNo.Yes"
+  actionMode="success"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onUnblockDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.address.dialogs.delete.title"
+  actionTranslationKey="widgets.address.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedAddress$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  *ngIf="canDisplayGrid"
+  columnTranslationKey="debtor.information.address"
+  contextFieldName="fullAddress"
+  [contextMenuEnabled]="true"
+  selectionType="single"
+  [styles]="{height: '230px'}"
+  [columns]="columns"
+  [rowClass]="getRowClass()"
+  [rows]="addresses"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

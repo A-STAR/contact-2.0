@@ -3,9 +3,22 @@
   [employeesRows]="employeesRows"
   [actionTypesRows]="actionTypesRows"
   (export)="doExport()"
-  (search)="doSearch()"
+  (search)="onRequest()"
+  (queryBuilderOpen)="openQueryBuilder()"
 >
 </app-actions-log-filter>
+
+<app-dialog *ngIf="queryBuilderOpen$ | async" [styles]="{ width: '80%', 'max-width': '80%' }" (onClose)="closeQueryBuilder()">
+  <div dialog-header>
+    <h3>{{ 'queryBuilder.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-qbuilder-2 [query]="query$ | async"></app-qbuilder-2>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-default" (click)="closeQueryBuilder()">OK</button>
+  </div>
+</app-dialog>
 
 <app-downloader
   #downloader
@@ -15,19 +28,14 @@
 </app-downloader>
 
 <app-grid2
-  columnTranslationKey="actionsLog"
-  [columns]="columnDefs | async"
-  [ngClass]="'actions-log-grid'"
-  [page]="actionsLogCurrentPage | async"
-  [pageSize]="actionsLogCurrentPageSize | async"
+  ngClass="actions-log-grid"
+  metadataKey="actions"
   persistenceKey="actionsLog"
-  [rows]="(actionsLogData | async).data"
-  [rowCount]="(actionsLogData | async)?.total"
-  [selected]="actionsLogSelected | async"
-  (onPage)="onRequestData($event)"
-  (onPageSize)="onRequestData($event)"
-  (onSort)="onRequestData($event)"
-  (onFilter)="onFilter($event)"
-  (onSelect)="onSelect($event)"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onFilter)="onRequest()"
 >
 </app-grid2>

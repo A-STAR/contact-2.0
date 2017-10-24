@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TextMaskModule } from 'angular2-text-mask';
 
@@ -22,7 +22,7 @@ describe('QbuilderComponent', () => {
       imports: [
         DatePickerModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
         ReactiveFormsModule,
         TextMaskModule,
         TranslateModule.forRoot({
@@ -30,7 +30,7 @@ describe('QbuilderComponent', () => {
             provide: TranslateLoader,
             useFactory: createTranslateLoader,
             deps: [
-              Http
+              HttpClient
             ]
           }
         })

@@ -1,11 +1,16 @@
 {
   "header": {
     "search": {
-      "PLACEHOLDER": "Type and hit enter..."
+      "placeholder": "Type and hit enter..."
     },
     "license": {
       "title": "License",
       "info": "Your license number is"
+    },
+    "account": {
+      "title": "Account",
+      "logout": "Logout",
+      "reset": "Reset Settings"
     }
   },
   "offsidebar": {
@@ -18,7 +23,6 @@
       "HEADER": "Menu Heading"
     },
     "nav": {
-      "SINGLEVIEW": "Single View",
       "menu": {
         "HOME": "Home",
         "WORKFLOW": "Workflow",
@@ -29,8 +33,8 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
-        "DICTIONARIES": "Dictionaries",
-        "BANKS": "Banks",
+        "DICTIONARIES": "Reference",
+        "PORTFOLIOS": "Portfolios",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
@@ -41,6 +45,7 @@
         "ARBITRARY_VALUES": "Arbitrary Values",
         "CONTACT_TREES": "Contact Trees",
         "MESSAGE_SCENARIOS": "Message Scenarios",
+        "CONTACT_REGISTRATION": "Contact Registration",
         "GROUPS": "Groups",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
@@ -49,6 +54,18 @@
         "WORKPLACES": "Workplaces",
         "DEBT_LIST": "Debt List",
         "DEBTOR_CARD": "Debtor",
+        "DEBTOR_ADDRESS": "Debtor's address",
+        "DEBTOR_CONTACTS": "Debtor contacts",
+        "DEBTOR_DEBT": "Debtor's debt",
+        "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DOCUMENT": "Document",
+        "DEBTOR_EMAIL": "Debtor's email",
+        "DEBTOR_EMPLOYMENT": "Employment record",
+        "DEBTOR_GUARANTEE": "Guarantee contract",
+        "DEBTOR_IDENTITY": "Identity document",
+        "DEBTOR_PAYMENT": "Payment",
+        "DEBTOR_PHONE": "Debtor's phone",
+        "DEBTOR_PROMISE": "Payment promise",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -59,7 +76,7 @@
         "SEARCH_GROUPS": "Search Groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Arbitrary Reports",
+        "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help"
       }
     },
@@ -75,12 +92,16 @@
   },
   "validation": {
     "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "datepicker": "Invalid date/time format",
     "fieldRequired": "This field is required",
+    "fieldMin": "The value must be greater than {{ minValue }}",
+    "fieldMax": "The value must be less than {{ maxValue }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
-    "fieldMaxSize": "File size must not exceed {{ requiredSize }}"
+    "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
     "CONNECTION_ERROR": "Connection error"
@@ -94,9 +115,9 @@
   },
   "toolbar": {
     "action": {
-      "add": "Add",
+      "add": "Create",
       "edit": "Edit",
-      "remove": "Remove",
+      "remove": "Delete",
       "copy": "Copy",
       "refresh": "Refresh",
       "search": "Search",
@@ -104,26 +125,32 @@
       "sms": "Send SMS",
       "move": "Move",
       "download": "Download",
-      "upload": "Upload"
+      "upload": "Upload",
+      "block": "Block",
+      "unblock": "Unblock",
+      "changeStatus": "Change Status",
+      "close": "Close",
+      "undo": "Undo",
+      "ok": "OK"
     }
   },
   "queryBuilder": {
-    "TITLE": "Query builder",
-    "ADD_CONDITION": "Add condition",
-    "ADD_GROUP": "Add group",
-    "REMOVE_GROUP": "Remove group",
+    "title": "Query Builder",
     "buttons": {
-      "GET_QUERY": "Build the query",
-      "BACK": "Back"
+      "addCondition": "Add condition",
+      "removeCondition": "Delete contition",
+      "addGroup": "Add group",
+      "removeGroup": "Delete group",
+      "addValue": "Add value",
+      "removeValue": "Delete value"
     }
   },
   "login": {
-    "PLEASE_AUTHENTICATE": "Please, authenticate",
-    "LOGIN_PLACEHOLDER": "Login",
-    "PASSWORD_PLACEHOLDER": "Password",
-    "REMEMBER_ME": "Remember login",
-    "FORGOT_PASSWORD": "Forgot password?",
-    "LOGIN_BUTTON": "Login"
+    "please_authenticate": "Please, authenticate",
+    "login_placeholder": "Login",
+    "password_placeholder": "Password",
+    "remember_me": "Remember login",
+    "login_button": "Login"
   },
   "constants": {
     "title": "Constants",
@@ -150,7 +177,7 @@
       "employees": {
         "title": "Operators",
         "placeholder": "Select operator(s)",
-        "blocking": "Show blocked operators",
+        "inactive": "Show inactive",
         "grid": {
           "id": "Id",
           "position": "Position",
@@ -183,7 +210,7 @@
     "title": "Users",
     "toolbar": {
       "action": {
-        "show_blocked_users": "show blocked"
+        "show_inactive_users": "show inactive"
       }
     },
     "edit": {
@@ -194,7 +221,8 @@
       "firstName": "Name",
       "middleName": "Middle name",
       "photo": "Photo",
-      "blocked": "Blocked",
+      "inactive": "Inactive",
+      "isAutoReset": "Auto reset",
       "login": "Login",
       "password": "Password",
       "ldapLogin": "LDAP login",
@@ -226,7 +254,7 @@
       "middleName": "Middle name",
       "position": "Position",
       "roleId": "Role",
-      "isBlocked": "Blocked",
+      "isInactive": "Inactive",
       "mobPhone": "Mobile",
       "workPhone": "Work phone",
       "intPhone": "Extension",
@@ -245,7 +273,7 @@
         "grid": {
           "name": "Full name",
           "login": "Login",
-          "isBlocked": "Blocked",
+          "isInactive": "Inactive",
           "comment": "Comment"
         }
       }
@@ -279,11 +307,12 @@
       "code": "Code",
       "name": "Name",
       "parentCode": "Parent dictionary",
-      "typeCode": "Dictionary type"
+      "typeCode": "Dictionary type",
+      "termTypeCode": "Term type"
     },
     "remove": {
-      "title": "Remove dictionary",
-      "confirmMessage": "Do you really want to remove the dictionary {{ name }}?"
+      "title": "Delete dictionary",
+      "confirmMessage": "Do you really want to delete the dictionary {{ name }}?"
     },
     "types": {
       "system": "System",
@@ -297,6 +326,10 @@
     },
     "errors": {
       "view": "Access to dictionaries list denied"
+    },
+    "tabs": {
+      "dictionaries": "Dictionaries",
+      "attributes": "Attributes"
     }
   },
   "terms": {
@@ -322,8 +355,8 @@
       "isClosed": "Unused term"
     },
     "remove": {
-      "title": "Remove term",
-      "confirmMessage": "Do you really want to remove the term {{ name }}?"
+      "title": "Delete term",
+      "confirmMessage": "Do you really want to delete the term {{ name }}?"
     },
     "errors": {
       "view": "Access to dictionary terms list denied"
@@ -349,8 +382,8 @@
         "title": "New role"
       },
       "remove": {
-        "title": "Remove the role",
-        "confirmMessage": "Do you really want to remove the role {{ name }}?"
+        "title": "Delete the role",
+        "confirmMessage": "Do you really want to delete the role {{ name }}?"
       },
       "grid": {
         "id": "Id",
@@ -365,8 +398,11 @@
       "tab": {
         "title": "Permits"
       },
-      "tab2": {
+      "access": {
         "title": "Access settings"
+      },
+      "objects": {
+        "title": "Objects"
       },
       "add": {
         "title": "Choose a permission",
@@ -387,8 +423,8 @@
         "access_denied": "Access to GUI objects permission tree denied"
       },
       "remove": {
-        "title": "Remove role permission",
-        "confirmMessage": "Do you really want to remove the permission {{ name }}?"
+        "title": "Delete role permission",
+        "confirmMessage": "Do you really want to delete the permission {{ name }}?"
       },
       "grid": {
         "id": "Id",
@@ -401,7 +437,7 @@
         "no_view": "You do not have the rights '{{ permission }}' for viewing records",
         "no_add": "You do not have the rights '{{ permission }}' for adding records",
         "no_edit": "You do not have the rights '{{ permission }}' for editing records",
-        "no_delete": "You do not have the rights '{{ permission }}' for deleting records"
+        "no_delete": "You do not have the rights '{{ permission }}' for removing records"
       },
       "errors": {
         "view": "Access to permissions list denied"
@@ -415,55 +451,77 @@
     "lastName": "Family name",
     "middleName": "Middle name",
     "type": "Type",
-    "responsible": "Manager",
+    "responsibleFullName": "Manager",
     "reward": "Remuneration",
-    "generalInformationTab": {
-      "title": "General",
-      "generalInformation": "General information",
-      "birthDate": "Date of birth",
-      "company": "Company",
-      "position": "Position",
-      "income": "Income",
-      "citizenship": "Citizenship",
-      "sex": "Sex",
-      "workplaceChecked": "Employment verified",
-      "importance": "Importance",
-      "stage": "Stage",
-      "decency": "Decency",
-      "maritalStatus": "Marital status",
-      "education": "Education",
-      "email": "Email",
-      "passport": "Passport",
-      "series": "Series",
-      "number": "No",
-      "issueDate": "Issue date",
-      "issuedBy": "Issued by",
-      "birthPlace": "Place of birth",
-      "phonesTab": {
-        "title": "Phones",
-        "contactsVerification": "Verification of contacts",
+    "shortInfo": "Short info",
+    "utc": "Debtor's local time",
+    "identityDocs": {
+      "title": "Identity documents",
+      "add": {
+        "title": "Add an identity"
+      },
+      "edit": {
+        "title": "Edit identity"
+      },
+      "remove": {
+        "title": "Delete the document",
+        "confirmMessage": "Do you really want to delete the document {{ docNumber }}?"
+      },
+      "changeMain": {
+        "title": "Confirm",
+        "confirmMessage": "This debtor already has an identity doc attribute set to \"Main\". Do you really want to set this identity document as main?"
+      },
+      "grid": {
+        "id": "Id",
+        "docTypeCode": "Type",
+        "docNumber": "No",
+        "issueDate": "Issue date",
+        "issuePlace": "Issue place",
+        "expiryDate": "Expiry date",
+        "citizenship": "Citizenship",
+        "comment": "Comment",
+        "isMain": "Is main?"
+      }
+    },
+    "information": {
+      "title": "General information",
+      "address": {
+        "title": "Addresses",
         "grid": {
-          "type": "Type",
-          "number": "Number",
-          "status": "Status",
-          "lastCall": "Last call",
-          "contactPerson": "Contact person",
-          "comment": "Comments",
-          "region": "Region",
-          "active": "Active",
-          "qualityCode": "Quality code",
-          "numberExists": "Number exists",
-          "qualityCodeByDataQ": "DataQ code quality",
-          "verified": "Verified",
-          "blockingDate": "Blocking date",
-          "blockingReason": "Blocking reason"
+          "fullAddress": "Address",
+          "typeCode": "Type",
+          "statusCode": "Status",
+          "isResidence": "Residence",
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking",
+          "comment": "Comment"
         }
       },
-      "addressesTab": {
-        "title": "Addresses"
+      "email": {
+        "title": "Emails",
+        "grid": {
+          "email": "Email",
+          "typeCode": "Type",
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking"
+        }
       },
-      "emailTab": {
-        "title": "Email"
+      "phone": {
+        "title": "Phones",
+        "toolbar": {
+          "verification": "Contact verification"
+        },
+        "grid": {
+          "phone": "Number",
+          "typeCode": "Type",
+          "statusCode": "Status",
+          "isInactive": "Inactive",
+          "inactiveReasonCode": "Reason for blocking",
+          "inactiveDateTime": "Date of blocking",
+          "comment": "Comment"
+        }
       }
     },
     "debtsTab": {
@@ -473,47 +531,79 @@
       "title": "Property"
     },
     "guarantorsTab": {
-      "title": "Guarantors"
+      "title": "Guarantors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this guarantee contract?"
+      }
     },
     "contactsTab": {
-      "title": "Contacts"
+      "title": "Contacts",
+      "remove": {
+        "title": "Delete the contact",
+        "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
+      }
     },
-    "planningTab": {
-      "title": "Planning"
+    "paymentsTab": {
+      "title": "Payments",
+      "confirm": {
+        "title": "Approve the payment",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this payment?"
+      },
+      "cancel": {
+        "title": "Cancel the payment",
+        "buttonLabel": "Cancel",
+        "message": "Do you really want to cancel this payment?"
+      }
     },
-    "documentationTab": {
+    "promisesTab": {
+      "title": "Promises",
+      "approve": {
+        "title": "Approve the promise",
+        "buttonLabel": "Approve",
+        "message": "Do you really want to approve of this promise?"
+      },
+      "remove": {
+        "title": "Delete the promise",
+        "message": "Do you really want to delete this promise?"
+      },
+      "confirmInsufficient": {
+        "title": "Confirm amount",
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?"
+      },
+      "infoIncreaseAmount": {
+        "title": "Information",
+        "message": "You have to increase the promise amount to {{ percent }}% of the amount due."
+      }
+    },
+    "documentsTab": {
       "title": "Documents",
       "errors": {
         "download": "Could not download document"
       }
     },
-    "accountsTab": {
-      "title": "Accounts"
-    },
-    "tasksTab": {
-      "title": "Tasks"
-    },
-    "workHistoryTab": {
-      "title": "Work history (full)"
+    "employmentRecordTab": {
+      "title": "Employment record",
+      "remove": {
+        "title": "Delete the record",
+        "confirmMessage": "Do you really want to delete the selected record?"
+      }
     },
     "actionLogTab": {
       "title": "Actions log"
     },
-    "arbitraryAttributesTab": {
-      "title": "Arbitrary attributes"
-    },
-    "commentTab": {
-      "title": "Comments"
-    },
-    "promotionsTab": {
-      "title": "Promotions"
-    },
-    "socialNetworksTab": {
-      "title": "Social networks"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Debt info"
+    "attributesTab": {
+      "title": "Attributes"
     }
+  },
+  "person": {
+    "gender": "Gender",
+    "birthDate": "Date of birth",
+    "birthPlace": "Place of birth",
+    "familyStatusCode": "Marital status",
+    "educationCode": "Education",
+    "comment": "Comment"
   },
   "debtors": {
     "grid": {
@@ -552,7 +642,7 @@
         "grid": {
           "fullName": "Full name",
           "position": "Position",
-          "isBlocked": "Blocked"
+          "isInactive": "Inactive"
         }
       },
       "edit": {
@@ -569,7 +659,7 @@
         "position": "Position",
         "fullName": "Full name",
         "roleCode": "Role code",
-        "isBlocked": "Blocked"
+        "isInactive": "Inactive"
       },
       "errors": {
         "view": "Access to employees list denied"
@@ -580,7 +670,7 @@
     "managers": {
       "remove": {
         "title": "Delete manager",
-        "confirmMessage": "Are you sure you want to delete manager {{ lastName }}?"
+        "confirmMessage": "Are you sure you want to delete the manager {{ lastName }}?"
       },
       "grid": {
         "fullName": "Full name",
@@ -594,6 +684,7 @@
         "workPhone": "Work phone",
         "intPhone": "Extension",
         "workAddress": "Address",
+        "email": "Email",
         "comment": "Comment"
       },
       "messages": {
@@ -605,6 +696,7 @@
       "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
     },
     "grid": {
+      "id": "Id",
       "name": "Short name",
       "fullName": "Full name",
       "smsName": "Name fot SMS",
@@ -624,6 +716,7 @@
   },
   "portfolios": {
     "grid": {
+      "id": "Id",
       "name": "Name",
       "directionCode": "Direction",
       "stageCode": "Stage",
@@ -639,6 +732,22 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
+    }
+  },
+  "utilities": {
+    "messageTemplates": {
+      "phoneCall": {
+        "title": "Phone Call"
+      },
+      "sms": {
+        "title": "SMS"
+      },
+      "custom": {
+        "title": "Custom"
+      },
+      "autoComment": {
+        "title": "Auto Comment"
+      }
     }
   },
   "notifications": {
@@ -657,70 +766,514 @@
       "refresh": "Could not refresh session"
     }
   },
+  "widgets": {
+    "actionLog": {
+      "grid": {
+        "createDateTime": "Date",
+        "dsc": "Description",
+        "guiObject": "Module",
+        "fullName": "Operator",
+        "machine": "Computer",
+        "typeCode": "Action type"
+      },
+      "form": {
+        "startDate": "From",
+        "endDate": "To",
+        "searchBtn": "Search"
+      }
+    },
+    "address": {
+      "card": {
+        "fullAddress": "Address",
+        "fullAddressLabel": "Full address",
+        "postalCode": "Postal code",
+        "country": "Country",
+        "region": "Region",
+        "area": "Region area",
+        "city": "City",
+        "settlement": "Settlement",
+        "cityDistrict": "City district",
+        "street": "Street",
+        "house": "House",
+        "building": "Building",
+        "flat": "Flat",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "isResidence": "Is current residence"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block address",
+          "inactiveReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock address",
+          "confirmMessage": "Are you sure you want to unblock the address {{ fullAddress }}?"
+        },
+        "delete": {
+          "title": "Delete address",
+          "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
+        }
+      }
+    },
+    "attribute": {
+      "dialogs": {
+        "edit": {
+          "title": "Edit Attribute"
+        },
+        "delete": {
+          "title": "Delete attribute",
+          "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        }
+      },
+      "grid": {
+        "code": "Code",
+        "name": "Name",
+        "value": "Value",
+        "userFullName": "Operator",
+        "changeDateTime": "Change date/time",
+        "comment": "Comments",
+        "typeCode": "Data Type",
+        "dictNameCode": "Dictionary",
+        "disabledValue": "No Value"
+      }
+    },
+    "contact": {
+      "grid": {
+        "fullName": "Full name",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "birthDate": "Date of birth",
+        "birthPlace": "Place of birth",
+        "genderCode": "Gender",
+        "familyStatusCode": "Family status",
+        "educationCode": "Education",
+        "linkTypeCode": "Type",
+        "comment": "Comment"
+      }
+    },
+    "contactProperty": {
+      "contactType": "Contact Type",
+      "treeType": "Tree Type",
+      "dialogs": {
+        "add": {
+          "title": "Create Contact Outcome",
+          "mainSettings": "Main Settings",
+          "attributesSettings": "Attribtues Settings",
+          "value": "Value",
+          "formula": "Formula",
+          "attributes": {
+            "code": "Code",
+            "name": "Name",
+            "display": "Display",
+            "mandatory": "Required"
+          }
+        },
+        "edit": {
+          "title": "Contact Outcome"
+        },
+        "delete": {
+          "title": "Delete Contact Outcome",
+          "confirmMessage": "Are you sure you want to remove contact outcome?"
+        }
+      },
+      "edit": {
+        "code": "Code",
+        "name": "Name",
+        "boxColor": "Color",
+        "commentMode": "Comment Input Mode",
+        "autoCommentIds": "Autocomment input",
+        "regInvisible": "Uploading Files",
+        "nextCallMode": "Next Call Date",
+        "promiseMode": "Promis Input",
+        "paymentMode": "Unverified Payment Input",
+        "callReasonMode": "Reason for Calling",
+        "debtStatusCode": "Custom Status",
+        "statusReasonMode": "Reason for Changing Status",
+        "debtReasonMode": "Debt Reason Input",
+        "template": "Script Type Input",
+        "nextCallDays": "Days Until Next Call",
+        "dictValue1": "Dictionary Attribute 1",
+        "dictValue2": "Dictionary Attribute 2",
+        "dictValue3": "Dictionary Attribute 3",
+        "dictValue4": "Dictionary Attribute 4",
+        "isInvalidContact": "Invalid Phone Number/Address",
+        "addPhone": "New Debtor's Phone Number Input",
+        "isRefusal": "Payment Refusal Flag",
+        "isSuccess": "Successful Outcome",
+        "changeResponsible": "Changing Operator",
+        "contactInvisible": "Don't Display in Contacts"
+      }
+    },
+    "document": {
+      "grid": {
+        "docName": "Document Name",
+        "fileName": "File Name",
+        "docTypeCode": "Document Type",
+        "docNumber": "Number",
+        "operatorName": "Operator",
+        "comment": "Comment",
+        "file": "File"
+      },
+      "dialogs": {
+        "delete": {
+          "title": "Delete document?",
+          "confirmMessage": "Are you sure you want to delete document {{ docName }}?"
+        }
+      }
+    },
+    "email": {
+      "card": {
+        "typeCode": "Type",
+        "email": "Email",
+        "comment": "Comment"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block email",
+          "inactiveReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock email",
+          "confirmMessage": "Are you sure you want to unblock email {{ email }}?"
+        },
+        "delete": {
+          "title": "Delete email",
+          "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        }
+      }
+    },
+    "guarantor": {
+      "title": "Guarantor",
+      "search": {
+        "title": "Find guarantors"
+      },
+      "dialog": {
+        "title": "Select a guarantor"
+      },
+      "grid": {
+        "id": "Id",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name",
+        "birthDate": "Date of birth",
+        "birthPlace": "Place of birth",
+        "educationCode": "Education",
+        "familyStatusCode": "Marital status",
+        "genderCode": "Gender",
+        "passportNumber": "Passport No",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "stringValue1": "Add. attribute 1",
+        "stringValue2": "Add. attribute 2",
+        "stringValue3": "Add. attribute 3",
+        "stringValue4": "Add. attribute 4",
+        "stringValue5": "Add. attribute 5",
+        "stringValue6": "Add. attribute 6",
+        "stringValue7": "Add. attribute 7",
+        "stringValue8": "Add. attribute 8",
+        "stringValue9": "Add. attribute 9",
+        "stringValue10": "Add. attribute 10"
+      }
+    },
+    "guaranteeContract": {
+      "title": "Guarantee contract",
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "contractTypeCode": "Contract type",
+        "comment": "Comment"
+      }
+    },
+    "employment": {
+      "grid": {
+        "workTypeCode": "Work type",
+        "company": "Company",
+        "position": "Position",
+        "hireDate": "Hire date",
+        "dismissDate": "Dismissal date",
+        "income": "Income",
+        "currencyId": "Currency",
+        "comment": "Comment"
+      }
+    },
+    "messageTemplate": {
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template",
+          "variables": "Variables"
+        },
+        "delete": {
+          "title": "Delete Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient"
+      }
+    },
+    "object": {
+      "dialogs": {
+        "add": {
+          "title": "Create object"
+        },
+        "delete": {
+          "title": "Delete object",
+          "confirmMessage": "Are you sure you want to delete object {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name"
+      }
+    },
+    "phone": {
+      "card": {
+        "typeCode": "Type",
+        "phoneNumber": "Phone number",
+        "stopAutoSms": "Stop automatic SMS",
+        "stopAutoInfo": "Stop automatic voicemail",
+        "comment": "Comment"
+      },
+      "dialogs": {
+        "block": {
+          "title": "Block phone number",
+          "inactiveReasonCode": "Reason for blocking"
+        },
+        "unblock": {
+          "title": "Unblock phone number",
+          "confirmMessage": "Are you sure you want to unblock phone {{ phone }}?"
+        },
+        "schedule": {
+          "title": "Schedule Single SMS",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "templateId": "SMS",
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "text": "Message Text"
+          }
+        },
+        "delete": {
+          "title": "Delete phone number",
+          "confirmMessage": "Are you sure you want to delete phone {{ phone }}?"
+        }
+      }
+    },
+    "payment": {
+      "grid": {
+        "amount": "Amount",
+        "amountMainCurrency": "Amount in currency",
+        "comment": "Comment",
+        "commission": "Commission",
+        "currencyName": "Currency",
+        "isConfirmed": "Is confirmed",
+        "payerName": "Payer",
+        "paymentDateTime": "Payment date",
+        "purposeCode": "Purpose",
+        "receiptNumber": "Receipt No",
+        "receiveDateTime": "Received on",
+        "reqUserFullName": "Req operator",
+        "statusCode": "Status",
+        "userFullName": "Operator"
+      },
+      "toolbar": {
+        "showCanceled": "Show canceled"
+      }
+    },
+    "promise": {
+      "grid": {
+        "promiseDate": "Due date",
+        "promiseAmount": "Amount",
+        "receiveDateTime": "Promise received",
+        "statusCode": "Status",
+        "comment": "Comment",
+        "fullName": "Operator"
+      }
+    },
+    "debt": {
+      "toolbar": {
+        "call": "Call Back",
+        "forRepayment": "For Repayment",
+        "withdrawn": "Withdrawn by Client",
+        "terminate": "Terminate Work"
+      },
+      "grid": {
+        "id": "Id",
+        "portfolioId": "Portfolio",
+        "bankId": "Bank",
+        "creditTypeCode": "Credit type",
+        "creditName": "Credit name",
+        "contract": "Contract #",
+        "statusCode": "Status",
+        "creditStartDate": "Credit start date",
+        "creditEndDate": "Credit end date",
+        "regionCode": "Region",
+        "branchCode": "Branch",
+        "currencyId": "Currency",
+        "startDate": "DPD start date",
+        "debtAmount": "Debt amount",
+        "totalAmount": "Total amount",
+        "dpd": "DPD",
+        "portfolio": "Portfolio",
+        "bank": "Bank",
+        "debtReasonCode": "Debt reason",
+        "comment": "Comments",
+        "dict1Code": "Dpd interval",
+        "dict2Code": "Dpd strategy",
+        "dict3Code": "Score 3",
+        "dict4Code": "Score 4"
+      },
+      "dialogs": {
+        "closeDebt": {
+          "title": "Debt Closure",
+          "reasonCode": "Reason",
+          "comment": "Comments"
+        },
+        "statusChange": {
+          "title": "Debt Status Update",
+          "statusCode": "Select Status",
+          "reasonCode": "Select Reason",
+          "customStatusCode": "Custom Status",
+          "comment": "Comments"
+        },
+        "nextCall": {
+          "title": "Set Next Call Date",
+          "nextCallDateTime": "Date",
+          "forAllDebts": "For All Debts"
+        }
+      },
+      "component": {
+        "title": "Debt components",
+        "grid": {
+          "typeCode": "Type",
+          "amount": "Amount",
+          "currencyId": "Currency"
+        },
+        "remove": {
+          "title": "Delete debt component",
+          "confirmMessage": "Are you sure you want to delete the debt component?"
+        }
+      },
+      "componentLog": {
+        "title": "Debt Components History",
+        "grid": {
+          "typeCode": "Type",
+          "amount": "Amount",
+          "currency": "Currency",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
+        }
+      },
+      "portfolioLog": {
+        "title": "Portfolio History",
+        "incoming": "Incoming",
+        "outgoing": "Outgoing",
+        "grid": {
+          "portfolioName": "Portfolio",
+          "fromDate": "Start Date",
+          "toDate": "End Date",
+          "fullName": "Operator"
+        }
+      }
+    }
+  },
   "entities": {
+    "attribute": {
+      "gen": { "singular": "attribute", "plural": "attributes" }
+    },
     "roles": {
-      "gen": { "singular": "role", "plural": "roles list" }
+      "gen": { "singular": "role", "plural": "roles" }
     },
     "permissions": {
-      "gen": { "singular": "permit", "plural": "permits list" }
+      "gen": { "singular": "permit", "plural": "permits" }
     },
     "guiObjects": {
-      "gen": { "singular": "GUI object", "plural": "GUI objects list" }
+      "gen": { "singular": "GUI object", "plural": "GUI objects" }
     },
     "users": {
-      "gen": { "singular": "user", "plural": "users list" },
+      "gen": { "singular": "user", "plural": "users" },
       "photos": {
         "gen": { "singular": "user photo" }
       }
     },
     "actionsLog": {
-      "gen": { "singular": "actions log entry", "plural": "actions log" }
+      "gen": { "singular": "actions log entry", "plural": "action log" }
     },
     "constants": {
-      "gen": { "singular": "constant", "plural": "constants list" }
+      "gen": { "singular": "constant", "plural": "constants" }
     },
     "dictionaries": {
-      "gen": { "singular": "dictionary", "plural": "dictionaries list" }
+      "gen": { "singular": "dictionary", "plural": "dictionaries" }
     },
     "terms": {
-      "gen": { "singular": "dictionary term", "plural": "dictionary terms list" }
+      "gen": { "singular": "dictionary term", "plural": "dictionary terms" }
     },
     "contractors": {
-      "gen": { "singular": "contractor", "plural": "contractors list" }
+      "gen": { "singular": "contractor", "plural": "contractors" }
     },
     "managers": {
-      "gen": { "singular": "manager", "plural": "managers list" }
+      "gen": { "singular": "manager", "plural": "managers" }
     },
     "portfolios": {
-      "gen": { "singular": "portfolio", "plural": "portfolios list" }
+      "gen": { "singular": "portfolio", "plural": "portfolios" }
+    },
+    "payments": {
+      "gen": { "singular": "payment", "plural": "payments" }
+    },
+    "guarantors": {
+      "gen": { "singular": "guarantor", "plural": "guarantors" }
+    },
+    "promises": {
+      "gen": { "singular": "promise", "plural": "promises" }
+    },
+    "promisesLimit": {
+      "gen": { "plural": "promise constraints" }
     },
     "organizations": {
-      "gen": { "singular": "organization", "plural": "organizations list" }
+      "gen": { "singular": "organization", "plural": "organizations" }
     },
     "employees": {
-      "gen": { "singular": "employee", "plural": "employees list" }
+      "gen": { "singular": "employee", "plural": "employees" }
     },
     "debtors": {
-      "gen": { "singular": "debtor", "plural": "debtors list" },
+      "gen": { "singular": "debtor", "plural": "debtors" },
       "info": {
         "gen": { "plural": "debtor general information" }
-      },
-      "phones": {
-        "gen": { "plural": "debtors phones list" }
       }
+    },
+    "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "metadata": {
+      "gen": { "plural": "metadata" }
     },
     "user": {
       "constants": {
-        "gen": { "singular": "user constant", "plural": "user constants list" }
+        "gen": { "singular": "user constant", "plural": "user constants" }
       },
       "languages": {
-        "gen": { "singular": "user language", "plural": "user languages list" }
+        "gen": { "singular": "user language", "plural": "user languages" }
       },
       "permissions": {
-        "gen": { "singular": "user permit", "plural": "user permits list" }
+        "gen": { "singular": "user permit", "plural": "user permits" }
       },
       "dictionaries": {
-        "gen": { "singular": "user dictionary", "plural": "user dictionaries list" }
+        "gen": { "singular": "user dictionary", "plural": "user dictionaries" }
       }
     },
     "lookup": {
@@ -730,19 +1283,61 @@
       "users": {
         "gen": { "plural": "users lookup data" }
       }
+    },
+    "addresses": {
+      "gen": { "singular": "address", "plural": "addresses" }
+    },
+    "emails": {
+      "gen": { "singular": "email", "plural": "emails" }
+    },
+    "phones": {
+      "gen": { "singular": "phone number", "plural": "phone numbers" }
+    },
+    "contacts": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+    },
+    "identityDocs": {
+      "gen": { "singular": "identity document", "plural": "identity documents" }
+    },
+    "employment": {
+      "gen": { "singular": "employment record", "plural": "employment records" }
+    },
+    "debtComponents": {
+      "gen": { "singular": "debt component", "plural": "debt components" }
+    },
+    "sms": {
+      "gen": { "singular": "SMS", "plural": "SMS" }
+    },
+    "messageTemplate": {
+      "gen": { "singular": "message template", "plural": "message templates" }
     }
   },
   "errors": {
     "server": {
+      "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
+      "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
+      "contactPersonNotFound": "Не найдено контактное лицо по Id",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
+      "currencyNotFound": "Не найдена валюта по id",
+      "currencyRateNotFound": "Currency rate not found for this date",
+      "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
+      "debtPromiseNotFound": "Не найдено обещание по Id",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
       "dictionaryTermNotFound": "Словарный термин не найден",
+      "emailNotFound": "Не найден email по id",
+      "employmentNotFound": "Не найдена запись о занятости по id",
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
+      "entityNotFound": "Не найдена сущность при обращении по entityTypeId или entityAttributeId",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
+      "entityTypeIsNotSupportedForEntity": "Для заданного entityTypeId не поддерживаются операции с заданной сущностью",
+      "fieldMustBeGreaterThan": "Значение поля должно быть больше заданного значения {{ $1 }}",
+      "fieldMustBeGreaterOrEqualThan": "Значение поля должно быть больше или равно заданному значению {{ $1 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
       "fieldSizeMustBeBetween": "Длина поля {{ $1 }} должна быть в диапазоне от {{ $2 }} до {{ $3 }} символов",
       "fileExtentionIsRequired": "В имени сохраняемого файла отсутствует расширение",
@@ -750,6 +1345,7 @@
       "filterOperatorNotAllowedForDataType": "Для заданного типа данных не поддерживается оператор, переданный в фильтре",
       "guiIdNotFound": "Не найден запрошенный по ID объект интерфейса",
       "guiNameNotFound": "Не найден запрошенный по имени объект интерфейса",
+      "gridParametersNotFound": "Недопустимый набор параметров запроса загрузки данных",
       "incorrectContentType": "Недопустимый content-type {{ $1 }} загружаемого файла",
       "incorrectNullValueOperator": "Некорректный оператор {{ $1 }} для значения NULL в фильтре",
       "incorrectValuesForConstTypeBoolean": "Значение для константы булевого типа не соответствует формату",
@@ -759,18 +1355,25 @@
       "incorrectValuesForPermitRoleTypeBoolean": "Некорректное значение булевого параметра доступа",
       "incorrectValuesForPermitRoleTypeNumber": "Некорректное значение числового параметра доступа",
       "incorrectValuesForPermitRoleTypeString": "Некорректное значение строкового параметра доступа",
+      "incorrectStatusCodeValue": "Некорректное значение кода статуса долга",
       "invalidDateFormat": "Некорректный формат даты {{ $1 }}",
       "invalidDateTimeFormat": "Некорректный формат даты и времени {{ $1 }}",
       "invalidDoubleFormat": "Некорректный формат дробного числового параметра {{ $1 }}",
+      "invalidEmailFormat": "Формат email не удовлетворяет заданному шаблону",
       "invalidInputFileStream": "Ошибка при обработке и/или преобразовании входного бинарного потока",
       "invalidInputModel": "Некорректная/пустая входная модель данных",
       "invalidIntegerFormat": "Некорректный формат целочисленного числового параметра {{ $1 }}",
+      "invalidPhoneFormat": "Формат телефона не удовлетворяет заданному шаблону",
       "invalidPortfolioDirection": "Некорректное направление портфеля",
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
+      "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
+      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",
       "organizationRootDeleteAttempt": "Запрошено удаление организации, членом которой является инициатор запроса",
@@ -781,7 +1384,9 @@
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
+      "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
+      "tempalteNotFound": "Не найден шаблон по Id",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
@@ -832,6 +1437,11 @@
       "TRUE": "True",
       "FALSE": "False"
     },
+    "contextMenu": {
+      "copy": "Copy",
+      "copyWithChildren": "Copy with child elements",
+      "paste": "Paste"
+    },
     "typeCode": {
       "number": "Number",
       "date": "Date",
@@ -841,19 +1451,21 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Save",
-      "cancel": "Cancel",
-      "remove": "Remove",
-      "close": "Close",
-      "clear": "Clear",
-      "search": "Search",
       "add": "Add",
+      "back": "Back",
+      "block": "Block",
       "change": "Change",
+      "clear": "Clear",
+      "close": "Close",
+      "cancel": "Cancel",
       "excel": "Export to Excel",
-      "back": "Back"
+      "ok": "OK",
+      "remove": "Delete",
+      "save": "Save",
+      "search": "Search",
+      "select": "Select"
     },
-    "dateTimeRage": {
+    "dateTimeRange": {
       "from": "From",
       "to": "To"
     },
@@ -884,7 +1496,10 @@
         "endsWith": "ends with",
         "selectAll": "All",
         "copy": "Copy",
+        "copyField": "Copy {{ field }}",
+        "copyRow": "Copy row",
         "copyWithHeaders": "Copy with headers",
+        "resetColumns": "Reset settings",
         "paste": "Paste",
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
@@ -896,6 +1511,9 @@
       "equal": "equal",
       "notEqual": "not equal",
       "empty": "empty"
+    },
+    "select" : {
+      "empty": "[empty value]"
     },
     "sex": {
       "m": "m",
@@ -917,6 +1535,18 @@
       "datePicker": {
         "placeholder": "Select a date"
       }
-    }
+    },
+    "colors": {
+      "transparent": "Transparent",
+      "azure": "Azure",
+      "violet": "Violet",
+      "olive": "Olive",
+      "lime": "Lime",
+      "fuchsia": "Fuchsia",
+      "orange": "Orange",
+      "pink": "Pink",
+      "yellow": "Yellow"
+    },
+    "NA": "N/A"
   }
 }

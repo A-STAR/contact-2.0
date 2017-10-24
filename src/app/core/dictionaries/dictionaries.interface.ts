@@ -1,4 +1,4 @@
-import { ILabeledValue } from '../converter/value/value-converter.interface';
+import { ILabeledValue } from '../converter/value-converter.interface';
 
 export type IDictionaryValue = number | Array<ILabeledValue>;
 
@@ -48,6 +48,7 @@ export interface IDictionariesState {
   selectedDictionary: IDictionary;
   selectedTerm: ITerm;
   terms: Array<ITerm>;
+  parentTerms: Array<ITerm>;
   dictionaryTermTypes: Array<ITerm>;
   dialogAction: DictionariesDialogActionEnum;
 }

@@ -1,14 +1,35 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 
-import { ITab } from './content-tab.interface';
+import { ITab, ITabEvent, TabEventStageEnum } from './content-tab.interface';
+
+import { ActionsLogService } from '../../../../core/actions-log/actions-log.service';
+import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
+
+import { menuConfig } from '../../../../routes/menu-config';
 
 @Injectable()
 export class ContentTabService {
   private _tabs: ITab[] = [];
   private _activeIndex: number;
+  private lastTabEvent: ITabEvent = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private actionsLogService: ActionsLogService,
+    private guiObjectsService: GuiObjectsService,
+    private location: Location,
+    private router: Router,
+  ) {
+    this.onSectionLoadStart();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.onSectionLoadStart();
+      } else if (event instanceof NavigationEnd) {
+        this.onSectionLoadEnd(event);
+      }
+    });
+  }
 
   get tabs(): ITab[] {
     return this._tabs;
@@ -19,13 +40,23 @@ export class ContentTabService {
   }
 
   addTab(tab: ITab): void {
-    const found = this._tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
+    const found = this.tabs.findIndex(el => el.component.COMPONENT_NAME === tab.component.COMPONENT_NAME);
     if (found === -1) {
       this.tabs = this.tabs.concat(tab);
       this.setActiveIndex(this.tabs.length - 1);
+      this.lastTabEvent.stage = TabEventStageEnum.TAB_OPEN;
     } else {
       this.setActiveIndex(found);
     }
+  }
+
+  getCurrentTab(): ITab {
+    return this.tabs[this.getActiveIndex()];
+  }
+
+  removeTabNoNav(current: number): void {
+    this.tabs = this.tabs.filter((tab, index) => index !== current);
+    // this.setActiveIndex(this.tabs.length - 1);
   }
 
   removeTab(i: number): void {
@@ -41,9 +72,7 @@ export class ContentTabService {
 
     this.tabs = this.tabs.filter((tab, index) => index !== i);
     this.setActiveIndex(active);
-    this.router
-      .navigateByUrl(this.tabs[active].path)
-      .then(result => result);
+    this.router.navigateByUrl(this.tabs[active].path);
   }
 
   setActiveIndex(i: number): void {
@@ -59,8 +88,59 @@ export class ContentTabService {
   }
 
   navigate(url: string): void {
-    const i = this._activeIndex;
+    const i = this.getActiveIndex();
     this.router.navigate([url])
       .then(() => this.removeTab(i));
+  }
+
+  back(): void {
+    const i = this._activeIndex;
+    this.location.back();
+    this.tabs = this.tabs.filter((tab, index) => index !== i);
+  }
+
+  gotoParent(router: Router, cutNSections: number): void {
+    const current = this.getActiveIndex();
+    const { path } = this.getCurrentTab();
+    const re = new RegExp('(\/[^\/]*){' + cutNSections + '}$', 'g');
+    router.navigate([ path.replace(re, '') ])
+      .then(() => {
+        if (path === this.getCurrentTab().path) {
+            this.removeTab(current);
+        } else {
+          this.removeTabNoNav(current);
+        }
+      });
+  }
+
+  findTabIndexByPath(path: string): number {
+    return this._tabs.findIndex(tab => tab.path.match(path) !== null);
+  }
+
+  private onSectionLoadStart(): void {
+    this.lastTabEvent = {
+      timestamp: Date.now(),
+      stage: TabEventStageEnum.NAVIGATION_START
+    };
+  }
+
+  private onSectionLoadEnd(event: NavigationEnd): void {
+    if (this.lastTabEvent.stage === TabEventStageEnum.TAB_OPEN) {
+      const delay = Date.now() - this.lastTabEvent.timestamp;
+      const name = Object.keys(menuConfig).find(key => menuConfig[key].link === event.url);
+      if (name) {
+        this.logAction(name, delay);
+      }
+    }
+  }
+
+  private logAction(name: string, delay: number): void {
+    this.guiObjectsService.menuItemIds
+      .take(1)
+      .subscribe(menuItemIds => {
+        if (menuItemIds[name] > 0) {
+          this.actionsLogService.log(name, delay, menuItemIds[name]);
+        }
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -7,6 +7,9 @@ import { IFilters, INotification } from '../../core/notifications/notifications.
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { PersistenceService } from '../../core/persistence/persistence.service';
+
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +17,8 @@ import { SettingsService } from '../../core/settings/settings.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
+
   isNavSearchVisible: boolean;
 
   isLicenseVisible = false;
@@ -27,6 +32,7 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     public settings: SettingsService,
+    private persistenceService: PersistenceService,
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
@@ -63,6 +69,12 @@ export class HeaderComponent implements OnInit {
 
   toggleCollapsedSidebar(): void {
     this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
+    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
+  }
+
+  toggleAside(): void {
+    this.settings.layout.asideToggled = !this.settings.layout.asideToggled;
+    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 
   isCollapsedText(): void {
@@ -82,6 +94,12 @@ export class HeaderComponent implements OnInit {
     const lang = this.translateService.currentLang;
     const nextLang = lang === 'ru' ? 'en' : 'ru';
     this.translateService.use(nextLang).take(1).subscribe();
+  }
+
+  resetSettings(event: UIEvent): void {
+    event.preventDefault();
+    this.persistenceService.clear();
+    this.accountDropdown.close();
   }
 
   logout(event: UIEvent): void {

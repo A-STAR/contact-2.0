@@ -22,13 +22,20 @@
     "label-position": true,
     "max-line-length": [
       true,
-      140
+      130
     ],
     "member-access": false,
     "member-ordering": [
       true,
-      "static-before-instance",
-      "variables-before-functions"
+      {
+        "order": [
+          "public-static-field",
+          "public-constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
+        ]
+      }
     ],
     "no-arg": true,
     "no-bitwise": true,
@@ -70,7 +77,7 @@
     ],
     "radix": true,
     "semicolon": [
-      "always"
+      true
     ],
     "triple-equals": [
       true,
@@ -109,11 +116,16 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "no-access-missing-member": true,
+    "no-access-missing-member": false,
     "templates-use-public": true,
     "invoke-injectable": true,
 
     "typedef": [true, "call-signature", "parameter"],
-    "no-unused-variable": [true, {"ignore-pattern": "^_"}]
+    "no-unused-variable": [true,
+      {
+        "ignore-pattern": "^_",
+        "check-parameters": true
+      }
+    ]
   }
 }

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
-import { IAppState } from '../../../core/state/state.interface';
 import { IUser } from './users.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -24,12 +23,10 @@ export class UsersEffects {
     .ofType(UsersService.USERS_FETCH)
     .switchMap((action: Action) => {
       return this.readUsers()
-        .mergeMap(data => [
+        .mergeMap(users => [
           {
             type: UsersService.USERS_FETCH_SUCCESS,
-            payload: {
-              users: data.users
-            }
+            payload: { users }
           },
           {
             type: UsersService.USER_SELECT,
@@ -42,15 +39,26 @@ export class UsersEffects {
     });
 
   @Effect()
+  toggleInactiveUsers$ = this.actions
+    .ofType(UsersService.USER_TOGGLE_INACTIVE)
+    .switchMap((action: Action) => {
+      return this.readUsers()
+        .mergeMap(() => [
+          {
+            type: UsersService.USERS_FETCH,
+          },
+        ])
+        .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').callback());
+    });
+
+  @Effect()
   fetchUser$ = this.actions
     .ofType(UsersService.USER_FETCH)
     .switchMap((action: Action) => {
       return this.readUser(action.payload.userId)
-        .map(response => ({
+        .map(user => ({
           type: UsersService.USER_FETCH_SUCCESS,
-          payload: {
-            user: response.users[0]
-          }
+          payload: { user }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.singular').callback());
     });
@@ -116,7 +124,9 @@ export class UsersEffects {
         ])
         .catch(error => {
           const message = photo ? 'errors.default.upload' : 'errors.default.delete';
-          return [ this.notificationsService.error(message).entity('entities.users.photos.gen.singular').response(error).action() ];
+          return [
+            this.notificationsService.error(message).entity('entities.users.photos.gen.singular').response(error).action()
+          ];
         });
     });
 
@@ -124,11 +134,10 @@ export class UsersEffects {
     private actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private store: Store<IAppState>,
   ) {}
 
   private readUsers(): Observable<any> {
-    return this.dataService.read('/users');
+    return this.dataService.readAll('/users');
   }
 
   private readUser(id: number): Observable<any> {

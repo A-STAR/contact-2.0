@@ -1,0 +1,20 @@
+<ng-container *ngIf="node.container; else container">
+
+  <!-- Flat layout -->
+  <ng-container *ngIf="node.container === 'flat'">
+    <ng-container *ngFor="let childNode of node.children">
+      <app-container [node]="childNode"></app-container>
+    </ng-container>
+  </ng-container>
+
+  <!-- Tabstrip -->
+  <ng-container *ngIf="node.container === 'tabs'">
+    <app-tabstrip [inverse]="true">
+      <app-tab *ngFor="let childNode of node.children" [closable]="false" [title]="childNode.title | translate">
+        <app-container [node]="childNode"></app-container>
+      </app-tab>
+    </app-tabstrip>
+  </ng-container>
+</ng-container>
+
+<ng-template #container></ng-template>

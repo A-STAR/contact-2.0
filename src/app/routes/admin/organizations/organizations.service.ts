@@ -167,12 +167,12 @@ export class OrganizationsService {
     });
   }
 
-  setDialogAction(dialogAction: IOrganizationDialogActionEnum, organization?: ITreeNode): void {
+  setDialogAction(dialogAction: IOrganizationDialogActionEnum, data: object = {}): void {
     return this.store.dispatch({
       type: OrganizationsService.DIALOG_ACTION,
       payload: {
         dialogAction,
-        organization
+        data
       }
     });
   }

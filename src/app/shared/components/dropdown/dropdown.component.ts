@@ -1,5 +1,7 @@
 import { Component, ElementRef, HostListener, Input, ViewChild, animate, state, style, transition, trigger } from '@angular/core';
 
+import { IDropdownPosition } from './dropdown.interface';
+
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
@@ -15,21 +17,37 @@ import { Component, ElementRef, HostListener, Input, ViewChild, animate, state, 
     )
   ]
 })
+/**
+ * @deprecated
+ */
 export class DropdownComponent {
   private _isOpen = false;
 
   @Input() enabled = true;
+  @Input() displayArrow = false;
+  @Input() fullWidth = false;
+  @Input() position: IDropdownPosition = 'center';
 
   @ViewChild('trigger') trigger: ElementRef;
+
+  constructor(private element: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.containsTarget(this.element, event) && !this.containsTarget(this.trigger, event)) {
       this.setIsOpen(false);
     }
-  };
+  }
 
-  constructor(private element: ElementRef) {}
+  get ngClass(): object {
+    return {
+      dropdown: true,
+      left: this.position === 'left',
+      right: this.position === 'right',
+      arrow: this.displayArrow,
+      full: this.fullWidth,
+    };
+  }
 
   get isOpen(): boolean {
     return this._isOpen;

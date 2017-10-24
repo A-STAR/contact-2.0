@@ -1,6 +1,6 @@
 import { RowNode, ColDef } from 'ag-grid';
 
-import { FilterObject } from './filter/grid2-filter';
+import { FilterObject } from './filter/grid-filter';
 
 export type AGridSortType = 'asc' | 'desc' | null;
 export type IAGridGroups  = string[];
@@ -8,14 +8,20 @@ export type IAGridSelected = Array<any>;
 
 export interface IAGridColumn {
   colId: string;
+  dataType: number;
+  dictCode?: number;
   disabled?: boolean;
   filter?: string;
   filterValues?: Array<any>;
-  filterDictionaryId?: number;
-  hide?: boolean;
+  hidden?: boolean;
+  label?: string;
   maxWidth?: number;
   minWidth?: number;
+  name?: string;
   renderer?: Function;
+  // compatibility between @swimlane/ngx-datatable and ag-grid
+  $$valueGetter?: Function;
+  valueGetter?: (params: ValueGetterParams) => any | string;
   sort?: string;
   type?: string;
   width?: number;
@@ -40,6 +46,11 @@ export interface IAGridSorter {
 export interface IAGridFilter {
   columnId: string;
   filter: FilterObject;
+}
+
+export interface IAGridFilterRequest {
+  filters: FilterObject;
+  currentPage?: number;
 }
 
 export interface IAGridExportableColumn {
@@ -67,6 +78,11 @@ export interface IAGridRequest {
   filtering?: FilterObject;
 }
 
+export interface IAGridResponse<T> {
+  data?: Array<T>;
+  total?: number;
+}
+
 export interface IAGridEventPayload {
   type: string;
   payload?:
@@ -80,12 +96,24 @@ export interface IAGridEventPayload {
 
 // need this, since ag-grid doesn't export this interface
 export interface IViewportDatasourceParams {
-    /** datasource calls this method when the total row count changes. This in turn sets the height of the grids vertical scroll. */
+    /** datasource calls this method when the total row count changes.
+     * This in turn sets the height of the grids vertical scroll.
+     */
     setRowCount: (count: number) => void;
-    /** datasource calls this when new data arrives. The grid then updates the provided rows. The rows are mapped [rowIndex]=>rowData].*/
+    /** datasource calls this when new data arrives. The grid then updates the provided rows.
+     * The rows are mapped [rowIndex]=>rowData].
+     */
     setRowData: (rowData: {
         [key: number]: any;
     }) => void;
     /** datasource calls this when it wants a row node - typically used when it wants to update the row node */
     getRow: (rowIndex: number) => RowNode;
+}
+
+export interface ValueGetterParams {
+  colDef: ColDef;
+  context: any;
+  data: any;
+  getValue: (field: string) => any;
+  node: RowNode;
 }

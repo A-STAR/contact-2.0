@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, animate, style, transition, trigger } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form-control.interface';
+import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form.interface';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -25,11 +25,15 @@ import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../d
 export class DynamicFormGroupComponent {
   static DEFAULT_MESSAGES = {
     required: 'validation.fieldRequired',
+    min: 'validation.fieldMin',
+    max: 'validation.fieldMax',
     minlength: 'validation.fieldMinLength',
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
     hasuppercasechars: 'validation.fieldUpperCase',
-    maxsize: 'validation.fieldMaxSize'
+    maxsize: 'validation.fieldMaxSize',
+    oneofgrouprequired: 'validation.oneOfGroupRequired',
+    datepicker: 'validation.datepicker'
   };
 
   @Input() collapsible = false;
@@ -54,13 +58,14 @@ export class DynamicFormGroupComponent {
 
   displayControlErrors(control: IDynamicFormControl): boolean {
     const formControl = this.form.controls[control.controlName];
-    return formControl.errors && (formControl.dirty || formControl.touched);
+    return formControl && formControl.errors && (formControl.dirty || formControl.touched);
   }
 
   getControlErrors(control: IDynamicFormControl): Array<any> {
     const errors = this.form.controls[control.controlName].errors;
     return Object.keys(errors).map(key => ({
-      message: control.validationMessages && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
+      message: control.validationMessages
+        && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
       data: errors[key]
     }));
   }

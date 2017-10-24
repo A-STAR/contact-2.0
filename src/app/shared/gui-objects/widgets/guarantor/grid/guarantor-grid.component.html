@@ -1,0 +1,24 @@
+<app-dialog (displayChange)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.guarantor.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-grid
+    columnTranslationKey="widgets.guarantor"
+    selectionType="single"
+    [styles]="gridStyles"
+    [columns]="columns"
+    [rows]="persons"
+    (onDblClick)="onDoubleClick($event)"
+>
+  </app-grid>
+
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onClose()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onClose()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

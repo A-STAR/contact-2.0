@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { EntityBaseComponent } from '../../../../shared/components/entity/edit/entity.base.component';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { EntityBaseComponent } from '../../../../shared/components/entity/base.component';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IConstant } from '../constants.interface';
 
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-constant-edit',
@@ -31,7 +31,9 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
   ngOnInit(): void {
     this.formData = {
       ...this.editedEntity,
-      value: this.editedEntity.typeCode === 2 ? this.valueConverterService.fromISO(this.editedEntity.valueD) : this.editedEntity.value
+      value: this.editedEntity.typeCode === 2
+        ? this.valueConverterService.fromISO(this.editedEntity.valueD)
+        : this.editedEntity.value
     };
     super.ngOnInit();
   }
@@ -40,9 +42,10 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
     this.langSub.unsubscribe();
   }
 
-  toSubmittedValues(constant: IConstant): IConstant {
+  toSubmittedValues(constant: IConstant): Partial<IConstant> {
     return {
-      ...constant,
+      id: this.editedEntity.id,
+      typeCode: this.editedEntity.typeCode,
       value: constant.typeCode === 2 ? this.valueConverterService.toISO(constant.value) : constant.value
     };
   }

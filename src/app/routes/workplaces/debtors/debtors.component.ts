@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebtor } from './debtor/debtor.interface';
+import { IPerson } from '../debt-processing/debtor/debtor.interface';
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -16,9 +16,9 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 export class DebtorsComponent implements OnDestroy {
   static COMPONENT_NAME = 'DebtorsComponent';
 
-  private selectedDebtor: IDebtor;
+  private selectedDebtor: IPerson;
 
-  debtors: IDebtor[];
+  debtors: IPerson[];
   debtorsSub: Subscription;
 
   columns: Array<IGridColumn> = [
@@ -33,9 +33,9 @@ export class DebtorsComponent implements OnDestroy {
   renderers: IRenderer = {
     fullName: toFullName,
     type: [
-      // TODO(a.poterenko) STUB
+      // TODO(a.tymchuk) STUB
       { value: 1, label: 'Physical person' },
-      { value: 2, label: 'Juridical person' },
+      { value: 2, label: 'Legal entity' },
     ]
   };
 
@@ -52,6 +52,7 @@ export class DebtorsComponent implements OnDestroy {
     private gridService: GridService
   ) {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.debtorsService.fetchDebtors();
     this.debtorsSub = debtorsService.debtors.subscribe(debtors => this.debtors = debtors);
   }
 
@@ -59,11 +60,11 @@ export class DebtorsComponent implements OnDestroy {
     this.debtorsSub.unsubscribe();
   }
 
-  onDblClick(debtor: IDebtor): void {
+  onDblClick(debtor: IPerson): void {
     this.debtorsService.showDebtor(debtor.id);
   }
 
-  onSelect(debtor: IDebtor): void {
+  onSelect(debtor: IPerson): void {
     this.debtorsService.selectDebtor(this.selectedDebtor = debtor);
   }
 }

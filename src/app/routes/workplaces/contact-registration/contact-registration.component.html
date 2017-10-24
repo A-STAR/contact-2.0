@@ -1,0 +1,17 @@
+<div class="mb">
+  <p-steps [model]="steps" [(activeIndex)]="step" [readonly]="false"></p-steps>
+</div>
+
+<div [hidden]="step != 0">
+  <app-outcome-form
+    [debtId]="debtId"
+    [contactTypeCode]="contactTypeCode">
+  </app-outcome-form>
+</div>
+
+<div [hidden]="step != 1">
+  <app-parameters-form
+    [debtId]="debtId"
+    [contactTypeCode]="contactTypeCode">
+  </app-parameters-form>
+</div>

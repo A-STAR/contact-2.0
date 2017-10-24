@@ -4,85 +4,149 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
-import { ILookupState, ILookupRole, ILookupUser } from './lookup.interface';
-import { IOption } from '../converter/value/value-converter.interface';
 
-import { ValueConverterService } from '../converter/value/value-converter.service';
+import { valuesToOptions, toOption } from '../utils';
+
+import {
+  ILookupState,
+  ILookupAttributeType,
+  ILookupContractor,
+  ILookupCurrency,
+  ILookupLanguage,
+  ILookupPortfolio,
+  ILookupRole,
+  ILookupUser,
+  ILookupKey,
+  LookupStatusEnum
+} from './lookup.interface';
+import { IOption } from '../converter/value-converter.interface';
+
+import { ValueConverterService } from '../converter/value-converter.service';
 
 @Injectable()
 export class LookupService {
-  static LOOKUP_ROLES_FETCH         = 'LOOKUP_ROLES_FETCH';
-  static LOOKUP_ROLES_FETCH_SUCCESS = 'LOOKUP_ROLES_FETCH_SUCCESS';
-  static LOOKUP_ROLES_FETCH_FAILURE = 'LOOKUP_ROLES_FETCH_FAILURE';
-  static LOOKUP_USERS_FETCH         = 'LOOKUP_USERS_FETCH';
-  static LOOKUP_USERS_FETCH_SUCCESS = 'LOOKUP_USERS_FETCH_SUCCESS';
-  static LOOKUP_USERS_FETCH_FAILURE = 'LOOKUP_USERS_FETCH_FAILURE';
+  static LOOKUP_FETCH         = 'LOOKUP_FETCH';
+  static LOOKUP_FETCH_SUCCESS = 'LOOKUP_FETCH_SUCCESS';
+  static LOOKUP_FETCH_FAILURE = 'LOOKUP_FETCH_FAILURE';
+
+  private _state: ILookupState;
 
   constructor(
     private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
-  ) {}
+  ) {
+    this.state$.subscribe(state => this._state = state);
+  }
 
-  get isResolved(): Observable<boolean> {
-    return this.state
-      .filter(state => state.rolesResolved !== null && state.usersResolved !== null)
-      .map(state => state.rolesResolved && state.usersResolved)
-      .take(1);
+  lookup(entity: ILookupKey): Observable<Array<any>> {
+    return this.getSlice(entity);
+  }
+
+  lookupAsOptions(entity: ILookupKey): Observable<Array<IOption>> {
+    const result = this.getSlice(entity);
+    switch (entity) {
+      case 'attributeTypes':
+        console.warn('Cannot convert nested attribute types to options array.');
+        return Observable.of([]);
+      case 'currencies':
+        return result.map(currencies => currencies.map(toOption('id', 'code')));
+      case 'dictionaries':
+        return result.map(dictionaries => dictionaries.map(toOption('code', 'name')));
+      case 'users':
+        return result.map(users => users.map((user: any) =>
+          ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })));
+      default:
+        return result.map(valuesToOptions);
+    }
+  }
+
+  get attributeTypes(): Observable<Array<ILookupAttributeType>> {
+    return this.getSlice('attributeTypes');
+  }
+
+  get contractors(): Observable<Array<ILookupContractor>> {
+    return this.getSlice('contractors');
+  }
+
+  get currencies(): Observable<Array<ILookupCurrency>> {
+    return this.getSlice('currencies');
+  }
+
+  get languages(): Observable<Array<ILookupLanguage>> {
+    return this.getSlice('languages');
+  }
+
+  get portfolios(): Observable<Array<ILookupPortfolio>> {
+    return this.getSlice('portfolios');
   }
 
   get roles(): Observable<Array<ILookupRole>> {
-    return this.getRoles()
-      .distinctUntilChanged();
+    return this.getSlice('roles');
   }
 
   get users(): Observable<Array<ILookupUser>> {
-    return this.getUsers()
+    return this.getSlice('users');
+  }
+
+  get contractorOptions(): Observable<Array<IOption>> {
+    return this.getSlice('contractors')
+      .map(contractors => this.valueConverterService.valuesToOptions(contractors))
+      .distinctUntilChanged();
+  }
+
+  get currencyOptions(): Observable<Array<IOption>> {
+    return this.getSlice('currencies')
+      .map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })))
+      .distinctUntilChanged();
+  }
+
+  get languageOptions(): Observable<Array<IOption>> {
+    return this.getSlice('languages')
+      .map(languages => this.valueConverterService.valuesToOptions(languages))
+      .distinctUntilChanged();
+  }
+
+  get portfolioOptions(): Observable<Array<IOption>> {
+    return this.getSlice('portfolios')
+      .map(portfolios => this.valueConverterService.valuesToOptions(portfolios))
       .distinctUntilChanged();
   }
 
   get roleOptions(): Observable<Array<IOption>> {
-    return this.getRoles()
+    return this.getSlice('roles')
       .map(roles => this.valueConverterService.valuesToOptions(roles))
       .distinctUntilChanged();
   }
 
   get userOptions(): Observable<Array<IOption>> {
-    return this.getUsers()
-      .map(users => this.valueConverterService.valuesToOptions(users))
+    return this.getSlice('users')
+      .map(users =>
+        users.map((user: any) => ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })))
       .distinctUntilChanged();
   }
 
-  createRefreshRolesAction(): Action {
-    return {
-      type: LookupService.LOOKUP_ROLES_FETCH
-    };
+  createRefreshAction(key: ILookupKey): Action {
+    return { type: LookupService.LOOKUP_FETCH, payload: { key } };
   }
 
-  createRefreshUsersAction(): Action {
-    return {
-      type: LookupService.LOOKUP_USERS_FETCH
-    };
-  }
-
-  refreshRoles(): void {
-    const action = this.createRefreshRolesAction();
+  refresh(key: ILookupKey): void {
+    const action = this.createRefreshAction(key);
     this.store.dispatch(action);
   }
 
-  refreshUsers(): void {
-    const action = this.createRefreshUsersAction();
-    this.store.dispatch(action);
+  private getSlice(key: ILookupKey): Observable<Array<any>> {
+    const status = this._state[key] && this._state[key].status;
+    if (status !== LookupStatusEnum.PENDING && status !== LookupStatusEnum.LOADED) {
+      this.refresh(key);
+    }
+    return this.state$
+      .map(state => state[key])
+      .filter(slice => slice && slice.status === LookupStatusEnum.LOADED)
+      .map(slice => slice.data)
+      .distinctUntilChanged();
   }
 
-  private get state(): Observable<ILookupState> {
+  private get state$(): Observable<ILookupState> {
     return this.store.select(state => state.lookup);
-  }
-
-  private getRoles(): Observable<Array<ILookupRole>> {
-    return this.state.map(state => state.roles);
-  }
-
-  private getUsers(): Observable<Array<ILookupUser>> {
-    return this.state.map(state => state.users);
   }
 }

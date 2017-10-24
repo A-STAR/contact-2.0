@@ -46,7 +46,7 @@ export const menuConfig: IMenuConfig = {
     icon: 'icon-book-open'
   },
   clients: {
-    text: 'sidebar.nav.menu.BANKS',
+    text: 'sidebar.nav.menu.PORTFOLIOS',
     link: '/admin/contractors',
     icon: 'icon-briefcase'
   },
@@ -79,12 +79,12 @@ export const menuConfig: IMenuConfig = {
   },
   contacts: {
     text: 'sidebar.nav.menu.CONTACT_TREES',
-    link: '/utilities/contact-trees',
+    link: '/utilities/contact-properties',
     icon: 'icon-people'
   },
   messages: {
     text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
-    link: '/utilities/message-scenarios',
+    link: '/utilities/message-templates',
     icon: 'icon-bubbles'
   },
   groups: {
@@ -121,7 +121,7 @@ export const menuConfig: IMenuConfig = {
   },
   debtList: {
     text: 'sidebar.nav.menu.DEBT_LIST',
-    link: '/workplaces/debt-list',
+    link: '/workplaces/debts',
     icon: 'icon-wallet'
   },
   tasks: {
@@ -131,7 +131,7 @@ export const menuConfig: IMenuConfig = {
   },
   debts: {
     text: 'sidebar.nav.menu.DEBTS',
-    link: '/workplaces/debts',
+    link: '/workplaces/debt-processing',
     icon: 'icon-fire'
   },
   contactProtocol: {

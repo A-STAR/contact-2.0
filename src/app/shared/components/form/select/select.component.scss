@@ -23,7 +23,7 @@
 .app-select-caret {
   position: absolute;
   top: 45%;
-  right: 15px;
+  right: 10px;
   cursor: pointer;
 }
 
@@ -64,7 +64,7 @@
   height: auto;
   max-height: 180px;
   overflow-x: hidden;
-  margin-top: 0;
+  margin-top: -1px;
 }
 
 .ui-select-choices.dropdown-menu {
@@ -74,6 +74,9 @@
 
 .ui-select-container {
   font-weight: normal;
+  > .ui-select-match > .form-control {
+    padding-right: 24px;
+  }
 }
 
 .ui-select-container[disabled] * {
@@ -85,7 +88,7 @@
   margin-top: 1px;
 }
 
-.ui-select-choices-row {
+.ui-select-item {
   &.active {
     .dropdown-item {
       color: #fff;

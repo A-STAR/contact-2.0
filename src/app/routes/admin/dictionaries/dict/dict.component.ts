@@ -1,24 +1,20 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { ILabeledValue } from '../../../../core/converter/value/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
-import { IUserLanguage } from '../../../../core/user/languages/user-languages.interface';
+import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { UserLanguagesService } from '../../../../core/user/languages/user-languages.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-dict',
@@ -55,38 +51,41 @@ export class DictComponent implements OnDestroy {
     }
   ];
 
-  columns: Array<IGridColumn> = [
-    { prop: 'code', minWidth: 100, maxWidth: 150 },
+  columns: IGridColumn[] = [
+    { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200 },
-    { prop: 'typeCode', localized: true },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
+    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
   ];
-
-  renderers: IRenderer = {
-    parentCode: [],
-    typeCode: [
-      { label: 'dictionaries.types.system', value: 1 },
-      { label: 'dictionaries.types.client', value: 2 }
-    ]
-  };
 
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private dictionariesService$: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
+    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
-    private userLanguagesService: UserLanguagesService,
   ) {
-    this.dictionariesService$ = this.dictionariesService.state.subscribe(state => {
-      this.renderers.parentCode = state.dictionaries.map(dict => ({ label: dict.name, value: dict.code }));
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    });
+
+    this.gridService.setDictionaryRenderers(this.columns)
+      .flatMap(columns => {
+        this.columns = columns;
+        return this.dictionariesService.state;
+      })
+      .take(3)
+      .subscribe(dicState => {
+        const { dictionaries } = dicState;
+        if (dictionaries.length) {
+          const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
+          this.columns = this.gridService.setRenderers(this.columns, renderers);
+          this.cdRef.markForCheck();
+        }
+      });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
@@ -97,7 +96,6 @@ export class DictComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dictionariesService$.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 
@@ -105,8 +103,8 @@ export class DictComponent implements OnDestroy {
     return this.dictionariesService.dictionaries;
   }
 
-  get languages(): Observable<IUserLanguage[]> {
-    return this.userLanguagesService.userLanguages;
+  get languages(): Observable<ILookupLanguage[]> {
+    return this.lookupService.languages;
   }
 
   get dictionaryTermTypes(): Observable<ITerm[]> {
@@ -166,41 +164,29 @@ export class DictComponent implements OnDestroy {
     this.dictionariesService.setDictionaryDialogAction(null);
   }
 
-  modifyEntity(data: IDictionary, editMode: boolean): void {
-    data.typeCode = this.valueConverterService.firstLabeledValue(data.typeCode);
-    data.parentCode = this.valueConverterService.firstLabeledValue(data.parentCode);
-    data.termTypeCode = this.valueConverterService.firstLabeledValue(data.termTypeCode);
-
-    if (editMode) {
-      const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
-
-      const deletedTranslations = nameTranslations
-        .filter((item: ILabeledValue) => item.removed)
-        .map((item: ILabeledValue) => item.value);
-
-      const updatedTranslations = nameTranslations
-        .filter((item: ILabeledValue) => !item.removed)
-        .map((item: ILabeledValue) => ({
-          languageId: item.value,
-          value: item.context ? item.context.translation : null
-        }))
-        .filter((item: IEntityTranslation) => item.value !== null);
-
-      delete data.translatedName;
-      delete data.nameTranslations;
-
-      this.dictionariesService.updateDictionary(data, deletedTranslations, updatedTranslations);
-    } else {
-      this.dictionariesService.createDictionary(data);
-    }
-  }
-
   onUpdateEntity(data: IDictionary): void {
-    this.modifyEntity(data, true);
+    const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
+
+    const deletedTranslations = nameTranslations
+      .filter(item => item.removed)
+      .map((item: ILabeledValue) => item.value);
+
+    const updatedTranslations: IEntityTranslation[] = nameTranslations
+      .filter(item => !item.removed)
+      .map((item: ILabeledValue) => ({
+        languageId: item.value,
+        value: item.context ? item.context.translation : null
+      }))
+      .filter((item: IEntityTranslation) => item.value !== null);
+
+    delete data.translatedName;
+    delete data.nameTranslations;
+
+    this.dictionariesService.updateDictionary(data, deletedTranslations, updatedTranslations);
   }
 
   onCreateEntity(data: IDictionary): void {
-    this.modifyEntity(data, false);
+    this.dictionariesService.createDictionary(data);
   }
 
   onRemoveSubmit(): void {

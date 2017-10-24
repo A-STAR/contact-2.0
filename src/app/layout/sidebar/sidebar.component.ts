@@ -1,35 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IMenuItem } from '../../core/menu/menu.interface';
-
-import { MenuService } from '../../core/menu/menu.service';
+import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { NotificationsService } from '../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit, OnDestroy {
 
-  menuItems: Array<IMenuItem>;
+  menuItems: any = [];
 
-  private routeDataSubscription: Subscription;
+  private menuSubscription: Subscription;
 
   constructor(
-    private menuService: MenuService,
-    private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
+    private menuService: GuiObjectsService,
     private router: Router,
     public settings: SettingsService,
   ) {
-    this.routeDataSubscription = this.route.data.subscribe(
-      data => this.menuItems = data.menu,
-      () => this.notificationsService.error('sidebar.messages.loadError').dispatch()
-    );
+    this.menuSubscription = this.menuService.menuItems.subscribe(items => {
+      this.menuItems = items;
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnInit(): void {
@@ -42,7 +39,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.routeDataSubscription.unsubscribe();
+    this.menuSubscription.unsubscribe();
   }
 
   toggleSubmenuClick(event: UIEvent): void {

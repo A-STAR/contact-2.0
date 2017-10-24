@@ -7,24 +7,21 @@ import 'rxjs/add/operator/filter';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { DataService } from '../../../core/data/data.service';
-
 @Injectable()
 export class UsersService {
-  static USERS_FETCH         = 'USERS_FETCH';
-  static USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS';
-  static USER_FETCH          = 'USER_FETCH';
-  static USER_FETCH_SUCCESS  = 'USER_FETCH_SUCCESS';
-  static USERS_CLEAR         = 'USERS_CLEAR';
-  static USER_CREATE         = 'USER_CREATE';
-  static USER_UPDATE         = 'USER_UPDATE';
-  static USER_UPDATE_PHOTO   = 'USER_UPDATE_PHOTO';
-  static USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
-  static USER_SELECT         = 'USER_SELECT';
-  static USER_TOGGLE_BLOCKED = 'USER_TOGGLE_BLOCKED';
+  static USERS_FETCH          = 'USERS_FETCH';
+  static USERS_FETCH_SUCCESS  = 'USERS_FETCH_SUCCESS';
+  static USER_FETCH           = 'USER_FETCH';
+  static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
+  static USERS_CLEAR          = 'USERS_CLEAR';
+  static USER_CREATE          = 'USER_CREATE';
+  static USER_UPDATE          = 'USER_UPDATE';
+  static USER_UPDATE_PHOTO    = 'USER_UPDATE_PHOTO';
+  static USER_UPDATE_SUCCESS  = 'USER_UPDATE_SUCCESS';
+  static USER_SELECT          = 'USER_SELECT';
+  static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
 
   constructor(
-    private dataService: DataService,
     private store: Store<IAppState>,
   ) {}
 
@@ -58,14 +55,11 @@ export class UsersService {
     this.dispatchAction(UsersService.USER_SELECT, { userId });
   }
 
-  toggleBlockedFilter(): void {
-    this.dispatchAction(UsersService.USER_TOGGLE_BLOCKED);
+  toggleInactiveFilter(): void {
+    this.dispatchAction(UsersService.USER_TOGGLE_INACTIVE);
   }
 
   private dispatchAction(type: string, payload: object = {}): void {
-    return this.store.dispatch({
-      type,
-      payload
-    });
+    return this.store.dispatch({ type, payload });
   }
 }

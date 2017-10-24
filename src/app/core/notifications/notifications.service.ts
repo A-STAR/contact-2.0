@@ -10,9 +10,11 @@ import {
   INotification,
   INotificationActionType,
   INotificationActionPayload,
-  INotificationServiceState,
+  INotificationsState,
   NotificationTypeEnum,
 } from './notifications.interface';
+
+import { PersistenceService } from '../persistence/persistence.service';
 
 import { NotificationActionBuilder } from './notification-action-builder';
 
@@ -28,11 +30,13 @@ export class NotificationsService implements OnDestroy {
   private notificationsStateSubscription: Subscription;
 
   constructor(
+    private persistenceService: PersistenceService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
   ) {
+    // TODO(d.maltsev): can we optimize this?
     this.notificationsStateSubscription = this.state.subscribe(state => {
-      localStorage.setItem(NotificationsService.STORAGE_KEY, JSON.stringify(state));
+      this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
     });
   }
 
@@ -40,7 +44,7 @@ export class NotificationsService implements OnDestroy {
     this.notificationsStateSubscription.unsubscribe();
   }
 
-  get state(): Observable<INotificationServiceState> {
+  get state(): Observable<INotificationsState> {
     return this.store.select(state => state.notifications);
   }
 
@@ -60,6 +64,22 @@ export class NotificationsService implements OnDestroy {
     return this.state
       .map(state => state.filters)
       .distinctUntilChanged();
+  }
+
+  fetchError(text: string = 'errors.default.read'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  createError(text: string = 'errors.default.create'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  updateError(text: string = 'errors.default.update'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  deleteError(text: string = 'errors.default.delete'): NotificationActionBuilder {
+    return this.error(text);
   }
 
   error(text: string = null): NotificationActionBuilder {

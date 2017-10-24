@@ -35,6 +35,6 @@
   [emptyMessage]="emptyMessage$ | async"
   [rows]="employees$ | async"
   selectionType="single"
-  (onDblClick)="onEdit()"
+  (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

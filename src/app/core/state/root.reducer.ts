@@ -7,7 +7,10 @@ import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.re
 import { authReducer, resetReducer } from '../auth/auth.reducer';
 import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
+import { debtReducer } from '../../routes/workplaces/debt-processing/debtor/debtor.reducer';
 import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
+import { entityAttributesReducer } from '../entity/attributes/entity-attributes.reducer';
+import { guiObjectsReducer } from '../gui-objects/gui-objects.reducer';
 import { lookupReducer } from '../lookup/lookup.reducer';
 import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
@@ -15,8 +18,8 @@ import { permissionReducer } from '../../routes/admin/roles/permissions.reducer'
 import { usersReducer } from '../../routes/admin/users/users.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userDictionariesReducer } from '../user/dictionaries/user-dictionaries.reducer';
-import { userLanguagesReducer } from '../user/languages/user-languages.reducer';
 import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
+import { userTemplatesReducer } from '../user/templates/user-templates.reducer';
 import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
 import { metadataReducer } from '../metadata/metadata.reducer';
 
@@ -25,7 +28,10 @@ export const reducers = {
   auth: authReducer,
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
   debtors: debtorsReducer,
+  debt: debtReducer,
   dictionaries: dictionariesReducer,
+  entityAttributes: entityAttributesReducer,
+  guiObjects: guiObjectsReducer,
   lookup: lookupReducer,
   notifications: notificationReducer,
   organizations: organizationsReducer,
@@ -33,12 +39,12 @@ export const reducers = {
   users: usersReducer,
   userConstants: userConstantsReducer,
   userDictionaries: userDictionariesReducer,
-  userLanguages: userLanguagesReducer,
   userPermissions: userPermissionsReducer,
+  userTemplates: userTemplatesReducer,
   metadata: metadataReducer,
   constants: constantsReducer,
 };
 
 export function rootReducer(state: IAppState, action: Action): IAppState {
   return compose(resetReducer, combineReducers)(reducers)(state, action);
-};
+}

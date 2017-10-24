@@ -8,18 +8,20 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
 import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { toFullName, timeToHourMinSec } from '../../../../core/utils';
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid2-filter';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
@@ -30,16 +32,16 @@ import { MultiSelectComponent } from '../../../../shared/components/form/multi-s
   templateUrl: './actions-log-filter.component.html',
 })
 export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
-
-  @Input() employeesRows;
-  @Input() actionTypesRows;
+  @Input() employeesRows: Observable<any>;
+  @Input() actionTypesRows: Observable<any>;
   @Output() export = new EventEmitter<void>();
   @Output() search = new EventEmitter<void>();
+  @Output() queryBuilderOpen = new EventEmitter<void>();
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
   employeesControl: IDynamicFormControl;
-  blockingEmployeesControl: IDynamicFormControl;
+  inactiveEmployeesControl: IDynamicFormControl;
   actionTypesControl: IDynamicFormControl;
   startDateControl: IDynamicFormControl;
   endDateControl: IDynamicFormControl;
@@ -74,19 +76,20 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
-  private _action: string;
+  private _dialog: string;
 
   get employeesRowsFilter(): Function {
-    return this.value[this.blockingEmployeesControl.controlName]
+    return this.value[this.inactiveEmployeesControl.controlName]
       ? () => true
-      : (record: IEmployee) => !record.isBlocked;
-  };
+      : (record: IEmployee) => !record.isInactive;
+  }
 
   constructor(
     formBuilder: FormBuilder,
     gridService: GridService,
+    valueConverterService: ValueConverterService,
   ) {
-    super(formBuilder);
+    super(formBuilder, valueConverterService);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
     this.employeesColumnsTo = gridService.setRenderers(this.employeesColumnsTo, this.renderers);
   }
@@ -100,9 +103,9 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         required: true,
         type: 'multiselect',
       },
-      this.blockingEmployeesControl = {
+      this.inactiveEmployeesControl = {
         controlName: 'blockingEmployees',
-        label: 'actionsLog.filter.employees.blocking',
+        label: 'actionsLog.filter.employees.inactive',
         type: 'checkbox',
       },
       this.actionTypesControl = {
@@ -114,7 +117,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.startDateControl = {
         controlName: 'startDate',
-        label: 'default.dateTimeRage.from',
+        label: 'default.dateTimeRange.from',
         required: true,
         type: 'datepicker',
       },
@@ -126,7 +129,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
       },
       this.endDateControl = {
         controlName: 'endDate',
-        label: 'default.dateTimeRage.to',
+        label: 'default.dateTimeRange.to',
         required: true,
         type: 'datepicker',
       },
@@ -162,34 +165,22 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return '';
   }
 
-  get isEmployeesBeingSelected(): boolean {
-    return this._action === 'employees';
+  isDialog(type: string): boolean {
+    return this._dialog === type;
   }
 
-  get isActionTypesBeingSelected(): boolean {
-    return this._action === 'actionTypes';
+  setDialog(type: string = null): void {
+    this._dialog = type;
   }
 
-  onSaveEmployeesChanges(): void {
+  onSetEmployees(): void {
     this.employeesComponent.syncChanges();
-    this.onCloseActionDialog();
+    this.setDialog();
   }
 
-  onSaveActionTypesChanges(): void {
+  onSetActionTypes(): void {
     this.actionTypesComponent.syncChanges();
-    this.onCloseActionDialog();
-  }
-
-  onCloseActionDialog(): void {
-    this._action = null;
-  }
-
-  onEmployeesSelect(): void {
-    this._action = 'employees';
-  }
-
-  onActionTypesSelect(): void {
-    this._action = 'actionTypes';
+    this.setDialog();
   }
 
   onSearch(): void {
@@ -198,6 +189,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
 
   onExport(): void {
     this.export.emit();
+  }
+
+  onQueryBuilderOpen(): void {
+    this.queryBuilderOpen.emit();
   }
 
   getFilters(): FilterObject {
@@ -231,6 +226,5 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
           .inOperator()
           .setValues(employees)
       );
-
   }
 }

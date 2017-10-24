@@ -6,15 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
-import {
-  IContractor,
-  IContractorsResponse,
-  IContractorManager,
-  IContractorManagersResponse,
-  IPortfolio,
-  IPortfolioMoveRequest,
-  IPortfoliosResponse
-} from './contractors-and-portfolios.interface';
+import { IContractor, IContractorManager, IPortfolio, IPortfolioMoveRequest } from './contractors-and-portfolios.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 import { DataService } from '../../../core/data/data.service';
@@ -27,13 +19,11 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
     .switchMap((action: Action) => {
       return this.readContractors()
-        .map(response => ({
+        .map(contractors => ({
           type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
-          payload: {
-            contractors: response.contractors
-          }
+          payload: { contractors }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.contractors.gen.plural').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback());
     });
 
   @Effect()
@@ -41,13 +31,11 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
     .switchMap((action: Action) => {
       return this.readContractor(action.payload.contractorId)
-        .map(response => ({
+        .map(contractor => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS,
-          payload: {
-            contractor: response.contractors[0]
-          }
+          payload: { contractor }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.contractors.gen.singular').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -58,7 +46,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
         }))
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.contractors.gen.singular').callback());
+        .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -70,7 +58,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
         }))
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.contractors.gen.singular').callback());
+        .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -84,7 +72,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
           { type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.contractors.gen.singular').callback());
+        .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
     });
 
   @Effect()
@@ -92,13 +80,11 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH)
     .switchMap((action: Action) => {
       return this.readManagers(action.payload.contractorId)
-        .map(response => ({
+        .map(managers => ({
           type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
-          payload: {
-            managers: response.managers
-          }
+          payload: { managers }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.managers.gen.plural').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
     });
 
   @Effect()
@@ -106,13 +92,11 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.MANAGER_FETCH)
     .switchMap((action: Action) => {
       return this.readManager(action.payload.contractorId, action.payload.managerId)
-        .map(response => ({
+        .map(manager => ({
           type: ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS,
-          payload: {
-            manager: response.managers[0]
-          }
+          payload: { manager }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.managers.gen.singular').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -124,7 +108,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
         }))
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.managers.gen.singular').callback());
+        .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -136,7 +120,7 @@ export class ContractorsAndPortfoliosEffects {
         .map(() => ({
           type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
         }))
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.managers.gen.singular').callback());
+        .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -150,7 +134,7 @@ export class ContractorsAndPortfoliosEffects {
           { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
           { type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS }
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.managers.gen.singular').callback());
+        .catch(this.notificationsService.deleteError().entity('entities.managers.gen.singular').callback());
     });
 
   @Effect()
@@ -160,28 +144,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap(data => {
       const [_, store]: [Action, IAppState] = data;
       return this.readPortfolios(store.contractorsAndPortfolios.selectedContractorId)
-        .map(response => ({
+        .map(portfolios => ({
           type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
-          payload: {
-            portfolios: response.portfolios
-          }
+          payload: { portfolios }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.portfolios.gen.plural').callback());
-    });
-
-  @Effect()
-  fetchPortfolio$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_FETCH)
-    .switchMap((action: Action) => {
-      const { contractorId, portfolioId } = action.payload;
-      return this.readPortfolio(contractorId, portfolioId)
-        .map(response => ({
-          type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
-          payload: {
-            portfolio: response.portfolios[0]
-          }
-        }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.portfolios.gen.singular').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').callback());
     });
 
   @Effect()
@@ -190,10 +157,10 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolio } = action.payload;
       return this.createPortfolio(contractorId, portfolio)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS
-        }))
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.portfolios.gen.singular').callback());
+        .map(() => (
+          { type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS }
+        ))
+        .catch(this.notificationsService.createError().entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -202,10 +169,11 @@ export class ContractorsAndPortfoliosEffects {
     .switchMap((action: Action) => {
       const { contractorId, portfolioId, portfolio } = action.payload;
       return this.updatePortfolio(contractorId, portfolioId, portfolio)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
-        }))
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.portfolios.gen.singular').callback());
+        .mergeMap(() => [
+          { type: ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS },
+          { type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH },
+        ])
+        .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
     });
 
   @Effect()
@@ -230,9 +198,9 @@ export class ContractorsAndPortfoliosEffects {
       return this.deletePortfolio(action.payload.contractorId, store.contractorsAndPortfolios.selectedPortfolioId)
         .mergeMap(() => [
           { type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH },
-          { type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS }
+          { type: ContractorsAndPortfoliosService.PORTFOLIO_DELETE_SUCCESS },
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.portfolios.entity.singular').callback());
+        .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
     });
 
   constructor(
@@ -240,66 +208,67 @@ export class ContractorsAndPortfoliosEffects {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
-    private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
   ) {}
 
-  private readContractors(): Observable<IContractorsResponse> {
-    return this.dataService.read('/api/contractors');
+  private readContractors(): Observable<IContractor[]> {
+    return this.dataService.readAll('/contractors');
   }
 
-  private readContractor(contractorId: number): Observable<IContractorsResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}', { contractorId });
+  private readContractor(contractorId: number): Observable<IContractor> {
+    return this.dataService.read('/contractors/{contractorId}', { contractorId });
   }
 
   private createContractor(contractor: IContractor): Observable<any> {
-    return this.dataService.create('/api/contractors', {}, contractor);
+    return this.dataService.create('/contractors', {}, contractor);
   }
 
   private updateContractor(contractorId: number, contractor: IContractor): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}', { contractorId }, contractor);
+    return this.dataService.update('/contractors/{contractorId}', { contractorId }, contractor);
   }
 
   private deleteContractor(contractorId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}', { contractorId });
+    return this.dataService.delete('/contractors/{contractorId}', { contractorId });
   }
 
-  private readManagers(contractorId: number): Observable<IContractorManagersResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/managers', { contractorId });
+  private readManagers(contractorId: number): Observable<IContractorManager[]> {
+    return this.dataService.readAll('/contractors/{contractorId}/managers', { contractorId });
   }
 
-  private readManager(contractorId: number, managerId: number): Observable<IContractorManagersResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+  private readManager(contractorId: number, managerId: number): Observable<IContractorManager> {
+    return this.dataService.read('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
   private createManager(contractorId: number, manager: IContractorManager): Observable<any> {
-    return this.dataService.create('/api/contractors/{contractorId}/managers', { contractorId }, manager);
+    return this.dataService.create('/contractors/{contractorId}/managers', { contractorId }, manager);
   }
 
   private updateManager(contractorId: number, managerId: number, manager: IContractorManager): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager);
+    return this.dataService.update('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager);
   }
 
   private deleteManager(contractorId: number, managerId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
+    return this.dataService.delete('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId });
   }
 
-  private readPortfolios(contractorId: number): Observable<IPortfoliosResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/portfolios', { contractorId });
-  }
-
-  private readPortfolio(contractorId: number, portfolioId: number): Observable<IPortfoliosResponse> {
-    return this.dataService.read('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+  private readPortfolios(contractorId: number): Observable<IPortfolio[]> {
+    return this.dataService.readAll('/contractors/{contractorId}/portfolios', { contractorId });
   }
 
   private createPortfolio(contractorId: number, portfolio: IPortfolio): Observable<any> {
-    return this.dataService.create('/api/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
+    return this.dataService.create('/contractors/{contractorId}/portfolios', { contractorId }, portfolio);
   }
 
-  private updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio | IPortfolioMoveRequest): Observable<any> {
-    return this.dataService.update('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
+  private updatePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioMoveRequest
+  ): Observable<any> {
+    return this.dataService
+    .update('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio);
   }
 
   private deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
-    return this.dataService.delete('/api/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
+    return this.dataService
+    .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId });
   }
 }

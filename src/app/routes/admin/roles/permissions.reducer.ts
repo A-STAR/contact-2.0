@@ -23,12 +23,15 @@ export function permissionReducer(
 
   switch (action.type) {
     case PermissionsService.ROLE_FETCH_SUCCESS:
+      const cr = state.currentRole;
+      const isThere = cr && action.payload.some(role => cr.id === role.id);
       return {
         ...state,
         roles: action.payload,
-        currentRole: null,
-        rawPermissions: [],
-        currentPermission: null
+        // currentRole: null,
+        currentRole: isThere ? cr : null,
+        // rawPermissions: [],
+        // currentPermission: null
       };
     case PermissionsService.ROLE_SELECTED:
       return {
@@ -95,5 +98,4 @@ export function permissionReducer(
     default:
       return state;
   }
-};
-
+}

@@ -1,0 +1,19 @@
+import { IDebt } from '../debt-processing.interface';
+
+export interface IPerson {
+  id: number;
+  birthDate?: string | Date;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  type?: number;
+  reward?: number;
+  debtId?: number;
+  product?: string;
+  city?: string;
+}
+
+export interface IDebtState {
+  currentDebt?: IDebt;
+  currentDebtor?: IPerson;
+}

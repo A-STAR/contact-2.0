@@ -10,6 +10,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  Renderer2,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
@@ -22,7 +24,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
-import { DataService } from '../../../core/data/data.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
@@ -33,6 +34,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
+  @ViewChild(DatatableComponent) dataTable: DatatableComponent;
   @Input() allowDblClick = true;
   @Input() footerHeight = 50;
   @Input() columns: IGridColumn[] = [];
@@ -40,13 +42,26 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() emptyMessage: string = null;
   @Input() parseFn: Function;
   @Input() rows: Array<any> = [];
+  @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
+  @Input() contextMenuEnabled = false;
+  @Input() contextFieldName: string;
   @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
+  clickDebouncer: Subject<{ type: string; row: any}>;
   columnDefs: IGridColumn[];
+  // Context Menu
+  ctxColumn: any;
+  ctxFieldNameTranslation = { field: this.contextFieldName };
+  ctxRow: any;
+  ctxEvent: MouseEvent;
+  ctxOutsideListener: Function;
+  ctxShowMenu = false;
+  ctxStyles: any;
+
   cssClasses: object = {
     sortAscending: 'fa fa-angle-down',
     sortDescending: 'fa fa-angle-up',
@@ -55,38 +70,52 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     pagerPrevious: 'fa fa-angle-double-left',
     pagerNext: 'fa fa-angle-double-right',
   };
-  clickDebouncer: Subject<{ type: string; row: any}>;
+
   debouncerSub: Subscription;
   element: HTMLElement;
   messages: IMessages = {};
   selected: Array<any> = [];
+  // a cache to prevent select from firing on already selected row
   subscription: Subscription;
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
-  }
+  private _selected: any = [];
 
   constructor(
-    private dataService: DataService,
+    private cdRef: ChangeDetectorRef,
+    private renderer: Renderer2,
     public settings: SettingsService,
     private translate: TranslateService,
-    private changeDetector: ChangeDetectorRef,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
+    this.onDocumentClick = this.onDocumentClick.bind(this);
     this.clickDebouncer = new Subject();
     this.debouncerSub = this.clickDebouncer
-      .debounceTime(150)
+      .debounceTime(100)
       .subscribe(({ type, row }: {type: string; row: any}) => {
-        if (type === 'click') {
+        if (type === 'select') {
           this.onSelect.emit(row);
         } else if (type === 'dblclick' && this.allowDblClick) {
           this.onDblClick.emit(row);
         }
       });
+
+    this.ctxFieldNameTranslation = {
+      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
+    };
+  }
+
+  @Input() rowClass = () => undefined;
+
+  @Input() filter(data: Array<any>): Array<any> {
+    return data;
   }
 
   get filteredRows(): Array<any> {
     return (this.rows || []).filter(this.filter);
+  }
+
+  get hasSingleSelection(): boolean {
+    return this._selected.length === 1;
   }
 
   ngOnInit(): void {
@@ -111,34 +140,54 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           acc[key] = key.split('.').reduce((a, prop) => a[prop], translations);
           return acc;
         }, {}))
-    ).subscribe(translations => {
-      this.messages = { ...translations[gridMessagesKey] };
-      if (this.columnTranslationKey) {
-        this.translateColumns(translations[this.columnTranslationKey].grid);
-      }
-      if (this.emptyMessage) {
-        this.messages.emptyMessage = translations[this.emptyMessage];
-      }
-      this.changeDetector.markForCheck();
-    });
+    )
+    .subscribe(
+      translations => {
+        this.messages = { ...translations[gridMessagesKey] };
+        if (this.columnTranslationKey) {
+          this.translateColumns(translations[this.columnTranslationKey].grid);
+          if (this.contextMenuEnabled && this.contextFieldName) {
+            this.ctxFieldNameTranslation = {
+              field: translations[this.columnTranslationKey].grid[this.contextFieldName] || this.contextFieldName
+            };
+          }
+        }
+        if (this.emptyMessage) {
+          this.messages.emptyMessage = translations[this.emptyMessage];
+        }
+        this.cdRef.markForCheck();
+      },
+      error => console.log(error)
+    );
   }
 
-  ngOnChanges(changes: any): void {
-    if (changes.emptyMessage) {
-      if (changes.emptyMessage.currentValue) {
-        this.messages.emptyMessage = this.translate.instant(changes.emptyMessage.currentValue);
+  ngOnChanges(changes: SimpleChanges): void {
+    const { emptyMessage, selection, rows } = changes;
+    if (emptyMessage) {
+      if (emptyMessage.currentValue) {
+        this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
+
       } else {
-        // TODO(d.maltsev): code duplication
         const gridMessagesKey = 'grid.messages';
-        const translationKeys = [gridMessagesKey];
-        this.translate.get(translationKeys)
+        this.translate.get([gridMessagesKey])
           .take(1)
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
     }
+    if (selection) {
+      this.selected = [...selection.currentValue];
+    }
+    if (rows) {
+      this._selected = [];
+      this.cdRef.markForCheck();
+      this.dataTable.recalculate();
+    }
   }
 
   ngAfterViewInit(): void {
+    if (this.contextMenuEnabled) {
+      this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
+    }
     // Define a possible height of the datatable
     // 43px - tab height,
     // 2x12px - top & bottom padding around the grid
@@ -156,6 +205,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.debouncerSub.unsubscribe();
+    if (this.ctxOutsideListener) {
+      this.ctxOutsideListener();
+    }
   }
 
   onActionClick(event: any): void {
@@ -163,22 +215,99 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   onSelectRow(event: any): void {
-    this.clickDebouncer.next({ type: 'click', row: event.row });
+    const { selected } = event;
+    const rowSelected = this._selected[0];
+    if (!rowSelected || rowSelected.id !== selected[0].id) {
+      const row = this.selectionType === 'single' ? selected[0] : selected;
+      this.clickDebouncer.next({ type: 'select', row });
+    }
+    this._selected = [].concat(selected);
   }
 
   onActivate(event: any): void {
-    const { row, type } = event;
+    const { row, type, event: e } = event;
     if (type === 'dblclick') {
-      // NOTE: workaround for rows getting unselected on dblclick
-      if (!this.selected.find(selected => selected.$$id === row.$$id)) {
-        this.selected = this.selected.concat(row);
-      }
+      this.clickDebouncer.next({ type, row });
     }
-    this.clickDebouncer.next({ type, row });
+    if (type === 'keydown' && e.keyCode === 13) {
+      this.clickDebouncer.next({ type: 'select', row });
+    }
+  }
+
+  onDocumentClick(event: MouseEvent): void {
+    if (this.ctxShowMenu) {
+      this.hideCtxMenu();
+    }
+  }
+
+  onTableContextMenu(ctxEvent: any): void {
+    ctxEvent.event.preventDefault();
+    ctxEvent.event.stopPropagation();
+
+    if (!this.contextMenuEnabled || !this.hasSingleSelection) {
+      return;
+    }
+
+    this.ctxEvent = ctxEvent.event;
+
+    if (ctxEvent.type === 'body') {
+      this.ctxRow = ctxEvent.content;
+      this.ctxColumn = undefined;
+      this.showCtxMenu();
+      const { x, y } = this.ctxEvent;
+      this.ctxStyles = { left: x + 'px', top: y + 'px' };
+    } else {
+      // Should you need to hook to the column header click, uncomment the next line
+      // this.ctxColumn = ctxEvent.content;
+      this.ctxRow = undefined;
+    }
+  }
+
+  onCtxMenuClick(event: MouseEvent, prop: string): void {
+    const data = prop ? this.ctxRow[prop] : this.ctxRow;
+    const copyAsPlaintext = (content) => {
+      const copyFrom = document.createElement('textarea');
+      copyFrom.textContent = content;
+      const body = document.querySelector('body');
+      body.appendChild(copyFrom);
+      copyFrom.select();
+
+      document.execCommand('copy');
+      body.removeChild(copyFrom);
+    };
+
+    const formattedData = prop
+      ? data
+      : this.columns
+          .filter(column => data[column.prop] !== null)
+          .map(column => {
+            return column.type === 'boolean'
+              ? Boolean(data[column.prop])
+              : column.$$valueGetter && column.dictCode
+                ? column.$$valueGetter(data, column.prop)
+                : data[column.prop];
+          })
+          .join('\t');
+
+    copyAsPlaintext(formattedData);
+    this.hideCtxMenu();
+  }
+
+  hideCtxMenu(): void {
+    this.ctxShowMenu = false;
+    this.cdRef.markForCheck();
+  }
+
+  showCtxMenu(): void {
+    this.ctxShowMenu = true;
   }
 
   getRowHeight(row: any): number {
     return row.height;
+  }
+
+  clearSelection(): void {
+    this.selected = [];
   }
 
   private translateColumns(columnTranslations: object): void {

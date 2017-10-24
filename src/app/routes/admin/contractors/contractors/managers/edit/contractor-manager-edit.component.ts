@@ -5,8 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
-import { IOption } from '../../../../../../core/converter/value/value-converter.interface';
+import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
@@ -46,8 +46,8 @@ export class ContractorManagerEditComponent {
     }
 
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.contractorId && this.managerId ?
         this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS).map(action => action.payload.manager) :
         Observable.of(null)
@@ -58,11 +58,6 @@ export class ContractorManagerEditComponent {
       this.initFormControls(branchesOptions, genderOptions);
       this.formData = manager;
     });
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_BRANCHES,
-      UserDictionariesService.DICTIONARY_GENDER
-    ]);
 
     this.actions.ofType(
       ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS,
@@ -101,6 +96,7 @@ export class ContractorManagerEditComponent {
       { label: 'contractors.managers.grid.workPhone', controlName: 'workPhone', type: 'text' },
       { label: 'contractors.managers.grid.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'contractors.managers.grid.workAddress', controlName: 'workAddress', type: 'text' },
+      { label: 'contractors.managers.grid.email', controlName: 'email', type: 'text' },
       { label: 'contractors.managers.grid.comment', controlName: 'comment', type: 'textarea' },
     ];
   }

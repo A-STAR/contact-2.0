@@ -32,4 +32,4 @@ interface TreeNodeDragEvent {
 export {
   ITreeNode,
   TreeNodeDragEvent
-}
+};

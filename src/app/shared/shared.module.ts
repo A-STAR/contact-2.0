@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MomentModule } from 'angular2-moment';
 import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
@@ -22,35 +21,51 @@ import { ScrollableDirective } from './directives/scrollable/scrollable.directiv
 import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
+import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { AttachmentsModule } from './components/attachments/attachments.module';
+import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
+import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
+import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
+import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-form-2.module';
+import { FileUploadModule } from './components/form/file-upload/file-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
+import { GridTreeModule } from './components/gridtree/gridtree.module';
+import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
+import { GuiObjectsModule } from './gui-objects/gui-objects.module';
+import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
+import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { MultiTextModule } from './components/form/multi-text/multi-text.module';
+import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
+import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
+import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
+import { RichTextEditorModule } from './components/form/rich-text-editor/rich-text-editor.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
+import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
+import { ValueInputModule } from './components/form/value/value.module';
 
 import { IconsService } from './icons/icons.service';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
-import { TabComponent } from './components/tabstrip/tab.component';
-import { TabstripComponent } from './components/tabstrip/tabstrip.component';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -61,30 +76,47 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     // Angle modules
     TranslateModule,
     TextMaskModule,
-    MultiSelectModule,
     PerfectScrollbarModule,
     // app modules
+    AccordionModule,
     ActionDialogModule,
     AttachmentsModule,
+    BlockDialogModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
     DownloaderModule,
     DropdownModule,
+    DropdownInputModule,
     DynamicFormModule,
-    ImageUploadModule,
-    InfoDialogModule,
+    DynamicForm2Module,
+    FileUploadModule,
     GridModule,
     Grid2Module,
-    SpinnerModule,
-    MomentModule,
+    GridTreeModule,
+    GridTreeWrapperModule,
+    GuiObjectsModule,
+    HDividerModule,
+    ImageUploadModule,
+    InfoDialogModule,
+    ListModule,
+    MultiSelectModule,
+    MultiTextModule,
+    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
+    QBuilder2Module,
+    RadioGroupModule,
+    RichTextEditorModule,
+    SpinnerModule,
+    TabstripModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    ValueInputModule,
   ],
   providers: [
     ColorsService,
@@ -101,8 +133,6 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ScrollableDirective,
     // app declarations
     RouterOutlet2Directive,
-    TabComponent,
-    TabstripComponent,
     NumericInputComponent,
     QBuilderComponent
   ],
@@ -124,33 +154,48 @@ import { TabstripComponent } from './components/tabstrip/tabstrip.component';
     ToasterModule,
     VectormapDirective,
     // App exports
+    AccordionModule,
     ActionDialogModule,
     AttachmentsModule,
+    BlockDialogModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
     DownloaderModule,
     DropdownModule,
+    DropdownInputModule,
     DynamicFormModule,
+    DynamicForm2Module,
     DialogModule,
-    ImageUploadModule,
-    InfoDialogModule,
+    FileUploadModule,
     GridModule,
     Grid2Module,
-    SpinnerModule,
-    MomentModule,
+    GridTreeModule,
+    GridTreeWrapperModule,
+    GuiObjectsModule,
+    HDividerModule,
+    ImageUploadModule,
+    InfoDialogModule,
+    ListModule,
     MultiSelectModule,
+    MultiTextModule,
     NumericInputComponent,
+    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilderComponent,
+    QBuilder2Module,
+    RadioGroupModule,
+    RichTextEditorModule,
     RouterOutlet2Directive,
-    TabComponent,
-    TabstripComponent,
+    SpinnerModule,
+    TabstripModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    ValueInputModule,
   ]
 })
 

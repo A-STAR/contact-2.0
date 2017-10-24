@@ -10,7 +10,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -63,24 +62,11 @@ export class EmployeesComponent implements OnDestroy {
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
     { prop: 'roleCode', minWidth: 100 },
-    // TODO: display column depending on filter
-    // TODO: render checkbox
-    { prop: 'isBlocked', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100 },
   ];
 
   renderers: IRenderer = {
-    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
-    roleCode: (column, roleCode: number) => {
-      // TODO: dictionary service
-      switch (roleCode) {
-        case 1: return 'Сотрудник';
-        case 2: return 'Руководитель';
-        case 3: return 'Заместитель';
-        case 4: return 'Куратор';
-      }
-      return roleCode;
-    },
-    isBlocked: ({ isBlocked }) => this.transformIsBlocked(isBlocked),
+    isInactive: 'checkboxRenderer',
   };
 
   action: IOrganizationDialogActionEnum;
@@ -101,26 +87,29 @@ export class EmployeesComponent implements OnDestroy {
 
   constructor(
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private organizationsService: OrganizationsService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.userDictionariesService
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE)
+      .take(1)
+      .subscribe(employeeRoles => {
+        this.renderers.roleCode = employeeRoles;
+        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      });
 
     this.organizationsStateSubscription = this.organizationsService.state
-      .subscribe(
-        state => {
-          this.action = state.dialogAction;
-          this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
-        }
-      );
+      .subscribe(state => {
+        this.action = state.dialogAction;
+        this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
+      });
 
-    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE ]);
-    this.employeeRoleOptions$ = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
+    this.employeeRoleOptions$ = this.userDictionariesService
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
 
-    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_EDIT');
+    this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
     this.viewPermissionSubscription = Observable.combineLatest(
       this.hasViewPermission$,
@@ -135,8 +124,8 @@ export class EmployeesComponent implements OnDestroy {
     });
 
     this.employees$ = this.organizationsService.state.map(state => state.employees);
-
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
+    this.emptyMessage$ = this.hasViewPermission$
+      .map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -160,8 +149,8 @@ export class EmployeesComponent implements OnDestroy {
     return this.action === IOrganizationDialogActionEnum.EMPLOYEE_REMOVE;
   }
 
-  transformIsBlocked(isBlocked: number): string {
-    return this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No');
+  transformIsInactive(isInactive: number): string {
+    return this.translateService.instant(isInactive ? 'default.yesNo.Yes' : 'default.yesNo.No');
   }
 
   onSelect(employee: IEmployee): void {
@@ -170,12 +159,13 @@ export class EmployeesComponent implements OnDestroy {
     }
   }
 
-  onEdit(): void {
+  onEdit(employee: IEmployee): void {
     this.userPermissionsService.has('ORGANIZATION_EDIT')
       .take(1)
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
-          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT);
+          const selectedEmployeeUserId = employee.userId;
+          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT, { selectedEmployeeUserId });
         }
       });
   }

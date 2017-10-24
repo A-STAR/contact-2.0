@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor, IPortfolio } from '../../contractors-and-portfolios.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
@@ -23,12 +23,8 @@ export class PortfolioMoveComponent implements OnDestroy {
     { prop: 'name' },
     { prop: 'fullName' },
     { prop: 'responsibleName' },
-    { prop: 'typeCode' }
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE }
   ];
-
-  private renderers: IRenderer = {
-    typeCode: []
-  };
 
   private selectedContractor: IContractor;
 
@@ -37,15 +33,11 @@ export class PortfolioMoveComponent implements OnDestroy {
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
-    private userDictionariesService: UserDictionariesService,
   ) {
-    this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE)
-      .subscribe(options => {
-        this.renderers.typeCode = [].concat(options);
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.dictionariesSubscription = this.gridService.setDictionaryRenderers(this.columns)
+      .subscribe(columns => {
+        this.columns = this.gridService.setRenderers(columns);
       });
-
-    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
   }
 
   ngOnDestroy(): void {

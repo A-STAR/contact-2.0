@@ -4,25 +4,18 @@
     appAlignment
     class="ui-select-choices dropdown-menu"
     [alignTarget]="inputRef"
-    [autoAlignEnabled]="autoAlignEnabled"
+    [autoAlign]="autoAlign"
   >
-    <li *ngIf="filterEnabled"
-        class="app-select-search-wrapper">
+    <li *ngIf="filterEnabled" class="app-select-search-wrapper">
       <input
         appFocus
         type="text"
-        class="form-control app-select-search"
+        [ngClass]="[ inputClass, 'app-select-search' ]"
         [(ngModel)]="filterValue"
       >
     </li>
-    <li
-      *ngFor="let action of actions"
-      class="app-select-unselectable"
-    >
-      <div
-        class="app-select-tool"
-        (click)="actionClick(action, $event)"
-      >
+    <li *ngFor="let action of actions" class="app-select-unselectable">
+      <div class="app-select-tool" (click)="actionClick(action, $event)">
         {{ action.text | translate }}
         <span
           *ngIf="action.actionIconCls"
@@ -30,41 +23,32 @@
         </span>
       </div>
     </li>
-    <li *ngFor="let option of (options || []) | rawDataFilter: { sortType: sortType }">
+    <li *ngFor="let option of options | rawDataFilter: { sortType: sortType }">
       <div
-        class="ui-select-choices-row"
+        class="ui-select-item"
         [ngClass]="{ active: isActive(option) }"
         (click)="onSelectMatch($event, option)"
       >
-        <div
-          class="dropdown-item"
-          [innerHtml]="toDisplayValue(option)">
-        </div>
+        <div class="dropdown-item" [innerHtml]="toDisplayValue(option)"></div>
       </div>
     </li>
   </ul>
 </ng-template>
 
+<!-- single-option-select -->
 <div
   class="ui-select-container dropdown open"
   *ngIf="!multiple"
   [ngStyle]="styles"
-  [attr.disabled]="disabled"
+  [attr.disabled]="disabled || undefined"
   [appOffClick]="clickedOutside"
 >
-  <div
-    *ngIf="!inputMode"
-    class="ui-select-match"
-  >
+  <div *ngIf="!inputMode" class="ui-select-match">
     <span
-      class="form-control app-select-unselectable"
+      [ngClass]="[ inputClass, 'app-select-unselectable' ]"
       (click)="onMatchClick($event)"
     >
-      <span
-        *ngIf="active.length"
-        [innerHTML]="toDisplayValue(active[0])"
-      >
-      </span>
+      <span *ngIf="active.length" [innerHTML]="toDisplayValue(active[0])"></span>
       <i class="caret app-select-caret"></i>
     </span>
   </div>
@@ -74,18 +58,17 @@
     *ngIf="inputMode"
     autocomplete="false"
     [attr.readonly]="readonly"
-    [ngClass]="{ hidden: !isInputVisible()}"
-    class="form-control app-select-search app-select-unselectable"
+    [ngClass]="inputNgClass"
     (click)="onInputClick($event)"
     [placeholder]="displayPlaceholder"
   >
-  <ng-container *ngTemplateOutlet="optionsTemplate">
-  </ng-container>
+  <ng-container *ngTemplateOutlet="optionsTemplate"></ng-container>
 </div>
 
+<!-- multi-option-select -->
 <div tabindex="0"
      [ngStyle]="styles"
-     [attr.disabled]="disabled"
+     [attr.disabled]="disabled || undefined"
      *ngIf="multiple"
      [appOffClick]="clickedOutside"
      class="ui-select-container ui-select-multiple dropdown form-control open"
@@ -113,11 +96,9 @@
     type="text"
     (click)="onMatchClick($event)"
     [attr.readonly]="readonly"
-    [ngClass]="{ hidden: !isInputVisible() }"
+    [ngClass]="inputNgClass"
     autocomplete="false"
     [placeholder]="displayPlaceholder"
-    class="form-control app-select-search app-select-unselectable"
   >
-  <ng-container *ngTemplateOutlet="optionsTemplate">
-  </ng-container>
+  <ng-container *ngTemplateOutlet="optionsTemplate"></ng-container>
 </div>

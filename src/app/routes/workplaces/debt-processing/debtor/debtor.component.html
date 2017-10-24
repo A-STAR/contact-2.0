@@ -1,0 +1,62 @@
+<div class="pb-lg">
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<app-dynamic-form
+  #form
+  *ngIf="controls && person"
+  [ngClass]="'app-debtor-container'"
+  [controls]="controls"
+  [data]="person">
+</app-dynamic-form>
+
+<app-tabstrip [scrollerEnabled]="false" [inverse]="true">
+  <app-tab [title]="'debtor.information.title'">
+    <app-debtor-information #information [person]="person"></app-debtor-information>
+  </app-tab>
+
+  <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
+    <app-debt-grid></app-debt-grid>
+
+    <app-hdivider></app-hdivider>
+
+    <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
+      <app-tab [title]="'debtor.paymentsTab.title'" [closable]="false">
+        <app-payment-grid></app-payment-grid>
+      </app-tab>
+
+      <app-tab [title]="'debtor.promisesTab.title'" [closable]="false">
+        <app-promise-grid></app-promise-grid>
+      </app-tab>
+    </app-tabstrip>
+  </app-tab>
+
+  <!-- <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
+  </app-tab>-->
+
+  <app-tab [title]="'debtor.guarantorsTab.title'" [closable]="false">
+    <app-guarantee-grid></app-guarantee-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.contactsTab.title'" [closable]="false">
+    <app-contact-grid></app-contact-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
+    <app-document-grid></app-document-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false">
+    <app-employment-grid></app-employment-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.actionLogTab.title'" [closable]="false">
+    <app-debtor-action-log></app-debtor-action-log>
+  </app-tab>
+
+  <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
+    <app-entity-attribute-grid></app-entity-attribute-grid>
+  </app-tab>
+</app-tabstrip>

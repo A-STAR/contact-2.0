@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,6 +13,7 @@ import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultEleme
 })
 export class Toolbar2Component {
   @Input() items: Array<IToolbarItem> = [];
+  @Output() action = new EventEmitter<IToolbarItem>();
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IToolbarDefaultElement } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: {
@@ -51,6 +52,30 @@ export class Toolbar2Component {
       label: 'toolbar.action.upload',
       icon: 'fa fa-cloud-upload',
     },
+    [ToolbarItemTypeEnum.BUTTON_BLOCK]: {
+      label: 'toolbar.action.block',
+      icon: 'fa fa-unlock-alt',
+    },
+    [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: {
+      label: 'toolbar.action.unblock',
+      icon: 'fa fa-unlock',
+    },
+    [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: {
+      label: 'toolbar.action.changeStatus',
+      icon: 'fa fa-random',
+    },
+    [ToolbarItemTypeEnum.BUTTON_CLOSE]: {
+      label: 'toolbar.action.close',
+      icon: 'fa fa-ban',
+    },
+    [ToolbarItemTypeEnum.BUTTON_UNDO]: {
+      label: 'toolbar.action.undo',
+      icon: 'fa fa-undo',
+    },
+    [ToolbarItemTypeEnum.BUTTON_OK]: {
+      label: 'toolbar.action.ok',
+      icon: 'fa fa-check',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -64,6 +89,12 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_MOVE,
     ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
     ToolbarItemTypeEnum.BUTTON_UPLOAD,
+    ToolbarItemTypeEnum.BUTTON_BLOCK,
+    ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+    ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+    ToolbarItemTypeEnum.BUTTON_CLOSE,
+    ToolbarItemTypeEnum.BUTTON_UNDO,
+    ToolbarItemTypeEnum.BUTTON_OK,
   ];
 
   constructor(
@@ -81,9 +112,10 @@ export class Toolbar2Component {
   onClick(item: IToolbarItem): void {
     if (typeof item.action === 'function') {
       item.action();
-    } else {
+    } else if (item.action) {
       this.store.dispatch(item.action);
     }
+    this.action.emit(item);
   }
 
   getIcon(item: IToolbarButton): string {

@@ -5,7 +5,7 @@ import { IUserDictionariesState } from './user-dictionaries.interface';
 import { UserDictionariesService } from './user-dictionaries.service';
 
 const defaultState: IUserDictionariesState = {
-  dictionaries: {}
+  dictionaries: {},
 };
 
 export function userDictionariesReducer(state: IUserDictionariesState = defaultState, action: Action): IUserDictionariesState {
@@ -13,21 +13,14 @@ export function userDictionariesReducer(state: IUserDictionariesState = defaultS
     case UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS:
       const { dictionaryId, terms } = action.payload;
       return {
-        ...state,
         dictionaries: {
           ...state.dictionaries,
           [dictionaryId]: terms
         }
       };
-    case UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE:
-      return {
-        ...state,
-        dictionaries: {
-          ...state.dictionaries,
-          [dictionaryId]: null
-        }
-      };
+    // NOTE: this should fall back to default
+    // case UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE:
     default:
       return state;
   }
-};
+}

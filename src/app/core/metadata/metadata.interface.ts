@@ -1,11 +1,16 @@
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
 export interface IMetadataColumn {
-  name: string;
+  actions: string[];
+  aggregate: MetadataAggregateType;
   dataType: number;
   dictCode: number;
-  aggregate: MetadataAggregateType;
-  actions: string[];
+  hidden?: boolean;
+  maxWidth?: number;
+  minWidth?: number;
+  label?: string;
+  name: string;
+  width?: number;
 }
 
 export interface IMetadata {
@@ -13,15 +18,15 @@ export interface IMetadata {
   data: IMetadataColumn[];
 }
 
-export interface IMetadataResponse {
-  success: boolean;
-  lists: IMetadata[];
-}
-
 export interface IMetadataState {
-  lists: IMetadataListsState;
+  [key: string]: {
+    columns: Array<IMetadataColumn>,
+    status: MetadataListStatusEnum
+  };
 }
 
-export interface IMetadataListsState {
-  [key: string]: IMetadataColumn[];
+export enum MetadataListStatusEnum {
+  PENDING,
+  LOADED,
+  ERROR,
 }

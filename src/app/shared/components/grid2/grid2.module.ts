@@ -45,7 +45,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 export class Grid2Module {
   constructor() {
     // tslint:disable-next-line
-    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Not_for_Production_100Devs19_July_2017__MTUwMDQxODgwMDAwMA==c8fa1c094c7bd76cddf4297f92d5f8da');
+    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Not_for_Production_100Devs2_August_2017__MTUwMTYyODQwMDAwMA==f340cff658f8e3245fee29659b49a674');
   }
 }
 

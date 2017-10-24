@@ -15,7 +15,7 @@ import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
@@ -50,17 +50,15 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
     { prop: 'name', minWidth: 150, maxWidth: 350 },
-    { prop: 'value', minWidth: 100, maxWidth: 150, localized: true },
+    { prop: 'value', minWidth: 100, maxWidth: 150,
+      renderer: (constant: IConstant) => this.valueConverterService.deserializeBoolean(constant)
+    },
     { prop: 'dsc', minWidth: 200 },
   ];
 
-  renderers = {
-    value: (constant: any) => this.valueConverterService.deserializeBoolean(constant),
-  };
-
   permissionSub: Subscription;
 
-  rows$: Observable<Array<IConstant>>;
+  rows$: Observable<IConstant[]>;
 
   selectedRecord$: Observable<IConstant>;
 
@@ -77,8 +75,10 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.rows$ = this.constantsService.state.map(state => this.valueConverterService.deserializeSet(state.constants));
+    this.columns = this.gridService.setRenderers(this.columns);
+    this.rows$ = this.constantsService.state
+      .map(state => state.constants).distinctUntilChanged()
+      .map(constants => this.valueConverterService.deserializeSet(constants)) as Observable<IConstant[]>;
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
@@ -135,7 +135,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   onBeforeEdit(): void {
     const permission = 'CONST_VALUE_EDIT';
-    this.userPermissionsService.has('CONST_VALUE_EDIT')
+    this.userPermissionsService.has(permission)
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {

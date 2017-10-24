@@ -54,17 +54,18 @@ export class ContractorManagersComponent implements OnDestroy {
 
   columns: Array<IGridColumn> = [
     // { prop: 'fullName' },
-    { prop: 'lastName' },
-    { prop: 'firstName' },
-    { prop: 'middleName' },
-    { prop: 'genderCode' },
-    { prop: 'position' },
-    { prop: 'branchCode' },
-    { prop: 'mobPhone' },
-    { prop: 'workPhone' },
-    { prop: 'intPhone' },
-    { prop: 'workAddress' },
-    { prop: 'comment' },
+    { prop: 'lastName', minWidth: 120, maxWidth: 200 },
+    { prop: 'firstName', minWidth: 120, maxWidth: 200 },
+    { prop: 'middleName', minWidth: 120, maxWidth: 200 },
+    { prop: 'genderCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'position', minWidth: 100, maxWidth: 150 },
+    { prop: 'branchCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'mobPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'workPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'intPhone', minWidth: 100, maxWidth: 150 },
+    { prop: 'workAddress', minWidth: 100, maxWidth: 250 },
+    { prop: 'email', minWidth: 100, maxWidth: 200 },
+    { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
   private contractorId = Number((this.activatedRoute.params as any).value.id);
@@ -101,18 +102,13 @@ export class ContractorManagersComponent implements OnDestroy {
     });
 
     this.dictionariesSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_BRANCHES),
-      this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_GENDER)
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER)
     ).subscribe(([ branchOptions, genderOptions ]) => {
       this.renderers.branchCode = [].concat(branchOptions);
       this.renderers.genderCode = [].concat(genderOptions);
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
-
-    this.userDictionariesService.preload([
-      UserDictionariesService.DICTIONARY_BRANCHES,
-      UserDictionariesService.DICTIONARY_GENDER
-    ]);
 
     this.managersSubscription = this.contractorsAndPortfoliosService.selectedManager$.subscribe(manager => {
       this.selectedManager = manager;

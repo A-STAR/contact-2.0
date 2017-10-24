@@ -22,9 +22,6 @@ export class TimeComponent implements ControlValueAccessor {
     keepCharPositions: true
   };
 
-  private onChange: Function = () => {};
-  private onTouched: Function = () => {};
-
   writeValue(value: any): void {
     this.value = value;
   }
@@ -40,4 +37,8 @@ export class TimeComponent implements ControlValueAccessor {
   onValueChange(value: string): void {
     this.onChange(value);
   }
+
+  private onChange: Function = () => {};
+  private onTouched: Function = () => {};
+
 }

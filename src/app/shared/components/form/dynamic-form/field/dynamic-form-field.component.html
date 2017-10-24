@@ -4,6 +4,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <input type="number"
              class="form-control"
@@ -16,6 +17,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <input type="text"
              class="form-control"
@@ -26,7 +28,8 @@
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
-      {{ control.label | translate }}
+      <b>{{ control.label | translate }}</b>
+      <b *ngIf="control.required" class="text-danger">*</b>
     </span>
     <label class="radio-inline">
       <input type="radio" [formControlName]="control.controlName" value="1">
@@ -43,6 +46,7 @@
       <label>
         <input type="checkbox" [formControlName]="control.controlName"/>
         {{ control.label | translate}}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </label>
     </div>
   </ng-container>
@@ -51,17 +55,61 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-select [formControlName]="control.controlName"
-                  [options]="control.options"
                   [actions]="control.optionsActions"
-                  [multiple]="control.multiple"
                   [closableSelectedItem]="control.closableSelectedItem"
                   [controlDisabled]="control.disabled"
-                  [readonly]="control.readonly"
+                  [multiple]="control.multiple"
+                  [nullable]="!control.required"
+                  [options]="control.options"
                   [placeholder]="control.placeholder"
+                  [readonly]="control.readonly"
+                  [renderer]="control.optionsRenderer"
                   (onSelect)="selectHandler({ control: control, items: $event})">
       </app-select>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'selectwrapper'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-select-wrapper
+        [formControlName]="control.controlName"
+        [dictCode]="control.dictCode"
+        [lookupKey]="control.lookupKey">
+      </app-select-wrapper>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'singleselect'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-single-select-wrapper
+        [formControlName]="control.controlName"
+        [dictCode]="control.dictCode"
+        [lookupKey]="control.lookupKey">
+      </app-single-select-wrapper>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'multiselect'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-multi-select
+        [formControlName]="control.controlName"
+        [options]="control.options">
+      </app-multi-select>
     </label>
   </ng-container>
 
@@ -69,12 +117,13 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <textarea
         [attr.placeholder]="(control.placeholder || '') | translate"
         [formControlName]="control.controlName"
         class="form-control"
-        rows="control.rows || 2"
+        [rows]="control.rows || 2"
       ></textarea>
     </label>
   </ng-container>
@@ -83,15 +132,23 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
+    <app-input-datepicker
+      [formControlName]="control.controlName"
+      [displayTime]="control.displayTime"
+      [minDate]="control.minDate"
+      [maxDate]="control.maxDate"
+      [required]="control.required"
+    ></app-input-datepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
     <app-image-upload
@@ -105,6 +162,7 @@
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <!-- TODO(d.maltsev): can we somehow use app-popup-input here? -->
       <div class="popupinput">
@@ -120,10 +178,124 @@
     </label>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'gridselect'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-grid-dropdown
+      [columns]="control.gridColumns"
+      [formControlName]="control.controlName"
+      [rows]="control.gridRows"
+      [labelGetter]="control.gridLabelGetter"
+      [valueGetter]="control.gridValueGetter"
+      (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
+    </app-grid-dropdown>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'password'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-password-input [formControlName]="control.controlName"></app-password-input>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'radio'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-radio-group [formControlName]="control.controlName" [options]="control.radioOptions"></app-radio-group>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'file'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
+  </ng-container>
+
   <input *ngSwitchCase="'hidden'"
          type="hidden"
          class="form-control"
          [formControlName]="control.controlName">
+
+  <ng-container *ngSwitchCase="'button'">
+    <label><span class="form-label">&nbsp;</span></label>
+    <button
+      class="btn btn-labeled btn-default"
+      type="button"
+      (click)="control.action()"
+      [disabled]="control.disabled"
+    >
+      <span class="btn-label">
+        <i *ngIf="control.iconCls" class="fa" [ngClass]="control.iconCls" aria-hidden="true"></i>
+      </span>
+      {{ control.label | translate }}
+      <b *ngIf="control.required" class="text-danger">*</b>
+    </button>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'richtexteditor'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-rich-text-editor
+      [disabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [toolbar]="control.toolbar"
+      (init)="control.onInit ? control.onInit($event) : null">
+    </app-rich-text-editor>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'segmented'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-segmented-input
+      [formControlName]="control.controlName"
+      [options]="control.segmentedInputOptions">
+    </app-segmented-input>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'multitext'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-multitext-input
+        [formControlName]="control.controlName"
+        [options]="control.options">
+      </app-multitext-input>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'colorpicker'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-colorpicker-input [formControlName]="control.controlName"></app-colorpicker-input>
+    </label>
+  </ng-container>
 
   <ng-container *ngSwitchCase="'dynamic'">
 
@@ -133,6 +305,7 @@
         <label>
           <span class="form-label">
             {{ control.label | translate }}
+            <b *ngIf="control.required" class="text-danger">*</b>
           </span>
           <input type="number"
                  class="form-control"
@@ -144,6 +317,7 @@
       <ng-container *ngSwitchCase="2">
         <label class="form-label">
           {{ control.label | translate }}
+          <b *ngIf="control.required" class="text-danger">*</b>
         </label>
         <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
       </ng-container>
@@ -151,6 +325,7 @@
       <ng-container *ngSwitchCase="4">
         <span class="form-label">
           {{ control.label | translate }}
+          <b *ngIf="control.required" class="text-danger">*</b>
         </span>
         <label class="radio-inline">
           <input type="radio" [formControlName]="control.controlName" value="1">
@@ -166,6 +341,7 @@
         <label>
           <span class="form-label">
             {{ control.label | translate }}
+            <b *ngIf="control.required" class="text-danger">*</b>
           </span>
           <input type="text"
                  class="form-control"

@@ -19,11 +19,6 @@ export interface IEmployee {
   isMain: boolean;
 }
 
-export interface IEmployeesResponse {
-  success: boolean;
-  users: Array<IEmployee>;
-}
-
 export interface IEmployeeCreateRequest {
   roleCode: number;
   usersIds: Array<number>;

@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IMetadataListsState, IMetadataResponse } from './metadata.interface';
+import { IMetadata } from './metadata.interface';
 
 import { DataService } from '../data/data.service';
 import { MetadataService } from './metadata.service';
@@ -17,19 +17,15 @@ export class MetadataEffects {
   fetchMetadata$ = this.actions
     .ofType(MetadataService.METADATA_FETCH)
     .switchMap((action: Action) => {
-      return this.read()
-        .map((response: IMetadataListsState) => {
-          return {
-            type: MetadataService.METADATA_FETCH_SUCCESS,
-            payload: response
-          };
-        })
+      return this.read(action.payload.key)
+        .map(list => ({
+          type: MetadataService.METADATA_FETCH_SUCCESS,
+          payload: list
+        }))
         .catch(error => {
           return [
-            {
-              type: MetadataService.METADATA_FETCH_FAILURE
-            },
-            this.notificationService.error().response(error).action()
+            { type: MetadataService.METADATA_FETCH_FAILURE },
+            this.notificationService.error('errors.default.read').entity('entities.metadata.gen.plural').response(error).action()
           ];
         });
     });
@@ -38,14 +34,9 @@ export class MetadataEffects {
     private actions: Actions,
     private dataService: DataService,
     private notificationService: NotificationsService
-  ) {
-  }
+  ) {}
 
-  private read(): Observable<IMetadataListsState> {
-    return this.dataService.read('/list')
-      .map((response: IMetadataResponse) => response.lists.reduce((acc, metadata) => {
-        acc[metadata.name] = metadata.data;
-        return acc;
-      }, {}));
+  private read(key: string): Observable<IMetadata[]> {
+    return this.dataService.read(`/list?name=${key}`);
   }
 }

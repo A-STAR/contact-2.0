@@ -4,17 +4,17 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/zip';
 
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interface';
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IValueEntity } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-permissions',
@@ -26,14 +26,12 @@ export class PermissionsComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    { prop: 'value', minWidth: 70, maxWidth: 100, localized: true },
+    { prop: 'value', minWidth: 70, maxWidth: 100,
+      renderer: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
+    },
     { prop: 'dsc', minWidth: 200 },
     { prop: 'comment', minWidth: 300 },
   ];
-
-  renderers: IRenderer = {
-    value: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
-  };
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -70,8 +68,7 @@ export class PermissionsComponent implements OnDestroy {
     },
   ];
 
-  // TODO(d.maltsev): type
-  permissions$: Observable<Array<any>>;
+  permissions$: Observable<IValueEntity[]>;
 
   canViewPermissions$: Observable<boolean>;
 
@@ -80,7 +77,7 @@ export class PermissionsComponent implements OnDestroy {
 
   dialog: IPermissionsDialogEnum;
 
-  private currentPermission: IPermissionModel;
+  currentPermission: IPermissionModel;
   private currentRole: IPermissionRole;
   private permissionsSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
@@ -88,12 +85,11 @@ export class PermissionsComponent implements OnDestroy {
   constructor(
     private dataService: DataService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.columns = this.gridService.setRenderers(this.columns);
     this.permissionsSubscription = this.permissionsService.permissions
       .subscribe(
         (permissions: IPermissionsState) => {
@@ -116,7 +112,7 @@ export class PermissionsComponent implements OnDestroy {
     )
     .subscribe(([ hasViewPermission, currentRole ]) => {
       if (!hasViewPermission) {
-        this.permissionsService.clearPremissions();
+        this.permissionsService.clearPermissions();
       } else if (currentRole) {
         this.permissionsService.fetchPermissions();
       }
@@ -132,9 +128,9 @@ export class PermissionsComponent implements OnDestroy {
 
   onBeforeAddPermissions(): void {
     this.dataService
-      .read('/roles/{id}/permits/notadded', { id: this.currentRole.id })
-      .subscribe(data => {
-        this.availablePermissions = data.permits;
+      .readAll('/roles/{id}/permits/notadded', { id: this.currentRole.id })
+      .subscribe(permits => {
+        this.availablePermissions = permits;
         this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
       });
   }

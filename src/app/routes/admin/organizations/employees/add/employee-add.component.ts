@@ -1,16 +1,14 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../../organizations.service';
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/edit/entity.base.component';
+import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
@@ -29,12 +27,11 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
     // TODO: display column depending on filter
-    { prop: 'isBlocked', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100 },
   ];
 
   renderers: IRenderer = {
-    fullName: (employee: IEmployeeUser) => `${employee.lastName || ''} ${employee.firstName || ''} ${employee.middleName || ''}`,
-    isBlocked: ({ isBlocked }) => this.translateService.instant(isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No'),
+    isInactive: 'checkboxRenderer',
   };
 
   get formData(): any {
@@ -43,13 +40,11 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
         this.employeeRoleOptions[0]
       ]
     };
-  };
+  }
 
   constructor(
     private gridService: GridService,
     private organizationsService: OrganizationsService,
-    private translateService: TranslateService,
-    private valueConverterService: ValueConverterService,
   ) {
     super();
     this.organizationsService.fetchNotAddedEmployees();

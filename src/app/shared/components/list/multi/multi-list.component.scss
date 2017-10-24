@@ -1,0 +1,17 @@
+@import "../../../styles/app/variables";
+
+.panel {
+  border: 1px solid $app-widget-border-color-dark;
+}
+
+.panel-heading {
+  background: $panel-footer-bg;
+  border-bottom: 1px solid $app-widget-border-color;
+}
+
+.list-group {
+  cursor: pointer;
+  .list-group-item:not(.active):hover {
+    background: $dropdown-link-hover-bg;
+  }
+}

@@ -1,0 +1,25 @@
+<div appDropdown>
+  <div #dropdownTrigger>
+    <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }">
+      {{ label }}
+      <i class="caret"></i>
+    </span>
+    <input type="hidden" [ngModel]="value">
+  </div>
+  <div #dropdownContent class="dropdown">
+    <app-grid
+      [columns]="columns"
+      [footerHeight]="false"
+      [rows]="rows"
+      [selection]="selection"
+      [selectionType]="'single'"
+      [styles]="{ height: '200px', border: 'none' }"
+      (onSelect)="onSelect($event)">
+    </app-grid>
+    <div class="panel-footer text-right">
+      <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
+        {{ 'default.buttons.clear' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form-control.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
@@ -23,6 +23,27 @@ export class EditPermissionComponent implements OnInit {
   ngOnInit(): void {
     this.controls = this.getControls();
     this.data = this.getData();
+  }
+
+  getData(): any {
+    return {
+      ...this.record,
+      value: String(this.record.value)
+    };
+  }
+
+  onDisplayChange(event: boolean): void {
+    if (!event) {
+      this.onCancel();
+    }
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  onSave(): void {
+    this.save.emit(this.form.value);
   }
 
   private getControls(): Array<IDynamicFormControl> {
@@ -67,24 +88,4 @@ export class EditPermissionComponent implements OnInit {
     ];
   }
 
-  getData(): any {
-    return {
-      ...this.record,
-      value: String(this.record.value)
-    };
-  }
-
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.onCancel();
-    }
-  }
-
-  onCancel(): void {
-    this.cancel.emit();
-  }
-
-  onSave(): void {
-    this.save.emit(this.form.value);
-  }
 }

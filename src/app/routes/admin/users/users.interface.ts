@@ -1,28 +1,24 @@
 export interface IUser {
   id: number;
-  login: string;
-  roleId: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
   comment: string;
   email: string;
-  password: string;
-  ldapLogin: string;
-  workPhone: string;
-  mobPhone: string;
-  intPhone: string;
-  workAddress: string;
-  position: string;
-  startWorkDate: string | Date;
   endWorkDate: string | Date;
+  intPhone: string;
+  isAutoReset: boolean;
+  isInactive: boolean;
+  firstName: string;
+  middleName: string;
   languageId: number;
-  isBlocked: boolean;
-}
-
-export interface IUsersResponse {
-  success: boolean;
-  users: Array<IUser>;
+  lastName: string;
+  ldapLogin: string;
+  login: string;
+  mobPhone: string;
+  password: string;
+  position: string;
+  roleId: number;
+  startWorkDate: string | Date;
+  workAddress: string;
+  workPhone: string;
 }
 
 export interface IUserEditPermissions {
@@ -34,5 +30,5 @@ export interface IUserEditPermissions {
 export interface IUsersState {
   users: Array<IUser>;
   selectedUserId: number;
-  displayBlocked: boolean;
+  displayInactive: boolean;
 }

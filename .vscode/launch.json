@@ -8,7 +8,7 @@
       "name": "Attach to Chrome",
       "type": "chrome",
       "request": "attach",
-      "url": "http://localhost:4200",
+      "url": "http://localhost:4200/admin/dictionaries",
       "port": 9222,
       "webRoot": "${workspaceRoot}/src"
     }

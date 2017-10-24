@@ -1,0 +1,47 @@
+<span class="form-inline value">
+  <span *ngIf="displayAsArray">(</span>
+
+  <ng-container *ngFor="let v of value; let i = index; let last = last; trackBy: trackByIndex">
+    <ng-container [ngSwitch]="filterType">
+
+      <!-- Datepicker -->
+      <ng-container *ngSwitchCase="'date'">
+        <app-input-datepicker
+          buttonClass="btn btn-sm btn-default"
+          inputClass="form-control input-sm"
+          [ngModel]="toDate(v)"
+          (ngModelChange)="onDateValueChange($event, i)">
+        </app-input-datepicker>
+      </ng-container>
+
+      <!-- Dropdown -->
+      <ng-container *ngSwitchCase="'set'">
+        <app-select
+          inputClass="form-control input-sm"
+          class="inline"
+          [ngModel]="v"
+          [options]="options"
+          (onSelect)="onSetValueChange($event, i)">
+        </app-select>
+      </ng-container>
+
+      <!-- Default input -->
+      <ng-container *ngSwitchDefault>
+        <input
+          type="text"
+          class="form-control input-sm"
+          [ngModel]="v"
+          (change)="onValueChange($event, i)"
+        />
+      </ng-container>
+    </ng-container>
+    <span *ngIf="!last && displayAsArray">,&nbsp;</span>
+  </ng-container>
+
+  <span *ngIf="displayAsArray">)</span>
+
+  <ng-container *ngIf="displayButtons">
+    <button class="btn btn-xs btn-default" [title]="'queryBuilder.buttons.addValue' | translate" (click)="addValue()">+</button>
+    <button class="btn btn-xs btn-default" [title]="'queryBuilder.buttons.removeValue' | translate" (click)="removeValue()">-</button>
+  </ng-container>
+<span>

@@ -1,0 +1,40 @@
+<app-message-template-grid-edit
+  *ngIf="isDialog('add')"
+  [typeCode]="typeCode"
+  (submit)="onAddDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-message-template-grid-edit>
+
+<app-message-template-grid-edit
+  *ngIf="isDialog('edit')"
+  [typeCode]="typeCode"
+  [templateId]="selectedTemplateId$ | async"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-message-template-grid-edit>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.messageTemplate.dialogs.delete.title"
+  actionTranslationKey="widgets.messageTemplate.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedTemplate$ | async"
+  (action)="onDeleteDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.messageTemplate"
+  selectionType="single"
+  [columns]="columns"
+  [rows]="templates"
+  [selection]="selection$ | async"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onDblClick($event)">
+</app-grid>

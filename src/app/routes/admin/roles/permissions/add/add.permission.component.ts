@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
-import { IPermissionModel, IPermissionsResponse } from '../../permissions.interface';
+import { IPermissionModel } from '../../permissions.interface';
 
-import { ValueConverterService } from '../../../../../core/converter/value/value-converter.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
@@ -28,7 +28,7 @@ export class AddPermissionComponent {
 
   constructor(private valueConverterService: ValueConverterService) { }
 
-  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
+  parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
 
   onSelectPermissions(): void {
     this.selectedPermissions = this.addPermitGrid.selected;

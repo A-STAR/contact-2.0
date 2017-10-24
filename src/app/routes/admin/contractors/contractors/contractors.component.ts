@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ContractorActionEnum } from './contractors.interface';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { DialogFunctions } from '../../../../core/dialog';
+
 @Component({
   selector: 'app-contractors',
   templateUrl: './contractors.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorsComponent implements OnDestroy {
+export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -37,7 +38,7 @@ export class ContractorsComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dialogAction = ContractorActionEnum.DELETE,
+      action: () => this.setDialog('delete'),
       enabled: Observable.combineLatest(
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedContractor$
@@ -51,44 +52,37 @@ export class ContractorsComponent implements OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'name' },
-    { prop: 'fullName' },
-    { prop: 'smsName' },
-    { prop: 'responsibleName' },
-    { prop: 'typeCode' },
-    { prop: 'phone' },
-    { prop: 'address' },
-    { prop: 'comment' },
+    { prop: 'id', minWidth: 50, maxWidth: 50 },
+    { prop: 'name', minWidth: 120, maxWidth: 200 },
+    { prop: 'fullName', minWidth: 120, maxWidth: 200 },
+    { prop: 'smsName', minWidth: 120, maxWidth: 200 },
+    { prop: 'responsibleName', minWidth: 100, maxWidth: 150 },
+    { prop: 'typeCode', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
+    { prop: 'phone', minWidth: 100, maxWidth: 150 },
+    { prop: 'address', minWidth: 100, maxWidth: 250 },
+    { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
-  private dialogAction: ContractorActionEnum;
+  dialog: string;
+  selectedContractor: IContractor;
 
   private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
   private contractorsSubscription: Subscription;
-  private dictionariesSubscription: Subscription;
-
-  private selectedContractor: IContractor;
-
-  private renderers: IRenderer = {
-    typeCode: []
-  };
 
   constructor(
     private actions: Actions,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userDictionariesService: UserDictionariesService,
+    private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.userDictionariesService.preload([ UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE ]);
-
-    this.dictionariesSubscription = this.userDictionariesService.getDictionaryOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE)
-      .subscribe(options => {
-        this.renderers.typeCode = [].concat(options);
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    super();
+    this.gridService.setDictionaryRenderers(this.columns)
+      .take(1)
+      .subscribe(columns => {
+        this.columns = this.gridService.setRenderers(columns);
       });
 
     this.canViewSubscription = this.canView$.subscribe(canView => {
@@ -106,47 +100,42 @@ export class ContractorsComponent implements OnDestroy {
 
     this.actionsSubscription = this.actions
       .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS)
-      .subscribe(() => this.dialogAction = null);
+      .subscribe(() => this.setDialog());
   }
 
   ngOnDestroy(): void {
     this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.contractorsSubscription.unsubscribe();
-    this.dictionariesSubscription.unsubscribe();
     this.contractorsAndPortfoliosService.clearContractors();
   }
 
-  get isContractorBeingRemoved(): boolean {
-    return this.dialogAction === ContractorActionEnum.DELETE;
-  }
-
-  get contractors$(): Observable<Array<IContractor>> {
+  get contractors$(): Observable<IContractor[]> {
     return this.contractorsAndPortfoliosService.contractors$;
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_VIEW').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_ADD').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_ADD');
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_EDIT').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_EDIT');
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_DELETE').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_DELETE');
   }
 
   onAdd(): void {
-    this.contentTabService.navigate(`/admin/contractors/create`);
+    this.router.navigate([ `/admin/contractors/create` ]);
   }
 
   onEdit(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.selectedContractor.id}`);
+    this.router.navigate([ `/admin/contractors/${this.selectedContractor.id}` ]);
   }
 
   onSelect(contractor: IContractor): void {
@@ -157,7 +146,4 @@ export class ContractorsComponent implements OnDestroy {
     this.contractorsAndPortfoliosService.deleteContractor();
   }
 
-  onCloseDialog(): void {
-    this.dialogAction = null;
-  }
 }

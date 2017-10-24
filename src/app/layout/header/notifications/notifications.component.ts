@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
 
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-notifications',
@@ -24,11 +26,23 @@ export class NotificationsComponent {
     NotificationTypeEnum.DEBUG,
   ];
 
-  constructor(private notificationsService: NotificationsService) {}
+  dateTimeFormat: string;
+
+  constructor(
+    private notificationsService: NotificationsService,
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService,
+  ) {
+    this.dateTimeFormat = this.translateService.instant('default.date.format.dateTime');
+  }
 
   @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.stopPropagation();
+  }
+
+  displayDate(date: Date): string {
+    return this.valueConverterService.toLocalDateTime(date);
   }
 
   getIconClass(type: NotificationTypeEnum): string {

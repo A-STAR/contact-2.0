@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
-import { SettingsService } from '../../../core/settings/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-login',
@@ -20,17 +19,21 @@ export class LoginComponent {
     public settings: SettingsService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private translateService: TranslateService,
-    private router: Router,
+    private persistenceService: PersistenceService,
   ) {
     const login = this.login;
     const remember = !!login;
 
-    this.form = fb.group({
+    this.form = this.fb.group({
       'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
       'password': [ null, Validators.required ],
       'remember_login': [remember],
     });
+  }
+
+  isControlDirtyOrTouched(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return (control.dirty || control.touched);
   }
 
   submitForm(event: UIEvent, value: any): void {
@@ -38,9 +41,7 @@ export class LoginComponent {
 
     this.login = value.remember_login ? value.login : null;
 
-    [].forEach.call(this.form.controls, ctrl => {
-        ctrl.markAsTouched();
-    });
+    this.form.markAsTouched();
 
     if (this.form.valid) {
       const { login, password } = value;
@@ -49,14 +50,14 @@ export class LoginComponent {
   }
 
   private get login(): string {
-    return localStorage.getItem(LoginComponent.LOGIN_KEY);
+    return this.persistenceService.get(LoginComponent.LOGIN_KEY);
   }
 
   private set login(login: string) {
     if (login) {
-      localStorage.setItem(LoginComponent.LOGIN_KEY, login);
+      this.persistenceService.set(LoginComponent.LOGIN_KEY, login);
     } else {
-      localStorage.removeItem(LoginComponent.LOGIN_KEY);
+      this.persistenceService.remove(LoginComponent.LOGIN_KEY);
     }
   }
 }

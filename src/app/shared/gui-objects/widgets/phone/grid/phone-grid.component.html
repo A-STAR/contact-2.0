@@ -1,0 +1,54 @@
+<app-block-dialog
+  *ngIf="isDialog('block')"
+  titleTranslationKey="widgets.phone.dialogs.block.title"
+  labelTranslationKey="widgets.phone.dialogs.block.inactiveReasonCode"
+  [dictionaryId]="blockDialogDictionaryId"
+  (action)="onBlockDialogSubmit($event)"
+  (close)="onDialogClose()">
+</app-block-dialog>
+
+<app-dialog-action
+  *ngIf="isDialog('unblock')"
+  titleTranslationKey="widgets.phone.dialogs.unblock.title"
+  actionTranslationKey="widgets.phone.dialogs.unblock.confirmMessage"
+  actionMessage="default.yesNo.Yes"
+  actionMode="success"
+  [messageParams]="selectedPhone$ | async"
+  (action)="onUnblockDialogSubmit()"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-phone-grid-schedule
+  *ngIf="isDialog('schedule')"
+  [person]="person"
+  [phoneId]="selectedPhoneId$ | async"
+  (submit)="onScheduleDialogSubmit($event)"
+  (cancel)="onDialogClose()">
+</app-phone-grid-schedule>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.phone.dialogs.delete.title"
+  actionTranslationKey="widgets.phone.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedPhone$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  *ngIf="canDisplayGrid"
+  columnTranslationKey="debtor.information.phone"
+  contextFieldName="phone"
+  [contextMenuEnabled]="true"
+  selectionType="single"
+  [styles]="{height: '230px'}"
+  [columns]="columns"
+  [rowClass]="getRowClass()"
+  [rows]="phones"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

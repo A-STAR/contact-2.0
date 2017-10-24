@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
@@ -15,8 +14,8 @@ import {
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnChangeEvent,
-  GridOptions, ICellRendererParams, RowNode,
+  ColDef, Column, ColumnChangeEvent, GetContextMenuItemsParams,
+  GridOptions, ICellRendererParams, MenuItemDef, RowNode,
 } from 'ag-grid/main';
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
 import {
@@ -26,16 +25,23 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridEventPayload, IAGridExportableColumn,
-  IAGridColumn, IAGridSortModel, IAGridSettings } from './grid2.interface';
-import { FilterObject } from './filter/grid2-filter';
+  IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
+  IAGridRequest, IAGridSorter } from './grid2.interface';
+import { FilterObject } from './filter/grid-filter';
 
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
+import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
+
+interface ITranslations {
+  translations: { [index: string]: string };
+}
 
 @Component({
   selector: 'app-grid2',
@@ -51,51 +57,54 @@ import { ViewPortDatasource } from './data/viewport-data-source';
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;
 
-  static FIRST_PAGE         = 'GRID2_FIRST_PAGE';
-  static LAST_PAGE          = 'GRID2_LAST_PAGE';
-  static NEXT_PAGE          = 'GRID2_NEXT_PAGE';
-  static PREVIOUS_PAGE      = 'GRID2_PREVIOUS_PAGE';
-  static PAGE_SIZE          = 'GRID2_PAGE_SIZE';
-  static SORT_COLUMNS       = 'GRID2_SORT_COLUMNS';
-  static GROUP_COLUMNS      = 'GRID2_GROUP_COLUMNS';
-  static SELECTED_ROWS      = 'GRID2_SELECTED_ROWS';
-  static DESTROY_STATE      = 'GRID2_DESTROY_STATE';
+  static FIRST_PAGE         = 'AGRID_FIRST_PAGE';
+  static LAST_PAGE          = 'AGRID_LAST_PAGE';
+  static NEXT_PAGE          = 'AGRID_NEXT_PAGE';
+  static PREVIOUS_PAGE      = 'AGRID_PREVIOUS_PAGE';
+  static PAGE_SIZE          = 'AGRID_PAGE_SIZE';
+  static SORT_COLUMNS       = 'AGRID_SORT_COLUMNS';
+  static GROUP_COLUMNS      = 'AGRID_GROUP_COLUMNS';
+  static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
+  static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
-  @Input() columns: IAGridColumn[] = [];
-  @Input() columnTranslationKey: string;
-  @Input() filterEnabled = true;
-  @Input() headerHeight = 25;
+  @Input() disableFilters = false;
   @Input() groupColumnMinWidth = 120;
-  @Input() page = 1;
+  @Input() headerHeight = 25;
+  @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
     .sort((x, y) => x > y ? 1 : -1);
-  // NOTE: remote by default, if you need local sorting => change to `false`
+  @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
   @Input() rowHeight = 25;
+  @Input() rowIdKey = 'id';
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
-  // selected rows
-  @Input() selected: any[] = [];
-  @Input() persistenceKey: string;
   @Input() showDndGroupPanel = false;
+  @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() fetchUrl: string;
 
-  @Output() onDragStarted: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onDragStopped: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onColumnGroup: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onDblClick: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onFilter: EventEmitter<FilterObject> = new EventEmitter<FilterObject>();
-  @Output() onPage: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onPageSize: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onSort: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
-  @Output() onSelect: EventEmitter<IAGridEventPayload> = new EventEmitter<IAGridEventPayload>();
+  @Output() onDragStarted = new EventEmitter<null>();
+  @Output() onDragStopped = new EventEmitter<null>();
+  @Output() onColumnGroup = new EventEmitter<IAGridGroups>();
+  // NOTE: emits the `.data` property of RowNode
+  @Output() onDblClick = new EventEmitter<any>();
+  @Output() onFilter = new EventEmitter<FilterObject>();
+  @Output() onPage = new EventEmitter<number>();
+  @Output() onInit = new EventEmitter<void>();
+  @Output() onPageSize = new EventEmitter<number>();
+  @Output() onSort = new EventEmitter< IAGridSortModel[]>();
+  @Output() onSelect = new EventEmitter<IAGridSelected>();
 
+  columns: IAGridColumn[];
   columnDefs: ColDef[];
-  paginationPanel: IToolbarAction[] = [];
   gridOptions: GridOptions = {};
+  page: number = this.startPage;
+  paginationPanel: IToolbarAction[] = [];
+  initCallbacks: Function[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -104,8 +113,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private elRef: ElementRef,
+    private gridService: GridService,
     private notificationService: NotificationsService,
+    private persistenceService: PersistenceService,
     private translate: TranslateService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -114,56 +124,57 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return this.gridOptions.columnApi.getAllGridColumns();
   }
 
+  // selected rows
+  get selected(): RowNode[] {
+    return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
+  }
+
   ngOnInit(): void {
     this.viewportDatasource = new ViewPortDatasource(this);
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
-    const { colDefs } = this.restoreGridSettings();
-    this.columnDefs = this.setColumnDefs(colDefs);
-    this.setGridOptions();
-    this.setPagination();
-
-    const translationKeys = ['grid.messages'];
-
-    if (this.columnTranslationKey) {
-      translationKeys.push(this.columnTranslationKey);
+    if (!this.metadataKey) {
+      throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
-    this.translate.get(translationKeys)
+
+    this.gridService
+      .getColumnMeta(this.metadataKey, {})
       .take(1)
-      .subscribe(
-        (translation) => {
-          if (this.columnTranslationKey) {
-            this.translateColumns(translation[this.columnTranslationKey].grid);
-          }
-        },
-        // TODO(d.maltsev): make sure `error` is a string
-        error => this.notificationService.warning(error).noAlert().dispatch()
-      );
+      .subscribe(columns => {
+        const { colDefs } = this.restoreGridSettings();
 
-    this.langSubscription = this.translate.onLangChange
-      .subscribe((translations: { translations: { [index: string]: string } }) =>
-        this.refreshTranslations(translations.translations));
+        this.columns = columns.slice();
+        this.columnDefs = this.setColumnDefs(colDefs);
+        this.setGridOptions();
+        this.setPagination();
 
-    this.initialized = true;
+        this.initialized = true;
+        this.cdRef.markForCheck();
+        this.onInit.emit();
+      });
+
+      this.langSubscription = this.translate.onLangChange
+        .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.initialized) {
-      const { rowCount, rows, currentPage, currentPageSize, selected } = changes;
-      if (rows || currentPage || currentPageSize) {
-        this.refreshPagination();
-        this.clearRangeSelections();
-      }
-      if (rowCount) {
-        this.viewportDatasource.params.setRowCount(rowCount.currentValue);
-        this.refreshRowCount();
-      }
-      if (rows) {
-        this.viewportDatasource.params.setRowData(this.rows);
-      }
-      if (selected) {
-        this.refreshRowCount();
+    if (!this.initialized) {
+      return;
+    }
+    const { rowCount, rows } = changes;
+    if (rows) {
+      this.refreshPagination();
+      this.clearRangeSelections();
+      this.viewportDatasource.params.setRowData(this.rows);
+    }
+    if (rowCount) {
+      this.viewportDatasource.params.setRowCount(rowCount.currentValue);
+      this.refreshRowCount();
+      if (rowCount.currentValue) {
+        this.gridOptions.api.hideOverlay();
+      } else {
+        this.gridOptions.api.showNoRowsOverlay();
       }
     }
   }
@@ -180,26 +191,31 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit({ type: Grid2Component.PREVIOUS_PAGE, payload: this.page });
+        this.onPage.emit(--this.page);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
-        if (this.page === this.getPageCount()) {
+        if ((this.page + 1) >= this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
-        this.onPage.emit({ type: Grid2Component.NEXT_PAGE, payload: this.page });
+        this.onPage.emit(++this.page);
         break;
       case ToolbarActionTypeEnum.GO_FIRST:
-        this.onPage.emit({ type: Grid2Component.FIRST_PAGE });
+        this.page = 1;
+        this.onPage.emit(1);
         break;
       case ToolbarActionTypeEnum.GO_LAST:
-        this.onPage.emit({ type: Grid2Component.LAST_PAGE, payload: this.getPageCount() });
+        this.page = this.getPageCount();
+        this.onPage.emit(this.page);
         break;
     }
   }
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
-    this.onPageSize.emit({ type: Grid2Component.PAGE_SIZE, payload: payload.value[0].value });
+    const newSize = payload.value[0].value;
+    console.log('new page size', newSize);
+    this.pageSize = newSize || this.pageSize;
+    this.onPageSize.emit(this.pageSize);
   }
 
   dragStarted(): void {
@@ -212,18 +228,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectionChanged(): void {
-    const selected = this.gridOptions.api.getSelectedRows();
-    this.onSelect.emit({
-      type: Grid2Component.SELECTED_ROWS, payload: selected.map(row => row.id)
-    });
+    const selected = this.selected.map(row => row[this.rowIdKey]);
+    this.refreshRowCount();
+    this.onSelect.emit(selected);
   }
 
-  rowDoubleClicked(): void {
-    this.onDblClick.emit(this.selected.map(node => node.data));
+  rowDoubleClicked(row: RowNode): void {
+    this.onDblClick.emit(row.data);
   }
 
   onFilterChanged(): void {
     const filters = this.getFilters();
+    this.page = 1;
     this.onFilter.emit(filters);
   }
 
@@ -233,22 +249,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .map(key => {
         const filter: any = { name: key };
         const model = filterModel[key];
-        // NOTE: `set` filter doesn't return the `filterType` => WTF?
-        switch (model.filterType || 'set') {
-          case 'set':
-            filter.operator = 'IN';
-            const column = this.columns.find(col => col.colId === key);
-            if (column && column.filterValues && Array.isArray(model)) {
-              filter.values = model.map(value => column.filterValues.find(val => val.name === value))
-                .map(val => val.code);
-            } else {
-              filter.values = [];
-            }
-            if (!filter.values.length) {
-              filter.operator = '==';
-              filter.values = null;
-            }
-            break;
+        switch (model.filterType) {
           case 'date':
             filter.operator = 'BETWEEN';
             filter.values = this.valueConverter.makeRangeFromLocalDate(model.dateFrom);
@@ -259,9 +260,23 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           case 'number':
             Object.assign(filter, this.getNumberFilter(model));
             break;
+          // NOTE: `set` filter doesn't return the `filterType` => WTF?
           default:
-            filter.operator = 'LIKE';
-            filter.values = [`%${model}%`];
+          case 'set':
+            filter.operator = 'IN';
+            const column = this.columns.find(col => col.colId === key);
+            if (column && column.filterValues && Array.isArray(model)) {
+              // console.log(column.filterValues);
+              // console.log('model', model);
+              filter.values = model.map(value => column.filterValues.find(val => val.name === value))
+                .map(val => val.code);
+            } else {
+              filter.values = [];
+            }
+            if (!filter.values.length) {
+              filter.operator = '==';
+              filter.values = null;
+            }
             break;
         }
         return filter;
@@ -270,8 +285,62 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return FilterObject
       .create()
       .and()
-      .addFilters(filters);
+      .setFilters(filters);
   }
+
+  onSortChanged(): void {
+    this.calculateGridSettings();
+    const sorters: IAGridSortModel[] = this.getSorters();
+    this.onSort.emit(sorters);
+  }
+
+  getSorters(): any {
+    return this.gridOptions.api.getSortModel();
+  }
+
+  getExportableColumns(): IAGridExportableColumn[] {
+    return this.allColumns
+      .filter(column => column.isVisible())
+      .map(column => {
+        const { field, headerName: name } = column.getColDef();
+        return { field, name };
+      });
+  }
+
+  getRequestParams(): IAGridRequestParams {
+    const sorters = this.getSorters();
+    const { pageSize, page: currentPage } = this;
+    return { currentPage, pageSize, sorters };
+  }
+
+  buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
+    const request: IAGridRequest = {};
+    const { sorters, currentPage, pageSize } = params;
+
+    if (sorters) {
+      request.sorting = sorters.map(col => {
+        return { field: col.colId, direction: col.sort } as IAGridSorter;
+      });
+    }
+
+    if (filters.hasFilter() || filters.hasValues()) {
+      request.filtering = filters;
+    }
+
+    if (!R.isNil(currentPage) && !R.isNil(pageSize)) {
+      request.paging = {
+        pageNumber: currentPage,
+        resultsPerPage: pageSize
+      };
+    }
+
+    return request;
+  }
+
+  // fetch(filters: FilterObject, params: IAGridRequestParams): void {
+  //   const payload = { filters, ...params };
+  //   this.gridService.fetch(payload);
+  // }
 
   private getTextFilter(model: any): any {
     const { filter, type } = model;
@@ -323,25 +392,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       result.values = [filter];
     }
     return result;
-  }
-
-  onSortChanged(): void {
-    this.calculateGridSettings();
-    const sorters: IAGridSortModel[] = this.getSorters();
-    this.onSort.emit({ type: Grid2Component.SORT_COLUMNS, payload: sorters });
-  }
-
-  getSorters(): any {
-    return this.gridOptions.api.getSortModel();
-  }
-
-  getExportableColumns(): IAGridExportableColumn[] {
-    return this.allColumns
-      .filter(column => column.isVisible())
-      .map(column => {
-        const { field, headerName: name } = column.getColDef();
-        return { field, name };
-      });
   }
 
   private setPagination(): void {
@@ -422,19 +472,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private refreshTranslations(translations: { [index: string]: any }): void {
     this.refreshRowCount();
-
     this.translateOptionsMessages();
-    this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
-
-    if (this.columnTranslationKey) {
-      // NOTE: the key 'grid' should be present in translation files for every grid component
-      // or this will throw
-      const columnTranslations = this.columnTranslationKey
-        .split('.')
-        .reduce((acc, prop) => acc[prop], translations)
-        .grid;
-      this.translateColumns(columnTranslations);
-    }
+    // this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
 
     this.cdRef.markForCheck();
   }
@@ -452,38 +491,27 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridOptions.api.clearFocusedCell();
   }
 
-  private getColumnByName(field: string): IAGridColumn {
-    return this.columns.find(column => column.colId === field);
-  }
-
-  private getRendererByName(field: string): Function {
-    return this.getColumnByName(field).renderer;
-  }
-
-  private translateColumns(columnTranslations: object): void {
-    this.columnDefs = this.columnDefs.map(col => {
-      col.headerName = columnTranslations[col.field];
-      return col;
-    });
-  }
+  // private getRendererByName(field: string): Function {
+  //   return this.columns.find(column => column.colId === field).renderer;
+  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);
   }
 
-  private getCustomFilter(name: string): any {
+  private getCustomFilter(column: IAGridColumn): any {
     const filterMap = {
-      number: 'number',
-      text: 'text',
-      date: 'date',
-      'set': 'set',
-      textFilter: GridTextFilter,
+      '1': 'number',
+      '3': 'text',
+      '6': 'set',
+      '7': 'date',
+      'default': GridTextFilter,
     };
-    return R.propOr('text', name)(filterMap);
+    return R.propOr('text', String(column.dataType))(filterMap);
   }
 
   private getCustomFilterParams(column: IAGridColumn): any {
-    if (column.filter === 'set' && column.filterValues) {
+    if (column.filterValues) {
       return {
         values: column.filterValues.map(item => item.name),
         cellRenderer: (node: { value: string }) => node.value,
@@ -494,34 +522,34 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
-  private setColumnDefs(colDefs: ColDef[]): ColDef[] {
-    return this.columns.map(column => {
+  private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
+    const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
         colId: column.colId,
         field: column.colId,
-        filter: this.getCustomFilter(column.filter),
+        filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.colId,
-        hide: column.hide,
-        // maxWidth: column.maxWidth,
+        headerName: column.label,
+        hide: !!column.hidden,
+        maxWidth: column.maxWidth,
         minWidth: column.minWidth,
-        width: column.width || column.minWidth,
+        width: column.width || column.minWidth || column.maxWidth,
       };
       // Merge persisted column settings, if any
-      if (colDefs) {
-        index = colDefs.findIndex(col => col.colId === column.colId);
+      if (savedColDefs) {
+        index = savedColDefs.findIndex(col => col.colId === column.colId);
         // tslint:disable-next-line:no-bitwise
         if (!!~index) {
-          Object.assign(colDef, colDefs[index]);
+          Object.assign(colDef, savedColDefs[index]);
         }
       } else {
-        index = -1;
+        index = 0;
       }
 
       switch (column.type) {
-        case 'primary':
+        case 'number':
           colDef.cellClass = 'ag-cell-number';
           break;
         case 'date':
@@ -529,46 +557,46 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           colDef.suppressSizeToFit = true;
           break;
       }
-      if (column.renderer) {
-        colDef.cellRenderer = (params: ICellRendererParams) => params.data && column.renderer(params.data);
+      if (column.$$valueGetter) {
+        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }
-      if (column.filter === 'set') {
-        colDef.keyCreator = (params) => params.value.code;
-      }
-      return { column: colDef, index };
-    })
-    .filter(item => item.index !== -1)
-    .sort((a, b) => {
-      return a.index > b.index ? 1 : -1;
-    })
-    .map(item => item.column);
+
+      return { column: colDef, index, originalIndex };
+    };
+
+    return this.columns
+      .filter(column => !!column.label)
+      .map(mapColumns)
+      // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
+      .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
+      .map(item => item.column);
   }
 
   private setGridOptions(): void {
     this.gridOptions = {
-      autoGroupColumnDef: {
-        headerName: this.translate.instant('default.grid.groupColumn'),
-        minWidth: this.groupColumnMinWidth,
-        suppressMenu: true,
-        suppressMovable: true,
-        suppressFilter: true,
-        cellRenderer: 'group',
-        cellRendererParams: {
-          innerRenderer: (params) => {
-            const rowNode: RowNode = params.node;
-            const { field } = rowNode;
-            if (rowNode.group && rowNode.allLeafChildren.length) {
-              const renderer = this.getRendererByName(field);
-              const data = rowNode.allLeafChildren[0].data;
-              return renderer
-                ? renderer(data)
-                : (data[field] || rowNode.rowGroupColumn.getColDef().headerName);
-            }
-            return '';
-          },
-        }
-      },
+      // autoGroupColumnDef: {
+      //   headerName: this.translate.instant('default.grid.groupColumn'),
+      //   minWidth: this.groupColumnMinWidth,
+      //   suppressMenu: true,
+      //   suppressMovable: true,
+      //   suppressFilter: true,
+      //   cellRenderer: 'group',
+      //   cellRendererParams: {
+      //     innerRenderer: (params) => {
+      //       const rowNode: RowNode = params.node;
+      //       const { field } = rowNode;
+      //       if (rowNode.group && rowNode.allLeafChildren.length) {
+      //         const renderer = this.getRendererByName(field);
+      //         const data = rowNode.allLeafChildren[0].data;
+      //         return renderer
+      //           ? renderer(data)
+      //           : (data[field] || rowNode.rowGroupColumn.getColDef().headerName);
+      //       }
+      //       return '';
+      //     },
+      //   }
+      // },
       dateComponentFramework: GridDatePickerComponent,
       debug: false,
       defaultColDef: {
@@ -581,10 +609,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           headerHeight: this.headerHeight,
           enableMenu: false,
         },
-        icons: {
-          sortAscending: '<i class="fa fa-sort-amount-asc"/>',
-          sortDescending: '<i class="fa fa-sort-amount-desc"/>'
-        },
+        // icons: {
+        //   sortAscending: '<i class="fa fa-sort-amount-asc"/>',
+        //   sortDescending: '<i class="fa fa-sort-amount-desc"/>'
+        // },
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
@@ -594,7 +622,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
-      floatingFilter: true,
+      floatingFilter: !this.disableFilters,
+      getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
@@ -602,21 +631,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       headerHeight: this.headerHeight,
       // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
-      overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
+      // overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">This is a custom \'no rows\' overlay</span>',
       pagination: this.pagination,
       paginationAutoPageSize: false,
       paginationPageSize: this.pageSize,
-      /**
-       * Reposition the popup to appear right below the button
-       * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
-       */
       postProcessPopup: this.postProcessPopup,
       rowDeselection: true,
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
       viewportDatasource: this.viewportDatasource,
-      getRowNodeId: (row) => { return row.id; },
+      getRowNodeId: row => row[this.rowIdKey],
       rowSelection: this.rowSelection,
       showToolPanel: false,
       suppressMenuHide: true,
@@ -629,12 +654,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       toolPanelSuppressPivotMode: true,
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
-      isExternalFilterPresent: () => this.filterEnabled,
+      isExternalFilterPresent: () => !this.disableFilters,
       doesExternalFilterPass: (node: RowNode) => true,
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: this.onFilterChanged.bind(this),
-      onGridReady: () => this.setSortModel(),
-      // onGridSizeChanged: (params) => this.fitGridSize(),
+      onGridReady: () => this.onGridReady(),
+      // onGridSizeChanged: (params) => this.onGridSizeChanged(),
       onColumnResized: () => this.calculateGridSettings(),
       onColumnVisible: () => this.calculateGridSettings(),
       onColumnMoved: () => this.calculateGridSettings(),
@@ -645,6 +670,51 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
+    return [
+      // {
+      //   name: 'Alert value',
+      //   action: () => { window.alert('Alerting about ' + params.value); },
+      // },
+      {
+        name: 'Always disabled',
+        disabled: true,
+        tooltip: 'Just to test what the tooltip can show'
+      },
+      // {
+      //   name: 'Person',
+      //   subMenu: [
+      //     {name: 'Niall', action: () => {console.log('Niall was pressed'); } },
+      //     {name: 'Sean', action: () => {console.log('Sean was pressed'); } },
+      //     {name: 'John', action: () => {console.log('John was pressed'); } },
+      //     {name: 'Alberto', action: () => {console.log('Alberto was pressed'); } },
+      //     {name: 'Tony', action: () => {console.log('Tony was pressed'); } },
+      //     {name: 'Andrew', action: () => {console.log('Andrew was pressed'); } },
+      //     {name: 'Lola', action: () => {console.log('Lola was pressed'); } },
+      //   ]
+      // },
+      'separator',
+      // {
+      //   name: 'Checked',
+      //   checked: true,
+      //   action: () => { console.log('Checked Selected'); }
+      // },
+      'copy',
+      'copyWithHeaders',
+      'separator',
+      // 'resetColumns',
+      {
+        name: this.translate.instant('default.grid.localeText.resetColumns'),
+        action: () => this.resetGridSettings(),
+        // shortcut: 'Alt+R'
+      }
+    ];
+  }
+
+  /**
+   * Reposition the popup to appear right below the button
+   * https://www.ag-grid.com/javascript-grid-column-menu/#gsc.tab=0
+   */
   private postProcessPopup(params: PostProcessPopupParams): void {
     if (params.type !== 'columnMenu') {
       return;
@@ -662,21 +732,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     ePopup.style.left = newLeft + px;
   }
 
-  private fitGridSize(): void {
-    const gridPanel = this.gridOptions.api['gridPanel'];
-    const availableWidth: number = gridPanel.getWidthForSizeColsToFit();
-    if (availableWidth > 0) {
-      // Prevent horizontal scrollbar
-      // Ag-grid workaround. The official examples have the same issue
-      gridPanel.columnController.sizeColumnsToFit(availableWidth - gridPanel.scrollWidth * 2);
-    }
-  }
-
   private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
-    this.fitGridSize();
-    this.onColumnGroup.emit({
-      type: Grid2Component.GROUP_COLUMNS, payload: event.getColumns().map(column => column.getColId())
-    });
+    // NOTE: emit colId's only as an array
+    this.onColumnGroup.emit(event.getColumns().map(column => column.getColId()));
   }
 
   private calculateGridSettings(): void {
@@ -687,19 +745,35 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridSettings = { sortModel, colDefs };
   }
 
+  private resetGridSettings(): void {
+    if (this.persistenceKey) {
+      this.gridSettings = { sortModel: [], colDefs: [] };
+    }
+    this.saveGridSettings();
+    this.gridOptions.api.setSortModel(null);
+    this.gridOptions.api.setFilterModel(null);
+    this.gridOptions.columnApi.resetColumnState();
+  }
+
   private saveGridSettings(): void {
     if (this.persistenceKey) {
-      localStorage.setItem(this.persistenceKey, JSON.stringify(this.gridSettings));
+      this.persistenceService.set(this.persistenceKey, this.gridSettings);
     }
   }
 
   private restoreGridSettings(): IAGridSettings {
-    this.gridSettings = JSON.parse(localStorage.getItem(this.persistenceKey) || '{}');
+    this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
     return this.gridSettings;
   }
 
   private setSortModel(): void {
     const { sortModel } = this.gridSettings || this.restoreGridSettings();
     this.gridOptions.api.setSortModel(sortModel);
+  }
+
+  private onGridReady(): void {
+    this.setSortModel();
+    this.initCallbacks.forEach((cb: Function) => cb());
+    this.initCallbacks = [];
   }
 }

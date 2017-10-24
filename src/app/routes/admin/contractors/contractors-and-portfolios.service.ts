@@ -3,7 +3,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IContractor, IContractorsAndPortfoliosState, IContractorManager, IPortfolio } from './contractors-and-portfolios.interface';
+import {
+  IContractor, IContractorsAndPortfoliosState,
+  IContractorManager, IPortfolio
+} from './contractors-and-portfolios.interface';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
@@ -33,8 +36,8 @@ export class ContractorsAndPortfoliosService {
   static MANAGER_DELETE         = 'MANAGER_DELETE';
   static MANAGER_DELETE_SUCCESS = 'MANAGER_DELETE_SUCCESS';
 
-  static PORTFOLIOS_FETCH         = 'PORTFOLIOS_FETCH';
   static PORTFOLIO_FETCH          = 'PORTFOLIO_FETCH';
+  static PORTFOLIOS_FETCH         = 'PORTFOLIOS_FETCH';
   static PORTFOLIOS_FETCH_SUCCESS = 'PORTFOLIOS_FETCH_SUCCESS';
   static PORTFOLIOS_CLEAR         = 'PORTFOLIOS_CLEAR';
   static PORTFOLIO_SELECT         = 'PORTFOLIO_SELECT';

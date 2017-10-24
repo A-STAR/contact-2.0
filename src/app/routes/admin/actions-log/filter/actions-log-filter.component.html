@@ -33,6 +33,9 @@
           <i class="fa fa-file-excel-o" aria-hidden="true"></i>
           {{ 'default.buttons.excel' | translate }}
         </button>
+        <button *ngIf="false" class="btn btn-default export-button" (click)="onQueryBuilderOpen()">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
     <div class="row">
@@ -45,21 +48,22 @@
             class="col-md-12"
             [value]="selectedEmployees"
             [placeholder]="employeesControl.placeholder"
-            (action)="onEmployeesSelect()"
+            (action)="setDialog('employees')"
           >
           </app-popup-input>
           <app-action-dialog
-            *ngIf="isEmployeesBeingSelected"
+            *ngIf="isDialog('employees')"
             [titleTranslationKey]="employeesControl.label"
             [autoWidth]="false"
-            (action)="onSaveEmployeesChanges()"
-            (cancel)="onCloseActionDialog()"
+            [styles]="{width: '70%'}"
+            (action)="onSetEmployees()"
+            (cancel)="setDialog(null)"
           >
             <app-multi-select
               #employees
               [formControlName]="employeesControl.controlName"
               [syncFormControlChanges]="false"
-              [height]="190"
+              [height]="300"
               [rowsFrom]="employeesRows | async"
               [rowsFilterFrom]="employeesRowsFilter"
               columnsTranslationKeyFrom="actionsLog.filter.employees"
@@ -67,10 +71,10 @@
               [columnsFrom]="employeesColumnsFrom"
               [columnsTo]="employeesColumnsTo">
             </app-multi-select>
-            <div class="checkbox">
+            <div class="checkbox mb0">
               <label>
-                <input type="checkbox" [formControlName]="blockingEmployeesControl.controlName"/>
-                {{ blockingEmployeesControl.label | translate }}
+                <input type="checkbox" [formControlName]="inactiveEmployeesControl.controlName"/>
+                {{ inactiveEmployeesControl.label | translate }}
               </label>
             </div>
           </app-action-dialog>
@@ -85,21 +89,22 @@
             class="col-md-12"
             [value]="selectedActionTypes"
             [placeholder]="actionTypesControl.placeholder"
-            (action)="onActionTypesSelect()"
+            (action)="setDialog('actionTypes')"
           >
           </app-popup-input>
           <app-action-dialog
-            *ngIf="isActionTypesBeingSelected"
+            *ngIf="isDialog('actionTypes')"
             [autoWidth]="false"
+            [styles]="{width: '70%'}"
             [titleTranslationKey]="actionTypesControl.label"
-            (action)="onSaveActionTypesChanges()"
-            (cancel)="onCloseActionDialog()"
+            (action)="onSetActionTypes()"
+            (cancel)="setDialog()"
           >
             <app-multi-select
               #actionTypes
               [formControlName]="actionTypesControl.controlName"
               [syncFormControlChanges]="false"
-              [height]="190"
+              [height]="300"
               [rowsFrom]="actionTypesRows | async"
               columnsTranslationKeyFrom="actionsLog.filter.actionsTypes"
               columnsTranslationKeyTo="actionsLog.filter.actionsTypes"
@@ -115,12 +120,12 @@
             &nbsp;
           </label>
           <div class="col-md-12 align-right pl0">
-          <button class="btn btn-default search-button" (click)="onSearch()">
-            <i class="fa fa-search" aria-hidden="true"></i>
-            <span>
-              {{ 'default.buttons.search' | translate }}
-            </span>
-          </button>
+            <button class="btn btn-default search-button" (click)="onSearch()">
+              <i class="fa fa-search" aria-hidden="true"></i>
+              <span>
+                {{ 'default.buttons.search' | translate }}
+              </span>
+            </button>
           </div>
         </div>
       </div>

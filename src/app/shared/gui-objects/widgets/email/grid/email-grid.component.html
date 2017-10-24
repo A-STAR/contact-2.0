@@ -1,0 +1,44 @@
+<app-block-dialog
+  *ngIf="dialog === 1"
+  titleTranslationKey="widgets.email.dialogs.block.title"
+  labelTranslationKey="widgets.email.dialogs.block.inactiveReasonCode"
+  [dictionaryId]="blockDialogDictionaryId"
+  (action)="onBlockDialogSubmit($event)"
+  (close)="onDialogClose()">
+</app-block-dialog>
+
+<app-dialog-action
+  *ngIf="dialog === 2"
+  titleTranslationKey="widgets.email.dialogs.unblock.title"
+  actionTranslationKey="widgets.email.dialogs.unblock.confirmMessage"
+  actionMessage="default.yesNo.Yes"
+  actionMode="success"
+  [messageParams]="selectedEmail$ | async"
+  (action)="onUnblockDialogSubmit()"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-dialog-action
+  *ngIf="dialog === 3"
+  titleTranslationKey="widgets.email.dialogs.delete.title"
+  actionTranslationKey="widgets.email.dialogs.delete.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedEmail$ | async"
+  (action)="onRemoveDialogSubmit()"
+  (cancel)="onDialogClose()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  *ngIf="canDisplayGrid"
+  columnTranslationKey="debtor.information.email"
+  selectionType="single"
+  [styles]="{height: '230px'}"
+  [columns]="columns"
+  [rowClass]="getRowClass()"
+  [rows]="emails"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
+</app-grid>

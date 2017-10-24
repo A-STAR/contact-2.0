@@ -1,4 +1,4 @@
-import { IValueEntity } from '../../../core/converter/value/value-converter.interface';
+import { IValueEntity } from '../../../core/converter/value-converter.interface';
 
 export { IValueEntity };
 
@@ -6,11 +6,6 @@ export interface IPermissionRole {
   id: number;
   name: string;
   comment: string;
-}
-
-export interface IPermissionRolesResponse {
-  success: boolean;
-  roles: Array<IPermissionRole>;
 }
 
 export interface IPermissionsRequest {
@@ -23,15 +18,6 @@ export interface IPermissionModel extends IValueEntity {
   dsc: string;
   name: string;
   comment?: string;
-}
-
-export interface IPermissionsResponse {
-  permits: IPermissionModel[];
-}
-
-export interface IPermissionsResponse {
-  success: boolean;
-  userPermits: IRawPermission[];
 }
 
 export interface IRawPermission {

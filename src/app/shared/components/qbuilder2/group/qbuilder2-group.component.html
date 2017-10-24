@@ -1,0 +1,19 @@
+<div>
+  <div class="form-inline">
+    <select class="form-control input-sm" [(ngModel)]="filter.condition">
+      <option value="AND">AND</option>
+      <option value="OR">OR</option>
+    </select>
+    <button class="btn btn-sm btn-default" (click)="addGroup()">{{ 'queryBuilder.buttons.addGroup' | translate }}</button>
+    <button class="btn btn-sm btn-default" (click)="addCondition()">{{ 'queryBuilder.buttons.addCondition' | translate }}</button>
+    <span class="remove-button">
+      <button class="btn btn-xs btn-danger" [title]="'queryBuilder.buttons.removeGroup' | translate" (click)="remove()">&#10006;</button>
+    </span>
+  </div>
+  <div class="group-child" *ngFor="let f of filter.filters; index as i">
+    <app-qbuilder2-group *ngIf="f.filters; else condition" [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-group>
+    <ng-template #condition>
+      <app-qbuilder2-condition [filter]="f" [columns]="columns" (onRemove)="removeChild(i)"></app-qbuilder2-condition>
+    </ng-template>
+  </div>
+</div>

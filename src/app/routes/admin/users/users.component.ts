@@ -4,19 +4,15 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
+import { IOption } from '../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
-import { IUserLanguageOption } from '../../../core/user/languages/user-languages.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { PermissionsService } from '../roles/permissions.service';
-import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
-import { UserLanguagesService } from '../../../core/user/languages/user-languages.service';
+import { LookupService } from '../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
-import { ValueConverterService } from '../../../core/converter/value/value-converter.service';
 
 @Component({
   selector: 'app-users',
@@ -34,8 +30,7 @@ export class UsersComponent implements OnDestroy {
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
     { prop: 'roleId', minWidth: 100 },
-    // TODO: display column depending on filter
-    { prop: 'isBlocked', minWidth: 100, localized: true },
+    { prop: 'isInactive', minWidth: 100 },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
@@ -45,11 +40,11 @@ export class UsersComponent implements OnDestroy {
 
   renderers: IRenderer = {
     roleId: [],
-    isBlocked: ({ isBlocked }) => isBlocked ? 'default.yesNo.Yes' : 'default.yesNo.No',
+    isInactive: 'checkboxRenderer',
     languageId: [],
   };
 
-  displayBlockedUsers: boolean;
+  displayInactiveUsers: boolean;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -72,17 +67,16 @@ export class UsersComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.usersService.toggleBlockedFilter(),
-      label: 'users.toolbar.action.show_blocked_users',
-      state: this.usersService.state.map(state => state.displayBlocked)
+      action: () => this.usersService.toggleInactiveFilter(),
+      label: 'users.toolbar.action.show_inactive_users',
+      state: this.usersService.state.map(state => state.displayInactive)
     }
   ];
 
   editedEntity: IUser;
 
-  // TODO(d.maltsev): role options type
-  roleOptions$: Observable<any>;
-  languageOptions$: Observable<Array<IUserLanguageOption>>;
+  roleOptions$: Observable<IOption[]>;
+  languageOptions$: Observable<Array<IOption>>;
 
   users$: Observable<Array<IUser>>;
 
@@ -97,21 +91,12 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private contentTabService: ContentTabService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
-    private permissionsService: PermissionsService,
-    private userConstantsService: UserConstantsService,
-    private userLanguagesService: UserLanguagesService,
+    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
-    private valueConverterService: ValueConverterService,
   ) {
-    this.roleOptions$ = this.permissionsService.roles.map(valueConverterService.valuesToOptions);
-
-    this.languageOptions$ = this.userLanguagesService.languageOptions;
-
-    // TODO(d.maltsev):
-    // Remove when UserRolesService is ready (currently waiting for spec & API)
-    this.permissionsService.fetchRoles();
+    this.roleOptions$ = this.lookupService.roleOptions;
+    this.languageOptions$ = this.lookupService.languageOptions;
 
     this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
       .subscribe(([ roleOptions, languageOptions ]) => {
@@ -122,10 +107,10 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    this.usersSubscription = this.usersService.state
+    this.usersSubscription = this.usersService.state.distinctUntilChanged()
       .subscribe(
         state => {
-          this.displayBlockedUsers = state.displayBlocked;
+          this.displayInactiveUsers = state.displayInactive;
           this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
         }
       );
@@ -151,7 +136,7 @@ export class UsersComponent implements OnDestroy {
   }
 
   filter(user: IUser): boolean {
-    return !user.isBlocked || this.displayBlockedUsers;
+    return !user.isInactive || this.displayInactiveUsers;
   }
 
   onAdd(): void {
