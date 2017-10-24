@@ -1,8 +1,27 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { makeKey } from '../../../../core/utils';
+import { ContactRegistrationService } from '../contact-registration.service';
+import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
+import { OutcomeService } from '../outcome/outcome.service';
+import { MiscService } from './misc.service';
+import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
+
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { makeKey, valuesToOptions } from '../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.misc');
 
@@ -11,7 +30,10 @@ const labelKey = makeKey('modules.contactRegistration.misc');
   templateUrl: './misc.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MiscComponent {
+export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() debtId: number;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls = [
     { controlName: 'nextCallDateTime', type: 'datepicker', displayTime: true },
     { controlName: 'autoCommentId', type: 'select', options: [] },
@@ -20,7 +42,81 @@ export class MiscComponent {
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
     { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19 },
     { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
+    { controlName: 'comment', type: 'textarea' },
   ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
 
   data = {};
+
+  private autoCommentIdSubscription: Subscription;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
+    private debtService: DebtService,
+    private miscService: MiscService,
+    private outcomeService: OutcomeService,
+    private userTemplatesService: UserTemplatesService,
+  ) {}
+
+  ngOnInit(): void {
+    this.userTemplatesService.getTemplates(4, 0)
+      .map(valuesToOptions)
+      .subscribe(autoCommentOptions => {
+        this.getControl('autoCommentId').options = autoCommentOptions;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
+      .filter(Boolean)
+      .flatMap(value => {
+        return this.getPersonId()
+          .flatMap(personId => {
+            const templateId = Array.isArray(value) ? value[0].value : value;
+            return this.outcomeService
+              .fetchAutoComment(this.debtId, personId, 1, templateId)
+              .catch(() => Observable.of(null));
+          });
+      })
+      .subscribe(autoComment => this.updateData('autoComment', autoComment));
+  }
+
+  ngOnDestroy(): void {
+    this.autoCommentIdSubscription.unsubscribe();
+  }
+
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onNextClick(): void {
+    const { guid } = this.contactRegistrationService;
+    const data = this.form.getSerializedUpdates();
+    this.miscService.create(this.debtId, guid, data)
+      .subscribe(() => {
+        this.contactRegistrationService.nextStep();
+        this.cdRef.markForCheck();
+      });
+  }
+
+  private getControl(name: string): IDynamicFormControl {
+    return this.controls.find(control => control.controlName === name);
+  }
+
+  private updateData(key: string, value: any): void {
+    this.data = {
+      ...this.data,
+      [key]: value,
+    };
+    this.cdRef.markForCheck();
+  }
+
+  private getPersonId(): Observable<number> {
+    return this.debtService.fetch(null, this.debtId)
+      .publishReplay(1)
+      .refCount()
+      .map(debt => debt.personId)
+      .distinctUntilChanged();
+  }
 }

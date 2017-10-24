@@ -13,10 +13,16 @@ export class AttributesService {
     private dataService: DataService,
   ) {}
 
-  fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
+  fetchAll(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
       .readAll(url, { debtId, contactType, treeResultId })
       .map(toTreeNodes(true, true));
+  }
+
+  create(debtId: number, guid: string, attributes: any): Observable<any> {
+    return this.dataService
+      // TODO(d.maltsev): error handling
+      .create('/debts/{debtId}/contactRequest/{guid}/attributes', { debtId, guid }, attributes);
   }
 }

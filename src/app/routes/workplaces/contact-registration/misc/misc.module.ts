@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { MiscService } from './misc.service';
+
 import { MiscComponent } from './misc.component';
 
 @NgModule({
@@ -14,5 +16,8 @@ import { MiscComponent } from './misc.component';
   declarations: [
     MiscComponent,
   ],
+  providers: [
+    MiscService,
+  ]
 })
 export class MiscModule {}

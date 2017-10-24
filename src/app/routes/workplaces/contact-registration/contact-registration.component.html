@@ -20,14 +20,14 @@
     </app-contact-registration-promise>
   </app-accordion-item>
 
-  <!-- <app-accordion-item
+  <app-accordion-item
     [clickable]="false"
     [title]="'modules.contactRegistration.payment.title'"
   >
     <app-contact-registration-payment
       [debtId]="debtId">
     </app-contact-registration-payment>
-  </app-accordion-item> -->
+  </app-accordion-item>
 
   <app-accordion-item
     [clickable]="false"
@@ -38,19 +38,12 @@
     </app-contact-registration-phone>
   </app-accordion-item>
 
-  <app-accordion-item
+  <!-- <app-accordion-item
     [clickable]="false"
     [title]="'modules.contactRegistration.attachment.title'"
   >
     <app-contact-registration-attachment></app-contact-registration-attachment>
-  </app-accordion-item>
-
-  <app-accordion-item
-    [clickable]="false"
-    [title]="'modules.contactRegistration.misc.title'"
-  >
-    <app-contact-registration-misc></app-contact-registration-misc>
-  </app-accordion-item>
+  </app-accordion-item> -->
 
   <app-accordion-item
     [clickable]="false"
@@ -64,8 +57,17 @@
 
   <app-accordion-item
     [clickable]="false"
-    [title]="'modules.contactRegistration.comment.title'"
+    [title]="'modules.contactRegistration.misc.title'"
   >
-    <app-contact-registration-comment></app-contact-registration-comment>
+    <app-contact-registration-misc
+      [debtId]="debtId">
+    </app-contact-registration-misc>
+  </app-accordion-item>
+
+  <app-accordion-item
+    [clickable]="false"
+    [title]="'modules.contactRegistration.misc.confirm'"
+  >
+    CONFIRM
   </app-accordion-item>
 </app-accordion>

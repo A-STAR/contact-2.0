@@ -1,1 +1,6 @@
 <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
+
+<button class="btn btn-default" [disabled]="!canSubmit" (click)="onNextClick()">
+  {{ 'default.buttons.next' | translate }}
+  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+</button>

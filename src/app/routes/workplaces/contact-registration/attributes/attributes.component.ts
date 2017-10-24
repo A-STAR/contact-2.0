@@ -28,21 +28,30 @@ export class AttributesComponent implements OnInit {
     this.contactRegistrationService.selectedNode$
       .filter(Boolean)
       .map(node => node.id)
-      .flatMap(nodeId => this.attributesService.fetchAttributes(this.debtId, this.contactTypeCode, nodeId))
+      .flatMap(nodeId => this.attributesService.fetchAll(this.debtId, this.contactTypeCode, nodeId))
       .subscribe(attributes => {
         this.attributes = attributes;
         this.cdRef.markForCheck();
       });
   }
 
-  onSubmit(): void {
+  get canSubmit(): boolean {
+    return true;
+  }
+
+  onNextClick(): void {
+    const { guid } = this.contactRegistrationService;
     const data = {
       attributes: this.attributes.map(row => ({
         ...getValue(row.data.typeCode, getRawValue(row.data)),
         code: row.data.code
       })),
     };
-    console.log(data);
+    this.attributesService.create(this.debtId, guid, data)
+      .subscribe(() => {
+        this.contactRegistrationService.nextStep();
+        this.cdRef.markForCheck();
+      });
   }
 
   private get selectedContact(): any {

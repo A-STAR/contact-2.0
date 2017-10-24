@@ -12,3 +12,8 @@
     </ng-template>
   </p-column>
 </p-treeTable>
+
+<button class="btn btn-default" [disabled]="!canSubmit" (click)="onNextClick()">
+  {{ 'default.buttons.next' | translate }}
+  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+</button>
