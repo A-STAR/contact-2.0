@@ -20,20 +20,22 @@
     </app-contact-registration-promise>
   </app-accordion-item>
 
-  <app-accordion-item
+  <!-- <app-accordion-item
     [clickable]="false"
     [title]="'modules.contactRegistration.payment.title'"
   >
     <app-contact-registration-payment
       [debtId]="debtId">
     </app-contact-registration-payment>
-  </app-accordion-item>
+  </app-accordion-item> -->
 
   <app-accordion-item
     [clickable]="false"
     [title]="'modules.contactRegistration.phone.title'"
   >
-    <app-contact-registration-phone></app-contact-registration-phone>
+    <app-contact-registration-phone
+      [debtId]="debtId">
+    </app-contact-registration-phone>
   </app-accordion-item>
 
   <app-accordion-item
