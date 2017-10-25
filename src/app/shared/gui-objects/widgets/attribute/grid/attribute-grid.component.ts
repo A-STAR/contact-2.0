@@ -133,13 +133,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   onTreeTypeChange(selection: IOption[]): void {
     this.treeType = Number(selection[0].value);
-    if (this.treeType === 33) {
-      this.isTreeSubtypeDisabled = false;
-      this.treeSubtype = this.treeSubtypeOptions ? this.treeSubtypeOptions[0].value : null;
-    } else {
-      this.isTreeSubtypeDisabled = true;
-      this.treeSubtype = null;
-    }
+    this.isTreeSubtypeDisabled = this.treeType !== 33;
+    this.treeSubtype = this.initTreeSubtype();
     this.fetch();
   }
 
@@ -194,9 +189,11 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   private initTreeSubtypeSelect(dictionaries: { [key: number]: IOption[] }): void {
     this.treeSubtypeOptions = dictionaries[UserDictionariesService.DICTIONARY_PROPERTY_TYPE];
-    this.treeSubtype = this.treeSubtypeOptions && this.treeType === 33
-      ? this.treeSubtypeOptions[0].value
-      : null;
+    this.treeSubtype = this.initTreeSubtype();
+  }
+
+  private initTreeSubtype(): number {
+    return this.treeSubtypeOptions && this.treeType === 33 ? this.treeSubtypeOptions[0].value : null;
   }
 
   private convertToGridTreeRow(attributes: IAttribute[], parentId: number = null): IGridTreeRow<IAttribute>[] {
