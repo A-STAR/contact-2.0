@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -71,14 +71,15 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private cdRef: ChangeDetectorRef,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns);
-    this.rows$ = this.constantsService.state
-      .map(state => state.constants).distinctUntilChanged()
-      .map(constants => this.valueConverterService.deserializeSet(constants)) as Observable<IConstant[]>;
+    // this.rows$ = this.constantsService.state
+    //   .map(state => state.constants).distinctUntilChanged()
+    //   .map(constants => this.valueConverterService.deserializeSet(constants)) as Observable<IConstant[]>;
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
@@ -92,11 +93,22 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
           this.constantsService.clear();
           this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
         } else {
-          this.constantsService.fetch();
+          this.fetchAll();
         }
       });
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
+  }
+
+  rows: IConstant[];
+
+  fetchAll(): void {
+    this.dataService.readAll('/constants')
+    .map(constants => this.valueConverterService.deserializeSet(constants))
+    .subscribe((ar: IConstant[]) => {
+      this.rows = ar;
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -125,7 +137,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       .take(1)
       .subscribe(
         () => {
-          this.constantsService.fetch();
+          this.fetchAll();
           this.userConstantsService.refresh();
           this.onCancel();
         },
