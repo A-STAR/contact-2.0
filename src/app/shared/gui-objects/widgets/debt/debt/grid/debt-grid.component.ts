@@ -160,7 +160,7 @@ export class DebtGridComponent {
   }
 
   private onEdit(debtId: number): void {
-    this.router.navigate([ `${this.router.url}/debt/${debtId}` ]);
+    this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
   }
 
   private onChangeStatus(): void {
