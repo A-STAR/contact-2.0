@@ -6,7 +6,7 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor } from '../../guarantee/guarantee.interface';
 
-// import { GuarantorService } from '../../guarantor/guarantor.service';
+import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -45,7 +45,7 @@ export class GuarantorCardComponent extends DialogFunctions {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    // private guarantorService: GuarantorService,
+    private guarantorService: GuarantorService,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
@@ -96,8 +96,14 @@ export class GuarantorCardComponent extends DialogFunctions {
     });
   }
 
-  get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+  get canSubmit$(): Observable<boolean> {
+    return this.canView$
+    .map(canView => canView && !!this.form && this.form.canSubmit)
+    .distinctUntilChanged();
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
 
   onClear(): void {
@@ -110,8 +116,7 @@ export class GuarantorCardComponent extends DialogFunctions {
   }
 
   onSearch(): void {
-    const data = this.form.requestValue;
-    this.searchParams = data;
+    this.searchParams = this.form.requestValue;
     this.setDialog('findGuarantor');
     this.cdRef.markForCheck();
   }

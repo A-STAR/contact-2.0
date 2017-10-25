@@ -13,7 +13,7 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-
+import { DialogFunctions } from '../../../../../core/dialog';
 import { GridComponent } from '../../../../components/grid/grid.component';
 
 @Component({
@@ -21,7 +21,7 @@ import { GridComponent } from '../../../../components/grid/grid.component';
   templateUrl: './guarantor-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuarantorGridComponent implements OnInit, OnDestroy {
+export class GuarantorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Input() searchParams: object;
@@ -53,6 +53,7 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {
+    super();
 
     this.gridService.setAllRenderers(this.columns)
       .take(1)
@@ -102,6 +103,9 @@ export class GuarantorGridComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         const { data: persons } = response;
         this.persons = persons ? [...persons] : [];
+        if (!this.persons.length) {
+          this.setDialog('infoNoRecords');
+        }
         this.cdRef.markForCheck();
       });
   }

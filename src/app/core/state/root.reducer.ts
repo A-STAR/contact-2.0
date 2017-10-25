@@ -27,12 +27,14 @@ export const reducers = {
   actionsLog: actionsLogReducer,
   auth: authReducer,
   contractorsAndPortfolios: contractorsAndPortfoliosReducer,
+  constants: constantsReducer,
   debtors: debtorsReducer,
   debt: debtReducer,
   dictionaries: dictionariesReducer,
   entityAttributes: entityAttributesReducer,
   guiObjects: guiObjectsReducer,
   lookup: lookupReducer,
+  metadata: metadataReducer,
   notifications: notificationReducer,
   organizations: organizationsReducer,
   permissions: permissionReducer,
@@ -41,8 +43,6 @@ export const reducers = {
   userDictionaries: userDictionariesReducer,
   userPermissions: userPermissionsReducer,
   userTemplates: userTemplatesReducer,
-  metadata: metadataReducer,
-  constants: constantsReducer,
 };
 
 export function rootReducer(state: IAppState, action: Action): IAppState {
