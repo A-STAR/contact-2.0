@@ -16,6 +16,7 @@ import { notificationReducer } from '../notifications/notifications.reducer';
 import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
 import { permissionReducer } from '../../routes/admin/roles/permissions.reducer';
 import { usersReducer } from '../../routes/admin/users/users.reducer';
+import { userAttributeTypesReducer } from '../user/attribute-types/user-attribute-types.reducer';
 import { userConstantsReducer } from '../user/constants/user-constants.reducer';
 import { userDictionariesReducer } from '../user/dictionaries/user-dictionaries.reducer';
 import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
@@ -37,6 +38,7 @@ export const reducers = {
   organizations: organizationsReducer,
   permissions: permissionReducer,
   users: usersReducer,
+  userAttributeTypes: userAttributeTypesReducer,
   userConstants: userConstantsReducer,
   userDictionaries: userDictionariesReducer,
   userPermissions: userPermissionsReducer,
