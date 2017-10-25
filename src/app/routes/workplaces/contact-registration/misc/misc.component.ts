@@ -49,6 +49,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   data = {};
 
   private autoCommentIdSubscription: Subscription;
+  private outcomeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -60,39 +61,31 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddAutoComment$.subscribe(canAddAutoComment => {
+    this.outcomeSubscription = Observable.combineLatest(
+      this.contactRegistrationService.canAddAutoComment$,
+      this.contactRegistrationService.canAddCallReason$,
+      this.contactRegistrationService.canAddComment$,
+      this.contactRegistrationService.canAddDebtReason$,
+      this.contactRegistrationService.canAddNextCall$,
+      this.contactRegistrationService.canAddRefusal$,
+      this.contactRegistrationService.canAddStatusChangeReason$,
+    )
+    .subscribe(([
+      canAddAutoComment,
+      canAddCallReason,
+      canAddComment,
+      canAddDebtReason,
+      canAddNextCall,
+      canAddRefusal,
+      canAddStatusChangeReason,
+    ]) => {
       this.toggleControl('autoCommentId', canAddAutoComment);
       this.toggleControl('autoComment', canAddAutoComment);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddCallReason$.subscribe(canAddCallReason => {
       this.toggleControl('callReasonCode', canAddCallReason);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddComment$.subscribe(canAddComment => {
       this.toggleControl('comment', canAddComment);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddDebtReason$.subscribe(canAddDebtReason => {
       this.toggleControl('debtReasonCode', canAddDebtReason);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddNextCall$.subscribe(canAddNextCall => {
       this.toggleControl('nextCallDateTime', canAddNextCall);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddRefusal$.subscribe(canAddRefusal => {
       this.toggleControl('refusalReasonCode', canAddRefusal);
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddStatusChangeReason$.subscribe(canAddStatusChangeReason => {
       this.toggleControl('statusReasonCode', canAddStatusChangeReason);
     });
 
@@ -121,6 +114,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
+    this.outcomeSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
