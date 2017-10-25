@@ -967,7 +967,8 @@
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
-        "contactInvisible": "Don't Display in Contacts"
+        "contactInvisible": "Don't Display in Contacts",
+        "fileAttachMode": "Files Attachment"
       }
     },
     "document": {
