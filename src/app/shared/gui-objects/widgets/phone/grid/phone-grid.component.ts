@@ -248,7 +248,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canSchedule$(): Observable<boolean> {
     return this.selectedPhone$.mergeMap(phone => {
-      return phone && !phone.isInactive && !phone.stopAutoSms && !this.isDebtClosed
+      return phone && !phone.isInactive && !phone.stopAutoSms && this.isDebtOpen
         ? combineLatestAnd([
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
@@ -263,12 +263,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
-      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => !this.isDebtClosed || canRegisterClosed),
+      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
 
-  private get isDebtClosed(): boolean {
-    return [6, 7, 8, 17].includes(this.debt.statusCode);
+  private get isDebtOpen(): boolean {
+    return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
 
   private onAdd(): void {
