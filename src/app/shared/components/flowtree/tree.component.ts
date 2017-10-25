@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -26,9 +25,8 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, OnDestroy {
+export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() canPaste = false;
-  @Input() contextMenuEnabled = false;
   @Input() dblClickEnabled = true;
   @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
@@ -53,7 +51,19 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
 
+  @Input('contextMenuEnabled')
+  set contextMenuEnabled(contextMenuEnabled: boolean) {
+    this._ctxMenuEnabled = contextMenuEnabled;
+    if (contextMenuEnabled) {
+      this._clickListener = this.renderer.listen('document', 'click', () => this.hideMenu());
+      this._wheelListener = this.renderer.listen('document', 'wheel', () => this.hideMenu());
+    } else {
+      this.removeListeners();
+    }
+  }
+
   private dragAndDropPlugin: DragAndDropComponentPlugin;
+  private _ctxMenuEnabled = false;
   private _ctxMenu: { node: ITreeNode, style: { left: string, top: string } } = null;
   private _clickListener: Function;
   private _wheelListener: Function;
@@ -97,21 +107,11 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
     }
   }
 
-  ngAfterViewInit(): void {
-    if (this.contextMenuEnabled) {
-      this._clickListener = this.renderer.listen('document', 'click', () => this.hideMenu());
-      this._wheelListener = this.renderer.listen('document', 'wheel', () => this.hideMenu());
-    }
-  }
-
   ngOnDestroy(): void {
     if (this.dndEnabled) {
       this.dragAndDropPlugin.ngOnDestroy();
     }
-    if (this.contextMenuEnabled) {
-      this._clickListener();
-      this._wheelListener();
-    }
+    this.removeListeners();
   }
 
   hideMenu(): void {
@@ -120,8 +120,8 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
   }
 
   onContextMenu(event: MouseEvent, node: ITreeNode): void {
-    if (this.contextMenuEnabled) {
-      event.preventDefault();
+    event.preventDefault();
+    if (this._ctxMenuEnabled) {
       this._ctxMenu = {
         node,
         style: {
@@ -394,5 +394,14 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
 
   private nodeSelect(event: MouseEvent, node: ITreeNode): void {
     this.onNodeSelect.emit({originalEvent: event, node: node});
+  }
+
+  private removeListeners(): void {
+    if (this._clickListener) {
+      this._clickListener();
+    }
+    if (this._wheelListener) {
+      this._wheelListener();
+    }
   }
 }

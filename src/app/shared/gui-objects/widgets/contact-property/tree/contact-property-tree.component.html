@@ -60,7 +60,7 @@
   layout="horizontal"
   selectionMode="single"
   [canPaste]="hasCopiedNode$ | async"
-  [contextMenuEnabled]="true"
+  [contextMenuEnabled]="canCopy$ | async"
   [dndEnabled]="true"
   [dblClickEnabled]="true"
   [collapseAdjacentNodes]="true"
