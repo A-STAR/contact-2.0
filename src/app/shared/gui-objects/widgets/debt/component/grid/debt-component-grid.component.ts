@@ -34,7 +34,7 @@ export class DebtComponentGridComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
     { prop: 'amount', minWidth: 150, maxWidth: 200 },
-    { prop: 'currencyId', minWidth: 150, maxWidth: 200 },
+    { prop: 'currencyId', minWidth: 150 },
   ];
   components: Array<IDebtComponent> = [];
 
