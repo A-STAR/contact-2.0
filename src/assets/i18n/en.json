@@ -589,7 +589,11 @@
       "title": "Property"
     },
     "guarantorsTab": {
-      "title": "Guarantors"
+      "title": "Guarantors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this guarantee contract?"
+      }
     },
     "contactsTab": {
       "title": "Contacts",
@@ -1470,6 +1474,10 @@
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
+      },
+      "upload": {
+        "403": "You don't have permissions to upload {{ entity }}",
+        "*": "Could not upload {{ entity }}"
       },
       "delete": {
         "403": "You don't have permissions to delete {{ entity }}",

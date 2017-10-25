@@ -98,7 +98,7 @@ export class NotificationActionBuilder {
     if (message.response) {
       const { status } = message.response;
 
-      const json = message.response.json();
+      const json = message.response.text() ? message.response.json() : {};
       if (json.message) {
         const { code, payload } = json.message;
         const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};

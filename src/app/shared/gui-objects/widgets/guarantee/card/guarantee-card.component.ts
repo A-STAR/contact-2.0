@@ -8,7 +8,6 @@ import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -36,7 +35,6 @@ export class GuaranteeCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private guaranteeService: GuaranteeService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -87,11 +85,11 @@ export class GuaranteeCardComponent {
   onSubmit(): void {
     const data = this.form.requestValue;
     const action = this.personId
-      ? this.guaranteeService.create(this.debtId, Object.assign(data, { personId: this.personId }))
+      ? this.guaranteeService.create(this.debtId, { ...data, personId: this.personId })
       : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
+      this.guaranteeService.notify(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
   }

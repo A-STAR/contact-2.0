@@ -6,7 +6,8 @@
   columnTranslationKey="users"
   [emptyMessage]="emptyMessage$ | async"
   [filter]="filter"
-  [rows]="users$ | async"
+  [selection]="selection"
+  [rows]="users"
   (onDblClick)="onEdit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

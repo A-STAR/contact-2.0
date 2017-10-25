@@ -1,16 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IGridColumn, IRenderer } from '../../../shared/components/grid/grid.interface';
-import { IOption } from '../../../core/converter/value-converter.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../core/lookup/lookup.service';
+import { MessageBusService } from '../../../core/message-bus/message-bus.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
@@ -22,6 +21,9 @@ import { UsersService } from './users.service';
 export class UsersComponent implements OnDestroy {
   static COMPONENT_NAME = 'UsersComponent';
 
+  private _users: Array<IUser> = [];
+  private _selectedUserId: number;
+
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
     { prop: 'login', minWidth: 120 },
@@ -29,20 +31,14 @@ export class UsersComponent implements OnDestroy {
     { prop: 'firstName', minWidth: 120 },
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
-    { prop: 'roleId', minWidth: 100 },
-    { prop: 'isInactive', minWidth: 100 },
+    { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
+    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    { prop: 'languageId', minWidth: 120 },
+    { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
   ];
-
-  renderers: IRenderer = {
-    roleId: [],
-    isInactive: 'checkboxRenderer',
-    languageId: [],
-  };
 
   displayInactiveUsers: boolean;
 
@@ -62,72 +58,63 @@ export class UsersComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.usersService.fetch(),
+      action: () => this.fetch(),
       enabled: this.userPermissionsService.has('USER_VIEW')
     },
     {
       type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.usersService.toggleInactiveFilter(),
+      action: () => this.toggleInactiveFilter(),
       label: 'users.toolbar.action.show_inactive_users',
       state: this.usersService.state.map(state => state.displayInactive)
     }
   ];
 
-  editedEntity: IUser;
-
-  roleOptions$: Observable<IOption[]>;
-  languageOptions$: Observable<Array<IOption>>;
-
-  users$: Observable<Array<IUser>>;
-
   emptyMessage$: Observable<string>;
 
+  private busSubscription: Subscription;
   private hasViewPermission$: Observable<boolean>;
-
   private usersSubscription: Subscription;
-  private optionsSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
-    private contentTabService: ContentTabService,
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private lookupService: LookupService,
+    private messageBusService: MessageBusService,
+    private router: Router,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
   ) {
-    this.roleOptions$ = this.lookupService.roleOptions;
-    this.languageOptions$ = this.lookupService.languageOptions;
 
-    this.optionsSubscription = Observable.combineLatest(this.roleOptions$, this.languageOptions$)
-      .subscribe(([ roleOptions, languageOptions ]) => {
-        this.renderers.roleId = [].concat(roleOptions);
-        this.renderers.languageId = [].concat(languageOptions);
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    this.gridService.setAllRenderers(this.columns)
+      .subscribe(columns => {
+        this.columns = [ ...columns ];
       });
 
     this.filter = this.filter.bind(this);
 
-    this.usersSubscription = this.usersService.state.distinctUntilChanged()
+    this.usersSubscription = this.state.distinctUntilChanged()
       .subscribe(
         state => {
           this.displayInactiveUsers = state.displayInactive;
-          this.editedEntity = (state.users || []).find(users => users.id === state.selectedUserId);
+          this._selectedUserId = state.selectedUserId;
+          this.refresh();
         }
       );
 
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission ? this.usersService.fetch() : this.usersService.clear()
+      hasViewPermission ? this.fetch() : this.clear()
     );
 
-    this.users$ = this.usersService.state.map(state => state.users);
-
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
+
+    this.busSubscription = this.messageBusService
+      .select(UsersService.USER_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.usersSubscription.unsubscribe();
-    this.optionsSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 
@@ -135,22 +122,57 @@ export class UsersComponent implements OnDestroy {
     return this.usersService.state;
   }
 
+  get users(): IUser[] {
+    return this._users;
+  }
+
+  get editedUser(): IUser {
+    return (this._users || []).find(users => users.id === this._selectedUserId);
+  }
+
+  get selection(): Array<IUser> {
+    const selectedUser = this.editedUser;
+    return selectedUser ? [ selectedUser ] : [];
+  }
+
   filter(user: IUser): boolean {
     return !user.isInactive || this.displayInactiveUsers;
   }
 
+  toggleInactiveFilter(): void {
+    this.usersService.select(null);
+    this.usersService.toggleInactiveFilter();
+  }
+
   onAdd(): void {
-    this.contentTabService.navigate('/admin/users/create');
+    this.router.navigate([ '/admin/users/create' ]);
   }
 
   onEdit(user?: IUser): void {
-    const id = user ? user.id : this.editedEntity.id;
-    this.contentTabService.navigate(`/admin/users/${id}`);
+    const id = user ? user.id : this.editedUser.id;
+    this.router.navigate([ `/admin/users/${id}` ]);
   }
 
   onSelect(user: IUser): void {
     if (user) {
       this.usersService.select(user.id);
     }
+  }
+
+  private fetch(): void {
+    this.usersService.fetch().subscribe(users => {
+      this._users = users;
+      this.cdRef.markForCheck();
+    });
+  }
+
+  private refresh(): void {
+    this._users = [].concat(this._users);
+    this.cdRef.markForCheck();
+  }
+
+  private clear(): void {
+    this._users = [];
+    this.cdRef.markForCheck();
   }
 }
