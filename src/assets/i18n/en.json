@@ -1017,13 +1017,14 @@
         "title": "Find guarantors"
       },
       "dialog": {
-        "title": "Select a guarantor"
+        "title": "Select a guarantor",
+        "notFound": "Could not find the guarantor. Please try to change the search criteria."
       },
       "grid": {
         "id": "Id",
         "firstName": "First name",
         "middleName": "Middle name",
-        "lastName": "Last name",
+        "lastName": "Last name / Company",
         "birthDate": "Date of birth",
         "birthPlace": "Place of birth",
         "educationCode": "Education",

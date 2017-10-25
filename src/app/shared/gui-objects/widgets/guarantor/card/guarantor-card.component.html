@@ -10,7 +10,7 @@
   <button class="btn btn-default" (click)="onClear()">
     <i class="fa fa-times"></i> {{ 'default.buttons.clear' | translate }}
   </button>
-  <button class="btn btn-default" (click)="onSearch()" [disabled]="!canSubmit">
+  <button class="btn btn-default" (click)="onSearch()" [disabled]="!(canSubmit$ | async)">
     <i class="fa fa-search"></i> {{ 'widgets.guarantor.search.title' | translate }}
   </button>
 </div>
