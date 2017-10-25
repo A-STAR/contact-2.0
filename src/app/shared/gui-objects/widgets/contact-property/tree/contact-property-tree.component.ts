@@ -104,7 +104,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   onNodeMove(event: any): void {
-    const { parentId, sortOrder, id } = event[0];
+    const { parentId, sortOrder, id } = event;
     const data = { parentId, sortOrder };
     this.contactPropertyService.update(this.contactType, this.treeType, id, data)
       .subscribe(() => this.onSuccess());

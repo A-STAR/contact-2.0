@@ -45,6 +45,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
   @Output() copy = new EventEmitter<ITreeNode>();
   @Output() paste = new EventEmitter<ITreeNode>();
+  @Output() nodeMove = new EventEmitter<ITreeNodeInfo>();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() layout = 'vertical';
@@ -361,6 +362,8 @@ export class TreeComponent implements IDragAndDropView, OnInit, AfterViewInit, O
       return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
     }, (payload.swap ? targetElement : sourceElement).parent.children);
 
+    const nodeMoveEventPayload = payloads.find(p => p.id === Number(payload.sourceId));
+    this.nodeMove.emit(nodeMoveEventPayload);
     this.changeNodesLocation.emit(payloads);
   }
 
