@@ -60,79 +60,40 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): we need to do smth with the boilerplate below
-
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddAutoComment$.subscribe(canAddAutoComment => {
-      if (canAddAutoComment) {
-        this.getControl('autoCommentId').type = 'select';
-        this.getControl('autoComment').type = 'textarea';
-      } else {
-        this.getControl('autoCommentId').type = 'hidden';
-        this.getControl('autoComment').type = 'hidden';
-        this.updateData('autoCommentId', null);
-        this.updateData('autoComment', null);
-      }
+      this.toggleControl('autoCommentId', canAddAutoComment);
+      this.toggleControl('autoComment', canAddAutoComment);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddCallReason$.subscribe(canAddCallReason => {
-      if (canAddCallReason) {
-        this.getControl('callReasonCode').type = 'select';
-      } else {
-        this.getControl('callReasonCode').type = 'hidden';
-        this.updateData('callReasonCode', null);
-      }
+      this.toggleControl('callReasonCode', canAddCallReason);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddComment$.subscribe(canAddComment => {
-      if (canAddComment) {
-        this.getControl('comment').type = 'textarea';
-      } else {
-        this.getControl('comment').type = 'hidden';
-        this.updateData('comment', null);
-      }
+      this.toggleControl('comment', canAddComment);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddDebtReason$.subscribe(canAddDebtReason => {
-      if (canAddDebtReason) {
-        this.getControl('debtReasonCode').type = 'select';
-      } else {
-        this.getControl('debtReasonCode').type = 'hidden';
-        this.updateData('debtReasonCode', null);
-      }
+      this.toggleControl('debtReasonCode', canAddDebtReason);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddNextCall$.subscribe(canAddNextCall => {
-      if (canAddNextCall) {
-        this.getControl('nextCallDateTime').type = 'datepicker';
-      } else {
-        this.getControl('nextCallDateTime').type = 'hidden';
-        this.updateData('nextCallDateTime', null);
-      }
+      this.toggleControl('nextCallDateTime', canAddNextCall);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddRefusal$.subscribe(canAddRefusal => {
-      if (canAddRefusal) {
-        this.getControl('refusalReasonCode').type = 'select';
-      } else {
-        this.getControl('refusalReasonCode').type = 'hidden';
-        this.updateData('refusalReasonCode', null);
-      }
+      this.toggleControl('refusalReasonCode', canAddRefusal);
     });
 
     // TODO(d.maltsev): subscription
     this.contactRegistrationService.canAddStatusChangeReason$.subscribe(canAddStatusChangeReason => {
-      if (canAddStatusChangeReason) {
-        this.getControl('statusReasonCode').type = 'select';
-      } else {
-        this.getControl('statusReasonCode').type = 'hidden';
-        this.updateData('statusReasonCode', null);
-      }
+      this.toggleControl('statusReasonCode', canAddStatusChangeReason);
     });
 
     this.userTemplatesService.getTemplates(4, 0)
@@ -174,6 +135,14 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
         this.contactRegistrationService.nextStep();
         this.cdRef.markForCheck();
       });
+  }
+
+  private toggleControl(name: string, display: boolean): void {
+    this.getControl(name).display = display;
+    if (!display) {
+      this.updateData(name, null);
+    }
+    this.cdRef.markForCheck();
   }
 
   private getControl(name: string): IDynamicFormControl {
