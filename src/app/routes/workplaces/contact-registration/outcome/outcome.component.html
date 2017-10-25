@@ -1,0 +1,21 @@
+<div class="mb">
+  <app-dynamic-form #form [controls]="controls" [data]="data"></app-dynamic-form>
+</div>
+
+<div class="mb-lg">
+  <app-tree
+    layout="horizontal"
+    selectionMode="single"
+    [collapseAdjacentNodes]="true"
+    [expandNodeOnClick]="true"
+    [value]="nodes"
+    [selection]="selectedNode$ | async"
+    (onNodeSelect)="onNodeSelect($event)"
+    (onNodeExpand)="onNodeSelect($event)">
+  </app-tree>
+</div>
+
+<button class="btn btn-default" [disabled]="!(canSubmit$ | async)" (click)="onNextClick()">
+  {{ 'default.buttons.next' | translate }}
+  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+</button>

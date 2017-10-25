@@ -73,7 +73,8 @@ export class UsersComponent implements OnDestroy {
 
   private busSubscription: Subscription;
   private hasViewPermission$: Observable<boolean>;
-  private usersSubscription: Subscription;
+  private selectedUserSubscription: Subscription;
+  private filterUserSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -92,11 +93,15 @@ export class UsersComponent implements OnDestroy {
 
     this.filter = this.filter.bind(this);
 
-    this.usersSubscription = this.state.distinctUntilChanged()
+    this.selectedUserSubscription = this.state
+      .subscribe(state => this._selectedUserId = state.selectedUserId);
+
+    this.filterUserSubscription = this.state
+      .map(state => state.displayInactive)
+      .distinctUntilChanged()
       .subscribe(
-        state => {
-          this.displayInactiveUsers = state.displayInactive;
-          this._selectedUserId = state.selectedUserId;
+        displayInactive => {
+          this.displayInactiveUsers = displayInactive;
           this.refresh();
         }
       );
@@ -114,7 +119,8 @@ export class UsersComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.usersSubscription.unsubscribe();
+    this.selectedUserSubscription.unsubscribe();
+    this.filterUserSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 

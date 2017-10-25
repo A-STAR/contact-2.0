@@ -23,6 +23,7 @@ export interface IDebt {
   dict2Code: number;
   dict3Code: number;
   dict4Code: number;
+  personId: number;
 }
 
 export interface IDebtNextCall {

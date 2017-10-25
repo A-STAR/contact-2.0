@@ -9,7 +9,7 @@ import { DataService } from '../../../../../core/data/data.service';
 export class ComponentLogService {
   constructor(private dataService: DataService) {}
 
-  readAll(debtId: number): Observable<Array<IComponentLogEntry>> {
+  readAll(debtId: number): Observable<IComponentLogEntry[]> {
     return this.dataService.readAll('/debts/{debtId}/componentlog', { debtId });
   }
 }

@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { OutcomeFormComponent } from './outcome-form.component';
+import { AttachmentComponent } from './attachment.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    OutcomeFormComponent,
+    AttachmentComponent,
   ],
   declarations: [
-    OutcomeFormComponent,
+    AttachmentComponent,
   ],
 })
-export class OutcomeFormModule {}
+export class AttachmentModule {}

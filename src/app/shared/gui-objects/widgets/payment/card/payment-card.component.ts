@@ -15,7 +15,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { min } from '../../../../../core/validators';
+import { minStrict } from '../../../../../core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +63,7 @@ export class PaymentCardComponent {
       const controls: IDynamicFormControl[] = [
         {
           label: 'widgets.payment.grid.amount', controlName: 'amount', disabled: !canEdit,
-          type: 'number', validators: [min(0)], width: 6
+          type: 'number', validators: [minStrict(0)], width: 6
         },
         {
           label: 'widgets.payment.grid.currencyName', controlName: 'currencyId', disabled: !canEdit,

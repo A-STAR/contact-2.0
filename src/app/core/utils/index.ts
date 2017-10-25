@@ -94,3 +94,8 @@ export const renderers = {
   yesNoRenderer,
   numberRenderer,
 };
+
+export const round = (value: number, precision: number) => {
+  const k = Math.pow(10, precision);
+  return Math.round(k * value) / k;
+};
