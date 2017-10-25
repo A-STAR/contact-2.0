@@ -1,9 +1,9 @@
 <app-info-dialog
-  *ngIf="isDialog('infoNoRecords')"
+  *ngIf="isDialog('infoNotFound')"
   titleTranslationKey="widgets.guarantor.dialog.title"
   (close)="onClose()"
   >
-  <section class="pv-xl">{{ 'Не удалось найти поручителя. Попробуйте изменить параметры поиска.' | translate }}</section>
+  <section class="pv-xl">{{ 'widgets.guarantor.dialog.notFound' | translate }}</section>
 </app-info-dialog>
 
 <app-dialog *ngIf="!!persons?.length" (displayChange)="onClose()">
@@ -12,6 +12,7 @@
   </div>
 
   <app-grid
+    *ngIf="columns"
     columnTranslationKey="widgets.guarantor"
     [footerHeight]="false"
     selectionType="single"

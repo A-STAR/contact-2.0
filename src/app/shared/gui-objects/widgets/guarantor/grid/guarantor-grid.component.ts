@@ -5,16 +5,20 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuarantor } from '../../guarantee/guarantee.interface';
+import { IGuarantor, ICompany } from '../../guarantee/guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
 import { DialogFunctions } from '../../../../../core/dialog';
 import { GridComponent } from '../../../../components/grid/grid.component';
+
+import { parseStringValueAttrs } from '../../../../../core/utils';
 
 @Component({
   selector: 'app-guarantor-grid',
@@ -24,21 +28,11 @@ import { GridComponent } from '../../../../components/grid/grid.component';
 export class GuarantorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  @Input() searchParams: object;
+  @Input() searchParams: any;
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IGuarantor>();
 
-  columns: Array<IGridColumn> = [
-    { prop: 'id', width: 70, minWidth: 40, type: 'number' },
-    { prop: 'lastName', type: 'string' },
-    { prop: 'firstName', type: 'string' },
-    { prop: 'middleName', type: 'string' },
-    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-    { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
-    { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
-    { prop: 'passportNumber', type: 'string' },
-    { prop: 'stringValue1', type: 'string' },
-  ];
+  columns: Array<IGridColumn> = null;
 
   dialog: string;
   gridStyles = { height: '500px' };
@@ -51,25 +45,51 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
     private guarantorService: GuarantorService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
 
-    this.gridService.setAllRenderers(this.columns)
+  ngOnInit(): void {
+    const attrConstant = this.guarantorService.getAttributeConstant(this.searchParams.typeCode);
+    this.userConstantsService.get(attrConstant)
+      .flatMap(strAttributeList => {
+        const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
+          .map(attr => ({ prop: attr, type: 'string' }));
+
+        const columns: IGridColumn[] =
+          this.searchParams.typeCode === 1
+            ? [
+                { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
+                { prop: 'lastName', type: 'string' },
+                { prop: 'firstName', type: 'string' },
+                { prop: 'middleName', type: 'string' },
+                { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
+                { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
+                { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
+                { prop: 'passportNumber', type: 'string' },
+              ]
+            : [
+                { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
+                { prop: 'lastName', type: 'string' },
+                { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
+            ];
+
+        return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
+      })
       .take(1)
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
       });
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch(this.searchParams);
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.guarantors.gen.plural').dispatch();
           this.clear();
         }
       });
@@ -104,7 +124,7 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
         const { data: persons } = response;
         this.persons = persons ? [...persons] : [];
         if (!this.persons.length) {
-          this.setDialog('infoNoRecords');
+          this.setDialog('infoNotFound');
         }
         this.cdRef.markForCheck();
       });
