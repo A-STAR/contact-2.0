@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { AccordionItemComponent } from './item/accordion-item.component';
 
@@ -7,9 +7,15 @@ import { AccordionItemComponent } from './item/accordion-item.component';
   templateUrl: './accordion.component.html'
 })
 export class AccordionComponent {
-  private _tabs: Array<AccordionItemComponent> = [];
+  @Input('selectedIndex') set selectedIndex(selectedIndex: number) {
+    this._tabs.forEach((tab, i) => tab.toggle(i !== selectedIndex));
+  }
 
-  get tabs(): Array<AccordionItemComponent> {
+  @Output() selectedIndexChange = new EventEmitter<number>();
+
+  private _tabs: AccordionItemComponent[] = [];
+
+  get tabs(): AccordionItemComponent[] {
     return this._tabs;
   }
 

@@ -131,7 +131,8 @@
       "changeStatus": "Сменить статус",
       "close": "Закрыть",
       "undo": "Отменить",
-      "ok": "OK"
+      "ok": "OK",
+      "registerCall": "Зарегистрировать звонок"
     }
   },
   "queryBuilder": {
@@ -143,6 +144,69 @@
       "removeGroup": "Удалить группу",
       "addValue": "Добавить значение",
       "removeValue": "Удалить значение"
+    }
+  },
+  "modules": {
+    "contactRegistration": {
+      "outcome": {
+        "title": "Выбор исхода",
+        "template": "Сценарий разговора",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "comment": "Комментарий для ввода"
+      },
+      "promise": {
+        "title": "Регистрация обещания",
+        "date": "Дата",
+        "amount": "Сумма",
+        "percentage": "Процент от остатка"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Дата",
+        "amount": "Сумма",
+        "currencyId": "Валюта",
+        "percentage": "Процент от остатка"
+      },
+      "phone": {
+        "title": "Ввод нового номера должника",
+        "typeCode": "Тип",
+        "phone": "Номер телефона",
+        "stopAutoSms": "Не отправлять автоматические SMS",
+        "stopAutoInfo": "Запретить голосовое информирование",
+        "comment": "Комментарий"
+      },
+      "attachment": {
+        "title": "Прикрепление файла",
+        "docTypeCode": "Тип",
+        "docName": "Название",
+        "docNumber": "Номер",
+        "comment": "Комментарий",
+        "file": "Выберите файл"
+      },
+      "attributes": {
+        "title": "Дополнительные атрибуты",
+        "grid": {
+          "code": "Код",
+          "name": "Название",
+          "value": "Значение",
+          "mandatory": "Обязательно к заполнению"
+        }
+      },
+      "misc": {
+        "title": "Дополнительно",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "callReasonCode": "Причина звонка",
+        "debtReasonCode": "Причина возникновения задолженности",
+        "nextCallDateTime": "Дата повторного звонка",
+        "refusalReasonCode": "Причина отказа от оплаты",
+        "statusReasonCode": "Причина смены статуса на пользовательский",
+        "comment": "Комментарий"
+      },
+      "confirm": {
+        "title": "Подтверждение данных"
+      }
     }
   },
   "login": {
@@ -1467,7 +1531,8 @@
       "remove": "Удалить",
       "save": "Сохранить",
       "search": "Искать",
-      "select": "Выбрать"
+      "select": "Выбрать",
+      "next": "Далее"
     },
     "dateTimeRange": {
       "from": "Начало",
