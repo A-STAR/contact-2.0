@@ -185,7 +185,13 @@
         "file": "Select File"
       },
       "attributes": {
-        "title": "Additional Attributes"
+        "title": "Additional Attributes",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "value": "Value",
+          "mandatory": "Mandatory Field"
+        }
       },
       "misc": {
         "title": "Misc",
