@@ -34,6 +34,8 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridEditComponent implements OnInit, OnDestroy {
+  @Input() treeType: number;
+  @Input() treeSubtype: number;
   @Input() attributeId: number;
 
   @Output() submit = new EventEmitter<Partial<IAttribute>>();
@@ -65,7 +67,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VARIABLE_TYPE),
       this.lookupService.lookupAsOptions('dictionaries'),
       this.lookupService.lookupAsOptions('languages'),
-      this.attributeId ? this.attributeService.fetch(this.attributeId) : Observable.of(null),
+      this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : Observable.of(null),
       this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : Observable.of(null),
     ).subscribe(([ types, dictionaries, languages, attribute, translations ]) => {
       this.cdRef.detectChanges();

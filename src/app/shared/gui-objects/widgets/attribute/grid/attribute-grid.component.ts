@@ -1,13 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/combineLatest';
 
 import { IAttribute } from '../attribute.interface';
+import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
@@ -23,6 +28,12 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
+  treeType: number = null;
+  treeTypeOptions = [];
+  treeSubtype: number = null;
+  treeSubtypeOptions = [];
+  isTreeSubtypeDisabled = true;
+
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
   columns: Array<IGridWrapperTreeColumn<any>> = [
@@ -70,12 +81,29 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private userConstantsService: UserConstantsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
   }
 
   ngOnInit(): void {
+    Observable.combineLatest(
+      this.userDictionariesService
+        .getDictionariesAsOptions([
+          UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
+          UserDictionariesService.DICTIONARY_ENTITY_TYPE,
+        ]),
+      this.userConstantsService.get('AttributeType.Entity.List')
+    )
+    .subscribe(([ dictionaries, constant ]) => {
+      this.initTreeTypeSelect(dictionaries, constant);
+      this.initTreeSubtypeSelect(dictionaries);
+      this.cdRef.markForCheck();
+      this.fetch();
+    });
+
     this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
       .subscribe(canView => {
         if (canView) {
@@ -103,6 +131,23 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
   }
 
+  onTreeTypeChange(selection: IOption[]): void {
+    this.treeType = Number(selection[0].value);
+    if (this.treeType === 33) {
+      this.isTreeSubtypeDisabled = false;
+      this.treeSubtype = this.treeSubtypeOptions ? this.treeSubtypeOptions[0].value : null;
+    } else {
+      this.isTreeSubtypeDisabled = true;
+      this.treeSubtype = null;
+    }
+    this.fetch();
+  }
+
+  onTreeSubtypeChange(selection: IOption[]): void {
+    this.treeSubtype = Number(selection[0].value);
+    this.fetch();
+  }
+
   onSelect(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
   }
@@ -119,24 +164,39 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onMove(row: IGridTreeRow<IAttribute>): void {
-    this.attributeService.update(row.data.id, { parentId: row.parentId, sortOrder: row.sortOrder } as any)
+    const data = { parentId: row.parentId, sortOrder: row.sortOrder } as any;
+    this.attributeService.update(this.treeType, this.treeSubtype, row.data.id, data)
       .subscribe(() => this.onSuccess());
   }
 
   onAddDialogSubmit(attribute: IAttribute): void {
     const parentId = this.selectedAttribute$.value ? this.selectedAttribute$.value.id : null;
-    this.attributeService.create({ ...attribute, parentId })
+    this.attributeService.create(this.treeType, this.treeSubtype, { ...attribute, parentId })
       .subscribe(() => this.onSuccess());
   }
 
   onEditDialogSubmit(attribute: IAttribute): void {
-    this.attributeService.update(this.selectedAttribute$.value.id, attribute)
+    this.attributeService.update(this.treeType, this.treeSubtype, this.selectedAttribute$.value.id, attribute)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.attributeService.delete(this.selectedAttribute$.value.id)
+    this.attributeService.delete(this.treeType, this.treeSubtype, this.selectedAttribute$.value.id)
       .subscribe(() => this.onSuccess());
+  }
+
+  private initTreeTypeSelect(dictionaries: { [key: number]: IOption[] }, constant: IUserConstant): void {
+    const values = constant.valueS.split(',').map(Number);
+    this.treeTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_ENTITY_TYPE]
+      .filter(o => [ ...values, 33 ].includes(Number(o.value)));
+    this.treeType = this.treeTypeOptions ? this.treeTypeOptions[0].value : null;
+  }
+
+  private initTreeSubtypeSelect(dictionaries: { [key: number]: IOption[] }): void {
+    this.treeSubtypeOptions = dictionaries[UserDictionariesService.DICTIONARY_PROPERTY_TYPE];
+    this.treeSubtype = this.treeSubtypeOptions && this.treeType === 33
+      ? this.treeSubtypeOptions[0].value
+      : null;
   }
 
   private convertToGridTreeRow(attributes: IAttribute[], parentId: number = null): IGridTreeRow<IAttribute>[] {
@@ -152,7 +212,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll().subscribe(attributes => {
+    this.attributeService.fetchAll(this.treeType, this.treeSubtype).subscribe(attributes => {
       this.attributes = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });
