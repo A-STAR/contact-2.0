@@ -95,24 +95,20 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
           UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
           UserDictionariesService.DICTIONARY_ENTITY_TYPE,
         ]),
-      this.userConstantsService.get('AttributeType.Entity.List')
+      this.userConstantsService.get('AttributeType.Entity.List'),
+      this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
     )
-    .subscribe(([ dictionaries, constant ]) => {
+    .subscribe(([ dictionaries, constant, canView ]) => {
       this.initTreeTypeSelect(dictionaries, constant);
       this.initTreeSubtypeSelect(dictionaries);
       this.cdRef.markForCheck();
-      this.fetch();
+      if (canView) {
+        this.fetch();
+      } else {
+        this.attributes = [];
+        this.cdRef.markForCheck();
+      }
     });
-
-    this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
-      .subscribe(canView => {
-        if (canView) {
-          this.fetch();
-        } else {
-          this.attributes = [];
-          this.cdRef.markForCheck();
-        }
-      });
   }
 
   get selectedAttributeId$(): Observable<number> {
