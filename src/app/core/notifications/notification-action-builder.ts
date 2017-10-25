@@ -98,8 +98,9 @@ export class NotificationActionBuilder {
     if (message.response) {
       const { status } = message.response;
 
-      const json = message.response.text() ? message.response.json() : {};
-      if (json.message) {
+      const json = this.parseMessageResponse(message);
+
+      if (json && json.message) {
         const { code, payload } = json.message;
         const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
 
@@ -120,6 +121,14 @@ export class NotificationActionBuilder {
     }
 
     return this.translateService.instant(message.text, translatedParams);
+  }
+
+  private parseMessageResponse(message: IMessageOptions): any {
+    try {
+      return message.response.json();
+    } catch (e) {
+      return null;
+    }
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
