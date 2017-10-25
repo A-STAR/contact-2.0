@@ -49,6 +49,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   data = {};
 
   private autoCommentIdSubscription: Subscription;
+  private outcomeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -60,79 +61,32 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): we need to do smth with the boilerplate below
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddAutoComment$.subscribe(canAddAutoComment => {
-      if (canAddAutoComment) {
-        this.getControl('autoCommentId').type = 'select';
-        this.getControl('autoComment').type = 'textarea';
-      } else {
-        this.getControl('autoCommentId').type = 'hidden';
-        this.getControl('autoComment').type = 'hidden';
-        this.updateData('autoCommentId', null);
-        this.updateData('autoComment', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddCallReason$.subscribe(canAddCallReason => {
-      if (canAddCallReason) {
-        this.getControl('callReasonCode').type = 'select';
-      } else {
-        this.getControl('callReasonCode').type = 'hidden';
-        this.updateData('callReasonCode', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddComment$.subscribe(canAddComment => {
-      if (canAddComment) {
-        this.getControl('comment').type = 'textarea';
-      } else {
-        this.getControl('comment').type = 'hidden';
-        this.updateData('comment', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddDebtReason$.subscribe(canAddDebtReason => {
-      if (canAddDebtReason) {
-        this.getControl('debtReasonCode').type = 'select';
-      } else {
-        this.getControl('debtReasonCode').type = 'hidden';
-        this.updateData('debtReasonCode', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddNextCall$.subscribe(canAddNextCall => {
-      if (canAddNextCall) {
-        this.getControl('nextCallDateTime').type = 'datepicker';
-      } else {
-        this.getControl('nextCallDateTime').type = 'hidden';
-        this.updateData('nextCallDateTime', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddRefusal$.subscribe(canAddRefusal => {
-      if (canAddRefusal) {
-        this.getControl('refusalReasonCode').type = 'select';
-      } else {
-        this.getControl('refusalReasonCode').type = 'hidden';
-        this.updateData('refusalReasonCode', null);
-      }
-    });
-
-    // TODO(d.maltsev): subscription
-    this.contactRegistrationService.canAddStatusChangeReason$.subscribe(canAddStatusChangeReason => {
-      if (canAddStatusChangeReason) {
-        this.getControl('statusReasonCode').type = 'select';
-      } else {
-        this.getControl('statusReasonCode').type = 'hidden';
-        this.updateData('statusReasonCode', null);
-      }
+    this.outcomeSubscription = Observable.combineLatest(
+      this.contactRegistrationService.canAddAutoComment$,
+      this.contactRegistrationService.canAddCallReason$,
+      this.contactRegistrationService.canAddComment$,
+      this.contactRegistrationService.canAddDebtReason$,
+      this.contactRegistrationService.canAddNextCall$,
+      this.contactRegistrationService.canAddRefusal$,
+      this.contactRegistrationService.canAddStatusChangeReason$,
+    )
+    .subscribe(([
+      canAddAutoComment,
+      canAddCallReason,
+      canAddComment,
+      canAddDebtReason,
+      canAddNextCall,
+      canAddRefusal,
+      canAddStatusChangeReason,
+    ]) => {
+      this.toggleControl('autoCommentId', canAddAutoComment);
+      this.toggleControl('autoComment', canAddAutoComment);
+      this.toggleControl('callReasonCode', canAddCallReason);
+      this.toggleControl('comment', canAddComment);
+      this.toggleControl('debtReasonCode', canAddDebtReason);
+      this.toggleControl('nextCallDateTime', canAddNextCall);
+      this.toggleControl('refusalReasonCode', canAddRefusal);
+      this.toggleControl('statusReasonCode', canAddStatusChangeReason);
     });
 
     this.userTemplatesService.getTemplates(4, 0)
@@ -160,6 +114,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
+    this.outcomeSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
@@ -174,6 +129,14 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
         this.contactRegistrationService.nextStep();
         this.cdRef.markForCheck();
       });
+  }
+
+  private toggleControl(name: string, display: boolean): void {
+    this.getControl(name).display = display;
+    if (!display) {
+      this.updateData(name, null);
+    }
+    this.cdRef.markForCheck();
   }
 
   private getControl(name: string): IDynamicFormControl {

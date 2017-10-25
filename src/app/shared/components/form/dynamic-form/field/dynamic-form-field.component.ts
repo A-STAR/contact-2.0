@@ -20,6 +20,10 @@ export class DynamicFormFieldComponent {
 
   @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
+  get isHidden(): boolean {
+    return this.control.display === false;
+  }
+
   selectHandler(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
   }

@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="control.type" [formGroup]="form">
+<div [ngSwitch]="control.type" [formGroup]="form" [hidden]="isHidden">
 
   <ng-container *ngSwitchCase="'number'">
     <label>
@@ -355,4 +355,4 @@
 
   </ng-container> <!-- control.type:'dynamic' -->
 
-</ng-container> <!-- ngSwitch:control.type -->
+</div> <!-- ngSwitch:control.type -->
