@@ -93,6 +93,10 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     return this.selectedNode$.map(node => node.id);
   }
 
+  get canCopy$(): Observable<boolean> {
+    return this.userPermissionsService.has('CONTACT_TREE_COPY');
+  }
+
   onContactTypeChange(selection: IOption[]): void {
     this.contactType = Number(selection[0].value);
     this.fetch();
