@@ -1190,6 +1190,15 @@
           "fullName": "Operator"
         }
       }
+    },
+    "property": {
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "propertyTypeCode": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
@@ -1310,6 +1319,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "message template", "plural": "message templates" }
+    },
+    "property": {
+      "gen": { "plural": "property list" }
     }
   },
   "errors": {

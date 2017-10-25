@@ -1190,6 +1190,15 @@
           "fullName": "Оператор"
         }
       }
+    },
+    "property": {
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "propertyTypeCode": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1310,6 +1319,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
+    },
+    "property": {
+      "gen": { "plural": "списка имущества" }
     }
   },
   "errors": {
