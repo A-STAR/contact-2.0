@@ -7,9 +7,10 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class PropertyService {
-  static PROPERTY_SAVED = 'MESSAGE_SAVED';
+  static MESSAGE_PROPERTY_SAVED = 'MESSAGE_PROPERTY_SAVED';
 
-  baseUrl = '/persons/{personId}/property';
+  private baseUrl = '/persons/{personId}/property';
+  private extUrl = `${this.baseUrl}/{propertyId}`;
 
   constructor(
     private dataService: DataService,
@@ -21,10 +22,24 @@ export class PropertyService {
       .catch(this.notificationsService.fetchError().entity('entities.property.gen.plural').dispatchCallback());
   }
 
+  fetch(personId: number, propertyId: number): Observable<IProperty> {
+    return this.dataService.read(this.extUrl, { personId, propertyId })
+      .catch(this.notificationsService.error('errors.default.read').entity('entities.property.gen.singular').dispatchCallback());
+  }
+
   create(personId: number, property: IProperty): Observable<IProperty> {
     return this.dataService.create(this.baseUrl, { personId }, property)
       .catch(this.notificationsService
         .error('errors.default.create')
+        .entity('entities.property.gen.singular')
+        .dispatchCallback()
+      );
+  }
+
+  update(personId: number, propertyId: number, propertyItem: IProperty): Observable<any> {
+    return this.dataService.update(this.extUrl, { personId, propertyId }, propertyItem)
+      .catch(this.notificationsService
+        .error('errors.default.update')
         .entity('entities.property.gen.singular')
         .dispatchCallback()
       );

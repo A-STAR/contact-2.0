@@ -6,5 +6,7 @@
   [columns]="columns"
   [footerHeight]="false"
   [rows]="propertyList"
-  [styles]="{ height: '230px' }">
+  [styles]="{ height: '230px' }"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)">
 </app-grid>

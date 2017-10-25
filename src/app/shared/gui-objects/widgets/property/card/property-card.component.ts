@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -23,13 +23,14 @@ const label = makeKey('widgets.property.card');
   selector: 'app-property-card',
   templateUrl: './property-card.component.html'
 })
-export class PropertyCardComponent {
+export class PropertyCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   private personId = (this.route.params as any).value.personId || null;
+  private propertyId = (this.route.params as any).value.propertyId || null;
 
   controls: Array<IDynamicFormItem> = null;
-  propertyItem: IProperty;
+  property: IProperty;
 
   constructor(
     private contentTabService: ContentTabService,
@@ -38,15 +39,18 @@ export class PropertyCardComponent {
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     Observable.combineLatest(
-      this.userPermissionsService.has('PROPERTY_ADD'),
+      this.propertyId ? this.userPermissionsService.has('PROPERTY_EDIT') : this.userPermissionsService.has('PROPERTY_ADD'),
+      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : Observable.of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
     .take(1)
-    .subscribe(([ canEdit, respTypeOpts ]) => {
+    .subscribe(([ canEdit, property, respTypeOpts ]) => {
       this.controls = this.initControls(canEdit, respTypeOpts);
-      this.propertyItem = this.getFormData();
+      this.property = property;
     });
   }
 
@@ -55,10 +59,12 @@ export class PropertyCardComponent {
   }
 
   onSubmit(): void {
-    const action = this.propertyService.create(this.personId, this.form.requestValue);
+    const action = this.propertyId
+      ? this.propertyService.update(this.personId, this.propertyId, this.form.requestValue)
+      : this.propertyService.create(this.personId, this.form.requestValue);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PropertyService.PROPERTY_SAVED);
+      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SAVED);
       this.onBack();
     });
   }
@@ -71,7 +77,7 @@ export class PropertyCardComponent {
     return [
       { label: label('name'), controlName: 'name', type: 'text', disabled: !canEdit },
       {
-        label: label('propertyType'), controlName: 'propertyType',
+        label: label('propertyType'), controlName: 'typeCode',
         type: 'select', options: propertyTypeOptions, required: true, disabled: !canEdit
       },
       { label: label('isConfirmed'), controlName: 'isConfirmed', type: 'checkbox', disabled: !canEdit },
@@ -81,7 +87,7 @@ export class PropertyCardComponent {
 
   private getFormData(): IProperty {
     return {
-      propertyType: 1
+      typeCode: 1
     };
   }
 }

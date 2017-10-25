@@ -34,7 +34,8 @@ const routes: Routes = [
         ]
       },
       { path: 'property', children: [
-          { path: 'create', component: DebtorPropertyComponent }
+          { path: 'create', component: DebtorPropertyComponent },
+          { path: ':propertyId', component: DebtorPropertyComponent },
         ]
       },
       { path: 'contact', children: [
