@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuarantor, ICompany } from '../../guarantee/guarantee.interface';
+import { IGuarantor } from '../../guarantee/guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { GuarantorService } from '../../guarantor/guarantor.service';

@@ -17,13 +17,14 @@ import { EntityTranslationsService } from '../../../../../../core/entity/transla
 import { IContactTreeAttribute } from '../../contact-property.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
-import { ILookupAttributeType } from '../../../../../../core/lookup/lookup.interface';
+import { IUserAttributeType } from '../../../../../../core/user/attribute-types/user-attribute-types.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../../components/flowtree/treenode/treenode.interface';
 
 import { ContactPropertyService } from '../../contact-property.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
+import { UserAttributeTypesService } from '../../../../../../core/user/attribute-types/user-attribute-types.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '../../../../../../core/user/templates/user-templates.service';
 
@@ -62,6 +63,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     private entityAttributesService: EntityAttributesService,
     private entityTranslationsService: EntityTranslationsService,
     private lookupService: LookupService,
+    private userAttributeTypesService: UserAttributeTypesService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
   ) {}
@@ -82,7 +84,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         EntityAttributesService.DICT_VALUE_4,
       ]),
       this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
-      this.lookupService.attributeTypes,
+      this.userAttributeTypesService.getAttributeTypes(19, 0),
       this.lookupService.lookupAsOptions('languages'),
       this.isEditing
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
@@ -112,7 +114,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  convertToNodes(attributeTypes: ILookupAttributeType[], attributeData: IContactTreeAttribute[]): ITreeNode[] {
+  convertToNodes(attributeTypes: IUserAttributeType[], attributeData: IContactTreeAttribute[]): ITreeNode[] {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;

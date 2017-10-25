@@ -881,6 +881,8 @@
       }
     },
     "attribute": {
+      "treeType": "Тип дерева",
+      "treeSubtype": "Подтип дерева",
       "dialogs": {
         "edit": {
           "title": "Редактирование атрибута"

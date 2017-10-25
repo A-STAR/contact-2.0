@@ -3,11 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormGroup, IDynamicFormItem, ControlTypes
-} from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormGroup, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor } from '../../guarantee/guarantee.interface';
 
-import { GuarantorService } from '../../guarantor/guarantor.service';
+// import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -39,7 +38,7 @@ export class GuarantorCardComponent extends DialogFunctions {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private guarantorService: GuarantorService,
+    // private guarantorService: GuarantorService,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,

@@ -23,23 +23,6 @@ export interface IGuarantor {
   stringValue10?: string;
 }
 
-export interface ICompany {
-  id?: number;
-  lastName?: string;
-  fullName?: string;
-  typeCode?: number;
-  stringValue1?: string;
-  stringValue2?: string;
-  stringValue3?: string;
-  stringValue4?: string;
-  stringValue5?: string;
-  stringValue6?: string;
-  stringValue7?: string;
-  stringValue8?: string;
-  stringValue9?: string;
-  stringValue10?: string;
-}
-
 export interface IGuaranteeContract {
   id?: number;
   contractNumber?: string;

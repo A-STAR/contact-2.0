@@ -881,6 +881,8 @@
       }
     },
     "attribute": {
+      "treeType": "Tree Type",
+      "treeSubtype": "Tree Subtype",
       "dialogs": {
         "edit": {
           "title": "Edit Attribute"
