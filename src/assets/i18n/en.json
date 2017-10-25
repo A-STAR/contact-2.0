@@ -131,7 +131,8 @@
       "changeStatus": "Change Status",
       "close": "Close",
       "undo": "Undo",
-      "ok": "OK"
+      "ok": "OK",
+      "registerCall": "Register Call"
     }
   },
   "queryBuilder": {
@@ -143,6 +144,69 @@
       "removeGroup": "Delete group",
       "addValue": "Add value",
       "removeValue": "Delete value"
+    }
+  },
+  "modules": {
+    "contactRegistration": {
+      "outcome": {
+        "title": "Contact Outcome",
+        "template": "Scenario",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "comment": "Comments"
+      },
+      "promise": {
+        "title": "Promise Registration",
+        "date": "Date",
+        "amount": "Amount",
+        "percentage": "Remainder Percentage"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Date",
+        "amount": "Amount",
+        "currencyId": "Currency",
+        "percentage": "Remainder Percentage"
+      },
+      "phone": {
+        "title": "New Debtor Phone Number",
+        "typeCode": "Type",
+        "phone": "Phone Number",
+        "stopAutoSms": "Disable Auto SMS",
+        "stopAutoInfo": "Disable Audo Voicemail",
+        "comment": "Comments"
+      },
+      "attachment": {
+        "title": "File Attachment",
+        "docTypeCode": "Type",
+        "docName": "Name",
+        "docNumber": "Number",
+        "comment": "Comments",
+        "file": "Select File"
+      },
+      "attributes": {
+        "title": "Additional Attributes",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "value": "Value",
+          "mandatory": "Mandatory Field"
+        }
+      },
+      "misc": {
+        "title": "Misc",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "callReasonCode": "Reason for Call",
+        "debtReasonCode": "Reason for Debt",
+        "nextCallDateTime": "Next Call Date",
+        "refusalReasonCode": "Reason for Refusal",
+        "statusReasonCode": "Reason for Status Change",
+        "comment": "Comments"
+      },
+      "confirm": {
+        "title": "Confirmation"
+      }
     }
   },
   "login": {
@@ -817,6 +881,8 @@
       }
     },
     "attribute": {
+      "treeType": "Tree Type",
+      "treeSubtype": "Tree Subtype",
       "dialogs": {
         "edit": {
           "title": "Edit Attribute"
@@ -903,7 +969,8 @@
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
-        "contactInvisible": "Don't Display in Contacts"
+        "contactInvisible": "Don't Display in Contacts",
+        "fileAttachMode": "Files Attachment"
       }
     },
     "document": {
@@ -1479,7 +1546,8 @@
       "remove": "Delete",
       "save": "Save",
       "search": "Search",
-      "select": "Select"
+      "select": "Select",
+      "next": "Next"
     },
     "dateTimeRange": {
       "from": "From",

@@ -22,6 +22,7 @@ import { AccordionComponent } from '../accordion.component';
   ]
 })
 export class AccordionItemComponent {
+  @Input() clickable = true;
   @Input() title: string;
 
   private _isCollapsed = true;
@@ -35,16 +36,27 @@ export class AccordionItemComponent {
   }
 
   onClick(): void {
-    const isCollapsed = this.isCollapsed;
-    this.accordion.tabs.forEach(tab => tab.hide());
-    this.toggle(!isCollapsed);
+    if (this.clickable) {
+      const isCollapsed = this.isCollapsed;
+      this.accordion.tabs.forEach(tab => tab.hide());
+      this.toggle(!isCollapsed);
+      this.accordion.selectedIndexChange.emit(this.index);
+    }
   }
 
   toggle(isCollapsed: boolean): void {
     this._isCollapsed = isCollapsed === undefined ? !this._isCollapsed : isCollapsed;
   }
 
+  show(): void {
+    this._isCollapsed = false;
+  }
+
   hide(): void {
     this._isCollapsed = true;
+  }
+
+  private get index(): number {
+    return this.accordion.tabs.findIndex(tab => tab === this);
   }
 }

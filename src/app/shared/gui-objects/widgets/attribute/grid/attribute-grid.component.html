@@ -1,11 +1,15 @@
 <app-attribute-grid-edit
   *ngIf="isDialog('add')"
+  [treeType]="treeType"
+  [treeSubtype]="treeSubtype"
   (submit)="onAddDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-attribute-grid-edit>
 
 <app-attribute-grid-edit
   *ngIf="isDialog('edit')"
+  [treeType]="treeType"
+  [treeSubtype]="treeSubtype"
   [attributeId]="selectedAttributeId$ | async"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
@@ -22,7 +26,35 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+<div class="panel m0 p ba">
+  <div class="row">
+    <div class="col-md-6">
+      <label>
+        <span>{{ 'widgets.attribute.treeType' | translate }}</span>
+        <app-select
+          [ngModel]="treeType"
+          [nullable]="false"
+          [options]="treeTypeOptions"
+          (onSelect)="onTreeTypeChange($event)">
+        </app-select>
+      </label>
+    </div>
+    <div class="col-md-6">
+      <label>
+        <span>{{ 'widgets.attribute.treeSubtype' | translate }}</span>
+        <app-select
+          [disabled]="isTreeSubtypeDisabled"
+          [ngModel]="treeSubtype"
+          [nullable]="false"
+          [options]="treeSubtypeOptions"
+          (onSelect)="onTreeSubtypeChange($event)">
+        </app-select>
+      </label>
+    </div>
+  </div>
+</div>
+
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-gridtree-wrapper
   [columns]="columns"

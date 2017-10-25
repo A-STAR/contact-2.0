@@ -9,7 +9,6 @@ import { valuesToOptions, toOption } from '../utils';
 
 import {
   ILookupState,
-  ILookupAttributeType,
   ILookupContractor,
   ILookupCurrency,
   ILookupLanguage,
@@ -45,9 +44,6 @@ export class LookupService {
   lookupAsOptions(entity: ILookupKey): Observable<Array<IOption>> {
     const result = this.getSlice(entity);
     switch (entity) {
-      case 'attributeTypes':
-        console.warn('Cannot convert nested attribute types to options array.');
-        return Observable.of([]);
       case 'currencies':
         return result.map(currencies => currencies.map(toOption('id', 'code')));
       case 'dictionaries':
@@ -58,10 +54,6 @@ export class LookupService {
       default:
         return result.map(valuesToOptions);
     }
-  }
-
-  get attributeTypes(): Observable<Array<ILookupAttributeType>> {
-    return this.getSlice('attributeTypes');
   }
 
   get contractors(): Observable<Array<ILookupContractor>> {

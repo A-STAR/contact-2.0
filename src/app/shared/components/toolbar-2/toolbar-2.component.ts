@@ -76,6 +76,10 @@ export class Toolbar2Component {
       label: 'toolbar.action.ok',
       icon: 'fa fa-check',
     },
+    [ToolbarItemTypeEnum.BUTTON_REGISTER_CALL]: {
+      label: 'toolbar.action.registerCall',
+      icon: 'fa fa-tty',
+    },
   };
 
   buttonTypes: Array<ToolbarItemTypeEnum> = [
@@ -95,6 +99,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_CLOSE,
     ToolbarItemTypeEnum.BUTTON_UNDO,
     ToolbarItemTypeEnum.BUTTON_OK,
+    ToolbarItemTypeEnum.BUTTON_REGISTER_CALL,
   ];
 
   constructor(
