@@ -1,9 +1,13 @@
-<app-dialog (onClose)="onCancel()">
+<app-dialog [styles]="{ width: '80%' }" (onClose)="onCancel()">
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.visits.title' | translate }}</h3>
   </div>
   <div>
-    {{ visits | json }}
+    <app-grid
+      [columns]="columns"
+      [rows]="visits"
+      [styles]="{ height: '600px' }">
+    </app-grid>
   </div>
   <div dialog-footer>
     <button class="btn btn-default" (click)="onCancel()">
