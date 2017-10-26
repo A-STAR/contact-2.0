@@ -36,6 +36,13 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-visits>
 
+<app-address-grid-mark
+  *ngIf="isDialog('mark')"
+  [addressId]="selectedAddressId$ | async"
+  [personId]="personId"
+  (cancel)="onCloseDialog()">
+</app-address-grid-mark>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid

@@ -60,7 +60,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         {
           label: 'widgets.phone.toolbar.visits.mark',
           enabled: this.canMarkVisit$,
-          action: () => console.log('Mark Visit')
+          action: () => this.setDialog('mark')
         },
       ]
     },
