@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -107,6 +107,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
       this.gridService.setDictionaryRenderers(this._columns),
@@ -143,15 +144,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
-  }
-
-  get personRole(): number {
-    // TODO(d.maltsev): add route params for values 2 and 3
-    // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
-    if (this.routeParams.contactId) {
-      return 4;
-    }
-    return 1;
   }
 
   get personId(): number {
