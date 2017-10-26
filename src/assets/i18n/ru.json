@@ -132,7 +132,8 @@
       "close": "Закрыть",
       "undo": "Отменить",
       "ok": "OK",
-      "registerCall": "Зарегистрировать звонок"
+      "registerCall": "Зарегистрировать звонок",
+      "visit": "Выезд"
     }
   },
   "queryBuilder": {
@@ -877,6 +878,25 @@
         "delete": {
           "title": "Удалить адрес",
           "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Просмотр истории выездов",
+          "grid": {
+            "id": "Ид",
+            "debtId": "Ид долга",
+            "contract": "Номер договора",
+            "statusCode": "Статус",
+            "purposeCode": "Цель",
+            "requestUserFullName": "Пользователь, наметивший выезд",
+            "requestDateTime": "Дата отметки необходимости",
+            "prepareUserFullName": "Пользователь, подготовивший выезд",
+            "prepareDateTime": "Дата подготовки выезда",
+            "planUserFullName": "Запланированный пользователь для выезда",
+            "planVisitDateTime": "Плановая дата выезда",
+            "execUserFullName": "Пользователь, выполнивший выезд",
+            "execDateTime": "Фактическая дата выезда",
+            "comment": "Комментарий"
+          }
         }
       }
     },
@@ -1108,6 +1128,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "Просмотр истории выездов",
+          "mark": "Отметить необходимость выезда"
+        }
+      },
       "card": {
         "typeCode": "Тип",
         "phoneNumber": "Номер телефона",
