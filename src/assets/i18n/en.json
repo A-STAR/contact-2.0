@@ -880,7 +880,23 @@
           "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
         },
         "visits": {
-          "title": "Visits Log"
+          "title": "Visits Log",
+          "grid": {
+            "id": "Id",
+            "debtId": "Debt Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "purposeCode": "Purpose",
+            "requestUserFullName": "Requested By",
+            "requestDateTime": "Requested On",
+            "prepareUserFullName": "Prepared By",
+            "prepareDateTime": "Prepared On",
+            "planUserFullName": "Planned For",
+            "planVisitDateTime": "Planned On",
+            "execUserFullName": "Carried out By",
+            "execDateTime": "Carried out On",
+            "comment": "Comments"
+          }
         }
       }
     },
