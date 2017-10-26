@@ -83,7 +83,7 @@ export class GuaranteeCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     const action = this.personId
       ? this.guaranteeService.create(this.debtId, { ...data, personId: this.personId })
       : this.guaranteeService.update(this.debtId, this.contractId, data);

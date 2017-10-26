@@ -67,21 +67,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   /**
-   * @deprecated
-   */
-  get dirtyValue(): any {
-    return Object.keys(this.form.value).reduce((acc, key) => {
-      const control = this.form.get(key);
-      if (control.dirty) {
-        acc[key] = control.value === '' ? null : control.value;
-      }
-      return acc;
-    }, {});
-  }
-
-  /**
    * Loop through dirty form controls and serialize their values
    *
+   * @deprecated Please prefer serializedUpdates
    * @readonly
    * @type {*}
    * @memberof DynamicFormComponent
@@ -91,16 +79,15 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   /**
-   * This name is more explicit than `requestValue` getter. Please prefer this over da latter
+   * Loop through dirty form controls and serialize their values
    *
-   * @returns {*}
    * @memberof DynamicFormComponent
    */
-  getSerializedUpdates(): any {
+  get serializedUpdates(): any {
     return this.getValue(true);
   }
 
-  getSerializedValue(): any {
+  get serializedValue(): any {
     return this.getValue(false);
   }
 
@@ -126,12 +113,19 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     return new FormControl(options, validators);
   }
 
+  /**
+   * Find a form control by its name
+   *
+   * @param controlName string
+   * @returns {AbtsractControl}
+   */
   getControl(controlName: string): AbstractControl {
     return this.form.get(controlName);
   }
 
   /**
    * Creates and then sets or replaces a form control
+   *
    * @param control IDynamicFormControl
    */
   setControl(control: IDynamicFormControl): void {
@@ -139,6 +133,31 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     this.form.setControl(control.controlName, ctrl);
   }
 
+  /**
+   * Find a form control's def by its name
+   *
+   * @param controlName string
+   * @returns {IDynamicFormControl}
+   */
+  getControlDef(controlName: string): IDynamicFormControl {
+    return this.flatControls.find(ctrl => ctrl.controlName === controlName);
+  }
+
+  /**
+   * Get a flat collection of all form controls
+   *
+   * @returns {IDynamicFormControl[]}
+   */
+  getFlatControls(): IDynamicFormControl[] {
+    return this.flatControls;
+  }
+
+  /**
+   * Monitors any changes of a form control's value
+   *
+   * @param controlName string
+   * @returns {Observable<any>}
+   */
   onCtrlValueChange(controlName: string): Observable<any> {
     return this.form.get(controlName).valueChanges;
   }

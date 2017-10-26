@@ -20,7 +20,7 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
   @Input() terms: ITerm[];
 
   toSubmittedValues(values: ITerm): any {
-    return this.dynamicForm.requestValue;
+    return this.dynamicForm.serializedUpdates;
   }
 
   protected getControls(): Array<IDynamicFormControl> {

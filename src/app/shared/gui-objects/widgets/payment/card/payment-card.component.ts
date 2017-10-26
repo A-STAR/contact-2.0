@@ -116,7 +116,7 @@ export class PaymentCardComponent {
   }
 
   onSubmit(): void {
-    const data: IPayment = this.form.requestValue;
+    const data: IPayment = this.form.serializedUpdates;
     const action = this.paymentId
       ? this.paymentService.update(this.debtId, this.paymentId, data)
       : this.paymentService.create(this.debtId, data);

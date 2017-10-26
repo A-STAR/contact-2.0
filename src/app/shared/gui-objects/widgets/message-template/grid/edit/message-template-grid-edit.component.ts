@@ -71,7 +71,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.form.requestValue);
+    this.submit.emit(this.form.serializedUpdates);
   }
 
   onCancel(): void {
@@ -127,8 +127,8 @@ export class MessageTemplateGridEditComponent implements OnInit {
         .subscribe(options => this.getControl('recipientTypeCode').options = options);
 
       this.cdRef.detectChanges();
-      this.form.onCtrlValueChange('recipientTypeCode').subscribe(v => {
-        this.fetchVariables(this.form.requestValue.recipientTypeCode || v);
+      this.form.onCtrlValueChange('recipientTypeCode').subscribe(value => {
+        this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value);
       });
     } else {
       this.fetchVariables(0);

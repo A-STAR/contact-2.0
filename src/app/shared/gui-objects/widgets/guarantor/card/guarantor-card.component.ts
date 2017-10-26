@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output, OnInit
+import {
+  AfterViewInit, Component, ViewChild, ChangeDetectionStrategy,
+  ChangeDetectorRef, EventEmitter, Output, OnDestroy, OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormGroup, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor } from '../../guarantee/guarantee.interface';
 
-// import { GuarantorService } from '../../guarantor/guarantor.service';
+import { GuarantorService } from '../../guarantor/guarantor.service';
 import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -25,7 +27,7 @@ const label = makeKey('widgets.guarantor.grid');
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent extends DialogFunctions implements AfterViewInit, OnInit {
+export class GuarantorCardComponent extends DialogFunctions implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
@@ -41,7 +43,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    // private guarantorService: GuarantorService,
+    private guarantorService: GuarantorService,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
@@ -79,7 +81,15 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
-      const addControls = this.makeControlsFromAttributeList(<string>attributeList.valueS);
+      const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
+        .map(ctrl => ctrl.controlName);
+
+      const allAdditionalControls = this.makeControlsFromAttributeList('1,2,3,4,5,6,7,8,9,10')
+        .map(ctrl => {
+          ctrl.display = additionalControlNames.includes(ctrl.controlName);
+          return ctrl;
+        });
+
       const controls = [
         {
           title: 'widgets.guarantor.title',
@@ -98,21 +108,45 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
             { label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
             { label: label('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
             { label: label('comment'), controlName: 'comment', type: 'textarea' },
-          ].concat(addControls as any[])
+          ].concat(allAdditionalControls as any[])
         },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
       this.guarantor = guarantor ? guarantor : { typeCode: 1 };
       this.cdRef.markForCheck();
-
     });
   }
 
   ngAfterViewInit(): void {
-    this.form.onCtrlValueChange('typeCode')
-      .subscribe(value => {
-        console.log('typeCode', value);
+    this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
+      .map(value => value && Array.isArray(value) ? value[0] : {})
+      .map(value => value.value)
+      .filter(Boolean)
+      .flatMap((typeCode: number) => {
+        const attrConstant = this.guarantorService.getAttributeConstant(typeCode);
+        return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
+      })
+      .subscribe(([ typeCode, attributeList ]) => {
+        const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
+          .map(ctrl => ctrl.controlName);
+
+        const baseControlNames = typeCode === 1
+          ? this.form.getFlatControls().map(ctrl => ctrl.controlName).filter(name => !/^stringValue\d+$/.test(name))
+          : ['typeCode', 'lastName'];
+
+        const formControlNames = baseControlNames.concat(additionalControlNames);
+        // hide irrelevant controls
+        this.form.getFlatControls()
+          .forEach(control => {
+            control.display = formControlNames.includes(control.controlName);
+          });
+
+        this.cdRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.typeCodeSubscription.unsubscribe();
   }
 
   onClear(): void {
@@ -125,7 +159,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   }
 
   onSearch(): void {
-    this.searchParams = { ...this.form.requestValue };
+    this.searchParams = this.form.serializedUpdates;
     this.setDialog('findGuarantor');
     this.cdRef.markForCheck();
   }
@@ -137,10 +171,10 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     this.cdRef.markForCheck();
   }
 
-  private makeControlsFromAttributeList(strAttributeList: string): IDynamicFormItem[] {
+  private makeControlsFromAttributeList(strAttributeList: string): IDynamicFormControl[] {
     return strAttributeList
       ? parseStringValueAttrs(strAttributeList)
-          .map(attr => (<IDynamicFormItem>{ label: label(attr), controlName: attr, type: 'text' }))
+          .map(attr => (<IDynamicFormControl>{ label: label(attr), controlName: attr, type: 'text' }))
       : [];
   }
 }

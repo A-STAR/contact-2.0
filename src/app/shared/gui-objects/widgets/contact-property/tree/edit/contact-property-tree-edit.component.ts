@@ -142,7 +142,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.getSerializedUpdates();
+    const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
     const attribute = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)

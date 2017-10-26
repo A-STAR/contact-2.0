@@ -76,8 +76,8 @@ export class DebtorComponent implements OnDestroy {
 
   onSubmit(): void {
     const value = {
-      ...this.form.requestValue,
-      ...this.information.form.requestValue,
+      ...this.form.serializedUpdates,
+      ...this.information.form.serializedUpdates,
     };
 
     this.debtorService.update(this.personId, value).subscribe(() => {

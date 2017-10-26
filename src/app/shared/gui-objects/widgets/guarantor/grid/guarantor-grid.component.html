@@ -14,11 +14,11 @@
   <app-grid
     *ngIf="columns"
     columnTranslationKey="widgets.guarantor"
+    [columns]="columns"
     [footerHeight]="false"
+    [rows]="persons"
     selectionType="single"
     [styles]="gridStyles"
-    [columns]="columns"
-    [rows]="persons"
     (onDblClick)="onDoubleClick($event)"
   >
   </app-grid>

@@ -63,7 +63,7 @@ export class PaymentComponent implements OnInit {
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const { percentage, ...rest } = this.form.getSerializedUpdates();
+    const { percentage, ...rest } = this.form.serializedUpdates;
     this.paymentService.create(this.debtId, guid, rest)
       .subscribe(() => {
         this.contactRegistrationService.nextStep();

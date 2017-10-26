@@ -74,7 +74,7 @@ export class ContractorEditComponent {
   }
 
   onSubmit(): void {
-    const contractor = this.form.getSerializedUpdates();
+    const contractor = this.form.serializedUpdates;
     if (this.contractorId) {
       this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor);
     } else {

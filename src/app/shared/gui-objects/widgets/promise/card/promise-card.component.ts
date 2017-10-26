@@ -173,7 +173,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onConfirm(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     data.isUnconfirmed = 1;
     this.save(data);
   }
@@ -183,7 +183,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     if (data.promiseAmount < this.debt.debtAmount * this.minAmountPercent / 100) {
       if (this.canAddInsufficientAmount) {
         this.setDialog('confirm');
@@ -200,7 +200,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   private save(promise: IPromise = null): void {
-    const data: IPromise = promise || this.form.requestValue;
+    const data: IPromise = promise || this.form.serializedUpdates;
     const action = this.promiseId
       ? this.promiseService.update(this.debtId, this.promiseId, data)
       : this.promiseService.create(this.debtId, data);
