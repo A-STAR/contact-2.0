@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 
+import { UserAttributeTypesEffects } from './attribute-types/user-attribute-types.effects';
+import { UserAttributeTypesService } from './attribute-types/user-attribute-types.service';
 import { UserConstantsEffects } from './constants/user-constants.effects';
 import { UserConstantsService } from './constants/user-constants.service';
 import { UserDictionariesEffects } from './dictionaries/user-dictionaries.effects';
@@ -14,12 +16,14 @@ import { UserTemplatesService } from './templates/user-templates.service';
 @NgModule({
   imports: [
     CommonModule,
+    EffectsModule.run(UserAttributeTypesEffects),
     EffectsModule.run(UserConstantsEffects),
     EffectsModule.run(UserDictionariesEffects),
     EffectsModule.run(UserPermissionsEffects),
     EffectsModule.run(UserTemplatesEffects),
   ],
   providers: [
+    UserAttributeTypesService,
     UserConstantsService,
     UserDictionariesService,
     UserPermissionsService,

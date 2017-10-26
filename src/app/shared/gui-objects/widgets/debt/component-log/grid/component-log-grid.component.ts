@@ -15,11 +15,11 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 export class ComponentLogGridComponent {
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 250 },
-    { prop: 'amount', minWidth: 150, maxWidth: 250 },
-    { prop: 'currency', minWidth: 150, maxWidth: 250 },
+    { prop: 'amount', minWidth: 100, maxWidth: 250 },
+    { prop: 'currency', minWidth: 100, maxWidth: 250 },
     { prop: 'fromDate', minWidth: 150, maxWidth: 250 },
     { prop: 'toDate', minWidth: 150, maxWidth: 250 },
-    { prop: 'fullName', minWidth: 150, maxWidth: 250 },
+    { prop: 'fullName', minWidth: 150 },
   ];
 
   private renderers: IRenderer = {
@@ -43,7 +43,7 @@ export class ComponentLogGridComponent {
         this.cdRef.markForCheck();
       });
 
-    this.componentLogService.read(1).subscribe(entries => {
+    this.componentLogService.readAll(1).subscribe(entries => {
       this.entries = entries;
       this.cdRef.markForCheck();
     });

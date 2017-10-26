@@ -24,10 +24,6 @@ export interface IGridColumn {
   disabled?: boolean;
   dictCode?: number;
   lookupKey?: ILookupKey;
-  /**
-   * @deprecated
-   */
-  // localized?: boolean;
   maxWidth?: number;
   minWidth?: number;
   name?: string;

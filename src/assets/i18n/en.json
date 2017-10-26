@@ -131,7 +131,9 @@
       "changeStatus": "Change Status",
       "close": "Close",
       "undo": "Undo",
-      "ok": "OK"
+      "ok": "OK",
+      "registerCall": "Register Call",
+      "visit": "Visit"
     }
   },
   "queryBuilder": {
@@ -143,6 +145,69 @@
       "removeGroup": "Delete group",
       "addValue": "Add value",
       "removeValue": "Delete value"
+    }
+  },
+  "modules": {
+    "contactRegistration": {
+      "outcome": {
+        "title": "Contact Outcome",
+        "template": "Scenario",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "comment": "Comments"
+      },
+      "promise": {
+        "title": "Promise Registration",
+        "date": "Date",
+        "amount": "Amount",
+        "percentage": "Remainder Percentage"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Date",
+        "amount": "Amount",
+        "currencyId": "Currency",
+        "percentage": "Remainder Percentage"
+      },
+      "phone": {
+        "title": "New Debtor Phone Number",
+        "typeCode": "Type",
+        "phone": "Phone Number",
+        "stopAutoSms": "Disable Auto SMS",
+        "stopAutoInfo": "Disable Audo Voicemail",
+        "comment": "Comments"
+      },
+      "attachment": {
+        "title": "File Attachment",
+        "docTypeCode": "Type",
+        "docName": "Name",
+        "docNumber": "Number",
+        "comment": "Comments",
+        "file": "Select File"
+      },
+      "attributes": {
+        "title": "Additional Attributes",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "value": "Value",
+          "mandatory": "Mandatory Field"
+        }
+      },
+      "misc": {
+        "title": "Misc",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "callReasonCode": "Reason for Call",
+        "debtReasonCode": "Reason for Debt",
+        "nextCallDateTime": "Next Call Date",
+        "refusalReasonCode": "Reason for Refusal",
+        "statusReasonCode": "Reason for Status Change",
+        "comment": "Comments"
+      },
+      "confirm": {
+        "title": "Confirmation"
+      }
     }
   },
   "login": {
@@ -813,10 +878,31 @@
         "delete": {
           "title": "Delete address",
           "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Visits Log",
+          "grid": {
+            "id": "Id",
+            "debtId": "Debt Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "purposeCode": "Purpose",
+            "requestUserFullName": "Requested By",
+            "requestDateTime": "Requested On",
+            "prepareUserFullName": "Prepared By",
+            "prepareDateTime": "Prepared On",
+            "planUserFullName": "Planned For",
+            "planVisitDateTime": "Planned On",
+            "execUserFullName": "Carried out By",
+            "execDateTime": "Carried out On",
+            "comment": "Comments"
+          }
         }
       }
     },
     "attribute": {
+      "treeType": "Tree Type",
+      "treeSubtype": "Tree Subtype",
       "dialogs": {
         "edit": {
           "title": "Edit Attribute"
@@ -903,7 +989,8 @@
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
-        "contactInvisible": "Don't Display in Contacts"
+        "contactInvisible": "Don't Display in Contacts",
+        "fileAttachMode": "Files Attachment"
       }
     },
     "document": {
@@ -950,13 +1037,14 @@
         "title": "Find guarantors"
       },
       "dialog": {
-        "title": "Select a guarantor"
+        "title": "Select a guarantor",
+        "notFound": "Could not find the guarantor. Please try to change the search criteria."
       },
       "grid": {
         "id": "Id",
         "firstName": "First name",
         "middleName": "Middle name",
-        "lastName": "Last name",
+        "lastName": "Last name / Company",
         "birthDate": "Date of birth",
         "birthPlace": "Place of birth",
         "educationCode": "Education",
@@ -1040,6 +1128,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "View Visit Log",
+          "mark": "Mark for Visit"
+        }
+      },
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
@@ -1417,6 +1511,10 @@
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
       },
+      "upload": {
+        "403": "You don't have permissions to upload {{ entity }}",
+        "*": "Could not upload {{ entity }}"
+      },
       "delete": {
         "403": "You don't have permissions to delete {{ entity }}",
         "*": "Could not delete {{ entity }}"
@@ -1463,7 +1561,8 @@
       "remove": "Delete",
       "save": "Save",
       "search": "Search",
-      "select": "Select"
+      "select": "Select",
+      "next": "Next"
     },
     "dateTimeRange": {
       "from": "From",

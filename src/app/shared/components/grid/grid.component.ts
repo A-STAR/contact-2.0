@@ -47,7 +47,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() styles: { [key: string]: any };
   @Input() contextMenuEnabled = false;
   @Input() contextFieldName: string;
-  @Output() onAction: EventEmitter<any> = new EventEmitter();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
@@ -71,11 +70,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     pagerNext: 'fa fa-angle-double-right',
   };
 
+  // a cache to prevent select from firing on already selected row
   debouncerSub: Subscription;
   element: HTMLElement;
   messages: IMessages = {};
   selected: Array<any> = [];
-  // a cache to prevent select from firing on already selected row
   subscription: Subscription;
 
   private _selected: any = [];
@@ -106,9 +105,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   @Input() rowClass = () => undefined;
 
-  @Input() filter(data: Array<any>): Array<any> {
-    return data;
-  }
+  @Input() filter = (row: object) => true;
 
   get filteredRows(): Array<any> {
     return (this.rows || []).filter(this.filter);
@@ -121,7 +118,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnInit(): void {
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
-
     this.columnDefs = [].concat(this.columns);
 
     if (this.columnTranslationKey) {
@@ -174,9 +170,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
     }
+
     if (selection) {
-      this.selected = [...selection.currentValue];
+      this.setSelectedRows(selection.currentValue);
     }
+
     if (rows) {
       this._selected = [];
       this.cdRef.markForCheck();
@@ -210,10 +208,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  onActionClick(event: any): void {
-    this.onAction.emit(event);
+  getSelectedRows(): Array<any> {
+    return this.selected;
   }
 
+  setSelectedRows(selection: Array<any>): void {
+    this.selected = selection ? [...selection] : [];
+  }
+
+  // NOTE: now own, the grid's function
   onSelectRow(event: any): void {
     const { selected } = event;
     const rowSelected = this._selected[0];
@@ -224,6 +227,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this._selected = [].concat(selected);
   }
 
+  // NOTE: now own, the grid's function
   onActivate(event: any): void {
     const { row, type, event: e } = event;
     if (type === 'dblclick') {
@@ -234,12 +238,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  onDocumentClick(event: MouseEvent): void {
-    if (this.ctxShowMenu) {
-      this.hideCtxMenu();
-    }
-  }
-
+  // NOTE: now own, the grid's function
   onTableContextMenu(ctxEvent: any): void {
     ctxEvent.event.preventDefault();
     ctxEvent.event.stopPropagation();
@@ -293,21 +292,23 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.hideCtxMenu();
   }
 
-  hideCtxMenu(): void {
-    this.ctxShowMenu = false;
-    this.cdRef.markForCheck();
+  clearSelection(): void {
+    this.selected = [];
   }
 
-  showCtxMenu(): void {
+  private onDocumentClick(event: MouseEvent): void {
+    if (this.ctxShowMenu) {
+      this.hideCtxMenu();
+    }
+  }
+
+  private showCtxMenu(): void {
     this.ctxShowMenu = true;
   }
 
-  getRowHeight(row: any): number {
-    return row.height;
-  }
-
-  clearSelection(): void {
-    this.selected = [];
+  private hideCtxMenu(): void {
+    this.ctxShowMenu = false;
+    this.cdRef.markForCheck();
   }
 
   private translateColumns(columnTranslations: object): void {

@@ -39,6 +39,8 @@ fieldset {
 .title {
   &.collapsible {
     cursor: pointer;
+    background-color: $form-accordion-title;
+    padding: 8px;
   }
 
   .collapse-button {

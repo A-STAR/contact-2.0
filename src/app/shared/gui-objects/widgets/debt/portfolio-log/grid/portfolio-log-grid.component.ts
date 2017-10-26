@@ -16,7 +16,7 @@ export class PortfolioLogGridComponent {
     { prop: 'portfolioName', minWidth: 150, maxWidth: 250 },
     { prop: 'fromDate', minWidth: 150, maxWidth: 250 },
     { prop: 'toDate', minWidth: 150, maxWidth: 250 },
-    { prop: 'fullName', minWidth: 150, maxWidth: 250 },
+    { prop: 'fullName', minWidth: 150 },
   ];
 
   private renderers: IRenderer = {

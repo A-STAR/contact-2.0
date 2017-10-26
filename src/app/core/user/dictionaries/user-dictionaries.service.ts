@@ -62,6 +62,10 @@ export class UserDictionariesService {
   static DICTIONARY_CONTACT_INPUT_MODE            = 51;
   static DICTIONARY_CONTACT_PROMISE_INPUT_MODE    = 52;
   static DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE = 53;
+  static DICTIONARY_PROPERTY_TYPE                 = 54;
+  static DICTIONARY_ENTITY_TYPE                   = 55;
+  static DICTIONARY_VISIT_STATUS                  = 56;
+  static DICTIONARY_VISIT_PURPOSE                 = 57;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

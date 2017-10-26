@@ -15,13 +15,15 @@ export interface IValidationMessages {
 export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 
 export interface IDynamicFormGroup {
-  children: Array<IDynamicFormItem>;
+  display?: boolean;
+  children: IDynamicFormItem[];
   collapsible?: boolean;
   title?: string;
   width?: number;
 }
 
 export interface IDynamicFormControl {
+  display?: boolean;
   children?: IDynamicFormControl[];
   controlName?: string;
   displayTime?: boolean;
@@ -37,6 +39,7 @@ export interface IDynamicFormControl {
   readonly?: boolean;
   required?: boolean;
   type: ControlTypes;
+  onChange?: (value: any) => void;
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;
@@ -74,6 +77,7 @@ export type ControlTypes =
     'boolean'
   | 'button'
   | 'checkbox'
+  | 'colorpicker'
   | 'datepicker'
   | 'dialog'
   | 'dynamic'
@@ -82,19 +86,17 @@ export type ControlTypes =
   | 'hidden'
   | 'image'
   | 'multiselect'
+  | 'multitext'
   | 'number'
   | 'password'
   | 'radio'
+  | 'richtexteditor'
   | 'select'
   | 'selectwrapper'
   | 'singleselect'
-  | 'multiselect'
   | 'text'
   | 'textarea'
-  | 'richtexteditor'
   | 'segmented'
-  | 'multitext'
-  | 'colorpicker'
 ;
 
 export interface IValue {

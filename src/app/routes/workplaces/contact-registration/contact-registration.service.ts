@@ -6,40 +6,82 @@ import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode
 
 import { DataService } from '../../../core/data/data.service';
 
-import { toTreeNodes } from '../../../core/utils/tree';
+import { isEmpty } from '../../../core/utils';
 
 @Injectable()
 export class ContactRegistrationService {
+  guid: string;
+  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+  step = 0;
+
   constructor(
     private dataService: DataService,
   ) {}
 
-  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
-
-  fetchAttributes(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
-    const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
-    return this.dataService
-      .readAll(url, { debtId, contactType, treeResultId })
-      .map(toTreeNodes(true, true));
+  get isInvalid$(): Observable<boolean> {
+    return this.selectedNode$.map(node => !this.isNodeValid(node));
   }
 
-  fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
-    const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
-    return this.dataService
-      .read(url, { debtId, contactType, treeResultId })
-      .map(response => response.text);
+  get canAddPromise$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.promiseMode));
   }
 
-  fetchAutoComment(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {
-    const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
-    return this.dataService
-      .read(url, { debtId, personId, personRole, templateId })
-      .map(response => response.text);
+  get canAddPayment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.payment));
   }
 
-  fetchContactTree(debtId: number, contactType: number): Observable<ITreeNode[]> {
+  get canAddNextCall$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.nextCallMode));
+  }
+
+  get canAddComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.commentMode));
+  }
+
+  get canAddAutoComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && !!node.data.autoCommentIds);
+  }
+
+  get canAddPhone$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.addPhone) === 1);
+  }
+
+  get canAddDebtReason$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.debtReasonMode));
+  }
+
+  get canAddRefusal$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.isRefusal) === 1);
+  }
+
+  get canAddFile$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.fileAttachMode));
+  }
+
+  get canAddCallReason$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.callReasonMode));
+  }
+
+  get canAddStatusChangeReason$(): Observable<boolean> {
+    return this.selectedNode$
+      .map(node => this.isNodeValid(node) && [2, 3].includes(node.data.statusReasonMode) && !!node.data.statusCode);
+  }
+
+  nextStep(): void {
+    this.step++;
+  }
+
+  prevStep(): void {
+    this.step--;
+  }
+
+  confirm(debtId: number): Observable<any> {
     return this.dataService
-      .readAll('/debts/{debtId}/contactTypes/{contactType}/treeResults', { debtId, contactType })
-      .map(toTreeNodes());
+      // TODO(d.maltsev): error handling
+      .create('/debts/{debtId}/contactRequest/{guid}/save', { debtId, guid: this.guid }, {});
+  }
+
+  private isNodeValid(node: ITreeNode): boolean {
+    return node && isEmpty(node.children);
   }
 }

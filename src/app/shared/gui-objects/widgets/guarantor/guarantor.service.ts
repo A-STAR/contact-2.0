@@ -19,6 +19,11 @@ export class GuarantorService {
 
   private url = '/persons/search';
   private errSingular = 'entities.guarantor.gen.singular';
+  private attrListConstants: { [key: string]: string } = {
+    '1' : 'Person.Individual.AdditionalAttribute.List',
+    '2' : 'Person.LegalEntity.AdditionalAttribute.List',
+    '3' : 'Person.SoleProprietorship.AdditionalAttribute.List',
+  };
 
   constructor(
     private dataService: DataService,
@@ -50,6 +55,10 @@ export class GuarantorService {
         );
       });
     return filter;
+  }
+
+  getAttributeConstant(typeCode: number): string {
+    return this.attrListConstants[typeCode];
   }
 
   fetch(personId: number): Observable<IGuarantor> {

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormGroup, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor } from '../../guarantee/guarantee.interface';
 
 // import { GuarantorService } from '../../guarantor/guarantor.service';
@@ -11,11 +11,10 @@ import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { parseStringValueAttrs } from '../../../../../core/utils';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { DialogFunctions } from '../../../../../core/dialog';
-import { makeKey } from '../../../../../core/utils';
+import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
 
 const label = makeKey('widgets.guarantor.grid');
 
@@ -28,16 +27,10 @@ export class GuarantorCardComponent extends DialogFunctions {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
-  private routeParams = (<any>this.route.params).value;
   // private personId = this.routeParams.personId || null;
   private debtId = this.routeParams.debtId || null;
   private contractId = this.routeParams.contractId || null;
 
-  attrListConstants: object = {
-    '1' : 'Person.Individual.AdditionalAttribute.List',
-    '2' : 'Person.LegalEntity.AdditionalAttribute.List',
-    '3' : 'Person.SoleProprietorship.AdditionalAttribute.List',
-  };
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
   guarantor: IGuarantor;
@@ -66,14 +59,11 @@ export class GuarantorCardComponent extends DialogFunctions {
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
-      const addControls = attributeList.valueS
-        ? parseStringValueAttrs(<string>attributeList.valueS)
-            .map(attr => ({ label: label(attr), controlName: attr, type: 'text' }))
-        : [];
-
+      const addControls = this.makeControlsFromAttributeList(<string>attributeList.valueS);
       const controls = [
         {
-          title: 'widgets.guarantor.title', collapsible: true,
+          title: 'widgets.guarantor.title',
+          collapsible: true,
           children: [
             {
               label: label('typeCode'), controlName: 'typeCode', type: 'select',
@@ -88,7 +78,7 @@ export class GuarantorCardComponent extends DialogFunctions {
             { label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
             { label: label('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
             { label: label('comment'), controlName: 'comment', type: 'textarea' },
-          ].concat(addControls)
+          ].concat(addControls as any[])
         },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
@@ -96,8 +86,18 @@ export class GuarantorCardComponent extends DialogFunctions {
     });
   }
 
-  get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+  get routeParams(): any {
+    return (<any>this.route.params).value;
+  }
+
+  get canSubmit$(): Observable<boolean> {
+    return this.canView$
+    .map(canView => canView && !!this.form && this.form.canSubmit)
+    .distinctUntilChanged();
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
 
   onClear(): void {
@@ -110,8 +110,7 @@ export class GuarantorCardComponent extends DialogFunctions {
   }
 
   onSearch(): void {
-    const data = this.form.requestValue;
-    this.searchParams = data;
+    this.searchParams = { ...this.form.requestValue };
     this.setDialog('findGuarantor');
     this.cdRef.markForCheck();
   }
@@ -121,5 +120,12 @@ export class GuarantorCardComponent extends DialogFunctions {
     this.form.form.disable();
     this.guarantorChanged.emit(guarantor);
     this.cdRef.markForCheck();
+  }
+
+  private makeControlsFromAttributeList(strAttributeList: string): IDynamicFormItem[] {
+    return strAttributeList
+      ? parseStringValueAttrs(strAttributeList)
+          .map(attr => (<IDynamicFormItem>{ label: label(attr), controlName: attr, type: 'text' }))
+      : [];
   }
 }
