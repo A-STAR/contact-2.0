@@ -22,12 +22,6 @@ export class ConstantsService {
     return this.store.select('constants');
   }
 
-  fetch(): void {
-    this.store.dispatch({
-      type: ConstantsService.CONSTANT_FETCH
-    });
-  }
-
   clear(): void {
     this.store.dispatch({
       type: ConstantsService.CONSTANT_CLEAR

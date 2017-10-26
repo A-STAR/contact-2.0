@@ -42,7 +42,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.constantsService.fetch(),
+      action: () => this.fetchAll(),
       enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
     },
   ];
@@ -58,13 +58,13 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
 
   permissionSub: Subscription;
 
-  rows$: Observable<IConstant[]>;
-
   selectedRecord$: Observable<IConstant>;
 
   hasViewPermission$: Observable<boolean>;
 
   emptyMessage$: Observable<string>;
+
+  selection: IConstant[];
 
   constructor(
     private constantsService: ConstantsService,
@@ -77,9 +77,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private valueConverterService: ValueConverterService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns);
-    // this.rows$ = this.constantsService.state
-    //   .map(state => state.constants).distinctUntilChanged()
-    //   .map(constants => this.valueConverterService.deserializeSet(constants)) as Observable<IConstant[]>;
+    this.selection = [];
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
@@ -105,8 +103,19 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   fetchAll(): void {
     this.dataService.readAll('/constants')
     .map(constants => this.valueConverterService.deserializeSet(constants))
-    .subscribe((ar: IConstant[]) => {
-      this.rows = ar;
+    .subscribe((constants: IConstant[]) => {
+      this.rows = constants;
+      this.constantsService.state
+      .map(state => state.currentConstant)
+      .subscribe(currentConstant => {
+        if (currentConstant) {
+          this.selection = [this.rows.find(row => {
+            return row.id === currentConstant.id;
+          })];
+        } else {
+          this.selection = [];
+        }
+      });
       this.cdRef.markForCheck();
     });
   }
@@ -163,6 +172,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
   }
 
   onSelect(record: IConstant): void {
+    this.selection = [record];
     this.constantsService.changeSelected(record);
   }
 }
