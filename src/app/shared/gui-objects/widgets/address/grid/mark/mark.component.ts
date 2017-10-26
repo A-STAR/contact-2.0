@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 
+import { IAddressMarkData, IDebt } from './mark.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 
@@ -47,7 +48,7 @@ export class AddressGridMarkComponent implements OnInit {
     { prop: 'currencyName', minWidth: 150 },
   ];
 
-  debts: any[];
+  debts: IDebt[];
 
   controls = [
     { controlName: 'purposeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
@@ -81,7 +82,7 @@ export class AddressGridMarkComponent implements OnInit {
     return this.hasSelection;
   }
 
-  onSelect(event: any): void {
+  onSelect(event: IAddressMarkData): void {
     this.hasSelection = this.grid.selected.length > 0;
     this.cdRef.markForCheck();
   }

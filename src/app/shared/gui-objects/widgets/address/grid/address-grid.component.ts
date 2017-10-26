@@ -7,6 +7,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
+import { IAddressMarkData } from './mark/mark.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -190,7 +191,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.setDialog('mark');
   }
 
-  onMarkDialogSubmit(data: any): void {
+  onMarkDialogSubmit(data: IAddressMarkData): void {
     this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data).subscribe(() => this.onSubmitSuccess());
   }
 

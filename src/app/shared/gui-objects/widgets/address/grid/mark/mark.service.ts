@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IDebt } from './mark.interface';
+
 import { DataService } from '../../../../../../core/data/data.service';
 import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
 
@@ -11,7 +13,7 @@ export class MarkService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchDebtsForPerson(personId: number, personRole: number, debtorId: number): Observable<any> {
+  fetchDebtsForPerson(personId: number, personRole: number, debtorId: number): Observable<IDebt[]> {
     const data = { personId, personRole, debtorId };
     return this.dataService
       .readAll('/persons/{personId}/personRoles/{personRole}/debtors/{debtorId}/debtsForVisit', data)
