@@ -35,22 +35,22 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: combineLatestAnd([this.canEdit$, this.selectedAddress$.map(Boolean)]),
+      enabled: this.canEdit$,
       action: () => this.onEdit(this.selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: combineLatestAnd([this.canBlock$, this.selectedAddress$.map(address => address && !address.isInactive)]),
+      enabled: this.canBlock$,
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: combineLatestAnd([this.canUnblock$, this.selectedAddress$.map(address => address && !!address.isInactive)]),
+      enabled: this.canUnblock$,
       action: () => this.setDialog('unblock')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_VISIT,
-      enabled: combineLatestAnd([this.canVisit$, this.selectedAddress$.map(Boolean)]),
+      enabled: combineLatestAnd([ this.canVisit$, this.canCheckVisit$ ]),
       action: () => console.log('visit')
     },
     {
@@ -189,36 +189,62 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_VIEW');
   }
 
   get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_ADD');
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]).distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
+      this.selectedAddress$.map(Boolean),
+    ]);
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_DELETE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_DELETE'),
+      this.selectedAddress$.map(Boolean),
+    ]);
   }
 
   get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_SET_INACTIVE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_SET_INACTIVE'),
+      this.selectedAddress$.map(address => address && !address.isInactive),
+    ]);
   }
 
   get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_SET_ACTIVE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_SET_ACTIVE'),
+      this.selectedAddress$.map(address => address && !!address.isInactive),
+    ]);
   }
 
   get canVisit$(): Observable<boolean> {
     // TODO(d.maltsev)
     return Observable.of(true);
+  }
+
+  get canViewVisitLog$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
+      this.selectedAddress$.map(Boolean),
+    ]);
+  }
+
+  get canCheckVisit$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
+      this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
+    ]);
   }
 
   private onAdd(): void {
