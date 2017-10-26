@@ -898,6 +898,10 @@
             "comment": "Comments"
           }
         },
+        "markConfirm": {
+          "title": "Mark for Visit",
+          "confirmMessage": "Invalid address. Are you sure you want to proceed?"
+        },
         "mark": {
           "title": "Mark for Visit"
         }

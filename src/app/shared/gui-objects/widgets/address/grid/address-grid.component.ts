@@ -60,7 +60,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         {
           label: 'widgets.phone.toolbar.visits.mark',
           enabled: this.canMarkVisit$,
-          action: () => this.setDialog('mark')
+          action: () => this.onMarkClick()
         },
       ]
     },
@@ -163,6 +163,15 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   getRowClass(): any {
     return (address: IAddress) => ({ inactive: !!address.isInactive });
+  }
+
+  onMarkClick(): void {
+    this.addressService.check(this.personId, this._selectedAddressId$.value)
+      .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
+  }
+
+  onMarkConfirmDialogSubmit(): void {
+    this.setDialog('mark');
   }
 
   onDoubleClick(address: IAddress): void {

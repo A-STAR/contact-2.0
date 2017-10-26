@@ -36,6 +36,16 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-visits>
 
+<app-dialog-action
+  *ngIf="isDialog('markConfirm')"
+  titleTranslationKey="widgets.address.dialogs.markConfirm.title"
+  actionTranslationKey="widgets.address.dialogs.markConfirm.confirmMessage"
+  actionMessage="default.buttons.ok"
+  actionMode="warning"
+  (action)="onMarkConfirmDialogSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
 <app-address-grid-mark
   *ngIf="isDialog('mark')"
   [addressId]="selectedAddressId$ | async"
