@@ -1109,6 +1109,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "View Visit Log",
+          "mark": "Mark for Visit"
+        }
+      },
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",

@@ -50,12 +50,23 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_VISIT,
-      enabled: combineLatestAnd([ this.canViewVisitLog$, this.canCheckVisit$ ]),
-      action: () => console.log('visit')
+      enabled: combineLatestAnd([ this.canViewVisitLog$, this.canMarkVisit$ ]),
+      children: [
+        {
+          label: 'widgets.phone.toolbar.visits.view',
+          enabled: this.canViewVisitLog$,
+          action: () => console.log('View Visit Log')
+        },
+        {
+          label: 'widgets.phone.toolbar.visits.mark',
+          enabled: this.canMarkVisit$,
+          action: () => console.log('Mark Visit')
+        },
+      ]
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: combineLatestAnd([this.canDelete$, this.selectedAddress$.map(Boolean)]),
+      enabled: this.canDelete$,
       action: () => this.setDialog('delete')
     },
     {
@@ -235,7 +246,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  get canCheckVisit$(): Observable<boolean> {
+  get canMarkVisit$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
