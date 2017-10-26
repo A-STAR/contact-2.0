@@ -31,6 +31,8 @@
 
 <app-address-grid-visits
   *ngIf="isDialog('visits')"
+  [addressId]="selectedAddressId$ | async"
+  [personId]="personId"
   (cancel)="onCloseDialog()">
 </app-address-grid-visits>
 

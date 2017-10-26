@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.address.dialogs.visits.title' | translate }}</h3>
   </div>
   <div>
-    GRID GOES HERE
+    {{ visits | json }}
   </div>
   <div dialog-footer>
     <button class="btn btn-default" (click)="onCancel()">

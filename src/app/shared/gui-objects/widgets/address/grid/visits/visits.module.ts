@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 
+import { VisitService } from './visits.service';
+
 import { AddressGridVisitsComponent } from './visits.component';
 
 @NgModule({
@@ -17,6 +19,9 @@ import { AddressGridVisitsComponent } from './visits.component';
   ],
   declarations: [
     AddressGridVisitsComponent,
+  ],
+  providers: [
+    VisitService,
   ],
   entryComponents: [
     AddressGridVisitsComponent,

@@ -95,10 +95,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ];
 
   private dialog: string;
-
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
 
   constructor(
     private addressService: AddressService,
@@ -110,9 +107,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
-
     Observable.combineLatest(
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
@@ -148,6 +142,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+  }
+
+  // NOTE: on deper routes we should take the contactId
+  get personId(): number {
+    return this.routeParams.contactId || this.routeParams.personId || null;
   }
 
   get canDisplayGrid(): boolean {
