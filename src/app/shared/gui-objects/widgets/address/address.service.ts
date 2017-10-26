@@ -33,15 +33,13 @@ export class AddressService {
   create(entityType: number, entityId: number, address: IAddress): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { entityType, entityId }, address)
-      .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback()
-      );
+      .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   update(entityType: number, entityId: number, addressId: number, address: Partial<IAddress>): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address)
-      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback()
-      );
+      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   block(entityType: number, entityId: number, addressId: number, inactiveReasonCode: number): Observable<void> {
@@ -55,8 +53,7 @@ export class AddressService {
   delete(entityType: number, entityId: number, addressId: number): Observable<void> {
     return this.dataService
       .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
-      .catch(this.notificationsService.deleteError().entity(`${this.entity}.singular`).dispatchCallback()
-      );
+      .catch(this.notificationsService.deleteError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   check(personId: number, addressId: number): Observable<boolean> {
@@ -64,5 +61,11 @@ export class AddressService {
       .read('/persons/{personId}/addresses/{addressId}/isWrongContactResults', { personId, addressId })
       .map(response => response.result)
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
+  }
+
+  markForVisit(personId: number, addressId: number, visit: any): Observable<void> {
+    return this.dataService
+      .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit)
+      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 }

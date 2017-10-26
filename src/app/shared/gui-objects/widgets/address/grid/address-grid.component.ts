@@ -190,8 +190,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.setDialog('mark');
   }
 
-  onMarkDialogSubmit(event: any): void {
-    console.log(event);
+  onMarkDialogSubmit(data: any): void {
+    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onDoubleClick(address: IAddress): void {
