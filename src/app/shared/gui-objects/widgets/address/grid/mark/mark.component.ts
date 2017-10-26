@@ -76,6 +76,7 @@ export class AddressGridMarkComponent implements OnInit {
         this.debts = debts;
         if (debts.length === 1) {
           this.grid.selected = debts;
+          this.hasSelection = true;
         }
         this.cdRef.markForCheck();
       });
