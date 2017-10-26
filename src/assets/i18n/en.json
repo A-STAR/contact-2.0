@@ -66,6 +66,7 @@
         "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
+        "DEBTOR_PROPERTY": "Property card",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -1259,10 +1260,16 @@
       }
     },
     "property": {
+      "card": {
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      },
       "grid": {
         "id": "Id",
         "name": "Name",
-        "propertyTypeCode": "Property Type",
+        "propertyType": "Property Type",
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
@@ -1388,7 +1395,7 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "plural": "property list" }
+      "gen": { "singular": "property item", "plural": "property list" }
     }
   },
   "errors": {

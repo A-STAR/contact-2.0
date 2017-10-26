@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PropertyGridModule } from './grid/property-grid.module';
+import { PropertyCardModule } from './card/property-card.module';
 
 import { PropertyService } from './property.service';
 
@@ -11,6 +12,7 @@ import { PropertyService } from './property.service';
   ],
   exports: [
     PropertyGridModule,
+    PropertyCardModule,
   ],
   providers: [
     PropertyService,

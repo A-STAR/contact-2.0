@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IProperty } from '../property.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PropertyService } from '../property.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -21,12 +22,17 @@ export class PropertyGridComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'name' },
-    { prop: 'propertyTypeCode', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
+    { prop: 'propertyType', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
     { prop: 'isConfirmed', renderer: 'checkboxRenderer' },
     { prop: 'comment' }
   ];
 
   toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.canAdd$,
+      action: () => this.onAdd()
+    },
   ];
 
   private _propertyList: Array<IProperty> = [];
@@ -41,7 +47,8 @@ export class PropertyGridComponent implements OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
 
     this.gridService.setAllRenderers(this.columns)
@@ -71,6 +78,14 @@ export class PropertyGridComponent implements OnDestroy {
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('PROPERTY_VIEW');
+  }
+
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('PROPERTY_ADD');
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/property/create` ]);
   }
 
   private fetch(): void {

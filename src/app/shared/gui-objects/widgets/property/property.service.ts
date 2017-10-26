@@ -7,6 +7,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class PropertyService {
+  static PROPERTY_SAVED = 'MESSAGE_SAVED';
 
   baseUrl = '/persons/{personId}/property';
 
@@ -16,8 +17,16 @@ export class PropertyService {
   ) {}
 
   fetchAll(personId: number): Observable<Array<IProperty>> {
-    return this.dataService
-      .readAll(this.baseUrl, { personId })
+    return this.dataService.readAll(this.baseUrl, { personId })
       .catch(this.notificationsService.fetchError().entity('entities.property.gen.plural').dispatchCallback());
+  }
+
+  create(personId: number, property: IProperty): Observable<IProperty> {
+    return this.dataService.create(this.baseUrl, { personId }, property)
+      .catch(this.notificationsService
+        .error('errors.default.create')
+        .entity('entities.property.gen.singular')
+        .dispatchCallback()
+      );
   }
 }
