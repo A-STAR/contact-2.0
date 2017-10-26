@@ -46,12 +46,11 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<!-- TODO(d.maltsev): debtor id, person role -->
 <app-address-grid-mark
   *ngIf="isDialog('mark')"
-  [debtorId]="personId"
+  [debtorId]="debtorId"
   [personId]="personId"
-  [personRole]="1"
+  [personRole]="personRole"
   (submit)="onMarkDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>

@@ -144,9 +144,21 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
   }
 
-  // NOTE: on deper routes we should take the contactId
+  get personRole(): number {
+    // TODO(d.maltsev): add route params for values 2 and 3
+    // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
+    if (this.routeParams.contactId) {
+      return 4;
+    }
+    return 1;
+  }
+
   get personId(): number {
     return this.routeParams.contactId || this.routeParams.personId || null;
+  }
+
+  get debtorId(): number {
+    return this.routeParams.personId || null;
   }
 
   get debtId(): number {
