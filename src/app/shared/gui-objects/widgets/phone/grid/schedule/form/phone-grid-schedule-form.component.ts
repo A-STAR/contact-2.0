@@ -130,7 +130,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   private fetchTemplateText(): void {
-    this.phoneService.fetchMessageTemplateText(this.debtId, this.person.id, 1, this.form.requestValue.templateId)
+    this.phoneService.fetchMessageTemplateText(this.debtId, this.person.id, 1, this.form.serializedUpdates.templateId)
       .subscribe(text => {
         this.data = {
           ...this.data,

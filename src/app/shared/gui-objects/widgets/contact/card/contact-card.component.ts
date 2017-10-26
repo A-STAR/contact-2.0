@@ -105,7 +105,7 @@ export class ContactCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     const action = this.contactId
       ? this.contactService.update(this.personId, this.contactId, data)
       : this.contactService.create(this.personId, data);

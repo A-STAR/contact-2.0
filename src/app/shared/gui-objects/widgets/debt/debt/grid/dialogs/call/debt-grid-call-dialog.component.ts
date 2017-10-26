@@ -26,7 +26,7 @@ export class DebtGridCallDialogComponent {
   constructor(private debtService: DebtService) {}
 
   onSubmit(): void {
-    this.debtService.setNextCallDate(this.debt.id, this.form.requestValue).subscribe(() => {
+    this.debtService.setNextCallDate(this.debt.id, this.form.serializedUpdates).subscribe(() => {
       this.submit.emit();
       this.close.emit();
     });

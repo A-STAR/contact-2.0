@@ -60,8 +60,8 @@ export class PropertyCardComponent implements OnInit {
 
   onSubmit(): void {
     const action = this.propertyId
-      ? this.propertyService.update(this.personId, this.propertyId, this.form.requestValue)
-      : this.propertyService.create(this.personId, this.form.requestValue);
+      ? this.propertyService.update(this.personId, this.propertyId, this.form.serializedUpdates)
+      : this.propertyService.create(this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SAVED);

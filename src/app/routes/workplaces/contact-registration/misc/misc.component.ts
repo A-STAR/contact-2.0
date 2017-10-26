@@ -123,7 +123,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const { autoComment, ...data } = this.form.getSerializedUpdates();
+    const { autoComment, ...data } = this.form.serializedUpdates;
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
         this.contactRegistrationService.nextStep();

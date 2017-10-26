@@ -66,6 +66,6 @@ export class PhoneGridScheduleComponent {
   }
 
   private getFormValue(form: PhoneGridScheduleFormComponent): ISMSSchedule {
-    return form && form.form && form.form.getSerializedValue();
+    return form && form.form && form.form.serializedValue;
   }
 }

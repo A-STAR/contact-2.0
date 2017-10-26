@@ -96,7 +96,7 @@ export class UserEditComponent extends DialogFunctions {
       return;
     }
 
-    const { image, ...user } = this.form.requestValue;
+    const { image, ...user } = this.form.serializedUpdates;
 
     const operation = this.userId
       ? this.usersService.update(user, image, this.userId)

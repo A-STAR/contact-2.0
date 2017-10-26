@@ -42,7 +42,7 @@ export class PhoneComponent {
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const data = this.form.getSerializedUpdates();
+    const data = this.form.serializedUpdates;
     this.phoneService.create(this.debtId, guid, data)
       .subscribe(() => {
         this.contactRegistrationService.nextStep();

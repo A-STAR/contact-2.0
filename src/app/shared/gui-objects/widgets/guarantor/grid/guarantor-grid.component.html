@@ -2,7 +2,7 @@
   *ngIf="isDialog('infoNotFound')"
   titleTranslationKey="widgets.guarantor.dialog.title"
   (close)="onClose()"
-  >
+>
   <section class="pv-xl">{{ 'widgets.guarantor.dialog.notFound' | translate }}</section>
 </app-info-dialog>
 
@@ -14,13 +14,13 @@
   <app-grid
     *ngIf="columns"
     columnTranslationKey="widgets.guarantor"
+    [columns]="columns"
     [footerHeight]="false"
+    [rows]="persons"
     selectionType="single"
     [styles]="gridStyles"
-    [columns]="columns"
-    [rows]="persons"
     (onDblClick)="onDoubleClick($event)"
->
+  >
   </app-grid>
 
   <div dialog-footer>

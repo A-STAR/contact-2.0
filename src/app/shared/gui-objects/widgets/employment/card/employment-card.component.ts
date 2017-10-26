@@ -76,7 +76,7 @@ export class EmploymentCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     const action = this.employmentId
       ? this.employmentService.update(this.personId, this.employmentId, data)
       : this.employmentService.create(this.personId, data);

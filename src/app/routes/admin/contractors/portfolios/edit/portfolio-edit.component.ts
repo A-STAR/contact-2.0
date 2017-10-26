@@ -94,7 +94,7 @@ export class PortfolioEditComponent {
   }
 
   onSubmit(): void {
-    const portfolio = this.form.requestValue;
+    const portfolio = this.form.serializedUpdates;
     if (this.contractorId && this.portfolioId) {
       this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio);
     } else {

@@ -21,7 +21,7 @@ export class DictEditComponent extends EntityTranslationComponent<IDictionary> {
   @Input() dictionaryTermTypes: ITerm[];
 
   toSubmittedValues(values: IDictionary): any {
-    return this.dynamicForm.requestValue;
+    return this.dynamicForm.serializedUpdates;
   }
 
   protected getControls(): Array<IDynamicFormControl> {

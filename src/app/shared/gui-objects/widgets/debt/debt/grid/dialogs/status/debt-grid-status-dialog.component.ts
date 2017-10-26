@@ -113,8 +113,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { requestValue } = this.form;
-    const { customStatusCode, statusCode, ...rest } = requestValue;
+    const { customStatusCode, statusCode, ...rest } = this.form.serializedUpdates;
     const value = {
       ...rest,
       statusCode: customStatusCode || statusCode,

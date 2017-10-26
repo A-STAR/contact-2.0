@@ -108,7 +108,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const formValue = this.form.getSerializedUpdates();
+    const formValue = this.form.serializedUpdates;
     const data = this.attributeId ? {
       ...formValue,
       name: formValue.name

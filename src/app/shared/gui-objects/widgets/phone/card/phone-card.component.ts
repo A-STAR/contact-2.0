@@ -64,8 +64,8 @@ export class PhoneCardComponent {
 
   onSubmit(): void {
     const action = this.phoneId
-      ? this.phoneService.update(18, this.personId, this.phoneId, this.form.requestValue)
-      : this.phoneService.create(18, this.personId, this.form.requestValue);
+      ? this.phoneService.update(18, this.personId, this.phoneId, this.form.serializedUpdates)
+      : this.phoneService.create(18, this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
