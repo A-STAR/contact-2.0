@@ -162,19 +162,16 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     if (this.data) {
       this.form.patchValue(this.data);
       // run markAsDirty for fields having this property set to true
-      this.controls
+      this.flatControls
         .filter((control: IDynamicFormControl) => !!control.markAsDirty)
         .forEach((control: IDynamicFormControl) => {
-          if (control.markAsDirty) {
-            this.form.get(control.controlName).markAsDirty();
-          }
+          this.form.get(control.controlName).markAsDirty();
         });
     }
   }
 
   private getValue(onlyUpdatedValues: boolean): any {
     return Object.keys(this.form.value).reduce((acc, key) => {
-      // const control = this.form.get(key);
       const control = this.form.controls[key];
       if (!onlyUpdatedValues || control.dirty) {
         acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.controlName === key));

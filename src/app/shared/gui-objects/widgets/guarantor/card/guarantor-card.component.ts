@@ -1,6 +1,8 @@
-import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output, OnInit
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -23,7 +25,7 @@ const label = makeKey('widgets.guarantor.grid');
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent extends DialogFunctions {
+export class GuarantorCardComponent extends DialogFunctions implements AfterViewInit, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
@@ -35,6 +37,7 @@ export class GuarantorCardComponent extends DialogFunctions {
   dialog: string = null;
   guarantor: IGuarantor;
   searchParams: object;
+  typeCodeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -46,6 +49,23 @@ export class GuarantorCardComponent extends DialogFunctions {
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get routeParams(): any {
+    return (<any>this.route.params).value;
+  }
+
+  get canSubmit$(): Observable<boolean> {
+    return this.canView$
+      .map(canView => canView && !!this.form && this.form.canSubmit)
+      .distinctUntilChanged();
+  }
+
+  get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('GUARANTEE_VIEW');
+  }
+
+  ngOnInit(): void {
     Observable.combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
@@ -83,21 +103,16 @@ export class GuarantorCardComponent extends DialogFunctions {
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
       this.guarantor = guarantor ? guarantor : { typeCode: 1 };
+      this.cdRef.markForCheck();
+
     });
   }
 
-  get routeParams(): any {
-    return (<any>this.route.params).value;
-  }
-
-  get canSubmit$(): Observable<boolean> {
-    return this.canView$
-    .map(canView => canView && !!this.form && this.form.canSubmit)
-    .distinctUntilChanged();
-  }
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('GUARANTEE_VIEW');
+  ngAfterViewInit(): void {
+    this.form.onCtrlValueChange('typeCode')
+      .subscribe(value => {
+        console.log('typeCode', value);
+      });
   }
 
   onClear(): void {

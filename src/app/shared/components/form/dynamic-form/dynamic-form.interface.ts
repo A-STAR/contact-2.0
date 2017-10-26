@@ -38,7 +38,7 @@ export interface IDynamicFormControl {
   placeholder?: string;
   readonly?: boolean;
   required?: boolean;
-  type: ControlTypes;
+  type: TControlTypes;
   onChange?: (value: any) => void;
   // options for select controls
   multiple?: boolean;
@@ -73,7 +73,7 @@ export interface IDynamicFormControl {
   segmentedInputOptions?: ISegmentedInputOption[];
 }
 
-export type ControlTypes =
+export type TControlTypes =
     'boolean'
   | 'button'
   | 'checkbox'
