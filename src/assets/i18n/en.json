@@ -910,6 +910,10 @@
             "statusCode": "Status",
             "debtAmount": "Debt Amount",
             "currencyName": "Currency"
+          },
+          "form": {
+            "purposeCode": "Purpose",
+            "comment": "Comments"
           }
         }
       }

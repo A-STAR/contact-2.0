@@ -178,6 +178,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.setDialog('mark');
   }
 
+  onMarkDialogSubmit(event: any): void {
+    console.log(event);
+  }
+
   onDoubleClick(address: IAddress): void {
     this.onEdit(address.id);
   }

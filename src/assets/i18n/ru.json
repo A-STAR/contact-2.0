@@ -910,6 +910,10 @@
             "statusCode": "Статус",
             "debtAmount": "Сумма просроченного долга",
             "currencyName": "Валюта"
+          },
+          "form": {
+            "purposeCode": "Цель",
+            "comment": "Комментарий"
           }
         }
       }

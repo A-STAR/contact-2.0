@@ -1,10 +1,27 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IGridColumn } from '../../../../../components/grid/grid.interface';
 
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
+import { GridService } from '../../../../../components/grid/grid.service';
 import { MarkService } from './mark.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { GridComponent } from '../../../../../components/grid/grid.component';
+
+import { makeKey } from '../../../../../../core/utils';
+
+const labelKey = makeKey('widgets.address.dialogs.mark.form');
 
 @Component({
   selector: 'app-address-grid-mark',
@@ -19,6 +36,9 @@ export class AddressGridMarkComponent implements OnInit {
   @Output() submit = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(GridComponent) grid: GridComponent;
+
   columns: IGridColumn[] = [
     { prop: 'id', minWidth: 75, maxWidth: 150 },
     { prop: 'contract', minWidth: 150, maxWidth: 200 },
@@ -28,6 +48,13 @@ export class AddressGridMarkComponent implements OnInit {
   ];
 
   debts: any[];
+
+  controls = [
+    { controlName: 'purposeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
+    { controlName: 'comment', type: 'textarea' },
+  ].map(control => ({ ...control, label: labelKey(control.controlName) })) as IDynamicFormItem[];
+
+  private hasSelection = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -50,8 +77,21 @@ export class AddressGridMarkComponent implements OnInit {
       });
   }
 
+  get canSubmit(): boolean {
+    return this.hasSelection;
+  }
+
+  onSelect(event: any): void {
+    this.hasSelection = this.grid.selected.length > 0;
+    this.cdRef.markForCheck();
+  }
+
   onSubmit(): void {
-    this.submit.emit();
+    const data = {
+      ...this.form.getSerializedUpdates(),
+      foo: this.grid.selected.map(debt => debt.id)
+    };
+    this.submit.emit(data);
   }
 
   onCancel(): void {
