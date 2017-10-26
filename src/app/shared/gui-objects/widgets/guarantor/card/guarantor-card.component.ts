@@ -1,6 +1,6 @@
 import {
-  AfterViewInit, Component, ViewChild, ChangeDetectionStrategy,
-  ChangeDetectorRef, EventEmitter, Output, OnDestroy, OnInit
+  AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy,
+  ChangeDetectorRef, EventEmitter, Output, OnDestroy, OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -27,7 +27,7 @@ const label = makeKey('widgets.guarantor.grid');
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent extends DialogFunctions implements AfterViewInit, OnInit, OnDestroy {
+export class GuarantorCardComponent extends DialogFunctions implements AfterViewChecked, OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
@@ -119,7 +119,9 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     });
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewChecked(): void {
+    if (this.typeCodeSubscription || !this.form) { return ; }
+
     this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
       .map(value => value && Array.isArray(value) ? value[0] : {})
       .map(value => value.value)
