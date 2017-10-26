@@ -132,7 +132,8 @@
       "close": "Close",
       "undo": "Undo",
       "ok": "OK",
-      "registerCall": "Register Call"
+      "registerCall": "Register Call",
+      "visit": "Visit"
     }
   },
   "queryBuilder": {

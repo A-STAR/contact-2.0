@@ -17,6 +17,8 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-address-grid',
   templateUrl: './address-grid.component.html',
@@ -33,26 +35,27 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedAddress$)
-        .map(([ canEdit, address ]) => canEdit && !!address),
+      enabled: combineLatestAnd([this.canEdit$, this.selectedAddress$.map(Boolean)]),
       action: () => this.onEdit(this.selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
-        .map(([ canBlock, address ]) => canBlock && !!address && !address.isInactive),
+      enabled: combineLatestAnd([this.canBlock$, this.selectedAddress$.map(address => address && !address.isInactive)]),
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isInactive),
+      enabled: combineLatestAnd([this.canUnblock$, this.selectedAddress$.map(address => address && !!address.isInactive)]),
       action: () => this.setDialog('unblock')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_VISIT,
+      enabled: combineLatestAnd([this.canVisit$, this.selectedAddress$.map(Boolean)]),
+      action: () => console.log('visit')
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedAddress$)
-        .map(([ canDelete, address ]) => canDelete && !!address),
+      enabled: combineLatestAnd([this.canDelete$, this.selectedAddress$.map(Boolean)]),
       action: () => this.setDialog('delete')
     },
     {
@@ -211,6 +214,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canUnblock$(): Observable<boolean> {
     return this.userPermissionsService.has('ADDRESS_SET_ACTIVE').distinctUntilChanged();
+  }
+
+  get canVisit$(): Observable<boolean> {
+    // TODO(d.maltsev)
+    return Observable.of(true);
   }
 
   private onAdd(): void {

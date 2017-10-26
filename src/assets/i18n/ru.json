@@ -132,7 +132,8 @@
       "close": "Закрыть",
       "undo": "Отменить",
       "ok": "OK",
-      "registerCall": "Зарегистрировать звонок"
+      "registerCall": "Зарегистрировать звонок",
+      "visit": "Выезд"
     }
   },
   "queryBuilder": {
