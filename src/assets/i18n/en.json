@@ -66,6 +66,7 @@
         "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
+        "DEBTOR_PROPERTY": "Property card",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -1284,6 +1285,21 @@
           "fullName": "Operator"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
@@ -1404,6 +1420,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "message template", "plural": "message templates" }
+    },
+    "property": {
+      "gen": { "singular": "property item", "plural": "property list" }
     }
   },
   "errors": {

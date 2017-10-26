@@ -66,6 +66,7 @@
         "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
+        "DEBTOR_PROPERTY": "Карточка имущества",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -1284,6 +1285,21 @@
           "fullName": "Оператор"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1404,6 +1420,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
+    },
+    "property": {
+      "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
     }
   },
   "errors": {
