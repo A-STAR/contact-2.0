@@ -43,7 +43,7 @@ export class ComponentLogGridComponent {
         this.cdRef.markForCheck();
       });
 
-    this.componentLogService.read(1).subscribe(entries => {
+    this.componentLogService.readAll(1).subscribe(entries => {
       this.entries = entries;
       this.cdRef.markForCheck();
     });

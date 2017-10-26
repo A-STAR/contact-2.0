@@ -13,7 +13,7 @@
 <app-info-dialog
   *ngIf="isDialog('info')"
   titleTranslationKey="debtor.promisesTab.infoIncreaseAmount.title"
-  (onClose)="onCancel()"
+  (close)="onCancel()"
   >
   <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
 </app-info-dialog>

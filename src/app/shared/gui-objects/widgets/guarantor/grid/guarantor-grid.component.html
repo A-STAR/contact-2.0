@@ -1,10 +1,20 @@
-<app-dialog (displayChange)="onClose()">
+<app-info-dialog
+  *ngIf="isDialog('infoNotFound')"
+  titleTranslationKey="widgets.guarantor.dialog.title"
+  (close)="onClose()"
+  >
+  <section class="pv-xl">{{ 'widgets.guarantor.dialog.notFound' | translate }}</section>
+</app-info-dialog>
+
+<app-dialog *ngIf="!!persons?.length" (displayChange)="onClose()">
   <div dialog-header>
     <h3>{{ 'widgets.guarantor.dialog.title' | translate }}</h3>
   </div>
 
   <app-grid
+    *ngIf="columns"
     columnTranslationKey="widgets.guarantor"
+    [footerHeight]="false"
     selectionType="single"
     [styles]="gridStyles"
     [columns]="columns"
