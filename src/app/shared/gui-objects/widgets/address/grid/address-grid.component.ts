@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -7,6 +7,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
+import { IAddressMarkData } from './mark/mark.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -60,7 +61,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         {
           label: 'widgets.phone.toolbar.visits.mark',
           enabled: this.canMarkVisit$,
-          action: () => console.log('Mark Visit')
+          action: () => this.onMarkClick()
         },
       ]
     },
@@ -106,6 +107,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
       this.gridService.setDictionaryRenderers(this._columns),
@@ -144,9 +146,20 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
   }
 
-  // NOTE: on deper routes we should take the contactId
+  get personRole(): number {
+    return this._personRole;
+  }
+
   get personId(): number {
     return this.routeParams.contactId || this.routeParams.personId || null;
+  }
+
+  get debtorId(): number {
+    return this.routeParams.personId || null;
+  }
+
+  get debtId(): number {
+    return this.routeParams.debtId || null;
   }
 
   get canDisplayGrid(): boolean {
@@ -163,6 +176,19 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   getRowClass(): any {
     return (address: IAddress) => ({ inactive: !!address.isInactive });
+  }
+
+  onMarkClick(): void {
+    this.addressService.check(this.personId, this._selectedAddressId$.value)
+      .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
+  }
+
+  onMarkConfirmDialogSubmit(): void {
+    this.setDialog('mark');
+  }
+
+  onMarkDialogSubmit(data: IAddressMarkData): void {
+    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onDoubleClick(address: IAddress): void {

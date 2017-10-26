@@ -220,7 +220,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   onSelectRow(event: any): void {
     const { selected } = event;
     const rowSelected = this._selected[0];
-    if (!rowSelected || rowSelected.id !== selected[0].id) {
+    if (!(rowSelected && selected[0] && rowSelected.id === selected[0].id)) {
       const row = this.selectionType === 'single' ? selected[0] : selected;
       this.clickDebouncer.next({ type: 'select', row });
     }

@@ -9,7 +9,9 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class AddressService {
   static MESSAGE_ADDRESS_SAVED = 'MESSAGE_ADDRESS_SAVED';
+
   private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/addresses';
+  private entity = 'entities.addresses.gen';
 
   constructor(
     private dataService: DataService,
@@ -19,29 +21,25 @@ export class AddressService {
   fetchAll(entityType: number, entityId: number): Observable<Array<IAddress>> {
     return this.dataService
       .readAll(this.baseUrl, { entityType, entityId })
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.addresses.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(`${this.entity}.plural`).dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, addressId: number): Observable<IAddress> {
     return this.dataService
       .read(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.addresses.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   create(entityType: number, entityId: number, address: IAddress): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { entityType, entityId }, address)
-      .catch(this.notificationsService
-        .error('errors.default.create').entity('entities.addresses.gen.singular').dispatchCallback()
-      );
+      .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   update(entityType: number, entityId: number, addressId: number, address: Partial<IAddress>): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address)
-      .catch(this.notificationsService
-        .error('errors.default.update').entity('entities.addresses.gen.singular').dispatchCallback()
-      );
+      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
   block(entityType: number, entityId: number, addressId: number, inactiveReasonCode: number): Observable<void> {
@@ -55,8 +53,19 @@ export class AddressService {
   delete(entityType: number, entityId: number, addressId: number): Observable<void> {
     return this.dataService
       .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
-      .catch(this.notificationsService
-        .error('errors.default.delete').entity('entities.addresses.gen.singular').dispatchCallback()
-      );
+      .catch(this.notificationsService.deleteError().entity(`${this.entity}.singular`).dispatchCallback());
+  }
+
+  check(personId: number, addressId: number): Observable<boolean> {
+    return this.dataService
+      .read('/persons/{personId}/addresses/{addressId}/isWrongContactResults', { personId, addressId })
+      .map(response => response.result)
+      .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
+  }
+
+  markForVisit(personId: number, addressId: number, visit: any): Observable<void> {
+    return this.dataService
+      .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit)
+      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 }

@@ -41,9 +41,9 @@ export class ContactCardComponent {
     container: 'tabs',
     children: [
       { component: PhoneGridComponent, title: 'debtor.information.phone.title', inject: { personRole: 4 } },
-      { component: AddressGridComponent, title: 'debtor.information.address.title' },
-      { component: IdentityGridComponent, title: 'debtor.identityDocs.title' },
-      { component: EmploymentGridComponent, title: 'debtor.employmentRecordTab.title' },
+      { component: AddressGridComponent, title: 'debtor.information.address.title', inject: { personRole: 4 } },
+      { component: IdentityGridComponent, title: 'debtor.identityDocs.title', inject: { personRole: 4 } },
+      { component: EmploymentGridComponent, title: 'debtor.employmentRecordTab.title', inject: { personRole: 4 } },
     ]
   };
 
