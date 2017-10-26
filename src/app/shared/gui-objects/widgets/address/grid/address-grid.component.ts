@@ -50,7 +50,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_VISIT,
-      enabled: combineLatestAnd([ this.canVisit$, this.canCheckVisit$ ]),
+      enabled: combineLatestAnd([ this.canViewVisitLog$, this.canCheckVisit$ ]),
       action: () => console.log('visit')
     },
     {
@@ -226,11 +226,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.userPermissionsService.has('ADDRESS_SET_ACTIVE'),
       this.selectedAddress$.map(address => address && !!address.isInactive),
     ]);
-  }
-
-  get canVisit$(): Observable<boolean> {
-    // TODO(d.maltsev)
-    return Observable.of(true);
   }
 
   get canViewVisitLog$(): Observable<boolean> {
