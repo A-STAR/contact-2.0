@@ -77,7 +77,6 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private valueConverterService: ValueConverterService,
   ) {
     this.columns = this.gridService.setRenderers(this.columns);
-    this.selection = [];
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
