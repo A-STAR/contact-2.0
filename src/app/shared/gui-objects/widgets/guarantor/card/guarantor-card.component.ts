@@ -34,6 +34,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   // private personId = this.routeParams.personId || null;
   private debtId = this.routeParams.debtId || null;
   private contractId = this.routeParams.contractId || null;
+  private currentTypeCode: number;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
@@ -113,6 +114,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
       this.guarantor = guarantor ? guarantor : { typeCode: 1 };
+      this.currentTypeCode = guarantor ? guarantor.typeCode : 1;
       this.cdRef.markForCheck();
     });
   }
@@ -123,6 +125,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
       .map(value => value.value)
       .filter(Boolean)
       .flatMap((typeCode: number) => {
+        this.currentTypeCode = typeCode;
         const attrConstant = this.guarantorService.getAttributeConstant(typeCode);
         return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
       })
@@ -153,7 +156,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     const { form } = this.form;
     form.reset();
     form.enable();
-    form.patchValue({ typeCode: 1 });
+    form.patchValue({ typeCode: this.currentTypeCode });
     this.guarantorChanged.emit({});
     this.cdRef.markForCheck();
   }
