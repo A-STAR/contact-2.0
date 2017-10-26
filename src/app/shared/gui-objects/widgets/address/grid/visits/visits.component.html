@@ -1,0 +1,18 @@
+<app-dialog [styles]="{ width: '80%' }" (onClose)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.address.dialogs.visits.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-grid
+      columnTranslationKey="widgets.address.dialogs.visits"
+      [columns]="columns"
+      [rows]="visits"
+      [styles]="{ height: '600px' }">
+    </app-grid>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.close' | translate }}
+    </button>
+  </div>
+</app-dialog>

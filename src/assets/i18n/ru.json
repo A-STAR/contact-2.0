@@ -66,6 +66,7 @@
         "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
+        "DEBTOR_PROPERTY": "Карточка имущества",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -132,7 +133,8 @@
       "close": "Закрыть",
       "undo": "Отменить",
       "ok": "OK",
-      "registerCall": "Зарегистрировать звонок"
+      "registerCall": "Зарегистрировать звонок",
+      "visit": "Выезд"
     }
   },
   "queryBuilder": {
@@ -877,6 +879,25 @@
         "delete": {
           "title": "Удалить адрес",
           "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Просмотр истории выездов",
+          "grid": {
+            "id": "Ид",
+            "debtId": "Ид долга",
+            "contract": "Номер договора",
+            "statusCode": "Статус",
+            "purposeCode": "Цель",
+            "requestUserFullName": "Пользователь, наметивший выезд",
+            "requestDateTime": "Дата отметки необходимости",
+            "prepareUserFullName": "Пользователь, подготовивший выезд",
+            "prepareDateTime": "Дата подготовки выезда",
+            "planUserFullName": "Запланированный пользователь для выезда",
+            "planVisitDateTime": "Плановая дата выезда",
+            "execUserFullName": "Пользователь, выполнивший выезд",
+            "execDateTime": "Фактическая дата выезда",
+            "comment": "Комментарий"
+          }
         }
       }
     },
@@ -1108,6 +1129,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "Просмотр истории выездов",
+          "mark": "Отметить необходимость выезда"
+        }
+      },
       "card": {
         "typeCode": "Тип",
         "phoneNumber": "Номер телефона",
@@ -1258,6 +1285,21 @@
           "fullName": "Оператор"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1378,6 +1420,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
+    },
+    "property": {
+      "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
     }
   },
   "errors": {

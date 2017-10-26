@@ -66,6 +66,7 @@
         "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
+        "DEBTOR_PROPERTY": "Property card",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -132,7 +133,8 @@
       "close": "Close",
       "undo": "Undo",
       "ok": "OK",
-      "registerCall": "Register Call"
+      "registerCall": "Register Call",
+      "visit": "Visit"
     }
   },
   "queryBuilder": {
@@ -877,6 +879,25 @@
         "delete": {
           "title": "Delete address",
           "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Visits Log",
+          "grid": {
+            "id": "Id",
+            "debtId": "Debt Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "purposeCode": "Purpose",
+            "requestUserFullName": "Requested By",
+            "requestDateTime": "Requested On",
+            "prepareUserFullName": "Prepared By",
+            "prepareDateTime": "Prepared On",
+            "planUserFullName": "Planned For",
+            "planVisitDateTime": "Planned On",
+            "execUserFullName": "Carried out By",
+            "execDateTime": "Carried out On",
+            "comment": "Comments"
+          }
         }
       }
     },
@@ -1108,6 +1129,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "View Visit Log",
+          "mark": "Mark for Visit"
+        }
+      },
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
@@ -1258,6 +1285,21 @@
           "fullName": "Operator"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
@@ -1378,6 +1420,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "message template", "plural": "message templates" }
+    },
+    "property": {
+      "gen": { "singular": "property item", "plural": "property list" }
     }
   },
   "errors": {
