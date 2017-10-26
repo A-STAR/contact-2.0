@@ -25,7 +25,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
-  private selectedAddressId$ = new BehaviorSubject<number>(null);
+  private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -36,7 +36,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: this.canEdit$,
-      action: () => this.onEdit(this.selectedAddressId$.value)
+      action: () => this.onEdit(this._selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -170,20 +170,20 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(address: IAddress): void {
-    this.selectedAddressId$.next(address.id);
+    this._selectedAddressId$.next(address.id);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(18, this.personId, this.selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.addressService.block(18, this.personId, this._selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.unblock(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.delete(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onCloseDialog(): void {
@@ -194,8 +194,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
+  get selectedAddressId$(): Observable<number> {
+    return this._selectedAddressId$;
+  }
+
   get selectedAddress$(): Observable<IAddress> {
-    return this.selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
+    return this._selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
   }
 
   get canView$(): Observable<boolean> {
