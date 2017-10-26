@@ -1,9 +1,14 @@
-<app-dialog (onClose)="onCancel()">
+<app-dialog [styles]="{ width: '80%' }" (onClose)="onCancel()">
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.mark.title' | translate }}</h3>
   </div>
   <div>
-    FORM GOES HERE
+    <app-grid
+      columnTranslationKey="widgets.address.dialogs.mark"
+      [columns]="columns"
+      [rows]="debts"
+      [styles]="{ height: '240px' }">
+    </app-grid>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" (click)="onSubmit()">

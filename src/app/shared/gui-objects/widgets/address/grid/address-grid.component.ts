@@ -149,6 +149,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this.routeParams.contactId || this.routeParams.personId || null;
   }
 
+  get debtId(): number {
+    return this.routeParams.debtId || null;
+  }
+
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }

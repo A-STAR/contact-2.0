@@ -903,7 +903,14 @@
           "confirmMessage": "Invalid address. Are you sure you want to proceed?"
         },
         "mark": {
-          "title": "Mark for Visit"
+          "title": "Mark for Visit",
+          "grid": {
+            "id": "Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "debtAmount": "Debt Amount",
+            "currencyName": "Currency"
+          }
         }
       }
     },
