@@ -1,0 +1,13 @@
+<app-dialog (onClose)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.address.dialogs.visits.title' | translate }}</h3>
+  </div>
+  <div>
+    GRID GOES HERE
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

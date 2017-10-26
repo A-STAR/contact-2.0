@@ -878,6 +878,9 @@
         "delete": {
           "title": "Delete address",
           "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Visits Log"
         }
       }
     },

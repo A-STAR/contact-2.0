@@ -55,7 +55,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         {
           label: 'widgets.phone.toolbar.visits.view',
           enabled: this.canViewVisitLog$,
-          action: () => console.log('View Visit Log')
+          action: () => this.setDialog('visits')
         },
         {
           label: 'widgets.phone.toolbar.visits.mark',

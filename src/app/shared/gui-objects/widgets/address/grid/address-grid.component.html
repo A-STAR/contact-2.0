@@ -29,6 +29,11 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
+<app-address-grid-visits
+  *ngIf="isDialog('visits')"
+  (cancel)="onCloseDialog()">
+</app-address-grid-visits>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
