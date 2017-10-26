@@ -107,7 +107,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-    @Inject('personRole') private personRole: number,
+    @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
       this.gridService.setDictionaryRenderers(this._columns),
@@ -144,6 +144,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+  }
+
+  get personRole(): number {
+    return this._personRole;
   }
 
   get personId(): number {

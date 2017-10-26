@@ -74,6 +74,9 @@ export class AddressGridMarkComponent implements OnInit {
     this.markService.fetchDebtsForPerson(this.personId, this.personRole, this.debtorId)
       .subscribe(debts => {
         this.debts = debts;
+        if (debts.length === 1) {
+          this.grid.selected = debts;
+        }
         this.cdRef.markForCheck();
       });
   }
