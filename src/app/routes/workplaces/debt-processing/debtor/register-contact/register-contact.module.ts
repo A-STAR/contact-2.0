@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../shared/components/dialog/dialog.module';
+import { SharedModule } from '../../../../../shared/shared.module';
 
 import { RegisterContactComponent } from './register-contact.component';
 
@@ -10,6 +11,7 @@ import { RegisterContactComponent } from './register-contact.component';
   imports: [
     CommonModule,
     DialogModule,
+    SharedModule,
     TranslateModule,
   ],
   exports: [

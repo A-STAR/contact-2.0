@@ -116,6 +116,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    @Inject('displayToolbar') private _displayToolbar: boolean,
     @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
@@ -156,6 +157,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+  }
+
+  get displayToolbar(): boolean {
+    return this._displayToolbar;
   }
 
   get personRole(): number {

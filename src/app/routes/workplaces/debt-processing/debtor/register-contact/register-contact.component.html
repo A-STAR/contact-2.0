@@ -3,7 +3,7 @@
     <h3>TITLE</h3>
   </div>
   <div>
-    CONTENT
+    <app-container [node]="node"></app-container>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
