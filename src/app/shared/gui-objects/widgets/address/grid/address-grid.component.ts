@@ -20,7 +20,7 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-address-grid',
@@ -53,7 +53,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_VISIT,
-      enabled: combineLatestAnd([ this.canViewVisitLog$, this.canMarkVisit$ ]),
+      enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
       children: [
         {
           label: 'widgets.phone.toolbar.visits.view',
