@@ -122,6 +122,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   ngAfterViewChecked(): void {
     if (this.typeCodeSubscription || !this.form) { return ; }
 
+    // observe the user choosing between 1: person, 2: enterprise, 3: entrepreneur
     this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
       .map(value => value && Array.isArray(value) ? value[0] : {})
       .map(value => value.value)
@@ -170,8 +171,9 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   }
 
   onSelect(guarantor: IGuarantor): void {
-    this.form.form.patchValue(guarantor);
-    this.form.form.disable();
+    const { form } = this.form;
+    form.patchValue(guarantor);
+    form.disable();
     this.guarantorChanged.emit(guarantor);
     this.cdRef.markForCheck();
   }

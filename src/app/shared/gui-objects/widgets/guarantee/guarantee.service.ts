@@ -14,7 +14,7 @@ export class GuaranteeService {
   static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
   private url = '/debts/{debtId}/guaranteeContract';
-  private errSingular = 'entities.employment.gen.singular';
+  private errSingular = 'entities.guaranteeContract.gen.singular';
 
   constructor(
     private dataService: DataService,
@@ -25,7 +25,7 @@ export class GuaranteeService {
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
       .readAll(this.url, { debtId })
-      .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.plural').dispatchCallback());
   }
 
   fetch(debtId: number, contractId: number): Observable<IGuaranteeContract> {
@@ -46,9 +46,9 @@ export class GuaranteeService {
       .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 
-  delete(debtId: number, contractId: number): Observable<any> {
+  delete(debtId: number, contractId: number, personId: number): Observable<any> {
     return this.dataService
-      .delete(`${this.url}/{contractId}`, { debtId, contractId })
+      .delete(`${this.url}/{contractId}/guarantor/{personId}`, { debtId, contractId, personId })
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 

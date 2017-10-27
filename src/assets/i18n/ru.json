@@ -1343,6 +1343,9 @@
     "guarantors": {
       "gen": { "singular": "поручителя", "plural": "списка поручителей" }
     },
+    "guaranteeContract": {
+      "gen": { "singular": "договора поручительства", "plural": "договоров поручительства" }
+    },
     "promises": {
       "gen": { "singular": "обещания", "plural": "списка обещаний" }
     },
