@@ -9,6 +9,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 @Injectable()
 export class PropertyService {
   static MESSAGE_PROPERTY_SAVED = 'MESSAGE_PROPERTY_SAVED';
+  static MESSAGE_PROPERTY_SELECTED = 'MESSAGE_PROPERTY_SELECTED';
 
   private baseUrl = '/persons/{personId}/property';
   private extUrl = `${this.baseUrl}/{propertyId}`;

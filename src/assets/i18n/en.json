@@ -575,6 +575,9 @@
       "remove": {
         "title": "Delete the propery",
         "confirmMessage": "Do you really want to delete this property?"
+      },
+      "attributes": {
+        "title": "Property attributes"
       }
     },
     "guarantorsTab": {

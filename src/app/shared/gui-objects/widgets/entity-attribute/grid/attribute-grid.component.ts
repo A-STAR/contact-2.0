@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttribute } from '../attribute.interface';
@@ -26,10 +26,12 @@ const labelKey = makeKey('widgets.attribute.grid');
   templateUrl: './attribute-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeGridComponent extends DialogFunctions implements OnInit {
+export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  // TODO(d.maltsev): entityTypeId should be configurable
-  entityTypeId = 19;
+  private _entityTypeId: number;
+  private _entityId: number;
+
+  private entitySubscription: Subscription;
 
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
     {
@@ -84,7 +86,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
+      action: () => this.entityTypeId && this.entityId && this.fetch(),
     },
   ];
 
@@ -92,28 +94,45 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   rows: IGridTreeRow<Partial<IAttribute>>[] = [];
 
-  debtId = (<any>this.route.params).value.debtId;
-
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
+    @Inject('entityTypeId$') private entityTypeId$: Observable<number>,
+    @Inject('entityId$') private entityId$: Observable<number>,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 19)
-      .subscribe(canView => {
-        if (canView) {
+    this.entitySubscription = Observable.combineLatest(this.entityTypeId$, this.entityId$)
+      .flatMap(([ entityTypeId, entityId ]) =>
+        this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', entityTypeId)
+          .map(canView => [entityTypeId, entityId, canView])
+      ).subscribe(([ entityTypeId, entityId, canView ]) => {
+        this._entityTypeId = entityTypeId as number;
+        this._entityId = entityId as number;
+
+        if (canView && this.entityTypeId && this.entityId) {
           this.fetch();
         } else {
           this.rows = [];
           this.cdRef.markForCheck();
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.entitySubscription.unsubscribe();
+  }
+
+  get entityTypeId(): number {
+    return this._entityTypeId;
+  }
+
+  get entityId(): number {
+    return this._entityId;
   }
 
   get columns(): Array<IGridTreeColumn<IAttribute>> {
@@ -140,11 +159,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
-    this.attributeService.update(this.entityTypeId, this.debtId, this.selectedAttribute$.value.code, attribute).subscribe(() => {
-      this.fetch();
-      this.setDialog(null);
-      this.cdRef.markForCheck();
-    });
+    this.attributeService.update(this.entityTypeId, this.entityId, this.selectedAttribute$.value.code, attribute)
+      .subscribe(() => {
+        this.fetch();
+        this.setDialog(null);
+        this.cdRef.markForCheck();
+      });
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
@@ -167,7 +187,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll(this.entityTypeId, this.debtId).subscribe(attributes => {
+    this.attributeService.fetchAll(this.entityTypeId, this.entityId).subscribe(attributes => {
       this.rows = this.convertToGridTreeRow(attributes);
       this.cdRef.markForCheck();
     });

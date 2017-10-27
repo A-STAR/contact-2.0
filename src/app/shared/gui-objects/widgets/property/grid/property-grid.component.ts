@@ -99,6 +99,10 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     this.busSubscription = this.messageBusService
       .select(PropertyService.MESSAGE_PROPERTY_SAVED)
       .subscribe(() => this.fetch());
+
+    this.selectedProperty$.subscribe(property =>
+      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SELECTED, null, property)
+    );
   }
 
   ngOnDestroy(): void {
@@ -107,6 +111,16 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   get propertyList(): Array<IProperty> {
     return this._propertyList;
+  }
+
+  get selectedProperty(): IProperty {
+    return (this._propertyList || [])
+      .find(property => this.selectedProperty$.value && property.id === this.selectedProperty$.value.id);
+  }
+
+  get selection(): Array<IProperty> {
+    const selectedProperty = this.selectedProperty;
+    return selectedProperty ? [ selectedProperty ] : [];
   }
 
   onSelect(property: IProperty): void {
@@ -118,10 +132,11 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
   }
 
   onRemove(): void {
-    const { id: propertyId } = this.selectedProperty$.value;
+    const { id: propertyId } = this.selectedProperty;
     this.propertyService.delete(this.personId, propertyId)
       .subscribe(() => {
         this.setDialog(null);
+        this.selectedProperty$.next(null);
         this.fetch();
       });
   }
@@ -139,5 +154,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   private clear(): void {
     this._propertyList = [];
+    this.cdRef.markForCheck();
   }
 }
