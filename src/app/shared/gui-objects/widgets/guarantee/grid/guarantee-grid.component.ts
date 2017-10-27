@@ -69,7 +69,6 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
   private debtId = this.routeParams.debtId || null;
 
   private actionSubscription: Subscription;
@@ -126,8 +125,8 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
   }
 
   onRemove(): void {
-    const { id: employmentId } = this.selectedContract$.value;
-    this.guaranteeService.delete(this.personId, employmentId)
+    const { id: contractId } = this.selectedContract$.value;
+    this.guaranteeService.delete(this.debtId, contractId, this.selectedContract$.value.personId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -173,7 +172,7 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
   private fetch(): void {
     this.guaranteeService.fetchAll(this.debtId)
       .subscribe(contracts => {
-        this.contracts = [...contracts];
+        this.contracts = contracts;
         this.selectedContract$.next(null);
         this.cdRef.markForCheck();
       });

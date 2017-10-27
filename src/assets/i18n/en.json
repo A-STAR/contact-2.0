@@ -1343,6 +1343,9 @@
     "guarantors": {
       "gen": { "singular": "guarantor", "plural": "guarantors" }
     },
+    "guaranteeContract": {
+      "gen": { "singular": "guarantee contract", "plural": "guarantee contracts" }
+    },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
