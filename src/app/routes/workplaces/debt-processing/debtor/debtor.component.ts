@@ -17,6 +17,8 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 import { DebtorInformationComponent } from './general/information.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { DialogFunctions } from '../../../../core/dialog';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -24,14 +26,15 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
   templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
 })
-export class DebtorComponent implements OnDestroy {
+export class DebtorComponent extends DialogFunctions implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
   person: Partial<IPerson & IDebt>;
-  controls: Array<IDynamicFormGroup>;
+  controls: IDynamicFormGroup[];
+  dialog: 'registerContact' = null;
 
   private routeParams = (this.route.params as any).value;
   private debtId = this.routeParams.debtId || null;
@@ -47,6 +50,8 @@ export class DebtorComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
+    super();
+
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
@@ -81,13 +86,21 @@ export class DebtorComponent implements OnDestroy {
     };
 
     this.debtorService.update(this.personId, value).subscribe(() => {
-      this.form.form.markAsPristine();
-      this.information.form.form.markAsPristine();
+      this.form.markAsPristine();
+      this.information.form.markAsPristine();
       this.cdRef.markForCheck();
     });
   }
 
-  private getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {
+  onRegisterContactClick(): void {
+    this.setDialog('registerContact');
+  }
+
+  onRegisterContactDialogSubmit(): void {
+    console.log('onRegisterContactDialogSubmit');
+  }
+
+  private getControls(canEdit: boolean, personTypeOptions: IOption[]): IDynamicFormGroup[] {
     return [
       {
         children: [
