@@ -37,6 +37,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() contactId: number;
   @Input() contactTypeCode: number;
   @Input() debtId: number;
+  @Input() personId: number;
+  @Input() personRole: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -130,7 +132,11 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onNextClick(): void {
-    this.outcomeService.initRegistration(this.debtId, { code: 1, phoneId: this.contactId })
+    const code = this.contactRegistrationService.selectedNode$.value.data.code;
+    const data = this.contactTypeCode === 3
+      ? { addressId: this.contactId }
+      : { phoneId: this.contactId };
+    this.outcomeService.initRegistration(this.debtId, { ...data, code, personId: this.personId, personRole: this.personRole })
       .subscribe(guid => {
         this.contactRegistrationService.guid = guid;
         this.contactRegistrationService.nextStep();

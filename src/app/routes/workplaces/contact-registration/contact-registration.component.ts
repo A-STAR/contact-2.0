@@ -21,6 +21,8 @@ export class ContactRegistrationComponent {
   debtId = Number(this.routeParams.debtId);
   contactTypeCode = Number(this.routeParams.contactTypeCode);
   contactId = Number(this.routeParams.contactId);
+  personId = Number(this.queryParams.personId);
+  personRole = Number(this.queryParams.personRole);
 
   selectedIndex = 0;
 
@@ -31,6 +33,10 @@ export class ContactRegistrationComponent {
 
   get routeParams(): any {
     return (this.route.params as any).value;
+  }
+
+  get queryParams(): any {
+    return (this.route.queryParams as any).value;
   }
 
   get step(): number {

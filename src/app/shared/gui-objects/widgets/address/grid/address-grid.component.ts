@@ -233,10 +233,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedAddress$
+    this.selectedAddressId$
       .take(1)
-      .subscribe(address => {
-        this.router.navigate([ `/workplaces/contact-registration/${this.debtId}/${address.typeCode}/${address.id}` ]);
+      .subscribe(addressId => {
+        // Contact type 'Visit' = 3
+        // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
+        const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
       });
   }
 

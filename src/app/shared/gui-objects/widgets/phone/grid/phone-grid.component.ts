@@ -113,6 +113,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
+    @Inject('contactType') private contactType: number,
     @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
@@ -207,10 +208,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedPhone$
+    this.selectedPhoneId$
       .take(1)
-      .subscribe(phone => {
-        this.router.navigate([ `/workplaces/contact-registration/${this.debtId}/${phone.typeCode}/${phone.id}` ]);
+      .subscribe(phoneId => {
+        const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
       });
   }
 
