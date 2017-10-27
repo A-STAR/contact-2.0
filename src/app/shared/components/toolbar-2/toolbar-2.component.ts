@@ -46,8 +46,7 @@ export class Toolbar2Component {
   }
 
   isButton(item: IToolbarItem): boolean {
-    const keys = Object.keys(this.defaultItems).map(Number);
-    return item.type === ToolbarItemTypeEnum.BUTTON || keys.includes(item.type);
+    return item.type === ToolbarItemTypeEnum.BUTTON || Object.keys(this.defaultItems).includes(String(item.type));
   }
 
   isCheckbox(item: IToolbarItem): boolean {
