@@ -13,14 +13,15 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   selector: 'app-property-grid',
   templateUrl: './property-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyGridComponent implements OnInit, OnDestroy {
+export class PropertyGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   private selectedProperty$ = new BehaviorSubject<IProperty>(null);
 
@@ -35,18 +36,28 @@ export class PropertyGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: this.propertyService.canAdd$,
       action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedProperty$.value),
       enabled: Observable.combineLatest(
-        this.canEdit$,
+        this.propertyService.canEdit$,
         this.selectedProperty$
       ).map(([canEdit, selectedProperty]) => !!canEdit && !!selectedProperty)
-    }
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.setDialog('removeProperty'),
+      enabled: Observable.combineLatest(
+        this.propertyService.canDelete$,
+        this.selectedProperty$
+      ).map(([canDelete, selectedProperty]) => !!canDelete && !!selectedProperty),
+    },
   ];
+
+  dialog: 'delete';
 
   private _propertyList: Array<IProperty> = [];
 
@@ -61,10 +72,11 @@ export class PropertyGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
@@ -74,14 +86,15 @@ export class PropertyGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.viewPermissionSubscription = this.canView$.subscribe(hasViewPermission => {
-      if (hasViewPermission) {
-        this.fetch();
-      } else {
-        this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.property.gen.plural').dispatch();
-      }
-    });
+    this.viewPermissionSubscription = this.propertyService.canView$
+      .subscribe(hasViewPermission => {
+        if (hasViewPermission) {
+          this.fetch();
+        } else {
+          this.clear();
+          this.notificationsService.error('errors.default.read.403').entity('entities.property.gen.plural').dispatch();
+        }
+      });
 
     this.busSubscription = this.messageBusService
       .select(PropertyService.MESSAGE_PROPERTY_SAVED)
@@ -96,24 +109,21 @@ export class PropertyGridComponent implements OnInit, OnDestroy {
     return this._propertyList;
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_EDIT');
-  }
-
   onSelect(property: IProperty): void {
     this.selectedProperty$.next(property);
   }
 
   onEdit(property: IProperty): void {
     this.router.navigate([ `${this.router.url}/property/${property.id}` ]);
+  }
+
+  onRemove(): void {
+    const { id: propertyId } = this.selectedProperty$.value;
+    this.propertyService.delete(this.personId, propertyId)
+      .subscribe(() => {
+        this.setDialog(null);
+        this.fetch();
+      });
   }
 
   private onAdd(): void {
