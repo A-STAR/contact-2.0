@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IButtonType } from '../button/button.interface';
-import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum } from './toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
 
 @Component({
   selector: 'app-toolbar-2',
@@ -13,7 +13,7 @@ import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum } from './toolbar-2.i
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar2Component {
-  @Input() items: Array<IToolbarItem> = [];
+  @Input() items: IToolbarItem[] = [];
   @Output() action = new EventEmitter<IToolbarItem>();
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
@@ -46,7 +46,8 @@ export class Toolbar2Component {
   }
 
   isButton(item: IToolbarItem): boolean {
-    return item.type === ToolbarItemTypeEnum.BUTTON || Object.keys(this.defaultItems).map(Number).includes(item.type as number);
+    const keys = Object.keys(this.defaultItems).map(Number);
+    return item.type === ToolbarItemTypeEnum.BUTTON || keys.includes(item.type);
   }
 
   isCheckbox(item: IToolbarItem): boolean {
