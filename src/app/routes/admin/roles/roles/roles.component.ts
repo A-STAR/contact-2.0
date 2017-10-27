@@ -28,9 +28,7 @@ export class RolesComponent implements OnDestroy {
       enabled: this.userPermissionsService.has('ROLE_ADD')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-      icon: 'fa fa-clone',
-      label: 'toolbar.action.copy',
+      type: ToolbarItemTypeEnum.BUTTON_COPY,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ROLE_COPY'),

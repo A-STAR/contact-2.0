@@ -20,15 +20,11 @@ export enum ToolbarItemTypeEnum {
   BUTTON_OK,
   BUTTON_REGISTER_CONTACT,
   BUTTON_VISIT,
+  BUTTON_COPY,
   CHECKBOX,
 }
 
 export type IToolbarAction = () => void;
-
-export interface IToolbarDefaultElement {
-  icon: string;
-  label: string;
-}
 
 export interface IToolbarElement {
   action?: IToolbarAction | Action;
