@@ -1599,7 +1599,8 @@
       "save": "Save",
       "search": "Search",
       "select": "Select",
-      "next": "Next"
+      "next": "Next",
+      "registerContact": "Register Contact"
     },
     "dateTimeRange": {
       "from": "From",

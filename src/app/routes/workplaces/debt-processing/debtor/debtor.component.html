@@ -2,6 +2,9 @@
   <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
     <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
   </button>
+  <button class="btn btn-primary" (click)="onRegisterContactClick()">
+    <i class="fa fa-tty"></i> {{ 'default.buttons.registerContact' | translate }}
+  </button>
 </div>
 
 <app-dynamic-form

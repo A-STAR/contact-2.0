@@ -1599,7 +1599,8 @@
       "save": "Сохранить",
       "search": "Искать",
       "select": "Выбрать",
-      "next": "Далее"
+      "next": "Далее",
+      "registerContact": "Зарегистрировать контакт"
     },
     "dateTimeRange": {
       "from": "Начало",
