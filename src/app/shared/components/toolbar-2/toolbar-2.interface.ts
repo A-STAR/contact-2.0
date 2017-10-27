@@ -25,11 +25,6 @@ export enum ToolbarItemTypeEnum {
 
 export type IToolbarAction = () => void;
 
-export interface IToolbarDefaultElement {
-  icon: string;
-  label: string;
-}
-
 export interface IToolbarElement {
   action?: IToolbarAction | Action;
   enabled?: Observable<boolean>;

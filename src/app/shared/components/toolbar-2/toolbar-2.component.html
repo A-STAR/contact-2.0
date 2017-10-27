@@ -7,24 +7,23 @@
       <!-- Dropdown Group -->
       <div *ngIf="item.children; else button">
         <app-dropdown position="left" [enabled]="!(isDisabled(item) | async)">
-          <button
+          <app-button
             trigger
-            class="btn btn-default"
             [disabled]="isDisabled(item) | async"
-            [title]="getLabel(item) | translate"
-          >
-            <i [ngClass]="getIcon(item)"></i>
-          </button>
+            [icon]="item.icon"
+            [label]="false"
+            [title]="item.label"
+            [type]="getButtonType(item)"
+            (click)="onClick(item)">
+          </app-button>
           <ul class="list-group mb0">
             <li *ngFor="let child of item.children" class="list-group-item p0 b0">
-              <button
-                class="btn btn-link"
+              <app-button
+                color="none"
                 [disabled]="isDisabled(child) | async"
-                [title]="getLabel(item) | translate"
-                (click)="onClick(child)"
-              >
-                {{ child.label | translate }}
-              </button>
+                [label]="child.label"
+                (click)="onClick(child)">
+              </app-button>
             </li>
           </ul>
         </app-dropdown>
@@ -32,14 +31,14 @@
 
       <!-- Simple Button -->
       <ng-template #button>
-        <button
-          class="btn btn-default"
+        <app-button
           [disabled]="isDisabled(item) | async"
-          [title]="getLabel(item) | translate"
-          (click)="onClick(item)"
-        >
-          <i [ngClass]="getIcon(item)"></i>
-        </button>
+          [icon]="item.icon"
+          [label]="false"
+          [title]="item.label"
+          [type]="getButtonType(item)"
+          (click)="onClick(item)">
+        </app-button>
       </ng-template>
     </ng-container>
 
@@ -52,7 +51,7 @@
           [disabled]="item.disabled | async"
           (change)="onClick(item)"
         >
-        {{ getLabel(item) | translate }}
+        {{ item.label | translate }}
       </label>
     </span>
   </div>
