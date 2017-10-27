@@ -15,6 +15,7 @@ export type IButtonType =
   'changeStatus' |
   'clear' |
   'close' |
+  'copy' |
   'delete' |
   'download' |
   'edit' |

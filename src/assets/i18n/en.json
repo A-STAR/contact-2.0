@@ -114,29 +114,6 @@
       "selectedMessage": "selected"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Create",
-      "edit": "Edit",
-      "remove": "Delete",
-      "copy": "Copy",
-      "refresh": "Refresh",
-      "search": "Search",
-      "save": "Save",
-      "sms": "Send SMS",
-      "move": "Move",
-      "download": "Download",
-      "upload": "Upload",
-      "block": "Block",
-      "unblock": "Unblock",
-      "changeStatus": "Change Status",
-      "close": "Close",
-      "undo": "Undo",
-      "ok": "OK",
-      "registerCall": "Register Call",
-      "visit": "Visit"
-    }
-  },
   "queryBuilder": {
     "title": "Query Builder",
     "buttons": {
@@ -1589,11 +1566,12 @@
       "add": "Add",
       "back": "Back",
       "block": "Block",
+      "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",
       "clear": "Clear",
       "close": "Close",
-      "cancel": "Cancel",
+      "copy": "Copy",
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",

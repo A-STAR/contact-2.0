@@ -13,6 +13,7 @@ export class ButtonService {
     changeStatus:     { icon: 'fa fa-random',           label: 'default.buttons.changeStatus'     },
     clear:            { icon: '',                       label: 'default.buttons.clear'            },
     close:            { icon: 'fa fa-ban',              label: 'default.buttons.close'            },
+    copy:             { icon: 'fa fa-clone',            label: 'default.buttons.copy'             },
     delete:           { icon: 'fa fa-trash',            label: 'default.buttons.delete'           },
     download:         { icon: 'fa fa-cloud-download',   label: 'default.buttons.download'         },
     edit:             { icon: 'fa fa-pencil',           label: 'default.buttons.edit'             },

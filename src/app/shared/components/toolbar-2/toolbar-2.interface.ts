@@ -20,6 +20,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_OK,
   BUTTON_REGISTER_CALL,
   BUTTON_VISIT,
+  BUTTON_COPY,
   CHECKBOX,
 }
 

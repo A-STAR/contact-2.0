@@ -33,7 +33,8 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_UNDO]: 'undo',
     [ToolbarItemTypeEnum.BUTTON_OK]: 'ok',
     [ToolbarItemTypeEnum.BUTTON_REGISTER_CALL]: 'registerContact',
-    [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit'
+    [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit',
+    [ToolbarItemTypeEnum.BUTTON_COPY]: 'copy',
   };
 
   constructor(
