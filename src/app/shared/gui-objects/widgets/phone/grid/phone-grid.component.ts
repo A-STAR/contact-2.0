@@ -59,9 +59,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CALL,
-      enabled: this.canRegisterCall$,
-      action: () => this.registerCall()
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
@@ -206,7 +206,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
-  registerCall(): void {
+  registerContact(): void {
     this.selectedPhone$
       .take(1)
       .subscribe(phone => {
@@ -259,7 +259,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  get canRegisterCall$(): Observable<boolean> {
+  get canRegisterContact$(): Observable<boolean> {
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),

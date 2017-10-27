@@ -76,8 +76,8 @@ export class Toolbar2Component {
       label: 'toolbar.action.ok',
       icon: 'fa fa-check',
     },
-    [ToolbarItemTypeEnum.BUTTON_REGISTER_CALL]: {
-      label: 'toolbar.action.registerCall',
+    [ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT]: {
+      label: 'toolbar.action.registerContact',
       icon: 'fa fa-tty',
     },
     [ToolbarItemTypeEnum.BUTTON_VISIT]: {
@@ -103,7 +103,7 @@ export class Toolbar2Component {
     ToolbarItemTypeEnum.BUTTON_CLOSE,
     ToolbarItemTypeEnum.BUTTON_UNDO,
     ToolbarItemTypeEnum.BUTTON_OK,
-    ToolbarItemTypeEnum.BUTTON_REGISTER_CALL,
+    ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
     ToolbarItemTypeEnum.BUTTON_VISIT,
   ];
 
