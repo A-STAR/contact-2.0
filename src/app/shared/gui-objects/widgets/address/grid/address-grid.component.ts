@@ -8,10 +8,12 @@ import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
+import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
+import { DebtService } from '../../debt/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -66,6 +68,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ]
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: this.canDelete$,
       action: () => this.setDialog('delete')
@@ -83,6 +90,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
+  private debt: IDebt;
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
@@ -101,6 +109,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
+    private debtService: DebtService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
@@ -110,11 +119,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
+      this.debtService.fetch(this.personId, this.debtId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ columns, canViewBlock ]) => {
+    .subscribe(([ debt, columns, canViewBlock ]) => {
+      this.debt = debt;
+
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
@@ -220,6 +232,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
+  registerContact(): void {
+    this.selectedAddressId$
+      .take(1)
+      .subscribe(addressId => {
+        // Contact type 'Visit' = 3
+        // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
+        const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+      });
+  }
+
   get selectedAddressId$(): Observable<number> {
     return this._selectedAddressId$;
   }
@@ -280,6 +303,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
     ]);
+  }
+
+  get canRegisterContact$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.selectedAddress$.map(address => address && !address.isInactive),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
+    ]);
+  }
+
+  private get isDebtOpen(): boolean {
+    return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
 
   private onAdd(): void {
