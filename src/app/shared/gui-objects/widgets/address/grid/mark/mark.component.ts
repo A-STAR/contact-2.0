@@ -94,7 +94,8 @@ export class AddressGridMarkComponent implements OnInit {
   onSubmit(): void {
     const data = {
       ...this.form.serializedUpdates,
-      debtIds: this.grid.selected.map(debt => debt.id)
+      debtIds: this.grid.selected.map(debt => debt.id),
+      personRole: this.personRole
     };
     this.submit.emit(data);
   }
