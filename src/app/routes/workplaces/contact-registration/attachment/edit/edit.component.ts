@@ -53,7 +53,7 @@ export class AttachmentEditComponent implements OnInit {
       {
         label: labelKey('docTypeCode'),
         controlName: 'docTypeCode',
-        type: 'selectwrapper',
+        type: 'singleselect',
         dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE
       },
       {
