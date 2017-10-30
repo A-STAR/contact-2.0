@@ -76,8 +76,9 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
       .filter(Boolean)
-      .flatMap(value => {
-        const templateId = Array.isArray(value) ? value[0].value : value;
+      .map(value => Array.isArray(value) ? value[0].value : value)
+      .distinctUntilChanged()
+      .flatMap(templateId => {
         return this.outcomeService
           .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
           .catch(() => Observable.of(null));
@@ -85,6 +86,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 
     this.selectedNodeSubscription = this.selectedNode$
+      .distinctUntilChanged()
       .flatMap(selectedNode => {
         return selectedNode && isEmpty(selectedNode.children)
           ? this.outcomeService
@@ -152,7 +154,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateData(key: string, value: any): void {
     this.data = {
-      ...this.data,
+      ...this.form.serializedValue,
       [key]: value,
     };
     this.cdRef.markForCheck();
