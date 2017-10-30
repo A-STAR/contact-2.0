@@ -156,7 +156,8 @@
         "comment": "Comments"
       },
       "attachment": {
-        "title": "File Attachment",
+        "title": "File Attachments",
+        "add": "Add File",
         "docTypeCode": "Type",
         "docName": "Name",
         "docNumber": "Number",
