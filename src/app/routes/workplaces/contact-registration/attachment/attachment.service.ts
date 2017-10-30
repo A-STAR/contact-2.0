@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IAttachment } from './attachment.interface';
+
 import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
@@ -11,7 +13,7 @@ export class AttachmentService {
     private dataService: DataService,
   ) {}
 
-  create(debtId: number, guid: string, data: any, file: File): Observable<string> {
+  create(debtId: number, guid: string, data: Partial<IAttachment>, file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
     const properties = new Blob(

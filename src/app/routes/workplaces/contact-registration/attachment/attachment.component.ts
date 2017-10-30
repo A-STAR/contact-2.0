@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { IAttachment, IAttachmentFormData } from './attachment.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -42,7 +43,7 @@ export class AttachmentComponent extends DialogFunctions {
     { prop: 'comment' }
   ];
 
-  documents: any[] = [];
+  documents: IAttachment[] = [];
 
   dialog: 'edit' | 'delete';
 
@@ -58,20 +59,20 @@ export class AttachmentComponent extends DialogFunctions {
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
   }
 
-  get selectedDocument$(): Observable<any > {
+  get selectedDocument$(): Observable<IAttachment > {
     return this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
   }
 
-  onSelect(document: any): void {
+  onSelect(document: IAttachment): void {
     this.selectedDocumentGuid$.next(document.guid);
   }
 
-  onDoubleClick(document: any): void {
+  onDoubleClick(document: IAttachment): void {
     this.selectedDocumentGuid$.next(document.guid);
     this.setDialog('edit');
   }
 
-  onEditDialogSubmit(event: any): void {
+  onEditDialogSubmit(event: IAttachmentFormData): void {
     const { file, ...data } = event;
     const { guid } = this.contactRegistrationService;
     this.attachmentService.create(this.debtId, guid, data, file)
