@@ -77,7 +77,7 @@ export class GuarantorService {
   fetchAll(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IGuarantor>> {
     const request = this.gridService.buildRequest(params, filters);
 
-    return this.dataService.create('/persons/search', {}, request)
+    return this.dataService.create(this.url, {}, request)
       .catch(this.notificationsService.fetchError().entity('entities.guarantors.gen.plural').callback());
   }
 }

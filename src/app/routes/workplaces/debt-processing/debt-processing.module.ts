@@ -7,7 +7,6 @@ import { SharedModule } from '../../../shared/shared.module';
 import { DebtProcessingService } from './debt-processing.service';
 
 import { DebtProcessingComponent } from './debt-processing.component';
-
 import { DebtorComponent } from './debtor/debtor.component';
 import { DebtorAddressComponent } from './debtor/address/address.component';
 import { DebtorContactsComponent } from './debtor/contacts/contacts.component';
@@ -30,10 +29,11 @@ const routes: Routes = [
       { path: 'guaranteeContract', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorGuarantorComponent },
-          { path: ':contractId', component: DebtorGuarantorComponent },
+          { path: 'view', component: DebtorGuarantorComponent },
         ]
       },
       { path: 'property', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPropertyComponent },
           { path: ':propertyId', component: DebtorPropertyComponent },
         ]

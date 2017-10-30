@@ -2,16 +2,15 @@ import {
   AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy,
   ChangeDetectorRef, EventEmitter, Output, OnDestroy, OnInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuarantor } from '../../guarantee/guarantee.interface';
+import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interface';
 
 import { GuarantorService } from '../../guarantor/guarantor.service';
-import { GuaranteeService } from '../../guarantee/guarantee.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -31,9 +30,6 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Output() guarantorChanged = new EventEmitter<IGuarantor>();
 
-  // private personId = this.routeParams.personId || null;
-  private debtId = this.routeParams.debtId || null;
-  private contractId = this.routeParams.contractId || null;
   private currentTypeCode: number;
 
   controls: IDynamicFormGroup[] = null;
@@ -45,17 +41,12 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   constructor(
     private cdRef: ChangeDetectorRef,
     private guarantorService: GuarantorService,
-    private guaranteeService: GuaranteeService,
-    private route: ActivatedRoute,
+    private messageBusService: MessageBusService,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
-  }
-
-  get routeParams(): any {
-    return (<any>this.route.params).value;
   }
 
   get canSubmit$(): Observable<boolean> {
@@ -69,16 +60,18 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   }
 
   ngOnInit(): void {
+    const contract = this.messageBusService.takeValueAndRemove<IGuaranteeContract>('contract') || {};
+
     Observable.combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      this.contractId
+      contract.id
         ? this.userPermissionsService.has('GUARANTEE_EDIT')
         : this.userPermissionsService.has('GUARANTEE_ADD'),
-      this.contractId ? this.guaranteeService.fetch(this.debtId, this.contractId) : Observable.of(null)
+      contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
@@ -152,7 +145,9 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   }
 
   ngOnDestroy(): void {
-    this.typeCodeSubscription.unsubscribe();
+    if (this.typeCodeSubscription) {
+      this.typeCodeSubscription.unsubscribe();
+    }
   }
 
   onClear(): void {
