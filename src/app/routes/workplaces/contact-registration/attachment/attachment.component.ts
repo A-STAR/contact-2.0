@@ -99,6 +99,10 @@ export class AttachmentComponent extends DialogFunctions {
       });
   }
 
+  onNextClick(): void {
+    this.contactRegistrationService.nextStep();
+  }
+
   private onSuccess(): void {
     this.setDialog();
     this.cdRef.markForCheck();

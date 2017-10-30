@@ -17,12 +17,16 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
-<app-grid
-  columnTranslationKey="widgets.document"
-  selectionType="single"
-  [styles]="{ height: '200px' }"
-  [columns]="columns"
-  [rows]="documents"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)"
-></app-grid>
+<div class="mb">
+  <app-grid
+    columnTranslationKey="widgets.document"
+    selectionType="single"
+    [styles]="{ height: '200px' }"
+    [columns]="columns"
+    [rows]="documents"
+    (onDblClick)="onDoubleClick($event)"
+    (onSelect)="onSelect($event)"
+  ></app-grid>
+</div>
+
+<app-button type="next" (click)="onNextClick()"></app-button>
