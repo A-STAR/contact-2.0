@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -9,10 +8,6 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '../../../../core/dialog';
-
-import { makeKey } from '../../../../core/utils';
-
-const labelKey = makeKey('modules.contactRegistration.attachment');
 
 @Component({
   selector: 'app-contact-registration-attachment',
@@ -48,7 +43,6 @@ export class AttachmentComponent extends DialogFunctions {
   dialog: 'edit' | 'delete';
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
   ) {
     super();
