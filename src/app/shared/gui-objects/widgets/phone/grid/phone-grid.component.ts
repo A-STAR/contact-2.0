@@ -213,10 +213,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$
       .take(1)
       .subscribe(phoneId => {
-        const tabIndex = this.contentTabService.findTabIndexByPath(`\/workplaces\/contact-registration(.*)`);
-        if (tabIndex !== null) {
-          this.contentTabService.removeTab(tabIndex);
-        }
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
         this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
       });
