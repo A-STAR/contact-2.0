@@ -16,10 +16,7 @@ export class ContactRegistrationService {
 
   constructor(
     private dataService: DataService,
-  ) {
-    // TODO(d.maltsev): remove this
-    this.selectedNode$.subscribe(console.log);
-  }
+  ) {}
 
   get isInvalid$(): Observable<boolean> {
     return this.selectedNode$.map(node => !this.isNodeValid(node));
@@ -58,8 +55,7 @@ export class ContactRegistrationService {
   }
 
   get canAddFile$(): Observable<boolean> {
-    // TODO(d.maltsev): uncomment
-    return this.selectedNode$.map(node => this.isNodeValid(node) /*&& [2, 3].includes(node.data.fileAttachMode)*/);
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.fileAttachMode));
   }
 
   get canAddCallReason$(): Observable<boolean> {
