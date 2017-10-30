@@ -13,14 +13,10 @@ export interface IConstant {
 }
 
 export interface IConstantsState {
-  constants: Array<IConstant>;
   currentConstant: IConstant;
 }
 
-export type IConstantActionType =
-  'CONSTANT_FETCH' |
-  'CONSTANT_FETCH_SUCCESS' |
-  'CONSTANT_UPDATE';
+export type IConstantActionType = 'CONSTANT_UPDATE';
 
 export interface IConstantAction {
   type: IConstantActionType;

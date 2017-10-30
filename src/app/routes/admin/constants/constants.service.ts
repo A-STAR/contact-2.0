@@ -5,16 +5,20 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant, IConstantsState } from './constants.interface';
 
+import { DataService } from '../../../core/data/data.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+
 @Injectable()
 export class ConstantsService {
   static STORAGE_KEY = 'state/constants';
 
-  static CONSTANT_FETCH         = 'CONSTANT_FETCH';
-  static CONSTANT_FETCH_SUCCESS = 'CONSTANT_FETCH_SUCCESS';
   static CONSTANT_SELECT        = 'CONSTANT_SELECT';
-  static CONSTANT_CLEAR         = 'CONSTANT_CLEAR';
+
+  private baseUrl = '/constants';
 
   constructor(
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
 
@@ -22,16 +26,14 @@ export class ConstantsService {
     return this.store.select('constants');
   }
 
-  fetch(): void {
-    this.store.dispatch({
-      type: ConstantsService.CONSTANT_FETCH
-    });
+  fetchAll(): Observable<IConstant[]> {
+    return this.dataService.readAll(this.baseUrl)
+      .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 
-  clear(): void {
-    this.store.dispatch({
-      type: ConstantsService.CONSTANT_CLEAR
-    });
+  update(id: number, constant: IConstant): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{id}`, { id }, constant)
+      .catch(this.notificationsService.updateError().entity('entities.users.gen.plural').dispatchCallback());
   }
 
   changeSelected(payload: IConstant): void {
