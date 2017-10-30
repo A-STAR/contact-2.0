@@ -20,7 +20,7 @@ import { DialogFunctions } from '../../../../core/dialog';
 export class AttachmentComponent extends DialogFunctions {
   @Input() debtId: number;
 
-  private selectedDocumentGuid$ = new BehaviorSubject<number>(null);
+  private selectedDocumentGuid$ = new BehaviorSubject<string>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -90,6 +90,13 @@ export class AttachmentComponent extends DialogFunctions {
   }
 
   onRemoveDialogSubmit(): void {
-
+    const { guid } = this.contactRegistrationService;
+    const fileGuid = this.selectedDocumentGuid$.value;
+    this.attachmentService.delete(this.debtId, guid, fileGuid)
+      .subscribe(() => {
+        this.documents = this.documents.filter(document => document.guid !== fileGuid);
+        this.setDialog();
+        this.cdRef.markForCheck();
+      });
   }
 }

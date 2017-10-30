@@ -5,6 +5,8 @@ import { DataService } from '../../../../core/data/data.service';
 
 @Injectable()
 export class AttachmentService {
+  private baseUrl = '/debts/{debtId}/contactRequest/{guid}/fileattachments';
+
   constructor(
     private dataService: DataService,
   ) {}
@@ -19,7 +21,12 @@ export class AttachmentService {
     formData.append('properties', properties);
     return this.dataService
       // TODO(d.maltsev): error handling
-      .create('/debts/{debtId}/contactRequest/{guid}/fileattachments', { debtId, guid }, formData)
+      .create(this.baseUrl, { debtId, guid }, formData)
       .map(response => response.data[0].guid);
+  }
+
+  delete(debtId: number, guid: string, fileGuid: string): Observable<void> {
+    return this.dataService
+      .delete(`${this.baseUrl}/{fileGuid}`, { debtId, guid, fileGuid });
   }
 }
