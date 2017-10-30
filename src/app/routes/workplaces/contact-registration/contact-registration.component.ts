@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from './contact-registration.service';
@@ -31,7 +31,6 @@ export class ContactRegistrationComponent {
     private contactRegistrationService: ContactRegistrationService,
     private contentTabService: ContentTabService,
     private route: ActivatedRoute,
-    private router: Router,
   ) {}
 
   get routeParams(): any {
