@@ -25,7 +25,7 @@ export class AttachmentComponent extends DialogFunctions {
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('add')
+      action: () => this.setDialog('edit')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
@@ -45,7 +45,7 @@ export class AttachmentComponent extends DialogFunctions {
 
   documents: any[] = [];
 
-  dialog: 'add' | 'delete';
+  dialog: 'edit' | 'delete';
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -64,5 +64,13 @@ export class AttachmentComponent extends DialogFunctions {
   onDoubleClick(document: any): void {
     this.selectedDocumentId$.next(document.id);
     this.setDialog('edit');
+  }
+
+  onEditDialogSubmit(): void {
+
+  }
+
+  onRemoveDialogSubmit(): void {
+
   }
 }
