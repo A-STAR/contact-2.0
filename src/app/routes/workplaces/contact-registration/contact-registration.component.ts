@@ -92,8 +92,7 @@ export class ContactRegistrationComponent {
 
   onSubmit(): void {
     this.contactRegistrationService.confirm(this.debtId).subscribe(() => {
-      this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${this.debtId}` ]);
-      this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
+      this.contentTabService.navigate(`/workplaces/debt-processing/${this.personId}/${this.debtId}`);
     });
   }
 }
