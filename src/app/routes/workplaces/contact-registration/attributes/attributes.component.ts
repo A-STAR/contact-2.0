@@ -5,6 +5,7 @@ import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treen
 import { AttributesService } from './attributes.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 
+import { flatten } from '../../../../core/utils';
 import { getRawValue, getValue } from '../../../../core/utils/value';
 
 @Component({
@@ -42,10 +43,13 @@ export class AttributesComponent implements OnInit {
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const data = {
-      attributes: this.attributes.map(row => ({
-        ...getValue(row.data.typeCode, getRawValue(row.data)),
-        code: row.data.code
-      })),
+      attributes: flatten(this.attributes)
+        .map(node => node.data)
+        .filter(attribute => attribute.typeCode)
+        .map(attribute => ({
+          ...getValue(attribute.typeCode, getRawValue(attribute)),
+          code: attribute.code
+        })),
     };
     this.attributesService.create(this.debtId, guid, data)
       .subscribe(() => {
