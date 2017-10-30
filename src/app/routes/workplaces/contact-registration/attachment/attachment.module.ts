@@ -4,6 +4,8 @@ import { SharedModule } from '../../../../shared/shared.module';
 
 import { AttachmentEditModule } from './edit/edit.module';
 
+import { AttachmentService } from './attachment.service';
+
 import { AttachmentComponent } from './attachment.component';
 
 @NgModule({
@@ -17,5 +19,8 @@ import { AttachmentComponent } from './attachment.component';
   declarations: [
     AttachmentComponent,
   ],
+  providers: [
+    AttachmentService,
+  ]
 })
 export class AttachmentModule {}

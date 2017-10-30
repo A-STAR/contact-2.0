@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { AttachmentService } from './attachment.service';
+import { ContactRegistrationService } from '../contact-registration.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -15,7 +18,9 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttachmentComponent extends DialogFunctions {
-  private selectedDocumentId$ = new BehaviorSubject<number>(null);
+  @Input() debtId: number;
+
+  private selectedDocumentGuid$ = new BehaviorSubject<number>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -24,7 +29,7 @@ export class AttachmentComponent extends DialogFunctions {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: this.selectedDocumentId$.map(Boolean),
+      enabled: this.selectedDocumentGuid$.map(Boolean),
       action: () => this.setDialog('delete')
     },
   ];
@@ -34,7 +39,6 @@ export class AttachmentComponent extends DialogFunctions {
     { prop: 'fileName' },
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
-    { prop: 'operatorName' },
     { prop: 'comment' }
   ];
 
@@ -43,6 +47,9 @@ export class AttachmentComponent extends DialogFunctions {
   dialog: 'edit' | 'delete';
 
   constructor(
+    private attachmentService: AttachmentService,
+    private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private gridService: GridService,
   ) {
     super();
@@ -51,17 +58,35 @@ export class AttachmentComponent extends DialogFunctions {
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
   }
 
+  get selectedDocument$(): Observable<any > {
+    return this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
+  }
+
   onSelect(document: any): void {
-    this.selectedDocumentId$.next(document.id);
+    this.selectedDocumentGuid$.next(document.guid);
   }
 
   onDoubleClick(document: any): void {
-    this.selectedDocumentId$.next(document.id);
+    this.selectedDocumentGuid$.next(document.guid);
     this.setDialog('edit');
   }
 
-  onEditDialogSubmit(data: any): void {
-    console.log(data);
+  onEditDialogSubmit(event: any): void {
+    const { file, ...data } = event;
+    const { guid } = this.contactRegistrationService;
+    this.attachmentService.create(this.debtId, guid, data, file)
+      .subscribe(fileGuid => {
+        this.documents = [
+          ...this.documents,
+          {
+            ...data,
+            guid: fileGuid,
+            fileName: file.name
+          },
+        ];
+        this.setDialog();
+        this.cdRef.markForCheck();
+      });
   }
 
   onRemoveDialogSubmit(): void {
