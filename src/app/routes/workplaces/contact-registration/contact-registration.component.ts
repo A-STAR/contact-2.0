@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from './contact-registration.service';
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 import { combineLatestOr } from '../../../core/utils/helpers';
 
@@ -28,7 +29,9 @@ export class ContactRegistrationComponent {
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
+    private contentTabService: ContentTabService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   get routeParams(): any {
@@ -88,6 +91,9 @@ export class ContactRegistrationComponent {
   }
 
   onSubmit(): void {
-    this.contactRegistrationService.confirm(this.debtId).subscribe(console.log);
+    this.contactRegistrationService.confirm(this.debtId).subscribe(() => {
+      this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${this.debtId}` ]);
+      this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
+    });
   }
 }
