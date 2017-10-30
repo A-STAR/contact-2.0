@@ -84,8 +84,7 @@ export class AttachmentComponent extends DialogFunctions {
             fileName: file.name
           },
         ];
-        this.setDialog();
-        this.cdRef.markForCheck();
+        this.onSuccess();
       });
   }
 
@@ -95,8 +94,12 @@ export class AttachmentComponent extends DialogFunctions {
     this.attachmentService.delete(this.debtId, guid, fileGuid)
       .subscribe(() => {
         this.documents = this.documents.filter(document => document.guid !== fileGuid);
-        this.setDialog();
-        this.cdRef.markForCheck();
+        this.onSuccess();
       });
+  }
+
+  private onSuccess(): void {
+    this.setDialog();
+    this.cdRef.markForCheck();
   }
 }
