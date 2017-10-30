@@ -45,7 +45,7 @@ export class DebtProcessingComponent {
   onDblClick(debt: IDebt): void {
     const { personId, debtId } = debt;
     const tabIndex = this.contentTabService.findTabIndexByPath(`${this.router.url}\/[0-9]+$`);
-    if (tabIndex) {
+    if (tabIndex !== null) {
       this.contentTabService.removeTab(tabIndex);
     }
 

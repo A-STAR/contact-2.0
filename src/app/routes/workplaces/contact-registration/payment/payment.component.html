@@ -2,7 +2,4 @@
   <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
 </div>
 
-<button class="btn btn-default" [disabled]="!canSubmit" (click)="onNextClick()">
-  {{ 'default.buttons.next' | translate }}
-  <i class="fa fa-arrow-right" aria-hidden="true"></i>
-</button>
+<app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>
