@@ -77,13 +77,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
       .filter(Boolean)
       .flatMap(value => {
-        return this.getPersonId()
-          .flatMap(personId => {
-            const templateId = Array.isArray(value) ? value[0].value : value;
-            return this.outcomeService
-              .fetchAutoComment(this.debtId, personId, 1, templateId)
-              .catch(() => Observable.of(null));
-          });
+        const templateId = Array.isArray(value) ? value[0].value : value;
+        return this.outcomeService
+          .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+          .catch(() => Observable.of(null));
       })
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 
@@ -170,13 +167,5 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getControl(name: string): IDynamicFormControl {
     return this.controls.find(control => control.controlName === name);
-  }
-
-  private getPersonId(): Observable<number> {
-    return this.debtService.fetch(null, this.debtId)
-      .publishReplay(1)
-      .refCount()
-      .map(debt => debt.personId)
-      .distinctUntilChanged();
   }
 }
