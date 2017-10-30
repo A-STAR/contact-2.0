@@ -98,7 +98,10 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
     this.busSubscription = this.messageBusService
       .select(PropertyService.MESSAGE_PROPERTY_SAVED)
-      .subscribe(() => this.fetch());
+      .subscribe(() => {
+        this.fetch();
+        this.selectedProperty$.next(this.selectedProperty);
+      });
 
     this.selectedProperty$.subscribe(property =>
       this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SELECTED, null, property)
