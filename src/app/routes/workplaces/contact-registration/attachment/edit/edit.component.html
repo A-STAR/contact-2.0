@@ -3,7 +3,7 @@
     <h3>Title</h3>
   </div>
   <div>
-    <app-dynamic-form [controls]="controls" [data]="{}"></app-dynamic-form>
+    <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="{}"></app-dynamic-form>
   </div>
   <div dialog-footer>
     <app-button color="primary" type="save" (click)="onSubmit()"></app-button>

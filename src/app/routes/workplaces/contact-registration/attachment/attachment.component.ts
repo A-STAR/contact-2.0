@@ -60,8 +60,8 @@ export class AttachmentComponent extends DialogFunctions {
     this.setDialog('edit');
   }
 
-  onEditDialogSubmit(): void {
-
+  onEditDialogSubmit(data: any): void {
+    console.log(data);
   }
 
   onRemoveDialogSubmit(): void {
