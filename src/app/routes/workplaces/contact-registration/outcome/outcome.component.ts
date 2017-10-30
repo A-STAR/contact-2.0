@@ -18,7 +18,6 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
@@ -56,7 +55,6 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
     private contactRegistrationService: ContactRegistrationService,
     private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
