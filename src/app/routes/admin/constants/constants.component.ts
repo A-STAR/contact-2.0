@@ -10,13 +10,13 @@ import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ConstantsService } from './constants.service';
-import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
+import { DialogFunctions } from '../../../core/dialog';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 @Component({
@@ -24,17 +24,17 @@ import { GridComponent } from '../../../shared/components/grid/grid.component';
   templateUrl: './constants.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConstantsComponent implements AfterViewInit, OnDestroy {
+export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'ConstantsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
 
-  display = false;
+  dialog = null;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.display = true,
+      action: () => this.setDialog('editConstant'),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CONST_VALUE_EDIT'),
         this.constantsService.state.map(state => !!state.currentConstant)
@@ -56,19 +56,16 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     { prop: 'dsc', minWidth: 200 },
   ];
 
+  emptyMessage$: Observable<string>;
+  hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
-
   selectedRecord$: Observable<IConstant>;
 
-  hasViewPermission$: Observable<boolean>;
-
-  emptyMessage$: Observable<string>;
-
+  rows: IConstant[];
   selection: IConstant[];
 
   constructor(
     private constantsService: ConstantsService,
-    private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private cdRef: ChangeDetectorRef,
@@ -76,6 +73,7 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
+    super();
     this.columns = this.gridService.setRenderers(this.columns);
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
@@ -84,10 +82,9 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
     this.permissionSub = this.hasViewPermission$
-      .filter(hasPermission => hasPermission !== undefined)
       .subscribe(hasPermission => {
         if (!hasPermission) {
-          this.constantsService.clear();
+          this.clear();
           this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
         } else {
           this.fetchAll();
@@ -97,26 +94,31 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
   }
 
-  rows: IConstant[];
-
   fetchAll(): void {
-    this.dataService.readAll('/constants')
-    .map(constants => this.valueConverterService.deserializeSet(constants))
-    .subscribe((constants: IConstant[]) => {
-      this.rows = constants;
-      this.constantsService.state
-      .map(state => state.currentConstant)
-      .subscribe(currentConstant => {
-        if (currentConstant) {
-          this.selection = [this.rows.find(row => {
-            return row.id === currentConstant.id;
-          })];
-        } else {
-          this.selection = [];
-        }
-      });
+    this.constantsService.fetchAll()
+      .map(constants => this.valueConverterService.deserializeSet(constants))
+      .subscribe((constants: IConstant[]) => {
+        this.rows = constants;
+        this.constantsService.state
+          .map(state => state.currentConstant)
+          .take(1)
+          .subscribe(currentConstant => {
+            if (currentConstant) {
+              const found = this.rows.find(row => row.id === currentConstant.id);
+              this.selection = found ? [found] : [];
+              if (!found) {
+                this.constantsService.changeSelected(null);
+              }
+            } else {
+              this.selection = [];
+            }
+          });
       this.cdRef.markForCheck();
     });
+  }
+
+  clear(): void {
+    this.rows = [];
   }
 
   ngOnDestroy(): void {
@@ -140,34 +142,25 @@ export class ConstantsComponent implements AfterViewInit, OnDestroy {
       body[field] = Number(value);
     }
 
-    this.dataService
-      .update('/constants/{id}', { id }, body)
-      .take(1)
-      .subscribe(
-        () => {
-          this.fetchAll();
-          this.userConstantsService.refresh();
-          this.onCancel();
-        },
-        error => this.notificationsService.error('constants.api.errors.update').dispatch()
-      );
+    this.constantsService.update(id, body as IConstant)
+      .subscribe(() => {
+        this.fetchAll();
+        this.userConstantsService.refresh();
+        this.onCloseDialog();
+      });
   }
 
-  onBeforeEdit(): void {
+  onDblClick(): void {
     const permission = 'CONST_VALUE_EDIT';
     this.userPermissionsService.has(permission)
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
-          this.display = true;
+          this.setDialog('editConstant');
         } else {
           this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
         }
       });
-  }
-
-  onCancel(): void {
-    this.display = false;
   }
 
   onSelect(record: IConstant): void {

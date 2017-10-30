@@ -21,11 +21,6 @@ export function constantsReducer(
         ...state,
         currentConstant: action.payload as IConstant
       };
-    case ConstantsService.CONSTANT_CLEAR:
-      return {
-        ...state,
-        currentConstant: null
-      };
     default:
       return state;
   }
