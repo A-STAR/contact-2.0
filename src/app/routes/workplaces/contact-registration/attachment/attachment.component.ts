@@ -56,7 +56,10 @@ export class AttachmentComponent extends DialogFunctions {
     super();
     this.gridService.setDictionaryRenderers(this.columns)
       .take(1)
-      .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
+      .subscribe(columns => {
+        this.columns = [ ...columns ];
+        this.cdRef.markForCheck();
+      });
   }
 
   get selectedDocument$(): Observable<IAttachment > {
