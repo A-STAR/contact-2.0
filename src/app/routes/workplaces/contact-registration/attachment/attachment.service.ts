@@ -14,16 +14,8 @@ export class AttachmentService {
   ) {}
 
   create(debtId: number, guid: string, data: Partial<IAttachment>, file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-    const properties = new Blob(
-      [ JSON.stringify({ ...data, fileName: file.name }) ],
-      { type: 'application/json;charset=UTF-8' }
-    );
-    formData.append('properties', properties);
     return this.dataService
-      // TODO(d.maltsev): error handling
-      .create(this.baseUrl, { debtId, guid }, formData)
+      .createMultipart(this.baseUrl, { debtId, guid }, data, file)
       .map(response => response.data[0].guid);
   }
 
