@@ -52,6 +52,10 @@
 
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
     <app-property-grid></app-property-grid>
+
+    <app-hdivider></app-hdivider>
+
+    <app-debtor-property-attributes></app-debtor-property-attributes>
   </app-tab>
 
   <app-tab [title]="'debtor.actionLogTab.title'" [closable]="false">
@@ -59,6 +63,6 @@
   </app-tab>
 
   <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
-    <app-entity-attribute-grid></app-entity-attribute-grid>
+    <app-debtor-attributes></app-debtor-attributes>
   </app-tab>
 </app-tabstrip>

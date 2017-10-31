@@ -572,7 +572,14 @@
       "title": "Debts"
     },
     "propertyTab": {
-      "title": "Property"
+      "title": "Property",
+      "remove": {
+        "title": "Delete the propery",
+        "confirmMessage": "Do you really want to delete this property?"
+      },
+      "attributes": {
+        "title": "Property attributes"
+      }
     },
     "guarantorsTab": {
       "title": "Guarantors",
@@ -1421,7 +1428,7 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property item", "plural": "property list" }
+      "gen": { "singular": "property", "plural": "property list" }
     }
   },
   "errors": {
