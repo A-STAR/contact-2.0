@@ -581,6 +581,9 @@
         "title": "Property attributes"
       }
     },
+    "pledgersTab": {
+      "title": "Pledgers"
+    },
     "guarantorsTab": {
       "title": "Guarantors",
       "remove": {
@@ -1303,6 +1306,19 @@
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
+    },
+    "pledgeContract": {
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "comment": "Comment",
+        "propertyType": "Property type",
+        "propertyName": "Property name"
+      }
     }
   },
   "entities": {
@@ -1429,6 +1445,9 @@
     },
     "property": {
       "gen": { "singular": "property", "plural": "property list" }
+    },
+    "pledgeContract": {
+      "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
     }
   },
   "errors": {

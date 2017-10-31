@@ -581,6 +581,9 @@
         "title": "Параметры имущества"
       }
     },
+    "pledgersTab": {
+      "title": "Залогодатели"
+    },
     "guarantorsTab": {
       "title": "Поручители",
       "remove": {
@@ -1303,6 +1306,19 @@
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
+    },
+    "pledgeContract": {
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "comment": "Комментарий",
+        "propertyType": "Тип имущества",
+        "propertyName": "Название имущества"
+      }
     }
   },
   "entities": {
@@ -1429,6 +1445,9 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
+    },
+    "pledgeContract": {
+      "gen": { "singular": "договора залога", "plural": "договоров залога" }
     }
   },
   "errors": {
