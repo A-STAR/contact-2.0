@@ -79,6 +79,8 @@ export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T =
   ], []);
 };
 
+export const invert = (a: boolean) => !a;
+
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
 
 export const parseStringValueAttrs = (str: string) => (str || '')

@@ -12,7 +12,7 @@ import { isEmpty } from '../../../core/utils';
 export class ContactRegistrationService {
   guid: string;
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
-  step = 0;
+  autoComment$ = new BehaviorSubject<{ autoComment: string, autoCommentId: number }>(null);
 
   constructor(
     private dataService: DataService,
@@ -65,14 +65,6 @@ export class ContactRegistrationService {
   get canAddStatusChangeReason$(): Observable<boolean> {
     return this.selectedNode$
       .map(node => this.isNodeValid(node) && [2, 3].includes(node.data.statusReasonMode) && !!node.data.statusCode);
-  }
-
-  nextStep(): void {
-    this.step++;
-  }
-
-  prevStep(): void {
-    this.step--;
   }
 
   confirm(debtId: number): Observable<any> {

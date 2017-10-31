@@ -1,0 +1,13 @@
+<div class="title">
+  <h4 [ngClass]="{ clickable: clickable }" (click)="onToggleClick()">
+    {{ title | translate }}
+    <span [ngClass]="{ 'collapse-button': true, 'display': display }">
+      <i class="fa fa-angle-down"></i>
+    </span>
+  </h4>
+</div>
+
+<div *ngIf="display" [@display]>
+  <ng-content>
+  </ng-content>
+</div>

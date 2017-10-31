@@ -1,0 +1,4 @@
+<button [ngClass]="buttonClass" [disabled]="disabled" [title]="displayTitle | translate">
+  <i *ngIf="iconClass" [ngClass]="iconClass" aria-hidden="true"></i>
+  <span *ngIf="displayLabel">{{ displayLabel | translate }}</span>
+</button>

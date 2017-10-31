@@ -5,12 +5,8 @@
 </app-register-contact-dialog>
 
 <div class="pb-lg">
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
-  <button class="btn btn-primary" (click)="onRegisterContactClick()">
-    <i class="fa fa-tty"></i> {{ 'default.buttons.registerContact' | translate }}
-  </button>
+  <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+  <app-button color="secondary" type="registerContact" (click)="onRegisterContactClick()"></app-button>
 </div>
 
 <app-dynamic-form

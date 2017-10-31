@@ -114,29 +114,6 @@
       "selectedMessage": "выбрано"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Создать",
-      "edit": "Изменить",
-      "remove": "Удалить",
-      "copy": "Копировать",
-      "refresh": "Обновить",
-      "search": "Искать",
-      "save": "Сохранить",
-      "sms": "Отправить SMS",
-      "move": "Переместить",
-      "download": "Скачать",
-      "upload": "Загрузить",
-      "block": "Заблокировать",
-      "unblock": "Разблокировать",
-      "changeStatus": "Сменить статус",
-      "close": "Закрыть",
-      "undo": "Отменить",
-      "ok": "OK",
-      "registerContact": "Зарегистрировать контакт",
-      "visit": "Выезд"
-    }
-  },
   "queryBuilder": {
     "title": "Построитель запросов",
     "buttons": {
@@ -179,7 +156,8 @@
         "comment": "Комментарий"
       },
       "attachment": {
-        "title": "Прикрепление файла",
+        "title": "Прикрепление файлов",
+        "add": "Добавить файл",
         "docTypeCode": "Тип",
         "docName": "Название",
         "docNumber": "Номер",
@@ -1366,6 +1344,9 @@
     "guarantors": {
       "gen": { "singular": "поручителя", "plural": "списка поручителей" }
     },
+    "guaranteeContract": {
+      "gen": { "singular": "договора поручительства", "plural": "договоров поручительства" }
+    },
     "promises": {
       "gen": { "singular": "обещания", "plural": "списка обещаний" }
     },
@@ -1589,18 +1570,31 @@
       "add": "Добавить",
       "back": "Назад",
       "block": "Блокировать",
+      "cancel": "Отменить",
       "change": "Изменить",
+      "changeStatus": "",
       "clear": "Очистить",
       "close": "Закрыть",
-      "cancel": "Отменить",
+      "copy": "Копировать",
+      "delete": "Удалить",
+      "download": "Скачать",
+      "edit": "Редактировать",
+      "exportToExcel": "Экспорт в Excel",
       "excel": "Экспорт в Excel",
+      "move": "Переместить",
+      "next": "Далее",
       "ok": "OK",
+      "refresh": "Перезагрузить",
+      "registerContact": "Зарегистрировать контакт",
       "remove": "Удалить",
       "save": "Сохранить",
       "search": "Искать",
       "select": "Выбрать",
-      "next": "Далее",
-      "registerContact": "Зарегистрировать контакт"
+      "sms": "СМС",
+      "unblock": "Разблокировать",
+      "undo": "Отменить",
+      "upload": "Загрузить",
+      "visit": "Выезд"
     },
     "dateTimeRange": {
       "from": "Начало",

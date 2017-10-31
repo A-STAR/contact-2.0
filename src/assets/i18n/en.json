@@ -114,29 +114,6 @@
       "selectedMessage": "selected"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Create",
-      "edit": "Edit",
-      "remove": "Delete",
-      "copy": "Copy",
-      "refresh": "Refresh",
-      "search": "Search",
-      "save": "Save",
-      "sms": "Send SMS",
-      "move": "Move",
-      "download": "Download",
-      "upload": "Upload",
-      "block": "Block",
-      "unblock": "Unblock",
-      "changeStatus": "Change Status",
-      "close": "Close",
-      "undo": "Undo",
-      "ok": "OK",
-      "registerContact": "Register Contact",
-      "visit": "Visit"
-    }
-  },
   "queryBuilder": {
     "title": "Query Builder",
     "buttons": {
@@ -179,7 +156,8 @@
         "comment": "Comments"
       },
       "attachment": {
-        "title": "File Attachment",
+        "title": "File Attachments",
+        "add": "Add File",
         "docTypeCode": "Type",
         "docName": "Name",
         "docNumber": "Number",
@@ -1366,6 +1344,9 @@
     "guarantors": {
       "gen": { "singular": "guarantor", "plural": "guarantors" }
     },
+    "guaranteeContract": {
+      "gen": { "singular": "guarantee contract", "plural": "guarantee contracts" }
+    },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
@@ -1589,18 +1570,31 @@
       "add": "Add",
       "back": "Back",
       "block": "Block",
+      "cancel": "Cancel",
       "change": "Change",
+      "changeStatus": "",
       "clear": "Clear",
       "close": "Close",
-      "cancel": "Cancel",
+      "copy": "Copy",
+      "delete": "Delete",
+      "download": "Download",
+      "edit": "Edit",
+      "exportToExcel": "Export to Excel",
       "excel": "Export to Excel",
+      "move": "Move",
+      "next": "Next",
       "ok": "OK",
+      "refresh": "Refresh",
+      "registerContact": "Register Contact",
       "remove": "Delete",
       "save": "Save",
       "search": "Search",
       "select": "Select",
-      "next": "Next",
-      "registerContact": "Register Contact"
+      "sms": "SMS",
+      "unblock": "Unblock",
+      "undo": "Undo",
+      "upload": "Upload",
+      "visit": "Visit"
     },
     "dateTimeRange": {
       "from": "From",

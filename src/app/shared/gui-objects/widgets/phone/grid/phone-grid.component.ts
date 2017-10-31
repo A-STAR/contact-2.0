@@ -12,6 +12,7 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
 import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -103,6 +104,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private debtorService: DebtorService,
     private gridService: GridService,
@@ -216,6 +218,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$
       .take(1)
       .subscribe(phoneId => {
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
         this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
       });
