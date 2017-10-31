@@ -7,7 +7,7 @@
   margin-left: 4px;
   transform: translateY(1px) rotate(0deg);
   transition: transform 0.15s ease;
-  &.collapsed {
+  &.display {
     transform: translateY(0) rotate(-90deg);
   }
 }

@@ -2,22 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { Accordion2ItemModule } from './item/item.module';
-
-import { Accordion2Component } from './accordion-2.component';
+import { AccordionItemComponent } from './item.component';
 
 @NgModule({
   imports: [
-    Accordion2ItemModule,
     CommonModule,
     TranslateModule,
   ],
   exports: [
-    Accordion2ItemModule,
-    Accordion2Component,
+    AccordionItemComponent,
   ],
   declarations: [
-    Accordion2Component,
+    AccordionItemComponent,
   ]
 })
-export class Accordion2Module { }
+export class AccordionItemModule { }

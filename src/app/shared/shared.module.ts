@@ -22,7 +22,6 @@ import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.dire
 
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
-import { Accordion2Module } from './components/accordion-2/accordion-2.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { AttachmentsModule } from './components/attachments/attachments.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
@@ -81,7 +80,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     PerfectScrollbarModule,
     // app modules
     AccordionModule,
-    Accordion2Module,
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,
@@ -159,7 +157,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     VectormapDirective,
     // App exports
     AccordionModule,
-    Accordion2Module,
     ActionDialogModule,
     AttachmentsModule,
     BlockDialogModule,

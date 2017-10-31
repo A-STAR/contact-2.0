@@ -28,8 +28,6 @@ export class ContactRegistrationComponent {
 
   selectedIndex = 0;
 
-  foo$ = Observable.timer(0, 5000).map(Boolean).take(2);
-
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private contentTabService: ContentTabService,
@@ -42,14 +40,6 @@ export class ContactRegistrationComponent {
 
   get queryParams(): any {
     return (this.route.queryParams as any).value;
-  }
-
-  get step(): number {
-    return this.contactRegistrationService.step;
-  }
-
-  set step(step: number) {
-    this.contactRegistrationService.step = step;
   }
 
   get isInvalid$(): Observable<boolean> {
