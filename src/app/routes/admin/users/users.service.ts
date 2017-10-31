@@ -65,9 +65,7 @@ export class UsersService {
   }
 
   createPhoto(userId: number, photo: File): Observable<any> {
-    const data = new FormData();
-    data.append('file', photo);
-    return this.dataService.create('/users/{userId}/photo', { userId }, data)
+    return this.dataService.createMultipart('/users/{userId}/photo', { userId }, null, photo)
       .catch(this.notificationsService
         .error('errors.default.upload')
         .entity('entities.users.photos.gen.singular')

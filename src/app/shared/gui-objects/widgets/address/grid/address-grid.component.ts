@@ -238,10 +238,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddressId$
       .take(1)
       .subscribe(addressId => {
-        const tabIndex = this.contentTabService.findTabIndexByPath(`\/workplaces\/contact-registration(.*)`);
-        if (tabIndex !== null) {
-          this.contentTabService.removeTab(tabIndex);
-        }
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
         const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;

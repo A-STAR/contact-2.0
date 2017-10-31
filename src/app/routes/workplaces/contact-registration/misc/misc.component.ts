@@ -14,6 +14,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { OutcomeService } from '../outcome/outcome.service';
@@ -52,6 +53,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   private outcomeSubscription: Subscription;
 
   constructor(
+    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
@@ -126,7 +128,7 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
     const { autoComment, ...data } = this.form.serializedUpdates;
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.contactRegistrationService.nextStep();
+        this.accordionService.next();
         this.cdRef.markForCheck();
       });
   }

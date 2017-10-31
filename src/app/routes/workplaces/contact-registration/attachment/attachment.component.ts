@@ -6,6 +6,7 @@ import { IAttachment, IAttachmentFormData } from './attachment.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { AttachmentService } from './attachment.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -48,6 +49,7 @@ export class AttachmentComponent extends DialogFunctions {
   dialog: 'edit' | 'delete';
 
   constructor(
+    private accordionService: AccordionService,
     private attachmentService: AttachmentService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
@@ -103,7 +105,7 @@ export class AttachmentComponent extends DialogFunctions {
   }
 
   onNextClick(): void {
-    this.contactRegistrationService.nextStep();
+    this.accordionService.next();
   }
 
   private onSuccess(): void {
