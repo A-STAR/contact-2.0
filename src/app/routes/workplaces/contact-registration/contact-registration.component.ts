@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
@@ -26,6 +27,8 @@ export class ContactRegistrationComponent {
   personRole = Number(this.queryParams.personRole);
 
   selectedIndex = 0;
+
+  foo$ = Observable.timer(0, 5000).map(Boolean).take(2);
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,

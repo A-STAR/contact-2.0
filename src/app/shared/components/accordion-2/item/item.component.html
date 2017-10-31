@@ -1,0 +1,9 @@
+<div>
+  <h4 (click)="onToggleClick()">
+    {{ title | translate }}
+    <i class="fa fa-angle-down"></i>
+  </h4>
+  <div *ngIf="display">
+    <ng-content></ng-content>
+  </div>
+</div>

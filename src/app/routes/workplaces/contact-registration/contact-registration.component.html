@@ -1,3 +1,16 @@
+<app-accordion-2>
+  <app-accordion-2-item [title]="'modules.contactRegistration.promise.title'">
+    Item 1
+  </app-accordion-2-item>
+  <app-accordion-2-item *ngIf="foo$ | async" [title]="'modules.contactRegistration.payment.title'">
+    Item 2
+  </app-accordion-2-item>
+  <app-accordion-2-item [title]="'modules.contactRegistration.phone.title'">
+    Item 3
+  </app-accordion-2-item>
+</app-accordion-2>
+
+<!--
 <app-accordion [(selectedIndex)]="step">
 
   <app-accordion-item
@@ -82,3 +95,4 @@
     <app-button color="primary" type="save" (click)="onSubmit()"></app-button>
   </app-accordion-item>
 </app-accordion>
+-->
