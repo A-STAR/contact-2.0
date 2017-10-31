@@ -15,7 +15,6 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { OutcomeService } from '../outcome/outcome.service';
 import { MiscService } from './misc.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
@@ -58,7 +57,6 @@ export class MiscComponent implements OnInit, OnDestroy {
     private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
     private miscService: MiscService,
     private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
