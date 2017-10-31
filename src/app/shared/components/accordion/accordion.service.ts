@@ -12,27 +12,28 @@ export class AccordionService {
   }
 
   toggle(item: AccordionItemComponent): void {
-    // The duplication here is necessary
-    // If we hide currentItem first, `item !== this.currentItem` will always be true
-    if (item !== this.currentItem) {
-      this.hideItem(this.currentItem);
+    const currentItem = this.currentItem;
+    this.hideItem(currentItem);
+    if (item !== currentItem) {
       this.showItem(item);
-    } else {
-      this.hideItem(this.currentItem);
     }
   }
 
   prev(): void {
-    if (this.prevItem) {
-      this.hideItem(this.currentItem);
-      this.showItem(this.prevItem);
+    const currentItem = this.currentItem;
+    const prevItem = this.prevItem;
+    if (prevItem) {
+      this.hideItem(currentItem);
+      this.showItem(prevItem);
     }
   }
 
   next(): void {
-    if (this.nextItem) {
-      this.hideItem(this.currentItem);
-      this.showItem(this.nextItem);
+    const currentItem = this.currentItem;
+    const nextItem = this.nextItem;
+    if (nextItem) {
+      this.hideItem(currentItem);
+      this.showItem(nextItem);
     }
   }
 
