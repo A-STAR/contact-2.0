@@ -6,6 +6,9 @@ import { IAppState } from '../../../core/state/state.interface';
 import { IButtonType } from '../button/button.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
 
+import { invert } from '../../../core/utils';
+import { doOnceIf } from '../../../core/utils/helpers';
+
 @Component({
   selector: 'app-toolbar-2',
   templateUrl: './toolbar-2.component.html',
@@ -54,12 +57,14 @@ export class Toolbar2Component {
   }
 
   onClick(item: IToolbarItem): void {
-    if (typeof item.action === 'function') {
-      item.action();
-    } else if (item.action) {
-      this.store.dispatch(item.action);
-    }
-    this.action.emit(item);
+    doOnceIf(this.isDisabled(item).map(invert), () => {
+      if (typeof item.action === 'function') {
+        item.action();
+      } else if (item.action) {
+        this.store.dispatch(item.action);
+      }
+      this.action.emit(item);
+    });
   }
 
   isDisabled(item: IToolbarItem): Observable<boolean> {
