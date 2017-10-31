@@ -137,7 +137,9 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       : { phoneId: this.contactId };
     this.outcomeService.initRegistration(this.debtId, { ...data, code, personId: this.personId, personRole: this.personRole })
       .subscribe(guid => {
+        const { autoComment, autoCommentId } = this.form.serializedValue;
         this.contactRegistrationService.guid = guid;
+        this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
         this.accordionService.next();
         this.cdRef.markForCheck();
       });

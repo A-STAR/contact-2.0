@@ -12,6 +12,7 @@ import { isEmpty } from '../../../core/utils';
 export class ContactRegistrationService {
   guid: string;
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+  autoComment$ = new BehaviorSubject<{ autoComment: string, autoCommentId: number }>(null);
 
   constructor(
     private dataService: DataService,
