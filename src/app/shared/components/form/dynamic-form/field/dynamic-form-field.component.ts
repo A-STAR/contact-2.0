@@ -26,5 +26,8 @@ export class DynamicFormFieldComponent {
 
   selectHandler(event: ISelectItemsPayload): void {
     this.onSelect.emit(event);
+    if (this.control.onChange) {
+      this.control.onChange(event.items);
+    }
   }
 }

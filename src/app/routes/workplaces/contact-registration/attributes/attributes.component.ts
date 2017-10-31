@@ -38,10 +38,6 @@ export class AttributesComponent implements OnInit {
       });
   }
 
-  get canSubmit(): boolean {
-    return true;
-  }
-
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const data = {
