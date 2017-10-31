@@ -1,6 +1,8 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -8,6 +10,8 @@ import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
+import { GuarantorService } from '../../guarantor/guarantor.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -21,36 +25,48 @@ const label = makeKey('widgets.guaranteeContract.grid');
   selector: 'app-guarantee-card',
   templateUrl: './guarantee-card.component.html'
 })
-export class GuaranteeCardComponent {
+export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  private canEdit: boolean;
   private routeParams = (<any>this.route.params).value;
-  private contractId = this.routeParams.contractId || null;
   private debtId = this.routeParams.debtId || null;
   private personId: number;
+  private guarantorSelectionSub: Subscription;
 
   controls: IDynamicFormGroup[] = null;
   contract: IGuaranteeContract;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private guaranteeService: GuaranteeService,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  get canSubmit(): boolean {
+    if (this.isRoute('addGuarantor') && !!this.personId) {
+      return true;
+    }
+    return this.form && this.form.canSubmit && !!this.personId;
+  }
+
+  ngOnInit(): void {
+    const contract = this.messageBusService.takeValue<IGuaranteeContract>('contract') || {};
 
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
-      this.contractId
+      contract.id
         ? this.userPermissionsService.has('GUARANTEE_EDIT')
         : this.userPermissionsService.has('GUARANTEE_ADD'),
-      this.contractId ? this.guaranteeService.fetch(this.debtId, this.contractId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ respTypeOpts, canEdit, contract ]) => {
-      const controls = [
+    .subscribe(([ respTypeOpts, canEdit ]) => {
+      const controls: IDynamicFormGroup[] = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
@@ -65,17 +81,31 @@ export class GuaranteeCardComponent {
           ]
         },
       ];
-      this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+
+      this.controls = controls;
       this.contract = contract;
+      this.canEdit = canEdit;
+      this.cdRef.markForCheck();
     });
+
+    this.guarantorSelectionSub = this.messageBusService
+      .select<string, IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
+      .subscribe(guarantor => {
+        this.personId = guarantor.id;
+      });
   }
 
-  get canSubmit(): boolean {
-    return this.form && this.form.canSubmit && !!this.personId;
+  ngAfterViewInit(): void {
+    if ((this.isRoute('addGuarantor') || this.isRoute('view') || !this.canEdit) && this.form) {
+      this.form.form.disable();
+      this.cdRef.detectChanges();
+    }
   }
 
-  onGuarantorChanged(guarantor: IGuarantor): void {
-    this.personId = guarantor.id;
+  ngOnDestroy(): void {
+    if (this.guarantorSelectionSub) {
+      this.guarantorSelectionSub.unsubscribe();
+    }
   }
 
   onBack(): void {
@@ -83,14 +113,18 @@ export class GuaranteeCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.serializedUpdates;
+    const data = this.isRoute('create') ? this.form.serializedUpdates : this.form.serializedValue;
     const action = this.personId
       ? this.guaranteeService.create(this.debtId, { ...data, personId: this.personId })
-      : this.guaranteeService.update(this.debtId, this.contractId, data);
+      : this.guaranteeService.update(this.debtId, this.contract.id, data);
 
     action.subscribe(() => {
       this.guaranteeService.notify(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
+  }
+
+  private isRoute(segment: string): boolean {
+    return this.route.snapshot.url.join('/') === segment;
   }
 }

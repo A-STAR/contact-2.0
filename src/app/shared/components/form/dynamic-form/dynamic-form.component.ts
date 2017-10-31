@@ -69,18 +69,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   /**
    * Loop through dirty form controls and serialize their values
    *
-   * @deprecated Please prefer serializedUpdates
-   * @readonly
-   * @type {*}
-   * @memberof DynamicFormComponent
-   */
-  get requestValue(): any {
-    return this.getValue(true);
-  }
-
-  /**
-   * Loop through dirty form controls and serialize their values
-   *
    * @memberof DynamicFormComponent
    */
   get serializedUpdates(): any {
