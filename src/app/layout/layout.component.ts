@@ -36,6 +36,7 @@ export class LayoutComponent {
     DebtorPhoneComponent: 'DEBTOR_PHONE',
     DebtorPromiseComponent: 'DEBTOR_PROMISE',
     DebtorPropertyComponent: 'DEBTOR_PROPERTY',
+    DebtorPledgeComponent: 'DEBTOR_PLEDGE',
     DebtorsComponent: 'DEBT_LIST',
     DebtProcessingComponent: 'DEBTS',
     DictionariesComponent: 'DICTIONARIES',

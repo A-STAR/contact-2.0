@@ -17,6 +17,7 @@ import { DebtorPromiseModule } from './promise/promise.module';
 import { DebtorPropertyModule } from './property/property.module';
 import { DebtorPropertyAttributesModule } from './property-attributes/property-attributes.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
+import { DebtorPledgeModule } from './pledge/pledge.module';
 
 import { DebtorService } from './debtor.service';
 import { DebtorEffects } from './debtor.effects';
@@ -41,6 +42,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorPropertyModule,
     DebtorPropertyAttributesModule,
     DebtorAttributesModule,
+    DebtorPledgeModule,
     EffectsModule.run(DebtorEffects),
     SharedModule,
   ],

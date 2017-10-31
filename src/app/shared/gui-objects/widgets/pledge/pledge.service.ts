@@ -21,6 +21,10 @@ export class PledgeService {
     return this.userPermissionsService.has('PLEDGE_VIEW');
   }
 
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('PLEDGE_ADD');
+  }
+
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
     return this.dataService.readAll(this.baseUrl, { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.plural').dispatchCallback());

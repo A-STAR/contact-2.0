@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPledgeContract } from '../pledge.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PledgeService } from '../pledge.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -32,6 +33,14 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
     { prop: 'propertyName' }
   ];
 
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.pledgeService.canAdd$,
+      action: () => this.onAdd()
+    },
+  ];
+
   private _contracts: Array<IPledgeContract> = [];
 
   private debtId = (this.route.params as any).value.debtId || null;
@@ -44,6 +53,7 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +84,10 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
 
   onSelect(pledge: IPledgeContract): void {
     this.selectedContract$.next(pledge);
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/pledge/create` ]);
   }
 
   private fetch(): void {

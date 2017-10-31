@@ -22,6 +22,7 @@ import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 import { DebtorPropertyComponent } from './debtor/property/property.component';
+import { DebtorPledgeComponent } from './debtor/pledge/pledge.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
@@ -36,6 +37,10 @@ const routes: Routes = [
       { path: 'property', children: [
           { path: 'create', component: DebtorPropertyComponent },
           { path: ':propertyId', component: DebtorPropertyComponent },
+        ]
+      },
+      { path: 'pledge', children: [
+          { path: 'create', component: DebtorPledgeComponent },
         ]
       },
       { path: 'contact', children: [
