@@ -31,12 +31,12 @@ export class DebtorInformationComponent implements OnDestroy {
       {
         component: AddressGridComponent,
         title: 'debtor.information.address.title',
-        inject: {personRole: 1, displayToolbar: true }
+        inject: { personRole: 1 }
       },
       {
         component: PhoneGridComponent,
         title: 'debtor.information.phone.title',
-        inject: { personRole: 1, contactType: 1, displayToolbar: true }
+        inject: { personRole: 1, contactType: 1 }
       },
       {
         component: EmailGridComponent,

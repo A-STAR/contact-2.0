@@ -1,0 +1,8 @@
+<app-grid
+  columnTranslationKey="debtor.information.address"
+  selectionType="single"
+  [styles]="{ height: '240px' }"
+  [columns]="columns"
+  [rows]="addresses"
+  (onDblClick)="onDoubleClick($event)"
+></app-grid>

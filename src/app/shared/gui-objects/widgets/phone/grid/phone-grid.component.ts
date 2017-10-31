@@ -116,7 +116,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
     @Inject('contactType') private contactType: number,
-    @Inject('displayToolbar') private _displayToolbar: boolean,
     @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
@@ -157,10 +156,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
-  }
-
-  get displayToolbar(): boolean {
-    return this._displayToolbar;
   }
 
   get canDisplayGrid(): boolean {

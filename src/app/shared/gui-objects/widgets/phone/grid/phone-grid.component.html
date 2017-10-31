@@ -37,11 +37,7 @@
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
-<app-toolbar-2
-  *ngIf="displayToolbar"
-  class="bh"
-  [items]="toolbarItems">
-</app-toolbar-2>
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   *ngIf="canDisplayGrid"
