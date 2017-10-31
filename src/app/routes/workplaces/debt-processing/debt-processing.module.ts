@@ -29,7 +29,8 @@ const routes: Routes = [
       { path: 'guaranteeContract', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorGuarantorComponent },
-          { path: 'view', component: DebtorGuarantorComponent },
+          { path: 'edit', component: DebtorGuarantorComponent },
+          { path: 'addGuarantor', component: DebtorGuarantorComponent },
         ]
       },
       { path: 'property', children: [

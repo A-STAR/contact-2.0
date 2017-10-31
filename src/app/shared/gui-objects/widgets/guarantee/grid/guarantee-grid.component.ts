@@ -45,6 +45,15 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      action: () => this.onAddGuarantor(this.selectedContract$.value),
+      label: 'widgets.guaranteeContract.toolbar.add',
+      enabled: combineLatestAnd([
+        this.canEdit$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeGuarantee'),
       enabled: combineLatestAnd([
@@ -149,7 +158,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onRemove(): void {
-    const { id: contractId } = this.selectedContract$.value;
+    const { contractId } = this.selectedContract$.value;
     this.guaranteeService.delete(this.debtId, contractId, this.selectedContract$.value.personId)
       .subscribe(() => {
         this.setDialog(null);
@@ -165,9 +174,14 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
   }
 
+  private onAddGuarantor(contract: IGuaranteeContract): void {
+    this.messageBusService.passValue('contract', contract);
+    this.router.navigate([ `${this.router.url}/guaranteeContract/addGuarantor` ]);
+  }
+
   private onEdit(contract: IGuaranteeContract): void {
     this.messageBusService.passValue('contract', contract);
-    this.router.navigate([ `${this.router.url}/guaranteeContract/view` ]);
+    this.router.navigate([ `${this.router.url}/guaranteeContract/edit` ]);
   }
 
   private fetch(): void {

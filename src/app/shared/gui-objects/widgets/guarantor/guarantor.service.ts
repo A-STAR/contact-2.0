@@ -15,10 +15,11 @@ import { FilterObject } from '../../../components/grid2/filter/grid-filter';
 export class GuarantorService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
   static MESSAGE_GUARANTOR_SELECTED = 'MESSAGE_GUARANTOR_SELECTED';
+  static MESSAGE_GUARANTOR_SELECTION_CHANGED = 'MESSAGE_GUARANTOR_SELECTION_CHANGED';
   static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
   private url = '/persons/search';
-  private errSingular = 'entities.guarantor.gen.singular';
+  private errSingular = 'entities.guarantors.gen.singular';
   private attrListConstants: { [key: string]: string } = {
     '1' : 'Person.Individual.AdditionalAttribute.List',
     '2' : 'Person.LegalEntity.AdditionalAttribute.List',

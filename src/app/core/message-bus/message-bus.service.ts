@@ -8,8 +8,15 @@ import { IBusMessage } from './message-bus.interface';
 @Injectable()
 export class MessageBusService {
   private bus$ = new Subject<IBusMessage<any, any>>();
-  // NOTE: the box is a static temporary storage for passing
-  // objects/values between component with a removal method
+
+  /**
+   * `box` is a temporary key/value storage for passing
+   * arbitrary data between components with an option
+   * to remove the passed data from the box
+   * @private
+   * @experimental
+   * @memberof MessageBusService
+   */
   private box = new Map<string, any>();
 
   dispatch<T, P>(type: T, key: string = null, payload: P = null): void {
