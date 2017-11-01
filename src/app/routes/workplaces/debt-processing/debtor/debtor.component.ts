@@ -14,7 +14,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
-import { DebtorInformationComponent } from './general/information.component';
+import { DebtorInformationComponent } from './information/information.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
@@ -82,7 +82,7 @@ export class DebtorComponent implements OnDestroy {
 
     this.debtorService.update(this.personId, value).subscribe(() => {
       this.form.form.markAsPristine();
-      this.information.form.form.markAsPristine();
+      this.information.form.markAsPristine();
       this.cdRef.markForCheck();
     });
   }
