@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing.interface';
 
@@ -23,6 +23,10 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 import { DebtorInformationComponent } from './information/information.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { DialogFunctions } from '../../../../core/dialog';
+
+import { invert } from '../../../../core/utils';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -33,14 +37,15 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
     DebtorService,
   ]
 })
-export class DebtorComponent implements OnInit, OnDestroy {
+export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
   person: Partial<IPerson & IDebt>;
-  controls: IDynamicFormControl[];
+  controls: IDynamicFormItem[];
+  dialog: 'registerContact' = null;
 
   private personSubscription: Subscription;
 
@@ -50,7 +55,9 @@ export class DebtorComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.personSubscription = Observable.combineLatest(
@@ -79,6 +86,10 @@ export class DebtorComponent implements OnInit, OnDestroy {
     return this.form && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
   }
 
+  get isContactRegistrationDisabled$(): Observable<boolean> {
+    return this.debtorService.canRegisterContacts$.map(invert);
+  }
+
   onSubmit(): void {
     const value = {
       ...this.form.serializedUpdates,
@@ -92,7 +103,17 @@ export class DebtorComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getControls(canEdit: boolean): IDynamicFormControl[] {
+
+  onRegisterContactClick(): void {
+    this.setDialog('registerContact');
+  }
+
+  onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
+    this.setDialog();
+    this.debtorService.navigateToRegistration(this.person.id, 1, contactType, contactId);
+  }
+
+  private getControls(canEdit: boolean): IDynamicFormItem[] {
     const debtorTypeOptions = {
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
@@ -109,6 +130,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
           { width: 12, label: 'debtor.shortInfo', controlName: 'shortInfo', type: 'textarea', disabled: true },
         ]
       }
-    ] as IDynamicFormControl[];
+    ] as IDynamicFormItem[];
   }
 }

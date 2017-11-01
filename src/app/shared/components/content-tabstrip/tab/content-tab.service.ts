@@ -118,7 +118,7 @@ export class ContentTabService {
   }
 
   removeTabByPath(path: string): void {
-    const tabIndex = this.findTabIndexByPath(`\/workplaces\/contact-registration(.*)`);
+    const tabIndex = this.findTabIndexByPath(path);
     if (tabIndex !== null) {
       this.removeTab(tabIndex);
     }
