@@ -26,11 +26,13 @@ export class DebtorService {
   }
 
   get debt$(): Observable<IDebt> {
-    return this._debt$;
+    return this._debt$
+      .filter(Boolean);
   }
 
   get debtor$(): Observable<IPerson> {
-    return this._debtor$;
+    return this._debtor$
+      .filter(Boolean);
   }
 
   update(person: IPerson): Observable<void> {

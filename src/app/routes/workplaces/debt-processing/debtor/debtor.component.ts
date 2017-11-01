@@ -87,7 +87,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
     this.debtorService.update(value).subscribe(() => {
       this.form.form.markAsPristine();
-      this.information.form.markAsPristine();
+      this.information.form.form.markAsPristine();
       this.cdRef.markForCheck();
     });
   }

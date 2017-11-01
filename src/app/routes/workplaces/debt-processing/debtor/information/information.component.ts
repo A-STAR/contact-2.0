@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PersonComponent } from './person/person.component';
 import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
@@ -24,7 +25,7 @@ export class DebtorInformationComponent {
     ]
   };
 
-  get form(): any {
+  get form(): DynamicFormComponent {
     return this.personComponent.form;
   }
 }
