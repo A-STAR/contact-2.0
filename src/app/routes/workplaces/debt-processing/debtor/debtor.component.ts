@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,7 +35,7 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
     DebtorService,
   ]
 })
-export class DebtorComponent implements OnDestroy {
+export class DebtorComponent implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
   @ViewChild('form') form: DynamicFormComponent;
@@ -49,10 +57,9 @@ export class DebtorComponent implements OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-  ) {
-    this.debtorService.preloadDebt(this.debtId);
-    this.debtorService.preloadDebtor(this.personId);
+  ) {}
 
+  ngOnInit(): void {
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
