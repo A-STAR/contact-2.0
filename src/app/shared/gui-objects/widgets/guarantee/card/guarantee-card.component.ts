@@ -49,10 +49,14 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   ) {}
 
   get canSubmit(): boolean {
-    if (this.isRoute('addGuarantor') && !!this.personId) {
+    if (this.isAddingGuarantor && !!this.personId) {
       return true;
     }
     return this.form && this.form.canSubmit;
+  }
+
+  get isAddingGuarantor(): boolean {
+    return this.isRoute('addGuarantor');
   }
 
   ngOnInit(): void {
@@ -100,7 +104,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    if ((this.isRoute('addGuarantor') || this.isRoute('view') || !this.canEdit) && this.form) {
+    if ((this.isAddingGuarantor || this.isRoute('view') || !this.canEdit) && this.form) {
       this.form.form.disable();
       this.cdRef.detectChanges();
     }
@@ -117,10 +121,12 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onSubmit(): void {
-    const data = this.isRoute('create') ? this.form.serializedUpdates : this.form.serializedValue;
-    const action = this.isRoute('create')
-      ? this.guaranteeService.create(this.debtId, { ...data, personId: this.personId })
-      : this.guaranteeService.update(this.debtId, this.contract.id, data);
+    const data = this.form.serializedUpdates;
+    const action = this.isAddingGuarantor
+      ? this.guaranteeService.addGuarantor(this.debtId, this.contract.contractId, data.personId)
+      : this.isRoute('create')
+        ? this.guaranteeService.create(this.debtId, data)
+        : this.guaranteeService.update(this.debtId, this.contract.contractId, data);
 
     action.subscribe(() => {
       this.guaranteeService.notify(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
@@ -129,6 +135,6 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/') === segment;
+    return this.route.snapshot.url.join('') === segment;
   }
 }
