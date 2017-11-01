@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export class ActionDialogComponent {
 
   @Input() autoWidth = true;
-  @Input() titleTranslationParams;
+  @Input() titleTranslationParams: any;
   @Input() titleTranslationKey: string;
   @Input() cancelTranslationKey = 'default.buttons.cancel';
   @Input() actionTranslationKey = 'default.buttons.save';
@@ -16,14 +16,8 @@ export class ActionDialogComponent {
   @Input() canSubmit = true;
   @Input() styles = {} as CSSStyleDeclaration;
 
-  @Output() action: EventEmitter<void> = new EventEmitter<void>();
-  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
-
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.close();
-    }
-  }
+  @Output() action = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
   onAction(): void {
     this.action.emit();

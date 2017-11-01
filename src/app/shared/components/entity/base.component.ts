@@ -27,10 +27,8 @@ export abstract class EntityBaseComponent<T> implements OnInit {
     return values;
   }
 
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.close();
-    }
+  onClose(): void {
+    this.close();
   }
 
   onCancel(): void {
