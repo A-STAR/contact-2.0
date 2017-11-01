@@ -1309,6 +1309,7 @@
       }
     },
     "pledgeContract": {
+      "title": "Информация о договоре",
       "grid": {
         "id": "Ид",
         "contractNumber": "Номер договора",
@@ -1319,6 +1320,13 @@
         "comment": "Комментарий",
         "propertyType": "Тип имущества",
         "propertyName": "Название имущества"
+      },
+      "card": {
+        "contractNumber": "Номер договора",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "typeCode": "Тип",
+        "comment": "Комментарий"        
       }
     }
   },

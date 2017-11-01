@@ -1309,6 +1309,7 @@
       }
     },
     "pledgeContract": {
+      "title": "Contract information",
       "grid": {
         "id": "Id",
         "contractNumber": "Contract No",
@@ -1319,6 +1320,13 @@
         "comment": "Comment",
         "propertyType": "Property type",
         "propertyName": "Property name"
+      },
+      "card": {
+        "contractNumber": "Contract No",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "comment": "Comment"        
       }
     }
   },

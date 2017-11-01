@@ -1,6 +1,6 @@
 export interface IPledgeContract {
   id?: number;
-  contractNumber: number;
+  contractNumber: string;
   fullName?: string;
   typeCode?: number;
   contractStartDate?: Date | string;

@@ -6,3 +6,7 @@
     <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
   </button>
 </div>
+
+<div class="pb-lg">
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="contract"></app-dynamic-form>
+</div>
