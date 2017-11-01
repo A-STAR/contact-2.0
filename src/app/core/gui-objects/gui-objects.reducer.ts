@@ -15,10 +15,10 @@ export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action
         ...state,
         data: [
           { id: 0, name: 'menuItemHome', children: [] },
-          ...action.payload.appGuiObjects
+          ...action.payload
         ]
       };
     default:
       return state;
   }
-};
+}

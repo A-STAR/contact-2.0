@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
-import { IPermissionModel, IPermissionsResponse } from '../../permissions.interface';
+import { IPermissionModel } from '../../permissions.interface';
 
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
@@ -28,7 +28,7 @@ export class AddPermissionComponent {
 
   constructor(private valueConverterService: ValueConverterService) { }
 
-  parseFn = (data: IPermissionsResponse) => this.valueConverterService.deserializeSet(data.permits);
+  parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
 
   onSelectPermissions(): void {
     this.selectedPermissions = this.addPermitGrid.selected;
@@ -36,12 +36,6 @@ export class AddPermissionComponent {
 
   onCancel(): void {
     this.cancel.emit();
-  }
-
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.onCancel();
-    }
   }
 
   onAddPermissions(): void {

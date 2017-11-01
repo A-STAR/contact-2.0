@@ -8,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -73,7 +73,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   };
 
   toolbarActions: IToolbarAction[] = [
-    { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
+    { text: 'default.buttons.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
   private _dialog: string;
@@ -82,7 +82,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     return this.value[this.inactiveEmployeesControl.controlName]
       ? () => true
       : (record: IEmployee) => !record.isInactive;
-  };
+  }
 
   constructor(
     formBuilder: FormBuilder,

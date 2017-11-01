@@ -20,7 +20,7 @@ export class DocumentService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IDocument>> {
     return this.dataService
-      .read(DocumentService.BASE_URL, { entityType, entityId })
+      .readAll(DocumentService.BASE_URL, { entityType, entityId })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.plural').dispatchCallback());
   }
 
@@ -31,16 +31,14 @@ export class DocumentService {
   }
 
   create(entityType: number, entityId: number, document: IDocument, file: File): Observable<void> {
-    const data = this.initFormData(document, file);
     return this.dataService
-      .create(DocumentService.BASE_URL, { entityType, entityId }, data)
+      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, document, file)
       .catch(this.notificationsService.error('errors.default.create').entity(this.errSingular).dispatchCallback());
   }
 
   update(entityType: number, entityId: number, documentId: number, document: Partial<IDocument>, file: File): Observable<void> {
-    const data = this.initFormData(document, file);
     return this.dataService
-      .update(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, data)
+      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, document, file)
       .catch(this.notificationsService.error('errors.default.update').entity(this.errSingular).dispatchCallback());
   }
 
@@ -48,18 +46,5 @@ export class DocumentService {
     return this.dataService
       .delete(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId })
       .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
-  }
-
-  private initFormData(document: Partial<IDocument>, file: File): FormData {
-    const data = new FormData();
-    if (file) {
-      data.append('file', file);
-    }
-    const properties = new Blob(
-      [ JSON.stringify({ ...document, fileName: file ? file.name : undefined }) ],
-      { type: 'application/json;charset=UTF-8' }
-    );
-    data.append('properties', properties);
-    return data;
   }
 }

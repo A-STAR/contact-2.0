@@ -18,6 +18,10 @@ $checkbox-size: 15px;
   border-right: 1px solid #d5d5d5;
 }
 
+:host(.bt) > .toolbar {
+  border-top: 1px solid #d5d5d5;
+}
+
 .toolbar-item {
   display: inline-block;
   &:not(:last-child) {
@@ -25,7 +29,7 @@ $checkbox-size: 15px;
   }
 }
 
-.btn-default {
+:host ::ng-deep .btn-default {
   width: $button-size;
   height: $button-size;
   padding: 0;

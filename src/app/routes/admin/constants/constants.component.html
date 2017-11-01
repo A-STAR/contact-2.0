@@ -1,8 +1,8 @@
 <app-constant-edit
-  *ngIf="display"
+  *ngIf="isDialog('editConstant')"
   [editedEntity]="selectedRecord$ | async"
   (submit)="onSubmit($event)"
-  (cancel)="onCancel()"
+  (cancel)="onCloseDialog()"
 >
 </app-constant-edit>
 
@@ -11,9 +11,10 @@
 <app-grid
   selectionType="single"
   [columns]="columns"
+  [selection]="selection"
   columnTranslationKey="constants"
   [emptyMessage]="emptyMessage$ | async"
-  [rows]="rows$ | async"
-  (onDblClick)="onBeforeEdit()"
+  [rows]="rows"
+  (onDblClick)="onDblClick()"
   (onSelect)="onSelect($event)">
 </app-grid>

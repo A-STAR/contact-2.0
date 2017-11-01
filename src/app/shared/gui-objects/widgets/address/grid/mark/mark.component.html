@@ -1,0 +1,29 @@
+<app-dialog [styles]="{ width: '80%' }" (onClose)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.address.dialogs.mark.title' | translate }}</h3>
+  </div>
+  <div>
+    <div class="mb">
+      <app-grid
+        columnTranslationKey="widgets.address.dialogs.mark"
+        selectionType="multi"
+        [columns]="columns"
+        [rows]="debts"
+        [styles]="{ height: '240px' }"
+        (onSelect)="onSelect($event)">
+      </app-grid>
+    </div>
+    <app-dynamic-form
+      *ngIf="controls"
+      [controls]="controls">
+    </app-dynamic-form>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

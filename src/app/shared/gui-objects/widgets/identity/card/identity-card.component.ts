@@ -78,18 +78,18 @@ export class IdentityCardComponent {
   }
 
   onConfirm(): void {
-    this.onSubmit(this.form.requestValue);
+    this.onSubmit(this.form.serializedUpdates);
     this.setDialog(null);
   }
 
   onCancel(): void {
     this.setDialog(null);
-    const data = { ...this.form.requestValue, isMain: 0 };
+    const data = { ...this.form.serializedUpdates, isMain: 0 };
     this.onSubmit(data);
   }
 
   onBeforeSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     if (data.isMain && this.identityService.hasMain) {
       this.setDialog('confirmIdentity');
     } else {

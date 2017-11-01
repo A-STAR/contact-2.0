@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { IMetadataResponse } from './metadata.interface';
+import { IMetadata } from './metadata.interface';
 
 import { DataService } from '../data/data.service';
 import { MetadataService } from './metadata.service';
@@ -18,7 +18,6 @@ export class MetadataEffects {
     .ofType(MetadataService.METADATA_FETCH)
     .switchMap((action: Action) => {
       return this.read(action.payload.key)
-        .map(response => response.lists[0])
         .map(list => ({
           type: MetadataService.METADATA_FETCH_SUCCESS,
           payload: list
@@ -37,7 +36,7 @@ export class MetadataEffects {
     private notificationService: NotificationsService
   ) {}
 
-  private read(key: string): Observable<IMetadataResponse> {
+  private read(key: string): Observable<IMetadata[]> {
     return this.dataService.read(`/list?name=${key}`);
   }
 }

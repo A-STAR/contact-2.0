@@ -69,6 +69,10 @@ export class TreeNodeComponent implements OnDestroy, IClickableComponent {
     this.tree.onDoubleNodeClick(event, this.node);
   }
 
+  onContextMenu(event: MouseEvent): void {
+    this.tree.onContextMenu(event, this.node);
+  }
+
   delegateClick(event: MouseEvent): void {
     this.clickComponentPlugin.delegateClick(event);
   }

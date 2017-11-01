@@ -20,15 +20,13 @@ export class EmploymentService {
 
   fetchAll(personId: number): Observable<IEmployment[]> {
     return this.dataService
-      .read(this.url, { personId })
-      .map(resp => resp.employments)
+      .readAll(this.url, { personId })
       .catch(this.notificationsService.fetchError().entity('entities.employment.gen.plural').dispatchCallback());
   }
 
   fetch(personId: number, employmentId: number): Observable<IEmployment> {
     return this.dataService
       .read(`${this.url}/{employmentId}`, { personId, employmentId })
-      .map(resp => resp.employments[0] || {})
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 

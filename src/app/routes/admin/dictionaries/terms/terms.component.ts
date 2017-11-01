@@ -114,7 +114,7 @@ export class TermsComponent implements OnDestroy {
 
   get selectedEntity(): Observable<ITerm> {
     return this.dictionariesService.selectedTerm;
-  };
+  }
 
   get languages(): Observable<ILookupLanguage[]> {
     return this.lookupService.languages;

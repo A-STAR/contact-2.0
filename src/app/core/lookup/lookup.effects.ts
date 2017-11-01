@@ -34,6 +34,6 @@ export class LookupEffects {
   ) {}
 
   private readData(key: ILookupKey): any {
-    return this.dataService.read(`/lookup/${key}`).map(response => response[key]);
+    return this.dataService.readAll(`/lookup/${key}`);
   }
 }

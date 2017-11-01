@@ -312,6 +312,9 @@
 }
 
 .ui-treetable {
+    .ui-treetable-row > td {
+        vertical-align: middle;
+    }
     .ui-treetable-row.ui-treetable-row-selectable:not(.ui-state-highlight):hover {
         background: $stateHoverBgColor;
         color: $stateHoverTextColor;

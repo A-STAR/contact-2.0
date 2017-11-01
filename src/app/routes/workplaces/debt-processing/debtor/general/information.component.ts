@@ -28,9 +28,21 @@ export class DebtorInformationComponent implements OnDestroy {
   node: INode = {
     container: 'tabs',
     children: [
-      { component: AddressGridComponent, title: 'debtor.information.address.title' },
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
-      { component: EmailGridComponent, title: 'debtor.information.email.title' },
+      {
+        component: AddressGridComponent,
+        title: 'debtor.information.address.title',
+        inject: { personRole: 1 }
+      },
+      {
+        component: PhoneGridComponent,
+        title: 'debtor.information.phone.title',
+        inject: { personRole: 1, contactType: 1 }
+      },
+      {
+        component: EmailGridComponent,
+        title: 'debtor.information.email.title',
+        inject: { personRole: 1 }
+      },
     ]
   };
 

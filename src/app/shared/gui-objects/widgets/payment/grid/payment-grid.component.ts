@@ -7,12 +7,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPayment } from '../payment.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { PaymentService } from '../payment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -72,19 +71,21 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: Array<IGridColumn> = [
-    { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130 },
-    { prop: 'paymentDateTime', minWidth: 120, maxWidth: 130 },
+    { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'paymentDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
     { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
-    { prop: 'amountMainCurrency', minWidth: 130, maxWidth: 130 },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130 },
-    { prop: 'statusCode' },
-    { prop: 'purposeCode' },
+    { prop: 'amountMainCurrency', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
+    { prop: 'purposeCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
     { prop: 'comment' },
     { prop: 'userFullName' },
     { prop: 'reqUserFullName' },
     { prop: 'payerName' },
     { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
-    { prop: 'commission', minWidth: 110, maxWidth: 130 },
+    { prop: 'commission', minWidth: 110, maxWidth: 130, renderer: 'numberRenderer' },
+    // TODO(atymchuk): the currency should appear in the promiseAmount column header
+    // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];
 
   rows: Array<IPayment> = [];
@@ -95,17 +96,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
   private debtSubscription: Subscription;
-  private gridSubscription: Subscription;
-
-  private renderers: IRenderer = {
-    amount: 'numberRenderer',
-    amountMainCurrency: 'numberRenderer',
-    commission: 'numberRenderer',
-    paymentDateTime: 'dateTimeRenderer',
-    receiveDateTime: 'dateTimeRenderer',
-    purposeCode: [],
-    statusCode: [],
-  };
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
 
@@ -113,32 +103,21 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private paymentService: PaymentService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     // Bind the context to the filter, or it will throw
     this.filter = this.filter.bind(this);
 
-    this.gridSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_STATUS),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
-      this.lookupService.lookupAsOptions('currencies'),
-    )
-    .subscribe(([ statusCodes, purposeCodes, currencyOptions ]) => {
-      this.renderers = {
-        ...this.renderers,
-        statusCode: [ ...statusCodes ],
-        purposeCode: [ ...purposeCodes ],
-        currencyId: [ ...currencyOptions ],
-      }
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
+    this.gridService.setAllRenderers(this.columns)
+      .take(1)
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnInit(): void {
@@ -174,7 +153,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
-    this.gridSubscription.unsubscribe();
   }
 
   get debtId(): number {

@@ -23,8 +23,9 @@ import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.dire
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
-import { AttachmentsModule } from './components/attachments/attachments.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
+import { ButtonModule } from './components/button/button.module';
+import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
@@ -45,6 +46,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
@@ -57,6 +59,7 @@ import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
+import { ValueInputModule } from './components/form/value/value.module';
 
 import { IconsService } from './icons/icons.service';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -73,13 +76,13 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // Angle modules
     TranslateModule,
     TextMaskModule,
-    MultiSelectModule,
     PerfectScrollbarModule,
     // app modules
     AccordionModule,
     ActionDialogModule,
-    AttachmentsModule,
     BlockDialogModule,
+    ButtonModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
@@ -98,6 +101,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
+    MultiSelectModule,
+    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -111,6 +116,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    ValueInputModule,
   ],
   providers: [
     ColorsService,
@@ -150,8 +156,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // App exports
     AccordionModule,
     ActionDialogModule,
-    AttachmentsModule,
     BlockDialogModule,
+    ButtonModule,
+    ColorPickerModule,
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
@@ -172,6 +179,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MultiSelectModule,
+    MultiTextModule,
     NumericInputComponent,
     PasswordModule,
     PopupInputModule,
@@ -187,6 +195,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    ValueInputModule,
   ]
 })
 

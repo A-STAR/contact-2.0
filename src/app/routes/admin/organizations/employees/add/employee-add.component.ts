@@ -40,7 +40,7 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
         this.employeeRoleOptions[0]
       ]
     };
-  };
+  }
 
   constructor(
     private gridService: GridService,

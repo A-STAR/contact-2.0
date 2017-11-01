@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -25,6 +26,7 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+  @Input() canPaste = false;
   @Input() dblClickEnabled = true;
   @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
@@ -39,6 +41,9 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Output() onNodeCollapse: EventEmitter<any> = new EventEmitter();
   @Output() onNodeDblClick: EventEmitter<any> = new EventEmitter();
   @Output() changeNodesLocation: EventEmitter<ITreeNodeInfo[]> = new EventEmitter<ITreeNodeInfo[]>();
+  @Output() copy = new EventEmitter<ITreeNode>();
+  @Output() paste = new EventEmitter<ITreeNode>();
+  @Output() nodeMove = new EventEmitter<ITreeNodeInfo>();
   @Input() style: any;
   @Input() styleClass: string;
   @Input() layout = 'vertical';
@@ -46,7 +51,26 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
 
+  @Input('contextMenuEnabled')
+  set contextMenuEnabled(contextMenuEnabled: boolean) {
+    this._ctxMenuEnabled = contextMenuEnabled;
+    if (contextMenuEnabled) {
+      this._clickListener = this.renderer.listen('document', 'click', () => this.hideMenu());
+      this._wheelListener = this.renderer.listen('document', 'wheel', () => this.hideMenu());
+    } else {
+      this.removeListeners();
+    }
+  }
+
   private dragAndDropPlugin: DragAndDropComponentPlugin;
+  private _ctxMenuEnabled = false;
+  private _ctxMenu: { node: ITreeNode, style: { left: string, top: string } } = null;
+  private _clickListener: Function;
+  private _wheelListener: Function;
+
+  get ctxMenu(): any {
+    return this._ctxMenu;
+  }
 
   get horizontal(): boolean {
     return this.layout === 'horizontal';
@@ -63,14 +87,14 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
         // prevent any drags by default
         invalid: () => true
       };
-  };
+  }
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.dndEnabled) {
@@ -87,6 +111,37 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
     if (this.dndEnabled) {
       this.dragAndDropPlugin.ngOnDestroy();
     }
+    this.removeListeners();
+  }
+
+  hideMenu(): void {
+    this._ctxMenu = null;
+    this.cdRef.markForCheck();
+  }
+
+  onContextMenu(event: MouseEvent, node: ITreeNode): void {
+    event.preventDefault();
+    if (this._ctxMenuEnabled) {
+      this._ctxMenu = {
+        node,
+        style: {
+          left: `${event.pageX}px`,
+          top: `${event.pageY}px`,
+        },
+      };
+    }
+  }
+
+  onCopyClick(copyChildren: boolean): void {
+    const { children, ...rest } = this._ctxMenu.node;
+    this.copy.emit({
+      ...rest,
+      children: copyChildren ? children : null
+    });
+  }
+
+  onPasteClick(): void {
+    this.paste.emit(this._ctxMenu.node);
   }
 
   onNodeClick(event: MouseEvent, node: ITreeNode): void {
@@ -307,6 +362,8 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
       return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
     }, (payload.swap ? targetElement : sourceElement).parent.children);
 
+    const nodeMoveEventPayload = payloads.find(p => p.id === Number(payload.sourceId));
+    this.nodeMove.emit(nodeMoveEventPayload);
     this.changeNodesLocation.emit(payloads);
   }
 
@@ -337,5 +394,14 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
 
   private nodeSelect(event: MouseEvent, node: ITreeNode): void {
     this.onNodeSelect.emit({originalEvent: event, node: node});
+  }
+
+  private removeListeners(): void {
+    if (this._clickListener) {
+      this._clickListener();
+    }
+    if (this._wheelListener) {
+      this._wheelListener();
+    }
   }
 }

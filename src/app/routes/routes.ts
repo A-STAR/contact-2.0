@@ -36,11 +36,19 @@ export const routes: Route[] = [
         children: [
           // { path: 'debts', loadChildren: './workplaces/debtors/debtors.module#DebtorsModule' },
           { path: 'debt-processing', loadChildren: './workplaces/debt-processing/debt-processing.module#DebtProcessingModule' },
+          {
+            path: 'contact-registration',
+            loadChildren: './workplaces/contact-registration/contact-registration.module#ContactRegistrationModule'
+          },
         ]
       },
       {
         path: 'utilities',
         children: [
+          {
+            path: 'contact-properties',
+            loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
+          },
           {
             path: 'message-templates',
             loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',

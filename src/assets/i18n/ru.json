@@ -33,7 +33,7 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
-        "DICTIONARIES": "Словари",
+        "DICTIONARIES": "Справочники",
         "PORTFOLIOS": "Клиенты и портфели",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -44,6 +44,7 @@
         "DATA_UPLOAD": "Загрузка данных",
         "ARBITRARY_VALUES": "Произвольные атрибуты",
         "CONTACT_TREES": "Дерево контактов",
+        "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
         "CAMPAIGNS": "Кампании обзвона",
@@ -60,10 +61,12 @@
         "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
+        "DEBTOR_GUARANTEE": "Договор поручительства",
         "DEBTOR_IDENTITY": "Удостоверение личности",
         "DEBTOR_PAYMENT": "Платеж",
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
+        "DEBTOR_PROPERTY": "Карточка имущества",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -111,27 +114,6 @@
       "selectedMessage": "выбрано"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Создать",
-      "edit": "Изменить",
-      "remove": "Удалить",
-      "copy": "Копировать",
-      "refresh": "Обновить",
-      "search": "Искать",
-      "save": "Сохранить",
-      "sms": "Отправить SMS",
-      "move": "Переместить",
-      "download": "Скачать",
-      "upload": "Загрузить",
-      "block": "Заблокировать",
-      "unblock": "Разблокировать",
-      "changeStatus": "Сменить статус",
-      "close": "Закрыть",
-      "undo": "Отменить",
-      "ok": "OK"
-    }
-  },
   "queryBuilder": {
     "title": "Построитель запросов",
     "buttons": {
@@ -141,6 +123,88 @@
       "removeGroup": "Удалить группу",
       "addValue": "Добавить значение",
       "removeValue": "Удалить значение"
+    }
+  },
+  "modules": {
+    "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Регистрация контакта",
+          "address": {
+            "title": "Адреса",
+            "button": "Зарегистрировать выбранный адрес"
+          },
+          "phone": {
+            "title": "Телефоны",
+            "button": "Зарегистрировать выбранный телефон"
+          },
+          "misc": {
+            "title": "Специальное",
+            "buttonMisc": "Специальное",
+            "buttonOfficeVisit": "Визит в офис"
+          }
+        }
+      },
+      "outcome": {
+        "title": "Выбор исхода",
+        "template": "Сценарий разговора",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "comment": "Комментарий для ввода"
+      },
+      "promise": {
+        "title": "Регистрация обещания",
+        "date": "Дата",
+        "amount": "Сумма",
+        "percentage": "Процент от остатка"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Дата",
+        "amount": "Сумма",
+        "currencyId": "Валюта",
+        "percentage": "Процент от остатка"
+      },
+      "phone": {
+        "title": "Ввод нового номера должника",
+        "typeCode": "Тип",
+        "phone": "Номер телефона",
+        "stopAutoSms": "Не отправлять автоматические SMS",
+        "stopAutoInfo": "Запретить голосовое информирование",
+        "comment": "Комментарий"
+      },
+      "attachment": {
+        "title": "Прикрепление файлов",
+        "add": "Добавить файл",
+        "docTypeCode": "Тип",
+        "docName": "Название",
+        "docNumber": "Номер",
+        "comment": "Комментарий",
+        "file": "Выберите файл"
+      },
+      "attributes": {
+        "title": "Дополнительные атрибуты",
+        "grid": {
+          "code": "Код",
+          "name": "Название",
+          "value": "Значение",
+          "mandatory": "Обязательно к заполнению"
+        }
+      },
+      "misc": {
+        "title": "Дополнительно",
+        "autoCommentId": "Выберите автокомментарий",
+        "autoComment": "Автокомментарий",
+        "callReasonCode": "Причина звонка",
+        "debtReasonCode": "Причина возникновения задолженности",
+        "nextCallDateTime": "Дата повторного звонка",
+        "refusalReasonCode": "Причина отказа от оплаты",
+        "statusReasonCode": "Причина смены статуса на пользовательский",
+        "comment": "Комментарий"
+      },
+      "confirm": {
+        "title": "Подтверждение данных"
+      }
     }
   },
   "login": {
@@ -220,6 +284,7 @@
       "middleName": "Отчество",
       "photo": "Фото",
       "inactive": "Блокирован",
+      "isAutoReset": "Автоматическое перезакрепление",
       "login": "Логин",
       "password": "Пароль",
       "ldapLogin": "LDAP-логин",
@@ -323,6 +388,10 @@
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
+    },
+    "tabs": {
+      "dictionaries": "Словари",
+      "attributes": "Атрибуты"
     }
   },
   "terms": {
@@ -521,7 +590,21 @@
       "title": "Долги"
     },
     "propertyTab": {
-      "title": "Имущество"
+      "title": "Имущество",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранный объект имущества?"
+      },
+      "attributes": {
+        "title": "Параметры имущества"
+      }
+    },
+    "guarantorsTab": {
+      "title": "Поручители",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранный договор поручительства?"
+      }
     },
     "contactsTab": {
       "title": "Контакты",
@@ -569,12 +652,6 @@
         "download": "Не удалось скачать документ"
       }
     },
-    "accountsTab": {
-      "title": "Счета"
-    },
-    "tasksTab": {
-      "title": "Задачи"
-    },
     "employmentRecordTab": {
       "title": "История трудоустройства",
       "remove": {
@@ -584,21 +661,6 @@
     },
     "actionLogTab": {
       "title": "Лог действий"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Произвольные атрибуты"
-    },
-    "commentTab": {
-      "title": "Комментарий"
-    },
-    "promotionsTab": {
-      "title": "Акции"
-    },
-    "socialNetworksTab": {
-      "title": "Социальные сети"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Доп. инфо"
     },
     "attributesTab": {
       "title": "Атрибуты"
@@ -820,13 +882,56 @@
         "delete": {
           "title": "Удалить адрес",
           "confirmMessage": "Вы действительно хотите удалить адрес {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Просмотр истории выездов",
+          "grid": {
+            "id": "Ид",
+            "debtId": "Ид долга",
+            "contract": "Номер договора",
+            "statusCode": "Статус",
+            "purposeCode": "Цель",
+            "requestUserFullName": "Пользователь, наметивший выезд",
+            "requestDateTime": "Дата отметки необходимости",
+            "prepareUserFullName": "Пользователь, подготовивший выезд",
+            "prepareDateTime": "Дата подготовки выезда",
+            "planUserFullName": "Запланированный пользователь для выезда",
+            "planVisitDateTime": "Плановая дата выезда",
+            "execUserFullName": "Пользователь, выполнивший выезд",
+            "execDateTime": "Фактическая дата выезда",
+            "comment": "Комментарий"
+          }
+        },
+        "markConfirm": {
+          "title": "Отметка необходимости выезда",
+          "confirmMessage": "По данному адресу результат выезда неверный адрес. Установить необходимость выезда снова?"
+        },
+        "mark": {
+          "title": "Отметка необходимости выезда",
+          "grid": {
+            "id": "Ид",
+            "contract": "Номер договора",
+            "statusCode": "Статус",
+            "debtAmount": "Сумма просроченного долга",
+            "currencyName": "Валюта"
+          },
+          "form": {
+            "purposeCode": "Цель",
+            "comment": "Комментарий"
+          }
         }
       }
     },
     "attribute": {
+      "treeType": "Тип дерева",
+      "treeSubtype": "Подтип дерева",
       "dialogs": {
         "edit": {
           "title": "Редактирование атрибута"
+        },
+        "delete": {
+          "title": "Удалить атрибут",
+          "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
         }
       },
       "grid": {
@@ -835,7 +940,10 @@
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
-        "comment": "Комментарий"
+        "comment": "Комментарий",
+        "typeCode": "Тип данных",
+        "dictNameCode": "Словарь",
+        "disabledValue": "Не содержит значение"
       }
     },
     "contact": {
@@ -851,6 +959,60 @@
         "educationCode": "Образование",
         "linkTypeCode": "Тип",
         "comment": "Комментарий"
+      }
+    },
+    "contactProperty": {
+      "contactType": "Тип контакта",
+      "treeType": "Тип дерева",
+      "dialogs": {
+        "add": {
+          "title": "Новый результат контакта"
+        },
+        "edit": {
+          "title": "Результат контакта",
+          "mainSettings": "Основные настройки",
+          "attributesSettings": "Настройки атрибутов",
+          "value": "Значение",
+          "formula": "Формула",
+          "attributes": {
+            "code": "Код",
+            "name": "Название",
+            "display": "Отображать",
+            "mandatory": "Обязательно к заполнению"
+          }
+        },
+        "delete": {
+          "title": "Удалить результат контакта",
+          "confirmMessage": "Вы действительно хотите удалить результат контакта?"
+        }
+      },
+      "edit": {
+        "code": "Код",
+        "name": "Название",
+        "boxColor": "Цвет",
+        "commentMode": "Ввод комментария",
+        "autoCommentIds": "Ввод автокомментария",
+        "regInvisible": "Добавление файла",
+        "nextCallMode": "Дата повторного звонка",
+        "promiseMode": "Ввод обещания",
+        "paymentMode": "Ввод неподтверженного платежа",
+        "callReasonMode": "Причина звонка должника",
+        "debtStatusCode": "Пользовательский статус",
+        "statusReasonMode": "Причина смены статуса",
+        "debtReasonMode": "Ввод причины возникновения задолженности",
+        "template": "Тип настройки сценария",
+        "nextCallDays": "Кол-во дней до следующего звонка",
+        "dictValue1": "Словарный атрибут 1",
+        "dictValue2": "Словарный атрибут 2",
+        "dictValue3": "Словарный атрибут 3",
+        "dictValue4": "Словарный атрибут 4",
+        "isInvalidContact": "Неверный номер/адрес",
+        "addPhone": "Ввод нового номера должника",
+        "isRefusal": "Признак отказа от оплаты",
+        "isSuccess": "Считать результат успешным",
+        "changeResponsible": "Перераспределение на оператора",
+        "contactInvisible": "Не отображать в списке контактов",
+        "fileAttachMode": "Прикрепление файлов"
       }
     },
     "document": {
@@ -889,6 +1051,56 @@
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
         }
+      }
+    },
+    "guarantor": {
+      "title": "Поручитель",
+      "search": {
+        "title": "Поиск поручителей"
+      },
+      "dialog": {
+        "title": "Выбор поручителя",
+        "notFound": "Не удалось найти поручителя. Попробуйте изменить параметры поиска."
+      },
+      "grid": {
+        "id": "Ид",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия / Наименование",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "educationCode": "Образование",
+        "familyStatusCode": "Семейное положение",
+        "genderCode": "Пол",
+        "passportNumber": "№ паспорта",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "stringValue1": "Доп. значение 1",
+        "stringValue2": "Доп. значение 2",
+        "stringValue3": "Доп. значение 3",
+        "stringValue4": "Доп. значение 4",
+        "stringValue5": "Доп. значение 5",
+        "stringValue6": "Доп. значение 6",
+        "stringValue7": "Доп. значение 7",
+        "stringValue8": "Доп. значение 8",
+        "stringValue9": "Доп. значение 9",
+        "stringValue10": "Доп. значение 10"
+      }
+    },
+    "guaranteeContract": {
+      "title": "Договор поручительства",
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Дата заключения договора",
+        "contractEndDate": "Дата окончания договора",
+        "contractTypeCode": "Тип ответственности",
+        "comment": "Комментарий"
+      },
+      "toolbar": {
+        "add": "Добавить поручителя"
       }
     },
     "employment": {
@@ -941,6 +1153,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "Просмотр истории выездов",
+          "mark": "Отметить необходимость выезда"
+        }
+      },
       "card": {
         "typeCode": "Тип",
         "phoneNumber": "Номер телефона",
@@ -1091,6 +1309,21 @@
           "fullName": "Оператор"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "propertyType": "Тип имущества",
+        "isConfirmed": "Подтверждено",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1135,6 +1368,12 @@
     },
     "payments": {
       "gen": { "singular": "платежа", "plural": "списка платежей" }
+    },
+    "guarantors": {
+      "gen": { "singular": "поручителя", "plural": "списка поручителей" }
+    },
+    "guaranteeContract": {
+      "gen": { "singular": "договора поручительства", "plural": "договоров поручительства" }
     },
     "promises": {
       "gen": { "singular": "обещания", "plural": "списка обещаний" }
@@ -1208,6 +1447,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "шаблона сообщения", "plural": "шаблонов сообщений" }
+    },
+    "property": {
+      "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
     }
   },
   "errors": {
@@ -1315,6 +1557,10 @@
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
       },
+      "upload": {
+        "403": "У вас недостаточно прав для загрузки {{ entity }}",
+        "*": "При загрузке {{ entity }} произошла ошибка"
+      },
       "delete": {
         "403": "У вас недостаточно прав для удаления {{ entity }}",
         "*": "При удалении {{ entity }} произошла ошибка"
@@ -1335,6 +1581,11 @@
       "TRUE": "Истина",
       "FALSE": "Ложь"
     },
+    "contextMenu": {
+      "copy": "Копировать",
+      "copyWithChildren": "Копировать с дочерними элементами",
+      "paste": "Вставить"
+    },
     "typeCode": {
       "number": "Число",
       "date": "Дата",
@@ -1344,18 +1595,35 @@
       "dictionary": "Словарь"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Сохранить",
-      "cancel": "Отменить",
-      "remove": "Удалить",
-      "close": "Закрыть",
-      "clear": "Очистить",
-      "search": "Искать",
       "add": "Добавить",
-      "change": "Изменить",
+      "addUser": "Добавить пользователя",
       "back": "Назад",
+      "block": "Блокировать",
+      "cancel": "Отменить",
+      "change": "Изменить",
+      "changeStatus": "",
+      "clear": "Очистить",
+      "close": "Закрыть",
+      "copy": "Копировать",
+      "delete": "Удалить",
+      "download": "Скачать",
+      "edit": "Редактировать",
+      "exportToExcel": "Экспорт в Excel",
       "excel": "Экспорт в Excel",
-      "block": "Блокировать"
+      "move": "Переместить",
+      "next": "Далее",
+      "ok": "OK",
+      "refresh": "Перезагрузить",
+      "registerContact": "Зарегистрировать контакт",
+      "remove": "Удалить",
+      "save": "Сохранить",
+      "search": "Искать",
+      "select": "Выбрать",
+      "sms": "СМС",
+      "unblock": "Разблокировать",
+      "undo": "Отменить",
+      "upload": "Загрузить",
+      "visit": "Выезд"
     },
     "dateTimeRange": {
       "from": "Начало",

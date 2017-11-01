@@ -92,7 +92,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     ) {
       this.toggleCalendar(false);
     }
-  };
+  }
 
   ngOnInit(): void {
     document.body.appendChild(this.dropdown.nativeElement);
@@ -121,6 +121,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    this.cdRef.markForCheck();
   }
 
   validate(): object {
@@ -190,9 +191,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   private positionDropdown(): void {
     const inputRect: ClientRect = this.input.nativeElement.getBoundingClientRect();
-    const contentRect: ClientRect = this.dropdown.nativeElement.children[0].getBoundingClientRect();
+    const content = this.dropdown.nativeElement.children[0];
+    if (!content) {
+      return;
+    }
+    const contentRect: ClientRect = content.getBoundingClientRect();
 
-    // If the dropdown won't fit into the window below the input - place it above it.
+    // If the dropdown won't fit into the window below the input - place it above.
     const top = inputRect.bottom + contentRect.height > window.innerHeight
       ? inputRect.top - contentRect.height
       : inputRect.bottom;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -12,6 +12,7 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
 import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -59,6 +60,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('schedule')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
@@ -98,6 +104,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private debtorService: DebtorService,
     private gridService: GridService,
@@ -108,6 +115,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
+    @Inject('contactType') private contactType: number,
+    @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
@@ -120,7 +129,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.debt = debt;
       this.person = person;
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
       this.columns = this.gridService.setRenderers(filteredColumns);
       this.cdRef.markForCheck();
@@ -182,11 +191,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const data = {
       ...schedule,
       personId: this.personId,
-      // personRole = 1 - debtor
-      // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=44.Рольперсоны
-      personRole: 1,
+      personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
-    }
+    };
     this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
   }
 
@@ -200,6 +207,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   isDialog(dialog: string): boolean {
     return this.dialog === dialog;
+  }
+
+  registerContact(): void {
+    this.selectedPhoneId$
+      .take(1)
+      .subscribe(phoneId => {
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
+        const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+      });
   }
 
   get selectedPhone$(): Observable<IPhone> {
@@ -236,16 +253,27 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canSchedule$(): Observable<boolean> {
     return this.selectedPhone$.mergeMap(phone => {
-      return phone && !phone.isInactive && !phone.stopAutoSms && ![6, 7, 8, 17].includes(this.debt.statusCode)
+      return phone && !phone.isInactive && !phone.stopAutoSms && this.isDebtOpen
         ? combineLatestAnd([
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          // personRole = 1 - debtor
-          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', 1),
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
         ])
         : Observable.of(false);
     });
+  }
+
+  get canRegisterContact$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.selectedPhone$.map(phone => phone && !phone.isInactive),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
+    ]);
+  }
+
+  private get isDebtOpen(): boolean {
+    return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
 
   private onAdd(): void {

@@ -22,7 +22,7 @@ import { IUserConstant } from '../../../../../../../../core/user/constants/user-
 import { DebtService } from '../../../debt.service';
 import { UserConstantsService } from '../../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../../../core/user/permissions/user-permissions.service'
+import { UserPermissionsService } from '../../../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -113,12 +113,11 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const { requestValue } = this.form;
-    const { customStatusCode, statusCode, ...rest } = requestValue;
+    const { customStatusCode, statusCode, ...rest } = this.form.serializedUpdates;
     const value = {
       ...rest,
       statusCode: customStatusCode || statusCode,
-    }
+    };
     this.debtService.changeStatus(this.personId, this.debt.id, value).subscribe(() => {
       this.submit.emit();
       this.close.emit();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -7,15 +7,21 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
+import { IAddressMarkData } from './mark/mark.interface';
+import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
+import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
+import { DebtService } from '../../debt/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-address-grid',
@@ -23,7 +29,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
-  private selectedAddressId$ = new BehaviorSubject<number>(null);
+  private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -33,26 +39,43 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedAddress$)
-        .map(([ canEdit, address ]) => canEdit && !!address),
-      action: () => this.onEdit(this.selectedAddressId$.value)
+      enabled: this.canEdit$,
+      action: () => this.onEdit(this._selectedAddressId$.value)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: Observable.combineLatest(this.canBlock$, this.selectedAddress$)
-        .map(([ canBlock, address ]) => canBlock && !!address && !address.isInactive),
+      enabled: this.canBlock$,
       action: () => this.setDialog('block')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: Observable.combineLatest(this.canUnblock$, this.selectedAddress$)
-        .map(([ canUnblock, address ]) => canUnblock && !!address && !!address.isInactive),
+      enabled: this.canUnblock$,
       action: () => this.setDialog('unblock')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_VISIT,
+      enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
+      children: [
+        {
+          label: 'widgets.phone.toolbar.visits.view',
+          enabled: this.canViewVisitLog$,
+          action: () => this.setDialog('visits')
+        },
+        {
+          label: 'widgets.phone.toolbar.visits.mark',
+          enabled: this.canMarkVisit$,
+          action: () => this.onMarkClick()
+        },
+      ]
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedAddress$)
-        .map(([ canDelete, address ]) => canDelete && !!address),
+      enabled: this.canDelete$,
       action: () => this.setDialog('delete')
     },
     {
@@ -68,6 +91,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
+  private debt: IDebt;
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
@@ -81,32 +105,32 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ];
 
   private dialog: string;
-
   private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
 
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
+    private debtService: DebtService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    @Inject('personRole') private _personRole: number,
   ) {
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
-
     Observable.combineLatest(
+      this.debtService.fetch(this.personId, this.debtId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ columns, canViewBlock ]) => {
+    .subscribe(([ debt, columns, canViewBlock ]) => {
+      this.debt = debt;
+
       const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop)
+        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
 
       this.columns = this.gridService.setRenderers(filteredColumns);
@@ -136,6 +160,22 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
   }
 
+  get personRole(): number {
+    return this._personRole;
+  }
+
+  get personId(): number {
+    return this.routeParams.contactId || this.routeParams.personId || null;
+  }
+
+  get debtorId(): number {
+    return this.routeParams.personId || null;
+  }
+
+  get debtId(): number {
+    return this.routeParams.debtId || null;
+  }
+
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }
@@ -152,25 +192,38 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return (address: IAddress) => ({ inactive: !!address.isInactive });
   }
 
+  onMarkClick(): void {
+    this.addressService.check(this.personId, this._selectedAddressId$.value)
+      .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
+  }
+
+  onMarkConfirmDialogSubmit(): void {
+    this.setDialog('mark');
+  }
+
+  onMarkDialogSubmit(data: IAddressMarkData): void {
+    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data).subscribe(() => this.onSubmitSuccess());
+  }
+
   onDoubleClick(address: IAddress): void {
     this.onEdit(address.id);
   }
 
   onSelect(address: IAddress): void {
-    this.selectedAddressId$.next(address.id);
+    this._selectedAddressId$.next(address.id);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(18, this.personId, this.selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.addressService.block(18, this.personId, this._selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.unblock(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.personId, this.selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.delete(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onCloseDialog(): void {
@@ -181,36 +234,90 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
+  registerContact(): void {
+    this.selectedAddressId$
+      .take(1)
+      .subscribe(addressId => {
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
+        // Contact type 'Visit' = 3
+        // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
+        const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+      });
+  }
+
+  get selectedAddressId$(): Observable<number> {
+    return this._selectedAddressId$;
+  }
+
   get selectedAddress$(): Observable<IAddress> {
-    return this.selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
+    return this._selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_VIEW');
   }
 
   get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_ADD').distinctUntilChanged();
+    return this.userPermissionsService.has('ADDRESS_ADD');
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]).distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
+      this.selectedAddress$.map(Boolean),
+    ]);
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_DELETE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_DELETE'),
+      this.selectedAddress$.map(Boolean),
+    ]);
   }
 
   get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_SET_INACTIVE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_SET_INACTIVE'),
+      this.selectedAddress$.map(address => address && !address.isInactive),
+    ]);
   }
 
   get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_SET_ACTIVE').distinctUntilChanged();
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_SET_ACTIVE'),
+      this.selectedAddress$.map(address => address && !!address.isInactive),
+    ]);
+  }
+
+  get canViewVisitLog$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
+      this.selectedAddress$.map(Boolean),
+    ]);
+  }
+
+  get canMarkVisit$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
+      this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
+    ]);
+  }
+
+  get canRegisterContact$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.selectedAddress$.map(address => address && !address.isInactive),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
+    ]);
+  }
+
+  private get isDebtOpen(): boolean {
+    return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
 
   private onAdd(): void {

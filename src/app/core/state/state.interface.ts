@@ -11,9 +11,11 @@ import { ILookupState } from '../lookup/lookup.interface';
 import { INotificationsState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
 import { IPermissionsState } from '../../routes/admin/roles/permissions.interface';
+import { IUserAttributeTypesState } from '../user/attribute-types/user-attribute-types.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.interface';
 import { IUserPermissionsState } from '../user/permissions/user-permissions.interface';
+import { IUserTemplatesState } from '../user/templates/user-templates.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 import { IMetadataState } from '../metadata/metadata.interface';
 
@@ -32,8 +34,10 @@ export interface IAppState {
   readonly notifications: INotificationsState;
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
+  readonly userAttributeTypes: IUserAttributeTypesState;
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;
   readonly userPermissions: IUserPermissionsState;
+  readonly userTemplates: IUserTemplatesState;
   readonly users: IUsersState;
 }

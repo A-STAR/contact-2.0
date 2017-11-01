@@ -15,6 +15,7 @@
     </app-tree-node>
   </ul>
 </div>
+
 <div
   *ngIf="horizontal"
   [ngClass]="{'ui-tree ui-tree-horizontal ui-widget ui-widget-content ui-corner-all':true,'ui-tree-selectable':selectionMode}"
@@ -39,4 +40,18 @@
       </app-tree-node>
     </table>
   </ng-container>
+</div>
+
+<div class="context-menu" *ngIf="ctxMenu" [ngStyle]="ctxMenu.style">
+  <div class="list-group m0">
+    <a class="list-group-item" (click)="onCopyClick(false)">
+      {{ 'default.contextMenu.copy' | translate }}
+    </a>
+    <a class="list-group-item" (click)="onCopyClick(true)">
+        {{ 'default.contextMenu.copyWithChildren' | translate }}
+    </a>
+    <a *ngIf="canPaste" class="list-group-item" (click)="onPasteClick()">
+      {{ 'default.contextMenu.paste' | translate }}
+    </a>
+  </div>
 </div>

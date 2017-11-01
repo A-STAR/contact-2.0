@@ -10,8 +10,3 @@ export interface IIdentityDoc {
   isMain: number;
   refPersonId?: number;
 }
-
-export interface IIDentityResponse {
-  success: boolean;
-  identityDocuments: IIdentityDoc[];
-}

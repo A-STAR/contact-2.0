@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { AddressGridMarkModule } from './mark/mark.module';
+import { AddressGridVisitsModule } from './visits/visits.module';
 import { BlockDialogModule } from '../../../../components/dialog/block/block-dialog.module';
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { GridModule } from '../../../../components/grid/grid.module';
@@ -10,6 +12,8 @@ import { AddressGridComponent } from './address-grid.component';
 
 @NgModule({
   imports: [
+    AddressGridMarkModule,
+    AddressGridVisitsModule,
     BlockDialogModule,
     CommonModule,
     DialogActionModule,

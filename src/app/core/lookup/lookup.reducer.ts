@@ -7,6 +7,7 @@ import { LookupService } from './lookup.service';
 const defaultState: ILookupState = {
   contractors: null,
   currencies: null,
+  dictionaries: null,
   languages: null,
   portfolios: null,
   roles: null,
@@ -41,9 +42,9 @@ export function lookupReducer(state: ILookupState = defaultState, action: Action
         [key]: {
           status: LookupStatusEnum.ERROR
         }
-      }
+      };
     }
     default:
       return state;
   }
-};
+}

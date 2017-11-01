@@ -184,6 +184,11 @@ export class SelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
+    this.cdRef.markForCheck();
+  }
+
   isItemContextExist(item: ILabeledValue): boolean {
     return item.context && !!Object.keys(item.context).length;
   }
@@ -205,9 +210,11 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   canCloseItem(item: ILabeledValue): boolean {
+    const option = this.lookupAtOptions(item.value);
     return this.closableSelectedItem
       && !!this._active.length
-      && this.lookupAtOptions(item.value).canRemove !== false;
+      && option
+      && option.canRemove !== false;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {

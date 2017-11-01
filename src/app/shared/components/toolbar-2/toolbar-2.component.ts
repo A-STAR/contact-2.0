@@ -3,7 +3,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultElement } from './toolbar-2.interface';
+import { IButtonType } from '../button/button.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
+
+import { invert } from '../../../core/utils';
+import { doOnceIf } from '../../../core/utils/helpers';
 
 @Component({
   selector: 'app-toolbar-2',
@@ -12,97 +16,41 @@ import { IToolbarItem, IToolbarButton, ToolbarItemTypeEnum, IToolbarDefaultEleme
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar2Component {
-  @Input() items: Array<IToolbarItem> = [];
+  @Input() items: IToolbarItem[] = [];
   @Output() action = new EventEmitter<IToolbarItem>();
 
-  defaultItems: { [ToolbarItemTypeEnum: number]: IToolbarDefaultElement } = {
-    [ToolbarItemTypeEnum.BUTTON_ADD]: {
-      label: 'toolbar.action.add',
-      icon: 'fa fa-plus',
-    },
-    [ToolbarItemTypeEnum.BUTTON_EDIT]: {
-      label: 'toolbar.action.edit',
-      icon: 'fa fa-pencil',
-    },
-    [ToolbarItemTypeEnum.BUTTON_SAVE]: {
-      label: 'toolbar.action.save',
-      icon: 'fa fa-save',
-    },
-    [ToolbarItemTypeEnum.BUTTON_DELETE]: {
-      label: 'toolbar.action.remove',
-      icon: 'fa fa-trash',
-    },
-    [ToolbarItemTypeEnum.BUTTON_REFRESH]: {
-      label: 'toolbar.action.refresh',
-      icon: 'fa fa-refresh',
-    },
-    [ToolbarItemTypeEnum.BUTTON_SMS]: {
-      label: 'toolbar.action.sms',
-      icon: 'fa fa-envelope',
-    },
-    [ToolbarItemTypeEnum.BUTTON_MOVE]: {
-      label: 'toolbar.action.move',
-      icon: 'fa fa-share',
-    },
-    [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: {
-      label: 'toolbar.action.download',
-      icon: 'fa fa-cloud-download',
-    },
-    [ToolbarItemTypeEnum.BUTTON_UPLOAD]: {
-      label: 'toolbar.action.upload',
-      icon: 'fa fa-cloud-upload',
-    },
-    [ToolbarItemTypeEnum.BUTTON_BLOCK]: {
-      label: 'toolbar.action.block',
-      icon: 'fa fa-unlock-alt',
-    },
-    [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: {
-      label: 'toolbar.action.unblock',
-      icon: 'fa fa-unlock',
-    },
-    [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: {
-      label: 'toolbar.action.changeStatus',
-      icon: 'fa fa-random',
-    },
-    [ToolbarItemTypeEnum.BUTTON_CLOSE]: {
-      label: 'toolbar.action.close',
-      icon: 'fa fa-ban',
-    },
-    [ToolbarItemTypeEnum.BUTTON_UNDO]: {
-      label: 'toolbar.action.undo',
-      icon: 'fa fa-undo',
-    },
-    [ToolbarItemTypeEnum.BUTTON_OK]: {
-      label: 'toolbar.action.ok',
-      icon: 'fa fa-check',
-    },
+  defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
+    [ToolbarItemTypeEnum.BUTTON_ADD]: 'add',
+    [ToolbarItemTypeEnum.BUTTON_ADD_USER]: 'addUser',
+    [ToolbarItemTypeEnum.BUTTON_EDIT]: 'edit',
+    [ToolbarItemTypeEnum.BUTTON_SAVE]: 'save',
+    [ToolbarItemTypeEnum.BUTTON_DELETE]: 'delete',
+    [ToolbarItemTypeEnum.BUTTON_REFRESH]: 'refresh',
+    [ToolbarItemTypeEnum.BUTTON_SMS]: 'sms',
+    [ToolbarItemTypeEnum.BUTTON_MOVE]: 'move',
+    [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: 'download',
+    [ToolbarItemTypeEnum.BUTTON_UPLOAD]: 'upload',
+    [ToolbarItemTypeEnum.BUTTON_BLOCK]: 'block',
+    [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: 'unblock',
+    [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: 'changeStatus',
+    [ToolbarItemTypeEnum.BUTTON_CLOSE]: 'close',
+    [ToolbarItemTypeEnum.BUTTON_UNDO]: 'undo',
+    [ToolbarItemTypeEnum.BUTTON_OK]: 'ok',
+    [ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT]: 'registerContact',
+    [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit',
+    [ToolbarItemTypeEnum.BUTTON_COPY]: 'copy',
   };
-
-  buttonTypes: Array<ToolbarItemTypeEnum> = [
-    ToolbarItemTypeEnum.BUTTON,
-    ToolbarItemTypeEnum.BUTTON_ADD,
-    ToolbarItemTypeEnum.BUTTON_EDIT,
-    ToolbarItemTypeEnum.BUTTON_SAVE,
-    ToolbarItemTypeEnum.BUTTON_DELETE,
-    ToolbarItemTypeEnum.BUTTON_REFRESH,
-    ToolbarItemTypeEnum.BUTTON_SMS,
-    ToolbarItemTypeEnum.BUTTON_MOVE,
-    ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
-    ToolbarItemTypeEnum.BUTTON_UPLOAD,
-    ToolbarItemTypeEnum.BUTTON_BLOCK,
-    ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-    ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
-    ToolbarItemTypeEnum.BUTTON_CLOSE,
-    ToolbarItemTypeEnum.BUTTON_UNDO,
-    ToolbarItemTypeEnum.BUTTON_OK,
-  ];
 
   constructor(
     private store: Store<IAppState>,
   ) {}
 
+  getButtonType(item: IToolbarItem): IButtonType {
+    return this.defaultItems[item.type];
+  }
+
   isButton(item: IToolbarItem): boolean {
-    return this.buttonTypes.includes(item.type);
+    return item.type === ToolbarItemTypeEnum.BUTTON || Object.keys(this.defaultItems).includes(String(item.type));
   }
 
   isCheckbox(item: IToolbarItem): boolean {
@@ -110,20 +58,14 @@ export class Toolbar2Component {
   }
 
   onClick(item: IToolbarItem): void {
-    if (typeof item.action === 'function') {
-      item.action();
-    } else if (item.action) {
-      this.store.dispatch(item.action);
-    }
-    this.action.emit(item);
-  }
-
-  getIcon(item: IToolbarButton): string {
-    return item.icon || this.defaultItems[item.type].icon;
-  }
-
-  getLabel(item: IToolbarButton): string {
-    return item.label || this.defaultItems[item.type].label;
+    doOnceIf(this.isDisabled(item).map(invert), () => {
+      if (typeof item.action === 'function') {
+        item.action();
+      } else if (item.action) {
+        this.store.dispatch(item.action);
+      }
+      this.action.emit(item);
+    });
   }
 
   isDisabled(item: IToolbarItem): Observable<boolean> {

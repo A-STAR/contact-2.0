@@ -58,8 +58,8 @@ export class EmailCardComponent {
 
   public onSubmit(): void {
     const action = this.emailId
-      ? this.emailService.update(18, this.id, this.emailId, this.form.requestValue)
-      : this.emailService.create(18, this.id, this.form.requestValue);
+      ? this.emailService.update(18, this.id, this.emailId, this.form.serializedUpdates)
+      : this.emailService.create(18, this.id, this.form.serializedUpdates);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(EmailService.MESSAGE_EMAIL_SAVED);

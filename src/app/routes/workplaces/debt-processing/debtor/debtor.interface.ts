@@ -1,9 +1,11 @@
+import { IDebt } from '../debt-processing.interface';
+
 export interface IPerson {
   id: number;
   birthDate?: string | Date;
   firstName?: string;
   middleName?: string;
-  lastName?: string,
+  lastName?: string;
   type?: number;
   reward?: number;
   debtId?: number;
@@ -11,26 +13,7 @@ export interface IPerson {
   city?: string;
 }
 
-export interface IPersonsResponse {
-  success: boolean;
-  persons: Array<IPerson>;
-}
-
-
-import { IPerson } from './debtor.interface';
-import { IDebt } from '../debt-processing.interface';
-
 export interface IDebtState {
   currentDebt?: IDebt;
   currentDebtor?: IPerson;
-}
-
-export interface IDebtorsFetchResponse {
-  success: boolean;
-  debtors: IPerson[];
-}
-
-export interface IDebtsFetchResponse {
-  success: boolean;
-  debts: IDebt[];
 }

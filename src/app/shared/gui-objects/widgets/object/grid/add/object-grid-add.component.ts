@@ -6,12 +6,15 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IObject } from '../../object.interface';
 
 import { ObjectService } from '../../object.service';
+
+import { GridComponent } from '../../../../../components/grid/grid.component';
 
 @Component({
   selector: 'app-object-grid-add',
@@ -25,6 +28,8 @@ export class ObjectGridEditComponent implements OnInit {
   @Output() submit = new EventEmitter<number[]>();
   @Output() cancel = new EventEmitter<void>();
 
+  @ViewChild(GridComponent) grid: GridComponent;
+
   columns: IGridColumn[] = [
     { prop: 'id' },
     { prop: 'name' },
@@ -32,7 +37,7 @@ export class ObjectGridEditComponent implements OnInit {
 
   rows: IObject[] = [];
 
-  private _selectedIds: number[] = [];
+  private _hasSelection = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -47,15 +52,17 @@ export class ObjectGridEditComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this._selectedIds.length > 0;
+    return this._hasSelection;
   }
 
-  onSelect(object: IObject): void {
-    this._selectedIds = [ object.id ];
+  onSelect(): void {
+    this._hasSelection = true;
+    this.cdRef.markForCheck();
   }
 
   onSubmit(): void {
-    this.submit.emit(this._selectedIds);
+    const ids = this.grid.selected.map(item => item.id);
+    this.submit.emit(ids);
   }
 
   onCancel(): void {

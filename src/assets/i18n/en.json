@@ -33,7 +33,7 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
-        "DICTIONARIES": "Dictionaries",
+        "DICTIONARIES": "Reference",
         "PORTFOLIOS": "Portfolios",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
@@ -45,6 +45,7 @@
         "ARBITRARY_VALUES": "Arbitrary Values",
         "CONTACT_TREES": "Contact Trees",
         "MESSAGE_SCENARIOS": "Message Scenarios",
+        "CONTACT_REGISTRATION": "Contact Registration",
         "GROUPS": "Groups",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
@@ -60,10 +61,12 @@
         "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
+        "DEBTOR_GUARANTEE": "Guarantee contract",
         "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PAYMENT": "Payment",
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
+        "DEBTOR_PROPERTY": "Property card",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -111,27 +114,6 @@
       "selectedMessage": "selected"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Create",
-      "edit": "Edit",
-      "remove": "Delete",
-      "copy": "Copy",
-      "refresh": "Refresh",
-      "search": "Search",
-      "save": "Save",
-      "sms": "Send SMS",
-      "move": "Move",
-      "download": "Download",
-      "upload": "Upload",
-      "block": "Block",
-      "unblock": "Unblock",
-      "changeStatus": "Change Status",
-      "close": "Close",
-      "undo": "Undo",
-      "ok": "OK"
-    }
-  },
   "queryBuilder": {
     "title": "Query Builder",
     "buttons": {
@@ -141,6 +123,88 @@
       "removeGroup": "Delete group",
       "addValue": "Add value",
       "removeValue": "Delete value"
+    }
+  },
+  "modules": {
+    "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Log Contact",
+          "address": {
+            "title": "Addresses",
+            "button": "Log Selected Address"
+          },
+          "phone": {
+            "title": "Phones",
+            "button": "Log Selected Phone"
+          },
+          "misc": {
+            "title": "Miscellaneous",
+            "buttonMisc": "Miscellaneous",
+            "buttonOfficeVisit": "Office Visit"
+          }
+        }
+      },
+      "outcome": {
+        "title": "Contact Outcome",
+        "template": "Scenario",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "comment": "Comments"
+      },
+      "promise": {
+        "title": "Promise Registration",
+        "date": "Date",
+        "amount": "Amount",
+        "percentage": "Remainder Percentage"
+      },
+      "payment": {
+        "title": "Регистрация неподтвержденного платежа",
+        "date": "Date",
+        "amount": "Amount",
+        "currencyId": "Currency",
+        "percentage": "Remainder Percentage"
+      },
+      "phone": {
+        "title": "New Debtor Phone Number",
+        "typeCode": "Type",
+        "phone": "Phone Number",
+        "stopAutoSms": "Disable Auto SMS",
+        "stopAutoInfo": "Disable Audo Voicemail",
+        "comment": "Comments"
+      },
+      "attachment": {
+        "title": "File Attachments",
+        "add": "Add File",
+        "docTypeCode": "Type",
+        "docName": "Name",
+        "docNumber": "Number",
+        "comment": "Comments",
+        "file": "Select File"
+      },
+      "attributes": {
+        "title": "Additional Attributes",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "value": "Value",
+          "mandatory": "Mandatory Field"
+        }
+      },
+      "misc": {
+        "title": "Misc",
+        "autoCommentId": "Select Auto Comments",
+        "autoComment": "Auto Comments",
+        "callReasonCode": "Reason for Call",
+        "debtReasonCode": "Reason for Debt",
+        "nextCallDateTime": "Next Call Date",
+        "refusalReasonCode": "Reason for Refusal",
+        "statusReasonCode": "Reason for Status Change",
+        "comment": "Comments"
+      },
+      "confirm": {
+        "title": "Confirmation"
+      }
     }
   },
   "login": {
@@ -220,6 +284,7 @@
       "middleName": "Middle name",
       "photo": "Photo",
       "inactive": "Inactive",
+      "isAutoReset": "Auto reset",
       "login": "Login",
       "password": "Password",
       "ldapLogin": "LDAP login",
@@ -323,6 +388,10 @@
     },
     "errors": {
       "view": "Access to dictionaries list denied"
+    },
+    "tabs": {
+      "dictionaries": "Dictionaries",
+      "attributes": "Attributes"
     }
   },
   "terms": {
@@ -521,7 +590,21 @@
       "title": "Debts"
     },
     "propertyTab": {
-      "title": "Property"
+      "title": "Property",
+      "remove": {
+        "title": "Delete the propery",
+        "confirmMessage": "Do you really want to delete this property?"
+      },
+      "attributes": {
+        "title": "Property attributes"
+      }
+    },
+    "guarantorsTab": {
+      "title": "Guarantors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this guarantee contract?"
+      }
     },
     "contactsTab": {
       "title": "Contacts",
@@ -569,12 +652,6 @@
         "download": "Could not download document"
       }
     },
-    "accountsTab": {
-      "title": "Accounts"
-    },
-    "tasksTab": {
-      "title": "Tasks"
-    },
     "employmentRecordTab": {
       "title": "Employment record",
       "remove": {
@@ -584,21 +661,6 @@
     },
     "actionLogTab": {
       "title": "Actions log"
-    },
-    "arbitraryAttributesTab": {
-      "title": "Arbitrary attributes"
-    },
-    "commentTab": {
-      "title": "Comments"
-    },
-    "promotionsTab": {
-      "title": "Promotions"
-    },
-    "socialNetworksTab": {
-      "title": "Social networks"
-    },
-    "extrasDebtInfoTab": {
-      "title": "Debt info"
     },
     "attributesTab": {
       "title": "Attributes"
@@ -820,13 +882,56 @@
         "delete": {
           "title": "Delete address",
           "confirmMessage": "Are you sure you want to delete the address {{ fullAddress }}?"
+        },
+        "visits": {
+          "title": "Visits Log",
+          "grid": {
+            "id": "Id",
+            "debtId": "Debt Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "purposeCode": "Purpose",
+            "requestUserFullName": "Requested By",
+            "requestDateTime": "Requested On",
+            "prepareUserFullName": "Prepared By",
+            "prepareDateTime": "Prepared On",
+            "planUserFullName": "Planned For",
+            "planVisitDateTime": "Planned On",
+            "execUserFullName": "Carried out By",
+            "execDateTime": "Carried out On",
+            "comment": "Comments"
+          }
+        },
+        "markConfirm": {
+          "title": "Mark for Visit",
+          "confirmMessage": "Invalid address. Are you sure you want to proceed?"
+        },
+        "mark": {
+          "title": "Mark for Visit",
+          "grid": {
+            "id": "Id",
+            "contract": "Contract #",
+            "statusCode": "Status",
+            "debtAmount": "Debt Amount",
+            "currencyName": "Currency"
+          },
+          "form": {
+            "purposeCode": "Purpose",
+            "comment": "Comments"
+          }
         }
       }
     },
     "attribute": {
+      "treeType": "Tree Type",
+      "treeSubtype": "Tree Subtype",
       "dialogs": {
         "edit": {
           "title": "Edit Attribute"
+        },
+        "delete": {
+          "title": "Delete attribute",
+          "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
         }
       },
       "grid": {
@@ -835,7 +940,10 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
-        "comment": "Comments"
+        "comment": "Comments",
+        "typeCode": "Data Type",
+        "dictNameCode": "Dictionary",
+        "disabledValue": "No Value"
       }
     },
     "contact": {
@@ -844,13 +952,67 @@
         "firstName": "First name",
         "middleName": "Middle name",
         "lastName": "Last name",
-        "birthDate": "Birth date",
+        "birthDate": "Date of birth",
         "birthPlace": "Place of birth",
         "genderCode": "Gender",
         "familyStatusCode": "Family status",
         "educationCode": "Education",
         "linkTypeCode": "Type",
         "comment": "Comment"
+      }
+    },
+    "contactProperty": {
+      "contactType": "Contact Type",
+      "treeType": "Tree Type",
+      "dialogs": {
+        "add": {
+          "title": "Create Contact Outcome",
+          "mainSettings": "Main Settings",
+          "attributesSettings": "Attribtues Settings",
+          "value": "Value",
+          "formula": "Formula",
+          "attributes": {
+            "code": "Code",
+            "name": "Name",
+            "display": "Display",
+            "mandatory": "Required"
+          }
+        },
+        "edit": {
+          "title": "Contact Outcome"
+        },
+        "delete": {
+          "title": "Delete Contact Outcome",
+          "confirmMessage": "Are you sure you want to remove contact outcome?"
+        }
+      },
+      "edit": {
+        "code": "Code",
+        "name": "Name",
+        "boxColor": "Color",
+        "commentMode": "Comment Input Mode",
+        "autoCommentIds": "Autocomment input",
+        "regInvisible": "Uploading Files",
+        "nextCallMode": "Next Call Date",
+        "promiseMode": "Promis Input",
+        "paymentMode": "Unverified Payment Input",
+        "callReasonMode": "Reason for Calling",
+        "debtStatusCode": "Custom Status",
+        "statusReasonMode": "Reason for Changing Status",
+        "debtReasonMode": "Debt Reason Input",
+        "template": "Script Type Input",
+        "nextCallDays": "Days Until Next Call",
+        "dictValue1": "Dictionary Attribute 1",
+        "dictValue2": "Dictionary Attribute 2",
+        "dictValue3": "Dictionary Attribute 3",
+        "dictValue4": "Dictionary Attribute 4",
+        "isInvalidContact": "Invalid Phone Number/Address",
+        "addPhone": "New Debtor's Phone Number Input",
+        "isRefusal": "Payment Refusal Flag",
+        "isSuccess": "Successful Outcome",
+        "changeResponsible": "Changing Operator",
+        "contactInvisible": "Don't Display in Contacts",
+        "fileAttachMode": "Files Attachment"
       }
     },
     "document": {
@@ -889,6 +1051,56 @@
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
         }
+      }
+    },
+    "guarantor": {
+      "title": "Guarantor",
+      "search": {
+        "title": "Find guarantors"
+      },
+      "dialog": {
+        "title": "Select a guarantor",
+        "notFound": "Could not find the guarantor. Please try to change the search criteria."
+      },
+      "grid": {
+        "id": "Id",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name / Company",
+        "birthDate": "Date of birth",
+        "birthPlace": "Place of birth",
+        "educationCode": "Education",
+        "familyStatusCode": "Marital status",
+        "genderCode": "Gender",
+        "passportNumber": "Passport No",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "stringValue1": "Add. attribute 1",
+        "stringValue2": "Add. attribute 2",
+        "stringValue3": "Add. attribute 3",
+        "stringValue4": "Add. attribute 4",
+        "stringValue5": "Add. attribute 5",
+        "stringValue6": "Add. attribute 6",
+        "stringValue7": "Add. attribute 7",
+        "stringValue8": "Add. attribute 8",
+        "stringValue9": "Add. attribute 9",
+        "stringValue10": "Add. attribute 10"
+      }
+    },
+    "guaranteeContract": {
+      "title": "Guarantee contract",
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "contractTypeCode": "Contract type",
+        "comment": "Comment"
+      },
+      "toolbar": {
+        "add": "Add guarantor"
       }
     },
     "employment": {
@@ -941,6 +1153,12 @@
       }
     },
     "phone": {
+      "toolbar": {
+        "visits": {
+          "view": "View Visit Log",
+          "mark": "Mark for Visit"
+        }
+      },
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
@@ -1091,11 +1309,26 @@
           "fullName": "Operator"
         }
       }
+    },
+    "property": {
+      "card": {
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "propertyType": "Property Type",
+        "isConfirmed": "Is confirmed",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
     "attribute": {
-      "gen": { "singular": "attribute", "plural": "attribtues" }
+      "gen": { "singular": "attribute", "plural": "attributes" }
     },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
@@ -1135,6 +1368,12 @@
     },
     "payments": {
       "gen": { "singular": "payment", "plural": "payments" }
+    },
+    "guarantors": {
+      "gen": { "singular": "guarantor", "plural": "guarantors" }
+    },
+    "guaranteeContract": {
+      "gen": { "singular": "guarantee contract", "plural": "guarantee contracts" }
     },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
@@ -1208,6 +1447,9 @@
     },
     "messageTemplate": {
       "gen": { "singular": "message template", "plural": "message templates" }
+    },
+    "property": {
+      "gen": { "singular": "property", "plural": "property list" }
     }
   },
   "errors": {
@@ -1315,6 +1557,10 @@
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
       },
+      "upload": {
+        "403": "You don't have permissions to upload {{ entity }}",
+        "*": "Could not upload {{ entity }}"
+      },
       "delete": {
         "403": "You don't have permissions to delete {{ entity }}",
         "*": "Could not delete {{ entity }}"
@@ -1335,6 +1581,11 @@
       "TRUE": "True",
       "FALSE": "False"
     },
+    "contextMenu": {
+      "copy": "Copy",
+      "copyWithChildren": "Copy with child elements",
+      "paste": "Paste"
+    },
     "typeCode": {
       "number": "Number",
       "date": "Date",
@@ -1344,18 +1595,35 @@
       "dictionary": "Dictionary"
     },
     "buttons": {
-      "ok": "OK",
-      "save": "Save",
-      "cancel": "Cancel",
-      "remove": "Delete",
-      "close": "Close",
-      "clear": "Clear",
-      "search": "Search",
       "add": "Add",
-      "change": "Change",
-      "excel": "Export to Excel",
+      "addUser": "Add user",
       "back": "Back",
-      "block": "Block"
+      "block": "Block",
+      "cancel": "Cancel",
+      "change": "Change",
+      "changeStatus": "",
+      "clear": "Clear",
+      "close": "Close",
+      "copy": "Copy",
+      "delete": "Delete",
+      "download": "Download",
+      "edit": "Edit",
+      "exportToExcel": "Export to Excel",
+      "excel": "Export to Excel",
+      "move": "Move",
+      "next": "Next",
+      "ok": "OK",
+      "refresh": "Refresh",
+      "registerContact": "Register Contact",
+      "remove": "Delete",
+      "save": "Save",
+      "search": "Search",
+      "select": "Select",
+      "sms": "SMS",
+      "unblock": "Unblock",
+      "undo": "Undo",
+      "upload": "Upload",
+      "visit": "Visit"
     },
     "dateTimeRange": {
       "from": "From",

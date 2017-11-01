@@ -1,5 +1,7 @@
 import { IPerson } from '../debt-processing/debtor/debtor.interface';
 
+export { IPerson };
+
 export interface ISelectedDebtors {
   [index: number]: IPerson;
 }
@@ -9,9 +11,4 @@ export interface IDebtorsState {
   selectedDebtors: ISelectedDebtors;
   selectedDebtor?: IPerson;
   currentDebtor?: number;
-}
-
-export interface IDebtorsFetchResponse {
-  success: boolean;
-  debtors: IPerson[];
 }

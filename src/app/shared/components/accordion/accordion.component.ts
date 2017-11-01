@@ -1,19 +1,33 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, QueryList } from '@angular/core';
 
-import { AccordionItemComponent } from './item/accordion-item.component';
+import { AccordionService } from './accordion.service';
+
+import { AccordionItemComponent } from './item/item.component';
 
 @Component({
   selector: 'app-accordion',
-  templateUrl: './accordion.component.html'
+  templateUrl: 'accordion.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    AccordionService,
+  ]
 })
-export class AccordionComponent {
-  private _tabs: Array<AccordionItemComponent> = [];
+export class AccordionComponent implements AfterViewInit {
+  @ContentChildren(AccordionItemComponent) items: QueryList<AccordionItemComponent>;
 
-  get tabs(): Array<AccordionItemComponent> {
-    return this._tabs;
+  constructor(
+    private accordion2Service: AccordionService,
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.accordion2Service.items = this.items;
   }
 
-  addTab(item: AccordionItemComponent): void {
-    this._tabs.push(item);
+  prev(): void {
+    this.accordion2Service.prev();
+  }
+
+  next(): void {
+    this.accordion2Service.next();
   }
 }

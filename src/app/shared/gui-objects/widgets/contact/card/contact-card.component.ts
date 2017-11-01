@@ -40,10 +40,26 @@ export class ContactCardComponent {
   node: INode = {
     container: 'tabs',
     children: [
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
-      { component: AddressGridComponent, title: 'debtor.information.address.title' },
-      { component: IdentityGridComponent, title: 'debtor.identityDocs.title' },
-      { component: EmploymentGridComponent, title: 'debtor.employmentRecordTab.title' },
+      {
+        component: PhoneGridComponent,
+        title: 'debtor.information.phone.title',
+        inject: { personRole: 4, contactType: 1 }
+      },
+      {
+        component: AddressGridComponent,
+        title: 'debtor.information.address.title',
+        inject: { personRole: 4 }
+      },
+      {
+        component: IdentityGridComponent,
+        title: 'debtor.identityDocs.title',
+        inject: { personRole: 4 }
+      },
+      {
+        component: EmploymentGridComponent,
+        title: 'debtor.employmentRecordTab.title',
+        inject: { personRole: 4 }
+      },
     ]
   };
 
@@ -60,7 +76,7 @@ export class ContactCardComponent {
         UserDictionariesService.DICTIONARY_GENDER,
         UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         UserDictionariesService.DICTIONARY_EDUCATION,
-        UserDictionariesService.DICTIONARY_CONTACT_TYPE,
+        UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
       ]),
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
@@ -72,7 +88,7 @@ export class ContactCardComponent {
       const genderOptions = options[UserDictionariesService.DICTIONARY_GENDER];
       const familyOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
       const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
-      const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_TYPE];
+      const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE];
       const controls: IDynamicFormControl[] = [
         { label: labelKey('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
         { label: labelKey('firstName'), controlName: 'firstName', type: 'text', width: 4 },
@@ -105,7 +121,7 @@ export class ContactCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.requestValue;
+    const data = this.form.serializedUpdates;
     const action = this.contactId
       ? this.contactService.update(this.personId, this.contactId, data)
       : this.contactService.create(this.personId, data);

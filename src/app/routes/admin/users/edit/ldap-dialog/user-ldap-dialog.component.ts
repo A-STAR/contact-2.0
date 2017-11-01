@@ -37,8 +37,7 @@ export class UserLdapDialogComponent {
     private userLdapDialogService: UserLdapDialogService
   ) {
     this.usersColumns = this.gridService.setRenderers(this.usersColumns);
-    this.groups$ = this.userLdapDialogService.readLdapGroups()
-      .map(response => response.groups);
+    this.groups$ = this.userLdapDialogService.readLdapGroups();
   }
 
   get selectedUser(): ILdapUser {
@@ -46,8 +45,7 @@ export class UserLdapDialogComponent {
   }
 
   onGroupSelect(group: ILdapGroup): void {
-    this.users$ = this.userLdapDialogService.readLdapUsers(group.name)
-      .map(response => response.users);
+    this.users$ = this.userLdapDialogService.readLdapUsers(group.name);
   }
 
   onUserSelect(user: ILdapUser): void {

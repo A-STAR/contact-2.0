@@ -2,6 +2,8 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
+import { ILookupKey } from '../../../../core/lookup/lookup.interface';
+import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { RichTextEditorComponent } from '../rich-text-editor/rich-text-editor.component';
@@ -13,13 +15,15 @@ export interface IValidationMessages {
 export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 
 export interface IDynamicFormGroup {
-  children: Array<IDynamicFormItem>;
+  display?: boolean;
+  children: IDynamicFormItem[];
   collapsible?: boolean;
   title?: string;
   width?: number;
 }
 
 export interface IDynamicFormControl {
+  display?: boolean;
   children?: IDynamicFormControl[];
   controlName?: string;
   displayTime?: boolean;
@@ -34,13 +38,17 @@ export interface IDynamicFormControl {
   placeholder?: string;
   readonly?: boolean;
   required?: boolean;
-  type: ControlTypes;
+  type: TControlTypes;
+  onChange?: (value: any) => void;
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;
   options?: ILabeledValue[];
   optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
+  // options for select wrapper
+  dictCode?: number;
+  lookupKey?: ILookupKey;
   // number of rows for textarea
   rows?: number;
   validators?: Array<ValidatorFn>;
@@ -61,12 +69,15 @@ export interface IDynamicFormControl {
   // options for rich text editor
   onInit?: (control: RichTextEditorComponent) => void;
   toolbar?: boolean;
+  // options for segmented input
+  segmentedInputOptions?: ISegmentedInputOption[];
 }
 
-export type ControlTypes =
+export type TControlTypes =
     'boolean'
   | 'button'
   | 'checkbox'
+  | 'colorpicker'
   | 'datepicker'
   | 'dialog'
   | 'dynamic'
@@ -75,13 +86,17 @@ export type ControlTypes =
   | 'hidden'
   | 'image'
   | 'multiselect'
+  | 'multitext'
   | 'number'
   | 'password'
   | 'radio'
+  | 'richtexteditor'
   | 'select'
+  | 'selectwrapper'
+  | 'singleselect'
   | 'text'
   | 'textarea'
-  | 'richtexteditor'
+  | 'segmented'
 ;
 
 export interface IValue {

@@ -61,7 +61,7 @@ export class DocumentCardComponent {
   }
 
   public onSubmit(): void {
-    const { file, ...document } = this.form.requestValue;
+    const { file, ...document } = this.form.serializedUpdates;
     const action = this.documentId
       ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file)
       : this.documentService.create(this.entityTypeCode, this.id, document, file);

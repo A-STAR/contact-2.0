@@ -53,4 +53,4 @@ export function notificationReducer(
     default:
       return state;
   }
-};
+}

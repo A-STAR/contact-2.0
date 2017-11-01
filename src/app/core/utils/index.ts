@@ -18,11 +18,11 @@ export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T)
     label: value[labelKey],
     value: value[valueKey]
   });
-}
+};
 
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
-  return values.map(toOption('id', 'name'));
-}
+  return (values || []).map(toOption('id', 'name'));
+};
 
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {
   return [ person.lastName, person.firstName, person.middleName ]
@@ -69,11 +69,35 @@ export const numberRenderer = (key: string) => ({ [key]: num }) => {
     parts.push('00');
   }
   return parts.join('.');
-}
+};
+
+export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T = null) => {
+  return items.reduce((acc, item) => [
+    ...acc,
+    key ? item[key] : item,
+    ...(item.children ? flatten(item.children, key) : []),
+  ], []);
+};
+
+export const invert = (a: boolean) => !a;
+
+export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
+
+export const parseStringValueAttrs = (str: string) => (str || '')
+  .split(/,\s?/g)
+  .filter(Boolean)
+  .map(s => parseInt(s, 10))
+  .filter(n => n > 0 && n <= 10 )
+  .map(attr => `stringValue${attr}`);
 
 export const renderers = {
   checkboxRenderer,
   phoneRenderer,
   yesNoRenderer,
   numberRenderer,
+};
+
+export const round = (value: number, precision: number) => {
+  const k = Math.pow(10, precision);
+  return Math.round(k * value) / k;
 };

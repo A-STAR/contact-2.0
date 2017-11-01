@@ -68,14 +68,8 @@ export class DebtComponentCardComponent {
     });
   }
 
-  public onSubmit(): void {
-    const value = this.form.dirtyValue;
-    const data = {
-      ...value,
-      typeCode: Array.isArray(value.typeCode) ? value.typeCode[0].value : value.typeCode,
-      currencyId: Array.isArray(value.currencyId) ? value.currencyId[0].value : value.currencyId
-    }
-
+  onSubmit(): void {
+    const data = this.form.serializedUpdates;
     const action = this.debtComponentId
       ? this.debtComponentService.update(this.debtId, this.debtComponentId, data)
       : this.debtComponentService.create(this.debtId, data);
@@ -86,11 +80,11 @@ export class DebtComponentCardComponent {
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

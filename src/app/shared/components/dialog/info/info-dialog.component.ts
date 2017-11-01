@@ -12,6 +12,9 @@ export class InfoDialogComponent {
   @Input() actionTranslationKey = 'default.buttons.close';
   @Input() actionMode = 'info';
 
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
+  onClose(): void {
+    this.close.emit();
+  }
 }

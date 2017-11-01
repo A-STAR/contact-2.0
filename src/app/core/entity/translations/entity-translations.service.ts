@@ -18,12 +18,19 @@ export class EntityTranslationsService {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_TERM_NAME);
   }
 
+  readAttributeNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_ATTRIBUTE_NAME);
+  }
+
+  readContactTreeNodeTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME);
+  }
+
   private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
     return this.dataService
-      .read('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
+      .readAll('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
         entityAttributesId: entityAttributesId,
         entitiesId: entityId
-      })
-      .map(data => data.translations);
+      });
   }
 }

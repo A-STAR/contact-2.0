@@ -17,6 +17,9 @@ import { IDropdownPosition } from './dropdown.interface';
     )
   ]
 })
+/**
+ * @deprecated
+ */
 export class DropdownComponent {
   private _isOpen = false;
 
@@ -34,7 +37,7 @@ export class DropdownComponent {
     if (!this.containsTarget(this.element, event) && !this.containsTarget(this.trigger, event)) {
       this.setIsOpen(false);
     }
-  };
+  }
 
   get ngClass(): object {
     return {

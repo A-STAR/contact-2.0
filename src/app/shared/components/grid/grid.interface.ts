@@ -2,6 +2,15 @@ import { ILookupKey } from '../../../core/lookup/lookup.interface';
 
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
+export type TColumnType =
+    'text'
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'date'
+  | 'datetime'
+  ;
+
 export type TRendererType = Function | Array<any>
   | 'checkboxRenderer'
   | 'dateRenderer'
@@ -15,16 +24,12 @@ export interface IGridColumn {
   disabled?: boolean;
   dictCode?: number;
   lookupKey?: ILookupKey;
-  /**
-   * @deprecated
-   */
-  // localized?: boolean;
   maxWidth?: number;
   minWidth?: number;
   name?: string;
   prop: string;
   renderer?: Function | TRendererType;
-  type?: string;
+  type?: TColumnType;
   // NOTE: technical use only by grid.service.ts, pls do NOT use directly
   $$valueGetter?: Function;
   width?: number;

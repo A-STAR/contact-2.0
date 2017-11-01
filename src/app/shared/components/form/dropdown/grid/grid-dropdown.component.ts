@@ -6,7 +6,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IGridColumn } from '../../../grid/grid.interface';
 
-import { DropdownComponent } from '../../../dropdown/dropdown.component';
+import { DropdownDirective } from '../../../dropdown/dropdown.directive';
 
 @Component({
   selector: 'app-grid-dropdown',
@@ -28,7 +28,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
 
   @Output() select = new EventEmitter<T>();
 
-  @ViewChild('dropdown') dropdown: DropdownComponent;
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   private _selection: T;
   private _isDisabled = false;

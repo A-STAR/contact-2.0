@@ -61,7 +61,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
     { prop: 'familyStatusCode', dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS },
     { prop: 'educationCode', dictCode: UserDictionariesService.DICTIONARY_EDUCATION },
-    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
+    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
     { prop: 'comment' },
   ];
 
@@ -123,7 +123,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(contact: IContact): void {
-    this.selectedContact$.next(contact)
+    this.selectedContact$.next(contact);
   }
 
   onRemove(): void {

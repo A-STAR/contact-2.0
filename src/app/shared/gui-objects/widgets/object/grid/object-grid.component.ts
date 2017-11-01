@@ -69,7 +69,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
     this._masterRoleSubscription = this.actions
       .ofType(PermissionsService.ROLE_SELECTED, PermissionsService.ROLE_FETCH_SUCCESS)
       .subscribe(action => {
-        const { role } = action.payload
+        const { role } = action.payload;
         this.masterRoleId$.next(role ? role.id : null);
         this.cdRef.markForCheck();
         this.fetch();
@@ -99,13 +99,13 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
 
   onAddDialogSubmit(ids: number[]): void {
     this.objectService
-      .create(this.masterRoleId$.value, this.selectedTypeCode, ids[0])
+      .create(this.masterRoleId$.value, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
     this.objectService
-      .delete(this.masterRoleId$.value, this.selectedTypeCode, this.selectedObject$.value.id)
+      .delete(this.masterRoleId$.value, this.selectedTypeCode, [ this.selectedObject$.value.id ])
       .subscribe(() => this.onSuccess());
   }
 

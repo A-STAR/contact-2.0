@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IEmail, IEmailsResponse } from './email.interface';
+import { IEmail } from './email.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -19,15 +19,13 @@ export class EmailService {
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IEmail>> {
     return this.dataService
-      .read(this.baseUrl, { entityType, entityId })
-      .map((response: IEmailsResponse) => response.emails)
+      .readAll(this.baseUrl, { entityType, entityId })
       .catch(this.notificationsService.fetchError().entity('entities.emails.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, emailId: number): Observable<IEmail> {
     return this.dataService
       .read(`${this.baseUrl}/{emailId}`, { entityType, entityId, emailId })
-      .map((response: IEmailsResponse) => response.emails[0])
       .catch(this.notificationsService.fetchError().entity(this.singularErr).dispatchCallback());
   }
 

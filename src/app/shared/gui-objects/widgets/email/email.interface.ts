@@ -8,8 +8,3 @@ export interface IEmail {
   inactiveDateTime: Date | string;
   comment: string;
 }
-
-export interface IEmailsResponse {
-  success: boolean;
-  emails: Array<IEmail>;
-}

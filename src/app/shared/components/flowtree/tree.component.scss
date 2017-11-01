@@ -34,16 +34,16 @@
   display: inline-block;
   text-align: center;
   min-width: 130px;
-  height: 36px;
-  line-height: 36px;
+  max-width: 130px;
   font-size: 12px;
+  padding: 5px 0;
 }
 
 .ui-tree-horizontal .app-tree-toggler, .gu-mirror .app-tree-toggler {
   position: absolute;
   left: 2px;
-  height: 36px;
-  line-height: 36px;
+  top: 50%;
+  margin-top: -7px;
 }
 
 .ui-tree-horizontal .ui-treenode.ui-treenode-leaf, .ui-tree-horizontal .ui-treenode.ui-treenode-collapsed {
@@ -133,4 +133,10 @@
       padding-left: 0;
     }
   }
+}
+
+.context-menu {
+  background-color: #fff;
+  border: 1px solid #d5d5d5;
+  position: fixed;
 }

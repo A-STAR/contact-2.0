@@ -2,7 +2,7 @@ import { IDynamicFormControl } from '../../shared/components/form/dynamic-form/d
 
 import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
 
-interface IValue {
+export interface IValue {
   dictNameCode?: number;
   typeCode: number;
   valueN: number;
@@ -35,14 +35,16 @@ export const getRawValue = <T extends IValue>(value: T): number | string => {
     // TODO(d.maltsev): maybe this should be boolean or at least number?
     case TYPE_CODES.BOOLEAN:
       return String(value.valueB);
-  };
-}
+    default:
+      return null;
+  }
+};
 
 export const getDictCodeForValue = <T extends IValue>(value: T): number => {
   return value.typeCode === TYPE_CODES.BOOLEAN
     ? UserDictionariesService.DICTIONARY_BOOLEAN_TYPE
     : value.dictNameCode;
-}
+};
 
 export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynamicFormControl> => {
   switch (value.typeCode) {
@@ -60,8 +62,10 @@ export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynam
     case TYPE_CODES.BOOLEAN:
       // TODO(d.maltsev): double check that boolean type uses corresponding dictionary
       return { type: 'boolean' };
-  };
-}
+    default:
+      return null;
+  }
+};
 
 export const getValue = (typeCode: number, value: string | number): Partial<IValue> => {
   switch (typeCode) {
@@ -76,5 +80,7 @@ export const getValue = (typeCode: number, value: string | number): Partial<IVal
       return { valueS: value as string };
     case TYPE_CODES.BOOLEAN:
       return { valueB: value as number };
-  };
-}
+    default:
+      return null;
+  }
+};

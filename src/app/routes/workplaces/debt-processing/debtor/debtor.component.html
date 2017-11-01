@@ -1,7 +1,12 @@
+<app-register-contact-dialog
+  *ngIf="isDialog('registerContact')"
+  (submit)="onRegisterContactDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-register-contact-dialog>
+
 <div class="pb-lg">
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
+  <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+  <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
 </div>
 
 <app-dynamic-form
@@ -34,9 +39,11 @@
   </app-tab>
 
   <!-- <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
-  </app-tab>
+  </app-tab>-->
+
   <app-tab [title]="'debtor.guarantorsTab.title'" [closable]="false">
-  </app-tab> -->
+    <app-guarantee-grid></app-guarantee-grid>
+  </app-tab>
 
   <app-tab [title]="'debtor.contactsTab.title'" [closable]="false">
     <app-contact-grid></app-contact-grid>
@@ -46,25 +53,23 @@
     <app-document-grid></app-document-grid>
   </app-tab>
 
-  <!-- <app-tab [title]="'debtor.accountsTab.title'" [closable]="false">
-  </app-tab> -->
-
   <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false">
     <app-employment-grid></app-employment-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
+    <app-property-grid></app-property-grid>
+
+    <app-hdivider></app-hdivider>
+
+    <app-debtor-property-attributes></app-debtor-property-attributes>
   </app-tab>
 
   <app-tab [title]="'debtor.actionLogTab.title'" [closable]="false">
     <app-debtor-action-log></app-debtor-action-log>
   </app-tab>
 
-  <!--
-  <app-tab [title]="'debtor.commentTab.title'" [closable]="false">
-  </app-tab>
-  <app-tab [title]="'debtor.extrasDebtInfoTab.title'" [closable]="false">
-  </app-tab>
-  -->
-
   <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
-    <app-attribute-grid></app-attribute-grid>
+    <app-debtor-attributes></app-debtor-attributes>
   </app-tab>
 </app-tabstrip>

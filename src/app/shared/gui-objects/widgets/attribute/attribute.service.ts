@@ -1,41 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttributeResponse } from './attribute.interface';
-import { IResponse } from '../../../../core/data/data.interface';
+import { IAttribute } from './attribute.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class AttributeService {
-  static MESSAGE_ATTRIBUTE_SAVED = 'MESSAGE_ATTRIBUTE_SAVED';
-
+  private baseUrl = '/entityTypes/{entityTypeId}/entitySubtypes/{entitySubtypeCode}/attributeTypes';
   private errorMessage = 'entities.attribute.gen';
-  private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/attributes'
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number): Observable<IAttributeResponse[]> {
+  fetchAll(entityTypeId: number, entitySubtypeCode: number): Observable<IAttribute[]> {
+    const params = { entityTypeId, entitySubtypeCode: entitySubtypeCode || 0 };
     return this.dataService
-      .read(this.baseUrl, { entityType, entityId })
-      .map((response: IResponse<IAttributeResponse[]>) => response.data)
+      .readAll(this.baseUrl, params)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeResponse> {
+  fetch(entityTypeId: number, entitySubtypeCode: number, attributeId: number): Observable<IAttribute> {
+    const params = { entityTypeId, entitySubtypeCode: entitySubtypeCode || 0, attributeId };
     return this.dataService
-      .read(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode })
-      .map((response: IResponse<IAttributeResponse>) => response.data[0])
+      .read(`${this.baseUrl}/{attributeId}`, params)
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, attributeCode: number, attribute: Partial<IAttributeResponse>): Observable<void> {
+  create(entityTypeId: number, entitySubtypeCode: number, attribute: Partial<IAttribute>): Observable<void> {
+    const params = { entityTypeId, entitySubtypeCode: entitySubtypeCode || 0 };
     return this.dataService
-      .update(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode }, attribute)
+      .create(this.baseUrl, params, attribute)
+      .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
+
+  update(entityTypeId: number, entitySubtypeCode: number, attributeId: number, attribute: Partial<IAttribute>): Observable<void> {
+    const params = { entityTypeId, entitySubtypeCode: entitySubtypeCode || 0, attributeId };
+    return this.dataService
+      .update(`${this.baseUrl}/{attributeId}`, params, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
+
+  delete(entityTypeId: number, entitySubtypeCode: number, attributeId: number): Observable<void> {
+    const params = { entityTypeId, entitySubtypeCode: entitySubtypeCode || 0, attributeId };
+    return this.dataService
+      .delete(`${this.baseUrl}/{attributeId}`, params)
+      .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }
