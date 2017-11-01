@@ -38,12 +38,6 @@ export class AddPermissionComponent {
     this.cancel.emit();
   }
 
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.onCancel();
-    }
-  }
-
   onAddPermissions(): void {
     this.add.emit(this.selectedPermissions);
   }

@@ -64,8 +64,8 @@ export class GuarantorService {
 
   fetch(personId: number): Observable<IGuarantor> {
     return this.dataService
-      .create(`${this.url}`, { personId }, { personId })
-      .map(resp => resp.data[0] || {})
+      .read('/persons/{personId}', { personId })
+      .map(resp => resp || {})
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
@@ -79,6 +79,6 @@ export class GuarantorService {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create(this.url, {}, request)
-      .catch(this.notificationsService.fetchError().entity('entities.guarantors.gen.plural').callback());
+      .catch(this.notificationsService.fetchError().entity('entities.guarantors.gen.plural').dispatchCallback());
   }
 }

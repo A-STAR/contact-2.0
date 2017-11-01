@@ -6,7 +6,7 @@
   <section class="pv-xl">{{ 'widgets.guarantor.dialog.notFound' | translate }}</section>
 </app-info-dialog>
 
-<app-dialog *ngIf="!!persons?.length" (displayChange)="onClose()">
+<app-dialog *ngIf="!!persons?.length" (close)="onClose()">
   <div dialog-header>
     <h3>{{ 'widgets.guarantor.dialog.title' | translate }}</h3>
   </div>
