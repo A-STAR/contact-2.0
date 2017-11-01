@@ -1,5 +1,3 @@
-import { IDebt } from '../debt-processing.interface';
-
 export interface IPerson {
   id: number;
   birthDate?: string | Date;

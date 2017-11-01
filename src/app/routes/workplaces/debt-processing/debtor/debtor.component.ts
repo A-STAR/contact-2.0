@@ -12,8 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IDynamicFormGroup } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing.interface';
 
@@ -42,7 +41,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
   @ViewChild('information') information: DebtorInformationComponent;
 
   person: Partial<IPerson & IDebt>;
-  controls: Array<IDynamicFormGroup>;
+  controls: IDynamicFormControl[];
 
   private routeParams = (this.route.params as any).value;
   private debtId = this.routeParams.debtId || null;
@@ -61,12 +60,11 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.personSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.debtorService.debtor$,
       this.debtorService.debt$,
     )
-    .subscribe(([ personTypeOptions, canEdit, person, debt ]) => {
+    .subscribe(([ canEdit, person, debt ]) => {
       this.person = {
         ...person,
         birthDate: this.valueConverterService.fromISO(person.birthDate as string),
@@ -74,7 +72,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
         utc: debt.utc,
         shortInfo: debt.shortInfo,
       };
-      this.controls = this.getControls(canEdit, personTypeOptions);
+      this.controls = this.getControls(canEdit);
       this.cdRef.markForCheck();
     });
   }
@@ -100,7 +98,11 @@ export class DebtorComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {
+  private getControls(canEdit: boolean): IDynamicFormControl[] {
+    const debtorTypeOptions = {
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
+    };
     return [
       {
         children: [
@@ -108,11 +110,11 @@ export class DebtorComponent implements OnInit, OnDestroy {
           { width: 3, label: 'debtor.lastName', controlName: 'lastName', type: 'text', disabled: !canEdit, required: true },
           { width: 2, label: 'debtor.firstName', controlName: 'firstName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text', disabled: !canEdit },
-          { width: 2, label: 'debtor.type', controlName: 'typeCode', type: 'select', options: personTypeOptions, disabled: true },
+          { width: 2, label: 'debtor.type', controlName: 'typeCode', ...debtorTypeOptions, disabled: true },
           { width: 2, label: 'debtor.responsibleFullName', controlName: 'responsibleFullName', type: 'text', disabled: true },
           { width: 12, label: 'debtor.shortInfo', controlName: 'shortInfo', type: 'textarea', disabled: true },
         ]
       }
-    ];
+    ] as IDynamicFormControl[];
   }
 }

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { DebtorAddressModule } from './address/address.module';
