@@ -32,7 +32,7 @@ export class PhoneGridComponent implements OnInit {
 
   phones: IPhone[];
 
-  private _selectedPhoneId: number;
+  private selectedPhoneId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -56,20 +56,17 @@ export class PhoneGridComponent implements OnInit {
     return this.registerContactService.canRegisterPhone$(this.selectedPhone, this.debtId);
   }
 
-  get selectedPhoneId(): number {
-    return this._selectedPhoneId;
-  }
-
   get selectedPhone(): IPhone {
-    return (this.phones || []).find(phone => phone.id === this._selectedPhoneId);
+    return (this.phones || []).find(phone => phone.id === this.selectedPhoneId);
   }
 
   onSelect(phone: IPhone): void {
-    this._selectedPhoneId = phone.id;
+    this.selectedPhoneId = phone.id;
+    this.cdRef.markForCheck();
   }
 
   onDoubleClick(phone: IPhone): void {
-    this._selectedPhoneId = phone.id;
-    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this._selectedPhoneId));
+    this.selectedPhoneId = phone.id;
+    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
   }
 }

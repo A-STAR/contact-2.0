@@ -33,7 +33,7 @@ export class AddressGridComponent implements OnInit {
 
   addresses: IAddress[];
 
-  private _selectedAddressId: number;
+  private selectedAddressId: number;
 
   constructor(
     private addressService: AddressService,
@@ -57,20 +57,17 @@ export class AddressGridComponent implements OnInit {
     return this.registerContactService.canRegisterAddress$(this.selectedAddress, this.debtId);
   }
 
-  get selectedAddressId(): number {
-    return this._selectedAddressId;
-  }
-
   get selectedAddress(): IAddress {
-    return (this.addresses || []).find(address => address.id === this._selectedAddressId);
+    return (this.addresses || []).find(address => address.id === this.selectedAddressId);
   }
 
   onSelect(address: IAddress): void {
-    this._selectedAddressId = address.id;
+    this.selectedAddressId = address.id;
+    this.cdRef.markForCheck();
   }
 
   onDoubleClick(address: IAddress): void {
-    this._selectedAddressId = address.id;
-    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this._selectedAddressId));
+    this.selectedAddressId = address.id;
+    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
   }
 }

@@ -55,6 +55,20 @@ export class RegisterContactService {
     return this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [ 7, 8 ]);
   }
 
+  canRegisterSpecial$(debtId: number): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 7),
+      this.canRegisterDebt$(debtId),
+    ]);
+  }
+
+  canRegisterOfficeVisit$(debtId: number): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 8),
+      this.canRegisterDebt$(debtId),
+    ]);
+  }
+
   navigateToRegistration(personId: number, personRole: number, debtId: number, contactType: number, contactId: number): void {
     this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
     const url = `/workplaces/contact-registration/${debtId}/${contactType}/${contactId}`;
@@ -62,12 +76,16 @@ export class RegisterContactService {
   }
 
   private canRegisterDebt$(debtId: number): Observable<boolean> {
-    return this.fetchDebt$(debtId)
-      .flatMap(debt => {
-        return this.isDebtActive(debt)
-          ? Observable.of(true)
-          : this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG');
-      });
+    return Observable.of(true);
+    // if (!debtId) {
+    //   return Observable.of(false);
+    // }
+    // return this.fetchDebt$(debtId)
+    //   .flatMap(debt => {
+    //     return this.isDebtActive(debt)
+    //       ? Observable.of(true)
+    //       : this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG');
+    //   });
   }
 
   private isDebtActive(debt: IDebt): boolean {
@@ -77,6 +95,6 @@ export class RegisterContactService {
   private fetchDebt$(debtId: number): Observable<IDebt> {
     return this.debt && this.debt.id === debtId
       ? Observable.of(this.debt)
-      : this.debtService.fetch(null, debtId);
+      : this.debtService.fetch(null, debtId).publishReplay(1).refCount();
   }
 }

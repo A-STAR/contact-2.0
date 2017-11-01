@@ -9,8 +9,6 @@ import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';
 import { PhoneGridComponent } from './phone/phone.component';
 
-import { invert } from '../../../../../core/utils';
-
 @Component({
   selector: 'app-register-contact-dialog',
   templateUrl: './register-contact.component.html',
@@ -48,27 +46,16 @@ export class RegisterContactComponent {
     return (this.route.params as BehaviorSubject<any>).value;
   }
 
-  get isPhonesTabDisabled$(): Observable<boolean> {
-    return this.registerContactService.canRegisterPhones$.map(invert);
+  get canRegisterPhones$(): Observable<boolean> {
+    return this.registerContactService.canRegisterPhones$;
   }
 
-  get isAddressesTabDisabled$(): Observable<boolean> {
-    return this.registerContactService.canRegisterAddresses$.map(invert);
+  get canRegisterAddresses$(): Observable<boolean> {
+    return this.registerContactService.canRegisterAddresses$;
   }
 
-  get isMiscTabDisabled$(): Observable<boolean> {
-    return this.registerContactService.canRegisterMisc$.map(invert);
-  }
-
-  get canSubmit$(): Observable<boolean> {
-    switch (this.selectedTabIndex) {
-      case 0:
-        return this.addressTab.canRegisterSelectedAddress$;
-      case 1:
-        return this.phoneTab.canRegisterSelectedPhone$;
-      default:
-        return Observable.of(false);
-    }
+  get canRegisterMisc$(): Observable<boolean> {
+    return this.registerContactService.canRegisterMisc$;
   }
 
   onTabSelect(index: any): void {
@@ -84,28 +71,28 @@ export class RegisterContactComponent {
     this.submit.emit({ contactType: 2, contactId });
   }
 
-  onSubmit(): void {
-    this.submit.emit(this.submitPayload);
-  }
+  // onSubmit(): void {
+  //   this.submit.emit(this.submitPayload);
+  // }
 
   onCancel(): void {
     this.cancel.emit();
   }
 
-  private get submitPayload(): any {
-    switch (this.selectedTabIndex) {
-      case 0:
-        return {
-          contactType: 3,
-          contactId: this.addressTab.selectedAddressId
-        };
-      case 1:
-        return {
-          contactType: 3,
-          contactId: this.phoneTab.selectedPhoneId
-        };
-      default:
-        return null;
-    }
-  }
+  // private get submitPayload(): any {
+  //   switch (this.selectedTabIndex) {
+  //     case 0:
+  //       return {
+  //         contactType: 3,
+  //         contactId: this.addressTab.selectedAddressId
+  //       };
+  //     case 1:
+  //       return {
+  //         contactType: 3,
+  //         contactId: this.phoneTab.selectedPhoneId
+  //       };
+  //     default:
+  //       return null;
+  //   }
+  // }
 }

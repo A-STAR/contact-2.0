@@ -1,9 +1,15 @@
-<app-grid
-  columnTranslationKey="debtor.information.phone"
-  selectionType="single"
-  [styles]="{ height: '240px' }"
-  [columns]="columns"
-  [rows]="phones"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onDoubleClick($event)"
-></app-grid>
+<h4>По адресу</h4>
+
+<div class="mb">
+  <app-grid
+    columnTranslationKey="debtor.information.phone"
+    selectionType="single"
+    [styles]="{ height: '200px' }"
+    [columns]="columns"
+    [rows]="phones"
+    (onSelect)="onSelect($event)"
+    (onDblClick)="onDoubleClick($event)"
+  ></app-grid>
+</div>
+
+<app-button color="primary" type="registerContact" label="Зарегистрировать выбранный номер" [disabled]="!(canRegisterSelectedPhone$ | async)"></app-button>
