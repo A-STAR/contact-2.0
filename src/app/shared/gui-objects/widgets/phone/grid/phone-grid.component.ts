@@ -12,6 +12,7 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
 import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -59,9 +60,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CALL,
-      enabled: this.canRegisterCall$,
-      action: () => this.registerCall()
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
@@ -103,6 +104,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private debtorService: DebtorService,
     private gridService: GridService,
@@ -113,6 +115,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
+    @Inject('contactType') private contactType: number,
     @Inject('personRole') private personRole: number,
   ) {
     Observable.combineLatest(
@@ -206,11 +209,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return this.dialog === dialog;
   }
 
-  registerCall(): void {
-    this.selectedPhone$
+  registerContact(): void {
+    this.selectedPhoneId$
       .take(1)
-      .subscribe(phone => {
-        this.router.navigate([ `/workplaces/contact-registration/${this.debtId}/${phone.typeCode}/${phone.id}` ]);
+      .subscribe(phoneId => {
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
+        const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
       });
   }
 
@@ -259,7 +264,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  get canRegisterCall$(): Observable<boolean> {
+  get canRegisterContact$(): Observable<boolean> {
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),

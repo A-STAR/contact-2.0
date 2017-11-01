@@ -1,7 +1,5 @@
 <div class="pb-lg">
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
+  <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
 </div>
 
 <app-dynamic-form
@@ -54,6 +52,10 @@
 
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
     <app-property-grid></app-property-grid>
+
+    <app-hdivider></app-hdivider>
+
+    <app-debtor-property-attributes></app-debtor-property-attributes>
   </app-tab>
 
   <app-tab [title]="'debtor.actionLogTab.title'" [closable]="false">
@@ -61,7 +63,7 @@
   </app-tab>
 
   <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
-    <app-entity-attribute-grid></app-entity-attribute-grid>
+    <app-debtor-attributes></app-debtor-attributes>
   </app-tab>
 
   <app-tab [title]="'debtor.contactLogTab.title'" [closable]="false">

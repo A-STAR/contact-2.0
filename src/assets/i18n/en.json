@@ -114,29 +114,6 @@
       "selectedMessage": "selected"
     }
   },
-  "toolbar": {
-    "action": {
-      "add": "Create",
-      "edit": "Edit",
-      "remove": "Delete",
-      "copy": "Copy",
-      "refresh": "Refresh",
-      "search": "Search",
-      "save": "Save",
-      "sms": "Send SMS",
-      "move": "Move",
-      "download": "Download",
-      "upload": "Upload",
-      "block": "Block",
-      "unblock": "Unblock",
-      "changeStatus": "Change Status",
-      "close": "Close",
-      "undo": "Undo",
-      "ok": "OK",
-      "registerCall": "Register Call",
-      "visit": "Visit"
-    }
-  },
   "queryBuilder": {
     "title": "Query Builder",
     "buttons": {
@@ -179,7 +156,8 @@
         "comment": "Comments"
       },
       "attachment": {
-        "title": "File Attachment",
+        "title": "File Attachments",
+        "add": "Add File",
         "docTypeCode": "Type",
         "docName": "Name",
         "docNumber": "Number",
@@ -594,7 +572,14 @@
       "title": "Debts"
     },
     "propertyTab": {
-      "title": "Property"
+      "title": "Property",
+      "remove": {
+        "title": "Delete the propery",
+        "confirmMessage": "Do you really want to delete this property?"
+      },
+      "attributes": {
+        "title": "Property attributes"
+      }
     },
     "guarantorsTab": {
       "title": "Guarantors",
@@ -1098,6 +1083,9 @@
         "contractEndDate": "Expiry date",
         "contractTypeCode": "Contract type",
         "comment": "Comment"
+      },
+      "toolbar": {
+        "add": "Add guarantor"
       }
     },
     "employment": {
@@ -1394,6 +1382,9 @@
     "guarantors": {
       "gen": { "singular": "guarantor", "plural": "guarantors" }
     },
+    "guaranteeContract": {
+      "gen": { "singular": "guarantee contract", "plural": "guarantee contracts" }
+    },
     "promises": {
       "gen": { "singular": "promise", "plural": "promises" }
     },
@@ -1468,10 +1459,14 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
+<<<<<<< HEAD
       "gen": { "singular": "property item", "plural": "property list" }
     },
     "contactLog": {
       "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+=======
+      "gen": { "singular": "property", "plural": "property list" }
+>>>>>>> 88ce9097400f20ed0985b183251379b12277764d
     }
   },
   "errors": {
@@ -1618,19 +1613,34 @@
     },
     "buttons": {
       "add": "Add",
+      "addUser": "Add user",
       "back": "Back",
       "block": "Block",
+      "cancel": "Cancel",
       "change": "Change",
+      "changeStatus": "",
       "clear": "Clear",
       "close": "Close",
-      "cancel": "Cancel",
+      "copy": "Copy",
+      "delete": "Delete",
+      "download": "Download",
+      "edit": "Edit",
+      "exportToExcel": "Export to Excel",
       "excel": "Export to Excel",
+      "move": "Move",
+      "next": "Next",
       "ok": "OK",
+      "refresh": "Refresh",
+      "registerContact": "Register Contact",
       "remove": "Delete",
       "save": "Save",
       "search": "Search",
       "select": "Select",
-      "next": "Next"
+      "sms": "SMS",
+      "unblock": "Unblock",
+      "undo": "Undo",
+      "upload": "Upload",
+      "visit": "Visit"
     },
     "dateTimeRange": {
       "from": "From",

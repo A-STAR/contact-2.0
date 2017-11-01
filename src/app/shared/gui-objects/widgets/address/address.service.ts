@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IAddress } from './address.interface';
+import { IAddressMarkData } from './grid/mark/mark.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -63,7 +64,7 @@ export class AddressService {
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  markForVisit(personId: number, addressId: number, visit: any): Observable<void> {
+  markForVisit(personId: number, addressId: number, visit: IAddressMarkData): Observable<void> {
     return this.dataService
       .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit)
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());

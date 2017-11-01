@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 export enum ToolbarItemTypeEnum {
   BUTTON,
   BUTTON_ADD,
+  BUTTON_ADD_USER,
   BUTTON_DELETE,
   BUTTON_DOWNLOAD,
   BUTTON_EDIT,
@@ -18,17 +19,13 @@ export enum ToolbarItemTypeEnum {
   BUTTON_CLOSE,
   BUTTON_UNDO,
   BUTTON_OK,
-  BUTTON_REGISTER_CALL,
+  BUTTON_REGISTER_CONTACT,
   BUTTON_VISIT,
+  BUTTON_COPY,
   CHECKBOX,
 }
 
 export type IToolbarAction = () => void;
-
-export interface IToolbarDefaultElement {
-  icon: string;
-  label: string;
-}
 
 export interface IToolbarElement {
   action?: IToolbarAction | Action;

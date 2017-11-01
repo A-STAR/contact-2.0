@@ -1,4 +1,4 @@
-<app-accordion [(selectedIndex)]="step">
+<app-accordion>
 
   <app-accordion-item
     [clickable]="false"
@@ -7,8 +7,10 @@
     <app-contact-registration-outcome
       [contactId]="contactId"
       [contactTypeCode]="contactTypeCode"
-      [debtId]="debtId">
-    </app-contact-registration-outcome>
+      [debtId]="debtId"
+      [personId]="personId"
+      [personRole]="personRole"
+    ></app-contact-registration-outcome>
   </app-accordion-item>
 
   <app-accordion-item
@@ -17,8 +19,8 @@
     [title]="'modules.contactRegistration.promise.title'"
   >
     <app-contact-registration-promise
-      [debtId]="debtId">
-    </app-contact-registration-promise>
+      [debtId]="debtId"
+    ></app-contact-registration-promise>
   </app-accordion-item>
 
   <app-accordion-item
@@ -27,8 +29,8 @@
     [title]="'modules.contactRegistration.payment.title'"
   >
     <app-contact-registration-payment
-      [debtId]="debtId">
-    </app-contact-registration-payment>
+      [debtId]="debtId"
+    ></app-contact-registration-payment>
   </app-accordion-item>
 
   <app-accordion-item
@@ -37,17 +39,19 @@
     [title]="'modules.contactRegistration.phone.title'"
   >
     <app-contact-registration-phone
-      [debtId]="debtId">
-    </app-contact-registration-phone>
+      [debtId]="debtId"
+    ></app-contact-registration-phone>
   </app-accordion-item>
 
-  <!-- <app-accordion-item
+  <app-accordion-item
     *ngIf="canAddFile$ | async"
     [clickable]="false"
     [title]="'modules.contactRegistration.attachment.title'"
   >
-    <app-contact-registration-attachment></app-contact-registration-attachment>
-  </app-accordion-item> -->
+    <app-contact-registration-attachment
+      [debtId]="debtId"
+    ></app-contact-registration-attachment>
+  </app-accordion-item>
 
   <app-accordion-item
     *ngIf="canAddAttributes$ | async"
@@ -56,8 +60,8 @@
   >
     <app-contact-registration-attributes
       [debtId]="debtId"
-      [contactTypeCode]="contactTypeCode">
-    </app-contact-registration-attributes>
+      [contactTypeCode]="contactTypeCode"
+    ></app-contact-registration-attributes>
   </app-accordion-item>
 
   <app-accordion-item
@@ -66,8 +70,10 @@
     [title]="'modules.contactRegistration.misc.title'"
   >
     <app-contact-registration-misc
-      [debtId]="debtId">
-    </app-contact-registration-misc>
+      [debtId]="debtId"
+      [personId]="personId"
+      [personRole]="personRole"
+    ></app-contact-registration-misc>
   </app-accordion-item>
 
   <app-accordion-item
@@ -75,9 +81,6 @@
     [clickable]="false"
     [title]="'modules.contactRegistration.confirm.title'"
   >
-    <button class="btn btn-default" (click)="onSubmit()">
-      <i class="fa fa-arrow-check" aria-hidden="true"></i>
-      {{ 'default.buttons.save' | translate }}
-    </button>
+    <app-button color="primary" type="save" (click)="onSubmit()"></app-button>
   </app-accordion-item>
 </app-accordion>

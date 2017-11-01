@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
 
 import { ContactRegistrationService } from './contact-registration.service';
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 import { combineLatestOr } from '../../../core/utils/helpers';
 
@@ -21,11 +23,14 @@ export class ContactRegistrationComponent {
   debtId = Number(this.routeParams.debtId);
   contactTypeCode = Number(this.routeParams.contactTypeCode);
   contactId = Number(this.routeParams.contactId);
+  personId = Number(this.queryParams.personId);
+  personRole = Number(this.queryParams.personRole);
 
   selectedIndex = 0;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
+    private contentTabService: ContentTabService,
     private route: ActivatedRoute,
   ) {}
 
@@ -33,12 +38,8 @@ export class ContactRegistrationComponent {
     return (this.route.params as any).value;
   }
 
-  get step(): number {
-    return this.contactRegistrationService.step;
-  }
-
-  set step(step: number) {
-    this.contactRegistrationService.step = step;
+  get queryParams(): any {
+    return (this.route.queryParams as any).value;
   }
 
   get isInvalid$(): Observable<boolean> {
@@ -82,6 +83,8 @@ export class ContactRegistrationComponent {
   }
 
   onSubmit(): void {
-    this.contactRegistrationService.confirm(this.debtId).subscribe(console.log);
+    this.contactRegistrationService.confirm(this.debtId).subscribe(() => {
+      this.contentTabService.navigate(`/workplaces/debt-processing/${this.personId}/${this.debtId}`);
+    });
   }
 }

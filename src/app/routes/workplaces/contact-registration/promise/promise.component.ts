@@ -8,6 +8,7 @@ import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-
 import { IPromise, IPromiseFormData } from './promise.interface';
 import { IPromiseLimit } from '../../../../shared/gui-objects/widgets/promise/promise.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { PromiseService } from '../../../../shared/gui-objects/widgets/promise/promise.service';
@@ -41,6 +42,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   private limit: IPromiseLimit;
 
   constructor(
+    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactPromiseService: ContactPromiseService,
     private contactRegistrationService: ContactRegistrationService,
@@ -105,7 +107,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
     const { percentage, ...rest } = this.form.serializedUpdates;
     this.contactPromiseService.create(this.debtId, guid, { ...data, ...rest })
       .subscribe(() => {
-        this.contactRegistrationService.nextStep();
+        this.accordionService.next();
         this.cdRef.markForCheck();
         this.closeDialog();
       });

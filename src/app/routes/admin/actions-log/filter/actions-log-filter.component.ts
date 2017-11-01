@@ -73,7 +73,7 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   };
 
   toolbarActions: IToolbarAction[] = [
-    { text: 'toolbar.action.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
+    { text: 'default.buttons.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
   ];
 
   private _dialog: string;

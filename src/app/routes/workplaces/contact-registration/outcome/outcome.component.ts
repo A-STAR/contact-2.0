@@ -17,8 +17,8 @@ import 'rxjs/add/operator/publishReplay';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
@@ -37,6 +37,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() contactId: number;
   @Input() contactTypeCode: number;
   @Input() debtId: number;
+  @Input() personId: number;
+  @Input() personRole: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -53,8 +55,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private selectedNodeSubscription: Subscription;
 
   constructor(
+    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
     private contactRegistrationService: ContactRegistrationService,
     private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
@@ -74,18 +76,17 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
       .filter(Boolean)
-      .flatMap(value => {
-        return this.getPersonId()
-          .flatMap(personId => {
-            const templateId = Array.isArray(value) ? value[0].value : value;
-            return this.outcomeService
-              .fetchAutoComment(this.debtId, personId, 1, templateId)
-              .catch(() => Observable.of(null));
-          });
+      .map(value => Array.isArray(value) ? value[0].value : value)
+      .distinctUntilChanged()
+      .flatMap(templateId => {
+        return this.outcomeService
+          .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+          .catch(() => Observable.of(null));
       })
       .subscribe(autoComment => this.updateData('autoComment', autoComment));
 
     this.selectedNodeSubscription = this.selectedNode$
+      .distinctUntilChanged()
       .flatMap(selectedNode => {
         return selectedNode && isEmpty(selectedNode.children)
           ? this.outcomeService
@@ -130,10 +131,16 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onNextClick(): void {
-    this.outcomeService.initRegistration(this.debtId, { code: 1, phoneId: this.contactId })
+    const code = this.contactRegistrationService.selectedNode$.value.data.code;
+    const data = this.contactTypeCode === 3
+      ? { addressId: this.contactId }
+      : { phoneId: this.contactId };
+    this.outcomeService.initRegistration(this.debtId, { ...data, code, personId: this.personId, personRole: this.personRole })
       .subscribe(guid => {
+        const { autoComment, autoCommentId } = this.form.serializedValue;
         this.contactRegistrationService.guid = guid;
-        this.contactRegistrationService.nextStep();
+        this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
+        this.accordionService.next();
         this.cdRef.markForCheck();
       });
   }
@@ -149,7 +156,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateData(key: string, value: any): void {
     this.data = {
-      ...this.data,
+      ...this.form.serializedValue,
       [key]: value,
     };
     this.cdRef.markForCheck();
@@ -164,13 +171,5 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getControl(name: string): IDynamicFormControl {
     return this.controls.find(control => control.controlName === name);
-  }
-
-  private getPersonId(): Observable<number> {
-    return this.debtService.fetch(null, this.debtId)
-      .publishReplay(1)
-      .refCount()
-      .map(debt => debt.personId)
-      .distinctUntilChanged();
   }
 }
