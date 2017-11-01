@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPerson } from '../../debtor.interface';
 
 import { DebtorService } from '../../debtor.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -11,9 +12,9 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-debtor-information-person',
   templateUrl: 'person.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PersonComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -29,9 +30,6 @@ export class PersonComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.debtorService.debt$.subscribe(console.log);
-    this.debtorService.debtor$.subscribe(console.log);
-
     this.personSubscription = Observable.combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
@@ -44,6 +42,10 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
+  }
+
+  get debtor$(): Observable<IPerson> {
+    return this.debtorService.debtor$;
   }
 
   protected getControls(canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {

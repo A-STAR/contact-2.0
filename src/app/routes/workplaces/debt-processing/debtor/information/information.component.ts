@@ -13,7 +13,6 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './information.component.html',
 })
 export class DebtorInformationComponent {
-  @Input() person: any;
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   node: INode = {

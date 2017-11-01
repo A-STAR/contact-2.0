@@ -7,7 +7,6 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,7 +45,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
   private personSubscription: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
     private translate: TranslateService,
