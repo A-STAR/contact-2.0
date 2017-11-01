@@ -19,9 +19,6 @@ import { DebtorPropertyAttributesModule } from './property-attributes/property-a
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { InformationModule } from './information/information.module';
 
-import { DebtorService } from './debtor.service';
-import { DebtorEffects } from './debtor.effects';
-
 import { DebtorComponent } from './debtor.component';
 
 @NgModule({
@@ -41,15 +38,11 @@ import { DebtorComponent } from './debtor.component';
     DebtorPropertyModule,
     DebtorPropertyAttributesModule,
     DebtorAttributesModule,
-    EffectsModule.run(DebtorEffects),
     InformationModule,
     SharedModule,
   ],
   declarations: [
     DebtorComponent,
-  ],
-  providers: [
-    DebtorService,
   ]
 })
 export class DebtorModule { }

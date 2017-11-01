@@ -23,6 +23,9 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
   selector: 'app-debtor',
   templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
+  providers: [
+    DebtorService,
+  ]
 })
 export class DebtorComponent implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
@@ -47,11 +50,14 @@ export class DebtorComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
+    this.debtorService.preloadDebt(this.debtId);
+    this.debtorService.preloadDebtor(this.personId);
+
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
-      this.debtorService.fetch(this.personId),
-      this.debtorService.fetchDebt(this.debtId)
+      this.debtorService.debtor$,
+      this.debtorService.debt$,
     )
     .subscribe(([ personTypeOptions, canEdit, person, debt ]) => {
       this.person = {

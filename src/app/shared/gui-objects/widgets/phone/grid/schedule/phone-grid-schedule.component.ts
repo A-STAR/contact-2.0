@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { IPerson } from '../../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { ISMSSchedule } from '../../phone.interface';
 
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -15,7 +14,7 @@ import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleComponent {
-  @Input() person: IPerson;
+  @Input() personId: number;
   @Input() phoneId: number;
 
   @Output() submit = new EventEmitter<ISMSSchedule>();

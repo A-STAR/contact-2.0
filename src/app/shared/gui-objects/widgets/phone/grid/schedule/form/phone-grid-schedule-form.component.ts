@@ -6,7 +6,6 @@ import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { INamedValue, IOption } from '../../../../../../../core/converter/value-converter.interface';
-import { IPerson } from '../../../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { ISMSSchedule } from '../../../phone.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
@@ -30,7 +29,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() debtId: number;
-  @Input() person: IPerson;
+  @Input() personId: number;
   @Input() phoneId: number;
   @Input() useTemplate: boolean;
 
@@ -130,7 +129,8 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   private fetchTemplateText(): void {
-    this.phoneService.fetchMessageTemplateText(this.debtId, this.person.id, 1, this.form.serializedUpdates.templateId)
+    // TODO(d.maltsev): pass personRole properly
+    this.phoneService.fetchMessageTemplateText(this.debtId, this.personId, 1, this.form.serializedUpdates.templateId)
       .subscribe(text => {
         this.data = {
           ...this.data,

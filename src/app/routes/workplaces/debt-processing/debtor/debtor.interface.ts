@@ -12,8 +12,3 @@ export interface IPerson {
   product?: string;
   city?: string;
 }
-
-export interface IDebtState {
-  currentDebt?: IDebt;
-  currentDebtor?: IPerson;
-}

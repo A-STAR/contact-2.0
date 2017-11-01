@@ -7,14 +7,12 @@ import 'rxjs/add/observable/of';
 
 import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IPerson } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
-import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -82,7 +80,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   phones: Array<IPhone> = [];
 
-  person: IPerson;
   debt: IDebt;
 
   private canViewSubscription: Subscription;
@@ -106,7 +103,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
-    private debtorService: DebtorService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
@@ -120,14 +116,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ) {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
-      this.debtorService.fetch(this.personId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ debt, person, columns, canViewBlock ]) => {
+    .subscribe(([ debt, columns, canViewBlock ]) => {
       this.debt = debt;
-      this.person = person;
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
