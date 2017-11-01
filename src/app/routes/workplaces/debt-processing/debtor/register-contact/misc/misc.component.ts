@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { RegisterContactService } from '../register-contact.service';
@@ -9,17 +9,26 @@ import { RegisterContactService } from '../register-contact.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MiscComponent {
-  @Input() debtId: number;
+  @Output() actionSpecial = new EventEmitter<void>();
+  @Output() actionOfficeVisit = new EventEmitter<void>();
 
   constructor(
     private registerContactService: RegisterContactService,
   ) {}
 
   get canRegisterSpecial$(): Observable<boolean> {
-    return this.registerContactService.canRegisterSpecial$(this.debtId);
+    return this.registerContactService.canRegisterSpecial$();
   }
 
   get canRegisterOfficeVisit$(): Observable<boolean> {
-    return this.registerContactService.canRegisterOfficeVisit$(this.debtId);
+    return this.registerContactService.canRegisterOfficeVisit$();
+  }
+
+  onSubmitSpecial(): void {
+    this.actionSpecial.emit();
+  }
+
+  onSubmitOfficeVisit(): void {
+    this.actionOfficeVisit.emit();
   }
 }

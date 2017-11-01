@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ import { PhoneGridComponent } from './phone/phone.component';
   templateUrl: './register-contact.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterContactComponent {
+export class RegisterContactComponent implements OnInit {
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -29,6 +29,10 @@ export class RegisterContactComponent {
     private registerContactService: RegisterContactService,
     private route: ActivatedRoute,
   ) {}
+
+  ngOnInit(): void {
+    this.registerContactService.fetchDebt(this.debtId);
+  }
 
   get entityType(): number {
     return 18;
@@ -58,11 +62,6 @@ export class RegisterContactComponent {
     return this.registerContactService.canRegisterMisc$;
   }
 
-  onTabSelect(index: any): void {
-    this.selectedTabIndex = index;
-    this.cdRef.markForCheck();
-  }
-
   onAddressAction(contactId: number): void {
     this.submit.emit({ contactType: 3, contactId });
   }
@@ -71,28 +70,15 @@ export class RegisterContactComponent {
     this.submit.emit({ contactType: 2, contactId });
   }
 
-  // onSubmit(): void {
-  //   this.submit.emit(this.submitPayload);
-  // }
+  onSpecialAction(): void {
+    this.submit.emit({ contactType: 7, contactId: 0 });
+  }
+
+  onOfficeVisitAction(): void {
+    this.submit.emit({ contactType: 8, contactId: 0 });
+  }
 
   onCancel(): void {
     this.cancel.emit();
   }
-
-  // private get submitPayload(): any {
-  //   switch (this.selectedTabIndex) {
-  //     case 0:
-  //       return {
-  //         contactType: 3,
-  //         contactId: this.addressTab.selectedAddressId
-  //       };
-  //     case 1:
-  //       return {
-  //         contactType: 3,
-  //         contactId: this.phoneTab.selectedPhoneId
-  //       };
-  //     default:
-  //       return null;
-  //   }
-  // }
 }

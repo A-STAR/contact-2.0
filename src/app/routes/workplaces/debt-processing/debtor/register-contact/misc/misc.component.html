@@ -1,8 +1,8 @@
 <h4>Специальное</h4>
 
 <div *ngIf="canRegisterSpecial$ | async" class="mb">
-  <app-button color="primary" type="registerContact" label="Специальное"></app-button>
+  <app-button color="primary" type="registerContact" label="Специальное" (click)="onSubmitSpecial()"></app-button>
 </div>
 <div *ngIf="canRegisterOfficeVisit$ | async" class="mb">
-  <app-button color="primary" type="registerContact" label="Визит в офис"></app-button>
+  <app-button color="primary" type="registerContact" label="Визит в офис" (click)="onSubmitOfficeVisit()"></app-button>
 </div>

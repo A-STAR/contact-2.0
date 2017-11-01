@@ -20,7 +20,6 @@ import { doOnceIf } from '../../../../../../core/utils/helpers';
 export class AddressGridComponent implements OnInit {
   @Input() entityType: number;
   @Input() entityId: number;
-  @Input() debtId: number;
   @Output() action = new EventEmitter<number>();
 
   columns: IGridColumn[] = [
@@ -54,7 +53,7 @@ export class AddressGridComponent implements OnInit {
   }
 
   get canRegisterSelectedAddress$(): Observable<boolean> {
-    return this.registerContactService.canRegisterAddress$(this.selectedAddress, this.debtId);
+    return this.registerContactService.canRegisterAddress$(this.selectedAddress);
   }
 
   get selectedAddress(): IAddress {
@@ -68,6 +67,10 @@ export class AddressGridComponent implements OnInit {
 
   onDoubleClick(address: IAddress): void {
     this.selectedAddressId = address.id;
+    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
+  }
+
+  onSubmit(): void {
     doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
   }
 }

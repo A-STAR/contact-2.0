@@ -20,7 +20,6 @@ import { doOnceIf } from '../../../../../../core/utils/helpers';
 export class PhoneGridComponent implements OnInit {
   @Input() entityType: number;
   @Input() entityId: number;
-  @Input() debtId: number;
   @Output() action = new EventEmitter<number>();
 
   columns: IGridColumn[] = [
@@ -53,7 +52,7 @@ export class PhoneGridComponent implements OnInit {
   }
 
   get canRegisterSelectedPhone$(): Observable<boolean> {
-    return this.registerContactService.canRegisterPhone$(this.selectedPhone, this.debtId);
+    return this.registerContactService.canRegisterPhone$(this.selectedPhone);
   }
 
   get selectedPhone(): IPhone {
@@ -67,6 +66,10 @@ export class PhoneGridComponent implements OnInit {
 
   onDoubleClick(phone: IPhone): void {
     this.selectedPhoneId = phone.id;
+    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
+  }
+
+  onSubmit(): void {
     doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
   }
 }

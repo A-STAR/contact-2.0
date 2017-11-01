@@ -12,4 +12,10 @@
   ></app-grid>
 </div>
 
-<app-button color="primary" type="registerContact" label="Зарегистрировать выбранный адрес" [disabled]="!(canRegisterSelectedAddress$ | async)"></app-button>
+<app-button
+  color="primary"
+  type="registerContact"
+  label="Зарегистрировать выбранный адрес"
+  [disabled]="!(canRegisterSelectedAddress$ | async)"
+  (click)="onSubmit()"
+></app-button>
