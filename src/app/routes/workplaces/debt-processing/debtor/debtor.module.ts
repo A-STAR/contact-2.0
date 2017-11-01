@@ -15,6 +15,7 @@ import { DebtorPaymentModule } from './payment/payment.module';
 import { DebtorPhoneModule } from './phone/phone.module';
 import { DebtorPromiseModule } from './promise/promise.module';
 import { DebtorPropertyModule } from './property/property.module';
+import { ContactLogModule } from './contact-log/contact-log.module';
 
 import { DebtorService } from './debtor.service';
 import { DebtorEffects } from './debtor.effects';
@@ -37,6 +38,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorPhoneModule,
     DebtorPromiseModule,
     DebtorPropertyModule,
+    ContactLogModule,
     EffectsModule.run(DebtorEffects),
     SharedModule,
   ],

@@ -661,6 +661,9 @@
     },
     "attributesTab": {
       "title": "Attributes"
+    },
+    "contactLogTam": {
+      "title": "Contact log"
     }
   },
   "person": {
@@ -1318,6 +1321,31 @@
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
+    },
+    "contactLog": {
+      "card": {
+        "contactNumber": "Order number",
+        "contactDateTime": "Contact date",
+        "contactType": "Contact type",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "contactData": "Phone/address",
+        "promiseDate": "Promise date",
+        "promiseAmount": "Promised amount",
+        "comment": "Comment",
+        "personRole": "Type of person",
+        "sentDateTime": "Sent date",
+        "status": "Status",
+        "contactPhone": "Contact phone",
+        "text": "Message",
+        "startDateTime": "Dispatch date"
+      },
+      "grid": {
+        "dedbId": "Debt ID",
+        "creditName": "Credit name",
+        "createDateTime": "Ceate date",
+        "fullName": "Contact person name"
+      }
     }
   },
   "entities": {
@@ -1441,6 +1469,9 @@
     },
     "property": {
       "gen": { "singular": "property item", "plural": "property list" }
+    },
+    "contactLog": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     }
   },
   "errors": {
