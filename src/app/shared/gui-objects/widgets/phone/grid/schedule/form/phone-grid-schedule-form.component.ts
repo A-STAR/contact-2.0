@@ -30,6 +30,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
 
   @Input() debtId: number;
   @Input() personId: number;
+  @Input() personRole: number;
   @Input() phoneId: number;
   @Input() useTemplate: boolean;
 
@@ -129,8 +130,8 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   private fetchTemplateText(): void {
-    // TODO(d.maltsev): pass personRole properly
-    this.phoneService.fetchMessageTemplateText(this.debtId, this.personId, 1, this.form.serializedUpdates.templateId)
+    const { templateId } = this.form.serializedUpdates;
+    this.phoneService.fetchMessageTemplateText(this.debtId, this.personId, this.personRole, templateId)
       .subscribe(text => {
         this.data = {
           ...this.data,

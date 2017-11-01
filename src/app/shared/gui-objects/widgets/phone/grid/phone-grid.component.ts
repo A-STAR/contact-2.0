@@ -112,7 +112,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
     @Inject('contactType') private contactType: number,
-    @Inject('personRole') private personRole: number,
+    @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
@@ -152,6 +152,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
   }
 
+  get personRole(): number {
+    return this._personRole;
+  }
+
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }
@@ -185,7 +189,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const data = {
       ...schedule,
       personId: this.personId,
-      personRole: this.personRole,
+      personRole: this._personRole,
       phoneId: this.selectedPhoneId$.value
     };
     this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
@@ -209,7 +213,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(phoneId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this._personRole } });
       });
   }
 
@@ -252,7 +256,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this._personRole),
         ])
         : Observable.of(false);
     });

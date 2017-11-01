@@ -15,6 +15,7 @@ import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.
 })
 export class PhoneGridScheduleComponent {
   @Input() personId: number;
+  @Input() personRole: number;
   @Input() phoneId: number;
 
   @Output() submit = new EventEmitter<ISMSSchedule>();
