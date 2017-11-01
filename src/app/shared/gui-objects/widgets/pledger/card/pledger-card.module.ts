@@ -3,25 +3,23 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
-import { PledgerModule } from '../../pledger/pledger.module';
 
-import { PledgeCardComponent } from './pledge-card.component';
+import { PledgerCardComponent } from './pledger-card.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    TranslateModule,
     DynamicFormModule,
-    PledgerModule,
+    TranslateModule,
   ],
   exports: [
-    PledgeCardComponent,
+    PledgerCardComponent,
   ],
   declarations: [
-    PledgeCardComponent,
+    PledgerCardComponent,
   ],
   entryComponents: [
-    PledgeCardComponent,
+    PledgerCardComponent,
   ]
 })
-export class PledgeCardModule { }
+export class PledgerCardModule { }

@@ -1308,6 +1308,33 @@
         "comment": "Comment"
       }
     },
+    "pledger": {
+      "title": "Pledger",
+      "grid": {
+        "id": "Id",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name / Company",
+        "birthDate": "Date of birth",
+        "birthPlace": "Place of birth",
+        "educationCode": "Education",
+        "familyStatusCode": "Marital status",
+        "genderCode": "Gender",
+        "passportNumber": "Passport No",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "stringValue1": "Add. attribute 1",
+        "stringValue2": "Add. attribute 2",
+        "stringValue3": "Add. attribute 3",
+        "stringValue4": "Add. attribute 4",
+        "stringValue5": "Add. attribute 5",
+        "stringValue6": "Add. attribute 6",
+        "stringValue7": "Add. attribute 7",
+        "stringValue8": "Add. attribute 8",
+        "stringValue9": "Add. attribute 9",
+        "stringValue10": "Add. attribute 10"
+      }
+    },
     "pledgeContract": {
       "title": "Contract information",
       "grid": {

@@ -21,6 +21,7 @@ import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { PledgeModule } from './pledge/pledge.module';
+import { PledgerModule } from './pledger/pledger.module';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { PledgeModule } from './pledge/pledge.module';
     PromiseModule,
     PropertyModule,
     PledgeModule,
+    PledgerModule,
   ],
   exports: [
     AddressModule,
@@ -67,6 +69,7 @@ import { PledgeModule } from './pledge/pledge.module';
     PromiseModule,
     PropertyModule,
     PledgeModule,
+    PledgerModule,
   ]
 })
 export class WidgetsModule { }
