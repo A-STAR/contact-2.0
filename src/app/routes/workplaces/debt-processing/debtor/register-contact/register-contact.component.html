@@ -3,7 +3,35 @@
     <h3>TITLE</h3>
   </div>
   <div>
-    <app-container [node]="node"></app-container>
+    <app-tabstrip [inverse]="true">
+      <app-tab
+        [closable]="false"
+        [disabled]="isPhonesTabDisabled$ | async"
+        [title]="'debtor.information.phone.title'"
+      >
+        <app-register-contact-phone-grid
+          [entityType]="entityType"
+          [entityId]="entityId"
+        ></app-register-contact-phone-grid>
+      </app-tab>
+      <app-tab
+        [closable]="false"
+        [disabled]="isAddressesTabDisabled$ | async"
+        [title]="'debtor.information.address.title'"
+      >
+        <app-register-contact-address-grid
+          [entityType]="entityType"
+          [entityId]="entityId"
+        ></app-register-contact-address-grid>
+      </app-tab>
+      <app-tab
+        [closable]="false"
+        [disabled]="isMiscTabDisabled$ | async"
+        [title]="'debtor.information.misc.title'"
+      >
+        <app-register-contact-misc></app-register-contact-misc>
+      </app-tab>
+    </app-tabstrip>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">

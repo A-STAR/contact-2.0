@@ -14,9 +14,6 @@ import { MiscComponent } from './misc.component';
     MiscComponent,
   ],
   declarations: [
-    MiscComponent
-  ],
-  entryComponents: [
     MiscComponent,
   ]
 })

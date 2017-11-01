@@ -15,9 +15,6 @@ import { PhoneGridComponent } from './phone.component';
   ],
   declarations: [
     PhoneGridComponent
-  ],
-  entryComponents: [
-    PhoneGridComponent,
   ]
 })
 export class PhoneGridModule { }

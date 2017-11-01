@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 
@@ -13,6 +13,9 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhoneGridComponent implements OnInit {
+  @Input() entityType: number;
+  @Input() entityId: number;
+
   columns: IGridColumn[] = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_PHONE_TYPE },
     { prop: 'phone', renderer: 'phoneRenderer' },
@@ -26,8 +29,6 @@ export class PhoneGridComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
     private gridService: GridService,
-    @Inject('entityType') private entityType: number,
-    @Inject('entityId') private entityId: number,
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +40,10 @@ export class PhoneGridComponent implements OnInit {
       this.phones = phones;
       this.cdRef.markForCheck();
     });
+  }
+
+  onSelect(): void {
+
   }
 
   onDoubleClick(): void {

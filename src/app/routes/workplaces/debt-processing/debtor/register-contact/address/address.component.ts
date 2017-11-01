@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 
@@ -13,6 +13,9 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddressGridComponent implements OnInit {
+  @Input() entityType: number;
+  @Input() entityId: number;
+
   columns: IGridColumn[] = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
     { prop: 'fullAddress', minWidth: 500 },
@@ -27,8 +30,6 @@ export class AddressGridComponent implements OnInit {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    @Inject('entityType') private entityType: number,
-    @Inject('entityId') private entityId: number,
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +41,10 @@ export class AddressGridComponent implements OnInit {
       this.addresses = addresses;
       this.cdRef.markForCheck();
     });
+  }
+
+  onSelect(): void {
+
   }
 
   onDoubleClick(): void {
