@@ -1,4 +1,4 @@
-<h4>По номеру телефона</h4>
+<h4>{{ 'modules.contactRegistration.dialogs.contactType.address.title' | translate }}</h4>
 
 <div class="mb">
   <app-grid
@@ -15,7 +15,7 @@
 <app-button
   color="primary"
   type="registerContact"
-  label="Зарегистрировать выбранный адрес"
+  label="modules.contactRegistration.dialogs.contactType.address.button"
   [disabled]="!(canRegisterSelectedAddress$ | async)"
   (click)="onSubmit()"
 ></app-button>

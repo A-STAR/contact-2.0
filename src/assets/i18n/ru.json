@@ -127,6 +127,24 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Регистрация контакта",
+          "address": {
+            "title": "Адреса",
+            "button": "Зарегистрировать выбранный адрес"
+          },
+          "phone": {
+            "title": "Телефоны",
+            "button": "Зарегистрировать выбранный телефон"
+          },
+          "misc": {
+            "title": "Специальное",
+            "buttonMisc": "Специальное",
+            "buttonOfficeVisit": "Визит в офис"
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
