@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -21,7 +21,6 @@ export class RegisterContactComponent {
   @Output() cancel = new EventEmitter<void>();
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private registerContactService: RegisterContactService,
     private route: ActivatedRoute,
   ) {}
