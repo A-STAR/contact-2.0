@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -20,7 +20,14 @@ export class RegisterContactComponent {
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
+  @ViewChild(AddressGridComponent) addressTab: AddressGridComponent;
+  @ViewChild(MiscComponent) miscTab: MiscComponent;
+  @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
+
+  private selectedTabIndex: number;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private registerContactService: RegisterContactService,
     private route: ActivatedRoute,
   ) {}
@@ -31,6 +38,10 @@ export class RegisterContactComponent {
 
   get entityId(): number {
     return this.routeParams.personId;
+  }
+
+  get debtId(): number {
+    return this.routeParams.debtId;
   }
 
   get routeParams(): any {
@@ -49,15 +60,52 @@ export class RegisterContactComponent {
     return this.registerContactService.canRegisterMisc$.map(invert);
   }
 
-  get canSubmit(): boolean {
-    return false;
+  get canSubmit$(): Observable<boolean> {
+    switch (this.selectedTabIndex) {
+      case 0:
+        return this.addressTab.canRegisterSelectedAddress$;
+      case 1:
+        return this.phoneTab.canRegisterSelectedPhone$;
+      default:
+        return Observable.of(false);
+    }
+  }
+
+  onTabSelect(index: any): void {
+    this.selectedTabIndex = index;
+    this.cdRef.markForCheck();
+  }
+
+  onAddressAction(contactId: number): void {
+    this.submit.emit({ contactType: 3, contactId });
+  }
+
+  onPhoneAction(contactId: any): void {
+    this.submit.emit({ contactType: 2, contactId });
   }
 
   onSubmit(): void {
-    this.submit.emit({});
+    this.submit.emit(this.submitPayload);
   }
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  private get submitPayload(): any {
+    switch (this.selectedTabIndex) {
+      case 0:
+        return {
+          contactType: 3,
+          contactId: this.addressTab.selectedAddressId
+        };
+      case 1:
+        return {
+          contactType: 3,
+          contactId: this.phoneTab.selectedPhoneId
+        };
+      default:
+        return null;
+    }
   }
 }

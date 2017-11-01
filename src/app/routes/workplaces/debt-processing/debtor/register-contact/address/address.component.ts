@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
+import { IAddress } from '../../../../../../shared/gui-objects/widgets/address/address.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 
 import { AddressService } from '../../../../../../shared/gui-objects/widgets/address/address.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
+import { RegisterContactService } from '../register-contact.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { doOnceIf } from '../../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-register-contact-address-grid',
@@ -15,6 +20,8 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 export class AddressGridComponent implements OnInit {
   @Input() entityType: number;
   @Input() entityId: number;
+  @Input() debtId: number;
+  @Output() action = new EventEmitter<number>();
 
   columns: IGridColumn[] = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
@@ -24,12 +31,15 @@ export class AddressGridComponent implements OnInit {
     { prop: 'comment' },
   ];
 
-  addresses = [];
+  addresses: IAddress[];
+
+  private _selectedAddressId: number;
 
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private registerContactService: RegisterContactService,
   ) {}
 
   ngOnInit(): void {
@@ -43,11 +53,24 @@ export class AddressGridComponent implements OnInit {
     });
   }
 
-  onSelect(): void {
-
+  get canRegisterSelectedAddress$(): Observable<boolean> {
+    return this.registerContactService.canRegisterAddress$(this.selectedAddress, this.debtId);
   }
 
-  onDoubleClick(): void {
+  get selectedAddressId(): number {
+    return this._selectedAddressId;
+  }
 
+  get selectedAddress(): IAddress {
+    return (this.addresses || []).find(address => address.id === this._selectedAddressId);
+  }
+
+  onSelect(address: IAddress): void {
+    this._selectedAddressId = address.id;
+  }
+
+  onDoubleClick(address: IAddress): void {
+    this._selectedAddressId = address.id;
+    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this._selectedAddressId));
   }
 }

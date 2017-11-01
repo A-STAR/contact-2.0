@@ -104,8 +104,9 @@ export class DebtorComponent extends DialogFunctions implements OnDestroy {
     this.setDialog('registerContact');
   }
 
-  onRegisterContactDialogSubmit(): void {
-    console.log('onRegisterContactDialogSubmit');
+  onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
+    this.setDialog();
+    this.registerContactService.navigateToRegistration(this.personId, 1, this.debtId, contactType, contactId);
   }
 
   private getControls(canEdit: boolean, personTypeOptions: IOption[]): IDynamicFormGroup[] {

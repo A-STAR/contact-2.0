@@ -3,7 +3,7 @@
     <h3>TITLE</h3>
   </div>
   <div>
-    <app-tabstrip [inverse]="true">
+    <app-tabstrip [inverse]="true" (select)="onTabSelect($event)">
       <app-tab
         [closable]="false"
         [disabled]="isPhonesTabDisabled$ | async"
@@ -12,6 +12,8 @@
         <app-register-contact-phone-grid
           [entityType]="entityType"
           [entityId]="entityId"
+          [debtId]="debtId"
+          (action)="onPhoneAction($event)"
         ></app-register-contact-phone-grid>
       </app-tab>
       <app-tab
@@ -22,6 +24,8 @@
         <app-register-contact-address-grid
           [entityType]="entityType"
           [entityId]="entityId"
+          [debtId]="debtId"
+          (action)="onAddressAction($event)"
         ></app-register-contact-address-grid>
       </app-tab>
       <app-tab
@@ -34,11 +38,7 @@
     </app-tabstrip>
   </div>
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button color="primary" type="ok" [disabled]="!(canSubmit$ | async)" (click)="onSubmit()"></app-button>
+    <app-button type="cancel" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>
