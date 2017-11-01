@@ -10,12 +10,17 @@ import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing.interface';
 
 import { DebtorService } from './debtor.service';
+import { RegisterContactService } from './register-contact/register-contact.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { DebtorInformationComponent } from './general/information.component';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { DialogFunctions } from '../../../../core/dialog';
+
+import { invert } from '../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,14 +29,15 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
   templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
 })
-export class DebtorComponent implements OnDestroy {
+export class DebtorComponent extends DialogFunctions implements OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
   @ViewChild('form') form: DynamicFormComponent;
   @ViewChild('information') information: DebtorInformationComponent;
 
   person: Partial<IPerson & IDebt>;
-  controls: Array<IDynamicFormGroup>;
+  controls: IDynamicFormGroup[];
+  dialog: 'registerContact' = null;
 
   private routeParams = (this.route.params as any).value;
   private debtId = this.routeParams.debtId || null;
@@ -42,11 +48,14 @@ export class DebtorComponent implements OnDestroy {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
+    private registerContactService: RegisterContactService,
     private translate: TranslateService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
+    super();
+
     this.personSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
@@ -74,6 +83,10 @@ export class DebtorComponent implements OnDestroy {
     return this.form && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
   }
 
+  get isContactRegistrationDisabled$(): Observable<boolean> {
+    return this.registerContactService.canRegisterContacts$.map(invert);
+  }
+
   onSubmit(): void {
     const value = {
       ...this.form.serializedUpdates,
@@ -81,13 +94,22 @@ export class DebtorComponent implements OnDestroy {
     };
 
     this.debtorService.update(this.personId, value).subscribe(() => {
-      this.form.form.markAsPristine();
-      this.information.form.form.markAsPristine();
+      this.form.markAsPristine();
+      this.information.form.markAsPristine();
       this.cdRef.markForCheck();
     });
   }
 
-  private getControls(canEdit: boolean, personTypeOptions: Array<IOption>): Array<IDynamicFormGroup> {
+  onRegisterContactClick(): void {
+    this.setDialog('registerContact');
+  }
+
+  onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
+    this.setDialog();
+    this.registerContactService.navigateToRegistration(this.personId, 1, this.debtId, contactType, contactId);
+  }
+
+  private getControls(canEdit: boolean, personTypeOptions: IOption[]): IDynamicFormGroup[] {
     return [
       {
         children: [

@@ -127,6 +127,24 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Log Contact",
+          "address": {
+            "title": "Addresses",
+            "button": "Log Selected Address"
+          },
+          "phone": {
+            "title": "Phones",
+            "button": "Log Selected Phone"
+          },
+          "misc": {
+            "title": "Miscellaneous",
+            "buttonMisc": "Miscellaneous",
+            "buttonOfficeVisit": "Office Visit"
+          }
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
