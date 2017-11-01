@@ -95,7 +95,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
             },
             { label: label('lastName'), controlName: 'lastName', type: 'text', required: true },
             { label: label('firstName'), controlName: 'firstName', type: 'text' },
-            { label: label('middleName'), controlName: 'firstName', type: 'text' },
+            { label: label('middleName'), controlName: 'middleName', type: 'text' },
             { label: label('birthDate'), controlName: 'birthDate', type: 'datepicker' },
             { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text' },
             { label: label('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
@@ -124,7 +124,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   ngAfterViewChecked(): void {
     if (this.typeCodeSubscription || !this.form) { return ; }
     // NOTE: the components ngAfterViewInit does not guarantee that the form is present,
-    // so we have to call the `init` manually
+    // so this is a workaround to call the `init` manually
     this.onFormInit();
 
     // observe the user choosing between 1: person, 2: enterprise, 3: entrepreneur

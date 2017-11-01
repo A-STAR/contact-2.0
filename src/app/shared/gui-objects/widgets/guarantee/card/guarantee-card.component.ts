@@ -52,7 +52,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
     if (this.isRoute('addGuarantor') && !!this.personId) {
       return true;
     }
-    return this.form && this.form.canSubmit && !!this.personId;
+    return this.form && this.form.canSubmit;
   }
 
   ngOnInit(): void {
@@ -70,6 +70,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
+            { label: label('personId'), controlName: 'personId',  type: 'number', required: true, display: false },
             { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
             { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
             { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
@@ -82,6 +83,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
         },
       ];
 
+      this.personId = contract.personId;
       this.controls = controls;
       this.contract = contract;
       this.canEdit = canEdit;
@@ -91,7 +93,9 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
     this.guarantorSelectionSub = this.messageBusService
       .select<string, IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
       .subscribe(guarantor => {
-        this.personId = guarantor.id;
+        const personId = this.form.getControl('personId');
+        personId.setValue(guarantor.id);
+        personId.markAsDirty();
       });
   }
 
@@ -114,7 +118,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
 
   onSubmit(): void {
     const data = this.isRoute('create') ? this.form.serializedUpdates : this.form.serializedValue;
-    const action = this.personId
+    const action = this.isRoute('create')
       ? this.guaranteeService.create(this.debtId, { ...data, personId: this.personId })
       : this.guaranteeService.update(this.debtId, this.contract.id, data);
 
