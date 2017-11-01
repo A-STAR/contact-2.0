@@ -41,24 +41,6 @@ export class DebtorService {
       .subscribe(debtor => this._debtor$.next(debtor));
   }
 
-  /**
-   * @deprecated
-   */
-  fetch(personId: number): Observable<IPerson> {
-    return this.dataService
-      .read('/persons/{personId}', { personId })
-      .catch(this.notificationsService.fetchError().entity('entities.persons.gen.singular').dispatchCallback());
-  }
-
-  /**
-   * @deprecated
-   */
-  fetchDebt(debtId: number): Observable<IDebt> {
-    return this.dataService
-      .read('/debts/{debtId}', { debtId })
-      .catch(this.notificationsService.fetchError().entity('entities.persons.gen.singular').dispatchCallback());
-  }
-
   update(personId: number, person: IPerson): Observable<void> {
     return this.dataService
       .update('/persons/{personId}', { personId }, person)
