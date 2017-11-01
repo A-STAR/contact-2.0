@@ -14,6 +14,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Injectable()
+// TODO(d.maltsev): all methods except fetchDebt should live in core debt service
 export class RegisterContactService {
   private debt$ = new BehaviorSubject<IDebt>(null);
 
