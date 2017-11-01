@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAddress } from '../../../../../shared/gui-objects/widgets/address/address.interface';
 import { IDebt } from '../../../../../shared/gui-objects/widgets/debt/debt/debt.interface';
