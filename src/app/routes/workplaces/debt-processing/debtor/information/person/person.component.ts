@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../../core/converter/value-converter.interface';
 
+import { DebtorService } from '../../debtor.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -24,10 +24,14 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
+    this.debtorService.debt$.subscribe(console.log);
+    this.debtorService.debtor$.subscribe(console.log);
+
     this.personSubscription = Observable.combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),

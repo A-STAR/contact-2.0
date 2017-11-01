@@ -33,9 +33,10 @@ export class DebtorService {
     return this._debtor$;
   }
 
-  update(personId: number, person: IPerson): Observable<void> {
+  update(person: IPerson): Observable<void> {
+    const debtorId = this._debtor$.value.id;
     return this.dataService
-      .update('/persons/{personId}', { personId }, person)
+      .update('/persons/{debtorId}', { debtorId }, person)
       .catch(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback());
   }
 

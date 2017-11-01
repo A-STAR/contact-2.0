@@ -43,9 +43,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
   person: Partial<IPerson & IDebt>;
   controls: IDynamicFormControl[];
 
-  private routeParams = (this.route.params as any).value;
-  private debtId = this.routeParams.debtId || null;
-  private personId = this.routeParams.personId || null;
   private personSubscription: Subscription;
 
   constructor(
@@ -53,7 +50,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
     private translate: TranslateService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {}
@@ -91,7 +87,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       ...this.information.form.serializedUpdates,
     };
 
-    this.debtorService.update(this.personId, value).subscribe(() => {
+    this.debtorService.update(value).subscribe(() => {
       this.form.form.markAsPristine();
       this.information.form.markAsPristine();
       this.cdRef.markForCheck();
