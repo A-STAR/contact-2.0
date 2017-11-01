@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -22,10 +22,7 @@ export class RegisterContactComponent implements OnInit {
   @ViewChild(MiscComponent) miscTab: MiscComponent;
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
-  private selectedTabIndex: number;
-
   constructor(
-    private cdRef: ChangeDetectorRef,
     private registerContactService: RegisterContactService,
     private route: ActivatedRoute,
   ) {}
