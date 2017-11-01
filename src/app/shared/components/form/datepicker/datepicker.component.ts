@@ -121,6 +121,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    this.cdRef.markForCheck();
   }
 
   validate(): object {
@@ -196,7 +197,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
     const contentRect: ClientRect = content.getBoundingClientRect();
 
-    // If the dropdown won't fit into the window below the input - place it above it.
+    // If the dropdown won't fit into the window below the input - place it above.
     const top = inputRect.bottom + contentRect.height > window.innerHeight
       ? inputRect.top - contentRect.height
       : inputRect.bottom;

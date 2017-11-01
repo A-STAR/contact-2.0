@@ -28,12 +28,6 @@ export class GuaranteeService {
       .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.plural').dispatchCallback());
   }
 
-  fetch(debtId: number, contractId: number): Observable<IGuaranteeContract> {
-    return this.dataService
-      .read(`${this.url}/{contractId}`, { debtId, contractId })
-      .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
-  }
-
   create(debtId: number, contract: IGuaranteeContract): Observable<any> {
     return this.dataService
       .create(this.url, { debtId }, contract)
