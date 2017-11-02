@@ -132,9 +132,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNextClick(): void {
     const code = this.contactRegistrationService.selectedNode$.value.data.code;
-    const data = this.contactTypeCode === 3
-      ? { addressId: this.contactId }
-      : { phoneId: this.contactId };
+    const data = this.buildPayload(this.contactTypeCode, this.contactId);
     this.outcomeService.initRegistration(this.debtId, { ...data, code, personId: this.personId, personRole: this.personRole })
       .subscribe(guid => {
         const { autoComment, autoCommentId } = this.form.serializedValue;
@@ -143,6 +141,18 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.accordionService.next();
         this.cdRef.markForCheck();
       });
+  }
+
+  private buildPayload(contactTypeCode: number, contactId: number): object {
+    switch (contactTypeCode) {
+      case 1:
+      case 2:
+        return { phoneId: contactId };
+      case 3:
+        return { addressId: contactId };
+      default:
+        return {};
+    }
   }
 
   private enableField(key: string): void {

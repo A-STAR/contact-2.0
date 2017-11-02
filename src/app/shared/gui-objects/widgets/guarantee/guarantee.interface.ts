@@ -25,6 +25,7 @@ export interface IGuarantor {
 
 export interface IGuaranteeContract {
   id?: number;
+  contractId?: number;
   contractNumber?: string;
   contractDate?: Date | string;
   contractEndDate?: Date | string;

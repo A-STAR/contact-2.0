@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 export enum ToolbarItemTypeEnum {
   BUTTON,
   BUTTON_ADD,
+  BUTTON_ADD_USER,
   BUTTON_DELETE,
   BUTTON_DOWNLOAD,
   BUTTON_EDIT,

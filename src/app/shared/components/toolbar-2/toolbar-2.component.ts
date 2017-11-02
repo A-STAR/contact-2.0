@@ -21,6 +21,7 @@ export class Toolbar2Component {
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: 'add',
+    [ToolbarItemTypeEnum.BUTTON_ADD_USER]: 'addUser',
     [ToolbarItemTypeEnum.BUTTON_EDIT]: 'edit',
     [ToolbarItemTypeEnum.BUTTON_SAVE]: 'save',
     [ToolbarItemTypeEnum.BUTTON_DELETE]: 'delete',

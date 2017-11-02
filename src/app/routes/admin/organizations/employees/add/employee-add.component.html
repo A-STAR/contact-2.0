@@ -1,9 +1,9 @@
-<app-dialog (displayChange)="onDisplayChange($event)">
+<app-dialog (close)="onClose()">
   <div dialog-header>
     <h3>{{ 'organizations.employees.add.title' | translate }}</h3>
   </div>
 
-  <!-- TODO: styles -->
+  <!-- TODO(d.maltsev): styles -->
   <div style="margin: 0 0 12px">
     <app-grid
       class="flat"

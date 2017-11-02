@@ -57,12 +57,13 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
       .flatMap(strAttributeList => {
         const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
           .map(attr => ({ prop: attr, type: 'string' }));
-
-        const columns: IGridColumn[] =
-          this.searchParams.typeCode === 1
+        const baseControls: IGridColumn[] = [
+          { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
+          { prop: 'lastName', type: 'string' },
+        ];
+        const columns: IGridColumn[] = this.searchParams.typeCode === 1
             ? [
-                { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
-                { prop: 'lastName', type: 'string' },
+                ...baseControls,
                 { prop: 'firstName', type: 'string' },
                 { prop: 'middleName', type: 'string' },
                 { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
@@ -71,10 +72,9 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
                 { prop: 'passportNumber', type: 'string' },
               ]
             : [
-                { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
-                { prop: 'lastName', type: 'string' },
+                ...baseControls,
                 { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-            ];
+              ];
 
         return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
       })
@@ -96,7 +96,9 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnDestroy(): void {
-    this.canViewSubscription.unsubscribe();
+    if (this.canViewSubscription) {
+      this.canViewSubscription.unsubscribe();
+    }
   }
 
   onDoubleClick(guarantor: IGuarantor): void {

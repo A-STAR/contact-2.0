@@ -60,7 +60,7 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
         controlName: 'typeCode',
         type: 'select',
         required: true,
-        // TODO Duplication
+        // TODO(a.tymchuk): use the form service function
         options: [
           { label: 'dictionaries.types.system', value: 1 },
           { label: 'dictionaries.types.client', value: 2 },
