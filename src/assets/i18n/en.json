@@ -1420,7 +1420,14 @@
     },
     "pledgerProperty": {
       "title": "Property information",
-      "card": {
+      "search": {
+        "title": "Find property"
+      },
+      "dialog": {
+        "title": "Select property",
+        "notFound": "Could not find property. Please try to change the search criteria."
+      },
+      "grid": {
         "propertyType": "Property type",
         "pledgeValue": "Pledge value",
         "marketValue": "Market value",
@@ -1429,7 +1436,14 @@
     },
     "pledger": {
       "title": "Pledger",
-      "card": {
+      "search": {
+        "title": "Find pledgers"
+      },
+      "dialog": {
+        "title": "Select a pledger",
+        "notFound": "Could not find the pledger. Please try to change the search criteria."
+      },
+      "grid": {
         "id": "Id",
         "firstName": "First name",
         "middleName": "Middle name",
@@ -1615,6 +1629,9 @@
     },
     "pledgeContract": {
       "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
+    },
+    "pledgers": {
+      "gen": { "singular": "pledger", "plural": "pledgers" }
     }
   },
   "errors": {

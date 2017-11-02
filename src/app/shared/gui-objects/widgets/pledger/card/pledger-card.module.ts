@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { PledgerGridModule } from '../grid/pledger-grid.module';
 
 import { PledgerCardComponent } from './pledger-card.component';
 
@@ -11,6 +12,7 @@ import { PledgerCardComponent } from './pledger-card.component';
     CommonModule,
     DynamicFormModule,
     TranslateModule,
+    PledgerGridModule,
   ],
   exports: [
     PledgerCardComponent,

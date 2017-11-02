@@ -1,39 +1,52 @@
-import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IPledger } from '../../pledger/pledger.interface';
 import { IPledgerProperty } from '../pledger-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../../pledge/pledge.service';
+import { PledgerService } from '../../pledger/pledger.service';
+import { PledgerPropertyService } from '../../pledger-property/pledger-property.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
 
-const label = makeKey('widgets.pledgerProperty.card');
+const label = makeKey('widgets.pledgerProperty.grid');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pledger-property-card',
   templateUrl: './pledger-property-card.component.html'
 })
-export class PledgerPropertyCardComponent implements OnInit {
+export class PledgerPropertyCardComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  private pledgerId: number;
+
   controls: IDynamicFormGroup[] = null;
+  dialog: string = null;
+  searchParams: object;  
   property: IPledgerProperty;
-  typeCodeSubscription: Subscription;
+  
+  private typeCodeSubscription: Subscription;
+  private pledgerSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private messageBusService: MessageBusService,
     private pledgeService: PledgeService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
+    super();
   }
 
   ngOnInit(): void {
@@ -49,6 +62,46 @@ export class PledgerPropertyCardComponent implements OnInit {
       this.property = property;
       this.cdRef.markForCheck();
     });
+    
+    this.pledgerSubscription = this.messageBusService
+      .select<string, IPledger>(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED)
+      .subscribe(pledger => {
+        this.pledgerId = pledger ? pledger.id : null;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.pledgerSubscription.unsubscribe();
+  }
+
+  get canSearch(): boolean {
+    return !!this.pledgerId;
+  }
+
+  onClear(): void {
+    const { form } = this.form;
+    form.reset();
+    form.enable();
+    form.patchValue(this.getFormData());
+    form.get('propertyType').markAsDirty();
+    this.messageBusService.dispatch(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED, null, {});
+    this.cdRef.markForCheck();
+  }
+
+  onSearch(): void {
+    this.searchParams = { personId: this.pledgerId };    
+    this.setDialog('findPledgerProperty');
+    this.cdRef.markForCheck();
+  }
+
+  onSelect(pledger: IPledgerProperty): void {
+    const { form } = this.form, propertyTypeField = form.get('propertyType');
+    form.patchValue(pledger);
+    propertyTypeField.disable();
+    propertyTypeField.markAsDirty();
+    this.messageBusService.dispatch(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED, null, pledger);
+    this.cdRef.markForCheck();
   }
 
   private initControls(canEdit: boolean, propertyTypeOptions: IOption[], currencyOptions: IOption[]): void {

@@ -1,4 +1,7 @@
-import { AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import {
+  AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy,
+  ChangeDetectorRef, OnInit, OnDestroy
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -7,37 +10,43 @@ import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/f
 import { IPledger } from '../pledger.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgerService } from '../../pledger/pledger.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
 
-const label = makeKey('widgets.pledger.card');
+const label = makeKey('widgets.pledger.grid');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pledger-card',
   templateUrl: './pledger-card.component.html'
 })
-export class PledgerCardComponent implements OnInit, AfterViewChecked {
+export class PledgerCardComponent extends DialogFunctions implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private currentTypeCode: number;
 
   controls: IDynamicFormGroup[] = null;
+  dialog: string = null;
   pledger: IPledger;
+  searchParams: object;
   typeCodeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private messageBusService: MessageBusService,
     private pledgerService: PledgerService,
     private pledgeService: PledgeService,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {
+    super();
   }
 
   ngOnInit(): void {
@@ -54,6 +63,7 @@ export class PledgerCardComponent implements OnInit, AfterViewChecked {
       const pledger = this.getFormData();
       this.initControls(canEdit, this.getFormData(), attributeList, { genderOpts, familyStatusOpts, educationOpts, typeOpts });
       this.pledger = pledger;
+      this.currentTypeCode = pledger.typeCode;
       this.cdRef.markForCheck();
     });
   }
@@ -89,8 +99,41 @@ export class PledgerCardComponent implements OnInit, AfterViewChecked {
       });
   }
 
-  private isPerson(pledger: IPledger): boolean {
-    return pledger.typeCode === 1;
+  ngOnDestroy(): void {
+    if (this.typeCodeSubscription) {
+      this.typeCodeSubscription.unsubscribe();
+    }
+  }
+
+  get canSubmit$(): Observable<boolean> {
+    return this.pledgeService.canView$
+      .map(canView => canView && !!this.form && this.form.canSubmit)
+      .distinctUntilChanged();
+  }
+
+  onClear(): void {
+    const { form } = this.form;
+    form.reset();
+    form.enable();
+    form.patchValue({ typeCode: this.currentTypeCode });
+    form.get('typeCode').markAsDirty();
+    this.messageBusService.dispatch(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED, null, {});
+    this.cdRef.markForCheck();
+  }
+
+  onSearch(): void {
+    this.searchParams = this.form.serializedUpdates;
+    this.setDialog('findPledger');
+    this.cdRef.markForCheck();
+  }
+
+  onSelect(pledger: IPledger): void {
+    const { form } = this.form;
+    form.patchValue(pledger);
+    form.get('typeCode').markAsDirty();
+    form.disable();
+    this.messageBusService.dispatch(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED, null, pledger);
+    this.cdRef.markForCheck();
   }
 
   private getPersonContols(typeOptions: any): IDynamicFormControl[] {
@@ -138,8 +181,11 @@ export class PledgerCardComponent implements OnInit, AfterViewChecked {
       {
         title: 'widgets.pledger.title',
         collapsible: true,
-        children: (this.isPerson(pledger) ? this.getPersonContols(typeOptions) : this.getDefaultControls(typeOptions))
-          .concat(allAdditionalControls as any[])
+        children: (
+          this.pledgerService.isPerson(pledger.typeCode)
+            ? this.getPersonContols(typeOptions)
+            : this.getDefaultControls(typeOptions)
+          ).concat(allAdditionalControls as any[])
       },
     ];
 
