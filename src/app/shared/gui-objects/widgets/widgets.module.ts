@@ -22,6 +22,7 @@ import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgerModule } from './pledger/pledger.module';
+import { PledgerPropertyModule } from './pledger-property/pledger-property.module';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { PledgerModule } from './pledger/pledger.module';
     PropertyModule,
     PledgeModule,
     PledgerModule,
+    PledgerPropertyModule,
   ],
   exports: [
     AddressModule,
@@ -70,6 +72,7 @@ import { PledgerModule } from './pledger/pledger.module';
     PropertyModule,
     PledgeModule,
     PledgerModule,
+    PledgerPropertyModule,
   ]
 })
 export class WidgetsModule { }

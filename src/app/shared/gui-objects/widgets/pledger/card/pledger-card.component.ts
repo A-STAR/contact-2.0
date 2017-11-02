@@ -15,7 +15,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
 
-const label = makeKey('widgets.guarantor.grid');
+const label = makeKey('widgets.pledger.card');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

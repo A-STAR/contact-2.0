@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 import { PledgerModule } from '../../pledger/pledger.module';
+import { PledgerPropertyModule } from '../../pledger-property/pledger-property.module';
 
 import { PledgeCardComponent } from './pledge-card.component';
 
@@ -13,6 +14,7 @@ import { PledgeCardComponent } from './pledge-card.component';
     TranslateModule,
     DynamicFormModule,
     PledgerModule,
+    PledgerPropertyModule,
   ],
   exports: [
     PledgeCardComponent,

@@ -1308,9 +1308,18 @@
         "comment": "Comment"
       }
     },
+    "pledgerProperty": {
+      "title": "Property information",
+      "card": {
+        "propertyType": "Property type",
+        "pledgeValue": "Pledge value",
+        "marketValue": "Market value",
+        "currencyId": "Currency"
+      }
+    },
     "pledger": {
       "title": "Pledger",
-      "grid": {
+      "card": {
         "id": "Id",
         "firstName": "First name",
         "middleName": "Middle name",

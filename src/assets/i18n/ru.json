@@ -1308,9 +1308,18 @@
         "comment": "Комментарий"
       }
     },
+    "pledgerProperty": {
+      "title": "Информация об имуществе",
+      "card": {
+        "propertyType": "Тип имущества",
+        "pledgeValue": "Залоговая стоимость",
+        "marketValue": "Рыночная стоимость",
+        "currencyId": "Валюта"
+      }
+    },
     "pledger": {
       "title": "Залогодатель",
-      "grid": {
+      "card": {
         "id": "Ид",
         "firstName": "Имя",
         "middleName": "Отчество",
