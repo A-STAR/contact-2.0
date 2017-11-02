@@ -15,6 +15,7 @@ import { DebtorPaymentModule } from './payment/payment.module';
 import { DebtorPhoneModule } from './phone/phone.module';
 import { DebtorPromiseModule } from './promise/promise.module';
 import { DebtorPropertyModule } from './property/property.module';
+import { RegisterContactModule } from './register-contact/register-contact.module';
 import { DebtorPropertyAttributesModule } from './property-attributes/property-attributes.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 
@@ -42,6 +43,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorPropertyAttributesModule,
     DebtorAttributesModule,
     EffectsModule.run(DebtorEffects),
+    RegisterContactModule,
     SharedModule,
   ],
   declarations: [

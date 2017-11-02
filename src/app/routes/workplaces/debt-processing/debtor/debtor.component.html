@@ -1,5 +1,12 @@
+<app-register-contact-dialog
+  *ngIf="isDialog('registerContact')"
+  (submit)="onRegisterContactDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-register-contact-dialog>
+
 <div class="pb-lg">
   <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+  <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
 </div>
 
 <app-dynamic-form
