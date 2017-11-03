@@ -3,11 +3,11 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserAttributeTypesService } from './user-attribute-types.service';
 
-const defaultState: IUserAttributeTypesState = {
+export const defaultState: IUserAttributeTypesState = {
   attributeTypes: null
 };
 
-function reducer(
+export function reducer(
   state: IUserAttributeTypesState = defaultState,
   action: UnsafeAction
 ): IUserAttributeTypesState {
@@ -58,10 +58,3 @@ function reducer(
       return state;
   }
 }
-
-const userAttributeTypes = {
-  defaultState,
-  reducer,
-};
-
-export default userAttributeTypes;

@@ -4,9 +4,9 @@ import { IEntityAttributesState, EntityAttributesStatusEnum } from './entity-att
 
 import { EntityAttributesService } from './entity-attributes.service';
 
-const defaultState = {};
+export const defaultState = {};
 
-function reducer(state: IEntityAttributesState = defaultState, action: UnsafeAction): IEntityAttributesState {
+export function reducer(state: IEntityAttributesState = defaultState, action: UnsafeAction): IEntityAttributesState {
   switch (action.type) {
     case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH: {
       const { id } = action.payload;
@@ -42,10 +42,3 @@ function reducer(state: IEntityAttributesState = defaultState, action: UnsafeAct
       return state;
   }
 }
-
-const entityAttributes = {
-  defaultState,
-  reducer,
-};
-
-export default entityAttributes;

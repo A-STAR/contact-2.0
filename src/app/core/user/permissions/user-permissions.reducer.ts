@@ -3,11 +3,11 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserPermissionsService } from './user-permissions.service';
 
-const defaultState: IUserPermissionsState = {
+export const defaultState: IUserPermissionsState = {
   permissions: null
 };
 
-function reducer(state: IUserPermissionsState = defaultState, action: UnsafeAction): IUserPermissionsState {
+export function reducer(state: IUserPermissionsState = defaultState, action: UnsafeAction): IUserPermissionsState {
   switch (action.type) {
     case UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS:
       return {
@@ -18,10 +18,3 @@ function reducer(state: IUserPermissionsState = defaultState, action: UnsafeActi
       return state;
   }
 }
-
-const userPermissionsReducer = {
-  defaultState,
-  reducer,
-};
-
-export default userPermissionsReducer;

@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 
 const savedToken = localStorage.getItem(AuthService.TOKEN_NAME);
 
-const defaultState: IAuthState = {
+export const defaultState: IAuthState = {
   token: null
 };
 
@@ -21,7 +21,7 @@ function getDefaultState(): IAuthState {
   return defaultState;
 }
 
-function reducer(
+export function reducer(
   state: IAuthState = R.tryCatch(parseToken, getDefaultState)(savedToken),
   action: UnsafeAction
 ): IAuthState {
@@ -47,9 +47,8 @@ export function resetReducer(nextReducer: ActionReducer<IAppState>): ActionReduc
   };
 }
 
-const auth = {
+export const auth = {
   defaultState,
   reducer,
+  resetReducer,
 };
-
-export default auth;

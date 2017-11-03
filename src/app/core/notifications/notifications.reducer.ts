@@ -6,7 +6,7 @@ import { NotificationsService } from './notifications.service';
 // TODO(a.tymchuk): take this to a separate service for persisting global state
 const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
 
-const defaultState: INotificationsState = {
+export const defaultState: INotificationsState = {
   notifications: [],
   filters: {
     [NotificationTypeEnum.DEBUG]: false,
@@ -18,7 +18,7 @@ const defaultState: INotificationsState = {
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-function reducer(
+export function reducer(
   state: INotificationsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: INotificationAction
 ): INotificationsState {
@@ -54,10 +54,3 @@ function reducer(
       return state;
   }
 }
-
-const notifications = {
-  defaultState,
-  reducer,
-};
-
-export default notifications;

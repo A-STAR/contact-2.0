@@ -3,7 +3,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 
 import { DictionariesService } from './dictionaries.service';
 
-const defaultState: IDictionariesState = {
+export const defaultState: IDictionariesState = {
   dictionaries: [],
   selectedDictionary: null,
   selectedTerm: null,
@@ -13,7 +13,7 @@ const defaultState: IDictionariesState = {
   dialogAction: null
 };
 
-function reducer(state: IDictionariesState = defaultState, action: UnsafeAction): IDictionariesState {
+export function reducer(state: IDictionariesState = defaultState, action: UnsafeAction): IDictionariesState {
   switch (action.type) {
     case DictionariesService.DICTIONARIES_FETCH_SUCCESS:
       return {
@@ -106,10 +106,3 @@ function reducer(state: IDictionariesState = defaultState, action: UnsafeAction)
       return state;
   }
 }
-
-const dictionaries = {
-  defaultState,
-  reducer,
-};
-
-export default dictionaries;

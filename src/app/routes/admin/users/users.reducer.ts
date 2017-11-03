@@ -4,12 +4,12 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UsersService } from './users.service';
 
-const defaultState: IUsersState = {
+export const defaultState: IUsersState = {
   selectedUserId: null,
   displayInactive: false
 };
 
-function reducer(state: IUsersState = defaultState, action: UnsafeAction): IUsersState {
+export function reducer(state: IUsersState = defaultState, action: UnsafeAction): IUsersState {
   switch (action.type) {
     case UsersService.USER_SELECT:
       return {
@@ -25,10 +25,3 @@ function reducer(state: IUsersState = defaultState, action: UnsafeAction): IUser
       return state;
   }
 }
-
-const users = {
-  defaultState,
-  reducer,
-};
-
-export default users;

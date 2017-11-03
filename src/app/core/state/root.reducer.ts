@@ -3,25 +3,25 @@ import { Action, combineReducers } from '@ngrx/store';
 
 import { IAppState } from './state.interface';
 
-import actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
-import auth, { resetReducer } from '../auth/auth.reducer';
-import contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
-import constants from '../../routes/admin/constants/constants.reducer';
-import debtors from '../../routes/workplaces/debtors/debtors.reducer';
-import dictionaries from '../dictionaries/dictionaries.reducer';
-import entityAttributes from '../entity/attributes/entity-attributes.reducer';
-import guiObjects from '../gui-objects/gui-objects.reducer';
-import lookup from '../lookup/lookup.reducer';
-import metadata from '../metadata/metadata.reducer';
-import notifications from '../notifications/notifications.reducer';
-import organizations from '../../routes/admin/organizations/organizations.reducer';
-import permissions from '../../routes/admin/roles/permissions.reducer';
-import users from '../../routes/admin/users/users.reducer';
-import userAttributeTypes from '../user/attribute-types/user-attribute-types.reducer';
-import userConstants from '../user/constants/user-constants.reducer';
-import userDictionaries from '../user/dictionaries/user-dictionaries.reducer';
-import userPermissions from '../user/permissions/user-permissions.reducer';
-import userTemplates from '../user/templates/user-templates.reducer';
+import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
+import { auth, resetReducer } from '../auth/auth.reducer';
+import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
+import * as constants from '../../routes/admin/constants/constants.reducer';
+import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
+import * as dictionaries from '../dictionaries/dictionaries.reducer';
+import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
+import * as guiObjects from '../gui-objects/gui-objects.reducer';
+import * as lookup from '../lookup/lookup.reducer';
+import * as metadata from '../metadata/metadata.reducer';
+import * as notifications from '../notifications/notifications.reducer';
+import * as organizations from '../../routes/admin/organizations/organizations.reducer';
+import * as permissions from '../../routes/admin/roles/permissions.reducer';
+import * as users from '../../routes/admin/users/users.reducer';
+import * as userAttributeTypes from '../user/attribute-types/user-attribute-types.reducer';
+import * as userConstants from '../user/constants/user-constants.reducer';
+import * as userDictionaries from '../user/dictionaries/user-dictionaries.reducer';
+import * as userPermissions from '../user/permissions/user-permissions.reducer';
+import * as userTemplates from '../user/templates/user-templates.reducer';
 
 export const reducers = {
   actionsLog: actionsLog.reducer,

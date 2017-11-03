@@ -4,7 +4,7 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { OrganizationsService } from './organizations.service';
 
-const defaultState: IOrganizationsState = {
+export const defaultState: IOrganizationsState = {
   organizations: [],
   selectedOrganization: null,
   employees: [],
@@ -26,7 +26,7 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
   return result;
 }
 
-function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
+export function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
   switch (action.type) {
     case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
       return {
@@ -78,10 +78,3 @@ function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction
       return state;
   }
 }
-
-const organizations = {
-  defaultState,
-  reducer,
-};
-
-export default organizations;

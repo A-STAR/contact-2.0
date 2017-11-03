@@ -3,7 +3,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 
 import { LookupService } from './lookup.service';
 
-const defaultState: ILookupState = {
+export const defaultState: ILookupState = {
   contractors: null,
   currencies: null,
   dictionaries: null,
@@ -13,7 +13,7 @@ const defaultState: ILookupState = {
   users: null,
 };
 
-function reducer(state: ILookupState = defaultState, action: UnsafeAction): ILookupState {
+export function reducer(state: ILookupState = defaultState, action: UnsafeAction): ILookupState {
   switch (action.type) {
     case LookupService.LOOKUP_FETCH: {
       const { key } = action.payload;
@@ -47,10 +47,3 @@ function reducer(state: ILookupState = defaultState, action: UnsafeAction): ILoo
       return state;
   }
 }
-
-const lookup = {
-  defaultState,
-  reducer,
-};
-
-export default lookup;

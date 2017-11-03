@@ -6,11 +6,11 @@ import { ConstantsService } from './constants.service';
 
 const savedState = localStorage.getItem(ConstantsService.STORAGE_KEY);
 
-const defaultState: IConstantsState = {
+export const defaultState: IConstantsState = {
   currentConstant: null,
 };
 
-function reducer(
+export function reducer(
   state: IConstantsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IConstantAction
 ): IConstantsState {
@@ -25,10 +25,3 @@ function reducer(
       return state;
   }
 }
-
-const constantsReducer = {
-  defaultState,
-  reducer,
-};
-
-export default constantsReducer;

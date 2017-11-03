@@ -3,11 +3,11 @@ import { UnsafeAction } from '../../core/state/state.interface';
 
 import { MetadataService } from './metadata.service';
 
-const defaultState: IMetadataState = {
+export const defaultState: IMetadataState = {
   lists: null
 };
 
-function reducer(state: IMetadataState = defaultState, action: UnsafeAction): IMetadataState {
+export function reducer(state: IMetadataState = defaultState, action: UnsafeAction): IMetadataState {
   switch (action.type) {
     case MetadataService.METADATA_FETCH_SUCCESS:
       const { name, data } = action.payload;
@@ -30,10 +30,3 @@ function reducer(state: IMetadataState = defaultState, action: UnsafeAction): IM
       return state;
   }
 }
-
-const metadata = {
-  defaultState,
-  reducer,
-};
-
-export default metadata;

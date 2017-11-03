@@ -6,7 +6,7 @@ import { PermissionsService } from './permissions.service';
 // TODO: separate service for persisting global state?
 const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
-const defaultState: IPermissionsState = {
+export const defaultState: IPermissionsState = {
   dialog: IPermissionsDialogEnum.NONE,
   currentPermission: null,
   currentRole: null,
@@ -16,7 +16,7 @@ const defaultState: IPermissionsState = {
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-function reducer(
+export function reducer(
   state: IPermissionsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IPermissionAction
 ): IPermissionsState {
@@ -99,10 +99,3 @@ function reducer(
       return state;
   }
 }
-
-const permissions = {
-  defaultState,
-  reducer,
-};
-
-export default permissions;

@@ -3,11 +3,11 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserConstantsService } from './user-constants.service';
 
-const defaultState: IUserConstantsState = {
+export const defaultState: IUserConstantsState = {
   constants: null
 };
 
-function reducer(state: IUserConstantsState = defaultState, action: UnsafeAction): IUserConstantsState {
+export function reducer(state: IUserConstantsState = defaultState, action: UnsafeAction): IUserConstantsState {
   switch (action.type) {
     case UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS:
       return {
@@ -18,10 +18,3 @@ function reducer(state: IUserConstantsState = defaultState, action: UnsafeAction
       return state;
   }
 }
-
-const userConstants = {
-  defaultState,
-  reducer,
-};
-
-export default userConstants;

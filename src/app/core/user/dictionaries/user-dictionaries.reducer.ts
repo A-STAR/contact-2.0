@@ -3,11 +3,11 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserDictionariesService } from './user-dictionaries.service';
 
-const defaultState: IUserDictionariesState = {
+export const defaultState: IUserDictionariesState = {
   dictionaries: {},
 };
 
-function reducer(
+export function reducer(
   state: IUserDictionariesState = defaultState,
   action: UnsafeAction
 ): IUserDictionariesState {
@@ -26,10 +26,3 @@ function reducer(
       return state;
   }
 }
-
-const userDictionaries = {
-  defaultState,
-  reducer,
-};
-
-export default userDictionaries;
