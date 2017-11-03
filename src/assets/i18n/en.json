@@ -1673,7 +1673,8 @@
       "empty": "empty"
     },
     "select" : {
-      "empty": "[empty value]"
+      "empty": "[empty value]",
+      "selected": "Items selected"
     },
     "sex": {
       "m": "m",
