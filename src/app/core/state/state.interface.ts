@@ -4,7 +4,6 @@ import { IAuthState } from '../auth/auth.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
-import { IDebtState } from '../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IDictionariesState } from '../dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
@@ -25,7 +24,6 @@ export interface IAppState {
   readonly auth: IAuthState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
-  readonly debt: IDebtState;
   readonly debtors: IDebtorsState;
   readonly dictionaries: IDictionariesState;
   readonly entityAttributes: IEntityAttributesState;

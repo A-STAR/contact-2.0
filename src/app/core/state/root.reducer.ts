@@ -7,7 +7,6 @@ import actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
 import auth, { resetReducer } from '../auth/auth.reducer';
 import contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import constants from '../../routes/admin/constants/constants.reducer';
-import debt from '../../routes/workplaces/debt-processing/debtor/debtor.reducer';
 import debtors from '../../routes/workplaces/debtors/debtors.reducer';
 import dictionaries from '../dictionaries/dictionaries.reducer';
 import entityAttributes from '../entity/attributes/entity-attributes.reducer';
@@ -29,7 +28,6 @@ export const reducers = {
   auth: auth.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
-  debt: debt.reducer,
   debtors: debtors.reducer,
   dictionaries: dictionaries.reducer,
   entityAttributes: entityAttributes.reducer,
@@ -52,7 +50,6 @@ export const initialState: IAppState = {
   auth: auth.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
-  debt: debt.defaultState,
   debtors: debtors.defaultState,
   dictionaries: dictionaries.defaultState,
   entityAttributes: entityAttributes.defaultState,

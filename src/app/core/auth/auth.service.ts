@@ -51,6 +51,7 @@ export class AuthService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.token$
+      .do(token => console.log('token', token))
       .map(token => this.isTokenValid(token))
       .do(isTokenValid => {
         if (!isTokenValid) {
@@ -140,7 +141,9 @@ export class AuthService implements CanActivate {
 
   private get token$(): Observable<string> {
     return this.store
-      .select(state => state.auth.token)
+      .select(state => state.auth)
+      .filter(Boolean)
+      .map(state => state.token)
       .distinctUntilChanged();
   }
 }

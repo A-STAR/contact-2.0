@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { RegisterContactService } from './register-contact.service';
+import { DebtorService } from '../debtor.service';
 
 import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';
@@ -14,7 +14,7 @@ import { PhoneGridComponent } from './phone/phone.component';
   templateUrl: './register-contact.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterContactComponent implements OnInit {
+export class RegisterContactComponent {
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -23,13 +23,9 @@ export class RegisterContactComponent implements OnInit {
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
   constructor(
-    private registerContactService: RegisterContactService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
-
-  ngOnInit(): void {
-    this.registerContactService.fetchDebt(this.debtId);
-  }
 
   get entityType(): number {
     return 18;
@@ -48,15 +44,15 @@ export class RegisterContactComponent implements OnInit {
   }
 
   get canRegisterPhones$(): Observable<boolean> {
-    return this.registerContactService.canRegisterPhones$;
+    return this.debtorService.canRegisterPhones$;
   }
 
   get canRegisterAddresses$(): Observable<boolean> {
-    return this.registerContactService.canRegisterAddresses$;
+    return this.debtorService.canRegisterAddresses$;
   }
 
   get canRegisterMisc$(): Observable<boolean> {
-    return this.registerContactService.canRegisterMisc$;
+    return this.debtorService.canRegisterMisc$;
   }
 
   onAddressAction(contactId: number): void {

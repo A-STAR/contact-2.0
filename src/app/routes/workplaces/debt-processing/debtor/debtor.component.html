@@ -19,7 +19,7 @@
 
 <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
   <app-tab [title]="'debtor.information.title'">
-    <app-debtor-information #information [person]="person"></app-debtor-information>
+    <app-debtor-information #information></app-debtor-information>
   </app-tab>
 
   <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
@@ -55,6 +55,10 @@
 
   <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false">
     <app-employment-grid></app-employment-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.identityDocs.title'" [closable]="false">
+      <app-identity-grid></app-identity-grid>
   </app-tab>
 
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
