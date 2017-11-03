@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { CompanyComponent } from './company/company.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PersonComponent } from './person/person.component';
@@ -14,6 +15,7 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './information.component.html',
 })
 export class DebtorInformationComponent {
+  @ViewChild(CompanyComponent) companyComponent: CompanyComponent;
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   node: INode = {
@@ -26,6 +28,7 @@ export class DebtorInformationComponent {
   };
 
   get form(): DynamicFormComponent {
-    return this.personComponent.form;
+    const component = this.companyComponent || this.personComponent;
+    return component.form;
   }
 }
