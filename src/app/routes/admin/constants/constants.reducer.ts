@@ -10,7 +10,7 @@ const defaultState: IConstantsState = {
   currentConstant: null,
 };
 
-export function constantsReducer(
+function reducer(
   state: IConstantsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IConstantAction
 ): IConstantsState {
@@ -25,3 +25,10 @@ export function constantsReducer(
       return state;
   }
 }
+
+const constantsReducer = {
+  defaultState,
+  reducer,
+};
+
+export default constantsReducer;

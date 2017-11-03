@@ -6,6 +6,7 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { UnsafeAction } from '../../../../../core/state/state.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
@@ -42,9 +43,10 @@ export class ContractorEditComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
-      this.contractorId ?
-        this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS).map(action => action.payload.contractor) :
-        Observable.of(null)
+      this.contractorId
+        ? this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS)
+          .map((action: UnsafeAction) => action.payload.contractor)
+        : Observable.of(null)
     )
     .take(1)
     .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {

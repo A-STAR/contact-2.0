@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
 import { IUserTemplate, IUserTemplates, TemplateStatusEnum } from './user-templates.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class UserTemplatesService {
@@ -19,7 +20,7 @@ export class UserTemplatesService {
     this.templates$.subscribe(templates => this.templates = templates);
   }
 
-  createRefreshAction(typeCode: number, recipientTypeCode: number): Action {
+  createRefreshAction(typeCode: number, recipientTypeCode: number): UnsafeAction {
     return {
       type: UserTemplatesService.USER_TEMPLATES_FETCH,
       payload: {

@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
 import { IGuiObjectsState } from './gui-objects.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { GuiObjectsService } from './gui-objects.service';
 
@@ -8,7 +7,7 @@ const defaultState: IGuiObjectsState = {
   data: null
 };
 
-export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action: Action): IGuiObjectsState {
+function reducer(state: IGuiObjectsState = defaultState, action: UnsafeAction): IGuiObjectsState {
   switch (action.type) {
     case GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS:
       return {
@@ -22,3 +21,10 @@ export function guiObjectsReducer(state: IGuiObjectsState = defaultState, action
       return state;
   }
 }
+
+const guiObjects = {
+  defaultState,
+  reducer,
+};
+
+export default guiObjects;

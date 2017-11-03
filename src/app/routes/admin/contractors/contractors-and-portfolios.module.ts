@@ -39,7 +39,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ContractorsModule,
-    EffectsModule.run(ContractorsAndPortfoliosEffects),
+    EffectsModule.forFeature([ContractorsAndPortfoliosEffects]),
     PortfoliosModule,
     RouterModule.forChild(routes),
     SharedModule,

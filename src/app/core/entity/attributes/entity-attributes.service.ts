@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { EntityAttributesStatusEnum, IEntityAttributes, IEntityAttributesState } from './entity-attributes.interface';
 import { IAppState } from '../../state/state.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class EntityAttributesService {
@@ -37,7 +38,7 @@ export class EntityAttributesService {
       .map(slice => Object.keys(slice).reduce((acc, key) => ({ ...acc, [key]: slice[key].attribute }), {}));
   }
 
-  createRefreshAction(id: number): Action {
+  createRefreshAction(id: number): UnsafeAction {
     return { type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH, payload: { id } };
   }
 

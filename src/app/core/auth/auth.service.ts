@@ -1,12 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
 
@@ -129,7 +130,7 @@ export class AuthService implements CanActivate {
     }
   }
 
-  private createAction(type: string, payload: object = {}): Action {
+  private createAction(type: string, payload: object = {}): UnsafeAction {
     return { type, payload };
   }
 
@@ -139,8 +140,7 @@ export class AuthService implements CanActivate {
 
   private get token$(): Observable<string> {
     return this.store
-      .select(state => state.auth)
-      .map(state => state.token)
+      .select(state => state.auth.token)
       .distinctUntilChanged();
   }
 }

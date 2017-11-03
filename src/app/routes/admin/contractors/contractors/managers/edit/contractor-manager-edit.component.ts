@@ -7,6 +7,7 @@ import 'rxjs/add/observable/combineLatest';
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
+import { UnsafeAction } from '../../../../../../core/state/state.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
@@ -48,9 +49,10 @@ export class ContractorManagerEditComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
-      this.contractorId && this.managerId ?
-        this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS).map(action => action.payload.manager) :
-        Observable.of(null)
+      this.contractorId && this.managerId
+        ? this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS)
+          .map((action: UnsafeAction) => action.payload.manager)
+        : Observable.of(null)
     )
     // TODO(d.maltsev): handle errors
     .take(1)

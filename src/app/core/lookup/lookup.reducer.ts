@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
 import { ILookupState, LookupStatusEnum } from './lookup.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { LookupService } from './lookup.service';
 
@@ -14,7 +13,7 @@ const defaultState: ILookupState = {
   users: null,
 };
 
-export function lookupReducer(state: ILookupState = defaultState, action: Action): ILookupState {
+function reducer(state: ILookupState = defaultState, action: UnsafeAction): ILookupState {
   switch (action.type) {
     case LookupService.LOOKUP_FETCH: {
       const { key } = action.payload;
@@ -48,3 +47,10 @@ export function lookupReducer(state: ILookupState = defaultState, action: Action
       return state;
   }
 }
+
+const lookup = {
+  defaultState,
+  reducer,
+};
+
+export default lookup;

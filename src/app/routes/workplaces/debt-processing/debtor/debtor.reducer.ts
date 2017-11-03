@@ -1,13 +1,12 @@
-import { Action } from '@ngrx/store';
-
 import { IDebtState } from './debtor.interface';
+import { UnsafeAction } from '../../../../core/state/state.interface';
 
-const DEFAULT_STATE: IDebtState = {
+const defaultState: IDebtState = {
   currentDebt: null,
   currentDebtor: null,
 };
 
-export function debtReducer(state: IDebtState = DEFAULT_STATE, action: Action): IDebtState {
+function reducer(state: IDebtState = defaultState, action: UnsafeAction): IDebtState {
   switch (action.type) {
     case 'CHANGE_CURRENT_DEBT':
       return {
@@ -23,3 +22,10 @@ export function debtReducer(state: IDebtState = DEFAULT_STATE, action: Action): 
       return state;
   }
 }
+
+const debtReducer = {
+  defaultState,
+  reducer,
+};
+
+export default debtReducer;

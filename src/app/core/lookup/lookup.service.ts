@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { valuesToOptions, toOption } from '../utils';
 
@@ -117,7 +118,7 @@ export class LookupService {
       .distinctUntilChanged();
   }
 
-  createRefreshAction(key: ILookupKey): Action {
+  createRefreshAction(key: ILookupKey): UnsafeAction {
     return { type: LookupService.LOOKUP_FETCH, payload: { key } };
   }
 

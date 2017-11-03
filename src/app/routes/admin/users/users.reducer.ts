@@ -1,6 +1,6 @@
-import { Action } from '@ngrx/store';
 
 import { IUsersState } from './users.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UsersService } from './users.service';
 
@@ -9,7 +9,7 @@ const defaultState: IUsersState = {
   displayInactive: false
 };
 
-export function usersReducer(state: IUsersState = defaultState, action: Action): IUsersState {
+function reducer(state: IUsersState = defaultState, action: UnsafeAction): IUsersState {
   switch (action.type) {
     case UsersService.USER_SELECT:
       return {
@@ -25,3 +25,10 @@ export function usersReducer(state: IUsersState = defaultState, action: Action):
       return state;
   }
 }
+
+const users = {
+  defaultState,
+  reducer,
+};
+
+export default users;

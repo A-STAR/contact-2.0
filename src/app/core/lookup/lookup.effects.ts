@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 
 import { ILookupKey } from './lookup.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { DataService } from '../data/data.service';
 import { LookupService } from './lookup.service';
@@ -13,7 +13,7 @@ export class LookupEffects {
   @Effect()
   fetchCurrencies$ = this.actions
     .ofType(LookupService.LOOKUP_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       const { key } = action.payload;
       return this.readData(key)
         .map(data => ({

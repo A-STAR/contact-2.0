@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
@@ -9,6 +9,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../state/state.interface';
 import { DictionariesDialogActionEnum, IDictionary, ITerm } from './dictionaries.interface';
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { DataService } from '../data/data.service';
 import { DictionariesService } from './dictionaries.service';
@@ -22,7 +23,7 @@ export class DictionariesEffects {
   @Effect()
   fetchDictionaries$ = this.actions
     .ofType(DictionariesService.DICTIONARIES_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readDictionaries()
         .map(dictionaries => ({
           type: DictionariesService.DICTIONARIES_FETCH_SUCCESS,
@@ -46,7 +47,7 @@ export class DictionariesEffects {
   @Effect()
   createDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_CREATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.createDictionary(action.payload.dictionary)
         .mergeMap(() => [
           {
@@ -67,7 +68,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARY_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       const { code } = store.dictionaries.selectedDictionary;
       const { dictionary, updatedTranslations, deletedTranslations } = action.payload;
       return this.updateDictionary(code, dictionary, deletedTranslations, updatedTranslations)
@@ -91,7 +92,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARY_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       const { code } = store.dictionaries.selectedDictionary;
       return this.deleteDictionary(code)
         .mergeMap(() => [
@@ -112,7 +113,7 @@ export class DictionariesEffects {
   @Effect()
   selectDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_SELECT)
-    .switchMap(action => ([
+    .switchMap((action: UnsafeAction) => ([
         {
           type: action.payload.dictionary ? DictionariesService.TERMS_FETCH : DictionariesService.TERMS_CLEAR,
           payload: action.payload.dictionary
@@ -127,7 +128,7 @@ export class DictionariesEffects {
   @Effect()
   onDictionaryDialogAction$ = this.actions
     .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
-    .switchMap(action => {
+    .switchMap((action: UnsafeAction) => {
         return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
           .includes(action.payload.dialogAction)
           ? [{ type: DictionariesService.TERM_TYPES_FETCH }]
@@ -141,7 +142,7 @@ export class DictionariesEffects {
   @Effect()
   onTermDialogAction$ = this.actions
     .ofType(DictionariesService.TERM_DIALOG_ACTION)
-    .switchMap(action => {
+    .switchMap((action: UnsafeAction) => {
         return [DictionariesDialogActionEnum.TERM_ADD, DictionariesDialogActionEnum.TERM_EDIT]
           .includes(action.payload.dialogAction)
           ? [].concat(action.payload.dialogAction === DictionariesDialogActionEnum.TERM_EDIT
@@ -171,7 +172,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TRANSLATIONS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.entityTranslationsService.readDictNameTranslations(store.dictionaries.selectedDictionary.id)
         .map((response: IEntityTranslation[]) => {
           return {
@@ -191,7 +192,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_TRANSLATIONS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.entityTranslationsService.readTermNameTranslations(store.dictionaries.selectedTerm.id)
         .map((response: IEntityTranslation[]) => {
           return {
@@ -209,7 +210,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERMS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return store.dictionaries.selectedDictionary
         ? this.readTerms(store.dictionaries.selectedDictionary.code)
           .map((terms: any) => {
@@ -235,7 +236,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERMS_PARENT_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       const code = store.dictionaries.selectedDictionary.parentCode || store.dictionaries.selectedDictionary.code;
       return this.readTerms(code as number)
             .map((terms: any) => {
@@ -252,7 +253,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_CREATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       const { code } = store.dictionaries.selectedDictionary;
       return this.createTerm(code, action.payload.term)
         .mergeMap(() => [
@@ -275,7 +276,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       const selectedTerm = store.dictionaries.selectedTerm;
       const { code } = store.dictionaries.selectedDictionary;
       const { term, updatedTranslations, deletedTranslations } = action.payload;
@@ -300,7 +301,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       const { code } = store.dictionaries.selectedDictionary;
       return this.deleteTerm(code, store.dictionaries.selectedTerm.id)
         .mergeMap(() => [

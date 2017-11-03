@@ -42,7 +42,7 @@ import { DebtorInformationComponent } from './general/information.component';
     DebtorPropertyModule,
     DebtorPropertyAttributesModule,
     DebtorAttributesModule,
-    EffectsModule.run(DebtorEffects),
+    EffectsModule.forFeature([DebtorEffects]),
     RegisterContactModule,
     SharedModule,
   ],
