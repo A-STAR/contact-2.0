@@ -103,7 +103,6 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     });
   }
 
-
   onRegisterContactClick(): void {
     this.setDialog('registerContact');
   }

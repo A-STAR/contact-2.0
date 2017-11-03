@@ -672,6 +672,16 @@
     "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
+    "stringValue1": "String attribute 1",
+    "stringValue2": "String attribute 2",
+    "stringValue3": "String attribute 3",
+    "stringValue4": "String attribute 4",
+    "stringValue5": "String attribute 5",
+    "stringValue6": "String attribute 6",
+    "stringValue7": "String attribute 7",
+    "stringValue8": "String attribute 8",
+    "stringValue9": "String attribute 9",
+    "stringValue10": "String attribute 10",
     "comment": "Comment"
   },
   "debtors": {
