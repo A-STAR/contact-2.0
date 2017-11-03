@@ -45,9 +45,8 @@ export const reducers = {
   userTemplates: userTemplates.reducer,
 };
 
-export const initialState: IAppState = {
+export const initialState: Partial<IAppState> = {
   actionsLog: actionsLog.defaultState,
-  auth: auth.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
   debtors: debtors.defaultState,
