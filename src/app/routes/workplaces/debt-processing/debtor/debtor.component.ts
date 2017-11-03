@@ -82,6 +82,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     this.personSubscription.unsubscribe();
   }
 
+  get isCompany$(): Observable<boolean> {
+    return this.debtorService.isCompany$;
+  }
+
   get canSubmit(): boolean {
     return this.form && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
   }

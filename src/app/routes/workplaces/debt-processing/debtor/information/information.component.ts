@@ -44,10 +44,10 @@ export class DebtorInformationComponent {
   }
 
   get isPerson$(): Observable<boolean> {
-    return this.debtorTypeCode$.map(code => code === 1);
+    return this.debtorService.isPerson$;
   }
 
   get isCompany$(): Observable<boolean> {
-    return this.debtorTypeCode$.map(code => [2, 3].includes(code));
+    return this.debtorService.isCompany$;
   }
 }
