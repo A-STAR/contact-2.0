@@ -1,14 +1,9 @@
 <div class="mv">
-  <ng-container [ngSwitch]="debtorTypeCode$ | async">
-    <ng-container *ngSwitchCase="1">
-      <app-debtor-information-person></app-debtor-information-person>
-    </ng-container>
-    <ng-container *ngSwitchCase="2">
-      <app-debtor-information-company [personTypeCode]="2"></app-debtor-information-company>
-    </ng-container>
-    <ng-container *ngSwitchCase="3">
-      <app-debtor-information-company [personTypeCode]="3"></app-debtor-information-company>
-    </ng-container>
+  <ng-container *ngIf="isPerson$ | async">
+    <app-debtor-information-person></app-debtor-information-person>
+  </ng-container>
+  <ng-container *ngIf="isCompany$ | async">
+    <app-debtor-information-company [personTypeCode]="debtorTypeCode$ | async"></app-debtor-information-company>
   </ng-container>
 </div>
 

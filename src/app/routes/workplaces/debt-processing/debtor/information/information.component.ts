@@ -36,10 +36,18 @@ export class DebtorInformationComponent {
 
   get form(): DynamicFormComponent {
     const component = this.companyComponent || this.personComponent;
-    return component.form;
+    return component && component.form;
   }
 
   get debtorTypeCode$(): Observable<number> {
     return this.debtorService.debtor$.map(debtor => debtor && debtor.typeCode);
+  }
+
+  get isPerson$(): Observable<boolean> {
+    return this.debtorTypeCode$.map(code => code === 1);
+  }
+
+  get isCompany$(): Observable<boolean> {
+    return this.debtorTypeCode$.map(code => [2, 3].includes(code));
   }
 }
