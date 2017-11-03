@@ -5,8 +5,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { MultiListComponent } from '../../../list/multi/multi-list.component';
 
-import { isEmpty } from '../../../../../core/utils';
-
 type IMultiSelectValue = Array<number|string>;
 
 @Component({
