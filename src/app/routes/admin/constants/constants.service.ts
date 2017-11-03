@@ -23,7 +23,8 @@ export class ConstantsService {
   ) {}
 
   get state(): Observable<IConstantsState> {
-    return this.store.select('constants');
+    return this.store.select(state => state.constants)
+      .filter(Boolean);
   }
 
   fetchAll(): Observable<IConstant[]> {

@@ -49,6 +49,8 @@ export class UserAttributeTypesService {
   }
 
   private get attributeTypes$(): Observable<IUserAttributeTypes> {
-    return this.store.select(state => state.userAttributeTypes.attributeTypes);
+    return this.store.select(state => state.userAttributeTypes)
+      .filter(Boolean)
+      .map(state => state.attributeTypes);
   }
 }

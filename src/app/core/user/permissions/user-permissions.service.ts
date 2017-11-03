@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -10,15 +11,20 @@ import { IUserPermissions } from './user-permissions.interface';
 import { UserPermissions } from './user-permissions';
 
 @Injectable()
-export class UserPermissionsService {
+export class UserPermissionsService implements OnDestroy {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
 
-  private permissions: IUserPermissions;
   private isInitialized = false;
+  private permissions: IUserPermissions;
+  private permissionsSub: Subscription;
 
   constructor(private store: Store<IAppState>) {
-    this.permissions$.subscribe(permissions => this.permissions = permissions);
+    this.permissionsSub = this.permissions$.subscribe(permissions => this.permissions = permissions);
+  }
+
+  ngOnDestroy(): void {
+    this.permissionsSub.unsubscribe();
   }
 
   createRefreshAction(): Action {
@@ -93,6 +99,8 @@ export class UserPermissionsService {
   }
 
   private get permissions$(): Observable<IUserPermissions> {
-    return this.store.select(state => state.userPermissions.permissions);
+    return this.store.select(state => state.userPermissions)
+      .filter(Boolean)
+      .map(state => state.permissions);
   }
 }

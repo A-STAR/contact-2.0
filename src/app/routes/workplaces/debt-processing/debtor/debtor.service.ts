@@ -41,6 +41,9 @@ export class DebtorService {
   }
 
   currentDebt$(): Observable<IDebt> {
-    return this.store.select(state => state.debt.currentDebt).distinctUntilChanged();
+    return this.store.select(state => state.debt)
+      .filter(Boolean)
+      .map(state => state.currentDebt)
+      .distinctUntilChanged();
   }
 }

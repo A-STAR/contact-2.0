@@ -47,7 +47,8 @@ export class NotificationsService implements OnDestroy {
   }
 
   get state(): Observable<INotificationsState> {
-    return this.store.select(state => state.notifications);
+    return this.store.select(state => state.notifications)
+      .filter(Boolean);
   }
 
   get length(): Observable<number> {
