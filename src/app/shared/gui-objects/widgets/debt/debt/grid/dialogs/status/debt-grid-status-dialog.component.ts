@@ -72,11 +72,26 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
     .distinctUntilChanged()
     .subscribe(([ dictionaries, bag, reasonCodeRequired, statusCode, customStatusCode ]) => {
       this.getControl('statusCode').radioOptions = [
-        // TODO(d.maltsev): i18n
-        { label: 'Перевод в статус "Проблемные"', value: 9, disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 9) },
-        { label: 'Перевод в статус "Поиск информации"', value: 15, disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 15) },
-        { label: 'Перевод в статус "Без перспектив"', value: 12, disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 12) },
-        { label: 'Перевод в пользовательский статус', value: 0, disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST') },
+        {
+          label: 'widgets.debt.dialogs.statusChange.statusProblematic',
+          value: 9,
+          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 9),
+        },
+        {
+          label: 'widgets.debt.dialogs.statusChange.statusInfoCollection',
+          value: 15,
+          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 15),
+        },
+        {
+          label: 'widgets.debt.dialogs.statusChange.statusFutile',
+          value: 12,
+          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 12),
+        },
+        {
+          label: 'widgets.debt.dialogs.statusChange.statusCustom',
+          value: 0,
+          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST'),
+        },
       ];
 
       const reasonCodeControl = this.getControl('reasonCode');

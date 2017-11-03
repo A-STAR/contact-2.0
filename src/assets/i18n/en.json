@@ -1277,6 +1277,10 @@
           "statusCode": "Select Status",
           "reasonCode": "Select Reason",
           "customStatusCode": "Custom Status",
+          "statusProblematic": "Change status to \"Problematic\"",
+          "statusInfoCollection": "Change status to \"Info Collection\"",
+          "statusFutile": "Change status to \"Futile\"",
+          "statusCustom": "Change to custom status",
           "comment": "Comments"
         },
         "nextCall": {
