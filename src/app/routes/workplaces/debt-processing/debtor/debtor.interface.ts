@@ -1,5 +1,3 @@
-import { IDebt } from '../debt-processing.interface';
-
 export interface IPerson {
   id: number;
   birthDate?: string | Date;
@@ -11,9 +9,4 @@ export interface IPerson {
   debtId?: number;
   product?: string;
   city?: string;
-}
-
-export interface IDebtState {
-  currentDebt?: IDebt;
-  currentDebtor?: IPerson;
 }

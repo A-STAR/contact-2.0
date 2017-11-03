@@ -6,7 +6,7 @@ import { IGridColumn } from '../../../../../../shared/components/grid/grid.inter
 
 import { AddressService } from '../../../../../../shared/gui-objects/widgets/address/address.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { RegisterContactService } from '../register-contact.service';
+import { DebtorService } from '../../debtor.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -37,8 +37,8 @@ export class AddressGridComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
+    private debtorService: DebtorService,
     private gridService: GridService,
-    private registerContactService: RegisterContactService,
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class AddressGridComponent implements OnInit {
   }
 
   get canRegisterSelectedAddress$(): Observable<boolean> {
-    return this.registerContactService.canRegisterAddress$(this.selectedAddress);
+    return this.debtorService.canRegisterAddress$(this.selectedAddress);
   }
 
   get selectedAddress(): IAddress {
