@@ -214,9 +214,9 @@ export class ContractorsAndPortfoliosEffects {
   //   return this.dataService.readAll('/contractors');
   // }
 
-  private readContractor(contractorId: number): Observable<IContractor> {
-    return this.dataService.read('/contractors/{contractorId}', { contractorId });
-  }
+  // private readContractor(contractorId: number): Observable<IContractor> {
+  //   return this.dataService.read('/contractors/{contractorId}', { contractorId });
+  // }
 
   private createContractor(contractor: IContractor): Observable<any> {
     return this.dataService.create('/contractors', {}, contractor);

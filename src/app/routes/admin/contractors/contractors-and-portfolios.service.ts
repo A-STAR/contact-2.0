@@ -104,8 +104,10 @@ export class ContractorsAndPortfoliosService {
       ) as Observable<IContractor[]>;
   }
 
-  fetchContractor(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH, { contractorId });
+  readContractor(contractorId: number): Observable<IContractor> {
+    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH, { contractorId });
+    return this.dataService.read('/contractors/{contractorId}', { contractorId })
+              .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
   // clearContractors(): void {

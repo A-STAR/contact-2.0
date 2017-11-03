@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -24,6 +25,7 @@ export class ContractorEditComponent {
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
+  needToCloseDialog$ = new BehaviorSubject<string>(null);
 
   private contractorId = Number((this.route.params as any).value.id);
 
@@ -35,16 +37,14 @@ export class ContractorEditComponent {
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    if (this.contractorId) {
-      this.contractorsAndPortfoliosService.fetchContractor(this.contractorId);
-    }
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
-      this.contractorId ?
-        this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS).map(action => action.payload.contractor) :
-        Observable.of(null)
+      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : Observable.of(null)
+      // this.contractorId ?
+      //   this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS)
+      // .map(action => action.payload.contractor) :
+      //   Observable.of(null)
     )
     .take(1)
     .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
@@ -61,10 +61,11 @@ export class ContractorEditComponent {
       this.formData = contractor;
     });
 
-    this.actions.ofType(
-      ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
-      ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
-    )
+    // this.actions.ofType(
+    //   ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
+    //   ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+    // )
+    this.needToCloseDialog$
     .take(1)
     .subscribe(() => this.onBack());
   }
