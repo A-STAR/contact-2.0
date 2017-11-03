@@ -1320,7 +1320,7 @@
       "grid": {
         "id": "Id",
         "name": "Name",
-        "propertyType": "Property Type",
+        "typeCode": "Property Type",
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
