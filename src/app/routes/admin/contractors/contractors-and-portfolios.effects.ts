@@ -14,29 +14,29 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Injectable()
 export class ContractorsAndPortfoliosEffects {
-  @Effect()
-  fetchContractors$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
-    .switchMap((action: Action) => {
-      return this.readContractors()
-        .map(contractors => ({
-          type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
-          payload: { contractors }
-        }))
-        .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback());
-    });
+  // @Effect()
+  // fetchContractors$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
+  //   .switchMap((action: Action) => {
+  //     return this.readContractors()
+  //       .map(contractors => ({
+  //         type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
+  //         payload: { contractors }
+  //       }))
+  //       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback());
+  //   });
 
-  @Effect()
-  fetchContractor$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
-    .switchMap((action: Action) => {
-      return this.readContractor(action.payload.contractorId)
-        .map(contractor => ({
-          type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS,
-          payload: { contractor }
-        }))
-        .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
-    });
+  // @Effect()
+  // fetchContractor$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
+  //   .switchMap((action: Action) => {
+  //     return this.readContractor(action.payload.contractorId)
+  //       .map(contractor => ({
+  //         type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS,
+  //         payload: { contractor }
+  //       }))
+  //       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
+  //   });
 
   @Effect()
   createContractor$ = this.actions
@@ -210,9 +210,9 @@ export class ContractorsAndPortfoliosEffects {
     private store: Store<IAppState>,
   ) {}
 
-  private readContractors(): Observable<IContractor[]> {
-    return this.dataService.readAll('/contractors');
-  }
+  // private readContractors(): Observable<IContractor[]> {
+  //   return this.dataService.readAll('/contractors');
+  // }
 
   private readContractor(contractorId: number): Observable<IContractor> {
     return this.dataService.read('/contractors/{contractorId}', { contractorId });

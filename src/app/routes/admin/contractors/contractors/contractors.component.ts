@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -33,7 +34,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractor$
+        this.contractorsAndPortfoliosService.selectedContractorId$
       ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
     },
     {
@@ -41,12 +42,12 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       action: () => this.setDialog('delete'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractor$
-      ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
+        this.contractorsAndPortfoliosService.selectedContractorId$
+      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.contractorsAndPortfoliosService.fetchContractors(),
+      action: () => this.contractorsAndPortfoliosService.readAllContractors(),
       enabled: this.canView$
     }
   ];
@@ -65,6 +66,9 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   dialog: string;
   selectedContractor: IContractor;
+  needToReadAllContractors$ = new BehaviorSubject<string>(null);
+  private _contractors: IContractor[];
+
 
   private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -74,6 +78,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     private actions: Actions,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
+    private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -87,15 +92,20 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
-        this.contractorsAndPortfoliosService.fetchContractors();
+        this.needToReadAllContractors$
+          .flatMap(() => this.contractorsAndPortfoliosService.readAllContractors())
+          .subscribe((contractors: IContractor[]) => {
+            this.contractors = contractors;
+          });
+        this.needToReadAllContractors$.next('');
       } else {
-        this.contractorsAndPortfoliosService.clearContractors();
+        this.clearContractors();
         this.notificationsService.error('errors.default.read.403').entity('entities.contractors.gen.plural').dispatch();
       }
     });
 
-    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractor$.subscribe(contractor => {
-      this.selectedContractor = contractor;
+    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$.subscribe(contractorId => {
+      this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId) || null;
     });
 
     this.actionsSubscription = this.actions
@@ -103,16 +113,31 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       .subscribe(() => this.setDialog());
   }
 
+  set contractors(newContractors: IContractor[]) {
+    this._contractors = newContractors;
+    this.cdRef.markForCheck();
+  }
+
+  get contractors(): IContractor[] {
+    return this._contractors;
+  }
+
   ngOnDestroy(): void {
     this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.contractorsSubscription.unsubscribe();
-    this.contractorsAndPortfoliosService.clearContractors();
+    this.needToReadAllContractors$.unsubscribe();
+    this.clearContractors();
   }
 
-  get contractors$(): Observable<IContractor[]> {
-    return this.contractorsAndPortfoliosService.contractors$;
+  // get contractors$(): Observable<IContractor[]> {
+  //   return this.contractorsAndPortfoliosService.contractors$;
+  // }
+
+  clearContractors(): void {
+    this.contractors = [];
   }
+
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('CONTRACTOR_VIEW');
@@ -143,7 +168,13 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    this.contractorsAndPortfoliosService.deleteContractor();
+    console.log(this.selectedContractor.id);
+    this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor.id)
+      .do(() => {
+        this.setDialog();
+        this.needToReadAllContractors$.next('');
+      })
+      .subscribe();
   }
 
 }

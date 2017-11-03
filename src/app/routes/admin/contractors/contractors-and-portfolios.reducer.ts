@@ -22,22 +22,20 @@ export function contractorsAndPortfoliosReducer(
   switch (action.type) {
 
     // Contractors:
-    case ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS:
-      const { contractors } = action.payload;
-      const selectedContractorId = contractors.find(c => c.id === state.selectedContractorId)
-        ? state.selectedContractorId : null;
+    // case ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS:
+    //   const { contractors } = action.payload;
+    //   const selectedContractorId = contractors.find(c => c.id === state.selectedContractorId)
+    //     ? state.selectedContractorId : null;
 
-      return {
-        ...state,
-        contractors: [...contractors],
-        selectedContractorId,
-        portfolios: null,
-        selectedPortfolioId: null
-      };
+    //   return {
+    //     ...state,
+    //     selectedContractorId,
+    //     portfolios: null,
+    //     selectedPortfolioId: null
+    //   };
     case ContractorsAndPortfoliosService.CONTRACTORS_CLEAR:
       return {
         ...state,
-        contractors: null,
         selectedContractorId: null
       };
     case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:

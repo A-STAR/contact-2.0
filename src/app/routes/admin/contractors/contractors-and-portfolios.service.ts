@@ -8,6 +8,10 @@ import {
   IContractorManager, IPortfolio
 } from './contractors-and-portfolios.interface';
 
+import { DataService } from '../../../core/data/data.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
+
 @Injectable()
 export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH         = 'CONTRACTORS_FETCH';
@@ -50,7 +54,12 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIO_DELETE         = 'PORTFOLIO_DELETE';
   static PORTFOLIO_DELETE_SUCCESS = 'PORTFOLIO_DELETE_SUCCESS';
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(
+    private store: Store<IAppState>,
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
+    private valueConverterService: ValueConverterService,
+  ) {}
 
   get contractors$(): Observable<Array<IContractor>> {
     return this.state
@@ -70,9 +79,9 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedContractor$(): Observable<IContractor> {
+  get selectedContractorId$(): Observable<Number> {
     return this.state
-      .map(state => state.contractors && state.contractors.find(contractor => contractor.id === state.selectedContractorId))
+      .map(state => state.selectedContractorId)
       .distinctUntilChanged();
   }
 
@@ -88,17 +97,20 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  fetchContractors(): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_FETCH);
+  readAllContractors(): Observable<IContractor[]> {
+    return this.dataService.readAll('/contractors')
+      .catch(
+        this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
+      ) as Observable<IContractor[]>;
   }
 
   fetchContractor(contractorId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH, { contractorId });
   }
 
-  clearContractors(): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
-  }
+  // clearContractors(): void {
+    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
+  // }
 
   selectContractor(contractorId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
@@ -112,8 +124,13 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE, { contractorId, contractor });
   }
 
-  deleteContractor(): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_DELETE);
+  deleteContractor(contractorId: Number): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_DELETE);
+    return this.dataService.delete('/contractors/{contractorId}', { contractorId })
+      .take(1)
+      .catch(
+        this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback()
+      );
   }
 
   fetchManagers(contractorId: number): void {
@@ -144,8 +161,12 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_DELETE, { contractorId });
   }
 
-  fetchPortfolios(): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+  fetchPortfolios(contractorId: Number): Observable<IPortfolio[]> {
+    // this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+    return this.dataService.readAll('/contractors/{contractorId}/portfolios', { contractorId })
+      .catch(
+        this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
+      ) as Observable<IPortfolio[]>;
   }
 
   fetchPortfolio(contractorId: number, portfolioId: number): void {

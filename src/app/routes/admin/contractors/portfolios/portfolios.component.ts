@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,  } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -28,8 +28,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       action: () => this.onAdd(),
       enabled: Observable.combineLatest(
         this.canAdd$,
-        this.contractorsAndPortfoliosService.selectedContractor$
-      ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
+        this.contractorsAndPortfoliosService.selectedContractorId$
+      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -57,11 +57,12 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.contractorsAndPortfoliosService.fetchPortfolios(),
+      // TODO
+      action: () => this.contractorsAndPortfoliosService.fetchPortfolios(1),
       enabled: Observable.combineLatest(
         this.canView$,
-        this.contractorsAndPortfoliosService.selectedContractor$
-      ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
+        this.contractorsAndPortfoliosService.selectedContractorId$
+      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
     }
   ];
 
@@ -85,6 +86,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   dialog: string;
   selectedContractor: IContractor;
   selectedPortfolio: IPortfolio;
+  portfolios: IPortfolio [];
 
   constructor(
     private actions: Actions,
@@ -105,10 +107,15 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
 
     this.canViewSubscription = Observable.combineLatest(
       this.canView$,
-      this.contractorsAndPortfoliosService.selectedContractor$
-    ).subscribe(([canView, selectedContractor]) => {
-      if (canView && selectedContractor) {
-        this.contractorsAndPortfoliosService.fetchPortfolios();
+      this.contractorsAndPortfoliosService.selectedContractorId$
+    ).subscribe(([canView, selectedContractorId]) => {
+      if (canView && selectedContractorId) {
+        this.contractorsAndPortfoliosService.fetchPortfolios(selectedContractorId)
+          .subscribe((portfolios) => {
+            this.portfolios = portfolios;
+            console.log(portfolios);
+            this.cdRef.markForCheck();
+          });
       } else {
         this.contractorsAndPortfoliosService.clearPortfolios();
         if (!canView) {
@@ -117,9 +124,10 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       }
     });
 
-    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractor$
+    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
       .subscribe(contractor => {
-        this.selectedContractor = contractor;
+        // TODO
+        // this.selectedContractor = contractor;
       });
 
     this.portfoliosSubscription = this.contractorsAndPortfoliosService.selectedPortfolio$
@@ -143,9 +151,9 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     this.contractorsAndPortfoliosService.clearPortfolios();
   }
 
-  get portfolios$(): Observable<IPortfolio[]> {
-    return this.contractorsAndPortfoliosService.portfolios$;
-  }
+  // get portfolios$(): Observable<IPortfolio[]> {
+  //   return this.contractorsAndPortfoliosService.portfolios$;
+  // }
 
   get selectedPortfolio$(): Observable<IPortfolio[]> {
     return this.contractorsAndPortfoliosService.selectedPortfolio$

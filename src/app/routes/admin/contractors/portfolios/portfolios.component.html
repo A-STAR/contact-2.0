@@ -23,12 +23,13 @@
 </app-toolbar-2>
 
 <app-grid
+  *ngIf="portfolios"
   columnTranslationKey="portfolios"
   [selection]="selectedPortfolio$ | async"
   selectionType="single"
   [styles]="{height: '400px'}"
   [columns]="columns"
-  [rows]="portfolios$ | async"
+  [rows]="portfolios"
   [allowDblClick]="canEdit$ | async"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">

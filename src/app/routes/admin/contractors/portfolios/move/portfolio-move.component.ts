@@ -48,10 +48,10 @@ export class PortfolioMoveComponent implements OnDestroy {
     return !!this.selectedContractor;
   }
 
-  get contractors$(): Observable<Array<IContractor>> {
-    return this.contractorsAndPortfoliosService.contractors$
-      .map(contractors => contractors.filter(contractor => contractor.id !== this.contractor.id));
-  }
+  // get contractors$(): Observable<Array<IContractor>> {
+  //   return this.contractorsAndPortfoliosService.contractors$
+  //     .map(contractors => contractors.filter(contractor => contractor.id !== this.contractor.id));
+  // }
 
   onSelect(contractor: IContractor): void {
     this.selectedContractor = contractor;
