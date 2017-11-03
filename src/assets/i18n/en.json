@@ -150,7 +150,10 @@
         "template": "Scenario",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",
-        "comment": "Comments"
+        "comment": "Comments",
+        "errors": {
+          "init": "An error has occurred"
+        }
       },
       "promise": {
         "title": "Promise Registration",
@@ -1450,6 +1453,15 @@
     },
     "property": {
       "gen": { "singular": "property", "plural": "property list" }
+    },
+    "scenarios": {
+      "gen": { "singular": "scenario", "plural": "scenarios list" }
+    },
+    "autoComments": {
+      "gen": { "singular": "autocomment", "plural": "autocomments list" }
+    },
+    "contactTreeItems": {
+      "gen": { "singular": "contact tree item", "plural": "contact tree" }
     }
   },
   "errors": {

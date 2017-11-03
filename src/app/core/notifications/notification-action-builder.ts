@@ -119,7 +119,11 @@ export class NotificationActionBuilder {
         return translatedFallbackMessage;
       }
 
-      return this.translateService.instant(`${message.text}.*`, translatedParams);
+      const translatedGenericMessageKey = `${message.text}.*`;
+      const translatedGenericMessage = this.translateService.instant(translatedGenericMessageKey, translatedParams);
+      if (translatedGenericMessage !== translatedGenericMessageKey) {
+        return translatedGenericMessage;
+      }
     }
 
     return this.translateService.instant(message.text, translatedParams);
