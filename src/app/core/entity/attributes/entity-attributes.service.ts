@@ -48,6 +48,7 @@ export class EntityAttributesService {
   }
 
   private get state$(): Observable<IEntityAttributesState> {
-    return this.store.select(state => state.entityAttributes);
+    return this.store.select(state => state.entityAttributes)
+      .filter(Boolean);
   }
 }

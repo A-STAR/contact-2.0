@@ -140,6 +140,7 @@ export class LookupService {
   }
 
   private get state$(): Observable<ILookupState> {
-    return this.store.select(state => state.lookup);
+    return this.store.select(state => state.lookup)
+      .filter(Boolean);
   }
 }

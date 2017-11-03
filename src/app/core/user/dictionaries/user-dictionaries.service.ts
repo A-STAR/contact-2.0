@@ -122,6 +122,7 @@ export class UserDictionariesService {
   }
 
   private get state$(): Observable<IUserDictionariesState> {
-    return this.store.select(state => state.userDictionaries);
+    return this.store.select(state => state.userDictionaries)
+      .filter(Boolean);
   }
 }

@@ -49,6 +49,8 @@ export class UserTemplatesService {
   }
 
   private get templates$(): Observable<IUserTemplates> {
-    return this.store.select(state => state.userTemplates.templates);
+    return this.store.select(state => state.userTemplates)
+      .filter(Boolean)
+      .map(state => state.templates);
   }
 }
