@@ -1,8 +1,12 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
+import { DebtorService } from '../debtor.service';
+
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { CompanyComponent } from './company/company.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PersonComponent } from './person/person.component';
@@ -14,6 +18,7 @@ import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/ph
   templateUrl: './information.component.html',
 })
 export class DebtorInformationComponent {
+  @ViewChild(CompanyComponent) companyComponent: CompanyComponent;
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   node: INode = {
@@ -25,7 +30,24 @@ export class DebtorInformationComponent {
     ]
   };
 
+  constructor(
+    private debtorService: DebtorService,
+  ) {}
+
   get form(): DynamicFormComponent {
-    return this.personComponent.form;
+    const component = this.companyComponent || this.personComponent;
+    return component && component.form;
+  }
+
+  get debtorTypeCode$(): Observable<number> {
+    return this.debtorService.debtor$.map(debtor => debtor && debtor.typeCode);
+  }
+
+  get isPerson$(): Observable<boolean> {
+    return this.debtorService.isPerson$;
+  }
+
+  get isCompany$(): Observable<boolean> {
+    return this.debtorService.isCompany$;
   }
 }

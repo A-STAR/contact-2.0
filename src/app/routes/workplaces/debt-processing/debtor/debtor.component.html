@@ -53,11 +53,11 @@
     <app-document-grid></app-document-grid>
   </app-tab>
 
-  <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false">
+  <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false" [disabled]="isCompany$ | async">
     <app-employment-grid></app-employment-grid>
   </app-tab>
 
-  <app-tab [title]="'debtor.identityDocs.title'" [closable]="false">
+  <app-tab [title]="'debtor.identityDocs.title'" [closable]="false" [disabled]="isCompany$ | async">
       <app-identity-grid></app-identity-grid>
   </app-tab>
 

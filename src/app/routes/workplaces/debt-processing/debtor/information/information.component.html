@@ -1,9 +1,10 @@
-<!--
-<app-debtor-information-company></app-debtor-information-company>
--->
-
-<div class="mt">
-  <app-debtor-information-person></app-debtor-information-person>
+<div class="mv">
+  <ng-container *ngIf="isPerson$ | async">
+    <app-debtor-information-person></app-debtor-information-person>
+  </ng-container>
+  <ng-container *ngIf="isCompany$ | async">
+    <app-debtor-information-company [personTypeCode]="debtorTypeCode$ | async"></app-debtor-information-company>
+  </ng-container>
 </div>
 
 <app-container [node]="node"></app-container>

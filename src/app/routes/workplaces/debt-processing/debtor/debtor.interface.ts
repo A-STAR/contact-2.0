@@ -9,4 +9,5 @@ export interface IPerson {
   debtId?: number;
   product?: string;
   city?: string;
+  typeCode: number;
 }

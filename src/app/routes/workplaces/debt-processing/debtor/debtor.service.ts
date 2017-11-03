@@ -93,6 +93,14 @@ export class DebtorService {
       .filter(Boolean);
   }
 
+  get isPerson$(): Observable<boolean> {
+    return this.debtor$.map(debtor => debtor && debtor.typeCode === 1);
+  }
+
+  get isCompany$(): Observable<boolean> {
+    return this.debtor$.map(debtor => debtor && [2, 3].includes(debtor.typeCode));
+  }
+
   update(person: IPerson): Observable<void> {
     const debtorId = this._debtor$.value.id;
     return this.dataService
