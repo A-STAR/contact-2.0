@@ -13,8 +13,16 @@ const defaultState: IAuthState = {
   token: null
 };
 
+function parseToken(token: string): IAuthState {
+  return { token: JSON.parse(token) };
+}
+
+function getDefaultState(): IAuthState {
+  return defaultState;
+}
+
 function reducer(
-  state: IAuthState = R.tryCatch(token => ({ token: JSON.parse(token) }), () => defaultState)(savedToken),
+  state: IAuthState = R.tryCatch(parseToken, getDefaultState)(savedToken),
   action: UnsafeAction
 ): IAuthState {
   switch (action.type) {
