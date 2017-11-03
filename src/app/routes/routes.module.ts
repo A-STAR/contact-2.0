@@ -12,7 +12,7 @@ import { routes } from './routes';
 
 @NgModule({
   imports: [
-    EffectsModule.run(PermissionsEffects),
+    EffectsModule.forFeature([PermissionsEffects]),
     SharedModule,
     RouterModule.forRoot(routes),
     PagesModule,

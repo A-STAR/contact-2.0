@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
 import { IUserPermissionsState } from './user-permissions.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserPermissionsService } from './user-permissions.service';
 
@@ -8,7 +7,7 @@ const defaultState: IUserPermissionsState = {
   permissions: null
 };
 
-export function userPermissionsReducer(state: IUserPermissionsState = defaultState, action: Action): IUserPermissionsState {
+function reducer(state: IUserPermissionsState = defaultState, action: UnsafeAction): IUserPermissionsState {
   switch (action.type) {
     case UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS:
       return {
@@ -19,3 +18,10 @@ export function userPermissionsReducer(state: IUserPermissionsState = defaultSta
       return state;
   }
 }
+
+const userPermissionsReducer = {
+  defaultState,
+  reducer,
+};
+
+export default userPermissionsReducer;

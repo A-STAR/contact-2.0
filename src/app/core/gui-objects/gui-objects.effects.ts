@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IGuiObject } from './gui-objects.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data/data.service';
@@ -17,7 +17,7 @@ export class GuiObjectsEffects {
   @Effect()
   fetchGuiObjects$ = this.actions
     .ofType(GuiObjectsService.GUI_OBJECTS_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readGuiObjects()
         .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
         .catch(error => {

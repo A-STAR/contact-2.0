@@ -1,10 +1,12 @@
-import { Action } from '@ngrx/store';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { IEntityAttributesState, EntityAttributesStatusEnum } from './entity-attributes.interface';
 
 import { EntityAttributesService } from './entity-attributes.service';
 
-export function entityAttributesReducer(state: IEntityAttributesState = {}, action: Action): IEntityAttributesState {
+const defaultState = {};
+
+function reducer(state: IEntityAttributesState = defaultState, action: UnsafeAction): IEntityAttributesState {
   switch (action.type) {
     case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH: {
       const { id } = action.payload;
@@ -40,3 +42,10 @@ export function entityAttributesReducer(state: IEntityAttributesState = {}, acti
       return state;
   }
 }
+
+const entityAttributes = {
+  defaultState,
+  reducer,
+};
+
+export default entityAttributes;

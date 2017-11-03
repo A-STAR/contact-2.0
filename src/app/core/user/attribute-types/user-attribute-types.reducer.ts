@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
 import { IUserAttributeTypesState, UserAttributeTypeStatusEnum } from './user-attribute-types.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserAttributeTypesService } from './user-attribute-types.service';
 
@@ -8,9 +7,9 @@ const defaultState: IUserAttributeTypesState = {
   attributeTypes: null
 };
 
-export function userAttributeTypesReducer(
+function reducer(
   state: IUserAttributeTypesState = defaultState,
-  action: Action
+  action: UnsafeAction
 ): IUserAttributeTypesState {
   switch (action.type) {
     case UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH: {
@@ -59,3 +58,10 @@ export function userAttributeTypesReducer(
       return state;
   }
 }
+
+const userAttributeTypes = {
+  defaultState,
+  reducer,
+};
+
+export default userAttributeTypes;

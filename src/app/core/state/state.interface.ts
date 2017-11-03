@@ -1,3 +1,4 @@
+import { Action } from '@ngrx/store';
 import { IActionsLogState } from '../../routes/admin/actions-log/actions-log.interface';
 import { IAuthState } from '../auth/auth.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
@@ -38,4 +39,12 @@ export interface IAppState {
   readonly userPermissions: IUserPermissionsState;
   readonly userTemplates: IUserTemplatesState;
   readonly users: IUsersState;
+}
+
+export interface UnsafeAction extends Action {
+  payload?: any;
+}
+
+export interface SafeAction<T> extends Action {
+  payload: T;
 }

@@ -21,7 +21,7 @@ const routes: Routes = [
       RouterModule.forChild(routes),
       OrganizationsTreeModule,
       OrganizationsEmployeesModule,
-      EffectsModule.run(OrganizationsEffects),
+      EffectsModule.forFeature([OrganizationsEffects]),
     ],
     exports: [
       RouterModule,

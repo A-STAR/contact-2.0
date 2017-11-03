@@ -18,7 +18,7 @@ const defaultState: INotificationsState = {
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-export function notificationReducer(
+function reducer(
   state: INotificationsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: INotificationAction
 ): INotificationsState {
@@ -54,3 +54,10 @@ export function notificationReducer(
       return state;
   }
 }
+
+const notifications = {
+  defaultState,
+  reducer,
+};
+
+export default notifications;

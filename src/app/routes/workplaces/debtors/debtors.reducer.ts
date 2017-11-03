@@ -1,12 +1,18 @@
-import { Action } from '@ngrx/store';
-
 import { IDebtorsState } from './debtors.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
-const DEFAULT_STATE: IDebtorsState = {
+const defaultState: IDebtorsState = {
   debtors: [],
   selectedDebtors: {}
 };
 
-export function debtorsReducer(state: IDebtorsState = DEFAULT_STATE, action: Action): IDebtorsState {
+function reducer(state: IDebtorsState = defaultState, action: UnsafeAction): IDebtorsState {
   return state;
 }
+
+const debtorsReducer = {
+  defaultState,
+  reducer,
+};
+
+export default debtorsReducer;

@@ -16,7 +16,7 @@ const defaultState: IPermissionsState = {
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-export function permissionReducer(
+function reducer(
   state: IPermissionsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IPermissionAction
 ): IPermissionsState {
@@ -99,3 +99,10 @@ export function permissionReducer(
       return state;
   }
 }
+
+const permissions = {
+  defaultState,
+  reducer,
+};
+
+export default permissions;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Action } from '@ngrx/store';
+import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -16,7 +16,7 @@ export class AuthEffects {
   @Effect()
   login$ = this.actions
     .ofType(AuthService.AUTH_LOGIN)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { login, password } = action.payload;
       return this.login(login, password)
         .map((token: string) => ({
@@ -37,7 +37,7 @@ export class AuthEffects {
   @Effect()
   refresh$ = this.actions
     .ofType(AuthService.AUTH_REFRESH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.refresh()
         .map((token: string) => ({
           type: AuthService.AUTH_CREATE_SESSION,
@@ -54,7 +54,7 @@ export class AuthEffects {
   @Effect()
   logout$ = this.actions
     .ofType(AuthService.AUTH_LOGOUT)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.logout()
         .map(() => ({
           type: AuthService.AUTH_DESTROY_SESSION
@@ -70,7 +70,7 @@ export class AuthEffects {
   @Effect()
   createSession$ = this.actions
     .ofType(AuthService.AUTH_CREATE_SESSION)
-    .do((action: Action) => {
+    .do((action: UnsafeAction) => {
       const { redirectAfterLogin, token } = action.payload;
       this.authService.saveToken(token);
       this.authService.saveLanguage(token);
@@ -84,7 +84,7 @@ export class AuthEffects {
   @Effect()
   destroySession$ = this.actions
     .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .do((action: Action) => {
+    .do((action: UnsafeAction) => {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
       if (!action.payload || action.payload.redirectToLogin !== false) {

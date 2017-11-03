@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IUserPermission } from './user-permissions.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -15,7 +15,7 @@ export class UserPermissionsEffects {
   @Effect()
   fetchUserPermissions$ = this.actions
     .ofType(UserPermissionsService.USER_PERMISSIONS_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.read()
         .map((permissions: IUserPermission[]) => ({
           type: UserPermissionsService.USER_PERMISSIONS_FETCH_SUCCESS,

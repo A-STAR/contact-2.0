@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -7,6 +7,8 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
+
 import {
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
@@ -27,7 +29,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.readOrganizations()
         .map(organizations => ({
           type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
@@ -56,7 +58,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATION_CREATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       const parentId = store.organizations.selectedOrganization ? store.organizations.selectedOrganization.id : null;
       return this.createOrganization(parentId, action.payload)
         .mergeMap(result => [
@@ -79,7 +81,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATION_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.updateOrganization(store.organizations.selectedOrganization.id, action.payload.organization)
         .mergeMap(() => [
           {
@@ -98,8 +100,8 @@ export class OrganizationsEffects {
   @Effect()
   updateOrganizationsOrder$ = this.actions
     .ofType(OrganizationsService.ORGANIZATION_ORDER_UPDATE)
-    .switchMap(data => {
-      const organizations: IOrganization[] = data.payload;
+    .switchMap((action: UnsafeAction) => {
+      const organizations: IOrganization[] = action.payload;
       return Observable.forkJoin(organizations
         .map((organization: IOrganization) => this.updateOrganization(organization.id, organization)))
         .mergeMap(() => [
@@ -118,7 +120,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.ORGANIZATION_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.deleteOrganization(store.organizations.selectedOrganization.id)
         .mergeMap(() => [
           {
@@ -145,7 +147,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.readEmployees(store.organizations.selectedOrganization.id)
         .map((employees: IEmployee[]) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_SUCCESS,
@@ -169,7 +171,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.readNotAddedEmployees(store.organizations.selectedOrganization.id)
         .map((employees: IEmployee[]) => ({
           type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS,
@@ -183,7 +185,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEE_CREATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.createEmployee(store.organizations.selectedOrganization.id, action.payload.employee)
         .mergeMap(() => [
           {
@@ -204,7 +206,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEE_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.updateEmployee(
         store.organizations.selectedOrganization.id,
         store.organizations.selectedEmployeeUserId,
@@ -229,7 +231,7 @@ export class OrganizationsEffects {
     .ofType(OrganizationsService.EMPLOYEE_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.deleteEmployee(store.organizations.selectedOrganization.id, store.organizations.selectedEmployeeUserId)
         .mergeMap(() => [
           {
