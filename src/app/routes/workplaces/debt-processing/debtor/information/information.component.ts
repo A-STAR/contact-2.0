@@ -1,6 +1,9 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
+
+import { DebtorService } from '../debtor.service';
 
 import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
 import { CompanyComponent } from './company/company.component';
@@ -27,8 +30,16 @@ export class DebtorInformationComponent {
     ]
   };
 
+  constructor(
+    private debtorService: DebtorService,
+  ) {}
+
   get form(): DynamicFormComponent {
     const component = this.companyComponent || this.personComponent;
     return component.form;
+  }
+
+  get debtorTypeCode$(): Observable<number> {
+    return this.debtorService.debtor$.map(debtor => debtor && debtor.typeCode);
   }
 }

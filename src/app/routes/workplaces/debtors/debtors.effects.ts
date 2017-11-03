@@ -43,7 +43,8 @@ export class DebtorsEffects {
               reward: 3180.78,
               debtId: 19,
               product: 'Autoexpress',
-              city: 'London'
+              city: 'London',
+              typeCode: 1,
             },
             {
               id: 24,
@@ -54,7 +55,8 @@ export class DebtorsEffects {
               reward: 4994.11,
               debtId: 20,
               product: 'Autoexpress',
-              city: 'London'
+              city: 'London',
+              typeCode: 1,
             },
           ]
         );
