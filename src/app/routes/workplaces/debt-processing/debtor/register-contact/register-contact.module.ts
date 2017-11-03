@@ -8,8 +8,6 @@ import { MiscModule } from './misc/misc.module';
 import { PhoneGridModule } from './phone/phone.module';
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { RegisterContactService } from './register-contact.service';
-
 import { RegisterContactComponent } from './register-contact.component';
 
 @NgModule({
@@ -27,9 +25,6 @@ import { RegisterContactComponent } from './register-contact.component';
   ],
   declarations: [
     RegisterContactComponent,
-  ],
-  providers: [
-    RegisterContactService,
   ]
 })
 export class RegisterContactModule { }

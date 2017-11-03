@@ -6,7 +6,7 @@ import { IGridColumn } from '../../../../../../shared/components/grid/grid.inter
 
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 import { PhoneService } from '../../../../../../shared/gui-objects/widgets/phone/phone.service';
-import { RegisterContactService } from '../register-contact.service';
+import { DebtorService } from '../../debtor.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -37,7 +37,7 @@ export class PhoneGridComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
     private gridService: GridService,
-    private registerContactService: RegisterContactService,
+    private debtorService: DebtorService,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class PhoneGridComponent implements OnInit {
   }
 
   get canRegisterSelectedPhone$(): Observable<boolean> {
-    return this.registerContactService.canRegisterPhone$(this.selectedPhone);
+    return this.debtorService.canRegisterPhone$(this.selectedPhone);
   }
 
   get selectedPhone(): IPhone {
