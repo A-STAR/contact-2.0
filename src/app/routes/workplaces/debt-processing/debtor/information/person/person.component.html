@@ -1,8 +1,1 @@
-<div class="row">
-  <div class="col-md-6 col-xs-12">
-    <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="debtor$ | async"> </app-dynamic-form>
-  </div>
-  <div class="col-md-6 col-xs-12 pv-lg">
-    <app-identity-grid></app-identity-grid>
-  </div>
-</div>
+<app-dynamic-form *ngIf="controls" [controls]="controls" [data]="debtor$ | async"> </app-dynamic-form>

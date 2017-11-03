@@ -51,7 +51,6 @@ export class PersonComponent implements OnInit, OnDestroy {
   protected getControls(canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {
     return [
       {
-        title: 'debtor.information.title',
         children: [
           {
             width: 6,
