@@ -1,7 +1,9 @@
 <div appDropdown>
   <div #dropdownTrigger class="form-control clickable">
-    <span>
-      {{ label }}
+    <span [ngSwitch]="selectionLength">
+      <ng-container *ngSwitchCase="0"></ng-container>
+      <ng-container *ngSwitchCase="1">{{ label }}</ng-container>
+      <ng-container *ngSwitchDefault>{{ 'default.select.selected' | translate }}: {{ selectionLength }}</ng-container>
     </span>
     <i class="caret"></i>
   </div>
