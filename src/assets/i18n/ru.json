@@ -1267,6 +1267,10 @@
           "statusCode": "Выберите статус",
           "reasonCode": "Выберите причину",
           "customStatusCode": "Пользовательский статус",
+          "statusProblematic": "Перевод в статус \"Проблемные\"",
+          "statusInfoCollection": "Перевод в статус \"Поиск информации\"",
+          "statusFutile": "Перевод в статус \"Без перспектив\"",
+          "statusCustom": "Перевод в пользовательский статус",
           "comment": "Комментарий"
         },
         "nextCall": {
