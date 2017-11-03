@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
 import { IUserAttributeType, IUserAttributeTypes, UserAttributeTypeStatusEnum } from './user-attribute-types.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class UserAttributeTypesService {
@@ -19,7 +20,7 @@ export class UserAttributeTypesService {
     this.attributeTypes$.subscribe(attributeTypes => this.attributeTypes = attributeTypes);
   }
 
-  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): Action {
+  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): UnsafeAction {
     return {
       type: UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH,
       payload: {

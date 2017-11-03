@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Store, Action } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
@@ -10,6 +10,7 @@ import {
   IPermissionModel,
 } from './permissions.interface';
 import { IAppState } from '../../../core/state/state.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -31,7 +32,7 @@ export class PermissionsEffects {
   @Effect()
   fetchRoles = this.actions
     .ofType(PermissionsService.ROLE_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readRoles()
         .map(roles => ({
           type: PermissionsService.ROLE_FETCH_SUCCESS,
@@ -43,7 +44,7 @@ export class PermissionsEffects {
   @Effect()
   createRole$ = this.actions
     .ofType(PermissionsService.ROLE_ADD)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.addRole(action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
@@ -55,7 +56,7 @@ export class PermissionsEffects {
   @Effect()
   copyRole$ = this.actions
     .ofType(PermissionsService.ROLE_COPY)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.copyRole(action.payload.originalRoleId, action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
@@ -69,7 +70,7 @@ export class PermissionsEffects {
     .ofType(PermissionsService.ROLE_UPDATE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.updateRole(store.permissions.currentRole.id, action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
@@ -84,7 +85,7 @@ export class PermissionsEffects {
     .ofType(PermissionsService.ROLE_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.deleteRole(store.permissions.currentRole.id)
         .mergeMap(() => [
           this.rolesFetchAction,
@@ -99,7 +100,7 @@ export class PermissionsEffects {
     .ofType(PermissionsService.PERMISSION_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.readPermissions(store.permissions.currentRole.id)
         .map(permissions => ({
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
@@ -111,7 +112,7 @@ export class PermissionsEffects {
   @Effect()
   createPermission = this.actions
     .ofType(PermissionsService.PERMISSION_ADD)
-    .map(toPayload)
+    .map((action: UnsafeAction) => action.payload)
     .switchMap(payload => {
       const { role, permissionIds } = payload;
       return this.add(role, permissionIds)
@@ -126,7 +127,7 @@ export class PermissionsEffects {
   @Effect()
   updatePermission = this.actions
     .ofType(PermissionsService.PERMISSION_UPDATE)
-    .map(toPayload)
+    .map((action: UnsafeAction) => action.payload)
     .switchMap(payload => {
       const { roleId, permission } = payload;
       return this.update(roleId, permission)
@@ -141,7 +142,7 @@ export class PermissionsEffects {
   @Effect()
   deletePermission = this.actions
     .ofType(PermissionsService.PERMISSION_DELETE)
-    .map(toPayload)
+    .map((action: UnsafeAction) => action.payload)
     .switchMap(payload => {
       const { role, permissionId } = payload;
       return this.delete(role, permissionId)

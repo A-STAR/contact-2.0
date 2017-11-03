@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IUserAttributeType } from './user-attribute-types.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -17,7 +17,7 @@ export class UserAttributeTypesEffects {
   @Effect()
   fetchUserAttributeTypes$ = this.actions
     .ofType(UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       const { entityTypeId, entitySubtypeCode } = action.payload;
       return this.read(entityTypeId, entitySubtypeCode)
         .map(attributeTypes => {

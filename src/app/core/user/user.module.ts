@@ -16,11 +16,13 @@ import { UserTemplatesService } from './templates/user-templates.service';
 @NgModule({
   imports: [
     CommonModule,
-    EffectsModule.run(UserAttributeTypesEffects),
-    EffectsModule.run(UserConstantsEffects),
-    EffectsModule.run(UserDictionariesEffects),
-    EffectsModule.run(UserPermissionsEffects),
-    EffectsModule.run(UserTemplatesEffects),
+    EffectsModule.forFeature([
+      UserAttributeTypesEffects,
+      UserConstantsEffects,
+      UserDictionariesEffects,
+      UserPermissionsEffects,
+      UserTemplatesEffects
+    ]),
   ],
   providers: [
     UserAttributeTypesService,

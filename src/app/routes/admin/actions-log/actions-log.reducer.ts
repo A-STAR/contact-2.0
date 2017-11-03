@@ -13,7 +13,7 @@ const defaultState: IActionsLogState = {
   actionTypes: [],
 };
 
-export function actionsLogReducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
+function reducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
   switch (action.type) {
     case ActionsLogService.ACTIONS_LOG_DESTROY:
       return { ...defaultState };
@@ -34,3 +34,10 @@ export function actionsLogReducer(state: IActionsLogState = defaultState, action
       return state;
   }
 }
+
+const actionsLog = {
+  defaultState,
+  reducer,
+};
+
+export default actionsLog;

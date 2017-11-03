@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
+
 import {
   IFilters,
   INotification,
@@ -115,7 +117,7 @@ export class NotificationsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
-  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
+  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {
     return {
       type,
       payload

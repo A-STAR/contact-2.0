@@ -1,6 +1,7 @@
-import { Action, ActionReducer } from '@ngrx/store';
+import { ActionReducer } from '@ngrx/store';
 import * as R from 'ramda';
 
+import { UnsafeAction } from '../../core/state/state.interface';
 import { IAppState } from '../state/state.interface';
 import { IAuthState } from './auth.interface';
 
@@ -12,9 +13,9 @@ const defaultState: IAuthState = {
   token: null
 };
 
-export function authReducer(
+function reducer(
   state: IAuthState = R.tryCatch(token => ({ token: JSON.parse(token) }), () => defaultState)(savedToken),
-  action: Action
+  action: UnsafeAction
 ): IAuthState {
   switch (action.type) {
     case AuthService.AUTH_CREATE_SESSION:
@@ -32,8 +33,15 @@ export function authReducer(
   }
 }
 
-export function resetReducer(reducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
-  return (state: IAppState, action: Action): IAppState => {
-    return reducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
+export function resetReducer(nextReducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
+  return (state: IAppState, action: UnsafeAction): IAppState => {
+    return nextReducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
   };
 }
+
+const auth = {
+  defaultState,
+  reducer,
+};
+
+export default auth;

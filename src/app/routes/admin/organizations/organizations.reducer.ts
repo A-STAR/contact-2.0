@@ -1,7 +1,6 @@
-import { Action } from '@ngrx/store';
-
 import { IOrganizationsState } from './organizations.interface';
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { OrganizationsService } from './organizations.service';
 
@@ -27,7 +26,7 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
   return result;
 }
 
-export function organizationsReducer(state: IOrganizationsState = defaultState, action: Action): IOrganizationsState {
+function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
   switch (action.type) {
     case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
       return {
@@ -79,3 +78,10 @@ export function organizationsReducer(state: IOrganizationsState = defaultState, 
       return state;
   }
 }
+
+const organizations = {
+  defaultState,
+  reducer,
+};
+
+export default organizations;
