@@ -2,14 +2,18 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, OnIni
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPerson } from '../../debtor.interface';
+import { IUserConstant } from '../../../../../../core/user/constants/user-constants.interface';
 
 import { DebtorService } from '../../debtor.service';
+import { UserConstantsService } from '../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { range } from '../../../../../../core/utils';
 
 @Component({
   selector: 'app-debtor-information-person',
@@ -19,13 +23,14 @@ import { DynamicFormComponent } from '../../../../../../shared/components/form/d
 export class PersonComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: IDynamicFormGroup[];
+  controls: IDynamicFormItem[];
 
   private personSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
+    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
@@ -33,9 +38,10 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.personSubscription = Observable.combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
+      this.userConstantsService.get('Person.Individual.AdditionalAttribute.List'),
     )
-    .subscribe(([ canEdit, canEditComment ]) => {
-      this.controls = this.getControls(canEdit, canEditComment);
+    .subscribe(([ canEdit, canEditComment, stringValues ]) => {
+      this.controls = this.getControls(canEdit, canEditComment, stringValues);
       this.cdRef.markForCheck();
     });
   }
@@ -48,60 +54,60 @@ export class PersonComponent implements OnInit, OnDestroy {
     return this.debtorService.debtor$;
   }
 
-  protected getControls(canEdit: boolean, canEditComment: boolean): IDynamicFormGroup[] {
+  protected getControls(canEdit: boolean, canEditComment: boolean, stringValues: IUserConstant): IDynamicFormItem[] {
+    const displayedStringValues = stringValues.valueS.split(',').map(Number);
     return [
       {
-        children: [
-          {
-            width: 6,
-            children: [
-              {
-                label: 'person.gender',
-                controlName: 'genderCode',
-                type: 'selectwrapper',
-                dictCode: UserDictionariesService.DICTIONARY_GENDER,
-                disabled: !canEdit
-              },
-              {
-                label: 'person.birthDate',
-                controlName: 'birthDate',
-                type: 'datepicker',
-                disabled: !canEdit
-              },
-              {
-                label: 'person.birthPlace',
-                controlName: 'birthPlace',
-                type: 'text',
-                disabled: !canEdit
-              },
-            ]
-          },
-          {
-            width: 6,
-            children: [
-              {
-                label: 'person.familyStatusCode',
-                controlName: 'familyStatusCode',
-                type: 'selectwrapper',
-                dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
-                disabled: !canEdit
-              },
-              {
-                label: 'person.educationCode',
-                controlName: 'educationCode',
-                type: 'selectwrapper',
-                dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
-                disabled: !canEdit
-              },
-              {
-                label: 'person.comment',
-                controlName: 'comment',
-                type: 'textarea',
-                disabled: !canEditComment
-              },
-            ]
-          }
-        ]
+        label: 'person.gender',
+        controlName: 'genderCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_GENDER,
+        disabled: !canEdit,
+        width: 2,
+      },
+      {
+        label: 'person.birthDate',
+        controlName: 'birthDate',
+        type: 'datepicker',
+        disabled: !canEdit,
+        width: 2,
+      },
+      {
+        label: 'person.birthPlace',
+        controlName: 'birthPlace',
+        type: 'text',
+        disabled: !canEdit,
+        width: 2,
+      },
+      {
+        label: 'person.familyStatusCode',
+        controlName: 'familyStatusCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
+        disabled: !canEdit,
+        width: 3,
+      },
+      {
+        label: 'person.educationCode',
+        controlName: 'educationCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
+        disabled: !canEdit,
+        width: 3,
+      },
+      ...range(1, 10).map(i => ({
+        label: `person.stringValue${i}`,
+        controlName: `stringValue${i}`,
+        type: 'text',
+        width: 3,
+        display: displayedStringValues.includes(i),
+      }) as IDynamicFormItem),
+      {
+        label: 'person.comment',
+        controlName: 'comment',
+        type: 'textarea',
+        disabled: !canEditComment,
+        width: 12,
       },
     ];
   }

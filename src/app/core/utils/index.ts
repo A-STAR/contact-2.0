@@ -101,3 +101,5 @@ export const round = (value: number, precision: number) => {
   const k = Math.pow(10, precision);
   return Math.round(k * value) / k;
 };
+
+export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
