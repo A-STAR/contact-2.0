@@ -267,6 +267,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canRegisterContact$(): Observable<boolean> {
+    // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),

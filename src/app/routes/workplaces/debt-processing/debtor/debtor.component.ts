@@ -109,6 +109,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   onRegisterContactClick(): void {
     this.setDialog('registerContact');
+    this.cdRef.markForCheck();
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
