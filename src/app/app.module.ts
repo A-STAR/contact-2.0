@@ -25,7 +25,7 @@ import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from './shared/shared.module';
 
-import { reducers } from './core/state/root.reducer';
+import { initialState, reducers } from './core/state/root.reducer';
 import { environment } from '../environments/environment';
 
 // https://github.com/ocombe/ng2-translate/issues/218
@@ -54,9 +54,9 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     HttpModule,
     LayoutModule,
-    RoutesModule,
     SharedModule.forRoot(),
-    StoreModule.forRoot(reducers),
+    RoutesModule,
+    StoreModule.forRoot(reducers, { initialState }),
     !environment.production
       ? StoreDevtoolsModule.instrument({ maxAge: 1024 })
       : [],
