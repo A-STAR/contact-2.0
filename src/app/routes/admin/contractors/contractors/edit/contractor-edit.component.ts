@@ -4,10 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-<<<<<<< HEAD
 import { Subscription } from 'rxjs/Subscription';
-=======
->>>>>>> 49267bcd2ede0c1fb08b84111ee2cd5a3202f1f0
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -32,10 +29,7 @@ export class ContractorEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   needToCloseDialog$ = new BehaviorSubject<string>(null);
-<<<<<<< HEAD
   private closeDialogSubscription: Subscription;
-=======
->>>>>>> 49267bcd2ede0c1fb08b84111ee2cd5a3202f1f0
 
   private contractorId = Number((this.route.params as any).value.id);
 
@@ -54,11 +48,7 @@ export class ContractorEditComponent {
       this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : Observable.of(null)
       // this.contractorId ?
       //   this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS)
-<<<<<<< HEAD
       // .map((action: UnsafeAction) => action.payload.contractor) :
-=======
-      // .map(action => action.payload.contractor) :
->>>>>>> 49267bcd2ede0c1fb08b84111ee2cd5a3202f1f0
       //   Observable.of(null)
     )
     .take(1)
