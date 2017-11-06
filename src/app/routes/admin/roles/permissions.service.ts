@@ -34,12 +34,12 @@ export class PermissionsService {
   constructor(private store: Store<IAppState>) {}
 
   get permissions(): Observable<IPermissionsState> {
-    return this.store.select('permissions');
+    return this.store.select(state => state.permissions)
+      .filter(Boolean);
   }
 
   get roles(): Observable<IPermissionRole[]> {
-    return this.store
-      .select((state: IAppState) => state.permissions.roles)
+    return this.permissions.map(state => state.roles)
       .distinctUntilChanged();
   }
 

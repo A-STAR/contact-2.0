@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 import { IPerson } from './debtors.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DebtorsService } from './debtors.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -14,7 +14,7 @@ export class DebtorsEffects {
   @Effect()
   fetchDebtor$ = this.actions
     .ofType(DebtorsService.DEBTORS_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readDebtors()
         .map(debtors => ({
           type: DebtorsService.DEBTORS_FETCH_SUCCESS,
@@ -43,7 +43,8 @@ export class DebtorsEffects {
               reward: 3180.78,
               debtId: 19,
               product: 'Autoexpress',
-              city: 'London'
+              city: 'London',
+              typeCode: 1,
             },
             {
               id: 24,
@@ -54,7 +55,8 @@ export class DebtorsEffects {
               reward: 4994.11,
               debtId: 20,
               product: 'Autoexpress',
-              city: 'London'
+              city: 'London',
+              typeCode: 1,
             },
           ]
         );

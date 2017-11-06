@@ -34,6 +34,12 @@ export class GuaranteeService {
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
+  addGuarantor(debtId: number, contractId: number, personId: number): Observable<any> {
+    return this.dataService
+      .create(`${this.url}/{contractId}/guarantor`, { debtId, contractId }, { personId })
+      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
+  }
+
   update(debtId: number, contractId: number, contract: IGuaranteeContract): Observable<any> {
     return this.dataService
       .update(`${this.url}/{contractId}`, { debtId, contractId }, contract)

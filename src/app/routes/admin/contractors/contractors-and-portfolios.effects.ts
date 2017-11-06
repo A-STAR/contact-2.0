@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -7,6 +7,7 @@ import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IContractor, IContractorManager, IPortfolio, IPortfolioMoveRequest } from './contractors-and-portfolios.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 import { DataService } from '../../../core/data/data.service';
@@ -17,7 +18,7 @@ export class ContractorsAndPortfoliosEffects {
   // @Effect()
   // fetchContractors$ = this.actions
   //   .ofType(ContractorsAndPortfoliosService.CONTRACTORS_FETCH)
-  //   .switchMap((action: Action) => {
+  //   .switchMap((action: UnsafeAction) => {
   //     return this.readContractors()
   //       .map(contractors => ({
   //         type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH_SUCCESS,
@@ -29,7 +30,7 @@ export class ContractorsAndPortfoliosEffects {
   // @Effect()
   // fetchContractor$ = this.actions
   //   .ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
-  //   .switchMap((action: Action) => {
+  //   .switchMap((action: UnsafeAction) => {
   //     return this.readContractor(action.payload.contractorId)
   //       .map(contractor => ({
   //         type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS,
@@ -38,10 +39,11 @@ export class ContractorsAndPortfoliosEffects {
   //       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   //   });
 
+
   @Effect()
   createContractor$ = this.actions
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.createContractor(action.payload.contractor)
         .map(() => ({
           type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
@@ -52,7 +54,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   updateContractor$ = this.actions
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractor, contractorId } = action.payload;
       return this.updateContractor(contractorId, contractor)
         .map(() => ({
@@ -66,7 +68,7 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.deleteContractor(store.contractorsAndPortfolios.selectedContractorId)
         .mergeMap(() => [
           { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
@@ -78,7 +80,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   fetchManagers$ = this.actions
     .ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readManagers(action.payload.contractorId)
         .map(managers => ({
           type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
@@ -90,7 +92,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   fetchManager$ = this.actions
     .ofType(ContractorsAndPortfoliosService.MANAGER_FETCH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.readManager(action.payload.contractorId, action.payload.managerId)
         .map(manager => ({
           type: ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS,
@@ -102,7 +104,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   createManager$ = this.actions
     .ofType(ContractorsAndPortfoliosService.MANAGER_CREATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractorId, manager } = action.payload;
       return this.createManager(contractorId, manager)
         .map(() => ({
@@ -114,7 +116,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   updateManager$ = this.actions
     .ofType(ContractorsAndPortfoliosService.MANAGER_UPDATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractorId, managerId, manager } = action.payload;
       return this.updateManager(contractorId, managerId, manager)
         .map(() => ({
@@ -128,7 +130,7 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
         .mergeMap(() => [
           { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
@@ -142,7 +144,7 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [Action, IAppState] = data;
+      const [_, store]: [UnsafeAction, IAppState] = data;
       return this.readPortfolios(store.contractorsAndPortfolios.selectedContractorId)
         .map(portfolios => ({
           type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
@@ -154,7 +156,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   createPortfolio$ = this.actions
     .ofType(ContractorsAndPortfoliosService.PORTFOLIO_CREATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractorId, portfolio } = action.payload;
       return this.createPortfolio(contractorId, portfolio)
         .map(() => (
@@ -166,7 +168,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   updatePortfolio$ = this.actions
     .ofType(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractorId, portfolioId, portfolio } = action.payload;
       return this.updatePortfolio(contractorId, portfolioId, portfolio)
         .mergeMap(() => [
@@ -179,7 +181,7 @@ export class ContractorsAndPortfoliosEffects {
   @Effect()
   movePortfolio$ = this.actions
     .ofType(ContractorsAndPortfoliosService.PORTFOLIO_MOVE)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { contractorId, newContractorId, portfolioId } = action.payload;
       return this.updatePortfolio(contractorId, portfolioId, { newContractorId })
         .mergeMap(() => [
@@ -194,7 +196,7 @@ export class ContractorsAndPortfoliosEffects {
     .ofType(ContractorsAndPortfoliosService.PORTFOLIO_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [action, store]: [Action, IAppState] = data;
+      const [action, store]: [UnsafeAction, IAppState] = data;
       return this.deletePortfolio(action.payload.contractorId, store.contractorsAndPortfolios.selectedPortfolioId)
         .mergeMap(() => [
           { type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH },

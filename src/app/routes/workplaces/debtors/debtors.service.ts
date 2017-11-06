@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IPerson } from '../debt-processing/debtor/debtor.interface';
+import { IDebtorsState } from './debtors.interface';
 
 @Injectable()
 export class DebtorsService {
@@ -26,7 +27,7 @@ export class DebtorsService {
   }
 
   isFetched(): Observable<boolean> {
-    return this.debtors.filter(Boolean);
+    return this.debtors.map(debtors => !!debtors.length);
   }
 
   selectDebtor(debtor: IPerson): void {
@@ -40,13 +41,18 @@ export class DebtorsService {
     this.router.navigate([`/workplaces/debts/${id}`]);
   }
 
+  get state(): Observable<IDebtorsState> {
+    return this.store.select(state => state.debtors)
+      .filter(Boolean);
+  }
+
   get selectedDebtor(): Observable<IPerson> {
-    return this.store.select(state => state.debtors.selectedDebtor)
+    return this.state.map(state => state.selectedDebtor)
       .distinctUntilChanged();
   }
 
   get debtors(): Observable<IPerson[]> {
-    return this.store.select(state => state.debtors.debtors)
+    return this.state.map(state => state.debtors)
       .distinctUntilChanged();
   }
 }

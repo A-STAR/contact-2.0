@@ -5,8 +5,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { MultiListComponent } from '../../../list/multi/multi-list.component';
 
-import { isEmpty } from '../../../../../core/utils';
-
 type IMultiSelectValue = Array<number|string>;
 
 @Component({
@@ -32,14 +30,11 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
+  get selectionLength(): number {
+    return this.selection && this.selection.length || 0;
+  }
+
   get label(): string {
-    if (isEmpty(this.selection)) {
-      return null;
-    }
-    if (this.selection.length > 1) {
-      // TODO(d.maltsev): i18n
-      return `Выбрано элементов: ${this.selection.length}`;
-    }
     const option = this.options.find(o => o.value === this.selection[0]);
     return option ? option.label : null;
   }

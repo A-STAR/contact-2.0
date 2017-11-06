@@ -198,13 +198,11 @@ export class ContractorsAndPortfoliosService {
   }
 
   private get state(): Observable<IContractorsAndPortfoliosState> {
-    return this.store.select(state => state.contractorsAndPortfolios);
+    return this.store.select(state => state.contractorsAndPortfolios)
+      .filter(Boolean);
   }
 
   private dispatch(type: string, payload?: any): void {
-    this.store.dispatch({
-      type,
-      payload
-    });
+    this.store.dispatch({ type, payload });
   }
 }

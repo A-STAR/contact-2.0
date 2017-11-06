@@ -1,5 +1,12 @@
+<app-register-contact-dialog
+  *ngIf="isDialog('registerContact')"
+  (submit)="onRegisterContactDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-register-contact-dialog>
+
 <div class="pb-lg">
   <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+  <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
 </div>
 
 <app-dynamic-form
@@ -12,7 +19,7 @@
 
 <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
   <app-tab [title]="'debtor.information.title'">
-    <app-debtor-information #information [person]="person"></app-debtor-information>
+    <app-debtor-information #information></app-debtor-information>
   </app-tab>
 
   <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
@@ -46,8 +53,12 @@
     <app-document-grid></app-document-grid>
   </app-tab>
 
-  <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false">
+  <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false" [disabled]="isCompany$ | async">
     <app-employment-grid></app-employment-grid>
+  </app-tab>
+
+  <app-tab [title]="'debtor.identityDocs.title'" [closable]="false" [disabled]="isCompany$ | async">
+      <app-identity-grid></app-identity-grid>
   </app-tab>
 
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">

@@ -127,12 +127,33 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Регистрация контакта",
+          "address": {
+            "title": "Адреса",
+            "button": "Зарегистрировать выбранный адрес"
+          },
+          "phone": {
+            "title": "Телефоны",
+            "button": "Зарегистрировать выбранный телефон"
+          },
+          "misc": {
+            "title": "Специальное",
+            "buttonMisc": "Специальное",
+            "buttonOfficeVisit": "Визит в офис"
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
-        "comment": "Комментарий для ввода"
+        "comment": "Комментарий для ввода",
+        "errors": {
+          "init": "Произошла ошибка"
+        }
       },
       "promise": {
         "title": "Регистрация обещания",
@@ -654,6 +675,16 @@
     "birthPlace": "Место рождения",
     "familyStatusCode": "Семейное положение",
     "educationCode": "Образование",
+    "stringValue1": "Строковый атрибут 1",
+    "stringValue2": "Строковый атрибут 2",
+    "stringValue3": "Строковый атрибут 3",
+    "stringValue4": "Строковый атрибут 4",
+    "stringValue5": "Строковый атрибут 5",
+    "stringValue6": "Строковый атрибут 6",
+    "stringValue7": "Строковый атрибут 7",
+    "stringValue8": "Строковый атрибут 8",
+    "stringValue9": "Строковый атрибут 9",
+    "stringValue10": "Строковый атрибут 10",
     "comment": "Комментарий"
   },
   "debtors": {
@@ -1249,6 +1280,10 @@
           "statusCode": "Выберите статус",
           "reasonCode": "Выберите причину",
           "customStatusCode": "Пользовательский статус",
+          "statusProblematic": "Перевод в статус \"Проблемные\"",
+          "statusInfoCollection": "Перевод в статус \"Поиск информации\"",
+          "statusFutile": "Перевод в статус \"Без перспектив\"",
+          "statusCustom": "Перевод в пользовательский статус",
           "comment": "Комментарий"
         },
         "nextCall": {
@@ -1302,7 +1337,7 @@
       "grid": {
         "id": "Ид",
         "name": "Название",
-        "propertyType": "Тип имущества",
+        "typeCode": "Тип имущества",
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
@@ -1432,6 +1467,15 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
+    },
+    "scenarios": {
+      "gen": { "singular": "сценария", "plural": "списка сценариев" }
+    },
+    "autoComments": {
+      "gen": { "singular": "автокомментария", "plural": "списка автокомментариев" }
+    },
+    "contactTreeItems": {
+      "gen": { "singular": "элемента дерева контактов", "plural": "дерева контактов" }
     }
   },
   "errors": {
@@ -1655,7 +1699,8 @@
       "empty": "пусто"
     },
     "select" : {
-      "empty": "[пустое значение]"
+      "empty": "[пустое значение]",
+      "selected": "Выбрано элементов"
     },
     "sex": {
       "m": "м",

@@ -1,10 +1,9 @@
-import { Action } from '@ngrx/store';
-
 import { IContractorsAndPortfoliosState } from './contractors-and-portfolios.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
-const defaultState: IContractorsAndPortfoliosState = {
+export const defaultState: IContractorsAndPortfoliosState = {
   contractors: null,
   selectedContractorId: null,
   portfolios: null,
@@ -15,9 +14,9 @@ const defaultState: IContractorsAndPortfoliosState = {
 
 // This should NOT be an arrow function in order to pass AoT compilation
 // See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
-export function contractorsAndPortfoliosReducer(
+export function reducer(
   state: IContractorsAndPortfoliosState = defaultState,
-  action: Action
+  action: UnsafeAction
 ): IContractorsAndPortfoliosState {
   switch (action.type) {
 
