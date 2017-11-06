@@ -47,7 +47,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.contractorsAndPortfoliosService.readAllContractors(),
+      action: () => this.needToReadAllContractors$.next(''),
       enabled: this.canView$
     }
   ];
@@ -65,7 +65,9 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   ];
 
   dialog: string;
-  selectedContractor: IContractor;
+  selectedContractor: IContractor[] = [];
+  selection: IContractor[] ;
+  rows: IContractor[];
   needToReadAllContractors$ = new BehaviorSubject<string>(null);
   private _contractors: IContractor[];
 
@@ -105,7 +107,9 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     });
 
     this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$.subscribe(contractorId => {
-      this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId) || null;
+      this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
+        ? [this.contractors.find((contractor) => contractor.id === contractorId)]
+        : [];
     });
 
     this.actionsSubscription = this.actions
@@ -115,6 +119,18 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   set contractors(newContractors: IContractor[]) {
     this._contractors = newContractors;
+    if (this.selectedContractor) {
+      this.onSelect(this.selectedContractor[0]);
+      this.contractorsAndPortfoliosService.state
+          .map(state => state.selectedContractorId)
+          .take(1)
+          .subscribe(contractorId => {
+            console.log(contractorId);
+            this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
+            ? [this.contractors.find((contractor) => contractor.id === contractorId)]
+            : [];
+          });
+    }
     this.cdRef.markForCheck();
   }
 
@@ -130,11 +146,8 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     this.clearContractors();
   }
 
-  // get contractors$(): Observable<IContractor[]> {
-  //   return this.contractorsAndPortfoliosService.contractors$;
-  // }
-
   clearContractors(): void {
+    this.contractorsAndPortfoliosService.selectContractor(null);
     this.contractors = [];
   }
 
@@ -156,20 +169,29 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onAdd(): void {
+    console.log('nav to create contractors');
     this.router.navigate([ `/admin/contractors/create` ]);
   }
 
   onEdit(): void {
-    this.router.navigate([ `/admin/contractors/${this.selectedContractor.id}` ]);
+    console.log('on before edit', `/admin/contractors/${this.selectedContractor[0].id}`);
+    this.router.navigate([ `/admin/contractors/${this.selectedContractor[0].id}` ]);
   }
 
   onSelect(contractor: IContractor): void {
-    this.contractorsAndPortfoliosService.selectContractor(contractor.id);
+    console.log('start on select', contractor);
+    if (contractor) {
+      this.selection = [contractor];
+      this.contractorsAndPortfoliosService.selectContractor(contractor.id);
+    } else {
+      this.selection = [];
+      this.contractorsAndPortfoliosService.selectContractor(null);
+    }
   }
 
   onRemoveSubmit(): void {
-    console.log(this.selectedContractor.id);
-    this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor.id)
+    console.log(this.selectedContractor[0].id);
+    this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor[0].id)
       .do(() => {
         this.setDialog();
         this.needToReadAllContractors$.next('');

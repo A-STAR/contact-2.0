@@ -40,16 +40,16 @@ export class ContractorsAndPortfoliosEffects {
   //   });
 
 
-  @Effect()
-  createContractor$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
-    .switchMap((action: UnsafeAction) => {
-      return this.createContractor(action.payload.contractor)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
-        }))
-        .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
-    });
+  // @Effect()
+  // createContractor$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.CONTRACTOR_CREATE)
+  //   .switchMap((action: UnsafeAction) => {
+  //     return this.createContractor(action.payload.contractor)
+  //       .map(() => ({
+  //         type: ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS
+  //       }))
+  //       .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
+  //   });
 
   @Effect()
   updateContractor$ = this.actions

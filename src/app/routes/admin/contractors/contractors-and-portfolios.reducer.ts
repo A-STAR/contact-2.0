@@ -38,6 +38,7 @@ export function reducer(
         selectedContractorId: null
       };
     case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
+      console.log('start reduser for select');
       return {
         ...state,
         selectedContractorId: action.payload.contractorId

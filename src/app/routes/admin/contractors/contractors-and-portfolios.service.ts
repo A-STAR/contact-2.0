@@ -115,15 +115,20 @@ export class ContractorsAndPortfoliosService {
   // }
 
   selectContractor(contractorId: number): void {
+    console.log('dispatch selected contractorId:', contractorId);
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
   }
 
-  createContractor(contractor: IContractor): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE, { contractor });
+  createContractor(contractor: IContractor): Observable<void> {
+    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE, { contractor });
+    return this.dataService.create('/contractors', {}, contractor)
+      .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
   }
 
-  updateContractor(contractorId: number, contractor: IContractor): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE, { contractorId, contractor });
+  updateContractor(contractorId: number, contractor: IContractor): Observable<void> {
+    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE, { contractorId, contractor });
+    return this.dataService.update('/contractors/{contractorId}', { contractorId }, contractor)
+      .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
   }
 
   deleteContractor(contractorId: Number): Observable<any> {
@@ -199,7 +204,7 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_DELETE, { contractorId });
   }
 
-  private get state(): Observable<IContractorsAndPortfoliosState> {
+  get state(): Observable<IContractorsAndPortfoliosState> {
     return this.store.select(state => state.contractorsAndPortfolios)
       .filter(Boolean);
   }

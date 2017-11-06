@@ -15,7 +15,7 @@
   columnTranslationKey="contractors"
   selectionType="single"
   *ngIf="contractors"
-
+  [selection]="selectedContractor"
   [styles]="{height: '300px'}"
   [columns]="columns"
   [rows]="contractors"

@@ -4,6 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -14,6 +15,7 @@ import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -27,6 +29,7 @@ export class ContractorEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   needToCloseDialog$ = new BehaviorSubject<string>(null);
+  private closeDialogSubscription: Subscription;
 
   private contractorId = Number((this.route.params as any).value.id);
 
@@ -34,6 +37,7 @@ export class ContractorEditComponent {
     private actions: Actions,
     private route: ActivatedRoute,
     private router: Router,
+    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
@@ -41,7 +45,6 @@ export class ContractorEditComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
-
       this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : Observable.of(null)
       // this.contractorId ?
       //   this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS)
@@ -68,8 +71,8 @@ export class ContractorEditComponent {
     //   ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
     // )
     this.needToCloseDialog$
-    .take(1)
-    .subscribe(() => this.onBack());
+      .take(1)
+      .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -78,14 +81,15 @@ export class ContractorEditComponent {
 
   onSubmit(): void {
     const contractor = this.form.serializedUpdates;
-    if (this.contractorId) {
-      this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor);
-    } else {
-      this.contractorsAndPortfoliosService.createContractor(contractor);
-    }
+    this.closeDialogSubscription = ((this.contractorId)
+      ? this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor)
+      : this.contractorsAndPortfoliosService.createContractor(contractor))
+          .subscribe(() => this.needToCloseDialog$.next(''));
   }
 
   onBack(): void {
+    // this.contentTabService.back();
+    console.log('go to back');
     this.router.navigate(['/admin/contractors']);
   }
 
