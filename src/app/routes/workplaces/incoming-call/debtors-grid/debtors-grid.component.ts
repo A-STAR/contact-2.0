@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
@@ -36,13 +37,15 @@ export class DebtorsGridComponent implements OnInit {
 
   debtors: any[] = [
     {
-      debtId: 1
+      debtId: 1,
+      debtorId: 1,
     }
   ];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private incomingCallService: IncomingCallService,
   ) {}
 
   ngOnInit(): void {
@@ -54,10 +57,6 @@ export class DebtorsGridComponent implements OnInit {
   }
 
   onSelect(debtor: any): void {
-
-  }
-
-  onDoubleClick(debtor: any): void {
-
+    this.incomingCallService.changeSelectedDebtorId(debtor.debtorId);
   }
 }
