@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 
@@ -43,7 +43,6 @@ export class DebtorGridComponent implements OnInit {
   ];
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
   ) {}
