@@ -14,8 +14,6 @@ import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../core/utils/helpers';
-
 @Injectable()
 export class DebtorService {
   private _debt$ = new BehaviorSubject<IDebt>(null);
