@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { DebtorsGridModule } from './debtors-grid/debtors-grid.module';
 import { FilterModule } from './filter/filter.module';
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -12,6 +13,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    DebtorsGridModule,
     FilterModule,
     RouterModule.forChild(routes),
     SharedModule,
