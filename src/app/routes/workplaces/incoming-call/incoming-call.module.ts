@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { DebtorCardModule } from './debtor-card/debtor-card.module';
 import { DebtorGridModule } from './debtor-grid/debtor-grid.module';
 import { FilterModule } from './filter/filter.module';
 import { PhoneGridModule } from './phone-grid/phone-grid.module';
@@ -14,6 +15,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    DebtorCardModule,
     DebtorGridModule,
     FilterModule,
     PhoneGridModule,
