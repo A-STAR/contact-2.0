@@ -114,11 +114,10 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
         ? [this.contractors.find((contractor) => contractor.id === contractorId)]
         : [];
     });
-
+    // TODO
     this.messageBusService
       .select(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
       .subscribe(() => {
-        console.log('get fetch signal');
         this.needToReadAllContractors$.next('');
       });
 

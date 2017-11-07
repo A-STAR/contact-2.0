@@ -59,9 +59,10 @@ export function reducer(
         selectedManagerId: null
       };
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
+      const extendedMapping = Object.assign({}, state.mapContracorToSelectedManager, action.payload.mapContractorToManagerId);
       return {
         ...state,
-        mapContracorToSelectedManager: { ...action.payload.mapContracorToSelectedManager }
+        mapContracorToSelectedManager: extendedMapping
       };
 
     // Portfolios:

@@ -85,9 +85,10 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedManager$(): Observable<IContractorManager> {
+  selectedManagerId$(contractorId: number): Observable<number> {
     return this.state
-      .map(state => state.managers && state.managers.find(manager => manager.id === state.selectedManagerId))
+      .map(state => state.mapContracorToSelectedManager && state.mapContracorToSelectedManager[contractorId])
+      .filter(Boolean)
       .distinctUntilChanged();
   }
 
@@ -145,7 +146,7 @@ export class ContractorsAndPortfoliosService {
   }
 
   selectManager(contractorId: number, managerId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { mapContractorToManagerId: { [contractorId]: managerId } });
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { mapContractorToManagerId: { [contractorId]: managerId } });
   }
 
   fetchManager(contractorId: number, managerId: number): void {

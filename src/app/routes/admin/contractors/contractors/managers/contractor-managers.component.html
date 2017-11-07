@@ -23,11 +23,12 @@
 </app-toolbar-2>
 
 <app-grid
+  *ngIf="managers"
   columnTranslationKey="contractors.managers"
   selectionType="single"
   [styles]="{height: '200px'}"
   [columns]="columns"
-  [rows]="managers$ | async"
+  [rows]="managers"
   [allowDblClick]="canEdit$ | async"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
