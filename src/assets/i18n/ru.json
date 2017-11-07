@@ -209,6 +209,25 @@
       "confirm": {
         "title": "Подтверждение данных"
       }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Ид долга",
+          "fullName": "ФИО/Название",
+          "contract": "Договор",
+          "account": "Лицевой счет",
+          "phoneNumber": "Номер телефона",
+          "fullAddress": "Адрес",
+          "docSeries": "Серия",
+          "docNumber": "Номер",
+          "clientId": "Ид клиента",
+          "birthDate": "Дата рождения",
+          "showDebtors": "По должникам",
+          "showGuarantors": "По поручителям",
+          "showClosed": "Показывать закрытые долги"
+        }
+      }
     }
   },
   "login": {

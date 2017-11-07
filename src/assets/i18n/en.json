@@ -209,6 +209,25 @@
       "confirm": {
         "title": "Confirmation"
       }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Debt Id",
+          "fullName": "Full Name/Company Name",
+          "contract": "Contract",
+          "account": "Account",
+          "phoneNumber": "Phone Number",
+          "fullAddress": "Address",
+          "docSeries": "Series",
+          "docNumber": "Number",
+          "clientId": "Client Id",
+          "birthDate": "Birth Date",
+          "showDebtors": "Show Debtors",
+          "showGuarantors": "Show Guarantors",
+          "showClosed": "Show Closed Debts"
+        }
+      }
     }
   },
   "login": {
