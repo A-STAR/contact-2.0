@@ -251,6 +251,17 @@
           "startDate": "Start date",
           "statusCode": "Status"
         }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
