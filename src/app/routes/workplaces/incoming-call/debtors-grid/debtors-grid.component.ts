@@ -57,6 +57,6 @@ export class DebtorsGridComponent implements OnInit {
   }
 
   onSelect(debtor: any): void {
-    this.incomingCallService.changeSelectedDebtorId(debtor.debtorId);
+    this.incomingCallService.selectedDebtorId = debtor.debtorId;
   }
 }
