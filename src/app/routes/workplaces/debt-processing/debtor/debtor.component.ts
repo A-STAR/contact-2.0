@@ -91,7 +91,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   get isContactRegistrationDisabled$(): Observable<boolean> {
-    return this.debtorService.canRegisterContacts$.map(invert);
+    return this.debtorService.canRegisterDebt$.map(invert);
   }
 
   onSubmit(): void {

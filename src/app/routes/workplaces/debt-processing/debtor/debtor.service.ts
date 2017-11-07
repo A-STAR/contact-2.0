@@ -34,18 +34,12 @@ export class DebtorService {
     });
   }
 
-  get canRegisterContacts$(): Observable<boolean> {
-    return this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [ 1, 3, 7, 8 ]);
-  }
-
   get canRegisterPhones$(): Observable<boolean> {
     return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1);
   }
 
   canRegisterPhone$(phone: IPhone): Observable<boolean> {
-    return phone && !phone.isInactive
-      ? combineLatestAnd([ this.canRegisterPhones$, this.canRegisterDebt$() ])
-      : Observable.of(false);
+    return phone && !phone.isInactive ? this.canRegisterPhones$ : Observable.of(false);
   }
 
   get canRegisterAddresses$(): Observable<boolean> {
@@ -53,27 +47,19 @@ export class DebtorService {
   }
 
   canRegisterAddress$(address: IAddress): Observable<boolean> {
-    return address && !address.isInactive
-      ? combineLatestAnd([ this.canRegisterAddresses$, this.canRegisterDebt$() ])
-      : Observable.of(false);
+    return address && !address.isInactive ? this.canRegisterAddresses$ : Observable.of(false);
   }
 
   get canRegisterMisc$(): Observable<boolean> {
     return this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [ 7, 8 ]);
   }
 
-  canRegisterSpecial$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 7),
-      this.canRegisterDebt$(),
-    ]);
+  get canRegisterSpecial$(): Observable<boolean> {
+    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 7);
   }
 
-  canRegisterOfficeVisit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 8),
-      this.canRegisterDebt$(),
-    ]);
+  get canRegisterOfficeVisit$(): Observable<boolean> {
+    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 8);
   }
 
   navigateToRegistration(personId: number, personRole: number, contactType: number, contactId: number): void {
@@ -108,13 +94,12 @@ export class DebtorService {
       .catch(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback());
   }
 
-  private canRegisterDebt$(): Observable<boolean> {
-    return this.debt$
-      .flatMap(debt => {
-        return this.isDebtActive(debt)
-          ? Observable.of(true)
-          : this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG');
-      });
+  get canRegisterDebt$(): Observable<boolean> {
+    return Observable.combineLatest(
+      this.debt$,
+      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG'),
+      this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [ 1, 3, 7, 8 ]),
+    ).map(([ debt, canRegisterClosed, canRegister ]) => (this.isDebtActive(debt) || canRegisterClosed) && canRegister);
   }
 
   private isDebtActive(debt: { statusCode: number }): boolean {
