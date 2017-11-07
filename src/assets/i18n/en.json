@@ -78,7 +78,8 @@
         "MAIL": "Mail",
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
-        "HELP": "Help"
+        "HELP": "Help",
+        "INCOMING_CALL": "Incoming Call"
       }
     },
     "messages": {
@@ -207,6 +208,60 @@
       },
       "confirm": {
         "title": "Confirmation"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Debt Id",
+          "fullName": "Full Name/Company Name",
+          "contract": "Contract",
+          "account": "Account",
+          "phoneNumber": "Phone Number",
+          "fullAddress": "Address",
+          "docSeries": "Series",
+          "docNumber": "Number",
+          "clientId": "Client Id",
+          "birthDate": "Birth Date",
+          "showDebtors": "Show Debtors",
+          "showGuarantors": "Show Guarantors",
+          "showClosed": "Show Closed Debts"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contact": "Contract",
+          "creditEndDate": "Credit End Date",
+          "creditName": "Credit Name",
+          "creditStartDate": "Credit Start Date",
+          "creditTypeCode": "Credit Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "debtorId": "Debtor Id",
+          "docNumber": "Document #",
+          "fullName": "Full Name/Company Name",
+          "outPortfolioName": "Outgoing Portfolio Name",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start date",
+          "statusCode": "Status"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },

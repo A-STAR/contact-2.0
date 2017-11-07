@@ -78,7 +78,8 @@
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
-        "HELP": "Помощь"
+        "HELP": "Помощь",
+        "INCOMING_CALL": "Входящий звонок"
       }
     },
     "messages": {
@@ -207,6 +208,60 @@
       },
       "confirm": {
         "title": "Подтверждение данных"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Ид долга",
+          "fullName": "ФИО/Название",
+          "contract": "Договор",
+          "account": "Лицевой счет",
+          "phoneNumber": "Номер телефона",
+          "fullAddress": "Адрес",
+          "docSeries": "Серия",
+          "docNumber": "Номер",
+          "clientId": "Ид клиента",
+          "birthDate": "Дата рождения",
+          "showDebtors": "По должникам",
+          "showGuarantors": "По поручителям",
+          "showClosed": "Показывать закрытые долги"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "Ид долга",
+          "debtorId": "Ид должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },

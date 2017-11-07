@@ -1,0 +1,8 @@
+<app-grid
+  columnTranslationKey="modules.incomingCall.debtors"
+  selectionType="single"
+  [styles]="{ height: '740px' }"
+  [columns]="columns"
+  [rows]="debtors"
+  (onSelect)="onSelect($event)"
+></app-grid>
