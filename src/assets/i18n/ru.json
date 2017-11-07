@@ -78,7 +78,8 @@
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
-        "HELP": "Помощь"
+        "HELP": "Помощь",
+        "INCOMING_CALL": "Входящий звонок"
       }
     },
     "messages": {

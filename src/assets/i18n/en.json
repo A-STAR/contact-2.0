@@ -78,7 +78,8 @@
         "MAIL": "Mail",
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
-        "HELP": "Help"
+        "HELP": "Help",
+        "INCOMING_CALL": "Incoming Call"
       }
     },
     "messages": {
