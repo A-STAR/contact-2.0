@@ -48,20 +48,20 @@ export function reducer(
     case ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS:
       return {
         ...state,
-        managers: [...action.payload.managers],
+        // managers: [...action.payload.managers],
         // TODO(d.maltsev): preserve selected contractor row
         selectedManagerId: null
       };
     case ContractorsAndPortfoliosService.MANAGERS_CLEAR:
       return {
         ...state,
-        managers: null,
+        // managers: null,
         selectedManagerId: null
       };
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
       return {
         ...state,
-        selectedManagerId: action.payload.managerId
+        mapContracorToSelectedManager: { ...action.payload.mapContracorToSelectedManager }
       };
 
     // Portfolios:

@@ -42,6 +42,8 @@ export interface IContractorManager {
   comment: string;
 }
 
+export interface INumberMap { [n: number]: number; }
+
 export interface IContractorsAndPortfoliosState {
   contractors: Array<IContractor>;
   selectedContractorId: number;
@@ -49,4 +51,5 @@ export interface IContractorsAndPortfoliosState {
   selectedPortfolioId: number;
   managers: Array<IContractorManager>;
   selectedManagerId: number;
+  mapContracorToSelectedManager?: INumberMap;
 }

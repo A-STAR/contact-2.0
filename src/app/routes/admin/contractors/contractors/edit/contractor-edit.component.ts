@@ -17,6 +17,8 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+
 @Component({
   selector: 'app-contractor-edit',
   templateUrl: './contractor-edit.component.html'
@@ -37,6 +39,7 @@ export class ContractorEditComponent {
     private actions: Actions,
     private route: ActivatedRoute,
     private router: Router,
+    private messageBusService: MessageBusService,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
@@ -46,10 +49,6 @@ export class ContractorEditComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.userOptions,
       this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : Observable.of(null)
-      // this.contractorId ?
-      //   this.actions.ofType(ContractorsAndPortfoliosService.CONTRACTOR_FETCH_SUCCESS)
-      // .map((action: UnsafeAction) => action.payload.contractor) :
-      //   Observable.of(null)
     )
     .take(1)
     .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
@@ -66,13 +65,11 @@ export class ContractorEditComponent {
       this.formData = contractor;
     });
 
-    // this.actions.ofType(
-    //   ContractorsAndPortfoliosService.CONTRACTOR_CREATE_SUCCESS,
-    //   ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
-    // )
     this.needToCloseDialog$
-    .take(1)
-    .subscribe(() => this.onBack());
+      .filter(Boolean)
+      .subscribe((res) => {
+        this.onBack();
+      });
   }
 
   canSubmit(): boolean {
@@ -84,13 +81,14 @@ export class ContractorEditComponent {
     this.closeDialogSubscription = ((this.contractorId)
       ? this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor)
       : this.contractorsAndPortfoliosService.createContractor(contractor))
-          .subscribe(() => this.needToCloseDialog$.next(''));
+          .subscribe(() => {
+            this.messageBusService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH);
+            this.needToCloseDialog$.next(' ');
+          });
   }
 
   onBack(): void {
-    // this.contentTabService.back();
-    console.log('go to back');
-    this.router.navigate(['/admin/contractors']);
+    this.contentTabService.gotoParent(this.router, 1);
   }
 
   onManagersClick(): void {

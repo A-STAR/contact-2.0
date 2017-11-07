@@ -115,33 +115,37 @@ export class ContractorsAndPortfoliosService {
   // }
 
   selectContractor(contractorId: number): void {
-    console.log('dispatch selected contractorId:', contractorId);
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
   }
 
   createContractor(contractor: IContractor): Observable<void> {
     // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE, { contractor });
     return this.dataService.create('/contractors', {}, contractor)
-      .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
+            .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
   }
 
   updateContractor(contractorId: number, contractor: IContractor): Observable<void> {
     // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE, { contractorId, contractor });
     return this.dataService.update('/contractors/{contractorId}', { contractorId }, contractor)
-      .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
+            .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
   }
 
   deleteContractor(contractorId: Number): Observable<any> {
     // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_DELETE);
     return this.dataService.delete('/contractors/{contractorId}', { contractorId })
-      .take(1)
-      .catch(
-        this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback()
-      );
+            .take(1)
+            .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
   }
 
-  fetchManagers(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH, { contractorId });
+  readManagersForContractor(contractorId: number): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH, { contractorId });
+    return this.dataService.readAll('/contractors/{contractorId}/managers', { contractorId })
+            .take(1)
+            .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
+  }
+
+  selectManager(contractorId: number, managerId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { mapContractorToManagerId: { [contractorId]: managerId } });
   }
 
   fetchManager(contractorId: number, managerId: number): void {
@@ -152,9 +156,9 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(ContractorsAndPortfoliosService.MANAGERS_CLEAR);
   }
 
-  selectManager(managerId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { managerId });
-  }
+  // selectManager(managerId: number): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { managerId });
+  // }
 
   createManager(contractorId: number, manager: IContractorManager): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });

@@ -51,31 +51,31 @@ export class ContractorsAndPortfoliosEffects {
   //       .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
   //   });
 
-  @Effect()
-  updateContractor$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE)
-    .switchMap((action: UnsafeAction) => {
-      const { contractor, contractorId } = action.payload;
-      return this.updateContractor(contractorId, contractor)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
-        }))
-        .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
-    });
+  // @Effect()
+  // updateContractor$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.CONTRACTOR_UPDATE)
+  //   .switchMap((action: UnsafeAction) => {
+  //     const { contractor, contractorId } = action.payload;
+  //     return this.updateContractor(contractorId, contractor)
+  //       .map(() => ({
+  //         type: ContractorsAndPortfoliosService.CONTRACTOR_UPDATE_SUCCESS
+  //       }))
+  //       .catch(this.notificationsService.updateError().entity('entities.contractors.gen.singular').callback());
+  //   });
 
-  @Effect()
-  deleteContractor$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      return this.deleteContractor(store.contractorsAndPortfolios.selectedContractorId)
-        .mergeMap(() => [
-          { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
-          { type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS }
-        ])
-        .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
-    });
+  // @Effect()
+  // deleteContractor$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE)
+  //   .withLatestFrom(this.store)
+  //   .switchMap(data => {
+  //     const [_, store]: [UnsafeAction, IAppState] = data;
+  //     return this.deleteContractor(store.contractorsAndPortfolios.selectedContractorId)
+  //       .mergeMap(() => [
+  //         { type: ContractorsAndPortfoliosService.CONTRACTORS_FETCH },
+  //         { type: ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS }
+  //       ])
+  //       .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
+  //   });
 
   @Effect()
   fetchManagers$ = this.actions

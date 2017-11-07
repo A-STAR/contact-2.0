@@ -18,11 +18,10 @@ import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.compone
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
-  // { path: ':id', component: ContractorEditComponent },
   { path: ':id', children: [
       { path: '', pathMatch: 'full', component: ContractorEditComponent },
       { path: 'managers', children: [
-          { path: '', component: ContractorManagersComponent },
+          { path: '', pathMatch: 'full', component: ContractorManagersComponent },
           { path: 'create', component: ContractorManagerEditComponent },
           { path: ':managerId', component: ContractorManagerEditComponent },
         ]

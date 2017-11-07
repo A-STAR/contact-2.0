@@ -15,6 +15,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
+
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
@@ -79,6 +81,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   constructor(
     private actions: Actions,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private messageBusService: MessageBusService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -112,6 +115,14 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
         : [];
     });
 
+    this.messageBusService
+      .select(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
+      .subscribe(() => {
+        console.log('get fetch signal');
+        this.needToReadAllContractors$.next('');
+      });
+
+
     this.actionsSubscription = this.actions
       .ofType(ContractorsAndPortfoliosService.CONTRACTOR_DELETE_SUCCESS)
       .subscribe(() => this.setDialog());
@@ -125,10 +136,9 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
           .map(state => state.selectedContractorId)
           .take(1)
           .subscribe(contractorId => {
-            console.log(contractorId);
             this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
-            ? [this.contractors.find((contractor) => contractor.id === contractorId)]
-            : [];
+              ? [this.contractors.find((contractor) => contractor.id === contractorId)]
+              : [];
           });
     }
     this.cdRef.markForCheck();
@@ -179,24 +189,17 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onSelect(contractor: IContractor): void {
-    console.log('start on select', contractor);
-    if (contractor) {
-      this.selection = [contractor];
-      this.contractorsAndPortfoliosService.selectContractor(contractor.id);
-    } else {
-      this.selection = [];
-      this.contractorsAndPortfoliosService.selectContractor(null);
-    }
+    this.selection = contractor ?  [contractor] : [];
+    this.contractorsAndPortfoliosService.selectContractor(contractor && contractor.id || null);
   }
 
   onRemoveSubmit(): void {
     console.log(this.selectedContractor[0].id);
     this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor[0].id)
-      .do(() => {
+      .subscribe(() => {
         this.setDialog();
         this.needToReadAllContractors$.next('');
-      })
-      .subscribe();
+      });
   }
 
 }
