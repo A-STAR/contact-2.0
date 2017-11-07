@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { DebtorsGridComponent } from './debtors-grid.component';
+import { DebtorGridComponent } from './debtor-grid.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   declarations: [
-    DebtorsGridComponent,
+    DebtorGridComponent,
   ],
   exports: [
-    DebtorsGridComponent,
+    DebtorGridComponent,
   ]
 })
-export class DebtorsGridModule {}
+export class DebtorGridModule {}

@@ -7,11 +7,11 @@ import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
-  selector: 'app-incoming-call-debtors-grid',
-  templateUrl: 'debtors-grid.component.html',
+  selector: 'app-incoming-call-debtor-grid',
+  templateUrl: 'debtor-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorsGridComponent implements OnInit {
+export class DebtorGridComponent implements OnInit {
   columns: IGridColumn[] = [
     { prop: 'debtId', minWidth: 100 },
     { prop: 'debtorId', minWidth: 100 },
