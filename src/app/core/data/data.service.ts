@@ -36,12 +36,12 @@ export class DataService {
    *  route = '/roles/5/permits
    */
   read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
       .map(response => response.data && response.data[0] || null);
   }
 
   readAll(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any[]> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
       .map(response => response.data || []);
   }
 

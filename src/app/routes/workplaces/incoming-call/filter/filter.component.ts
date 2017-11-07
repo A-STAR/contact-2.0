@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+
+import { IncomingCallService } from '../incoming-call.service';
+
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -11,6 +15,8 @@ const labelKey = makeKey('modules.incomingCall.filter.form');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterComponent {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls = [
     { label: labelKey('debtId'), controlName: 'debtId', type: 'text' },
     { label: labelKey('fullName'), controlName: 'fullName', type: 'text' },
@@ -27,7 +33,18 @@ export class FilterComponent {
     { label: labelKey('showClosed'), controlName: 'showClosed', type: 'checkbox' },
   ];
 
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private incomingCallService: IncomingCallService,
+  ) {}
+
   onSearchClick(): void {
-    console.log('Click!');
+    this.incomingCallService.searchParams = this.form.serializedUpdates;
+  }
+
+  onClearClick(): void {
+    this.form.form.reset();
+    this.form.markAsPristine();
+    this.cdRef.markForCheck();
   }
 }

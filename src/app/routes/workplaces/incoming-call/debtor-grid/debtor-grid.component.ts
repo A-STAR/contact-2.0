@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 
+import { DebtorGridService } from './debtor-grid.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -11,7 +13,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
   templateUrl: 'debtor-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorGridComponent implements OnInit {
+export class DebtorGridComponent implements OnInit, OnDestroy {
   columns: IGridColumn[] = [
     { prop: 'debtId', minWidth: 100 },
     { prop: 'debtorId', minWidth: 100 },
@@ -35,14 +37,13 @@ export class DebtorGridComponent implements OnInit {
     { prop: 'creditEndDate', minWidth: 220, renderer: 'dateRenderer' },
   ];
 
-  debtors: any[] = [
-    {
-      debtId: 1,
-      debtorId: 1,
-    }
-  ];
+  debtors: any[];
+
+  private searchParamsSubscription: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
+    private debtorGridService: DebtorGridService,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
   ) {}
@@ -53,6 +54,18 @@ export class DebtorGridComponent implements OnInit {
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
       });
+
+    this.searchParamsSubscription = this.incomingCallService.searchParams$
+      .filter(Boolean)
+      .flatMap(params => this.debtorGridService.fetchAll(params))
+      .subscribe(debtors => {
+        this.debtors = debtors;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.searchParamsSubscription.unsubscribe();
   }
 
   onSelect(debtor: any): void {
