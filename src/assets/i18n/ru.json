@@ -227,6 +227,30 @@
           "showGuarantors": "По поручителям",
           "showClosed": "Показывать закрытые долги"
         }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "Ид долга",
+          "debtorId": "Ид должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
       }
     }
   },

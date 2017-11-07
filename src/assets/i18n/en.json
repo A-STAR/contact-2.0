@@ -227,6 +227,30 @@
           "showGuarantors": "Show Guarantors",
           "showClosed": "Show Closed Debts"
         }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contact": "Contract",
+          "creditEndDate": "Credit End Date",
+          "creditName": "Credit Name",
+          "creditStartDate": "Credit Start Date",
+          "creditTypeCode": "Credit Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "debtorId": "Debtor Id",
+          "docNumber": "Document #",
+          "fullName": "Full Name/Company Name",
+          "outPortfolioName": "Outgoing Portfolio Name",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start date",
+          "statusCode": "Status"
+        }
       }
     }
   },
