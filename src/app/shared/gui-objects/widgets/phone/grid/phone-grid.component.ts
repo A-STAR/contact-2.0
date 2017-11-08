@@ -29,6 +29,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
+  @Input() action: 'edit' | 'registerIncoming' | 'registerOutgoing';
   @Input() contactType: number;
   @Input() debtId: number;
   @Input() personId: number;
@@ -163,7 +164,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.onEdit(phone.id);
+    switch (this.action) {
+      case 'edit':
+        this.onEdit(phone.id);
+        break;
+    }
   }
 
   onSelect(phone: IPhone): void {
