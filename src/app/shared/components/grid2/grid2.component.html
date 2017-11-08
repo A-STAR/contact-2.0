@@ -1,3 +1,13 @@
+<app-dialog *ngIf="dialog === 'contactLog'" (close)="closeDialog()">
+  <div dialog-header>
+    <h3>Contact Log</h3>
+  </div>
+  <div>
+    <app-contact-log-grid></app-contact-log-grid>
+  </div>
+</app-dialog>
+
+
 <div class="grid grid-default">
     <ag-grid-angular
       *ngIf="columnDefs"
