@@ -18,6 +18,8 @@ import {
   GridOptions, ICellRendererParams, MenuItemDef, RowNode,
 } from 'ag-grid/main';
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
+
+import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
@@ -73,8 +75,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
-  @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
-    .sort((x, y) => x > y ? 1 : -1);
+  @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000])).sort((x, y) => x > y ? 1 : -1);
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
@@ -105,6 +106,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
+  actions: IMetadataAction[];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -137,6 +139,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.metadataKey) {
       throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
+
+    this.gridService
+      .getActions(this.metadataKey)
+      .take(1)
+      .subscribe(actions => this.actions = actions);
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
@@ -681,6 +688,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         disabled: true,
         tooltip: 'Just to test what the tooltip can show'
       },
+      'separator',
+      ...(this.actions || []).map(action => ({
+        name: this.translate.instant(`default.grid.actions.${action.action}`),
+        action: () => console.log(action)
+      })),
       // {
       //   name: 'Person',
       //   subMenu: [

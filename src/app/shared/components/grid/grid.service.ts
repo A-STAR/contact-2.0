@@ -65,6 +65,10 @@ export class GridService {
     return request;
   }
 
+  getActions(metadataKey: string): Observable<any[]> {
+    return this.metadataService.getActions(metadataKey);
+  }
+
   /**
    * Builds column defs from server metadata
    * To be used only once during ngOnInit phase
