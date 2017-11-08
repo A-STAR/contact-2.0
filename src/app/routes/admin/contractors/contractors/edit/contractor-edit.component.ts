@@ -16,7 +16,6 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 @Component({

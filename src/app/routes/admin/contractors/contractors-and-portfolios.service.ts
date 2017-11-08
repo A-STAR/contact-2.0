@@ -39,6 +39,7 @@ export class ContractorsAndPortfoliosService {
   static MANAGER_UPDATE_SUCCESS = 'MANAGER_UPDATE_SUCCESS';
   static MANAGER_DELETE         = 'MANAGER_DELETE';
   static MANAGER_DELETE_SUCCESS = 'MANAGER_DELETE_SUCCESS';
+  static MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR = 'MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR';
 
   static PORTFOLIO_FETCH          = 'PORTFOLIO_FETCH';
   static PORTFOLIOS_FETCH         = 'PORTFOLIOS_FETCH';
@@ -146,31 +147,38 @@ export class ContractorsAndPortfoliosService {
   }
 
   selectManager(contractorId: number, managerId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { mapContractorToManagerId: { [contractorId]: managerId } });
+    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
+      mapContracorToSelectedManager: { [contractorId]: managerId
+      }
+    });
   }
 
-  fetchManager(contractorId: number, managerId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_FETCH, { contractorId, managerId });
+  readManager(contractorId: number, managerId: number): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_FETCH, { contractorId, managerId });
+    return this.dataService.read('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId })
+            .catch(this.notificationsService.fetchError().entity('entities.managers.gen.singular').callback());
   }
 
-  clearManagers(): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGERS_CLEAR);
-  }
-
-  // selectManager(managerId: number): void {
-  //   this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, { managerId });
+  // clearManagers(): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.MANAGERS_CLEAR);
   // }
 
-  createManager(contractorId: number, manager: IContractorManager): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });
+  createManager(contractorId: number, manager: IContractorManager): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });
+    return this.dataService.create('/contractors/{contractorId}/managers', { contractorId }, manager)
+            .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
   }
 
-  updateManager(contractorId: number, managerId: number, manager: IContractorManager): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_UPDATE, { contractorId, managerId, manager });
+  updateManager(contractorId: number, managerId: number, manager: IContractorManager): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_UPDATE, { contractorId, managerId, manager });
+    return this.dataService.update('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager)
+            .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
   }
 
-  deleteManager(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_DELETE, { contractorId });
+  deleteManager(contractorId: number, managerId: number): Observable<any> {
+    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_DELETE, { contractorId });
+    return this.dataService.delete('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId })
+            .catch(this.notificationsService.deleteError().entity('entities.managers.gen.singular').callback());
   }
 
   fetchPortfolios(contractorId: Number): Observable<IPortfolio[]> {

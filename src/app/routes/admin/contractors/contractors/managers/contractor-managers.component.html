@@ -1,10 +1,10 @@
 <app-dialog-action
-  *ngIf="isManagerBeingRemoved"
+  *ngIf="isDialog('delete')"
   titleTranslationKey="contractors.managers.remove.title"
   actionTranslationKey="contractors.managers.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedManager$ | async"
+  [messageParams]="selectedManager[0]"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>

@@ -193,7 +193,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    console.log(this.selectedContractor[0].id);
     this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor[0].id)
       .subscribe(() => {
         this.setDialog();

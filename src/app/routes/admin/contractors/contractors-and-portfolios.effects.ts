@@ -77,17 +77,17 @@ export class ContractorsAndPortfoliosEffects {
   //       .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
   //   });
 
-  @Effect()
-  fetchManagers$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH)
-    .switchMap((action: UnsafeAction) => {
-      return this.readManagers(action.payload.contractorId)
-        .map(managers => ({
-          type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
-          payload: { managers }
-        }))
-        .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
-    });
+  // @Effect()
+  // fetchManagers$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.MANAGERS_FETCH)
+  //   .switchMap((action: UnsafeAction) => {
+  //     return this.readManagers(action.payload.contractorId)
+  //       .map(managers => ({
+  //         type: ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS,
+  //         payload: { managers }
+  //       }))
+  //       .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
+  //   });
 
   @Effect()
   fetchManager$ = this.actions
@@ -125,45 +125,45 @@ export class ContractorsAndPortfoliosEffects {
         .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
     });
 
-  @Effect()
-  deleteManager$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [UnsafeAction, IAppState] = data;
-      return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
-        .mergeMap(() => [
-          { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
-          { type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS }
-        ])
-        .catch(this.notificationsService.deleteError().entity('entities.managers.gen.singular').callback());
-    });
+  // @Effect()
+  // deleteManager$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE)
+  //   .withLatestFrom(this.store)
+  //   .switchMap(data => {
+  //     const [action, store]: [UnsafeAction, IAppState] = data;
+  //     return this.deleteManager(action.payload.contractorId, store.contractorsAndPortfolios.selectedManagerId)
+  //       .mergeMap(() => [
+  //         { type: ContractorsAndPortfoliosService.MANAGERS_FETCH, payload: action.payload },
+  //         { type: ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS }
+  //       ])
+  //       .catch(this.notificationsService.deleteError().entity('entities.managers.gen.singular').callback());
+  //   });
 
-  @Effect()
-  fetchPortfolios$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      return this.readPortfolios(store.contractorsAndPortfolios.selectedContractorId)
-        .map(portfolios => ({
-          type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
-          payload: { portfolios }
-        }))
-        .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').callback());
-    });
+  // @Effect()
+  // fetchPortfolios$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH)
+  //   .withLatestFrom(this.store)
+  //   .switchMap(data => {
+  //     const [_, store]: [UnsafeAction, IAppState] = data;
+  //     return this.readPortfolios(store.contractorsAndPortfolios.selectedContractorId)
+  //       .map(portfolios => ({
+  //         type: ContractorsAndPortfoliosService.PORTFOLIOS_FETCH_SUCCESS,
+  //         payload: { portfolios }
+  //       }))
+  //       .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').callback());
+  //   });
 
-  @Effect()
-  createPortfolio$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.PORTFOLIO_CREATE)
-    .switchMap((action: UnsafeAction) => {
-      const { contractorId, portfolio } = action.payload;
-      return this.createPortfolio(contractorId, portfolio)
-        .map(() => (
-          { type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS }
-        ))
-        .catch(this.notificationsService.createError().entity('entities.portfolios.gen.singular').callback());
-    });
+  // @Effect()
+  // createPortfolio$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.PORTFOLIO_CREATE)
+  //   .switchMap((action: UnsafeAction) => {
+  //     const { contractorId, portfolio } = action.payload;
+  //     return this.createPortfolio(contractorId, portfolio)
+  //       .map(() => (
+  //         { type: ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS }
+  //       ))
+  //       .catch(this.notificationsService.createError().entity('entities.portfolios.gen.singular').callback());
+  //   });
 
   @Effect()
   updatePortfolio$ = this.actions

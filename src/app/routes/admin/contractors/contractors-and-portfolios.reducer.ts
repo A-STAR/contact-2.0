@@ -45,24 +45,17 @@ export function reducer(
       };
 
     // Contractors:
-    case ContractorsAndPortfoliosService.MANAGERS_FETCH_SUCCESS:
-      return {
-        ...state,
-        // managers: [...action.payload.managers],
-        // TODO(d.maltsev): preserve selected contractor row
-        selectedManagerId: null
-      };
-    case ContractorsAndPortfoliosService.MANAGERS_CLEAR:
-      return {
-        ...state,
-        // managers: null,
-        selectedManagerId: null
-      };
+    case ContractorsAndPortfoliosService.MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR:
+      delete state.mapContracorToSelectedManager[action.payload.contractorId];
+      return state;
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
-      const extendedMapping = Object.assign({}, state.mapContracorToSelectedManager, action.payload.mapContractorToManagerId);
+      Object.assign({}, state.mapContracorToSelectedManager, action.payload.mapContractorToManagerId);
       return {
         ...state,
-        mapContracorToSelectedManager: extendedMapping
+        mapContracorToSelectedManager: Object.assign({},
+                                                     state.mapContracorToSelectedManager,
+                                                     action.payload.mapContracorToSelectedManager
+                                                    )
       };
 
     // Portfolios:
