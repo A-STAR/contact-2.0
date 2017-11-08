@@ -5,7 +5,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../state/state.interface';
-import { IMetadataColumn, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
+import { IMetadataAction, IMetadataColumn, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
 
 @Injectable()
 export class MetadataService {
@@ -19,15 +19,12 @@ export class MetadataService {
     this.state$.subscribe(state => this.state = state);
   }
 
-  getMetadata(key: string): Observable<Array<IMetadataColumn>> {
-    const status = this.state[key] && this.state[key].status;
-    if (!status || status === MetadataListStatusEnum.ERROR) {
-      this.refresh(key);
-    }
-    return this.state$
-      .map(state => state[key])
-      .filter(list => list && list.status === MetadataListStatusEnum.LOADED)
-      .map(list => list.columns || []);
+  getMetadata(key: string): Observable<IMetadataColumn[]> {
+    return this.getData(key, 'columns');
+  }
+
+  getActions(key: string): Observable<IMetadataAction[]> {
+    return this.getData(key, 'actions');
   }
 
   refresh(key: string): void {
@@ -35,6 +32,17 @@ export class MetadataService {
       type: MetadataService.METADATA_FETCH,
       payload: { key }
     });
+  }
+
+  private getData(metadataKey: string, key: 'actions' | 'columns'): Observable<any[]> {
+    const status = this.state[metadataKey] && this.state[metadataKey].status;
+    if (!status || status === MetadataListStatusEnum.ERROR) {
+      this.refresh(metadataKey);
+    }
+    return this.state$
+      .map(state => state[metadataKey])
+      .filter(list => list && list.status === MetadataListStatusEnum.LOADED)
+      .map(list => list[key] || []);
   }
 
   private get state$(): Observable<IMetadataState> {

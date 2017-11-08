@@ -1745,6 +1745,9 @@
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
         "filterOoo": "filter..."
+      },
+      "actions": {
+        "statusChange": "Change Status"
       }
     },
     "filter": {
