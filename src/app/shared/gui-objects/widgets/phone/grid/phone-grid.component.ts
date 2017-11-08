@@ -29,7 +29,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
-  @Input() action: 'edit' | 'registerIncoming' | 'registerOutgoing';
+  @Input() action: 'edit';
   @Input() contactType: number;
   @Input() debtId: number;
   @Input() personId: number;
