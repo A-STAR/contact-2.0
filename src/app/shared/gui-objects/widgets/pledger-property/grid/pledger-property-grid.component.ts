@@ -2,17 +2,13 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
   Input, OnInit, OnDestroy, Output, ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IPledger } from '../../pledger/pledger.interface';
 import { IPledgerProperty } from '../../pledger-property/pledger-property.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
-import { PledgerService } from '../../pledger/pledger.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { PledgerPropertyService } from '../../pledger-property/pledger-property.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -52,12 +48,10 @@ export class PledgerPropertyGridComponent extends DialogFunctions implements OnI
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private pledgerPropertyService: PledgerPropertyService,
     private pledgeService: PledgeService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
   ) {
     super();
   }

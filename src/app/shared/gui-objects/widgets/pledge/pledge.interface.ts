@@ -1,11 +1,57 @@
 export interface IPledgeContract {
   id?: number;
+  contractId?: number;
   contractNumber: string;
-  fullName?: string;
-  typeCode?: number;
   contractStartDate?: Date | string;
   contractEndDate?: Date | string;
   comment?: string;
-  propertyType: number;
+  personId?: number;
+  lastName?: string;
+  firstName?: string;
+  middleName?: string;
+  fullName?: string;
+  typeCode?: number;
+  birthDate?: Date | string;
+  birthPlace?: string;
+  genderCode?: number;
+  familyStatusCode?: number;
+  educationCode?: number;
+  personComment?: string;
+  stringValue1?: string;
+  stringValue2?: string;
+  stringValue3?: string;
+  stringValue4?: string;
+  stringValue5?: string;
+  stringValue6?: string;
+  stringValue7?: string;
+  stringValue8?: string;
+  stringValue9?: string;
+  stringValue10?: string;
+  propertyId?: number;
   propertName?: string;
+  propertyType?: number;
+  propertyComment?: string;
+  pledgeValue?: number;
+  marketValue?: number;
+  currencyId?: number;
+}
+
+export interface IPledgeContractCreation {
+  contractNumber: string;
+  contractStartDate?: Date | string;
+  contractEndDate?: Date | string;
+  comment?: string;
+  pledgors: IPledgor[];
+}
+
+export interface IPledgor {
+  personId: number;
+  properties: IProperty[];
+}
+
+export interface IProperty {
+  propertyId: number;
+  pledgeValue: number;
+  marketValue: number;
+  currencyId: number;
 }

@@ -1,4 +1,5 @@
-import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef,
+  OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -26,18 +27,18 @@ const label = makeKey('widgets.pledgerProperty.grid');
   selector: 'app-pledger-property-card',
   templateUrl: './pledger-property-card.component.html'
 })
-export class PledgerPropertyCardComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class PledgerPropertyCardComponent extends DialogFunctions implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private pledgerId: number;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
-  searchParams: object;  
+  searchParams: object;
   property: IPledgerProperty;
-  
-  private typeCodeSubscription: Subscription;
+
   private pledgerSubscription: Subscription;
+  private formSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -62,13 +63,26 @@ export class PledgerPropertyCardComponent extends DialogFunctions implements OnI
       this.property = property;
       this.cdRef.markForCheck();
     });
-    
+
     this.pledgerSubscription = this.messageBusService
       .select<string, IPledger>(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED)
       .subscribe(pledger => {
         this.pledgerId = pledger ? pledger.id : null;
         this.cdRef.markForCheck();
       });
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.formSubscription || !this.form) { return ; }
+
+    this.formSubscription = this.form.form.valueChanges.subscribe(property => {
+      this.messageBusService.dispatch(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED, null, {
+        id: this.form.getControl('id').value,
+        pledgeValue: this.form.getControl('pledgeValue').value,
+        marketValue: this.form.getControl('marketValue').value,
+        currencyId: this.form.getControl('currencyId').value
+      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -85,12 +99,11 @@ export class PledgerPropertyCardComponent extends DialogFunctions implements OnI
     form.enable();
     form.patchValue(this.getFormData());
     form.get('propertyType').markAsDirty();
-    this.messageBusService.dispatch(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED, null, {});
     this.cdRef.markForCheck();
   }
 
   onSearch(): void {
-    this.searchParams = { personId: this.pledgerId };    
+    this.searchParams = { personId: this.pledgerId };
     this.setDialog('findPledgerProperty');
     this.cdRef.markForCheck();
   }
@@ -100,7 +113,6 @@ export class PledgerPropertyCardComponent extends DialogFunctions implements OnI
     form.patchValue(pledger);
     propertyTypeField.disable();
     propertyTypeField.markAsDirty();
-    this.messageBusService.dispatch(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED, null, pledger);
     this.cdRef.markForCheck();
   }
 
@@ -110,12 +122,13 @@ export class PledgerPropertyCardComponent extends DialogFunctions implements OnI
         title: 'widgets.pledgerProperty.title',
         collapsible: true,
         children: [
+          { label: label('id'), controlName: 'id', type: 'number', display: false },
           {
             label: label('propertyType'), controlName: 'propertyType', type: 'select',
             options: propertyTypeOptions, required: true, markAsDirty: true
           },
-          { label: label('pledgeValue'), controlName: 'pledgeValue', type: 'text' },
-          { label: label('marketValue'), controlName: 'marketValue', type: 'text' },
+          { label: label('pledgeValue'), controlName: 'pledgeValue', type: 'number' },
+          { label: label('marketValue'), controlName: 'marketValue', type: 'number' },
           {
             label: label('currencyId'), controlName: 'currencyId', type: 'select',
             options: currencyOptions, required: true, markAsDirty: true
