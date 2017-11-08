@@ -104,7 +104,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
 
   private submit(data: Partial<IPromise>): void {
     const { guid } = this.contactRegistrationService;
-    const { percentage, ...rest } = this.form.serializedUpdates;
+    const { percentage, ...rest } = this.form.serializedValue;
     this.contactPromiseService.create(this.debtId, guid, { ...data, ...rest })
       .subscribe(() => {
         this.accordionService.next();
