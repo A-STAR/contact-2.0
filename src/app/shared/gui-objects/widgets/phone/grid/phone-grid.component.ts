@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -29,6 +29,9 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
+  @Input() contactType: number;
+  @Input() personRole: number;
+
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -111,8 +114,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
-    @Inject('contactType') private contactType: number,
-    @Inject('personRole') private _personRole: number,
   ) {
     Observable.combineLatest(
       this.debtService.fetch(this._personId, this.debtId),
@@ -155,11 +156,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   get personId(): number {
     return this._personId;
   }
-
-  get personRole(): number {
-    return this._personRole;
-  }
-
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }
@@ -193,7 +189,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const data = {
       ...schedule,
       personId: this._personId,
-      personRole: this._personRole,
+      personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
     };
     this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
@@ -217,7 +213,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(phoneId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this._personId, personRole: this._personRole } });
+        this.router.navigate([ url ], { queryParams: { personId: this._personId, personRole: this.personRole } });
       });
   }
 
@@ -260,7 +256,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this._personRole),
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
         ])
         : Observable.of(false);
     });
