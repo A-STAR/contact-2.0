@@ -1396,6 +1396,18 @@
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
+    },
+    "operator": {
+      "dialog": {
+        "title": "Выбор оператора"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "ФИО",
+        "debtCnt": "Количество активных долгов",
+        "organization": "Подразделение",
+        "position": "Должность"
+      }
     }
   },
   "entities": {
@@ -1531,6 +1543,9 @@
     },
     "contactTreeItems": {
       "gen": { "singular": "элемента дерева контактов", "plural": "дерева контактов" }
+    },
+    "operator": {
+      "gen": { "singular": "оператора", "plural": "операторов" }
     }
   },
   "errors": {

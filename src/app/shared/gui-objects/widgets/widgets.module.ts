@@ -20,6 +20,7 @@ import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
+import { OperatorModule } from './operator/operator.module';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
+    OperatorModule,
   ],
   exports: [
     AddressModule,
@@ -64,6 +66,7 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
+    OperatorModule,
   ]
 })
 export class WidgetsModule { }
