@@ -68,7 +68,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
         if (promiseMode === 3) {
           this.data = { ...this.data, amount: debt.debtAmount, percentage: 100 };
         } else if (promiseMode === 2) {
-          this.data = { ...this.data, amount: this.minDebtAmount, percentage: limit.minAmountPercent }
+          this.data = { ...this.data, amount: this.minDebtAmount, percentage: limit.minAmountPercent };
         }
         this.controls = this.buildControls(promiseMode, canAddInsufficientAmount);
         this.cdRef.detectChanges();
