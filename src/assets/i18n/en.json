@@ -1762,7 +1762,8 @@
         "filterOoo": "filter..."
       },
       "actions": {
-        "statusChange": "Change Status"
+        "statusChange": "Change Status",
+        "viewContactLog": "Contact Log"
       }
     },
     "filter": {
