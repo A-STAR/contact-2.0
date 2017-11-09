@@ -10,7 +10,7 @@ import { CompanyComponent } from './company/company.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
 import { PersonComponent } from './person/person.component';
-import { PhoneGridComponent } from '../../../../../shared/gui-objects/widgets/phone/grid/phone-grid.component';
+import { PhoneGridComponent } from './phone-grid/phone-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,11 +21,12 @@ export class DebtorInformationComponent {
   @ViewChild(CompanyComponent) companyComponent: CompanyComponent;
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
+  // TODO(d.maltsev) get rid of this. Use widgets in html instead.
   node: INode = {
     container: 'tabs',
     children: [
       { component: AddressGridComponent, title: 'debtor.information.address.title', inject: { personRole: 1 } },
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title', inject: { personRole: 1, contactType: 1 } },
+      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
       { component: EmailGridComponent, title: 'debtor.information.email.title', inject: { personRole: 1 } },
     ]
   };
