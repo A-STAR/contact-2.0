@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
+import { DebtorCardService } from './debtor-card.service';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -9,7 +11,7 @@ const labelKey = makeKey('modules.incomingCall.debtorCard.form');
   templateUrl: 'debtor-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorCardComponent {
+export class DebtorCardComponent implements OnInit {
   controls = [
     { label: labelKey('userFullName'), controlName: 'userFullName', type: 'text' },
     { label: labelKey('organization'), controlName: 'organization ', type: 'text' },
@@ -21,4 +23,12 @@ export class DebtorCardComponent {
   ];
 
   data = {};
+
+  constructor(
+    private debtorCardService: DebtorCardService,
+  ) {}
+
+  ngOnInit(): void {
+    this.debtorCardService.fetch(1).subscribe(console.log);
+  }
 }
