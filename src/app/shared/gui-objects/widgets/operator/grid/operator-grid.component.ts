@@ -41,10 +41,6 @@ export class OperatorGridComponent implements OnInit {
     this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, null, operator);
   }
 
-  get hasSelection(): boolean {
-    return this.grid && this.grid.hasSingleSelection;
-  }
-
   private fetch(searchParams: object = {}): void {
     this.operatorService.fetchAll().subscribe(operators => {
       this.operators = operators;
