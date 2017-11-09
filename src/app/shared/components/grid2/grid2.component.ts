@@ -108,7 +108,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   initCallbacks: Function[] = [];
   actions: IMetadataAction[];
 
-  dialog: 'contactLog';
+  dialog: string;
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -193,7 +193,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.langSubscription.unsubscribe();
   }
 
-  setDialog(dialog: 'contactLog'): void {
+  setDialog(dialog: string): void {
     this.dialog = dialog;
     this.cdRef.markForCheck();
   }
@@ -703,7 +703,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       'separator',
       ...(this.actions || []).map(action => ({
         name: this.translate.instant(`default.grid.actions.${action.action}`),
-        action: () => this.setDialog('contactLog')
+        action: () => this.setDialog(action.action)
       })),
       // {
       //   name: 'Person',
