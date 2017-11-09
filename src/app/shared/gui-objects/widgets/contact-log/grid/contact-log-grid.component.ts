@@ -47,7 +47,7 @@ export class ContactLogGridComponent implements OnInit {
       });
   }
 
-  private fetchAll(personId: number) {
+  private fetchAll(personId: number): void {
     this.contactLogService.fetchAll(personId).subscribe(data => {
       this.data = data;
       this.cdRef.markForCheck();
