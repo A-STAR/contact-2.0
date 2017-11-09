@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { GridModule } from '../../grid/grid.module';
-
-import { ContactLogGridService } from './contact-log-grid.service';
+import { GridModule } from '../../../../components/grid/grid.module';
 
 import { ContactLogGridComponent } from './contact-log-grid.component';
 
@@ -15,9 +13,6 @@ import { ContactLogGridComponent } from './contact-log-grid.component';
   ],
   declarations: [
     ContactLogGridComponent,
-  ],
-  providers: [
-    ContactLogGridService,
   ]
 })
 export class ContactLogGridModule { }

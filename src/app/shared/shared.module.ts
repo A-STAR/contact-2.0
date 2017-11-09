@@ -61,7 +61,6 @@ import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
-import { WidgetsModule } from './components/widgets/widgets.module';
 
 import { IconsService } from './icons/icons.service';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
@@ -120,7 +119,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     TreeModule,
     TimeModule,
     ValueInputModule,
-    WidgetsModule,
   ],
   providers: [
     ColorsService,
@@ -201,7 +199,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     TreeModule,
     TimeModule,
     ValueInputModule,
-    WidgetsModule,
   ]
 })
 

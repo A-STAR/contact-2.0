@@ -13,7 +13,7 @@ import { DatePickerModule } from '../form/datepicker/datepicker.module';
 import { DialogModule } from '../dialog/dialog.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
-import { WidgetsModule } from '../widgets/widgets.module';
+import { ContactLogModule } from '../../gui-objects/widgets/contact-log/contact-log.module';
 
 import { GridService } from '../grid/grid.service';
 
@@ -22,18 +22,18 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 
 @NgModule({
   imports: [
-    CommonModule,
-    DatePickerModule,
-    FormsModule,
-    ToolbarModule,
-    TranslateModule,
     ActionDialogModule,
     AgGridModule.withComponents([
       GridDatePickerComponent
     ]),
+    CommonModule,
+    ContactLogModule,
+    DatePickerModule,
     DialogModule,
+    FormsModule,
     SelectModule,
-    WidgetsModule,
+    ToolbarModule,
+    TranslateModule,
   ],
   exports: [
     Grid2Component,

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import { IGridColumn } from '../../../components/grid/grid.interface';
+import { IGridColumn } from '../../../../components/grid/grid.interface';
 
-import { ContactLogGridService } from './contact-log-grid.service';
-import { GridService } from '../../grid/grid.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { ContactLogService } from '../contact-log.service';
+import { GridService } from '../../../../components/grid/grid.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-contact-log-grid',
@@ -34,7 +34,7 @@ export class ContactLogGridComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contactLogGridService: ContactLogGridService,
+    private contactLogService: ContactLogService,
     private gridService: GridService,
   ) {}
 
@@ -48,7 +48,7 @@ export class ContactLogGridComponent implements OnInit {
   }
 
   private fetchAll(personId: number) {
-    this.contactLogGridService.fetchAll(personId).subscribe(data => {
+    this.contactLogService.fetchAll(personId).subscribe(data => {
       this.data = data;
       this.cdRef.markForCheck();
     });

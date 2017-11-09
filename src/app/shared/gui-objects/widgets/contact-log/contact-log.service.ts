@@ -5,7 +5,7 @@ import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class ContactLogGridService {
+export class ContactLogService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
