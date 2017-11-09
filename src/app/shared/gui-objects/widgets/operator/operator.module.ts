@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OperatorGridModule } from './grid/operator-grid.module';
+import { OperatorDialogModule } from './dialog/operator-dialog.module';
 
 import { OperatorService } from './operator.service';
 
@@ -12,6 +13,7 @@ import { OperatorService } from './operator.service';
   ],
   exports: [
     OperatorGridModule,
+    OperatorDialogModule,
   ],
   providers: [
     OperatorService,
