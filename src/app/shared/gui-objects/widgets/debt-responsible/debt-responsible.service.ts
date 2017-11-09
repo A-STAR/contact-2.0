@@ -20,7 +20,7 @@ export class DebtResponsibleService {
       .catch(this.notificationsService.fetchError().entity('entities.opearator.gen.plural').dispatchCallback());
   }
 
-  clearResponsible(operator: IOperator): Observable<any> {
+  clearResponsible(): Observable<any> {
     return this.dataService
       .create('mass/debts/clearResponsible', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.opearator.gen.plural').dispatchCallback());
