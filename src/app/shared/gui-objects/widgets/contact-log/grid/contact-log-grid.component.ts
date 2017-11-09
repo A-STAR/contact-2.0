@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
+import { IContact } from '../contact-log.interface';
 import { IGridColumn } from '../../../../components/grid/grid.interface';
 
 import { ContactLogService } from '../contact-log.service';
@@ -30,7 +31,7 @@ export class ContactLogGridComponent implements OnInit {
     { prop: 'resultName', minWidth: 200 },
   ];
 
-  data: any[];
+  data: IContact[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -45,14 +46,6 @@ export class ContactLogGridComponent implements OnInit {
         this.columns = this.gridService.setRenderers(columns);
         this.cdRef.markForCheck();
       });
-  }
-
-  onSelect(contact: any): void {
-
-  }
-
-  onDoubleClick(contact: any): void {
-
   }
 
   private fetchAll(personId: number): void {
