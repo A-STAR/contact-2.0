@@ -29,8 +29,6 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
       .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED)
       .subscribe(operator => {
         this.selectedOperator = operator;
-        this.select.emit(operator);
-        this.close.emit();
         this.cdRef.markForCheck();
       });
   }
@@ -41,6 +39,11 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
 
   get hasSelection(): boolean {
     return !!this.selectedOperator;
+  }
+
+  onSelect(): void {
+    this.select.emit(this.selectedOperator);
+    this.close.emit();
   }
 
   onClose(): void {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
+import { ResultDialogModule } from '../../../../../components/dialog/result/result-dialog.module';
 import { OperatorModule } from '../../../operator/operator.module';
 
 import { DebtResponsibleSetComponent } from './debt-responsible-set.component';
@@ -11,6 +12,7 @@ import { DebtResponsibleSetComponent } from './debt-responsible-set.component';
   imports: [
     CommonModule,
     DialogModule,
+    ResultDialogModule,
     OperatorModule,
     TranslateModule,
   ],

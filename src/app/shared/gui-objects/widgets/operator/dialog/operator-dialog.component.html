@@ -6,7 +6,7 @@
   <app-operator-grid></app-operator-grid>
 
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onClose()">
+    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSelect()">
       <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
     </button>
     <button class="btn btn-default" (click)="onClose()">
