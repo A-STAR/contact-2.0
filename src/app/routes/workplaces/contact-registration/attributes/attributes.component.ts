@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { AttributesService } from './attributes.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 
+import { flatten } from '../../../../core/utils';
 import { getRawValue, getValue } from '../../../../core/utils/value';
 
 @Component({
@@ -19,6 +21,7 @@ export class AttributesComponent implements OnInit {
   attributes: ITreeNode[];
 
   constructor(
+    private accordionService: AccordionService,
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
@@ -35,21 +38,20 @@ export class AttributesComponent implements OnInit {
       });
   }
 
-  get canSubmit(): boolean {
-    return true;
-  }
-
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const data = {
-      attributes: this.attributes.map(row => ({
-        ...getValue(row.data.typeCode, getRawValue(row.data)),
-        code: row.data.code
-      })),
+      attributes: flatten(this.attributes)
+        .map(node => node.data)
+        .filter(attribute => attribute.typeCode)
+        .map(attribute => ({
+          ...getValue(attribute.typeCode, getRawValue(attribute)),
+          code: attribute.code
+        })),
     };
     this.attributesService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.contactRegistrationService.nextStep();
+        this.accordionService.next();
         this.cdRef.markForCheck();
       });
   }

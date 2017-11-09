@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
 import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm } from './user-dictionaries.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class UserDictionariesService {
@@ -77,7 +78,7 @@ export class UserDictionariesService {
     this.state$.subscribe(state => this.state = state);
   }
 
-  createRefreshAction(dictionaryId: number): Action {
+  createRefreshAction(dictionaryId: number): UnsafeAction {
     return {
       type: UserDictionariesService.USER_DICTIONARY_FETCH,
       payload: { dictionaryId }
@@ -121,6 +122,7 @@ export class UserDictionariesService {
   }
 
   private get state$(): Observable<IUserDictionariesState> {
-    return this.store.select(state => state.userDictionaries);
+    return this.store.select(state => state.userDictionaries)
+      .filter(Boolean);
   }
 }

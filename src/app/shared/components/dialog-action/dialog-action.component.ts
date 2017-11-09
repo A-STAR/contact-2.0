@@ -19,12 +19,6 @@ export class DialogActionComponent {
 
   @Input() errorMessage: string;
 
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.close();
-    }
-  }
-
   onAction(): void {
     this.action.emit();
   }

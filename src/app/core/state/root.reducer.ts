@@ -1,50 +1,69 @@
-import { compose } from '@ngrx/core';
+import { compose } from '@ngrx/store';
 import { Action, combineReducers } from '@ngrx/store';
 
 import { IAppState } from './state.interface';
 
-import { actionsLogReducer } from '../../routes/admin/actions-log/actions-log.reducer';
-import { authReducer, resetReducer } from '../auth/auth.reducer';
-import { contractorsAndPortfoliosReducer } from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
-import { dictionariesReducer } from '../dictionaries/dictionaries.reducer';
-import { debtReducer } from '../../routes/workplaces/debt-processing/debtor/debtor.reducer';
-import { debtorsReducer } from '../../routes/workplaces/debtors/debtors.reducer';
-import { entityAttributesReducer } from '../entity/attributes/entity-attributes.reducer';
-import { guiObjectsReducer } from '../gui-objects/gui-objects.reducer';
-import { lookupReducer } from '../lookup/lookup.reducer';
-import { notificationReducer } from '../notifications/notifications.reducer';
-import { organizationsReducer } from '../../routes/admin/organizations/organizations.reducer';
-import { permissionReducer } from '../../routes/admin/roles/permissions.reducer';
-import { usersReducer } from '../../routes/admin/users/users.reducer';
-import { userAttributeTypesReducer } from '../user/attribute-types/user-attribute-types.reducer';
-import { userConstantsReducer } from '../user/constants/user-constants.reducer';
-import { userDictionariesReducer } from '../user/dictionaries/user-dictionaries.reducer';
-import { userPermissionsReducer } from '../user/permissions/user-permissions.reducer';
-import { userTemplatesReducer } from '../user/templates/user-templates.reducer';
-import { constantsReducer } from '../../routes/admin/constants/constants.reducer';
-import { metadataReducer } from '../metadata/metadata.reducer';
+import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
+import { auth, resetReducer } from '../auth/auth.reducer';
+import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
+import * as constants from '../../routes/admin/constants/constants.reducer';
+import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
+import * as dictionaries from '../dictionaries/dictionaries.reducer';
+import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
+import * as guiObjects from '../gui-objects/gui-objects.reducer';
+import * as lookup from '../lookup/lookup.reducer';
+import * as metadata from '../metadata/metadata.reducer';
+import * as notifications from '../notifications/notifications.reducer';
+import * as organizations from '../../routes/admin/organizations/organizations.reducer';
+import * as permissions from '../../routes/admin/roles/permissions.reducer';
+import * as users from '../../routes/admin/users/users.reducer';
+import * as userAttributeTypes from '../user/attribute-types/user-attribute-types.reducer';
+import * as userConstants from '../user/constants/user-constants.reducer';
+import * as userDictionaries from '../user/dictionaries/user-dictionaries.reducer';
+import * as userPermissions from '../user/permissions/user-permissions.reducer';
+import * as userTemplates from '../user/templates/user-templates.reducer';
 
 export const reducers = {
-  actionsLog: actionsLogReducer,
-  auth: authReducer,
-  contractorsAndPortfolios: contractorsAndPortfoliosReducer,
-  constants: constantsReducer,
-  debtors: debtorsReducer,
-  debt: debtReducer,
-  dictionaries: dictionariesReducer,
-  entityAttributes: entityAttributesReducer,
-  guiObjects: guiObjectsReducer,
-  lookup: lookupReducer,
-  metadata: metadataReducer,
-  notifications: notificationReducer,
-  organizations: organizationsReducer,
-  permissions: permissionReducer,
-  users: usersReducer,
-  userAttributeTypes: userAttributeTypesReducer,
-  userConstants: userConstantsReducer,
-  userDictionaries: userDictionariesReducer,
-  userPermissions: userPermissionsReducer,
-  userTemplates: userTemplatesReducer,
+  actionsLog: actionsLog.reducer,
+  auth: auth.reducer,
+  contractorsAndPortfolios: contractorsAndPortfolios.reducer,
+  constants: constants.reducer,
+  debtors: debtors.reducer,
+  dictionaries: dictionaries.reducer,
+  entityAttributes: entityAttributes.reducer,
+  guiObjects: guiObjects.reducer,
+  lookup: lookup.reducer,
+  metadata: metadata.reducer,
+  notifications: notifications.reducer,
+  organizations: organizations.reducer,
+  permissions: permissions.reducer,
+  users: users.reducer,
+  userAttributeTypes: userAttributeTypes.reducer,
+  userConstants: userConstants.reducer,
+  userDictionaries: userDictionaries.reducer,
+  userPermissions: userPermissions.reducer,
+  userTemplates: userTemplates.reducer,
+};
+
+export const initialState: Partial<IAppState> = {
+  actionsLog: actionsLog.defaultState,
+  contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
+  constants: constants.defaultState,
+  debtors: debtors.defaultState,
+  dictionaries: dictionaries.defaultState,
+  entityAttributes: entityAttributes.defaultState,
+  guiObjects: guiObjects.defaultState,
+  lookup: lookup.defaultState,
+  metadata: metadata.defaultState,
+  notifications: notifications.defaultState,
+  organizations: organizations.defaultState,
+  permissions: permissions.defaultState,
+  userAttributeTypes: userAttributeTypes.defaultState,
+  userConstants: userConstants.defaultState,
+  userDictionaries: userDictionaries.defaultState,
+  userPermissions: userPermissions.defaultState,
+  userTemplates: userTemplates.defaultState,
+  users: users.defaultState,
 };
 
 export function rootReducer(state: IAppState, action: Action): IAppState {

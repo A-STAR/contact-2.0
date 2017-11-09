@@ -1,0 +1,13 @@
+.title > h4 {
+  display: inline-block;
+}
+
+.collapse-button {
+  display: inline-block;
+  margin-left: 4px;
+  transform: translateY(1px) rotate(0deg);
+  transition: transform 0.15s ease;
+  &.display {
+    transform: translateY(0) rotate(-90deg);
+  }
+}

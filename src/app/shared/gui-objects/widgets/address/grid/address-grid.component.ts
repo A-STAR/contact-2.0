@@ -13,6 +13,7 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
+import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -109,6 +110,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
@@ -236,6 +238,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddressId$
       .take(1)
       .subscribe(addressId => {
+        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
         const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;
@@ -306,9 +309,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canRegisterContact$(): Observable<boolean> {
+    // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }

@@ -1,4 +1,5 @@
 <app-select
+  [disabled]="disabled"
   [ngModel]="value"
   (ngModelChange)="onChange($event)"
   [options]="options">

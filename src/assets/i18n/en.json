@@ -78,7 +78,8 @@
         "MAIL": "Mail",
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
-        "HELP": "Help"
+        "HELP": "Help",
+        "INCOMING_CALL": "Incoming Call"
       }
     },
     "messages": {
@@ -127,12 +128,33 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Log Contact",
+          "address": {
+            "title": "Addresses",
+            "button": "Log Selected Address"
+          },
+          "phone": {
+            "title": "Phones",
+            "button": "Log Selected Phone"
+          },
+          "misc": {
+            "title": "Miscellaneous",
+            "buttonMisc": "Miscellaneous",
+            "buttonOfficeVisit": "Office Visit"
+          }
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",
-        "comment": "Comments"
+        "comment": "Comments",
+        "errors": {
+          "init": "An error has occurred"
+        }
       },
       "promise": {
         "title": "Promise Registration",
@@ -156,7 +178,8 @@
         "comment": "Comments"
       },
       "attachment": {
-        "title": "File Attachment",
+        "title": "File Attachments",
+        "add": "Add File",
         "docTypeCode": "Type",
         "docName": "Name",
         "docNumber": "Number",
@@ -185,6 +208,60 @@
       },
       "confirm": {
         "title": "Confirmation"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Debt Id",
+          "fullName": "Full Name/Company Name",
+          "contract": "Contract",
+          "account": "Account",
+          "phoneNumber": "Phone Number",
+          "fullAddress": "Address",
+          "docSeries": "Series",
+          "docNumber": "Number",
+          "clientId": "Client Id",
+          "birthDate": "Birth Date",
+          "showDebtors": "Show Debtors",
+          "showGuarantors": "Show Guarantors",
+          "showClosed": "Show Closed Debts"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contact": "Contract",
+          "creditEndDate": "Credit End Date",
+          "creditName": "Credit Name",
+          "creditStartDate": "Credit Start Date",
+          "creditTypeCode": "Credit Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "debtorId": "Debtor Id",
+          "docNumber": "Document #",
+          "fullName": "Full Name/Company Name",
+          "outPortfolioName": "Outgoing Portfolio Name",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start date",
+          "statusCode": "Status"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
@@ -571,7 +648,14 @@
       "title": "Debts"
     },
     "propertyTab": {
-      "title": "Property"
+      "title": "Property",
+      "remove": {
+        "title": "Delete the propery",
+        "confirmMessage": "Do you really want to delete this property?"
+      },
+      "attributes": {
+        "title": "Property attributes"
+      }
     },
     "guarantorsTab": {
       "title": "Guarantors",
@@ -646,6 +730,16 @@
     "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
+    "stringValue1": "String attribute 1",
+    "stringValue2": "String attribute 2",
+    "stringValue3": "String attribute 3",
+    "stringValue4": "String attribute 4",
+    "stringValue5": "String attribute 5",
+    "stringValue6": "String attribute 6",
+    "stringValue7": "String attribute 7",
+    "stringValue8": "String attribute 8",
+    "stringValue9": "String attribute 9",
+    "stringValue10": "String attribute 10",
     "comment": "Comment"
   },
   "debtors": {
@@ -1072,6 +1166,9 @@
         "contractEndDate": "Expiry date",
         "contractTypeCode": "Contract type",
         "comment": "Comment"
+      },
+      "toolbar": {
+        "add": "Add guarantor"
       }
     },
     "employment": {
@@ -1238,6 +1335,10 @@
           "statusCode": "Select Status",
           "reasonCode": "Select Reason",
           "customStatusCode": "Custom Status",
+          "statusProblematic": "Change status to \"Problematic\"",
+          "statusInfoCollection": "Change status to \"Info Collection\"",
+          "statusFutile": "Change status to \"Futile\"",
+          "statusCustom": "Change to custom status",
           "comment": "Comments"
         },
         "nextCall": {
@@ -1291,7 +1392,7 @@
       "grid": {
         "id": "Id",
         "name": "Name",
-        "propertyType": "Property Type",
+        "typeCode": "Property Type",
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
@@ -1420,7 +1521,16 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property item", "plural": "property list" }
+      "gen": { "singular": "property", "plural": "property list" }
+    },
+    "scenarios": {
+      "gen": { "singular": "scenario", "plural": "scenarios list" }
+    },
+    "autoComments": {
+      "gen": { "singular": "autocomment", "plural": "autocomments list" }
+    },
+    "contactTreeItems": {
+      "gen": { "singular": "contact tree item", "plural": "contact tree" }
     }
   },
   "errors": {
@@ -1567,6 +1677,7 @@
     },
     "buttons": {
       "add": "Add",
+      "addUser": "Add user",
       "back": "Back",
       "block": "Block",
       "cancel": "Cancel",
@@ -1643,7 +1754,8 @@
       "empty": "empty"
     },
     "select" : {
-      "empty": "[empty value]"
+      "empty": "[empty value]",
+      "selected": "Items selected"
     },
     "sex": {
       "m": "m",

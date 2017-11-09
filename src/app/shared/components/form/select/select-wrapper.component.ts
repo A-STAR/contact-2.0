@@ -38,10 +38,15 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
     private userDictionariesService: UserDictionariesService,
   ) {}
 
+  private _disabled = false;
   private _value: any;
   private _options: IOption[];
 
   private _optionsSubscription: Subscription;
+
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   get value(): any {
     return this._value;
@@ -81,6 +86,11 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   registerOnTouched(): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
+    this.cdRef.markForCheck();
   }
 
   onChange(value: any): void {

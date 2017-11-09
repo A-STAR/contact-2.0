@@ -1,10 +1,12 @@
 import { Response } from '@angular/http';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
+
 import {
   IMessageOptions,
   IMessageParams,
@@ -51,7 +53,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  action(): Action {
+  action(): UnsafeAction {
     const messageOptions = {
       text: this._text,
       prefix: this._prefix,
@@ -74,7 +76,7 @@ export class NotificationActionBuilder {
     this.store.dispatch(this.action());
   }
 
-  callback(): (response: Response) => Array<Action> {
+  callback(): (response: Response) => Array<UnsafeAction> {
     return (response: Response) => [ this.response(response).action() ];
   }
 
@@ -117,7 +119,11 @@ export class NotificationActionBuilder {
         return translatedFallbackMessage;
       }
 
-      return this.translateService.instant(`${message.text}.*`, translatedParams);
+      const translatedGenericMessageKey = `${message.text}.*`;
+      const translatedGenericMessage = this.translateService.instant(translatedGenericMessageKey, translatedParams);
+      if (translatedGenericMessage !== translatedGenericMessageKey) {
+        return translatedGenericMessage;
+      }
     }
 
     return this.translateService.instant(message.text, translatedParams);
@@ -131,7 +137,7 @@ export class NotificationActionBuilder {
     }
   }
 
-  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
+  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {
     return {
       type,
       payload

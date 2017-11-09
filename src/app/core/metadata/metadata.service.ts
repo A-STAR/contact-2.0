@@ -38,6 +38,8 @@ export class MetadataService {
   }
 
   private get state$(): Observable<IMetadataState> {
-    return this.store.select(state => state.metadata).distinctUntilChanged();
+    return this.store.select(state => state.metadata)
+      .filter(Boolean)
+      .distinctUntilChanged();
   }
 }

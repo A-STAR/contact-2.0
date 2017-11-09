@@ -36,12 +36,12 @@ export class DataService {
    *  route = '/roles/5/permits
    */
   read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
       .map(response => response.data && response.data[0] || null);
   }
 
   readAll(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any[]> {
-    return this.jsonRequest(url, routeParams, { method: RequestMethod.Get })
+    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
       .map(response => response.data || []);
   }
 
@@ -53,12 +53,22 @@ export class DataService {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
   }
 
+  createMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptionsArgs = {}): Observable<any> {
+    const data = this.prepareMultipartFormData(body, file);
+    return this.jsonRequest(url, params, { ...options, method: RequestMethod.Post, body: data });
+  }
+
   createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
     return this.blobRequest(url, routeParams, { method: RequestMethod.Post, body });
   }
 
   update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
     return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
+  }
+
+  updateMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptionsArgs = {}): Observable<any> {
+    const data = this.prepareMultipartFormData(body, file);
+    return this.jsonRequest(url, params, { ...options, method: RequestMethod.Put, body: data });
   }
 
   delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
@@ -107,9 +117,24 @@ export class DataService {
       });
   }
 
+  private prepareMultipartFormData(body: object, file: File): FormData {
+    const formData = new FormData();
+    if (file) {
+      formData.append('file', file);
+    }
+    if (body) {
+      const properties = new Blob(
+        [ JSON.stringify({ ...body, fileName: file.name }) ],
+        { type: 'application/json;charset=UTF-8' }
+      );
+      formData.append('properties', properties);
+    }
+    return formData;
+  }
+
   private validateUrl(url: string = ''): Observable<any> {
     if (!url) {
-      return Observable.throw('Error: no url passed to the GridService');
+      return Observable.throw('Error: no url passed to the DataService');
     }
     return this.rootUrl$;
   }

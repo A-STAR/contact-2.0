@@ -117,6 +117,13 @@ export class ContentTabService {
     return this._tabs.findIndex(tab => tab.path.match(path) !== null);
   }
 
+  removeTabByPath(path: string): void {
+    const tabIndex = this.findTabIndexByPath(path);
+    if (tabIndex !== null) {
+      this.removeTab(tabIndex);
+    }
+  }
+
   private onSectionLoadStart(): void {
     this.lastTabEvent = {
       timestamp: Date.now(),

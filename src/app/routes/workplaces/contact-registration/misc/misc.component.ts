@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -14,8 +13,8 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
 import { OutcomeService } from '../outcome/outcome.service';
 import { MiscService } from './misc.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
@@ -31,13 +30,16 @@ const labelKey = makeKey('modules.contactRegistration.misc');
   templateUrl: './misc.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MiscComponent implements OnInit, OnDestroy {
   @Input() debtId: number;
+  @Input() personId: number;
+  @Input() personRole: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [
     { controlName: 'nextCallDateTime', type: 'datepicker', displayTime: true },
-    { controlName: 'autoCommentId', type: 'select', options: [] },
+    { controlName: 'autoCommentId', type: 'select', options: [], onChange: v => this.onSelectAutoCommentId(v) },
     { controlName: 'autoComment', type: 'textarea', disabled: true },
     { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
@@ -52,15 +54,19 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   private outcomeSubscription: Subscription;
 
   constructor(
+    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
     private miscService: MiscService,
     private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
   ) {}
 
   ngOnInit(): void {
+    this.autoCommentIdSubscription = this.contactRegistrationService.autoComment$
+      .filter(Boolean)
+      .subscribe(autoComment => this.data = autoComment);
+
     this.outcomeSubscription = Observable.combineLatest(
       this.contactRegistrationService.canAddAutoComment$,
       this.contactRegistrationService.canAddCallReason$,
@@ -97,21 +103,6 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngAfterViewInit(): void {
-    this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
-      .filter(Boolean)
-      .flatMap(value => {
-        return this.getPersonId()
-          .flatMap(personId => {
-            const templateId = Array.isArray(value) ? value[0].value : value;
-            return this.outcomeService
-              .fetchAutoComment(this.debtId, personId, 1, templateId)
-              .catch(() => Observable.of(null));
-          });
-      })
-      .subscribe(autoComment => this.updateData('autoComment', autoComment));
-  }
-
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
     this.outcomeSubscription.unsubscribe();
@@ -126,7 +117,20 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
     const { autoComment, ...data } = this.form.serializedUpdates;
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.contactRegistrationService.nextStep();
+        this.accordionService.next();
+        this.cdRef.markForCheck();
+      });
+  }
+
+  private onSelectAutoCommentId(v: any): void {
+    const templateId = Array.isArray(v) ? v[0].value : v;
+    this.outcomeService
+      .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+      .subscribe(autoComment => {
+        this.data = {
+          ...this.form.serializedValue,
+          autoComment
+        };
         this.cdRef.markForCheck();
       });
   }
@@ -134,28 +138,15 @@ export class MiscComponent implements OnInit, AfterViewInit, OnDestroy {
   private toggleControl(name: string, display: boolean): void {
     this.getControl(name).display = display;
     if (!display) {
-      this.updateData(name, null);
+      this.data = {
+        ...this.data,
+        [name]: null,
+      };
     }
     this.cdRef.markForCheck();
   }
 
   private getControl(name: string): IDynamicFormControl {
     return this.controls.find(control => control.controlName === name);
-  }
-
-  private updateData(key: string, value: any): void {
-    this.data = {
-      ...this.data,
-      [key]: value,
-    };
-    this.cdRef.markForCheck();
-  }
-
-  private getPersonId(): Observable<number> {
-    return this.debtService.fetch(null, this.debtId)
-      .publishReplay(1)
-      .refCount()
-      .map(debt => debt.personId)
-      .distinctUntilChanged();
   }
 }

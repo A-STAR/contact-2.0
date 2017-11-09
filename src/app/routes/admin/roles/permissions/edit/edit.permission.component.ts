@@ -32,12 +32,6 @@ export class EditPermissionComponent implements OnInit {
     };
   }
 
-  onDisplayChange(event: boolean): void {
-    if (!event) {
-      this.onCancel();
-    }
-  }
-
   onCancel(): void {
     this.cancel.emit();
   }

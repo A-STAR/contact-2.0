@@ -8,12 +8,12 @@ import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.int
 
 import { ActionsLogService } from './actions-log.service';
 
-const defaultState: IActionsLogState = {
+export const defaultState: IActionsLogState = {
   employees: [],
   actionTypes: [],
 };
 
-export function actionsLogReducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
+export function reducer(state: IActionsLogState = defaultState, action: IActionsLogPayload): IActionsLogState {
   switch (action.type) {
     case ActionsLogService.ACTIONS_LOG_DESTROY:
       return { ...defaultState };

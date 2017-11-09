@@ -1,0 +1,9 @@
+// TODO(d.maltsev): use form class modifiers instead
+
+:host ::ng-deep .form-group {
+  margin-bottom: 5px !important;
+}
+
+:host ::ng-deep .form-label {
+  margin-bottom: 0 !important;
+}

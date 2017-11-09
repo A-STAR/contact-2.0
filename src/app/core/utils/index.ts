@@ -79,6 +79,8 @@ export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T =
   ], []);
 };
 
+export const invert = (a: boolean) => !a;
+
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
 
 export const parseStringValueAttrs = (str: string) => (str || '')
@@ -99,3 +101,5 @@ export const round = (value: number, precision: number) => {
   const k = Math.pow(10, precision);
   return Math.round(k * value) / k;
 };
+
+export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);

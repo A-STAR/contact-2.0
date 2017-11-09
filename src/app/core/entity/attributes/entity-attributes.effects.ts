@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 import { IEntityAttribute } from './entity-attributes.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { EntityAttributesService } from './entity-attributes.service';
@@ -14,7 +14,7 @@ export class EntityAttributesEffects {
   @Effect()
   fetchAttributes$ = this.actions
     .ofType(EntityAttributesService.ENTITY_ATTRIBUTE_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       const { id } = action.payload;
       return this.read(id)
         .map(attribute => ({
