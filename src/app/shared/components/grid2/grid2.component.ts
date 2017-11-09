@@ -99,6 +99,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
+  @Output() onContextMenu = new EventEmitter<IMetadataAction>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -691,7 +692,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       'separator',
       ...(this.actions || []).map(action => ({
         name: this.translate.instant(`default.grid.actions.${action.action}`),
-        action: () => console.log(action)
+        action: () => this.onContextMenu.emit(action)
       })),
       // {
       //   name: 'Person',

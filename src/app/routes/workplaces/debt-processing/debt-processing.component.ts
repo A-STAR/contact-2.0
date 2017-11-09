@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
+import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
 
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+import { DialogFunctions } from '../../../core/dialog';
 
 @Component({
   selector: 'app-debt-processing',
@@ -16,20 +18,23 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtProcessingComponent {
+export class DebtProcessingComponent extends DialogFunctions {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   rows: IDebt[] = [];
   rowCount = 0;
+  dialog: string;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtProcessingService: DebtProcessingService,
     private router: Router,
-  ) {}
+  ) {
+    super();
+  }
 
   onRequest(): void {
     const filters = this.grid.getFilters();
@@ -51,6 +56,12 @@ export class DebtProcessingComponent {
     //  `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
     // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
     // if (win.focus) { win.focus() };
+  }
+
+  onContextMenu(action: IMetadataAction): void {
+    switch (action.action) {
+      case 'debtSetResponsible': this.setDialog('debtResponsibleSet');
+    }
   }
 
   getRowNodeId(debt: IDebt): number {
