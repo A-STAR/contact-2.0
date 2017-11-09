@@ -1,0 +1,15 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'default.dialog.result.title' | translate }}</h3>
+  </div>
+
+  <div>
+    {{ 'default.dialog.result.message' | translate: messageContext }}
+  </div>
+
+  <div dialog-footer>
+    <button class="btn btn-success" (click)="onClose()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate  }}
+    </button>
+  </div>
+</app-dialog>
