@@ -43,7 +43,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     { controlName: 'autoComment', type: 'textarea', disabled: true },
     { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
-    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19 },
+    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19, required: true },
     { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
     { controlName: 'comment', type: 'textarea' },
   ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
@@ -75,6 +75,7 @@ export class MiscComponent implements OnInit, OnDestroy {
       this.contactRegistrationService.canAddNextCall$,
       this.contactRegistrationService.canAddRefusal$,
       this.contactRegistrationService.canAddStatusChangeReason$,
+      this.contactRegistrationService.selectedNode$,
     )
     .subscribe(([
       canAddAutoComment,
@@ -84,15 +85,17 @@ export class MiscComponent implements OnInit, OnDestroy {
       canAddNextCall,
       canAddRefusal,
       canAddStatusChangeReason,
+      node,
     ]) => {
+      const { nextCallMode, commentMode, debtReasonMode, callReasonMode, statusReasonMode } = (node as any).data;
       this.toggleControl('autoCommentId', canAddAutoComment);
       this.toggleControl('autoComment', canAddAutoComment);
-      this.toggleControl('callReasonCode', canAddCallReason);
-      this.toggleControl('comment', canAddComment);
-      this.toggleControl('debtReasonCode', canAddDebtReason);
-      this.toggleControl('nextCallDateTime', canAddNextCall);
+      this.toggleControl('callReasonCode', canAddCallReason, callReasonMode === 3);
+      this.toggleControl('comment', canAddComment, commentMode === 3);
+      this.toggleControl('debtReasonCode', canAddDebtReason, debtReasonMode === 3);
+      this.toggleControl('nextCallDateTime', canAddNextCall, nextCallMode === 3);
       this.toggleControl('refusalReasonCode', canAddRefusal);
-      this.toggleControl('statusReasonCode', canAddStatusChangeReason);
+      this.toggleControl('statusReasonCode', canAddStatusChangeReason, statusReasonMode === 3);
     });
 
     this.userTemplatesService.getTemplates(4, 0)
@@ -137,8 +140,10 @@ export class MiscComponent implements OnInit, OnDestroy {
     }
   }
 
-  private toggleControl(name: string, display: boolean): void {
-    this.getControl(name).display = display;
+  private toggleControl(name: string, display: boolean, required: boolean = false): void {
+    const control = this.getControl(name);
+    control.display = display;
+    control.required = required;
     if (!display) {
       this.data = {
         ...this.data,
