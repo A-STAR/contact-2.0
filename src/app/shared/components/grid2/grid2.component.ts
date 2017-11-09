@@ -35,11 +35,14 @@ import { FilterObject } from './filter/grid-filter';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
+
+import { UserPermissions } from '../../../core/user/permissions/user-permissions';
 
 interface IDialogParams {
   [key: string]: string | number;
@@ -118,6 +121,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private gridSettings: IAGridSettings;
   private initialized = false;
   private langSubscription: EventEmitter<any>;
+  private userPermissionsBag: UserPermissions;
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
@@ -126,6 +130,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
 
@@ -146,6 +151,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.metadataKey) {
       throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
+
+    // TODO(d.maltsev): subscription
+    this.userPermissionsService.bag()
+      .subscribe(bag => this.userPermissionsBag = bag);
 
     this.gridService
       .getActions(this.metadataKey)
@@ -709,6 +718,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       'separator',
       ...(this.actions || []).map(action => ({
         name: this.translate.instant(`default.grid.actions.${action.action}`),
+        disabled: !this.isContextMenuItemEnabled(action.action),
         action: () => {
           const dialogParams = action.params.reduce((acc, param) => ({
             ...acc,
@@ -745,6 +755,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       }
     ];
+  }
+
+  // TODO(d.maltsev): this looks a bit messy.
+  // Maybe we should get permissions from server as well or get all metadata from client service
+  private isContextMenuItemEnabled(action: string): boolean {
+    switch (action) {
+      case 'showContactHistory':
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      default:
+        return true;
+    }
   }
 
   /**
