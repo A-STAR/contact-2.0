@@ -47,6 +47,14 @@ export class ContactLogGridComponent implements OnInit {
       });
   }
 
+  onSelect(contact: any): void {
+
+  }
+
+  onDoubleClick(contact: any): void {
+
+  }
+
   private fetchAll(personId: number): void {
     this.contactLogService.fetchAll(personId).subscribe(data => {
       this.data = data;
