@@ -10,7 +10,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
 import { DatePickerModule } from '../form/datepicker/datepicker.module';
-import { DialogModule } from '../dialog/dialog.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
 import { ContactLogModule } from '../../gui-objects/widgets/contact-log/contact-log.module';
@@ -29,7 +28,6 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
     CommonModule,
     ContactLogModule,
     DatePickerModule,
-    DialogModule,
     FormsModule,
     SelectModule,
     ToolbarModule,

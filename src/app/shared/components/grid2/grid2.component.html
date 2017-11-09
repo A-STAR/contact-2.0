@@ -1,31 +1,26 @@
-<app-dialog [styles]="{ width: '80%' }" *ngIf="dialog === 'showContactHistory'" (close)="closeDialog()">
-  <div dialog-header>
-    <h3>Contact Log</h3>
-  </div>
-  <div>
-    <app-contact-log-grid [personId]="1"></app-contact-log-grid>
-  </div>
-</app-dialog>
-
+<app-contact-log-dialog
+  *ngIf="dialog === 'showContactHistory'"
+  [personId]="1"
+  (close)="closeDialog()"
+></app-contact-log-dialog>
 
 <div class="grid grid-default">
-    <ag-grid-angular
-      *ngIf="columnDefs"
-      class="app-grid2 ag-contact2"
-      [columnDefs]="columnDefs"
-      [gridOptions]="gridOptions"
-      [ngStyle]="styles"
-      [rowSelection]="rowSelection"
-      (dragStarted)="dragStarted()"
-      (dragStopped)="dragStopped()"
-      (rowDoubleClicked)="rowDoubleClicked($event)"
-    >
-    </ag-grid-angular>
+  <ag-grid-angular
+    *ngIf="columnDefs"
+    class="app-grid2 ag-contact2"
+    [columnDefs]="columnDefs"
+    [gridOptions]="gridOptions"
+    [ngStyle]="styles"
+    [rowSelection]="rowSelection"
+    (dragStarted)="dragStarted()"
+    (dragStopped)="dragStopped()"
+    (rowDoubleClicked)="rowDoubleClicked($event)"
+  ></ag-grid-angular>
 </div>
+
 <app-toolbar
   class="app-toolbar"
   [actions]="paginationPanel"
   (actionClick)="onPageChange($event)"
   (actionSelect)="onPageSizeChange($event)"
->
-</app-toolbar>
+></app-toolbar>
