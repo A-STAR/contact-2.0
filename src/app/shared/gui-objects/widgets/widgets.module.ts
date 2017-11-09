@@ -21,6 +21,7 @@ import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { OperatorModule } from './operator/operator.module';
+import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { OperatorModule } from './operator/operator.module';
     PromiseModule,
     PropertyModule,
     OperatorModule,
+    DebtResponsibleModule,
   ],
   exports: [
     AddressModule,
@@ -67,6 +69,7 @@ import { OperatorModule } from './operator/operator.module';
     PromiseModule,
     PropertyModule,
     OperatorModule,
+    DebtResponsibleModule,
   ]
 })
 export class WidgetsModule { }

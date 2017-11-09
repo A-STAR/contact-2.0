@@ -20,6 +20,6 @@ export class OperatorService {
   fetchAll(): Observable<IOperator[]> {
     return this.dataService
       .readAll(this.url)
-      .catch(this.notificationsService.fetchError().entity('entities.opearator.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
   }
 }
