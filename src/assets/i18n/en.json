@@ -1748,7 +1748,7 @@
       },
       "actions": {
         "statusChange": "Change Status",
-        "viewContactLog": "Contact Log"
+        "showContactHistory": "Contact Log"
       }
     },
     "filter": {

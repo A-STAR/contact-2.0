@@ -1748,7 +1748,7 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "viewContactLog": "История контактов"
+        "showContactHistory": "История контактов"
       }
     },
     "filter": {
