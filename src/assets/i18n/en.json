@@ -1804,6 +1804,12 @@
       "pink": "Pink",
       "yellow": "Yellow"
     },
+    "dialog": {
+      "result": {
+        "title": "Operation result",
+        "message": "Operation was successful for {{successCount}} of {{count}} records"
+      }
+    },
     "NA": "N/A"
   }
 }
