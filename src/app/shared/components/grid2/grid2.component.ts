@@ -41,7 +41,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 
-type IDialogParams = {
+interface IDialogParams {
   [key: string]: string | number;
 }
 
