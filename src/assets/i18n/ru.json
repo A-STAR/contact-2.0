@@ -1763,7 +1763,8 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "viewContactLog": "История контактов"
+        "viewContactLog": "История контактов",
+        "debtSetResponsible": "Установка ответственного по долгу"
       }
     },
     "filter": {

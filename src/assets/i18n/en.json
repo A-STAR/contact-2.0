@@ -1763,7 +1763,8 @@
       },
       "actions": {
         "statusChange": "Change Status",
-        "viewContactLog": "Contact Log"
+        "viewContactLog": "Contact Log",
+        "debtSetResponsible": "Set debt responsible"
       }
     },
     "filter": {
