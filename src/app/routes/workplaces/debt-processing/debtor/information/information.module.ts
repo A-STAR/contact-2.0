@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CompanyModule } from './company/company.module';
 import { PersonModule } from './person/person.module';
+import { PhoneGridModule } from './phone-grid/phone-grid.module';
 import { SharedModule } from '../../../../../shared/shared.module';
 
 import { DebtorInformationComponent } from './information.component';
@@ -12,6 +13,7 @@ import { DebtorInformationComponent } from './information.component';
     CommonModule,
     CompanyModule,
     PersonModule,
+    PhoneGridModule,
     SharedModule,
   ],
   exports: [

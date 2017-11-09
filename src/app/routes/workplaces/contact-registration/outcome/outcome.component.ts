@@ -75,8 +75,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
-      .filter(Boolean)
       .map(value => Array.isArray(value) ? value[0].value : value)
+      .filter(Boolean)
       .distinctUntilChanged()
       .flatMap(templateId => {
         return this.outcomeService
