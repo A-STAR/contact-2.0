@@ -41,6 +41,10 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 
+type IDialogParams = {
+  [key: string]: string | number;
+}
+
 interface ITranslations {
   translations: { [index: string]: string };
 }
@@ -109,6 +113,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   actions: IMetadataAction[];
 
   dialog: string;
+  dialogParams: IDialogParams;
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -193,8 +198,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.langSubscription.unsubscribe();
   }
 
-  setDialog(dialog: string): void {
+  setDialog(dialog: string, dialogParams: IDialogParams): void {
     this.dialog = dialog;
+    this.dialogParams = dialogParams;
     this.cdRef.markForCheck();
   }
 
@@ -703,7 +709,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       'separator',
       ...(this.actions || []).map(action => ({
         name: this.translate.instant(`default.grid.actions.${action.action}`),
-        action: () => this.setDialog(action.action)
+        action: () => {
+          const dialogParams = action.params.reduce((acc, param) => ({
+            ...acc,
+            [param]: params.node.data[param]
+          }), {});
+          this.setDialog(action.action, dialogParams);
+        }
       })),
       // {
       //   name: 'Person',
