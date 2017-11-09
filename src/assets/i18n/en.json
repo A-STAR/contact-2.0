@@ -1029,6 +1029,22 @@
         "comment": "Comment"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      },
+      "grid": {
+        "debtId": "Debt Id",
+        "сontract": "Contract #",
+        "createDateTime": "Created On",
+        "fullName": "Contact Person",
+        "personRole": "Contact Person Type",
+        "contactDateTime": "Contact Date",
+        "contactType": "Contact Type",
+        "userFullName": "Operator",
+        "resultName": "Outcome"
+      }
+    },
     "contactProperty": {
       "contactType": "Contact Type",
       "treeType": "Tree Type",
@@ -1515,7 +1531,7 @@
       "gen": { "singular": "phone number", "plural": "phone numbers" }
     },
     "contacts": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "contact", "plural": "contacts" }
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }

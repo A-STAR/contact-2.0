@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ContactLogGridModule } from '../grid/contact-log-grid.module';
 import { DialogModule } from '../../../../components/dialog/dialog.module';
@@ -9,6 +10,7 @@ import { ContactLogDialogComponent } from './contact-log-dialog.component';
   imports: [
     ContactLogGridModule,
     DialogModule,
+    TranslateModule,
   ],
   exports: [
     ContactLogDialogComponent,

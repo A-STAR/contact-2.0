@@ -17,7 +17,6 @@ export class ContactLogService {
     return this.dataService
       .create('/persons/{personId}/contacts?isOnlyContactLog=1', { personId }, {})
       .map(response => response.data)
-      // TODO(d.maltsev): correct entity
-      .catch(this.notificationsService.fetchError().entity(`entities.addresses.gen.plural`).dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(`entities.contacts.gen.plural`).dispatchCallback());
   }
 }

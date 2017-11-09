@@ -21,7 +21,7 @@ export class ContactLogGridComponent implements OnInit {
 
   columns: IGridColumn[] = [
     { prop: 'debtId', minWidth: 80 },
-    { prop: 'сontractNumber', minWidth: 120 },
+    { prop: 'сontract', minWidth: 120 },
     { prop: 'createDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'personRole', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
