@@ -38,7 +38,6 @@ export class ButtonComponent {
   onClick(event: MouseEvent): void {
     if (this.disabled) {
       event.stopPropagation();
-      event.preventDefault();
     }
   }
 }
