@@ -17,6 +17,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 
+import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
@@ -84,6 +85,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     private messageBusService: MessageBusService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
+    private contentTabService: ContentTabService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -139,8 +141,8 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
               ? [this.contractors.find((contractor) => contractor.id === contractorId)]
               : [];
           });
+          this.cdRef.markForCheck();
     }
-    this.cdRef.markForCheck();
   }
 
   get contractors(): IContractor[] {
@@ -178,17 +180,15 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onAdd(): void {
-    console.log('nav to create contractors');
     this.router.navigate([ `/admin/contractors/create` ]);
   }
 
   onEdit(): void {
-    console.log('on before edit', `/admin/contractors/${this.selectedContractor[0].id}`);
     this.router.navigate([ `/admin/contractors/${this.selectedContractor[0].id}` ]);
   }
 
   onSelect(contractor: IContractor): void {
-    this.selection = contractor ?  [contractor] : [];
+    // this.selection = contractor ?  [contractor] : [];
     this.contractorsAndPortfoliosService.selectContractor(contractor && contractor.id || null);
   }
 

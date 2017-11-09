@@ -83,12 +83,13 @@ export class ContractorManagerEditComponent {
     const manager = this.getManagerFromFormData();
     this.closeDialogSubscription = ((this.contractorId && this.managerId)
       ? this.contractorsAndPortfoliosService
-          .updateManager( this.contractorId, this.managerId, this.formData)
+          .updateManager( this.contractorId, this.managerId, manager)
       : this.contractorsAndPortfoliosService
-          .createManager(this.contractorId, this.formData))
+          .createManager(this.contractorId, manager))
           .subscribe(() => {
             // TODO need to make current magnager for particular contractor here
             console.log('in on submit sub');
+            this.messageBusService.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH);
             this.needToGoBack$.next(' ');
           });
   }

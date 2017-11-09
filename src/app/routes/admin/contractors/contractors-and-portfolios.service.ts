@@ -62,6 +62,10 @@ export class ContractorsAndPortfoliosService {
     private valueConverterService: ValueConverterService,
   ) {}
 
+  get currentStore(): any {
+    return this.store;
+  }
+
   get contractors$(): Observable<Array<IContractor>> {
     return this.state
       .map(state => state.contractors)
@@ -86,12 +90,18 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  selectedManagerId$(contractorId: number): Observable<number> {
+  get selectedManagerId$(): Observable<any> {
     return this.state
-      .map(state => state.mapContracorToSelectedManager && state.mapContracorToSelectedManager[contractorId])
-      .filter(Boolean)
+      .map(state => {
+        this.managerMapping = state.mapContracorToSelectedManager;
+        return state.mapContracorToSelectedManager;
+      })
       .distinctUntilChanged();
+      // .filter(Boolean)
+      // .do((res) => console.log('rusult', res));
   }
+  // TOBO typing
+  managerMapping: any;
 
   get selectedPortfolio$(): Observable<IPortfolio> {
     return this.state
@@ -148,7 +158,8 @@ export class ContractorsAndPortfoliosService {
 
   selectManager(contractorId: number, managerId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
-      mapContracorToSelectedManager: { [contractorId]: managerId
+      mapContracorToSelectedManager: {
+        [contractorId]: managerId
       }
     });
   }
@@ -165,6 +176,7 @@ export class ContractorsAndPortfoliosService {
 
   createManager(contractorId: number, manager: IContractorManager): Observable<any> {
     // this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });
+    // return this.dataService.create('/roles', {}, role);
     return this.dataService.create('/contractors/{contractorId}/managers', { contractorId }, manager)
             .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
   }

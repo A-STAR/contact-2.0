@@ -89,41 +89,41 @@ export class ContractorsAndPortfoliosEffects {
   //       .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
   //   });
 
-  @Effect()
-  fetchManager$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.MANAGER_FETCH)
-    .switchMap((action: UnsafeAction) => {
-      return this.readManager(action.payload.contractorId, action.payload.managerId)
-        .map(manager => ({
-          type: ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS,
-          payload: { manager }
-        }))
-        .catch(this.notificationsService.fetchError().entity('entities.managers.gen.singular').callback());
-    });
+  // @Effect()
+  // fetchManager$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.MANAGER_FETCH)
+  //   .switchMap((action: UnsafeAction) => {
+  //     return this.readManager(action.payload.contractorId, action.payload.managerId)
+  //       .map(manager => ({
+  //         type: ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS,
+  //         payload: { manager }
+  //       }))
+  //       .catch(this.notificationsService.fetchError().entity('entities.managers.gen.singular').callback());
+  //   });
 
-  @Effect()
-  createManager$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.MANAGER_CREATE)
-    .switchMap((action: UnsafeAction) => {
-      const { contractorId, manager } = action.payload;
-      return this.createManager(contractorId, manager)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
-        }))
-        .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
-    });
+  // @Effect()
+  // createManager$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.MANAGER_CREATE)
+  //   .switchMap((action: UnsafeAction) => {
+  //     const { contractorId, manager } = action.payload;
+  //     return this.createManager(contractorId, manager)
+  //       .map(() => ({
+  //         type: ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS
+  //       }))
+  //       .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
+  //   });
 
-  @Effect()
-  updateManager$ = this.actions
-    .ofType(ContractorsAndPortfoliosService.MANAGER_UPDATE)
-    .switchMap((action: UnsafeAction) => {
-      const { contractorId, managerId, manager } = action.payload;
-      return this.updateManager(contractorId, managerId, manager)
-        .map(() => ({
-          type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
-        }))
-        .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
-    });
+  // @Effect()
+  // updateManager$ = this.actions
+  //   .ofType(ContractorsAndPortfoliosService.MANAGER_UPDATE)
+  //   .switchMap((action: UnsafeAction) => {
+  //     const { contractorId, managerId, manager } = action.payload;
+  //     return this.updateManager(contractorId, managerId, manager)
+  //       .map(() => ({
+  //         type: ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
+  //       }))
+  //       .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+  //   });
 
   // @Effect()
   // deleteManager$ = this.actions

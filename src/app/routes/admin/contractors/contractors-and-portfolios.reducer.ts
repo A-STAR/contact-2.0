@@ -38,16 +38,14 @@ export function reducer(
         selectedContractorId: null
       };
     case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
-      console.log('start reduser for select');
-      return {
-        ...state,
-        selectedContractorId: action.payload.contractorId
-      };
-
+    return {
+      ...state,
+      selectedContractorId: action.payload.contractorId
+    };
     // Contractors:
     case ContractorsAndPortfoliosService.MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR:
-      delete state.mapContracorToSelectedManager[action.payload.contractorId];
-      return state;
+    delete state.mapContracorToSelectedManager[action.payload.contractorId];
+    return state;
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
       Object.assign({}, state.mapContracorToSelectedManager, action.payload.mapContractorToManagerId);
       return {

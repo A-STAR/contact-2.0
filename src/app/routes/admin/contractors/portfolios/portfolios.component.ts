@@ -113,7 +113,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.contractorsAndPortfoliosService.fetchPortfolios(selectedContractorId)
           .subscribe((portfolios) => {
             this.portfolios = portfolios;
-            console.log(portfolios);
             this.cdRef.markForCheck();
           });
       } else {
