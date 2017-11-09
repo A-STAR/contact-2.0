@@ -124,15 +124,17 @@ export class MiscComponent implements OnInit, OnDestroy {
 
   private onSelectAutoCommentId(v: any): void {
     const templateId = Array.isArray(v) ? v[0].value : v;
-    this.outcomeService
-      .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-      .subscribe(autoComment => {
-        this.data = {
-          ...this.form.serializedValue,
-          autoComment
-        };
-        this.cdRef.markForCheck();
-      });
+    if (templateId) {
+      this.outcomeService
+        .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+        .subscribe(autoComment => {
+          this.data = {
+            ...this.form.serializedValue,
+            autoComment
+          };
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   private toggleControl(name: string, display: boolean): void {
