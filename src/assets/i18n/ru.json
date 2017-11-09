@@ -1032,17 +1032,6 @@
     "contactLog": {
       "dialog": {
         "title": "История контактов"
-      },
-      "grid": {
-        "debtId": "Ид долга",
-        "сontract": "Номер договора",
-        "createDateTime": "Дата создания",
-        "fullName": "ФИО контактного лица",
-        "personRole": "Тип лица",
-        "contactDateTime": "Дата контакта",
-        "contactType": "Тип контакта",
-        "userFullName": "Оператор",
-        "resultName": "Результат"
       }
     },
     "contactProperty": {

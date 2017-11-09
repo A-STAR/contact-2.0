@@ -1032,17 +1032,6 @@
     "contactLog": {
       "dialog": {
         "title": "Contact Log"
-      },
-      "grid": {
-        "debtId": "Debt Id",
-        "сontract": "Contract #",
-        "createDateTime": "Created On",
-        "fullName": "Contact Person",
-        "personRole": "Contact Person Type",
-        "contactDateTime": "Contact Date",
-        "contactType": "Contact Type",
-        "userFullName": "Operator",
-        "resultName": "Outcome"
       }
     },
     "contactProperty": {
