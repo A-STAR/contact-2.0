@@ -1,12 +1,16 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+import { IContextMenuItem } from '../../../shared/components/grid2/grid2.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
+import { DebtResponsibleService } from '../../../shared/gui-objects/widgets/debt-responsible/debt-responsible.service';
 
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 import { DialogFunctions } from '../../../core/dialog';
@@ -21,7 +25,17 @@ import { DialogFunctions } from '../../../core/dialog';
 export class DebtProcessingComponent extends DialogFunctions {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
+  private selectedDebts$ = new BehaviorSubject<IDebt[]>(null);
+
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  contextMenuItems: IContextMenuItem[] = [
+    {
+      name: 'debtSetResponsible',
+      enabled: Observable.combineLatest(this.debtResponsibleService.canSet$, this.selectedDebts$)
+        .map(([ canSet, selected ]) => canSet && !!selected && selected.length > 0)
+    }
+  ];
 
   rows: IDebt[] = [];
   rowCount = 0;
@@ -31,6 +45,7 @@ export class DebtProcessingComponent extends DialogFunctions {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtProcessingService: DebtProcessingService,
+    private debtResponsibleService: DebtResponsibleService,
     private router: Router,
   ) {
     super();
@@ -56,6 +71,10 @@ export class DebtProcessingComponent extends DialogFunctions {
     //  `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
     // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
     // if (win.focus) { win.focus() };
+  }
+
+  onSelect(selectedDebts: IDebt[]): void {
+    this.selectedDebts$.next(selectedDebts);
   }
 
   onContextMenu(action: IMetadataAction): void {

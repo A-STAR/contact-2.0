@@ -10,10 +10,12 @@
   [ngClass]="'debt-processing-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
+  [contextMenuItems]="contextMenuItems"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onFilter)="onRequest()"
   (onDblClick)="onDblClick($event)"
-  (onContextMenu)="onContextMenu($event)">
+  (onContextMenu)="onContextMenu($event)"
+  (onSelect)="onSelect($event)">
 </app-grid2>

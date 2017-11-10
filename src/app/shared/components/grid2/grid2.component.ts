@@ -29,7 +29,7 @@ import {
 import {
   IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
+  IAGridRequest, IAGridSorter, IContextMenuItem } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -87,6 +87,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
   @Input() fetchUrl: string;
+  @Input() contextMenuItems: IContextMenuItem[] = [];
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -162,8 +163,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onInit.emit();
       });
 
-      this.langSubscription = this.translate.onLangChange
-        .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+    this.langSubscription = this.translate.onLangChange
+      .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -678,6 +679,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  private get metadataMenuItems(): MenuItemDef[] {
+    return (this.actions || []).map(action => {
+      const contextItem = this.contextMenuItems.find(item => item.name === action.action);
+      if (contextItem) {
+        contextItem.enabled.take(1).subscribe(enabled => contextItem.disabled = !enabled);
+      }
+      return {
+        action: () => this.onContextMenu.emit(action),
+        ...this.contextMenuItems.find(item => item.name === action.action) || {},
+        name: this.translate.instant(`default.grid.actions.${action.action}`)
+      };
+    });
+  }
+
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
       // {
@@ -690,10 +705,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         tooltip: 'Just to test what the tooltip can show'
       },
       'separator',
-      ...(this.actions || []).map(action => ({
-        name: this.translate.instant(`default.grid.actions.${action.action}`),
-        action: () => this.onContextMenu.emit(action)
-      })),
+      ...this.metadataMenuItems,
       // {
       //   name: 'Person',
       //   subMenu: [

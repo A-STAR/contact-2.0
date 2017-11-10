@@ -1,4 +1,5 @@
 import { RowNode, ColDef } from 'ag-grid';
+import { Observable } from 'rxjs/Observable';
 
 import { FilterObject } from './filter/grid-filter';
 
@@ -116,4 +117,16 @@ export interface ValueGetterParams {
   data: any;
   getValue: (field: string) => any;
   node: RowNode;
+}
+
+export interface IContextMenuItem {
+  name: string;
+  enabled?: Observable<boolean>;
+  action?: () => void;
+  disabled?: boolean;
+  shortcut?: string;
+  checked?: boolean;
+  icon?: HTMLElement | string;
+  cssClasses?: string[];
+  tooltip?: string;
 }

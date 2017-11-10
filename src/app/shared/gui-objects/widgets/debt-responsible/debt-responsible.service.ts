@@ -5,6 +5,7 @@ import { IOperator } from '../operator/operator.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class DebtResponsibleService {
@@ -12,7 +13,12 @@ export class DebtResponsibleService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
+
+  get canSet$(): Observable<boolean> {
+    return this.userPermissionsService.hasOne([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]);
+  }
 
   setResponsible(operator: IOperator): Observable<any> {
     return this.dataService
