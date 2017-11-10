@@ -31,6 +31,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() dictCode: number;
   @Input() lookupKey = null as ILookupKey;
+  @Input() nullable = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,

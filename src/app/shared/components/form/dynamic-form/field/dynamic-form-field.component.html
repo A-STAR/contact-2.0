@@ -58,18 +58,19 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <app-select [formControlName]="control.controlName"
-                  [actions]="control.optionsActions"
-                  [closableSelectedItem]="control.closableSelectedItem"
-                  [controlDisabled]="control.disabled"
-                  [multiple]="control.multiple"
-                  [nullable]="!control.required"
-                  [options]="control.options"
-                  [placeholder]="control.placeholder"
-                  [readonly]="control.readonly"
-                  [renderer]="control.optionsRenderer"
-                  (onSelect)="selectHandler({ control: control, items: $event})">
-      </app-select>
+      <app-select
+        [formControlName]="control.controlName"
+        [actions]="control.optionsActions"
+        [closableSelectedItem]="control.closableSelectedItem"
+        [controlDisabled]="control.disabled"
+        [multiple]="control.multiple"
+        [nullable]="!control.required"
+        [options]="control.options"
+        [placeholder]="control.placeholder"
+        [readonly]="control.readonly"
+        [renderer]="control.optionsRenderer"
+        (onSelect)="selectHandler({ control: control, items: $event})"
+      ></app-select>
     </label>
   </ng-container>
 
@@ -82,8 +83,9 @@
       <app-select-wrapper
         [formControlName]="control.controlName"
         [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey">
-      </app-select-wrapper>
+        [lookupKey]="control.lookupKey"
+        [nullable]="!control.required"
+      ></app-select-wrapper>
     </label>
   </ng-container>
 

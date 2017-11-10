@@ -43,7 +43,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     { controlName: 'autoComment', type: 'textarea', disabled: true },
     { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
-    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19, required: true },
+    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19 },
     { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
     { controlName: 'comment', type: 'textarea' },
   ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
@@ -94,7 +94,7 @@ export class MiscComponent implements OnInit, OnDestroy {
       this.toggleControl('comment', canAddComment, commentMode === 3);
       this.toggleControl('debtReasonCode', canAddDebtReason, debtReasonMode === 3);
       this.toggleControl('nextCallDateTime', canAddNextCall, nextCallMode === 3);
-      this.toggleControl('refusalReasonCode', canAddRefusal);
+      this.toggleControl('refusalReasonCode', canAddRefusal, true);
       this.toggleControl('statusReasonCode', canAddStatusChangeReason, statusReasonMode === 3);
     });
 
@@ -143,7 +143,7 @@ export class MiscComponent implements OnInit, OnDestroy {
   private toggleControl(name: string, display: boolean, required: boolean = false): void {
     const control = this.getControl(name);
     control.display = display;
-    control.required = required;
+    control.required = display && required;
     if (!display) {
       this.data = {
         ...this.data,
