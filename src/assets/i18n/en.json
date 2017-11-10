@@ -219,12 +219,9 @@
           "account": "Account",
           "phoneNumber": "Phone Number",
           "fullAddress": "Address",
-          "docSeries": "Series",
           "docNumber": "Number",
-          "clientId": "Client Id",
           "birthDate": "Birth Date",
-          "showDebtors": "Show Debtors",
-          "showGuarantors": "Show Guarantors",
+          "personRoleCodes": "Role",
           "showClosed": "Show Closed Debts"
         }
       },
