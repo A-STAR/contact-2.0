@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IContact } from '../contact-log.interface';
-import { IGridColumn } from '../../../../components/grid/grid.interface';
 
 import { ContactLogService } from '../contact-log.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { Grid2Component } from '../../../../components/grid2/grid2.component';
 
@@ -27,7 +24,6 @@ export class ContactLogGridComponent {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactLogService: ContactLogService,
-    private gridService: GridService,
   ) {}
 
   onRequest(): void {
