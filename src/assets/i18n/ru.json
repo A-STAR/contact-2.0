@@ -1741,6 +1741,10 @@
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",
         "filterOoo": "фильтр..."
+      },
+      "actions": {
+        "statusChange": "Изменить статус",
+        "viewContactLog": "История контактов"
       }
     },
     "filter": {

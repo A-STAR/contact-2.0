@@ -27,7 +27,7 @@ export class ContactRegistrationService {
   }
 
   get canAddPayment$(): Observable<boolean> {
-    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.payment));
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.paymentMode));
   }
 
   get canAddNextCall$(): Observable<boolean> {

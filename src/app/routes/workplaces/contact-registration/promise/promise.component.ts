@@ -67,6 +67,8 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
         const { promiseMode } = node.data;
         if (promiseMode === 3) {
           this.data = { ...this.data, amount: debt.debtAmount, percentage: 100 };
+        } else if (promiseMode === 2) {
+          this.data = { ...this.data, amount: this.minDebtAmount, percentage: limit.minAmountPercent };
         }
         this.controls = this.buildControls(promiseMode, canAddInsufficientAmount);
         this.cdRef.detectChanges();
@@ -104,7 +106,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
 
   private submit(data: Partial<IPromise>): void {
     const { guid } = this.contactRegistrationService;
-    const { percentage, ...rest } = this.form.serializedUpdates;
+    const { percentage, ...rest } = this.form.serializedValue;
     this.contactPromiseService.create(this.debtId, guid, { ...data, ...rest })
       .subscribe(() => {
         this.accordionService.next();
