@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 import { DebtResponsibleService } from '../../debt-responsible.service';
 
@@ -11,9 +11,12 @@ import { DialogFunctions } from '../../../../../../core/dialog';
 })
 export class DebtResponsibleClearComponent extends DialogFunctions implements OnInit {
 
+  @Input() debts: number[];
   @Output() close = new EventEmitter<null>();
 
   dialog: string = null;
+  count: number;
+  successCount: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -23,8 +26,10 @@ export class DebtResponsibleClearComponent extends DialogFunctions implements On
   }
 
   ngOnInit(): void {
-    this.debtResponsibleService.clearResponsible()
-      .subscribe(() => {
+    this.debtResponsibleService.clearResponsible(this.debts)
+      .subscribe(result => {
+        this.count = result.count;
+        this.successCount = result.successCount;
         this.setDialog('clearResult');
         this.cdRef.markForCheck();
       });

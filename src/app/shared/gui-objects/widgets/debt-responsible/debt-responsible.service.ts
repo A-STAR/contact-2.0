@@ -32,9 +32,9 @@ export class DebtResponsibleService {
       .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
   }
 
-  clearResponsible(): Observable<any> {
+  clearResponsible(debts: number[]): Observable<any> {
     return this.dataService
-      .create('mass/debts/clearResponsible', {}, {})
-      .catch(this.notificationsService.fetchError().entity('entities.opearator.gen.plural').dispatchCallback());
+      .create('/mass/debts/clearResponsible', {}, { idData: debts })
+      .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
   }
 }

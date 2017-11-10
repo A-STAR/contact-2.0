@@ -6,6 +6,7 @@
 
 <app-debt-responsible-clear
   *ngIf="isDialog('debtResponsibleClear')"
+  [debts]="selectedDebts$ | async"
   (close)="onCloseDialog()">
 </app-debt-responsible-clear>
 

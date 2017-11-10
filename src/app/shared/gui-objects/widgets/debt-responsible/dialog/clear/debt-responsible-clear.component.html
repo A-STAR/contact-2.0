@@ -1,4 +1,6 @@
 <app-result-dialog
-*ngIf="isDialog('clearResult')"
-(close)="onClose()">
+  *ngIf="isDialog('clearResult')"
+  [count]="count"
+  [successCount]="successCount"
+  (close)="onClose()">
 </app-result-dialog>
