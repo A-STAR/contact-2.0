@@ -10,15 +10,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
 import { DatePickerModule } from '../form/datepicker/datepicker.module';
-import { DialogModule } from '../dialog/dialog.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
 
-import { ContactLogService } from './contact-log/contact-log.service';
 import { GridService } from '../grid/grid.service';
 
-import { ContactLogDialogComponent } from './contact-log/dialog/contact-log-dialog.component';
-import { ContactLogGridComponent } from './contact-log/grid/contact-log-grid.component';
 import { Grid2Component } from './grid2.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
@@ -30,7 +26,6 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
     ]),
     CommonModule,
     DatePickerModule,
-    DialogModule,
     FormsModule,
     SelectModule,
     ToolbarModule,
@@ -40,13 +35,10 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
     Grid2Component,
   ],
   declarations: [
-    ContactLogDialogComponent,
-    ContactLogGridComponent,
     Grid2Component,
     GridDatePickerComponent,
   ],
   providers: [
-    ContactLogService,
     GridService,
   ],
 })

@@ -1,9 +1,3 @@
-<app-contact-log-dialog
-  *ngIf="dialog === 'showContactHistory'"
-  [personId]="dialogParams.personId"
-  (close)="closeDialog()"
-></app-contact-log-dialog>
-
 <div class="grid grid-default">
   <ag-grid-angular
     *ngIf="columnDefs"

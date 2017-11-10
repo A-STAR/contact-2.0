@@ -44,10 +44,6 @@ import { ViewPortDatasource } from './data/viewport-data-source';
 
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
 
-interface IDialogParams {
-  [key: string]: string | number;
-}
-
 interface ITranslations {
   translations: { [index: string]: string };
 }
@@ -106,6 +102,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<any>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -114,9 +111,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
   actions: IMetadataAction[];
-
-  dialog: string;
-  dialogParams: IDialogParams;
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -205,17 +199,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.saveGridSettings();
     this.langSubscription.unsubscribe();
-  }
-
-  setDialog(dialog: string, dialogParams: IDialogParams): void {
-    this.dialog = dialog;
-    this.dialogParams = dialogParams;
-    this.cdRef.markForCheck();
-  }
-
-  closeDialog(): void {
-    this.dialog = null;
-    this.cdRef.markForCheck();
   }
 
   onPageChange(action: IToolbarAction): void {
@@ -719,13 +702,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       ...(this.actions || []).map(action => ({
         name: this.translate.instant(`default.grid.actions.${action.action}`),
         disabled: !this.isContextMenuItemEnabled(action.action),
-        action: () => {
-          const dialogParams = action.params.reduce((acc, param) => ({
-            ...acc,
-            [param]: params.node.data[param]
-          }), {});
-          this.setDialog(action.action, dialogParams);
-        }
+        action: () => this.action.emit({ action, params })
       })),
       // {
       //   name: 'Person',

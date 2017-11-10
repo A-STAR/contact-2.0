@@ -1,0 +1,19 @@
+<app-contact-log-dialog
+  *ngIf="dialog === 'showContactHistory'"
+  [personId]="dialogParams.personId"
+  (close)="closeDialog()"
+></app-contact-log-dialog>
+
+<app-grid2
+  [ngClass]="ngClass"
+  [metadataKey]="metadataKey"
+  [persistenceKey]="persistenceKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (action)="onAction($event)"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onFilter)="onRequest()"
+  (onDblClick)="onDblClick($event)"
+></app-grid2>
