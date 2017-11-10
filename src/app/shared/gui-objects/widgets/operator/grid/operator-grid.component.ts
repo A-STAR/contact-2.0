@@ -37,7 +37,7 @@ export class OperatorGridComponent implements OnInit {
     this.fetch();
   }
 
-  onDoubleClick(operator: IOperator): void {
+  onSelect(operator: IOperator): void {
     this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, null, operator);
   }
 
