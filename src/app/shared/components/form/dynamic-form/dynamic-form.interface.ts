@@ -48,6 +48,7 @@ export interface IDynamicFormControl {
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // options for select wrapper
   dictCode?: number;
+  parentCode?: number;
   lookupKey?: ILookupKey;
   // number of rows for textarea
   rows?: number;
