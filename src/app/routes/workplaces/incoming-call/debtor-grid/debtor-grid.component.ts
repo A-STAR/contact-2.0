@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -46,6 +47,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     private debtorGridService: DebtorGridService,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,5 +72,27 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   onSelect(debtor: any): void {
     this.incomingCallService.selectedDebtorId = debtor.debtorId;
+  }
+
+  onDoubleClick(debtor: any): void {
+    this.router.navigate([ `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/` ]).then(() => {
+      const nextUrl = this.getUrlByDebtor(debtor);
+      if (nextUrl) {
+        this.router.navigate([ nextUrl ]);
+      }
+    });
+  }
+
+  private getUrlByDebtor(debtor: any): string {
+    switch (debtor.personRole) {
+      case 2:
+        return `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/guaranteeContract/edit`;
+      case 3:
+        // TODO(d.maltsev): return correct url when the module is finished
+        // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
+        return null;
+      case 4:
+        return `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/contact/${debtor.personId}`;
+    }
   }
 }

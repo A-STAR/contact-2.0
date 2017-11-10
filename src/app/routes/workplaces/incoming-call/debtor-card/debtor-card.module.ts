@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { DebtorCardService } from './debtor-card.service';
+
 import { DebtorCardComponent } from './debtor-card.component';
 
 @NgModule({
@@ -13,6 +15,9 @@ import { DebtorCardComponent } from './debtor-card.component';
   ],
   exports: [
     DebtorCardComponent,
+  ],
+  providers: [
+    DebtorCardService,
   ]
 })
 export class DebtorCardModule {}
