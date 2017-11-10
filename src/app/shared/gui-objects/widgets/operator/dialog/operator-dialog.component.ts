@@ -43,7 +43,6 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
 
   onSelect(): void {
     this.select.emit(this.selectedOperator);
-    this.close.emit();
   }
 
   onClose(): void {

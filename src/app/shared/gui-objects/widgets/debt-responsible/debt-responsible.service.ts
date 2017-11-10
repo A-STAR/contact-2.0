@@ -26,9 +26,9 @@ export class DebtResponsibleService {
     return this.userPermissionsService.has('DEBT_RESPONSIBLE_CLEAR');
   }
 
-  setResponsible(operator: IOperator): Observable<any> {
+  setResponsible(debts: number[], operator: IOperator): Observable<any> {
     return this.dataService
-      .create('mass/debts/setResponsible', {}, {})
+      .create('/mass/debts/setResponsible', {}, { idData: debts, actionData: { userId: operator.id } })
       .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
   }
 

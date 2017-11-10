@@ -1,9 +1,12 @@
 <app-result-dialog
   *ngIf="isDialog('setResult')"
+  [count]="count"
+  [successCount]="successCount"
   (close)="onSetResult()">
 </app-result-dialog>
 
-<app-operator-dialog 
+<app-operator-dialog
+  *ngIf="!isDialog('setResult')"
   (select)="onSelect($event)"
   (close)="onClose()">
 </app-operator-dialog>

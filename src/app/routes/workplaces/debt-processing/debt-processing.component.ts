@@ -25,9 +25,9 @@ import { DialogFunctions } from '../../../core/dialog';
 export class DebtProcessingComponent extends DialogFunctions {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
-  private selectedDebts$ = new BehaviorSubject<IDebt[]>(null);
-
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  selectedDebts$ = new BehaviorSubject<IDebt[]>(null);
 
   contextMenuItems: IContextMenuItem[] = [
     {

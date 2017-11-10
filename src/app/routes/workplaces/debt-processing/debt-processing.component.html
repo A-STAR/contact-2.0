@@ -1,5 +1,6 @@
 <app-debt-responsible-set 
   *ngIf="isDialog('debtResponsibleSet')"
+  [debts]="selectedDebts$ | async"
   (close)="onCloseDialog()">
 </app-debt-responsible-set>
 
