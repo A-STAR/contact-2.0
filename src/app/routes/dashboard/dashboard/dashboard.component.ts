@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
+import { HttpClient } from '@angular/common/http';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -92,13 +92,12 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private colors: ColorsService,
-    private http: AuthHttp,
+    private http: HttpClient,
     private notificationsService: NotificationsService,
   ) { }
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
-      .map(data => data.json())
       .take(1)
       .subscribe(
         data => this.splineData = data,

@@ -1,8 +1,6 @@
-import { ActionReducer } from '@ngrx/store';
 import * as R from 'ramda';
 
 import { UnsafeAction } from '../../core/state/state.interface';
-import { IAppState } from '../state/state.interface';
 import { IAuthState } from './auth.interface';
 
 import { AuthService } from './auth.service';
@@ -41,14 +39,7 @@ export function reducer(
   }
 }
 
-export function resetReducer(nextReducer: ActionReducer<IAppState>): ActionReducer<IAppState> {
-  return (state: IAppState, action: UnsafeAction): IAppState => {
-    return nextReducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
-  };
-}
-
 export const auth = {
   defaultState,
   reducer,
-  resetReducer,
 };
