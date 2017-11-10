@@ -18,6 +18,17 @@ export class ContactLogGridComponent {
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
+  columnIds = [
+    'contactDateTime',
+    'contactType',
+    'сontract',
+    'createDateTime',
+    'debtId',
+    'fullName',
+    'personRole',
+    'resultName',
+    'userFullName',
+  ];
   data: IContact[];
   rowCount = 0;
 

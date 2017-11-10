@@ -5,15 +5,16 @@
 ></app-contact-log-dialog>
 
 <app-grid2
-  [ngClass]="ngClass"
+  [columnIds]="columnIds"
   [metadataKey]="metadataKey"
+  [ngClass]="ngClass"
   [persistenceKey]="persistenceKey"
   [rows]="rows"
   [rowCount]="rowCount"
   (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onRequest()"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
-  (onFilter)="onRequest()"
-  (onDblClick)="onDblClick($event)"
 ></app-grid2>

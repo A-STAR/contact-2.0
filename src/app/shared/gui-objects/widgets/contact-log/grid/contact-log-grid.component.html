@@ -1,11 +1,12 @@
 <app-grid2
-  [ngClass]="'contact-log-grid'"
   metadataKey="contactSearchContactLog"
   persistenceKey="contactSearchContactLog"
-  [rows]="data"
+  [columnIds]="columnIds"
+  [ngClass]="'contact-log-grid'"
   [rowCount]="rowCount"
+  [rows]="data"
+  (onFilter)="onRequest()"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
-  (onFilter)="onRequest()"
 ></app-grid2>

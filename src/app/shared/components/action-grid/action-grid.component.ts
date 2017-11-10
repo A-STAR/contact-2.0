@@ -24,6 +24,7 @@ import { FilterObject } from '../grid2/filter/grid-filter';
   encapsulation: ViewEncapsulation.None
 })
 export class ActionGridComponent<T> extends DialogFunctions {
+  @Input() columnIds: string[];
   @Input() metadataKey: string;
   @Input() persistenceKey: string;
   @Input() rowIdKey: string;

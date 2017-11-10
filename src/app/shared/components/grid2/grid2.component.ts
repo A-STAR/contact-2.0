@@ -72,7 +72,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
+  @Input() columnIds: string[];
   @Input() disableFilters = false;
+  @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
   @Input() headerHeight = 25;
   @Input() metadataKey: string;
@@ -89,7 +91,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
-  @Input() fetchUrl: string;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -583,6 +584,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     };
 
     return this.columns
+      .filter(column => !this.columnIds || this.columnIds.includes(column.colId))
       .filter(column => !!column.label)
       .map(mapColumns)
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
