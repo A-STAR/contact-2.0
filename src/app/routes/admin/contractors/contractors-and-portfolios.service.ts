@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio
+  IContractorManager, IPortfolio, IPortfolioMoveRequest,
+  INumberMap
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -66,17 +67,17 @@ export class ContractorsAndPortfoliosService {
     return this.store;
   }
 
-  get contractors$(): Observable<Array<IContractor>> {
-    return this.state
-      .map(state => state.contractors)
-      .distinctUntilChanged();
-  }
+  // get contractors$(): Observable<Array<IContractor>> {
+  //   return this.state
+  //     .map(state => state.contractors)
+  //     .distinctUntilChanged();
+  // }
 
-  get managers$(): Observable<Array<IContractorManager>> {
-    return this.state
-      .map(state => state.managers)
-      .distinctUntilChanged();
-  }
+  // get managers$(): Observable<Array<IContractorManager>> {
+  //   return this.state
+  //     .map(state => state.managers)
+  //     .distinctUntilChanged();
+  // }
 
   get portfolios$(): Observable<Array<IPortfolio>> {
     return this.state
@@ -84,7 +85,7 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedContractorId$(): Observable<Number> {
+  get selectedContractorId$(): Observable<number> {
     return this.state
       .map(state => state.selectedContractorId)
       .distinctUntilChanged();
@@ -93,21 +94,19 @@ export class ContractorsAndPortfoliosService {
   get selectedManagerId$(): Observable<any> {
     return this.state
       .map(state => {
-        this.managerMapping = state.mapContracorToSelectedManager;
-        return state.mapContracorToSelectedManager;
+        this.managerMapping = state.mapContractorToSelectedManager;
+        return state.mapContractorToSelectedManager;
       })
       .distinctUntilChanged();
-      // .filter(Boolean)
-      // .do((res) => console.log('rusult', res));
   }
-  // TOBO typing
+  // TODO typing
   managerMapping: any;
 
-  get selectedPortfolio$(): Observable<IPortfolio> {
-    return this.state
-      .map(state => state.portfolios && state.portfolios.find(portfolio => portfolio.id === state.selectedPortfolioId))
-      .distinctUntilChanged();
-  }
+  // get selectedPortfolioId$(): Observable<IPortfolio> {
+  //   return this.state
+  //     .map(state => state.portfolios && state.portfolios.find(portfolio => portfolio.id === state.selectedPortfolioId))
+  //     .distinctUntilChanged();
+  // }
 
   readAllContractors(): Observable<IContractor[]> {
     return this.dataService.readAll('/contractors')
@@ -117,21 +116,15 @@ export class ContractorsAndPortfoliosService {
   }
 
   readContractor(contractorId: number): Observable<IContractor> {
-    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH, { contractorId });
     return this.dataService.read('/contractors/{contractorId}', { contractorId })
               .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
-
-  // clearContractors(): void {
-    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTORS_CLEAR);
-  // }
 
   selectContractor(contractorId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
   }
 
   createContractor(contractor: IContractor): Observable<void> {
-    // this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE, { contractor });
     return this.dataService.create('/contractors', {}, contractor)
             .catch(this.notificationsService.createError().entity('entities.contractors.gen.singular').callback());
   }
@@ -158,76 +151,116 @@ export class ContractorsAndPortfoliosService {
 
   selectManager(contractorId: number, managerId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
-      mapContracorToSelectedManager: {
+      mapContractorToSelectedManager: {
         [contractorId]: managerId
       }
     });
   }
 
   readManager(contractorId: number, managerId: number): Observable<any> {
-    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_FETCH, { contractorId, managerId });
     return this.dataService.read('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId })
             .catch(this.notificationsService.fetchError().entity('entities.managers.gen.singular').callback());
   }
 
-  // clearManagers(): void {
-  //   this.dispatch(ContractorsAndPortfoliosService.MANAGERS_CLEAR);
-  // }
-
   createManager(contractorId: number, manager: IContractorManager): Observable<any> {
-    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_CREATE, { contractorId, manager });
-    // return this.dataService.create('/roles', {}, role);
     return this.dataService.create('/contractors/{contractorId}/managers', { contractorId }, manager)
             .catch(this.notificationsService.createError().entity('entities.managers.gen.singular').callback());
   }
 
   updateManager(contractorId: number, managerId: number, manager: IContractorManager): Observable<any> {
-    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_UPDATE, { contractorId, managerId, manager });
     return this.dataService.update('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId }, manager)
             .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
   }
 
   deleteManager(contractorId: number, managerId: number): Observable<any> {
-    // this.dispatch(ContractorsAndPortfoliosService.MANAGER_DELETE, { contractorId });
     return this.dataService.delete('/contractors/{contractorId}/managers/{managerId}', { contractorId, managerId })
             .catch(this.notificationsService.deleteError().entity('entities.managers.gen.singular').callback());
   }
 
-  fetchPortfolios(contractorId: Number): Observable<IPortfolio[]> {
-    // this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+  readPortfolios(contractorId: Number): Observable<any> {
     return this.dataService.readAll('/contractors/{contractorId}/portfolios', { contractorId })
-      .catch(
-        this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
-      ) as Observable<IPortfolio[]>;
+              .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').callback());
   }
 
-  fetchPortfolio(contractorId: number, portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_FETCH, { contractorId, portfolioId });
+  readPortfolio(contractorId: number, portfolioId: number): Observable<any> {
+    return this.dataService.read('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
+      // TODO create and use matching key in dictionary
+      .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
-  clearPortfolios(): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR);
+  createPortfolio(contractorId: number, portfolio: IPortfolio): Observable<any> {
+    // TODO remove temporary patch
+    portfolio.stageCode = 1;
+    return this.dataService.create('/contractors/{contractorId}/portfolios', { contractorId }, portfolio)
+              .catch(this.notificationsService.createError().entity('entities.portfolios.gen.singular').callback());
   }
 
-  selectPortfolio(portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, { portfolioId });
+  updatePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioMoveRequest
+  ): Observable<any> {
+    return this.dataService
+              .update('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio)
+              .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
-  createPortfolio(contractorId: number, portfolio: IPortfolio): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_CREATE, { contractorId, portfolio });
+  movePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioMoveRequest
+  ): Observable<any>  {
+    return this.dataService
+            .update('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio)
+            .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
   }
 
-  updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE, { contractorId, portfolioId, portfolio });
+  get selectedPortfolioId$(): Observable<any> {
+    return this.state
+      .map(state => {
+        this.portfolioMapping = state.mapContractorToSelectedPortfolio;
+        return state.mapContractorToSelectedPortfolio;
+      })
+      .distinctUntilChanged();
   }
 
-  movePortfolio(contractorId: number, newContractorId: number, portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_MOVE, { contractorId, newContractorId, portfolioId });
+  portfolioMapping: INumberMap;
+
+  // fetchPortfolio(contractorId: number, portfolioId: number): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_FETCH, { contractorId, portfolioId });
+  // }
+
+  // clearPortfolios(): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR);
+  // }
+  deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
+    return this.dataService
+              .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
+              .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
   }
 
-  deletePortfolio(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_DELETE, { contractorId });
+  selectPortfolio(contractorId: number, portfolioId: number): void {
+    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, {
+        mapContractorToSelectedPortfolio: {
+        [contractorId]: portfolioId
+      }
+    });
   }
+  // createPortfolio(contractorId: number, portfolio: IPortfolio): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_CREATE, { contractorId, portfolio });
+  // }
+
+  // updatePortfolio(contractorId: number, portfolioId: number, portfolio: IPortfolio): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_UPDATE, { contractorId, portfolioId, portfolio });
+  // }
+
+  // movePortfolio(contractorId: number, newContractorId: number, portfolioId: number): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_MOVE, { contractorId, newContractorId, portfolioId });
+  // }
+
+  // deletePortfolio(contractorId: number): void {
+  //   this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_DELETE, { contractorId });
+  // }
 
   get state(): Observable<IContractorsAndPortfoliosState> {
     return this.store.select(state => state.contractorsAndPortfolios)

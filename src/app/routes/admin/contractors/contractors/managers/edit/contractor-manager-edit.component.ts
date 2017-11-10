@@ -88,9 +88,6 @@ export class ContractorManagerEditComponent {
           .createManager(this.contractorId, manager))
           .subscribe(() => {
             // TODO need to make current magnager for particular contractor here
-            console.log('in on submit sub');
-            this.messageBusService.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH);
-            this.needToGoBack$.next(' ');
           });
   }
 

@@ -45,11 +45,12 @@ export interface IContractorManager {
 export interface INumberMap { [n: number]: number; }
 
 export interface IContractorsAndPortfoliosState {
-  contractors: Array<IContractor>;
+  // contractors: Array<IContractor>;
   selectedContractorId: number;
   portfolios: Array<IPortfolio>;
   selectedPortfolioId: number;
-  managers: Array<IContractorManager>;
+  // managers: Array<IContractorManager>;
   selectedManagerId: number;
-  mapContracorToSelectedManager?: INumberMap;
+  mapContractorToSelectedManager?: INumberMap;
+  mapContractorToSelectedPortfolio?: INumberMap;
 }

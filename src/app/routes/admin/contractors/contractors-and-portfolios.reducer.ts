@@ -4,11 +4,11 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
 export const defaultState: IContractorsAndPortfoliosState = {
-  contractors: null,
+  // contractors: null,
   selectedContractorId: null,
   portfolios: null,
   selectedPortfolioId: null,
-  managers: null,
+  // managers: null,
   selectedManagerId: null
 };
 
@@ -44,15 +44,14 @@ export function reducer(
     };
     // Contractors:
     case ContractorsAndPortfoliosService.MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR:
-    delete state.mapContracorToSelectedManager[action.payload.contractorId];
+    delete state.mapContractorToSelectedManager[action.payload.contractorId];
     return state;
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
-      Object.assign({}, state.mapContracorToSelectedManager, action.payload.mapContractorToManagerId);
       return {
         ...state,
-        mapContracorToSelectedManager: Object.assign({},
-                                                     state.mapContracorToSelectedManager,
-                                                     action.payload.mapContracorToSelectedManager
+        mapContractorToSelectedManager: Object.assign({},
+                                                     state.mapContractorToSelectedManager,
+                                                     action.payload.mapContractorToSelectedManager
                                                     )
       };
 
@@ -70,15 +69,21 @@ export function reducer(
     case ContractorsAndPortfoliosService.PORTFOLIOS_CLEAR:
       return {
         ...state,
-        portfolios: null,
+        // portfolios: null,
         selectedPortfolioId: null
       };
     case ContractorsAndPortfoliosService.PORTFOLIO_SELECT:
+      console.log(action.payload);
+      console.log(
+        Object.assign({}, state.mapContractorToSelectedPortfolio, action.payload.mapContractorToSelectedPortfolio)
+      );
       return {
         ...state,
-        selectedPortfolioId: action.payload.portfolioId
+        mapContractorToSelectedPortfolio: Object.assign({},
+                                                    state.mapContractorToSelectedPortfolio,
+                                                    action.payload.mapContractorToSelectedPortfolio
+                                                    )
       };
-
     default:
       return state;
   }

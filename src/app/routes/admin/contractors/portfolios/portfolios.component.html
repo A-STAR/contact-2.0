@@ -4,7 +4,7 @@
   actionTranslationKey="portfolios.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedPortfolio"
+  [messageParams]="selection[0]"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
@@ -12,7 +12,7 @@
 <app-portfolio-move
   *ngIf="isDialog('move')"
   [contractor]="selectedContractor"
-  [portfolio]="selectedPortfolio"
+  [portfolio]="selection[0]"
   (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onCloseDialog()">
 </app-portfolio-move>
@@ -25,7 +25,7 @@
 <app-grid
   *ngIf="portfolios"
   columnTranslationKey="portfolios"
-  [selection]="selectedPortfolio$ | async"
+  [selection]="selection"
   selectionType="single"
   [styles]="{height: '400px'}"
   [columns]="columns"

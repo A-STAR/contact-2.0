@@ -140,11 +140,8 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     this.messageBusService
           .select(ContractorsAndPortfoliosService.MANAGERS_FETCH)
           .subscribe(() => {
-            console.log('catch need to fetch managers');
             this.needToReadAllManagers$.next(' ');
           });
-
-
 
     this.managersSubscription = this.contractorsAndPortfoliosService.selectedManagerId$
       .subscribe(mappedId => {
@@ -162,7 +159,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
 
   set managers(newManagers: IContractorManager[]) {
     this._managers = newManagers;
-    console.log('current selection, store', this.selection, this.contractorsAndPortfoliosService.managerMapping);
     if ( this.contractorsAndPortfoliosService.managerMapping &&
       this.contractorsAndPortfoliosService.managerMapping[this.contractorId] && this._managers.length) {
       this.selection =
@@ -215,8 +211,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   }
 
   onSelect(manager: IContractorManager): void {
-    // this.selection = [this.managers[1]];
-    console.log('selection:', this.selection);
     this.selection = [manager];
     this.contractorsAndPortfoliosService.selectManager(this.contractorId, manager.id);
   }
