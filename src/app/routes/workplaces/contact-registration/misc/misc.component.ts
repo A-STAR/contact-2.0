@@ -43,7 +43,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     { controlName: 'autoComment', type: 'textarea', disabled: true },
     { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
-    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19, required: true },
+    { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19, parentCode: 3, required: true },
     { controlName: 'statusReasonCode', type: 'selectwrapper', dictCode: 19 },
     { controlName: 'comment', type: 'textarea' },
   ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
@@ -87,7 +87,7 @@ export class MiscComponent implements OnInit, OnDestroy {
       canAddStatusChangeReason,
       node,
     ]) => {
-      const { nextCallMode, commentMode, debtReasonMode, callReasonMode, statusReasonMode } = (node as any).data;
+      const { nextCallMode, commentMode, debtReasonMode, callReasonMode, statusReasonMode, debtStatusCode } = (node as any).data;
       this.toggleControl('autoCommentId', canAddAutoComment);
       this.toggleControl('autoComment', canAddAutoComment);
       this.toggleControl('callReasonCode', canAddCallReason, callReasonMode === 3);
@@ -96,6 +96,7 @@ export class MiscComponent implements OnInit, OnDestroy {
       this.toggleControl('nextCallDateTime', canAddNextCall, nextCallMode === 3);
       this.toggleControl('refusalReasonCode', canAddRefusal);
       this.toggleControl('statusReasonCode', canAddStatusChangeReason, statusReasonMode === 3);
+      this.getControl('statusReasonCode').parentCode = debtStatusCode;
     });
 
     this.userTemplatesService.getTemplates(4, 0)

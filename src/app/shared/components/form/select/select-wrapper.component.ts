@@ -16,6 +16,8 @@ import { IOption } from '../../../../core/converter/value-converter.interface';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { toLabeledValues } from '../../../../core/utils';
+
 @Component({
   selector: 'app-select-wrapper',
   templateUrl: 'select-wrapper.component.html',
@@ -30,6 +32,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 })
 export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() dictCode: number;
+  @Input() parentCode: number;
   @Input() lookupKey = null as ILookupKey;
 
   constructor(
@@ -61,7 +64,11 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
       throw new Error('SelectWrapperComponent must have either dictCode or lookupKey but not both.');
     }
     if (this.dictCode) {
-      this._optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
+      this._optionsSubscription = this.userDictionariesService.getDictionary(this.dictCode)
+        .map(terms => terms
+          .filter(term => !this.parentCode || term.parentCode === this.parentCode)
+          .map(toLabeledValues)
+        )
         .subscribe(this.onOptionsFetch);
     }
     if (this.lookupKey) {
