@@ -28,11 +28,6 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
 
 export function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
   switch (action.type) {
-    case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
-      return {
-        ...state,
-        organizations: action.payload.organizations
-      };
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
@@ -41,32 +36,10 @@ export function reducer(state: IOrganizationsState = defaultState, action: Unsaf
           // so we should find him actual mirror by id
           findOrganizationNode(state.organizations, state.selectedOrganization)
       };
-    case OrganizationsService.ORGANIZATIONS_CLEAR:
-      return {
-        ...state,
-        organizations: [],
-        selectedOrganization: null
-      };
-    case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
-      return {
-        ...state,
-        employees: action.payload.employees
-      };
-    case OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS:
-      return {
-        ...state,
-        notAddedEmployees: action.payload.employees
-      };
     case OrganizationsService.EMPLOYEE_SELECT:
       return {
         ...state,
         selectedEmployeeUserId: action.payload.employeeUserId
-      };
-    case OrganizationsService.EMPLOYEES_CLEAR:
-      return {
-        ...state,
-        employees: [],
-        selectedEmployeeUserId: null
       };
     case OrganizationsService.DIALOG_ACTION:
       return {

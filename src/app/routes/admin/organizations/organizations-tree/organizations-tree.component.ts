@@ -21,6 +21,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 })
 export class OrganizationsTreeComponent implements OnDestroy {
   permissionSub: Subscription;
+  organizations: ITreeNode[] = [];
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -59,17 +60,11 @@ export class OrganizationsTreeComponent implements OnDestroy {
       ? this.organizationsService.fetchOrganizations()
       : this.organizationsService.clearOrganizations()
     );
-
-    this.organizations.subscribe(console.log);
   }
 
   ngOnDestroy(): void {
     this.permissionSub.unsubscribe();
     this.organizationsService.clearAll();
-  }
-
-  get organizations(): Observable<ITreeNode[]> {
-    return this.organizationsService.organizations;
   }
 
   get action(): Observable<IOrganizationDialogActionEnum> {
@@ -109,7 +104,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   onRemove(): void {
-    this.organizationsService.deleteOrganization();
+    this.organizationsService.removeOrganization();
   }
 
   onNodeEdit(node: ITreeNode): void {

@@ -2,17 +2,22 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IOrganization,
   IOrganizationsState,
+  IEmployee,
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
   IOrganizationDialogActionEnum
 } from './organizations.interface';
 
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
+import { DataService } from 'app/core/data/data.service';
+import { OrganizationsTreeService } from 'app/routes/admin/organizations/organizations-tree/organizations-tree.service';
+import { NotificationsService } from 'app/core/notifications/notifications.service';
 
 @Injectable()
 export class OrganizationsService {
@@ -34,8 +39,12 @@ export class OrganizationsService {
   static EMPLOYEE_DELETE                   = 'EMPLOYEE_DELETE';
   static EMPLOYEE_SELECT                   = 'EMPLOYEE_SELECT';
   static DIALOG_ACTION                     = 'DIALOG_ACTION';
+  private baseUrl = '/organizations';
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(private store: Store<IAppState>,
+              private dataService: DataService,
+              private converterService: OrganizationsTreeService,
+              private notificationsService: NotificationsService) {}
 
   get state(): Observable<IOrganizationsState> {
     return this.store
@@ -61,26 +70,79 @@ export class OrganizationsService {
       .distinctUntilChanged();
   }
 
-  fetchOrganizations(): void {
-    return this.store.dispatch({
-      type: OrganizationsService.ORGANIZATIONS_FETCH
-    });
+  fetchOrganizations(): Observable<ITreeNode[]> {
+    return this.readOrganizations()
+      .map(organizations =>
+        this.converterService.toTreeNodes(
+          organizations,
+          this.getExpandedNodes(organizations)
+        )
+      )
+      .do((organizations) =>
+        this.store.dispatch({
+          type: OrganizationsService.ORGANIZATION_SELECT,
+          payload: {
+            organization: null,
+            organizations
+          }
+        })
+      )
+    .catch(
+      this.notificationsService.error('errors.default.read')
+        .entity('entities.organizations.gen.plural').dispatchCallback()
+      );
+
   }
 
-  createOrganization(organization: IOrganization): void {
-    return this.store.dispatch({
-      type: OrganizationsService.ORGANIZATION_CREATE,
-      payload: organization
-    });
+  createOrganization(organization: IOrganization): Observable<any> {
+    return this.selectedOrganization
+      .switchMap(selectedOrganization => {
+        const parentId = selectedOrganization ? selectedOrganization.id : null;
+        return this.dataService.create(this.baseUrl, {}, { ...organization, parentId });
+      })
+      .do(this.resetDialogAction)
+      .do(this.fetchOrganizations)
+      .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
   }
 
-  updateOrganization(organization: IOrganization): void {
-    return this.store.dispatch({
-      type: OrganizationsService.ORGANIZATION_UPDATE,
-      payload: {
-        organization
-      }
-    });
+  updateOrganization(organization: ITreeNode): Observable<any> {
+    return this.selectedOrganization
+      .switchMap(selectedOrganization =>
+        this.dataService.update(`${this.baseUrl}/{organizationId}`, { organizationId: selectedOrganization.id }, organization))
+      .do(this.resetDialogAction)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
+  }
+
+  readEmployees(organizationId: number): Observable<IEmployee[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{organizationId}/users`, { organizationId });
+  }
+
+  readNotAddedEmployees(organizationId: number): Observable<IEmployee[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{organizationId}/users/notadded`, { organizationId });
+  }
+
+  createEmployee(employee: IEmployeeCreateRequest): Observable<any> {
+    return this.selectedOrganization
+      .switchMap(selectedOrganization =>
+        this.dataService.create(`${this.baseUrl}/{organizationId}/users`, { organizationId: selectedOrganization.id }, employee))
+      .do(this.resetDialogAction)
+      .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
+  }
+
+  updateEmployee(organizationId: number, userId: number, employee: IEmployeeUpdateRequest): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{organizationId}/users/{userId}`, { organizationId, userId }, employee);
+  }
+
+  deleteEmployee(organizationId: number, userId: number): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{organizationId}/users/?id={userId}`, { organizationId, userId });
+  }
+
+  removeOrganization(): void {
+    this.selectedOrganization
+      .switchMap(organization => this.deleteOrganization(organization.id))
+      .do(this.resetDialogAction)
+      .do(this.fetchOrganizations)
+      .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
   }
 
   clearAll(): void {
@@ -89,18 +151,13 @@ export class OrganizationsService {
   }
 
   updateOrganizations(organizations: IOrganization[]): void {
-    this.store.dispatch({
-      type: OrganizationsService.ORGANIZATION_ORDER_UPDATE,
-      payload: organizations
-    });
+    Observable.forkJoin(organizations
+      .map((organization: IOrganization) => this.updateOrganization(organization)))
+      .do(this.resetDialogAction);
+    // .mergeMap(this.resetDialogAction)
   }
 
-  deleteOrganization(): void {
-    this.store.dispatch({
-      type: OrganizationsService.ORGANIZATION_DELETE
-    });
-  }
-
+  // is there any api method?
   clearOrganizations(): void {
     this.store.dispatch({
       type: OrganizationsService.ORGANIZATIONS_CLEAR
@@ -113,42 +170,6 @@ export class OrganizationsService {
       payload: {
         organization
       }
-    });
-  }
-
-  fetchEmployees(): void {
-    return this.store.dispatch({
-      type: OrganizationsService.EMPLOYEES_FETCH
-    });
-  }
-
-  fetchNotAddedEmployees(): void {
-    return this.store.dispatch({
-      type: OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED
-    });
-  }
-
-  createEmployee(employee: IEmployeeCreateRequest): void {
-    return this.store.dispatch({
-      type: OrganizationsService.EMPLOYEE_CREATE,
-      payload: {
-        employee
-      }
-    });
-  }
-
-  updateEmployee(employee: IEmployeeUpdateRequest): void {
-    return this.store.dispatch({
-      type: OrganizationsService.EMPLOYEE_UPDATE,
-      payload: {
-        employee
-      }
-    });
-  }
-
-  deleteEmployee(): void {
-    return this.store.dispatch({
-      type: OrganizationsService.EMPLOYEE_DELETE,
     });
   }
 
@@ -177,10 +198,29 @@ export class OrganizationsService {
     });
   }
 
+  resetDialogAction(): void {
+    return this.store.dispatch(
+      {
+        type: OrganizationsService.DIALOG_ACTION,
+        payload: {
+          dialogAction: null
+        }
+      }
+    );
+  }
+
   getExpandedNodes(organizations: ITreeNode[]): Set<number> {
     const expandedNodes = new Set<number>();
     this.observeOrganizations(organizations, expandedNodes);
     return expandedNodes;
+  }
+
+  private deleteOrganization(organizationId: number): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{organizationId}`, { organizationId });
+  }
+
+  private readOrganizations(): Observable<IOrganization[]> {
+    return this.dataService.readAll(this.baseUrl);
   }
 
   private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {
@@ -191,4 +231,5 @@ export class OrganizationsService {
       this.observeOrganizations(node.children, expandedNodes);
     });
   }
+
 }

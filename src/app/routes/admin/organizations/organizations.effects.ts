@@ -25,124 +25,6 @@ import { OrganizationsTreeService } from './organizations-tree/organizations-tre
 export class OrganizationsEffects {
 
   @Effect()
-  fetchOrganizations$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATIONS_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      return this.readOrganizations()
-        .map(organizations => ({
-          type: OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS,
-          payload: {
-            organizations: this.converterService.toTreeNodes(
-              organizations,
-              this.organizationsService.getExpandedNodes(store.organizations.organizations)
-            )
-          }
-        }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.organizations.gen.plural').callback());
-    });
-
-  @Effect()
-  fetchOrganizationsSuccess$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS)
-    .map(() => ({
-      type: OrganizationsService.ORGANIZATION_SELECT,
-      payload: {
-        organizationId: null
-      }
-    }));
-
-  @Effect()
-  createOrganization$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_CREATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [UnsafeAction, IAppState] = data;
-      const parentId = store.organizations.selectedOrganization ? store.organizations.selectedOrganization.id : null;
-      return this.createOrganization(parentId, action.payload)
-        .mergeMap(result => [
-          {
-            type: OrganizationsService.ORGANIZATIONS_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null,
-              selectedOrganization: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
-    });
-
-  @Effect()
-  updateOrganization$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_UPDATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [UnsafeAction, IAppState] = data;
-      return this.updateOrganization(store.organizations.selectedOrganization.id, action.payload.organization)
-        .mergeMap(() => [
-          {
-            type: OrganizationsService.ORGANIZATIONS_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
-    });
-
-  @Effect()
-  updateOrganizationsOrder$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_ORDER_UPDATE)
-    .switchMap((action: UnsafeAction) => {
-      const organizations: IOrganization[] = action.payload;
-      return Observable.forkJoin(organizations
-        .map((organization: IOrganization) => this.updateOrganization(organization.id, organization)))
-        .mergeMap(() => [
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
-    });
-
-  @Effect()
-  deleteOrganization$ = this.actions
-    .ofType(OrganizationsService.ORGANIZATION_DELETE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      return this.deleteOrganization(store.organizations.selectedOrganization.id)
-        .mergeMap(() => [
-          {
-            type: OrganizationsService.ORGANIZATIONS_FETCH
-          },
-          {
-            type: OrganizationsService.ORGANIZATION_SELECT,
-            payload: {
-              organizationId: null
-            }
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
-    });
-
-  @Effect()
   fetchEmployees$ = this.actions
     .ofType(OrganizationsService.EMPLOYEES_FETCH)
     .withLatestFrom(this.store)
@@ -178,27 +60,6 @@ export class OrganizationsEffects {
           payload: { employees }
         }))
         .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').callback());
-    });
-
-  @Effect()
-  createEmployee$ = this.actions
-    .ofType(OrganizationsService.EMPLOYEE_CREATE)
-    .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [UnsafeAction, IAppState] = data;
-      return this.createEmployee(store.organizations.selectedOrganization.id, action.payload.employee)
-        .mergeMap(() => [
-          {
-            type: OrganizationsService.EMPLOYEES_FETCH
-          },
-          {
-            type: OrganizationsService.DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          }
-        ])
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
     });
 
   @Effect()
@@ -254,41 +115,5 @@ export class OrganizationsEffects {
     private store: Store<IAppState>,
     private converterService: OrganizationsTreeService,
     private organizationsService: OrganizationsService,
-  ) {}
-
-  private readOrganizations(): Observable<IOrganization[]> {
-    return this.dataService.readAll('/organizations');
-  }
-
-  private createOrganization(parentId: number, organization: any): Observable<any> {
-    return this.dataService.create('/organizations', {}, { ...organization, parentId });
-  }
-
-  private updateOrganization(organizationId: number, organization: any): Observable<any> {
-    return this.dataService.update('/organizations/{organizationId}', { organizationId }, organization);
-  }
-
-  private deleteOrganization(organizationId: number): Observable<any> {
-    return this.dataService.delete('/organizations/{organizationId}', { organizationId });
-  }
-
-  private readEmployees(organizationId: number): Observable<IEmployee[]> {
-    return this.dataService.readAll('/organizations/{organizationId}/users', { organizationId });
-  }
-
-  private readNotAddedEmployees(organizationId: number): Observable<IEmployee[]> {
-    return this.dataService.readAll('/organizations/{organizationId}/users/notadded', { organizationId });
-  }
-
-  private createEmployee(organizationId: number, employee: IEmployeeCreateRequest): Observable<any> {
-    return this.dataService.create('/organizations/{organizationId}/users', { organizationId }, employee);
-  }
-
-  private updateEmployee(organizationId: number, userId: number, employee: IEmployeeUpdateRequest): Observable<any> {
-    return this.dataService.update('/organizations/{organizationId}/users/{userId}', { organizationId, userId }, employee);
-  }
-
-  private deleteEmployee(organizationId: number, userId: number): Observable<any> {
-    return this.dataService.delete('/organizations/{organizationId}/users/?id={userId}', { organizationId, userId });
-  }
+  ) { }
 }
