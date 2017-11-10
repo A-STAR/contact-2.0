@@ -123,7 +123,7 @@ export class EmployeesComponent implements OnDestroy {
       }
     });
 
-    this.employees$ = this.organizationsService.state.map(state => state.employees);
+    this.employees$ = this.organizationsService.employees;
     this.emptyMessage$ = this.hasViewPermission$
       .map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
@@ -178,7 +178,7 @@ export class EmployeesComponent implements OnDestroy {
     this.organizationsService.updateEmployee({
       roleCode: data.roleCode[0].value,
       comment: data.comment,
-      isMain: Number(data.isMain),
+      isMain: Number(data.isMain)
     });
   }
 
