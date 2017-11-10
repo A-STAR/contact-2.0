@@ -15,7 +15,7 @@ export const addLabel = (key: string) => {
     ...control,
     label: control.label || labelKey(control.controlName)
   });
-}
+};
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
