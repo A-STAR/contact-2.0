@@ -1029,6 +1029,11 @@
         "comment": "Комментарий"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      }
+    },
     "contactProperty": {
       "contactType": "Тип контакта",
       "treeType": "Тип дерева",
@@ -1396,6 +1401,18 @@
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
+    },
+    "operator": {
+      "dialog": {
+        "title": "Выбор оператора"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "ФИО",
+        "debtCnt": "Количество активных долгов",
+        "organization": "Подразделение",
+        "position": "Должность"
+      }
     }
   },
   "entities": {
@@ -1503,7 +1520,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
+      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
@@ -1531,6 +1548,9 @@
     },
     "contactTreeItems": {
       "gen": { "singular": "элемента дерева контактов", "plural": "дерева контактов" }
+    },
+    "operator": {
+      "gen": { "singular": "оператора", "plural": "операторов" }
     }
   },
   "errors": {
@@ -1748,7 +1768,7 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "viewContactLog": "История контактов"
+        "showContactHistory": "История контактов"
       }
     },
     "filter": {
@@ -1792,6 +1812,12 @@
       "orange": "Оранжевый",
       "pink": "Розовый",
       "yellow": "Желтый"
+    },
+    "dialog": {
+      "result": {
+        "title": "Результат операции",
+        "message": "Операция выполнена успешно для {{successCount}} из {{count}} записей"
+      }
     },
     "NA": "Не установлен"
   }

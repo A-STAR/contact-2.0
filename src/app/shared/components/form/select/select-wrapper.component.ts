@@ -34,6 +34,7 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
   @Input() dictCode: number;
   @Input() parentCode: number;
   @Input() lookupKey = null as ILookupKey;
+  @Input() nullable = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,

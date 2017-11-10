@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AddressModule } from './address/address.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
+import { ContactLogModule } from './contact-log/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
@@ -26,6 +27,7 @@ import { PropertyModule } from './property/property.module';
     CommonModule,
     AddressModule,
     AttributeModule,
+    ContactLogModule,
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
@@ -47,6 +49,7 @@ import { PropertyModule } from './property/property.module';
   exports: [
     AddressModule,
     AttributeModule,
+    ContactLogModule,
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
