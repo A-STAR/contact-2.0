@@ -1764,7 +1764,8 @@
       "actions": {
         "statusChange": "Изменить статус",
         "viewContactLog": "История контактов",
-        "debtSetResponsible": "Установка ответственного по долгу"
+        "debtSetResponsible": "Установка ответственного по долгу",
+        "debtClearResponsible": "Снятие ответственного по долгу"
       }
     },
     "filter": {

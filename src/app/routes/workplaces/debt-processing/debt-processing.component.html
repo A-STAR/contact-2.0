@@ -3,6 +3,11 @@
   (close)="onCloseDialog()">
 </app-debt-responsible-set>
 
+<app-debt-responsible-clear
+  *ngIf="isDialog('debtResponsibleClear')"
+  (close)="onCloseDialog()">
+</app-debt-responsible-clear>
+
 <app-grid2
   metadataKey="debtsprocessingall"
   persistenceKey="debtsprocessingall"

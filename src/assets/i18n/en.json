@@ -1764,7 +1764,8 @@
       "actions": {
         "statusChange": "Change Status",
         "viewContactLog": "Contact Log",
-        "debtSetResponsible": "Set debt responsible"
+        "debtSetResponsible": "Set debt responsible",
+        "debtClearResponsible": "Clear debt responsible"
       }
     },
     "filter": {

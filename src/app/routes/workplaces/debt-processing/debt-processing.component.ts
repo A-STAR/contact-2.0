@@ -31,9 +31,14 @@ export class DebtProcessingComponent extends DialogFunctions {
 
   contextMenuItems: IContextMenuItem[] = [
     {
-      name: 'debtSetResponsible',
+      name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET,
       enabled: Observable.combineLatest(this.debtResponsibleService.canSet$, this.selectedDebts$)
         .map(([ canSet, selected ]) => canSet && !!selected && selected.length > 0)
+    },
+    {
+      name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR,
+      enabled: Observable.combineLatest(this.debtResponsibleService.canClear$, this.selectedDebts$)
+        .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0)
     }
   ];
 
@@ -79,7 +84,8 @@ export class DebtProcessingComponent extends DialogFunctions {
 
   onContextMenu(action: IMetadataAction): void {
     switch (action.action) {
-      case 'debtSetResponsible': this.setDialog('debtResponsibleSet');
+      case DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET: this.setDialog('debtResponsibleSet'); break;
+      case DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR: this.setDialog('debtResponsibleClear'); break;
     }
   }
 
