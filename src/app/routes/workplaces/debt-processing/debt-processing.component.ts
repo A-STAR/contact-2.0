@@ -19,7 +19,7 @@ import { ActionGridComponent } from '../../../shared/components/action-grid/acti
 export class DebtProcessingComponent {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
-  @ViewChild(ActionGridComponent) grid: ActionGridComponent;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<IDebt>;
 
   rows: IDebt[] = [];
   rowCount = 0;

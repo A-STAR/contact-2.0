@@ -1,6 +1,6 @@
 <app-contact-log-dialog
-  *ngIf="dialog === 'showContactHistory'"
-  [personId]="dialogParams.personId"
+  *ngIf="isDialog('showContactHistory')"
+  [personId]="getDialogParam('personId')"
   (close)="closeDialog()"
 ></app-contact-log-dialog>
 

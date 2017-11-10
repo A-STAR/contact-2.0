@@ -27,7 +27,7 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
@@ -102,7 +102,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
-  @Output() action = new EventEmitter<any>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];

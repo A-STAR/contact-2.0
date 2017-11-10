@@ -1,8 +1,21 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+
+import { IActionGridDialogParams } from './action-grid.interface';
+import { IAGridAction, IAGridRequestParams } from '../grid2/grid2.interface';
 
 import { Grid2Component } from '../../components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
+import { FilterObject } from '../grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-action-grid',
@@ -10,43 +23,55 @@ import { DialogFunctions } from '../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ActionGridComponent extends DialogFunctions {
+export class ActionGridComponent<T> extends DialogFunctions {
   @Input() metadataKey: string;
   @Input() persistenceKey: string;
   @Input() rowIdKey: string;
   @Input() ngClass: string;
-  @Input() rows: any[];
+  @Input() rows: T[] = [];
   @Input() rowCount: number;
 
-  @Output() request = new EventEmitter<any>();
-  @Output() dblClick = new EventEmitter<any>();
+  @Output() request = new EventEmitter<void>();
+  @Output() dblClick = new EventEmitter<T>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   dialog: string;
-  dialogParams: any;
 
-  getFilters(): any {
+  private dialogParams: IActionGridDialogParams;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {
+    super();
+  }
+
+  getDialogParam(key: string): number | string {
+    return this.dialogParams[key];
+  }
+
+  getFilters(): FilterObject {
     return this.grid.getFilters();
   }
 
-  getRequestParams(): any {
+  getRequestParams(): IAGridRequestParams {
     return this.grid.getRequestParams();
   }
 
-  onAction({ action, params }: any): void {
+  onAction({ action, params }: IAGridAction): void {
     this.dialog = action.action;
     this.dialogParams = action.params.reduce((acc, param) => ({
       ...acc,
       [param]: params.node.data[param]
     }), {});
+    this.cdRef.markForCheck();
   }
 
   onRequest(): void {
     this.request.emit();
   }
 
-  onDblClick(event: any): void {
-    this.dblClick.emit(event);
+  onDblClick(row: T): void {
+    this.dblClick.emit(row);
   }
 }
