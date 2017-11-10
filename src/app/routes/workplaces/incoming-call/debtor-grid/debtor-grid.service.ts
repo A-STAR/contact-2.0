@@ -11,6 +11,6 @@ export class DebtorGridService {
 
   fetchAll(params: object): Observable<any[]> {
     // TODO(d.maltsev): notifications
-    return this.dataService.readAll('/incomingCall/search', {}, { params });
+    return this.dataService.readAll('/incomingCall/search', {}, params);
   }
 }
