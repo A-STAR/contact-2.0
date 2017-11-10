@@ -34,6 +34,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() debtId: number;
   @Input() personId: number;
   @Input() personRole: number;
+  @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
 
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
