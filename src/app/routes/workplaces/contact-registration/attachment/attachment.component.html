@@ -29,4 +29,4 @@
   ></app-grid>
 </div>
 
-<app-button type="next" (click)="onNextClick()"></app-button>
+<app-button type="next" [disabled]="formDisabled$ | async" (click)="onNextClick()"></app-button>
