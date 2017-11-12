@@ -17,11 +17,11 @@ export class MiscComponent {
   ) {}
 
   get canRegisterSpecial$(): Observable<boolean> {
-    return this.debtorService.canRegisterSpecial$();
+    return this.debtorService.canRegisterSpecial$;
   }
 
   get canRegisterOfficeVisit$(): Observable<boolean> {
-    return this.debtorService.canRegisterOfficeVisit$();
+    return this.debtorService.canRegisterOfficeVisit$;
   }
 
   onSubmitSpecial(): void {

@@ -40,6 +40,7 @@ export const routes: Route[] = [
             path: 'contact-registration',
             loadChildren: './workplaces/contact-registration/contact-registration.module#ContactRegistrationModule'
           },
+          { path: 'incoming-call', loadChildren: './workplaces/incoming-call/incoming-call.module#IncomingCallModule' }
         ]
       },
       {

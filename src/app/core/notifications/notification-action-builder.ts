@@ -1,4 +1,4 @@
-import { Response } from '@angular/http';
+import { HttpResponseBase } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -17,7 +17,7 @@ import {
 
 export class NotificationActionBuilder {
   private _prefix: string;
-  private _response: Response;
+  private _response: HttpResponseBase;
   private _params: IMessageParams = {};
   private _alert = true;
 
@@ -33,7 +33,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  response(response: Response): NotificationActionBuilder {
+  response(response: HttpResponseBase): NotificationActionBuilder {
     this._response = response;
     return this;
   }
@@ -76,12 +76,12 @@ export class NotificationActionBuilder {
     this.store.dispatch(this.action());
   }
 
-  callback(): (response: Response) => Array<UnsafeAction> {
-    return (response: Response) => [ this.response(response).action() ];
+  callback(): (response: HttpResponseBase) => Array<UnsafeAction> {
+    return (response: HttpResponseBase) => [ this.response(response).action() ];
   }
 
-  dispatchCallback(): (response: Response) => Observable<null> {
-    return (response: Response) => {
+  dispatchCallback(): (response: HttpResponseBase) => Observable<null> {
+    return (response: HttpResponseBase) => {
       this.response(response).dispatch();
       return Observable.throw(response);
     };
@@ -131,7 +131,7 @@ export class NotificationActionBuilder {
 
   private parseMessageResponse(message: IMessageOptions): any {
     try {
-      return message.response.json();
+      return JSON.parse(message.response.statusText);
     } catch (e) {
       return null;
     }

@@ -47,7 +47,7 @@ export class AddressGridComponent implements OnInit {
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
     this.addressService.fetchAll(this.entityType, this.entityId).subscribe(addresses => {
-      this.addresses = addresses;
+      this.addresses = addresses.filter(address => !address.isInactive);
       this.cdRef.markForCheck();
     });
   }

@@ -46,7 +46,7 @@ export class PhoneGridComponent implements OnInit {
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
     this.phoneService.fetchAll(this.entityType, this.entityId).subscribe(phones => {
-      this.phones = phones;
+      this.phones = phones.filter(phone => !phone.isInactive);
       this.cdRef.markForCheck();
     });
   }

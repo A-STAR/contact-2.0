@@ -78,7 +78,8 @@
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
-        "HELP": "Помощь"
+        "HELP": "Помощь",
+        "INCOMING_CALL": "Входящий звонок"
       }
     },
     "messages": {
@@ -207,6 +208,60 @@
       },
       "confirm": {
         "title": "Подтверждение данных"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Ид долга",
+          "fullName": "ФИО/Название",
+          "contract": "Договор",
+          "account": "Лицевой счет",
+          "phoneNumber": "Номер телефона",
+          "fullAddress": "Адрес",
+          "docSeries": "Серия",
+          "docNumber": "Номер",
+          "clientId": "Ид клиента",
+          "birthDate": "Дата рождения",
+          "showDebtors": "По должникам",
+          "showGuarantors": "По поручителям",
+          "showClosed": "Показывать закрытые долги"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "Ид долга",
+          "debtorId": "Ид должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
@@ -974,6 +1029,11 @@
         "comment": "Комментарий"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      }
+    },
     "contactProperty": {
       "contactType": "Тип контакта",
       "treeType": "Тип дерева",
@@ -1341,6 +1401,18 @@
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
+    },
+    "operator": {
+      "dialog": {
+        "title": "Выбор оператора"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "ФИО",
+        "debtCnt": "Количество активных долгов",
+        "organization": "Подразделение",
+        "position": "Должность"
+      }
     }
   },
   "entities": {
@@ -1448,7 +1520,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
+      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
@@ -1476,6 +1548,9 @@
     },
     "contactTreeItems": {
       "gen": { "singular": "элемента дерева контактов", "plural": "дерева контактов" }
+    },
+    "operator": {
+      "gen": { "singular": "оператора", "plural": "операторов" }
     }
   },
   "errors": {
@@ -1690,6 +1765,10 @@
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",
         "filterOoo": "фильтр..."
+      },
+      "actions": {
+        "statusChange": "Изменить статус",
+        "showContactHistory": "История контактов"
       }
     },
     "filter": {
@@ -1733,6 +1812,12 @@
       "orange": "Оранжевый",
       "pink": "Розовый",
       "yellow": "Желтый"
+    },
+    "dialog": {
+      "result": {
+        "title": "Результат операции",
+        "message": "Операция выполнена успешно для {{successCount}} из {{count}} записей"
+      }
     },
     "NA": "Не установлен"
   }

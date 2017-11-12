@@ -18,7 +18,7 @@ export class OutcomeService {
 
   initRegistration(debtId: number, data: Partial<IContactRegistrationData>): Observable<string> {
     return this.dataService
-      .create('/debts/{debtId}/contactRequest111', { debtId }, data)
+      .create('/debts/{debtId}/contactRequest', { debtId }, data)
       .map(response => response.data[0].guid)
       .catch(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback());
   }

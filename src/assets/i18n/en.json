@@ -78,7 +78,8 @@
         "MAIL": "Mail",
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
-        "HELP": "Help"
+        "HELP": "Help",
+        "INCOMING_CALL": "Incoming Call"
       }
     },
     "messages": {
@@ -207,6 +208,60 @@
       },
       "confirm": {
         "title": "Confirmation"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Debt Id",
+          "fullName": "Full Name/Company Name",
+          "contract": "Contract",
+          "account": "Account",
+          "phoneNumber": "Phone Number",
+          "fullAddress": "Address",
+          "docSeries": "Series",
+          "docNumber": "Number",
+          "clientId": "Client Id",
+          "birthDate": "Birth Date",
+          "showDebtors": "Show Debtors",
+          "showGuarantors": "Show Guarantors",
+          "showClosed": "Show Closed Debts"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contact": "Contract",
+          "creditEndDate": "Credit End Date",
+          "creditName": "Credit Name",
+          "creditStartDate": "Credit Start Date",
+          "creditTypeCode": "Credit Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "debtorId": "Debtor Id",
+          "docNumber": "Document #",
+          "fullName": "Full Name/Company Name",
+          "outPortfolioName": "Outgoing Portfolio Name",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start date",
+          "statusCode": "Status"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
@@ -974,6 +1029,11 @@
         "comment": "Comment"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      }
+    },
     "contactProperty": {
       "contactType": "Contact Type",
       "treeType": "Tree Type",
@@ -1341,6 +1401,18 @@
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
+    },
+    "operator": {
+      "dialog": {
+        "title": "Select operator"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "Full name",
+        "debtCnt": "Active debt count",
+        "organization": "Department",
+        "position": "Position"
+      }
     }
   },
   "entities": {
@@ -1448,7 +1520,7 @@
       "gen": { "singular": "phone number", "plural": "phone numbers" }
     },
     "contacts": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "contact", "plural": "contacts" }
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
@@ -1476,6 +1548,9 @@
     },
     "contactTreeItems": {
       "gen": { "singular": "contact tree item", "plural": "contact tree" }
+    },
+    "operator": {
+      "gen": { "singular": "operator", "plural": "operators" }
     }
   },
   "errors": {
@@ -1690,6 +1765,10 @@
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
         "filterOoo": "filter..."
+      },
+      "actions": {
+        "statusChange": "Change Status",
+        "showContactHistory": "Contact Log"
       }
     },
     "filter": {
@@ -1733,6 +1812,12 @@
       "orange": "Orange",
       "pink": "Pink",
       "yellow": "Yellow"
+    },
+    "dialog": {
+      "result": {
+        "title": "Operation result",
+        "message": "Operation was successful for {{successCount}} of {{count}} records"
+      }
     },
     "NA": "N/A"
   }

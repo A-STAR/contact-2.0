@@ -1,9 +1,9 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { AuthHttp, AuthConfig, JwtHelper } from 'angular2-jwt';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { createTranslateLoader } from '../../app.module';
 
@@ -33,17 +33,10 @@ describe('Component: Sidebar', () => {
         })
       ],
       providers: [
-        AuthHttp,
         AuthService,
-        {
-          provide: AuthConfig,
-          useValue: new AuthConfig
-        },
-        {
-          provide: JwtHelper,
-          useValue: new JwtHelper
-        },
+        HttpClient,
         GuiObjectsService,
+        JwtHelperService,
         SettingsService,
         { provide: Router, useValue: mockRouter }
       ]
