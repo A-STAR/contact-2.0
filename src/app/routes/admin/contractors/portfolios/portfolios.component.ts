@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,  } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -128,12 +127,10 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   private needToReadPortfolios$ = new BehaviorSubject<string>(null);
   private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private portfoliosSubscription: Subscription;
   private contractorSubscription: Subscription;
   private _portfolios: IPortfolio[];
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,

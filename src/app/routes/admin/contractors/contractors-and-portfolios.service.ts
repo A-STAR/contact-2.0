@@ -11,7 +11,6 @@ import {
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
@@ -47,7 +46,6 @@ export class ContractorsAndPortfoliosService {
     private store: Store<IAppState>,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private valueConverterService: ValueConverterService,
   ) {}
 
   get selectedContractorId$(): Observable<number> {

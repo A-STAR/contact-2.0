@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -32,7 +31,6 @@ export class PortfolioEditComponent {
   private portfolioId: number;
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private contentTabService: ContentTabService,

@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -9,7 +8,6 @@ import 'rxjs/add/observable/combineLatest';
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
-import { UnsafeAction } from '../../../../../../core/state/state.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
@@ -38,7 +36,6 @@ export class ContractorManagerEditComponent {
   private closeDialogSubscription: Subscription;
 
   constructor(
-    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,

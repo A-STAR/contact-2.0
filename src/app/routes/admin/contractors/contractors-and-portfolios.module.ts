@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
 
 import { ContractorsModule } from './contractors/contractors.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';

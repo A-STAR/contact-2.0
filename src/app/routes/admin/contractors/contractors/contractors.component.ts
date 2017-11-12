@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -16,8 +15,6 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
-
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
@@ -84,12 +81,10 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   private viewSubFromChildCreate: Subscription;
 
   constructor(
-    private actions: Actions,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private messageBusService: MessageBusService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,

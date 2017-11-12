@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef} from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { ActivatedRoute, Router} from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -87,7 +86,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   private dialogAction: ContractorManagerActionEnum;
   private dictionariesSubscription: Subscription;
   private managersSubscription: Subscription;
-  private actionsSubscription: Subscription;
   private viewCreateManagerOnChild: Subscription;
 
   private _managers: IContractorManager[];
@@ -99,7 +97,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   };
 
   constructor(
-    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,

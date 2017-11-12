@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef,  ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -62,7 +62,6 @@ export class PortfolioMoveComponent implements OnDestroy {
   private selectedContractor: IContractor;
 
   private dictionariesSubscription: Subscription;
-  private getContractorSubscription: Subscription;
 
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,

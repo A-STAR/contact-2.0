@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -8,7 +7,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { UnsafeAction } from '../../../../../core/state/state.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
@@ -35,7 +33,6 @@ export class ContractorEditComponent {
   private contractorId = Number((this.route.params as any).value.id);
 
   constructor(
-    private actions: Actions,
     private route: ActivatedRoute,
     private router: Router,
     private messageBusService: MessageBusService,
