@@ -6,7 +6,6 @@ import { ContractorsModule } from './contractors/contractors.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { SharedModule } from '../../../shared/shared.module';
 
-import { ContractorsAndPortfoliosEffects } from './contractors-and-portfolios.effects';
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
@@ -39,7 +38,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ContractorsModule,
-    EffectsModule.forFeature([ContractorsAndPortfoliosEffects]),
     PortfoliosModule,
     RouterModule.forChild(routes),
     SharedModule,

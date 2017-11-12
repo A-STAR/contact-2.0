@@ -108,6 +108,12 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       this._portfolios = null;
       return;
     }
+    if (!newPortfolios.length) {
+      this.messageBusService.dispatch(
+        ContractorsAndPortfoliosService.EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED,
+        null,
+        this.selectedContractorId);
+    }
     this._portfolios = newPortfolios;
     if (!(this.contractorsAndPortfoliosService.portfolioMapping
           && this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])) {
@@ -170,6 +176,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       .subscribe(() => {
         this.needToReadPortfolios$.next(' ');
       });
+
+
 
     this.contractorSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
       .subscribe(contractorId => this.selectedContractorId = contractorId);

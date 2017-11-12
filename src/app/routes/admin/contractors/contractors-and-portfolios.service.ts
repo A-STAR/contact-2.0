@@ -55,6 +55,7 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIO_MOVE_SUCCESS   = 'PORTFOLIO_MOVE_SUCCESS';
   static PORTFOLIO_DELETE         = 'PORTFOLIO_DELETE';
   static PORTFOLIO_DELETE_SUCCESS = 'PORTFOLIO_DELETE_SUCCESS';
+  static EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED = 'EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED';
 
   constructor(
     private store: Store<IAppState>,

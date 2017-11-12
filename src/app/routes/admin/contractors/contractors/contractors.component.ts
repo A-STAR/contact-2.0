@@ -26,6 +26,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent extends DialogFunctions implements OnDestroy {
+  lastManagerLessContractorId$ = new BehaviorSubject<number>(null);
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -45,8 +46,10 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       action: () => this.setDialog('delete'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$
-      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
+        this.contractorsAndPortfoliosService.selectedContractorId$,
+        this.lastManagerLessContractorId$
+      ).map(([hasPermissions, selectedContractorId, lastManagerLessContractorId]) =>
+              hasPermissions && selectedContractorId && (selectedContractorId === lastManagerLessContractorId))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -121,6 +124,13 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       .select(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
       .subscribe(() => {
         this.needToReadAllContractors$.next('');
+      });
+    // TODO
+    this.messageBusService
+      .select(ContractorsAndPortfoliosService.EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED)
+      .subscribe(managerLessContractorId  => {
+        console.log(managerLessContractorId);
+        return this.lastManagerLessContractorId$.next(managerLessContractorId as number);
       });
 
 

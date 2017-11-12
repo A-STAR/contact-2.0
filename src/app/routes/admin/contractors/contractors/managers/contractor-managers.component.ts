@@ -87,7 +87,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   private managersSubscription: Subscription;
   private actionsSubscription: Subscription;
 
-  // private selectedManager: IContractorManager[];
   selection: IContractorManager[];
   rows: IContractorManager[];
   private _managers: IContractorManager[];
@@ -126,9 +125,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
         this.needToReadAllManagers$
           .flatMap(() => this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId))
           .subscribe((managers: IContractorManager[]) => {
-            console.log('update managers in grid constructor', managers);
-            this.managers = managers;
-            this.cdRef.markForCheck();
           });
         this.needToReadAllManagers$.next(' ');
       } else {
@@ -149,7 +145,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
             this.managers && this.managers.find(manager => manager.id === mappedId[this.contractorId])
         ? [ this.managers.find(manager => manager.id === mappedId[this.contractorId]) ]
         : [];
-        console.log('manager id in constructor manager grid', this.selection);
       });
 
     this.actionsSubscription = this.actions
@@ -202,12 +197,11 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   }
 
   onAdd(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers/create`);
+    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/create`]);
   }
 
   onEdit(): void {
-    console.log(this.selection);
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers/${this.selection[0].id}`);
+    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/${this.selection[0].id}`]);
   }
 
   onSelect(manager: IContractorManager): void {
@@ -217,7 +211,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
 
   onBack(): void {
     this.contentTabService.gotoParent(this.router, 1);
-    // this.contentTabService.navigate(`/admin/contractors/${this.contractorId}`);
   }
 
   onRemoveSubmit(): void {
