@@ -69,11 +69,12 @@ export class PortfolioMoveComponent implements OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
   ) {
-    console.log('start child');
+
     this.dictionariesSubscription = this.gridService.setDictionaryRenderers(this.columns)
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
       });
+
     Observable.combineLatest(
         this.haveContractor$, this.havePortfolio$
       )

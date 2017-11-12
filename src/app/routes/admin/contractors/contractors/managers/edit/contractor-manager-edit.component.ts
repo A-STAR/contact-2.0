@@ -51,11 +51,6 @@ export class ContractorManagerEditComponent {
     this.contractorId = value.id;
     this.managerId = value.managerId;
 
-    // if (this.contractorId && this.managerId) {
-    //   // TODO
-    //   this.contractorsAndPortfoliosService.readManager(this.contractorId, this.managerId);
-    // }
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
@@ -87,7 +82,6 @@ export class ContractorManagerEditComponent {
       : this.contractorsAndPortfoliosService
           .createManager(this.contractorId, manager))
           .subscribe(() => {
-            // TODO need to make current magnager for particular contractor here
             this.messageBusService.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH);
             this.onBack();
           });
@@ -99,7 +93,6 @@ export class ContractorManagerEditComponent {
       this.closeDialogSubscription.unsubscribe();
     }
     this.contentTabService.gotoParent(this.router, 1);
-    // this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers`);
   }
 
   private initFormControls(branchesOptions: Array<IOption>, genderOptions: Array<IOption>): void {

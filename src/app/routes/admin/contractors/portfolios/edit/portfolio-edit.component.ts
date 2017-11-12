@@ -45,11 +45,6 @@ export class PortfolioEditComponent {
     this.contractorId = value.id;
     this.portfolioId = value.portfolioId;
 
-    if (this.contractorId && this.portfolioId) {
-      // TODO
-      // this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId);
-    }
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
@@ -82,13 +77,6 @@ export class PortfolioEditComponent {
       ];
       this.cdRef.markForCheck();
     });
-
-    this.actions.ofType(
-      ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS,
-      ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
-    )
-    .take(1)
-    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {

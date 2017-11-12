@@ -31,9 +31,8 @@ import { MessageBusService } from '../../../../../core/message-bus/message-bus.s
 })
 export class ContractorManagersComponent extends DialogFunctions  implements OnDestroy {
   static COMPONENT_NAME = 'ContractorManagersComponent';
-  private contractorId = Number((this.activatedRoute.params as any).value.id);
-  dialog: string;
 
+  dialog: string;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -59,7 +58,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      // TODO
       action: () => this.needToReadAllManagers$.next(' '),
       enabled: this.canView$
     }
@@ -81,14 +79,17 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
+  selection: IContractorManager[];
+  rows: IContractorManager[];
+
+  private contractorId = Number((this.activatedRoute.params as any).value.id);
   private canViewSubscription: Subscription;
   private dialogAction: ContractorManagerActionEnum;
   private dictionariesSubscription: Subscription;
   private managersSubscription: Subscription;
   private actionsSubscription: Subscription;
+  private viewCreateManagerOnChild: Subscription;
 
-  selection: IContractorManager[];
-  rows: IContractorManager[];
   private _managers: IContractorManager[];
   private needToReadAllManagers$ = new BehaviorSubject<string>(null);
 
@@ -111,6 +112,7 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+
     this.dictionariesSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER)
@@ -120,12 +122,15 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 
+    this.needToReadAllManagers$
+      .flatMap(() => this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId))
+      .subscribe((managers: IContractorManager[]) => {
+        this.managers = managers;
+        this.cdRef.markForCheck();
+      });
+
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
-        this.needToReadAllManagers$
-          .flatMap(() => this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId))
-          .subscribe((managers: IContractorManager[]) => {
-          });
         this.needToReadAllManagers$.next(' ');
       } else {
         this.clearManagers();
@@ -133,7 +138,7 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
       }
     });
 
-    this.messageBusService
+    this.viewCreateManagerOnChild = this.messageBusService
           .select(ContractorsAndPortfoliosService.MANAGERS_FETCH)
           .subscribe(() => {
             this.needToReadAllManagers$.next(' ');
@@ -146,10 +151,13 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
         ? [ this.managers.find(manager => manager.id === mappedId[this.contractorId]) ]
         : [];
       });
+  }
 
-    this.actionsSubscription = this.actions
-      .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS)
-      .subscribe(() => this.setDialog());
+  ngOnDestroy(): void {
+    this.canViewSubscription.unsubscribe();
+    this.dictionariesSubscription.unsubscribe();
+    this.managersSubscription.unsubscribe();
+    this.viewCreateManagerOnChild.unsubscribe();
   }
 
   set managers(newManagers: IContractorManager[]) {
@@ -169,11 +177,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
   clearManagers (): void {
     this.contractorsAndPortfoliosService.selectManager(this.contractorId, null);
     this.managers = [];
-  }
-
-  ngOnDestroy(): void {
-    this.canViewSubscription.unsubscribe();
-    this.dictionariesSubscription.unsubscribe();
   }
 
   get isManagerBeingRemoved(): boolean {

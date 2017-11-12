@@ -68,7 +68,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      // TODO
       action: () => this.needToReadPortfolios$.next(' '),
       enabled: Observable.combineLatest(
         this.canView$,
@@ -89,21 +88,14 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
-  private actionsSubscription: Subscription;
-  private canViewSubscription: Subscription;
-  private contractorsSubscription: Subscription;
-  private portfoliosSubscription: Subscription;
-  private contractorSubscription: Subscription;
-  private _portfolios: IPortfolio[];
-
-
-  needToReadPortfolios$ = new BehaviorSubject<string>(null);
 
   dialog: string;
   selectedContractor: IContractor;
   selectedContractorId: number;
   selection: IPortfolio[];
+
   set portfolios(newPortfolios: IPortfolio[]) {
+    // TODO refactor this function
     if (!newPortfolios) {
       this._portfolios = null;
       return;
@@ -114,11 +106,14 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         null,
         this.selectedContractorId);
     }
+
     this._portfolios = newPortfolios;
+
     if (!(this.contractorsAndPortfoliosService.portfolioMapping
           && this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])) {
       return;
     }
+
     this.selection = this.portfolios.find(portfolio => portfolio.id ===
       this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])
       ? [this.portfolios.find(portfolio => portfolio.id ===
@@ -129,6 +124,13 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   get portfolios(): IPortfolio[] {
     return this._portfolios;
   }
+
+  private needToReadPortfolios$ = new BehaviorSubject<string>(null);
+  private actionsSubscription: Subscription;
+  private canViewSubscription: Subscription;
+  private portfoliosSubscription: Subscription;
+  private contractorSubscription: Subscription;
+  private _portfolios: IPortfolio[];
 
   constructor(
     private actions: Actions,
@@ -147,6 +149,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.columns = this.gridService.setRenderers(columns);
         this.cdRef.markForCheck();
       });
+
     this.needToReadPortfolios$
       .filter(Boolean)
       .flatMap(() => this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId))
@@ -154,7 +157,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.portfolios = portfolios as IPortfolio[];
         this.cdRef.markForCheck();
       });
-
 
     this.canViewSubscription = Observable.combineLatest(
       this.canView$,
@@ -177,8 +179,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.needToReadPortfolios$.next(' ');
       });
 
-
-
     this.contractorSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
       .subscribe(contractorId => this.selectedContractorId = contractorId);
  }
@@ -186,7 +186,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   ngOnDestroy(): void {
     this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.contractorsSubscription.unsubscribe();
     this.contractorSubscription.unsubscribe();
     this.needToReadPortfolios$.unsubscribe();
     this.clearPortfolios();
@@ -226,7 +225,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    // TODO
     this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
         .subscribe(() => {
           this.setDialog();
@@ -242,6 +240,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.needToReadPortfolios$.next(' ');
       });
   }
+
   toMovePortfolio(): void {
     this.contractorsAndPortfoliosService.readContractor(this.selectedContractorId)
     .subscribe(contractor => {
@@ -250,6 +249,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
         this.cdRef.markForCheck();
       });
   }
+
   private clearPortfolios(): void {
     this.portfolios = null;
   }

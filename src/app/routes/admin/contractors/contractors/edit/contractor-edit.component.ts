@@ -30,8 +30,8 @@ export class ContractorEditComponent {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   needToCloseDialog$ = new BehaviorSubject<string>(null);
-  private closeDialogSubscription: Subscription;
 
+  private closeDialogSubscription: Subscription;
   private contractorId = Number((this.route.params as any).value.id);
 
   constructor(
@@ -66,9 +66,8 @@ export class ContractorEditComponent {
 
     this.needToCloseDialog$
       .filter(Boolean)
-      .subscribe((res) => {
-        this.onBack();
-      });
+      .take(1)
+      .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -93,5 +92,4 @@ export class ContractorEditComponent {
   onManagersClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
   }
-
 }
