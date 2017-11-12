@@ -102,7 +102,7 @@ export class ContractorsAndPortfoliosService {
   // TODO typing
   managerMapping: any;
 
-  // get selectedPortfolioId$(): Observable<IPortfolio> {
+  // get mapContractorToSelectedPortfolio$(): Observable<IPortfolio> {
   //   return this.state
   //     .map(state => state.portfolios && state.portfolios.find(portfolio => portfolio.id === state.selectedPortfolioId))
   //     .distinctUntilChanged();
@@ -114,7 +114,14 @@ export class ContractorsAndPortfoliosService {
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
       ) as Observable<IContractor[]>;
   }
-
+  readAllContractorsExeptCurrent(currentContractorId: number): Observable<IContractor[]> {
+    return this.dataService.readAll('/contractors')
+      .take(2)
+      .map(contractors => contractors ? contractors.filter(contractor => contractor.id !== currentContractorId) : null )
+      .catch(
+        this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
+      ) as Observable<IContractor[]>;
+  }
   readContractor(contractorId: number): Observable<IContractor> {
     return this.dataService.read('/contractors/{contractorId}', { contractorId })
               .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
@@ -210,12 +217,13 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioMoveRequest
   ): Observable<any>  {
+    console.log(arguments);
     return this.dataService
             .update('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId }, portfolio)
             .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
   }
 
-  get selectedPortfolioId$(): Observable<any> {
+  get mapContractorToSelectedPortfolio$(): Observable<any> {
     return this.state
       .map(state => {
         this.portfolioMapping = state.mapContractorToSelectedPortfolio;

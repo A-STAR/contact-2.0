@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef,  ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractor, IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -11,13 +13,39 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 @Component({
   selector: 'app-portfolio-move',
-  templateUrl: './portfolio-move.component.html'
+  templateUrl: './portfolio-move.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioMoveComponent implements OnDestroy {
-  @Input() contractor: IContractor;
-  @Input() portfolio: IPortfolio;
+
+  haveContractor$ = new BehaviorSubject<IContractor>(null);
+  havePortfolio$ = new BehaviorSubject<IPortfolio>(null);
+
+  @Input() set contractor(val: IContractor) {
+    this._contractor = val;
+    if (val) {
+      this.haveContractor$.next(val);
+    }
+  }
+
+  get contractor(): IContractor {
+    return this._contractor;
+  }
+
+  @Input() set portfolio(val: IPortfolio) {
+    this._portfolio = val;
+    if (val) {
+      this.havePortfolio$.next(val);
+    }
+  }
+
+  get portfolio(): IPortfolio{
+    return this._portfolio;
+  }
+
   @Output() onSubmit = new EventEmitter<IContractor>();
   @Output() onCancel = new EventEmitter<void>();
+
 
   columns: Array<IGridColumn> = [
     { prop: 'name' },
@@ -26,17 +54,38 @@ export class PortfolioMoveComponent implements OnDestroy {
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE }
   ];
 
+  contractors: IContractor[];
+
+  private _contractor: IContractor;
+  private _portfolio: IPortfolio;
+
   private selectedContractor: IContractor;
 
   private dictionariesSubscription: Subscription;
+  private getContractorSubscription: Subscription;
 
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
   ) {
+    console.log('start child');
     this.dictionariesSubscription = this.gridService.setDictionaryRenderers(this.columns)
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
+      });
+    Observable.combineLatest(
+        this.haveContractor$, this.havePortfolio$
+      )
+      .filter(([contractor, portfolio]) => !!(contractor && portfolio))
+      .take(1)
+      .flatMap(([contractor, portfolio]) => {
+        console.log(portfolio);
+        return this.contractorsAndPortfoliosService.readAllContractorsExeptCurrent(contractor.id);
+      })
+      .subscribe(contractors => {
+        this.contractors = contractors as IContractor[];
+        this.cdRef.markForCheck();
       });
   }
 
@@ -47,11 +96,6 @@ export class PortfolioMoveComponent implements OnDestroy {
   get canSubmit(): boolean {
     return !!this.selectedContractor;
   }
-
-  // get contractors$(): Observable<Array<IContractor>> {
-  //   return this.contractorsAndPortfoliosService.contractors$
-  //     .map(contractors => contractors.filter(contractor => contractor.id !== this.contractor.id));
-  // }
 
   onSelect(contractor: IContractor): void {
     this.selectedContractor = contractor;
