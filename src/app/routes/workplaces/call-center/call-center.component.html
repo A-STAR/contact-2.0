@@ -1,1 +1,7 @@
-Campaigns Grid
+<h1>Выбор кампании</h1>
+
+<div class="mb">
+  {{ campaigns$ | async | json }}
+</div>
+
+<app-button color="primary" type="ok" [disabled]="true"></app-button>

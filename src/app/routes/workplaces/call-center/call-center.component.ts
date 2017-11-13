@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
+import { ICampaign } from './call-center.interface';
 
 import { CallCenterService } from './call-center.service';
 
@@ -12,4 +15,12 @@ import { CallCenterService } from './call-center.service';
 })
 export class CallCenterComponent {
   static COMPONENT_NAME = 'CallCenterComponent';
+
+  constructor(
+    private callCenterService: CallCenterService,
+  ) {}
+
+  get campaigns$(): Observable<ICampaign[]> {
+    return this.callCenterService.campaigns$;
+  }
 }

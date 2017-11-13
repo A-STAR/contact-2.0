@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+
+import { CampaignService } from './campaign.service';
 
 @Component({
   selector: 'app-campaign',
   templateUrl: 'campaign.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    CampaignService,
+  ]
 })
 export class CampaignComponent {
   static COMPONENT_NAME = 'CallCenterComponent';
