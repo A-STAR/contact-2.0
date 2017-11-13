@@ -1,0 +1,15 @@
+<h1>Выбор кампании</h1>
+
+<div class="mb">
+  <app-grid
+    columnTranslationKey="modules.callCenter"
+    selectionType="single"
+    [columns]="columns"
+    [rows]="campaigns$ | async"
+    [styles]="{ height: '480px' }"
+    (onDblClick)="onAction($event)"
+    (onSelect)="onSelect()"
+  ></app-grid>
+</div>
+
+<app-button color="primary" type="ok" [disabled]="isSubmitButtonDisabled" (click)="onSubmit()"></app-button>

@@ -5,7 +5,7 @@ import { INode } from '../../../../../shared/gui-objects/container/container.int
 
 import { DebtorService } from '../debtor.service';
 
-import { AddressGridComponent } from '../../../../../shared/gui-objects/widgets/address/grid/address-grid.component';
+import { AddressGridComponent } from './address-grid/address-grid.component';
 import { CompanyComponent } from './company/company.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { EmailGridComponent } from '../../../../../shared/gui-objects/widgets/email/grid/email-grid.component';
@@ -25,7 +25,7 @@ export class DebtorInformationComponent {
   node: INode = {
     container: 'tabs',
     children: [
-      { component: AddressGridComponent, title: 'debtor.information.address.title', inject: { personRole: 1 } },
+      { component: AddressGridComponent, title: 'debtor.information.address.title' },
       { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
       { component: EmailGridComponent, title: 'debtor.information.email.title', inject: { personRole: 1 } },
     ]
