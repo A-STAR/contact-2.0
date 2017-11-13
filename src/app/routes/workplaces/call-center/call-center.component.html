@@ -7,9 +7,9 @@
     [columns]="columns"
     [rows]="campaigns$ | async"
     [styles]="{ height: '480px' }"
-    (onDblClick)="onAction()"
+    (onDblClick)="onAction($event)"
     (onSelect)="onSelect()"
   ></app-grid>
 </div>
 
-<app-button color="primary" type="ok" [disabled]="isSubmitButtonDisabled"></app-button>
+<app-button color="primary" type="ok" [disabled]="isSubmitButtonDisabled" (click)="onSubmit()"></app-button>

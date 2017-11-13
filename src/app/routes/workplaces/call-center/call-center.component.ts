@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { ICampaign } from './call-center.interface';
@@ -35,7 +34,7 @@ export class CallCenterComponent {
   ) {}
 
   get isSubmitButtonDisabled(): boolean {
-    return isEmpty(this.grid.selected);
+    return isEmpty(this.selection);
   }
 
   get campaigns$(): Observable<ICampaign[]> {
@@ -48,5 +47,15 @@ export class CallCenterComponent {
 
   onSelect(): void {
     this.cdRef.markForCheck();
+  }
+
+  onSubmit(): void {
+    if (!isEmpty(this.selection)) {
+      this.callCenterService.navigateToCampaign(this.selection[0]);
+    }
+  }
+
+  private get selection(): ICampaign[] {
+    return this.grid.selected;
   }
 }
