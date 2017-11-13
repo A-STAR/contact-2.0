@@ -10,7 +10,7 @@ job_test:
     - echo $CI_PROJECT_DIR
     - node -v && npm -v
     - npm install
-    - npm run lint && npm run build -- --prod --progress=false
+    - npm run lint && npm run build -- --aot
   except:
     - dev
 
@@ -20,7 +20,7 @@ job_build:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
     - node -v && npm -v && npm install
-    - npm run build -- --prod --progress=false
+    - npm run build -- --aot --progress=false
   artifacts:
     name: "frontend_default_build"
     paths:

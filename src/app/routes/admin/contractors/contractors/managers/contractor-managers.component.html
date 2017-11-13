@@ -1,10 +1,10 @@
 <app-dialog-action
-  *ngIf="isManagerBeingRemoved"
+  *ngIf="isDialog('delete')"
   titleTranslationKey="contractors.managers.remove.title"
   actionTranslationKey="contractors.managers.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedManager$ | async"
+  [messageParams]="selection[0]"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
@@ -23,11 +23,13 @@
 </app-toolbar-2>
 
 <app-grid
+  *ngIf="managers"
   columnTranslationKey="contractors.managers"
   selectionType="single"
+  [selection] = "selection"
   [styles]="{height: '200px'}"
   [columns]="columns"
-  [rows]="managers$ | async"
+  [rows]="managers"
   [allowDblClick]="canEdit$ | async"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">

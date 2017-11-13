@@ -30,7 +30,7 @@ import { UserTemplatesService } from '../../../../../../core/user/templates/user
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, makeKey, valuesToOptions } from '../../../../../../core/utils';
+import { flatten, isEmpty, makeKey, range, valuesToOptions } from '../../../../../../core/utils';
 
 const labelKey = makeKey('widgets.contactProperty.edit');
 
@@ -196,31 +196,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
     languages: IOption[],
   ): IDynamicFormItem[] {
     const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
-    const dict1Attributes = attributes[EntityAttributesService.DICT_VALUE_1];
-    const dict2Attributes = attributes[EntityAttributesService.DICT_VALUE_2];
-    const dict3Attributes = attributes[EntityAttributesService.DICT_VALUE_3];
-    const dict4Attributes = attributes[EntityAttributesService.DICT_VALUE_4];
-    const dict1 = {
-      type: 'selectwrapper',
-      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_1,
-      required: dict1Attributes.isMandatory,
-    };
-    const dict2 = {
-      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_2,
-      type: 'selectwrapper',
-      required: dict2Attributes.isMandatory,
-    };
-    const dict3 = {
-      type: 'selectwrapper',
-      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_3,
-      required: dict3Attributes.isMandatory,
-    };
-    const dict4 = {
-      type: 'selectwrapper',
-      dictCode: UserDictionariesService.DICTIONARY_DEBT_LIST_4,
-      required: dict4Attributes.isMandatory,
-    };
-
     const templateInputOptions = {
       segmentedInputOptions: [
         { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value' },
@@ -273,22 +248,13 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
             children: [
               { label: labelKey('template'), controlName: 'template', type: 'segmented', ...templateInputOptions },
               { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
-              ...(dict1Attributes.isUsed
-                ? [{ label: labelKey('dictValue1'), controlName: 'dictValue1', ...dict1 }]
-                : []
-              ),
-              ...(dict2Attributes.isUsed
-                ? [{ label: labelKey('dictValue2'), controlName: 'dictValue2', ...dict2 }]
-                : []
-              ),
-              ...(dict3Attributes.isUsed
-                ? [{ label: labelKey('dictValue3'), controlName: 'dictValue3', ...dict3 }]
-                : []
-              ),
-              ...(dict4Attributes.isUsed
-                ? [{ label: labelKey('dictValue4'), controlName: 'dictValue4', ...dict4 }]
-                : []
-              ),
+              ...range(1, 4).map(i => ({
+                label: labelKey(`dictValue${i}`),
+                controlName: `dictValue${i}`,
+                type: 'selectwrapper',
+                dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
+                display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]],
+              })),
               { label: labelKey('isInvalidContact'), controlName: 'isInvalidContact', type: 'checkbox' },
               { label: labelKey('addPhone'), controlName: 'addPhone', type: 'checkbox' },
               { label: labelKey('isRefusal'), controlName: 'isRefusal', type: 'checkbox' },
