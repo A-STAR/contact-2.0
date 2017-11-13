@@ -1419,6 +1419,9 @@
     "attribute": {
       "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
     },
+    "campaign": {
+      "gen": { "singular": "кампании", "plural": "списка кампаний" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },

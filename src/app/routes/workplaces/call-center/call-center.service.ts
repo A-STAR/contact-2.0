@@ -15,6 +15,7 @@ export class CallCenterService {
 
   get shouldSelectCampaign$(): Observable<boolean> {
     return this.dataService.readAll('/userCampaigns')
+      .catch(this.notificationsService.fetchError().entity('entities.campaign.gen.plural').dispatchCallback())
       .map(isEmpty)
       .map(invert);
   }
