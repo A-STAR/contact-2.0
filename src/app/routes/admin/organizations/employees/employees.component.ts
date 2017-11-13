@@ -1,11 +1,17 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IEmployeeUser, IEmployee, IOrganizationDialogActionEnum, IOrganizationsState } from '../organizations.interface';
+import {
+  IEmployeeUser,
+  IEmployee,
+  IEmployeeViewEntity,
+  OrganizationDialogActionEnum,
+  IOrganizationsState,
+  IEmployeeUpdateRequest} from '../organizations.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -14,19 +20,22 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { DialogFunctions } from 'app/core/dialog';
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html'
 })
-export class EmployeesComponent implements OnDestroy {
+export class EmployeesComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() employees: Array<IEmployee>;
   @ViewChild(GridComponent) grid: GridComponent;
+  dialog: string;
+  private currentDialogAction: OrganizationDialogActionEnum = OrganizationDialogActionEnum.NONE;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_ADD,
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
         Observable.of(this.organizationsService.selectedOrganization)
@@ -34,7 +43,7 @@ export class EmployeesComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_EDIT,
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
@@ -42,7 +51,7 @@ export class EmployeesComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_REMOVE),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_REMOVE,
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
@@ -61,28 +70,22 @@ export class EmployeesComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
-    { prop: 'roleCode', minWidth: 100 },
-    { prop: 'isInactive', minWidth: 100 },
+    { prop: 'roleCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE },
+    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
 
-  renderers: IRenderer = {
-    isInactive: 'checkboxRenderer',
-  };
-
-  action: IOrganizationDialogActionEnum;
-
-  editedEntity: IEmployee;
+  editedEntity: IEmployeeViewEntity;
 
   // TODO(d.maltsev): type
   employeeRoleOptions$: Observable<Array<any>>;
 
-  employees$: Observable<Array<IEmployee>>;
+  employees$: Observable<Array<IEmployeeViewEntity>>;
 
   emptyMessage$: Observable<string>;
 
   private hasViewPermission$: Observable<boolean>;
 
-  private organizationsStateSubscription: Subscription;
+  private selectedEmployeeSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
   private employeeFetchSubscription: Subscription;
 
@@ -93,19 +96,22 @@ export class EmployeesComponent implements OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE)
+    super();
+  }
+
+  ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
       .take(1)
-      .subscribe(employeeRoles => {
-        this.renderers.roleCode = employeeRoles;
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      .subscribe(columns => {
+        this.columns = [...columns];
       });
 
-    this.organizationsStateSubscription = this.organizationsService.state
-      .subscribe(state => {
-        this.action = state.dialogAction;
-        this.editedEntity = state.employees.find(employee => employee.userId === state.selectedEmployeeUserId);
-      });
+    this.selectedEmployeeSubscription = Observable.combineLatest(
+      this.organizationsService.selectedEmployeeId,
+      this.organizationsService.employees
+    ).subscribe((data: [number, IEmployeeViewEntity[]]) => {
+      this.editedEntity = data[1].find(employee => employee.userId === data[0]);
+    });
 
     this.employeeRoleOptions$ = this.userDictionariesService
       .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
@@ -115,19 +121,20 @@ export class EmployeesComponent implements OnDestroy {
     this.viewPermissionSubscription = Observable.combineLatest(
       this.hasViewPermission$
     )
-    .subscribe(([ hasViewPermission, currentOrganization ]) => {
-      if (!hasViewPermission) {
-        this.organizationsService.clearEmployees();
-      }
-    });
+      .subscribe(([hasViewPermission, currentOrganization]) => {
+        if (!hasViewPermission) {
+          this.organizationsService.clearEmployees();
+        }
+      });
 
     this.employees$ = this.organizationsService.employees;
+
     this.emptyMessage$ = this.hasViewPermission$
       .map(hasPermission => hasPermission ? null : 'organizations.employees.errors.view');
   }
 
   ngOnDestroy(): void {
-    this.organizationsStateSubscription.unsubscribe();
+    this.selectedEmployeeSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
   }
 
@@ -136,15 +143,15 @@ export class EmployeesComponent implements OnDestroy {
   }
 
   get isEntityBeingCreated(): boolean {
-    return this.action === IOrganizationDialogActionEnum.EMPLOYEE_ADD;
+    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_ADD;
   }
 
   get isEntityBeingEdited(): boolean {
-    return this.action === IOrganizationDialogActionEnum.EMPLOYEE_EDIT;
+    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_EDIT;
   }
 
   get isEntityBeingRemoved(): boolean {
-    return this.action === IOrganizationDialogActionEnum.EMPLOYEE_REMOVE;
+    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_REMOVE;
   }
 
   transformIsInactive(isInactive: number): string {
@@ -163,28 +170,26 @@ export class EmployeesComponent implements OnDestroy {
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
           const selectedEmployeeUserId = employee.userId;
-          this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_EDIT, { selectedEmployeeUserId });
+          this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_EDIT;
+          this.organizationsService.selectEmployee(selectedEmployeeUserId);
         }
       });
   }
 
   onAddSubmit(data: any): void {
-    this.organizationsService.createEmployee(data);
+    this.organizationsService.createEmployee(data).subscribe(() => this.cancelAction());
   }
 
-  onEditSubmit(data: IEmployeeUser): void {
-    this.organizationsService.updateEmployee({
-      roleCode: data.roleCode[0].value,
-      comment: data.comment,
-      isMain: Number(data.isMain)
-    });
+  onEditSubmit(data: IEmployeeUpdateRequest): void {
+    this.organizationsService.updateEmployee(data).subscribe(() => this.cancelAction());
   }
 
   onRemoveSubmit(data: any): void {
-     this.organizationsService.deleteEmployee();
+     this.organizationsService.deleteEmployee().subscribe(() => {});
   }
 
   cancelAction(): void {
-    this.organizationsService.setDialogAction(null);
+    this.currentDialogAction = OrganizationDialogActionEnum.NONE;
+    this.onCloseDialog();
   }
 }

@@ -19,6 +19,10 @@ export interface IEmployee {
   isMain: boolean;
 }
 
+export interface IEmployeeViewEntity extends IEmployee {
+  id: number;
+}
+
 export interface IEmployeeCreateRequest {
   roleCode: number;
   usersIds: Array<number>;
@@ -30,7 +34,8 @@ export interface IEmployeeUpdateRequest {
   isMain: number;
 }
 
-export enum IOrganizationDialogActionEnum {
+export enum OrganizationDialogActionEnum {
+  NONE,
   ORGANIZATION_ADD,
   ORGANIZATION_EDIT,
   ORGANIZATION_REMOVE,
@@ -45,13 +50,13 @@ export interface IOrganizationSelectPayload {
 }
 
 export interface IEmployeeSelectPayload {
-  employees?: Array<IEmployee>;
-  notAddedEmployees?: Array<IEmployee>;
+  employees?: Array<IEmployeeViewEntity>;
+  notAddedEmployees?: Array<IEmployeeViewEntity>;
   selectedEmployeeUserId: number;
 }
 
 export interface IOrganizationsState extends IOrganizationSelectPayload, IEmployeeSelectPayload {
-  dialogAction: IOrganizationDialogActionEnum;
+  dialogAction: OrganizationDialogActionEnum;
 }
 
 export type IEmployeeUser = IUser & IEmployee;

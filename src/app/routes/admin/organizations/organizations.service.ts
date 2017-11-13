@@ -12,9 +12,10 @@ import {
   IEmployee,
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
-  IOrganizationDialogActionEnum,
+  OrganizationDialogActionEnum,
   IEmployeeSelectPayload,
-  IOrganizationSelectPayload
+  IOrganizationSelectPayload,
+  IEmployeeViewEntity
 } from './organizations.interface';
 
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
@@ -48,19 +49,12 @@ export class OrganizationsService {
       .distinctUntilChanged();
   }
 
-  get dialogAction(): Observable<IOrganizationDialogActionEnum> {
-    return this.store
-      .select(state => state.organizations.dialogAction)
-      .distinctUntilChanged();
-  }
-
   get selectedOrganization(): Observable<ITreeNode> {
     return this.store
-    .select(state => state.organizations.selectedOrganization)
-    .distinctUntilChanged();
+    .select(state => state.organizations.selectedOrganization);
   }
 
-  get employees(): Observable<IEmployee[]> {
+  get employees(): Observable<IEmployeeViewEntity[]> {
     return this.store
       .select(state => state.organizations.employees)
       .distinctUntilChanged();
@@ -68,29 +62,28 @@ export class OrganizationsService {
 
   get selectedEmployeeId(): Observable<number> {
     return this.store
-    .select(state => state.organizations.selectedEmployeeUserId)
-    .distinctUntilChanged();
+    .select(state => state.organizations.selectedEmployeeUserId);
   }
 
   fetchOrganizations(): Observable<ITreeNode[]> {
     return this.readOrganizations()
       .map(_organizations => this.convertToTreeNodes(_organizations))
-      .do(organizations =>
-        this.selectOrganization(null, organizations)
-      )
+      .map(organizations => this.selectOrganization(null, organizations))
+      .map(onOrganizationSelect => onOrganizationSelect.organizations)
       .catch(
         this.notificationsService.error('errors.default.read')
           .entity('entities.organizations.gen.plural').dispatchCallback()
       );
   }
 
-  fetchEmployees(): Observable<IEmployee[]> {
+  fetchEmployees(): Observable<IEmployeeViewEntity[]> {
     return this.selectedOrganization
       .take(1)
       .switchMap(organization => organization ? this.readEmployees(organization.id) : Observable.of([]))
       // because grid component relies on row's property id
-      .map(employees => employees.map(employee => (employee.id = employee.userId) && employee))
-      .do(employees => this.selectEmployee(null, employees))
+      .map(employees => employees.map<IEmployeeViewEntity>(employee => (employee.id = employee.userId) && employee))
+      .map(employees => this.selectEmployee(null, employees))
+      .map(onEmployeeSelect => onEmployeeSelect.employees)
       .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').dispatchCallback());
   }
 
@@ -98,18 +91,23 @@ export class OrganizationsService {
     return this.selectedOrganization
       .take(1)
       .switchMap(organization => this.readNotAddedEmployees(organization.id))
-      .do(employees => this.selectEmployee(null, employees))
+      .map(employees => employees.map<IEmployeeViewEntity>(employee => {
+        return {
+          ...employee,
+          id: employee.userId
+        };
+      }))
       .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').dispatchCallback());
   }
 
   createOrganization(organization: IOrganization): Observable<any> {
     return this.selectedOrganization
       .take(1)
-      .switchMap(selectedOrganization =>
-        this.dataService.create(this.baseUrl, {}, { ...organization, parentId: selectedOrganization.id })
-      )
-      .do(() => this.resetDialogAction())
-      .do(() => this.fetchOrganizations())
+      .switchMap(selectedOrganization => {
+        const parentId = selectedOrganization && selectedOrganization.id;
+        return this.dataService.create(this.baseUrl, {}, { ...organization, parentId });
+      })
+      .switchMap(() => this.fetchOrganizations())
       .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
   }
 
@@ -120,7 +118,6 @@ export class OrganizationsService {
         this.dataService.update(`${this.baseUrl}/{organizationId}`, {
           organizationId: selectedOrganization.id
         }, organization))
-      .do(() => this.resetDialogAction())
       .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
   }
 
@@ -130,8 +127,7 @@ export class OrganizationsService {
       .switchMap(selectedOrganization =>
         this.deleteOrganization(selectedOrganization.id)
       )
-      .do(() => this.resetDialogAction())
-      .do(() => this.fetchOrganizations())
+      .switchMap(() => this.fetchOrganizations())
       .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
   }
 
@@ -142,12 +138,13 @@ export class OrganizationsService {
   createEmployee(employee: IEmployeeCreateRequest): Observable<any> {
     return this.selectedOrganization
       .take(1)
-      .map(selectedOrganization => this.dataService.create(`${this.baseUrl}/{organizationId}/users`, {
+      .switchMap(selectedOrganization => {
+        return this.dataService.create(`${this.baseUrl}/{organizationId}/users`, {
         organizationId: selectedOrganization.id
-      }, employee)
+      }, employee);
+    }
       )
-      .do(() => this.fetchEmployees())
-      .do(() => this.resetDialogAction())
+      .switchMap(() => this.fetchEmployees())
       .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
 
   }
@@ -161,7 +158,6 @@ export class OrganizationsService {
         organizationId: data[0].id,
         userId: data[1]
       }, employee))
-      .do(() => this.resetDialogAction())
       .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
   }
 
@@ -177,7 +173,6 @@ export class OrganizationsService {
             userId: data[1]
           })
         )
-      .do(() => this.resetDialogAction())
       .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
   }
 
@@ -188,8 +183,7 @@ export class OrganizationsService {
 
   updateOrganizations(organizations: IOrganization[]): Observable<any> {
     return Observable.forkJoin(organizations
-      .map((organization: IOrganization) => this.updateOrganization(organization)))
-      .do(() => this.resetDialogAction());
+      .map((organization: IOrganization) => this.updateOrganization(organization)));
   }
 
   clearOrganizations(): Observable<any[]> {
@@ -197,7 +191,7 @@ export class OrganizationsService {
     return Observable.of([]);
   }
 
-  selectOrganization(selectedOrganization: ITreeNode, organizations?: ITreeNode[]): void {
+  selectOrganization(selectedOrganization: ITreeNode, organizations?: ITreeNode[]): IOrganizationSelectPayload {
     const onOrganizationSelectPayload: IOrganizationSelectPayload = {
       selectedOrganization
     };
@@ -208,44 +202,25 @@ export class OrganizationsService {
       type: OrganizationsService.ORGANIZATION_SELECT,
       payload: onOrganizationSelectPayload
     });
+    return onOrganizationSelectPayload;
   }
 
   clearEmployees(): void {
     this.selectEmployee(null, []);
   }
 
-  selectEmployee(selectedEmployeeUserId: number, employees?: IEmployee[]): void {
+  selectEmployee(selectedEmployeeUserId: number, employees?: IEmployeeViewEntity[]): IEmployeeSelectPayload {
     const onEmployeeSelectPayload: IEmployeeSelectPayload = {
       selectedEmployeeUserId
     };
     if (employees) {
       onEmployeeSelectPayload.employees = employees;
     }
-    return this.store.dispatch({
+    this.store.dispatch({
       type: OrganizationsService.EMPLOYEE_SELECT,
       payload: onEmployeeSelectPayload
     });
-  }
-
-  setDialogAction(dialogAction: IOrganizationDialogActionEnum, data: object = {}): void {
-    return this.store.dispatch({
-      type: OrganizationsService.DIALOG_ACTION,
-      payload: {
-        dialogAction,
-        data
-      }
-    });
-  }
-
-  resetDialogAction(): void {
-    return this.store.dispatch(
-      {
-        type: OrganizationsService.DIALOG_ACTION,
-        payload: {
-          dialogAction: null
-        }
-      }
-    );
+    return onEmployeeSelectPayload;
   }
 
   getExpandedNodes(organizations: ITreeNode[]): Set<number> {

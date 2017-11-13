@@ -43,12 +43,6 @@ export function reducer(state: IOrganizationsState = defaultState, action: Unsaf
         employees: action.payload.employees || state.employees,
         selectedEmployeeUserId: action.payload.selectedEmployeeUserId
       };
-    case OrganizationsService.DIALOG_ACTION:
-      return {
-        ...state,
-        dialogAction: action.payload.dialogAction,
-        ...action.payload.data
-      };
     default:
       return state;
   }

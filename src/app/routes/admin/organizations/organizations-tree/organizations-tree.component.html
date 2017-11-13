@@ -1,18 +1,18 @@
 <app-organization-edit
-  *ngIf="isEntityBeingCreated | async"
+  *ngIf="isEntityBeingCreated"
   (submit)="createOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
 <app-organization-edit
-  *ngIf="isEntityBeingEdited | async"
+  *ngIf="isEntityBeingEdited"
   [editedEntity]="selectedOrganization?.data"
   (submit)="updateOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>
 
 <app-dialog-action
-  *ngIf="isEntityBeingRemoved | async"
+  *ngIf="isEntityBeingRemoved"
   [titleTranslationKey]="'organizations.organizations.remove.title'"
   [actionTranslationKey]="'organizations.organizations.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"

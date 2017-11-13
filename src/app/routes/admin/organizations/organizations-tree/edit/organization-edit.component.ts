@@ -1,24 +1,28 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Output, Input, EventEmitter } from '@angular/core';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOrganization } from '../../organizations.interface';
+import { IOrganization, IEmployeeViewEntity } from '../../organizations.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-organization-edit',
   templateUrl: './organization-edit.component.html'
 })
-export class OrganizationEditComponent extends EntityBaseComponent<IOrganization> implements OnInit {
+export class OrganizationEditComponent implements OnInit {
+  @Input() editedEntity: IEmployeeViewEntity;
+  @Output() submit: EventEmitter<any> = new EventEmitter();
+  @Output() cancel: EventEmitter<null> = new EventEmitter();
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  controls: Array<IDynamicFormControl>;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private userDictionariesService: UserDictionariesService,
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES)
@@ -38,6 +42,20 @@ export class OrganizationEditComponent extends EntityBaseComponent<IOrganization
       boxColor: Array.isArray(organization.boxColor) ? organization.boxColor[0].value : organization.boxColor,
       branchCode: Array.isArray(organization.branchCode) ? organization.branchCode[0].value : organization.branchCode
     };
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  onSubmit(): void {
+    const organization = this.form.serializedUpdates;
+    this.submit.emit(this.toSubmittedValues(organization));
+    this.onCancel();
+  }
+
+  canSubmit(): boolean {
+    return (this.form && this.form.canSubmit) || false;
   }
 
   protected buildControls(branchOptions: Array<IOption>): Array<IDynamicFormControl> {

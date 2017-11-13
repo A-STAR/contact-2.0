@@ -8,32 +8,36 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IOrganizationDialogActionEnum } from '../organizations.interface';
+import { OrganizationDialogActionEnum } from '../organizations.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { EntityBaseComponent } from 'app/shared/components/entity/base.component';
+import { DialogFunctions } from 'app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
 })
-export class OrganizationsTreeComponent implements OnDestroy, OnInit {
+export class OrganizationsTreeComponent extends DialogFunctions implements OnDestroy, OnInit {
   permissionSub: Subscription;
   organizations: Observable<ITreeNode[]>;
+  dialog: string;
+  private currentDialogAction: OrganizationDialogActionEnum = OrganizationDialogActionEnum.NONE;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_ADD,
       enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_EDIT,
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.selectedOrganization
@@ -41,7 +45,7 @@ export class OrganizationsTreeComponent implements OnDestroy, OnInit {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE),
+      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_REMOVE,
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_DELETE'),
         this.organizationsService.selectedOrganization
@@ -59,15 +63,16 @@ export class OrganizationsTreeComponent implements OnDestroy, OnInit {
     private userPermissionsService: UserPermissionsService,
     private cdRef: ChangeDetectorRef
   ) {
-
+      super();
   }
 
   ngOnInit(): void {
     this.permissionSub = this.canViewOrganization.do(hasViewPermission => hasViewPermission
-      ? (this.organizations = this.organizationsService.fetchOrganizations())
+      ? (this.organizations = Observable.merge(this.organizationsService.fetchOrganizations(),
+       this.organizationsService.organizations))
       : this.organizationsService.clearOrganizations()
     ).subscribe(() => {
-      console.log('Fired!');
+      this.cdRef.markForCheck();
     });
   }
 
@@ -76,24 +81,20 @@ export class OrganizationsTreeComponent implements OnDestroy, OnInit {
     this.organizationsService.clearAll();
   }
 
-  get action(): Observable<IOrganizationDialogActionEnum> {
-    return this.organizationsService.dialogAction;
-  }
-
   get selectedOrganization(): Observable<ITreeNode> {
     return this.organizationsService.selectedOrganization;
   }
 
-  get isEntityBeingCreated(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_ADD);
+  get isEntityBeingCreated(): boolean {
+    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_ADD;
   }
 
-  get isEntityBeingEdited(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
+  get isEntityBeingEdited(): boolean {
+    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_EDIT;
   }
 
-  get isEntityBeingRemoved(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
+  get isEntityBeingRemoved(): boolean {
+    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_REMOVE;
   }
 
   get canViewOrganization(): Observable<boolean> {
@@ -114,26 +115,35 @@ export class OrganizationsTreeComponent implements OnDestroy, OnInit {
   }
 
   onRemove(): void {
-    this.organizationsService.removeOrganization().subscribe(() => {});
+    this.organizationsService.removeOrganization().subscribe(() => this.cancelAction());
   }
 
   onNodeEdit(node: ITreeNode): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT, { selectedOrganization: node });
+    this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_EDIT;
+    this.organizationsService.selectOrganization(node);
   }
 
   cancelAction(): void {
-    this.organizationsService.setDialogAction(null);
+    this.currentDialogAction = OrganizationDialogActionEnum.NONE;
+    // reset previously selected organization
+    this.organizationsService.selectOrganization(null);
+    this.onCloseDialog();
+    this.cdRef.markForCheck();
   }
 
   fetchOrganizations(): void {
-    this.organizationsService.fetchOrganizations().subscribe(() => {});
+    this.organizationsService.fetchOrganizations().subscribe(() => {
+      this.cdRef.markForCheck();
+    });
   }
 
   createOrganization(data: any): void {
-    this.organizationsService.createOrganization(data).subscribe(() => {});
+    this.organizationsService.createOrganization(data).subscribe(() => {
+      this.cancelAction();
+    });
   }
 
   updateOrganization(data: any): void {
-    this.organizationsService.updateOrganization(data).subscribe(() => {});
+    this.organizationsService.updateOrganization(data).subscribe(() => this.cancelAction());
   }
 }
