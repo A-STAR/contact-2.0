@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { CallCenterService } from './call-center.service';
 
@@ -13,12 +12,4 @@ import { CallCenterService } from './call-center.service';
 })
 export class CallCenterComponent {
   static COMPONENT_NAME = 'CallCenterComponent';
-
-  constructor(
-    private callCenterService: CallCenterService,
-  ) {}
-
-  get shouldSelectCampaign$(): Observable<boolean> {
-    return this.callCenterService.shouldSelectCampaign$;
-  }
 }

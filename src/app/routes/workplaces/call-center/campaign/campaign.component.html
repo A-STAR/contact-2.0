@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-lg-4">
+    <app-call-center-overview></app-call-center-overview>
+    <app-call-center-debtor></app-call-center-debtor>
+    <app-call-center-debt></app-call-center-debt>
+    <app-call-center-misc></app-call-center-misc>
+  </div>
+  <div class="col-lg-8">
+    <app-tabstrip [disableScrollbar]="true" [inverse]="true">
+      <app-tab [title]="'modules.callCenter.tabs.phonesAndAddresses'" [closable]="false">
+        <app-call-center-phones-and-addresses></app-call-center-phones-and-addresses>
+      </app-tab>
+      <app-tab [title]="'modules.callCenter.tabs.debtComponents'" [closable]="false">
+        <app-call-center-debt-components></app-call-center-debt-components>
+      </app-tab>
+      <app-tab [title]="'modules.callCenter.tabs.contacts'" [closable]="false">
+        <app-call-center-contacts></app-call-center-contacts>
+      </app-tab>
+      <app-tab [title]="'modules.callCenter.tabs.payments'" [closable]="false">
+        <app-call-center-payments></app-call-center-payments>
+      </app-tab>
+      <app-tab [title]="'modules.callCenter.tabs.promises'" [closable]="false">
+        <app-call-center-promises></app-call-center-promises>
+      </app-tab>
+      <app-tab [title]="'modules.callCenter.tabs.documents'" [closable]="false">
+        <app-call-center-documents></app-call-center-documents>
+      </app-tab>
+    </app-tabstrip>
+  </div>
+</div>
