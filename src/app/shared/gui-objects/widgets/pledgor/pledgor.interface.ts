@@ -1,4 +1,4 @@
-export interface IPledger {
+export interface IPledgor {
     id?: number;
     firstName?: string;
     middleName?: string;

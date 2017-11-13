@@ -7,7 +7,7 @@ import { GridModule } from '../../../../components/grid/grid.module';
 import { InfoDialogModule } from '../../../../components/dialog/info/info-dialog.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
-import { PledgerPropertyGridComponent } from './pledger-property-grid.component';
+import { PledgorGridComponent } from './pledgor-grid.component';
 
 @NgModule({
   imports: [
@@ -19,13 +19,13 @@ import { PledgerPropertyGridComponent } from './pledger-property-grid.component'
     TranslateModule,
   ],
   exports: [
-    PledgerPropertyGridComponent,
+    PledgorGridComponent,
   ],
   declarations: [
-    PledgerPropertyGridComponent,
+    PledgorGridComponent,
   ],
   entryComponents: [
-    PledgerPropertyGridComponent,
+    PledgorGridComponent,
   ]
 })
-export class PledgerPropertyGridModule { }
+export class PledgorGridModule { }

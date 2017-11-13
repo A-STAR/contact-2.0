@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
-import { IPledgerProperty } from '../../pledger-property/pledger-property.interface';
+import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { PledgeService } from '../../pledge/pledge.service';
-import { PledgerPropertyService } from '../../pledger-property/pledger-property.service';
+import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -19,17 +19,17 @@ import { DialogFunctions } from '../../../../../core/dialog';
 import { GridComponent } from '../../../../components/grid/grid.component';
 
 @Component({
-  selector: 'app-pledger-property-grid',
-  templateUrl: './pledger-property-grid.component.html',
+  selector: 'app-pledgor-property-grid',
+  templateUrl: './pledgor-property-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PledgerPropertyGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class PledgorPropertyGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Input() searchParams: any;
   @Output() close = new EventEmitter<null>();
-  @Output() select = new EventEmitter<IPledgerProperty>();
+  @Output() select = new EventEmitter<IPledgorProperty>();
 
   columns: Array<IGridColumn> = [
     { prop: 'id' },
@@ -41,14 +41,14 @@ export class PledgerPropertyGridComponent extends DialogFunctions implements OnI
 
   dialog: string;
   gridStyles = { height: '500px' };
-  propertyList: Array<IPledgerProperty> = [];
+  propertyList: Array<IPledgorProperty> = [];
 
   private personId;
   private canViewSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private pledgerPropertyService: PledgerPropertyService,
+    private pledgorPropertyService: PledgorPropertyService,
     private pledgeService: PledgeService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -95,12 +95,12 @@ export class PledgerPropertyGridComponent extends DialogFunctions implements OnI
     return this.grid && this.grid.hasSingleSelection;
   }
 
-  get selectedProperty(): IPledgerProperty {
+  get selectedProperty(): IPledgorProperty {
     return this.grid.selected.length ? this.grid.selected[0] : null;
   }
 
   private fetch(searchParams: object = {}): void {
-    this.pledgerPropertyService.fetchAll(this.personId).subscribe(propertyList => {
+    this.pledgorPropertyService.fetchAll(this.personId).subscribe(propertyList => {
       this.propertyList = propertyList;
       if (!this.propertyList.length) {
         this.setDialog('infoNotFound');

@@ -7,11 +7,11 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPledger } from '../pledger.interface';
+import { IPledgor } from '../pledgor.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
-import { PledgerService } from '../../pledger/pledger.service';
+import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -20,28 +20,28 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
 
-const label = makeKey('widgets.pledger.grid');
+const label = makeKey('widgets.pledgor.grid');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-pledger-card',
-  templateUrl: './pledger-card.component.html'
+  selector: 'app-pledgor-card',
+  templateUrl: './pledgor-card.component.html'
 })
-export class PledgerCardComponent extends DialogFunctions implements OnInit, AfterViewChecked, OnDestroy {
+export class PledgorCardComponent extends DialogFunctions implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private currentTypeCode: number;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
-  pledger: IPledger;
+  pledgor: IPledgor;
   searchParams: object;
   typeCodeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private messageBusService: MessageBusService,
-    private pledgerService: PledgerService,
+    private pledgorService: PledgorService,
     private pledgeService: PledgeService,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -60,10 +60,10 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit ]) => {
-      const pledger = this.getFormData();
+      const pledgor = this.getFormData();
       this.initControls(canEdit, this.getFormData(), attributeList, { genderOpts, familyStatusOpts, educationOpts, typeOpts });
-      this.pledger = pledger;
-      this.currentTypeCode = pledger.typeCode;
+      this.pledgor = pledgor;
+      this.currentTypeCode = pledgor.typeCode;
       this.cdRef.markForCheck();
     });
   }
@@ -77,7 +77,7 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
       .filter(Boolean)
       .flatMap((typeCode: number) => {
         this.currentTypeCode = typeCode;
-        const attrConstant = this.pledgerService.getAttributeConstant(typeCode);
+        const attrConstant = this.pledgorService.getAttributeConstant(typeCode);
         return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
       })
       .subscribe(([ typeCode, attributeList ]) => {
@@ -117,22 +117,22 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.messageBusService.dispatch(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED, null, {});
+    this.messageBusService.dispatch(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, null, {});
     this.cdRef.markForCheck();
   }
 
   onSearch(): void {
     this.searchParams = this.form.serializedUpdates;
-    this.setDialog('findPledger');
+    this.setDialog('findPledgor');
     this.cdRef.markForCheck();
   }
 
-  onSelect(pledger: IPledger): void {
+  onSelect(pledgor: IPledgor): void {
     const { form } = this.form;
-    form.patchValue(pledger);
+    form.patchValue(pledgor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.messageBusService.dispatch(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED, null, pledger);
+    this.messageBusService.dispatch(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, null, pledgor);
     this.cdRef.markForCheck();
   }
 
@@ -167,7 +167,7 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
     ];
   }
 
-  private initControls(canEdit: boolean, pledger: IPledger, attributeList: IUserConstant, typeOptions: any): void {
+  private initControls(canEdit: boolean, pledgor: IPledgor, attributeList: IUserConstant, typeOptions: any): void {
     const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
       .map(ctrl => ctrl.controlName);
 
@@ -179,10 +179,10 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
 
     const controls = [
       {
-        title: 'widgets.pledger.title',
+        title: 'widgets.pledgor.title',
         collapsible: true,
         children: (
-          this.pledgerService.isPerson(pledger.typeCode)
+          this.pledgorService.isPerson(pledgor.typeCode)
             ? this.getPersonContols(typeOptions)
             : this.getDefaultControls(typeOptions)
           ).concat(allAdditionalControls as any[])
@@ -199,7 +199,7 @@ export class PledgerCardComponent extends DialogFunctions implements OnInit, Aft
       : [];
   }
 
-  private getFormData(): IPledger {
+  private getFormData(): IPledgor {
     return {
       typeCode: 1
     };

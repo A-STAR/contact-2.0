@@ -3,25 +3,25 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
-import { PledgerPropertyGridModule } from '../grid/pledger-property-grid.module';
+import { PledgorGridModule } from '../grid/pledgor-grid.module';
 
-import { PledgerPropertyCardComponent } from './pledger-property-card.component';
+import { PledgorCardComponent } from './pledgor-card.component';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicFormModule,
     TranslateModule,
-    PledgerPropertyGridModule,
+    PledgorGridModule,
   ],
   exports: [
-    PledgerPropertyCardComponent,
+    PledgorCardComponent,
   ],
   declarations: [
-    PledgerPropertyCardComponent,
+    PledgorCardComponent,
   ],
   entryComponents: [
-    PledgerPropertyCardComponent,
+    PledgorCardComponent,
   ]
 })
-export class PledgerPropertyCardModule { }
+export class PledgorCardModule { }

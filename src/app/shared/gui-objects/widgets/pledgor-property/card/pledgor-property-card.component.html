@@ -1,16 +1,16 @@
-<app-pledger-property-grid
-  *ngIf="isDialog('findPledgerProperty')"
+<app-pledgor-property-grid
+  *ngIf="isDialog('findPledgorProperty')"
   [searchParams]="searchParams"  
   (close)="onCloseDialog()"
   (select)="onSelect($event)">
-</app-pledger-property-grid>
+</app-pledgor-property-grid>
 
 <div>
   <button class="btn btn-default" (click)="onClear()">
     <i class="fa fa-times"></i> {{ 'default.buttons.clear' | translate }}
   </button>
   <button class="btn btn-default" (click)="onSearch()" [disabled]="!canSearch">
-    <i class="fa fa-search"></i> {{ 'widgets.pledgerProperty.search.title' | translate }}
+    <i class="fa fa-search"></i> {{ 'widgets.pledgorProperty.search.title' | translate }}
   </button>
 </div>
 

@@ -658,7 +658,7 @@
         "title": "Параметры имущества"
       }
     },
-    "pledgersTab": {
+    "pledgorsTab": {
       "title": "Залогодатели"
     },
     "guarantorsTab": {
@@ -1418,7 +1418,7 @@
         "position": "Должность"
       }
     },
-    "pledgerProperty": {
+    "pledgorProperty": {
       "title": "Информация об имуществе",
       "search": {
         "title": "Поиск имущества"
@@ -1434,7 +1434,7 @@
         "currencyId": "Валюта"
       }
     },
-    "pledger": {
+    "pledgor": {
       "title": "Залогодатель",
       "search": {
         "title": "Поиск залогодателей"
@@ -1630,9 +1630,9 @@
     "pledgeContract": {
       "gen": { "singular": "договора залога", "plural": "договоров залога" }
     },
-    "pledgers": {
+    "pledgors": {
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
-    },
+    }
   },
   "errors": {
     "server": {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams, IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
-import { IPledger } from './pledger.interface';
+import { IPledgor } from './pledgor.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 
 import { DataService } from '../../../../core/data/data.service';
@@ -12,8 +12,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { FilterObject } from '../../../components/grid2/filter/grid-filter';
 
 @Injectable()
-export class PledgerService {
-  static MESSAGE_PLEDGER_SELECTION_CHANGED = 'MESSAGE_PLEDGER_SELECTION_CHANGED';
+export class PledgorService {
+  static MESSAGE_PLEDGOR_SELECTION_CHANGED = 'MESSAGE_PLEDGOR_SELECTION_CHANGED';
 
   private url = '/persons/search';
   private attrListConstants: { [key: string]: string } = {
@@ -58,14 +58,14 @@ export class PledgerService {
     return this.attrListConstants[typeCode];
   }
 
-  isPerson(pledgerTypeCode: number): boolean {
-    return pledgerTypeCode === 1;
+  isPerson(pledgorTypeCode: number): boolean {
+    return pledgorTypeCode === 1;
   }
 
-  fetchAll(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IPledger>> {
+  fetchAll(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IPledgor>> {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create(this.url, {}, request)
-      .catch(this.notificationsService.fetchError().entity('entities.pledgers.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.pledgors.gen.plural').dispatchCallback());
   }
 }

@@ -658,8 +658,8 @@
         "title": "Property attributes"
       }
     },
-    "pledgersTab": {
-      "title": "Pledgers"
+    "pledgorsTab": {
+      "title": "Pledgors"
     },
     "guarantorsTab": {
       "title": "Guarantors",
@@ -1418,7 +1418,7 @@
         "position": "Position"
       }
     },
-    "pledgerProperty": {
+    "pledgorProperty": {
       "title": "Property information",
       "search": {
         "title": "Find property"
@@ -1434,14 +1434,14 @@
         "currencyId": "Currency"
       }
     },
-    "pledger": {
-      "title": "Pledger",
+    "pledgor": {
+      "title": "Pledgor",
       "search": {
-        "title": "Find pledgers"
+        "title": "Find pledgors"
       },
       "dialog": {
-        "title": "Select a pledger",
-        "notFound": "Could not find the pledger. Please try to change the search criteria."
+        "title": "Select a pledgor",
+        "notFound": "Could not find the pledgor. Please try to change the search criteria."
       },
       "grid": {
         "id": "Id",
@@ -1630,8 +1630,8 @@
     "pledgeContract": {
       "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
     },
-    "pledgers": {
-      "gen": { "singular": "pledger", "plural": "pledgers" }
+    "pledgors": {
+      "gen": { "singular": "pledgor", "plural": "pledgors" }
     }
   },
   "errors": {

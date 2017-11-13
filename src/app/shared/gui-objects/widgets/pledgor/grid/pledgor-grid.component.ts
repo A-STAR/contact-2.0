@@ -4,11 +4,11 @@ import {
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IPledger } from '../../pledger/pledger.interface';
+import { IPledgor } from '../../pledgor/pledgor.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { PledgeService } from '../../pledge/pledge.service';
-import { PledgerService } from '../../pledger/pledger.service';
+import { PledgorService } from '../../pledgor/pledgor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -20,28 +20,28 @@ import { GridComponent } from '../../../../components/grid/grid.component';
 import { parseStringValueAttrs } from '../../../../../core/utils';
 
 @Component({
-  selector: 'app-pledger-grid',
-  templateUrl: './pledger-grid.component.html',
+  selector: 'app-pledgor-grid',
+  templateUrl: './pledgor-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PledgerGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class PledgorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Input() searchParams: any;
   @Output() close = new EventEmitter<null>();
-  @Output() select = new EventEmitter<IPledger>();
+  @Output() select = new EventEmitter<IPledgor>();
 
   columns: Array<IGridColumn> = null;
 
   dialog: string;
   gridStyles = { height: '500px' };
-  persons: Array<IPledger> = [];
+  persons: Array<IPledgor> = [];
 
   private canViewSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private pledgerService: PledgerService,
+    private pledgorService: PledgorService,
     private pledgeService: PledgeService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -51,7 +51,7 @@ export class PledgerGridComponent extends DialogFunctions implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    const attrConstant = this.pledgerService.getAttributeConstant(this.searchParams.typeCode);
+    const attrConstant = this.pledgorService.getAttributeConstant(this.searchParams.typeCode);
     this.userConstantsService.get(attrConstant)
       .flatMap(strAttributeList => {
         const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
@@ -70,7 +70,7 @@ export class PledgerGridComponent extends DialogFunctions implements OnInit, OnD
         if (hasPermission) {
           this.fetch(this.searchParams);
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.pledgers.gen.plural').dispatch();
+          this.notificationsService.error('errors.default.read.403').entity('entities.pledgors.gen.plural').dispatch();
           this.clear();
         }
       });
@@ -93,14 +93,14 @@ export class PledgerGridComponent extends DialogFunctions implements OnInit, OnD
     return this.grid && this.grid.hasSingleSelection;
   }
 
-  get selectedPerson(): IPledger {
+  get selectedPerson(): IPledgor {
     return this.grid.selected.length ? this.grid.selected[0] : null;
   }
 
   private fetch(searchParams: object = {}): void {
-    const filter = this.pledgerService.makeFilter(searchParams, this.columns);
+    const filter = this.pledgorService.makeFilter(searchParams, this.columns);
     const params = { sorters: [{ colId: 'lastName', sort: 'asc' }] };
-    this.pledgerService.fetchAll(filter, params)
+    this.pledgorService.fetchAll(filter, params)
       .subscribe(response => {
         const { data: persons } = response;
         this.persons = persons ? [...persons] : [];
@@ -138,6 +138,6 @@ export class PledgerGridComponent extends DialogFunctions implements OnInit, OnD
   }
 
   private creatateColumns(typeCode: number): IGridColumn[] {
-    return this.pledgerService.isPerson(typeCode) ? this.getPersonColumns() : this.getDefaultColumns();
+    return this.pledgorService.isPerson(typeCode) ? this.getPersonColumns() : this.getDefaultColumns();
   }
 }

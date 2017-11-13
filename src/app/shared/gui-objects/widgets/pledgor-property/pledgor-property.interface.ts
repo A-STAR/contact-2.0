@@ -1,4 +1,4 @@
-export interface IPledgerProperty {
+export interface IPledgorProperty {
     id?: number;
     contractNumber?: string;
     propertyType: number;

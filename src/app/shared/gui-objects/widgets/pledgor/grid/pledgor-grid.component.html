@@ -1,22 +1,22 @@
 <app-info-dialog
   *ngIf="isDialog('infoNotFound')"
-  titleTranslationKey="widgets.pledgerProperty.dialog.title"
+  titleTranslationKey="widgets.pledgor.dialog.title"
   (close)="onClose()"
 >
-  <section class="pv-xl">{{ 'widgets.pledgerProperty.dialog.notFound' | translate }}</section>
+  <section class="pv-xl">{{ 'widgets.pledgor.dialog.notFound' | translate }}</section>
 </app-info-dialog>
 
-<app-dialog *ngIf="!!propertyList?.length" (close)="onClose()">
+<app-dialog *ngIf="!!persons?.length" (close)="onClose()">
   <div dialog-header>
-    <h3>{{ 'widgets.pledgerProperty.dialog.title' | translate }}</h3>
+    <h3>{{ 'widgets.pledgor.dialog.title' | translate }}</h3>
   </div>
 
   <app-grid
     *ngIf="columns"
-    columnTranslationKey="widgets.property"
+    columnTranslationKey="widgets.pledgor"
     [columns]="columns"
     [footerHeight]="false"
-    [rows]="propertyList"
+    [rows]="persons"
     selectionType="single"
     [styles]="gridStyles"
     (onDblClick)="onSelect()">

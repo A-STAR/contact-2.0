@@ -22,8 +22,8 @@ import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { PledgeModule } from './pledge/pledge.module';
-import { PledgerModule } from './pledger/pledger.module';
-import { PledgerPropertyModule } from './pledger-property/pledger-property.module';
+import { PledgorModule } from './pledgor/pledgor.module';
+import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 
 @NgModule({
   imports: [
@@ -49,8 +49,8 @@ import { PledgerPropertyModule } from './pledger-property/pledger-property.modul
     PromiseModule,
     PropertyModule,
     PledgeModule,
-    PledgerModule,
-    PledgerPropertyModule,
+    PledgorModule,
+    PledgorPropertyModule,
   ],
   exports: [
     AddressModule,
@@ -74,8 +74,8 @@ import { PledgerPropertyModule } from './pledger-property/pledger-property.modul
     PromiseModule,
     PropertyModule,
     PledgeModule,
-    PledgerModule,
-    PledgerPropertyModule,
+    PledgorModule,
+    PledgorPropertyModule,
   ]
 })
 export class WidgetsModule { }

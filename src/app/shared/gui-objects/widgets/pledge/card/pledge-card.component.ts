@@ -6,15 +6,15 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgeContract } from '../pledge.interface';
-import { IPledger } from '../../pledger/pledger.interface';
-import { IPledgerProperty } from '../../pledger-property/pledger-property.interface';
+import { IPledgor } from '../../pledgor/pledgor.interface';
+import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../pledge.service';
-import { PledgerService } from '../../pledger/pledger.service';
-import { PledgerPropertyService } from '../../pledger-property/pledger-property.service';
+import { PledgorService } from '../../pledgor/pledgor.service';
+import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -32,8 +32,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
 
   private routeParams = (<any>this.route.params).value;
   private debtId = this.routeParams.debtId || null;
-  private pledgerSelectionSub: Subscription;
-  private pledgerPropertySelectionSub: Subscription;
+  private pledgorSelectionSub: Subscription;
+  private pledgorPropertySelectionSub: Subscription;
 
   controls: IDynamicFormGroup[];
   contract: Partial<IPledgeContract>;
@@ -58,35 +58,35 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       this.contract = contract;
     });
 
-    this.pledgerSelectionSub = this.messageBusService
-      .select<string, IPledger>(PledgerService.MESSAGE_PLEDGER_SELECTION_CHANGED)
-      .subscribe(pledger => {
+    this.pledgorSelectionSub = this.messageBusService
+      .select<string, IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+      .subscribe(pledgor => {
         const personId = this.form.getControl('personId');
-        personId.setValue(pledger.id);
+        personId.setValue(pledgor.id);
         personId.markAsDirty();
       });
 
-    this.pledgerPropertySelectionSub = this.messageBusService
-      .select<string, IPledgerProperty>(PledgerPropertyService.MESSAGE_PLEDGER_PROPERTY_SELECTION_CHANGED)
-      .subscribe(pledgerProperty => {
+    this.pledgorPropertySelectionSub = this.messageBusService
+      .select<string, IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
+      .subscribe(pledgorProperty => {
         const propertyId = this.form.getControl('propertyId');
-        propertyId.setValue(pledgerProperty.id);
+        propertyId.setValue(pledgorProperty.id);
         propertyId.markAsDirty();
         const pledgeValue = this.form.getControl('pledgeValue');
-        pledgeValue.setValue(pledgerProperty.pledgeValue);
+        pledgeValue.setValue(pledgorProperty.pledgeValue);
         pledgeValue.markAsDirty();
         const marketValue = this.form.getControl('marketValue');
-        marketValue.setValue(pledgerProperty.marketValue);
+        marketValue.setValue(pledgorProperty.marketValue);
         marketValue.markAsDirty();
         const currencyId = this.form.getControl('currencyId');
-        currencyId.setValue(pledgerProperty.currencyId);
+        currencyId.setValue(pledgorProperty.currencyId);
         currencyId.markAsDirty();
       });
   }
 
   ngOnDestroy(): void {
-    this.pledgerSelectionSub.unsubscribe();
-    this.pledgerPropertySelectionSub.unsubscribe();
+    this.pledgorSelectionSub.unsubscribe();
+    this.pledgorPropertySelectionSub.unsubscribe();
   }
 
   get canSubmit(): boolean {
