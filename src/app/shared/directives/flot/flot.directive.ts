@@ -47,8 +47,8 @@ export class FlotDirective implements OnInit, OnChanges, OnDestroy {
       height: this.height
     });
 
-    // Flot has to be initialized outside zone.
-    // Otherwise zone gets destabilized.
+    // Flot has to be initialized outside zone,
+    // otherwise the zone gets unstable
     this.zone.runOutsideAngular(() => {
       this.plot = $.plot(element, [], this.options);
     });

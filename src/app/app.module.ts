@@ -69,6 +69,7 @@ export function authTokenGetter(): string {
       config: {
         tokenGetter: authTokenGetter,
         whitelistedDomains: [
+          '*',
           'localhost:4200',
           'localhost:8080',
           'appservertest.luxbase.int:4100',

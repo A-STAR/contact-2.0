@@ -61,13 +61,9 @@ export class EmployeesComponent implements OnDestroy {
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
-    { prop: 'roleCode', minWidth: 100 },
-    { prop: 'isInactive', minWidth: 100 },
+    { prop: 'roleCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE },
+    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
-
-  renderers: IRenderer = {
-    isInactive: 'checkboxRenderer',
-  };
 
   action: IOrganizationDialogActionEnum;
 
@@ -92,12 +88,10 @@ export class EmployeesComponent implements OnDestroy {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE)
+    this.gridService.setAllRenderers(this.columns)
       .take(1)
-      .subscribe(employeeRoles => {
-        this.renderers.roleCode = employeeRoles;
-        this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+      .subscribe(columns => {
+        this.columns = [...columns];
       });
 
     this.organizationsStateSubscription = this.organizationsService.state

@@ -29,6 +29,6 @@ export class DebtorCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.debtorCardService.fetch(1).subscribe(console.log);
+    this.debtorCardService.fetch(1).subscribe(() => {});
   }
 }

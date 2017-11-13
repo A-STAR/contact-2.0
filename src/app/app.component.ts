@@ -30,7 +30,7 @@ export class AppComponent {
   static LOADER_DEBOUNCE_INTERVAL = 200;
 
   toasterConfig = new ToasterConfig({
-    animationClass: 'flyLeft',
+    animation: 'flyLeft',
     limit: 10,
     mouseoverTimerStop: true,
     positionClass: 'toaster-container',
