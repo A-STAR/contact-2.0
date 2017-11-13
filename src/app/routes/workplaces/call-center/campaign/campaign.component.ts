@@ -11,5 +11,5 @@ import { CampaignService } from './campaign.service';
   ]
 })
 export class CampaignComponent {
-  static COMPONENT_NAME = 'CallCenterComponent';
+  static COMPONENT_NAME = 'CampaignComponent';
 }

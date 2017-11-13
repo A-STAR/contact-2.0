@@ -16,9 +16,9 @@ import { SharedModule } from '../../../../shared/shared.module';
 
 import { CampaignComponent } from './campaign.component';
 
-// const routes: Routes = [
-//   { path: ':campaignId', component: CampaignComponent },
-// ];
+const routes: Routes = [
+  { path: '', component: CampaignComponent },
+];
 
 @NgModule({
   imports: [
@@ -33,12 +33,12 @@ import { CampaignComponent } from './campaign.component';
     PaymentsModule,
     PhonesModule,
     PromisesModule,
-    // RouterModule.forChild(routes),
+    RouterModule.forChild(routes),
     SharedModule,
   ],
-  // exports: [
-  //   RouterModule,
-  // ],
+  exports: [
+    RouterModule,
+  ],
   declarations: [
     CampaignComponent,
   ]

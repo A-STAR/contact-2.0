@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CampaignModule } from './campaign/campaign.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { CallCenterComponent } from './call-center.component';
@@ -14,14 +13,12 @@ const routes: Routes = [
   },
   {
     path: ':campaignId',
-    // loadChildren: './campaign/campaign.module#CampaignModule'
-    component: CampaignComponent
+    loadChildren: './campaign/campaign.module#CampaignModule'
   },
 ];
 
 @NgModule({
   imports: [
-    CampaignModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],
