@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -110,7 +110,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
 
   constructor(
     private addressService: AddressService,
@@ -120,7 +119,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
