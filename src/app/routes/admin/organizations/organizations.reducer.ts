@@ -31,7 +31,8 @@ export function reducer(state: IOrganizationsState = defaultState, action: Unsaf
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganization: action.payload.organization ||
+        organizations: action.payload.organizations || state.organizations,
+        selectedOrganization: action.payload.selectedOrganization ||
           // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
           // so we should find him actual mirror by id
           findOrganizationNode(state.organizations, state.selectedOrganization)
@@ -39,7 +40,8 @@ export function reducer(state: IOrganizationsState = defaultState, action: Unsaf
     case OrganizationsService.EMPLOYEE_SELECT:
       return {
         ...state,
-        selectedEmployeeUserId: action.payload.employeeUserId
+        employees: action.payload.employees || state.employees,
+        selectedEmployeeUserId: action.payload.selectedEmployeeUserId
       };
     case OrganizationsService.DIALOG_ACTION:
       return {

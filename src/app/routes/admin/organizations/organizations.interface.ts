@@ -39,12 +39,18 @@ export enum IOrganizationDialogActionEnum {
   EMPLOYEE_REMOVE
 }
 
-export interface IOrganizationsState {
-  organizations: ITreeNode[];
+export interface IOrganizationSelectPayload {
   selectedOrganization: ITreeNode;
-  employees: Array<IEmployee>;
-  notAddedEmployees: Array<IEmployee>;
+  organizations?: ITreeNode[];
+}
+
+export interface IEmployeeSelectPayload {
+  employees?: Array<IEmployee>;
+  notAddedEmployees?: Array<IEmployee>;
   selectedEmployeeUserId: number;
+}
+
+export interface IOrganizationsState extends IOrganizationSelectPayload, IEmployeeSelectPayload {
   dialogAction: IOrganizationDialogActionEnum;
 }
 

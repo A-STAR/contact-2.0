@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy
 } from '@angular/core';
@@ -13,15 +14,16 @@ import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree
 
 import { OrganizationsService } from '../organizations.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
 })
-export class OrganizationsTreeComponent implements OnDestroy {
+export class OrganizationsTreeComponent implements OnDestroy, OnInit {
   permissionSub: Subscription;
-  organizations: ITreeNode[] = [];
+  organizations: Observable<ITreeNode[]>;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -47,7 +49,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.organizationsService.fetchOrganizations(),
+      action: () => this.fetchOrganizations(),
       enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
     },
   ];
@@ -55,11 +57,18 @@ export class OrganizationsTreeComponent implements OnDestroy {
   constructor(
     private organizationsService: OrganizationsService,
     private userPermissionsService: UserPermissionsService,
+    private cdRef: ChangeDetectorRef
   ) {
-    this.permissionSub = this.canViewOrganization.subscribe(hasViewPermission => hasViewPermission
-      ? this.organizationsService.fetchOrganizations()
+
+  }
+
+  ngOnInit(): void {
+    this.permissionSub = this.canViewOrganization.do(hasViewPermission => hasViewPermission
+      ? (this.organizations = this.organizationsService.fetchOrganizations())
       : this.organizationsService.clearOrganizations()
-    );
+    ).subscribe(() => {
+      console.log('Fired!');
+    });
   }
 
   ngOnDestroy(): void {
@@ -96,15 +105,16 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   onChangeNodesLocation(payload: ITreeNodeInfo[]): void {
-    this.organizationsService.updateOrganizations(payload);
+    this.organizationsService.updateOrganizations(payload).subscribe(() => {});
   }
 
   onNodeSelect({ node }: { node: ITreeNode }): void {
     this.organizationsService.selectOrganization(node);
+    this.organizationsService.fetchEmployees().subscribe(() => {});
   }
 
   onRemove(): void {
-    this.organizationsService.removeOrganization();
+    this.organizationsService.removeOrganization().subscribe(() => {});
   }
 
   onNodeEdit(node: ITreeNode): void {
@@ -115,11 +125,15 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.organizationsService.setDialogAction(null);
   }
 
+  fetchOrganizations(): void {
+    this.organizationsService.fetchOrganizations().subscribe(() => {});
+  }
+
   createOrganization(data: any): void {
-    this.organizationsService.createOrganization(data);
+    this.organizationsService.createOrganization(data).subscribe(() => {});
   }
 
   updateOrganization(data: any): void {
-    this.organizationsService.updateOrganization(data);
+    this.organizationsService.updateOrganization(data).subscribe(() => {});
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
@@ -10,29 +10,28 @@ import { OrganizationsService } from '../../organizations.service';
 
 import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-employee-add',
   templateUrl: './employee-add.component.html'
 })
-export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
+export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
   @ViewChild(GridComponent) addEmployeeGrid: GridComponent;
 
   private selectedEmployees: Array<IEmployeeUser>;
+  private employeesSub: Subscription;
+  public notAddedEmployees: Observable<IEmployee[]>;
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
     // TODO: display column depending on filter
-    { prop: 'isInactive', minWidth: 100 },
+    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
-
-  renderers: IRenderer = {
-    isInactive: 'checkboxRenderer',
-  };
 
   get formData(): any {
     return {
@@ -47,12 +46,19 @@ export class EmployeeAddComponent extends EntityBaseComponent<IEmployeeUser> {
     private organizationsService: OrganizationsService,
   ) {
     super();
-    this.organizationsService.fetchNotAddedEmployees();
-    this.columns = this.gridService.setRenderers(this.columns, this.renderers);
+    // base class form render fails if this loc placed inside ngOnInit
   }
 
   get state(): Observable<IOrganizationsState> {
     return this.organizationsService.state;
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.notAddedEmployees = this.organizationsService.fetchNotAddedEmployees();
+    this.gridService.setAllRenderers(this.columns)
+      .take(1)
+      .subscribe(columns => this.columns = [...columns]);
   }
 
   toSubmittedValues(values: IEmployeeUser): any {

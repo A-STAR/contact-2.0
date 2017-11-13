@@ -29,7 +29,7 @@ export class EmployeesComponent implements OnDestroy {
       action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.EMPLOYEE_ADD),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.selectedOrganization
+        Observable.of(this.organizationsService.selectedOrganization)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
     },
     {
@@ -84,6 +84,7 @@ export class EmployeesComponent implements OnDestroy {
 
   private organizationsStateSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
+  private employeeFetchSubscription: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -112,14 +113,11 @@ export class EmployeesComponent implements OnDestroy {
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
     this.viewPermissionSubscription = Observable.combineLatest(
-      this.hasViewPermission$,
-      this.organizationsService.selectedOrganization
+      this.hasViewPermission$
     )
     .subscribe(([ hasViewPermission, currentOrganization ]) => {
       if (!hasViewPermission) {
         this.organizationsService.clearEmployees();
-      } else if (currentOrganization) {
-        this.organizationsService.fetchEmployees();
       }
     });
 
