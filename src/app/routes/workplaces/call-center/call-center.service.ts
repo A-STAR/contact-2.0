@@ -20,7 +20,7 @@ export class CallCenterService {
     this.fetchCampaigns().subscribe(campaigns => {
       this._campaigns$.next(campaigns);
       if (campaigns && campaigns[0]) {
-        this.router.navigate([ `./${campaigns[0].id}` ]);
+        this.navigateToCampaign(campaigns[0]);
       }
     });
   }
@@ -29,8 +29,12 @@ export class CallCenterService {
     return this._campaigns$;
   }
 
+  navigateToCampaign(campaign: ICampaign): void {
+    this.router.navigate([ `./${campaign.id}` ]);
+  }
+
   private fetchCampaigns(): Observable<ICampaign[]> {
     return this.dataService.readAll('/userCampaigns')
-      .catch(this.notificationsService.fetchError().entity('entities.campaign.gen.plural').dispatchCallback())
+      .catch(this.notificationsService.fetchError().entity('entities.campaign.gen.plural').dispatchCallback());
   }
 }
