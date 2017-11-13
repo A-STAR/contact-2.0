@@ -16,7 +16,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class ContractorsAndPortfoliosService {
   static CONTRACTORS_FETCH                      = 'CONTRACTORS_FETCH';
   static CONTRACTOR_FETCH                       = 'CONTRACTOR_FETCH';
-  static CONTRACTORS_CLEAR                      = 'CONTRACTORS_CLEAR';
   static CONTRACTOR_SELECT                      = 'CONTRACTOR_SELECT';
   static CONTRACTOR_CREATE                      = 'CONTRACTOR_CREATE';
   static CONTRACTOR_UPDATE                      = 'CONTRACTOR_UPDATE';
@@ -29,7 +28,6 @@ export class ContractorsAndPortfoliosService {
   static MANAGER_CREATE                         = 'MANAGER_CREATE';
   static MANAGER_UPDATE                         = 'MANAGER_UPDATE';
   static MANAGER_DELETE                         = 'MANAGER_DELETE';
-  static MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR = 'MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR';
 
   static PORTFOLIO_FETCH                        = 'PORTFOLIO_FETCH';
   static PORTFOLIOS_FETCH                       = 'PORTFOLIOS_FETCH';

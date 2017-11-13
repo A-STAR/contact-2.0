@@ -14,38 +14,22 @@ export function reducer(
   action: UnsafeAction
 ): IContractorsAndPortfoliosState {
   switch (action.type) {
-    case ContractorsAndPortfoliosService.CONTRACTORS_CLEAR:
-      return {
-        ...state,
-        selectedContractorId: null
-      };
     case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
     return {
       ...state,
       selectedContractorId: action.payload.contractorId
     };
-
-    // Contractors:
-    case ContractorsAndPortfoliosService.MANAGERS_CLEAR_SELECTED_FOR_CONTRACTOR:
-      delete state.mapContractorToSelectedManager[action.payload.contractorId];
-      return state;
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
       return {
         ...state,
-        mapContractorToSelectedManager: Object.assign({},
-                                                     state.mapContractorToSelectedManager,
-                                                     action.payload.mapContractorToSelectedManager
-                                                    )
+        mapContractorToSelectedManager: Object
+          .assign( {}, state.mapContractorToSelectedManager, action.payload.mapContractorToSelectedManager)
       };
-
-    // Portfolios:
     case ContractorsAndPortfoliosService.PORTFOLIO_SELECT:
       return {
         ...state,
-        mapContractorToSelectedPortfolio: Object.assign({},
-                                                    state.mapContractorToSelectedPortfolio,
-                                                    action.payload.mapContractorToSelectedPortfolio
-                                                    )
+        mapContractorToSelectedPortfolio: Object
+          .assign( {}, state.mapContractorToSelectedPortfolio, action.payload.mapContractorToSelectedPortfolio)
       };
     default:
       return state;
