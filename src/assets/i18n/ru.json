@@ -127,6 +127,20 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "grid": {
+        "name": "Название",
+        "comment": "Описание"
+      },
+      "tabs": {
+        "phonesAndAddresses": "Телефоны и адреса",
+        "debtComponents": "Компоненты долга",
+        "contacts": "Контакты",
+        "payments": "Платежи",
+        "promises": "Обещания",
+        "documents": "Документы"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -1418,6 +1432,9 @@
   "entities": {
     "attribute": {
       "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
+    },
+    "campaign": {
+      "gen": { "singular": "кампании", "plural": "списка кампаний" }
     },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
