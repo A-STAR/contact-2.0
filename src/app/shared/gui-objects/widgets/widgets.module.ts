@@ -21,7 +21,6 @@ import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
-import { ContactLogModule } from './contact-log/contact-log.module';
 
 @NgModule({
   imports: [

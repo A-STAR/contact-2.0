@@ -1431,7 +1431,9 @@
         "contactDateTime": "Дата контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
-        "promiseDate": "Обещанная дата",
+        "promiseDate": "Обещанная дата"
+      }
+    },
     "operator": {
       "dialog": {
         "title": "Select operator"
@@ -1854,4 +1856,4 @@
     },
     "NA": "N/A"
   }
-}}}
+}
