@@ -1504,6 +1504,13 @@
         "organization": "Department",
         "position": "Position"
       }
+    },
+    "entityGroup": {
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
@@ -1648,6 +1655,9 @@
     },
     "operator": {
       "gen": { "singular": "operator", "plural": "operators" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "group", "plural": "groups" }
     }
   },
   "errors": {

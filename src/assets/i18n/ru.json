@@ -1504,6 +1504,13 @@
         "organization": "Подразделение",
         "position": "Должность"
       }
+    },
+    "entityGroup": {
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1648,6 +1655,9 @@
     },
     "operator": {
       "gen": { "singular": "оператора", "plural": "операторов" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "группы", "plural": "групп" }
     }
   },
   "errors": {

@@ -1,0 +1,10 @@
+<app-grid
+  *ngIf="columns"
+  columnTranslationKey="widgets.entityGroup"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="entityGroups"
+  selectionType="single"
+  [styles]="gridStyles"
+  (onSelect)="onSelect($event)">
+</app-grid>
