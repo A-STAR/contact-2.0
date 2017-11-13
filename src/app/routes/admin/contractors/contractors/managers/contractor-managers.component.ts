@@ -1,8 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Actions } from '@ngrx/effects';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import { ActivatedRoute, Router} from '@angular/router';
+
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractorManager } from '../../contractors-and-portfolios.interface';
 import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
@@ -16,12 +17,21 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+
+import { DialogFunctions } from '../../../../../core/dialog';
+
+
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
+
 @Component({
   selector: 'app-contractor-managers',
-  templateUrl: './contractor-managers.component.html'
+  templateUrl: './contractor-managers.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorManagersComponent implements OnDestroy {
+export class ContractorManagersComponent extends DialogFunctions  implements OnDestroy {
   static COMPONENT_NAME = 'ContractorManagersComponent';
+
+  dialog: string;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -34,20 +44,20 @@ export class ContractorManagersComponent implements OnDestroy {
       action: () => this.onEdit(),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedManager$
-      ).map(([hasPermissions, selectedManager]) => hasPermissions && !!selectedManager)
+        this.contractorsAndPortfoliosService.selectedManagerId$
+      ).map(([hasPermissions, mappedId]) => hasPermissions && mappedId && !!mappedId[this.contractorId])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dialogAction = ContractorManagerActionEnum.DELETE,
+      action: () => this.setDialog('delete'),
       enabled: Observable.combineLatest(
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedManager$
-      ).map(([hasPermissions, selectedManager]) => hasPermissions && !!selectedManager)
+        this.contractorsAndPortfoliosService.selectedManagerId$
+      ).map(([hasPermissions, mappedId]) => hasPermissions && mappedId && !!mappedId[this.contractorId])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.contractorsAndPortfoliosService.fetchManagers(this.contractorId),
+      action: () => this.needToReadAllManagers$.next(' '),
       enabled: this.canView$
     }
   ];
@@ -68,14 +78,18 @@ export class ContractorManagersComponent implements OnDestroy {
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
+  selection: IContractorManager[];
+  rows: IContractorManager[];
+
   private contractorId = Number((this.activatedRoute.params as any).value.id);
   private canViewSubscription: Subscription;
   private dialogAction: ContractorManagerActionEnum;
   private dictionariesSubscription: Subscription;
   private managersSubscription: Subscription;
-  private actionsSubscription: Subscription;
+  private viewCreateManagerOnChild: Subscription;
 
-  private selectedManager: IContractorManager;
+  private _managers: IContractorManager[];
+  private needToReadAllManagers$ = new BehaviorSubject<string>(null);
 
   private renderers: IRenderer = {
     branchCode: [],
@@ -83,23 +97,18 @@ export class ContractorManagersComponent implements OnDestroy {
   };
 
   constructor(
-    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private router: Router,
+    private messageBusService: MessageBusService,
+    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.canViewSubscription = this.canView$.subscribe(canView => {
-      if (canView) {
-        this.contractorsAndPortfoliosService.fetchManagers(this.contractorId);
-      } else {
-        this.contractorsAndPortfoliosService.clearManagers();
-        this.notificationsService.error('errors.default.read.403').entity('entities.managers.gen.plural').dispatch();
-      }
-    });
+    super();
 
     this.dictionariesSubscription = Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
@@ -110,31 +119,65 @@ export class ContractorManagersComponent implements OnDestroy {
       this.columns = this.gridService.setRenderers(this.columns, this.renderers);
     });
 
-    this.managersSubscription = this.contractorsAndPortfoliosService.selectedManager$.subscribe(manager => {
-      this.selectedManager = manager;
+    this.needToReadAllManagers$
+      .flatMap(() => this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId))
+      .subscribe((managers: IContractorManager[]) => {
+        this.managers = managers;
+        this.cdRef.markForCheck();
+      });
+
+    this.canViewSubscription = this.canView$.subscribe(canView => {
+      if (canView) {
+        this.needToReadAllManagers$.next(' ');
+      } else {
+        this.clearManagers();
+        this.notificationsService.error('errors.default.read.403').entity('entities.managers.gen.plural').dispatch();
+      }
     });
 
-    this.actionsSubscription = this.actions
-      .ofType(ContractorsAndPortfoliosService.MANAGER_DELETE_SUCCESS)
-      .subscribe(() => this.dialogAction = null);
+    this.viewCreateManagerOnChild = this.messageBusService
+          .select(ContractorsAndPortfoliosService.MANAGERS_FETCH)
+          .subscribe(() => {
+            this.needToReadAllManagers$.next(' ');
+          });
+
+    this.managersSubscription = this.contractorsAndPortfoliosService.selectedManagerId$
+      .subscribe(mappedId => {
+        this.selection = mappedId && mappedId[this.contractorId] &&
+            this.managers && this.managers.find(manager => manager.id === mappedId[this.contractorId])
+        ? [ this.managers.find(manager => manager.id === mappedId[this.contractorId]) ]
+        : [];
+      });
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.dictionariesSubscription.unsubscribe();
-    this.contractorsAndPortfoliosService.clearManagers();
+    this.managersSubscription.unsubscribe();
+    this.viewCreateManagerOnChild.unsubscribe();
+  }
+
+  set managers(newManagers: IContractorManager[]) {
+    this._managers = newManagers;
+    if ( this.contractorsAndPortfoliosService.managerMapping &&
+      this.contractorsAndPortfoliosService.managerMapping[this.contractorId] && this._managers.length) {
+      this.selection =
+        [ this._managers.find((manager) => manager.id ===
+          this.contractorsAndPortfoliosService.managerMapping[this.contractorId])];
+    }
+  }
+
+  get managers(): IContractorManager[] {
+    return this._managers;
+  }
+
+  clearManagers (): void {
+    this.contractorsAndPortfoliosService.selectManager(this.contractorId, null);
+    this.managers = [];
   }
 
   get isManagerBeingRemoved(): boolean {
     return this.dialogAction === ContractorManagerActionEnum.DELETE;
-  }
-
-  get managers$(): Observable<Array<IContractorManager>> {
-    return this.contractorsAndPortfoliosService.managers$;
-  }
-
-  get selectedManager$(): Observable<IContractorManager> {
-    return this.contractorsAndPortfoliosService.selectedManager$;
   }
 
   get canView$(): Observable<boolean> {
@@ -154,26 +197,31 @@ export class ContractorManagersComponent implements OnDestroy {
   }
 
   onAdd(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers/create`);
+    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/create`]);
   }
 
   onEdit(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers/${this.selectedManager.id}`);
+    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/${this.selection[0].id}`]);
   }
 
   onSelect(manager: IContractorManager): void {
-    this.contractorsAndPortfoliosService.selectManager(manager.id);
+    this.selection = [manager];
+    this.contractorsAndPortfoliosService.selectManager(this.contractorId, manager.id);
   }
 
   onBack(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}`);
+    this.contentTabService.gotoParent(this.router, 1);
   }
 
   onRemoveSubmit(): void {
-    this.contractorsAndPortfoliosService.deleteManager(this.contractorId);
+    this.contractorsAndPortfoliosService.deleteManager(this.contractorId, this.selection[0].id)
+      .subscribe(() => {
+        this.setDialog();
+        this.needToReadAllManagers$.next('');
+      });
   }
 
   onCloseDialog(): void {
-    this.dialogAction = null;
+    this.setDialog();
   }
 }
