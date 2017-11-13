@@ -1506,6 +1506,9 @@
       }
     },
     "entityGroup": {
+      "dialog": {
+        "title": "Select group"
+      },
       "grid": {
         "id": "Id",
         "name": "Name",
