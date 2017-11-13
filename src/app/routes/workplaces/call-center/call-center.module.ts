@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { CallCenterComponent } from './call-center.component';
-import { CampaignComponent } from './campaign/campaign.component';
 
 const routes: Routes = [
   {
