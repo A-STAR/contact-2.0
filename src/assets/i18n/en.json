@@ -127,6 +127,16 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "tabs": {
+        "phonesAndAddresses": "Phones and Addresses",
+        "debtComponents": "Debt Components",
+        "contacts": "Contacts",
+        "payments": "Payments",
+        "promises": "Promises",
+        "documents": "Documents"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {

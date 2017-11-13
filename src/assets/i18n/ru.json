@@ -127,6 +127,16 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "tabs": {
+        "phonesAndAddresses": "Телефоны и адреса",
+        "debtComponents": "Компоненты долга",
+        "contacts": "Контакты",
+        "payments": "Платежи",
+        "promises": "Обещания",
+        "documents": "Документы"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
