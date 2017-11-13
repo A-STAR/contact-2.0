@@ -169,6 +169,11 @@ export const menuConfig: IMenuConfig = {
     link: '/workplaces/mail',
     icon: 'icon-envelope-letter'
   },
+  incomingCall: {
+    text: 'sidebar.nav.menu.INCOMING_CALL',
+    link: '/workplaces/incoming-call',
+    icon: 'icon-phone'
+  },
 
   // Отчеты
   reports: {

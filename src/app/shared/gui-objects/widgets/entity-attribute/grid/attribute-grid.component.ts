@@ -80,7 +80,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([
-        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+        this.entityTypeId$.flatMap(
+          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
+        ),
         this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
       ])
     },

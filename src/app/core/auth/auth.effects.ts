@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { Action } from '@ngrx/store';
+import { HttpResponse } from '@angular/common/http';
+import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -16,7 +16,7 @@ export class AuthEffects {
   @Effect()
   login$ = this.actions
     .ofType(AuthService.AUTH_LOGIN)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       const { login, password } = action.payload;
       return this.login(login, password)
         .map((token: string) => ({
@@ -37,7 +37,7 @@ export class AuthEffects {
   @Effect()
   refresh$ = this.actions
     .ofType(AuthService.AUTH_REFRESH)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.refresh()
         .map((token: string) => ({
           type: AuthService.AUTH_CREATE_SESSION,
@@ -54,7 +54,7 @@ export class AuthEffects {
   @Effect()
   logout$ = this.actions
     .ofType(AuthService.AUTH_LOGOUT)
-    .switchMap((action: Action) => {
+    .switchMap((action: UnsafeAction) => {
       return this.logout()
         .map(() => ({
           type: AuthService.AUTH_DESTROY_SESSION
@@ -70,7 +70,7 @@ export class AuthEffects {
   @Effect()
   createSession$ = this.actions
     .ofType(AuthService.AUTH_CREATE_SESSION)
-    .do((action: Action) => {
+    .do((action: UnsafeAction) => {
       const { redirectAfterLogin, token } = action.payload;
       this.authService.saveToken(token);
       this.authService.saveLanguage(token);
@@ -84,7 +84,7 @@ export class AuthEffects {
   @Effect()
   destroySession$ = this.actions
     .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .do((action: Action) => {
+    .do((action: UnsafeAction) => {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
       if (!action.payload || action.payload.redirectToLogin !== false) {
@@ -104,13 +104,17 @@ export class AuthEffects {
     private notificationService: NotificationsService,
   ) {}
 
+  private get overrideRequestOptions(): any {
+    return { observe: 'response', responseType: 'json' };
+  }
+
   private login(login: string, password: string): Observable<string> {
-    return this.dataService.post('/auth/login', {}, { login, password })
+    return this.dataService.post('/auth/login', {}, { login, password }, this.overrideRequestOptions)
       .map(response => this.getTokenFromResponse(response));
   }
 
   private refresh(): Observable<string> {
-    return this.dataService.get('/api/refresh', {}, {})
+    return this.dataService.get('/api/refresh', {}, this.overrideRequestOptions)
       .map(response => this.getTokenFromResponse(response));
   }
 
@@ -118,7 +122,7 @@ export class AuthEffects {
     return this.dataService.get('/auth/logout', {});
   }
 
-  private getTokenFromResponse(response: Response): string {
-    return response.headers.get('X-Auth-Token');
+  private getTokenFromResponse(response: HttpResponse<string>): string {
+    return response.headers.get('X-AUTH-TOKEN');
   }
 }

@@ -7,6 +7,7 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 import { IObject } from '../object.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { UnsafeAction } from '../../../../../core/state/state.interface';
 
 import { ObjectService } from '../object.service';
 import { PermissionsService } from '../../../../../routes/admin/roles/permissions.service';
@@ -68,7 +69,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   ngOnInit(): void {
     this._masterRoleSubscription = this.actions
       .ofType(PermissionsService.ROLE_SELECTED, PermissionsService.ROLE_FETCH_SUCCESS)
-      .subscribe(action => {
+      .subscribe((action: UnsafeAction) => {
         const { role } = action.payload;
         this.masterRoleId$.next(role ? role.id : null);
         this.cdRef.markForCheck();

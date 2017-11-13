@@ -63,6 +63,7 @@ export class GuiObjectsService {
   }
 
   private get state$(): Observable<IGuiObjectsState> {
-    return this.store.select(state => state.guiObjects);
+    return this.store.select(state => state.guiObjects)
+      .filter(Boolean);
   }
 }

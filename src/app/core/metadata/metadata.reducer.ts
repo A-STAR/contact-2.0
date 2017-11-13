@@ -1,20 +1,20 @@
-import { Action } from '@ngrx/store';
-
 import { IMetadataState, MetadataListStatusEnum } from './metadata.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { MetadataService } from './metadata.service';
 
-const DEFAULT_STATE: IMetadataState = {
+export const defaultState: IMetadataState = {
   lists: null
 };
 
-export function metadataReducer(state: IMetadataState = DEFAULT_STATE, action: Action): IMetadataState {
+export function reducer(state: IMetadataState = defaultState, action: UnsafeAction): IMetadataState {
   switch (action.type) {
     case MetadataService.METADATA_FETCH_SUCCESS:
-      const { name, data } = action.payload;
+      const { actions, data, name } = action.payload;
       return {
         ...state,
         [name]: {
+          actions,
           columns: data,
           status: MetadataListStatusEnum.LOADED
         }

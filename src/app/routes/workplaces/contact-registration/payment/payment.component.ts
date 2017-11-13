@@ -29,7 +29,7 @@ export class PaymentComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
-  data = {};
+  data: any = {};
 
   constructor(
     private accordionService: AccordionService,
@@ -46,11 +46,11 @@ export class PaymentComponent implements OnInit {
     )
     .subscribe(([ node, debt ]) => {
       if (node && isEmpty(node.children)) {
-        const { promiseMode } = node.data;
-        if (promiseMode === 3) {
+        const { paymentMode } = node.data;
+        if (paymentMode === 3) {
           this.data = { ...this.data, amount: debt.debtAmount, percentage: 100 };
         }
-        this.controls = this.buildControls(promiseMode, debt);
+        this.controls = this.buildControls(paymentMode, debt);
         this.cdRef.detectChanges();
       } else {
         this.controls = null;
@@ -66,14 +66,14 @@ export class PaymentComponent implements OnInit {
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.serializedUpdates;
-    this.paymentService.create(this.debtId, guid, rest)
+    this.paymentService.create(this.debtId, guid, { amount: this.data.amount, ...rest })
       .subscribe(() => {
         this.accordionService.next();
         this.cdRef.markForCheck();
       });
   }
 
-  private buildControls(promiseMode: number, debt: IDebt): IDynamicFormControl[] {
+  private buildControls(paymentMode: number, debt: IDebt): IDynamicFormControl[] {
     const maxDate = moment().toDate();
     const { debtAmount } = debt;
     return [
@@ -87,14 +87,14 @@ export class PaymentComponent implements OnInit {
         controlName: 'amount',
         type: 'number',
         required: true,
-        disabled: promiseMode === 3,
+        disabled: paymentMode === 3,
         validators: [ minStrict(0), max(debtAmount) ],
         onChange: event => this.onAmountChange(event, debtAmount)
       },
       {
         controlName: 'percentage',
         type: 'number',
-        disabled: promiseMode === 3,
+        disabled: paymentMode === 3,
         validators: [ minStrict(0), max(100) ],
         onChange: event => this.onPercentageChange(event, debtAmount)
       },

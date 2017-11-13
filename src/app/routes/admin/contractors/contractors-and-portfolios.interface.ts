@@ -42,11 +42,10 @@ export interface IContractorManager {
   comment: string;
 }
 
+export interface INumberMap { [n: number]: number; }
+
 export interface IContractorsAndPortfoliosState {
-  contractors: Array<IContractor>;
   selectedContractorId: number;
-  portfolios: Array<IPortfolio>;
-  selectedPortfolioId: number;
-  managers: Array<IContractorManager>;
-  selectedManagerId: number;
+  mapContractorToSelectedManager?: INumberMap;
+  mapContractorToSelectedPortfolio?: INumberMap;
 }

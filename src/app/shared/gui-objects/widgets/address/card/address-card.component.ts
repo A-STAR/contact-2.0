@@ -95,7 +95,6 @@ export class AddressCardComponent {
             {
               type: 'group',
               bordered: true,
-              // TODO(d.maltsev): i18n
               label: 'widgets.address.card.fullAddressLabel',
               name: 'foo',
               translationKey: 'widgets.address.card',

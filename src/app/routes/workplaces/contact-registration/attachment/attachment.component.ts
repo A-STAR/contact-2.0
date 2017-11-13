@@ -14,6 +14,8 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 
 import { DialogFunctions } from '../../../../core/dialog';
 
+import { isEmpty } from '../../../../core/utils';
+
 @Component({
   selector: 'app-contact-registration-attachment',
   templateUrl: './attachment.component.html',
@@ -66,6 +68,11 @@ export class AttachmentComponent extends DialogFunctions {
 
   get selectedDocument$(): Observable<IAttachment > {
     return this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
+  }
+
+  get formDisabled$(): Observable<boolean> {
+    return this.contactRegistrationService.selectedNode$
+      .map(node => node.data.fileAttachMode === 3 && isEmpty(this.documents));
   }
 
   onSelect(document: IAttachment): void {

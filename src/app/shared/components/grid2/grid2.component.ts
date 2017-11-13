@@ -18,6 +18,8 @@ import {
   GridOptions, ICellRendererParams, MenuItemDef, RowNode,
 } from 'ag-grid/main';
 import { PostProcessPopupParams } from 'ag-grid-enterprise';
+
+import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
@@ -25,7 +27,7 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
@@ -33,11 +35,14 @@ import { FilterObject } from './filter/grid-filter';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
+
+import { UserPermissions } from '../../../core/user/permissions/user-permissions';
 
 interface ITranslations {
   translations: { [index: string]: string };
@@ -67,14 +72,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
+  @Input() columnIds: string[];
   @Input() disableFilters = false;
+  @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
   @Input() headerHeight = 25;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
-  @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000]))
-    .sort((x, y) => x > y ? 1 : -1);
+  @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000])).sort((x, y) => x > y ? 1 : -1);
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
@@ -85,7 +91,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
-  @Input() fetchUrl: string;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -98,6 +103,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -105,10 +111,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
+  actions: IMetadataAction[];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
   private langSubscription: EventEmitter<any>;
+  private userPermissionsBag: UserPermissions;
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
@@ -117,6 +125,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
 
@@ -137,6 +146,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.metadataKey) {
       throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
+
+    // TODO(d.maltsev): subscription
+    this.userPermissionsService.bag()
+      .subscribe(bag => this.userPermissionsBag = bag);
+
+    this.gridService
+      .getActions(this.metadataKey)
+      .take(1)
+      .subscribe(actions => this.actions = actions);
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
@@ -566,6 +584,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     };
 
     return this.columns
+      .filter(column => !this.columnIds || this.columnIds.includes(column.colId))
       .filter(column => !!column.label)
       .map(mapColumns)
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
@@ -681,6 +700,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         disabled: true,
         tooltip: 'Just to test what the tooltip can show'
       },
+      'separator',
+      ...(this.actions || []).map(action => ({
+        name: this.translate.instant(`default.grid.actions.${action.action}`),
+        disabled: !this.isContextMenuItemEnabled(action.action),
+        action: () => this.action.emit({ action, params })
+      })),
       // {
       //   name: 'Person',
       //   subMenu: [
@@ -709,6 +734,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       }
     ];
+  }
+
+  // TODO(d.maltsev): this looks a bit messy.
+  // Maybe we should get permissions from server as well or get all metadata from client service
+  private isContextMenuItemEnabled(action: string): boolean {
+    switch (action) {
+      case 'showContactHistory':
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      default:
+        return true;
+    }
   }
 
   /**

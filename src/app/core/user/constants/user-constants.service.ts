@@ -41,6 +41,8 @@ export class UserConstantsService {
   }
 
   private get constants$(): Observable<Array<IUserConstant>> {
-    return this.store.select(state => state.userConstants.constants);
+    return this.store.select(state => state.userConstants)
+      .filter(Boolean)
+      .map(state => state.constants);
   }
 }

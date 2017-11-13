@@ -20,16 +20,16 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 
 @NgModule({
   imports: [
-    CommonModule,
-    DatePickerModule,
-    FormsModule,
-    ToolbarModule,
-    TranslateModule,
     ActionDialogModule,
     AgGridModule.withComponents([
       GridDatePickerComponent
     ]),
+    CommonModule,
+    DatePickerModule,
+    FormsModule,
     SelectModule,
+    ToolbarModule,
+    TranslateModule,
   ],
   exports: [
     Grid2Component,

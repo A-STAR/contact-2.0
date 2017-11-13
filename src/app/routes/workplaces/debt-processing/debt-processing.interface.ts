@@ -1,4 +1,5 @@
 export interface IDebt {
+  id: number;
   bankName: string;
   branchCode: number;
   creditEndDate: Date | string;

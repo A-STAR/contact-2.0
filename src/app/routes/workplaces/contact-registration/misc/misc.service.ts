@@ -4,16 +4,18 @@ import { Observable } from 'rxjs/Observable';
 import { IMiscData } from './misc.interface';
 
 import { DataService } from '../../../../core/data/data.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class MiscService {
   constructor(
     private dataService: DataService,
+    private notificationsService: NotificationsService,
   ) {}
 
   create(debtId: number, guid: string, data: IMiscData): Observable<any> {
     return this.dataService
-      // TODO(d.maltsev): error handling
-      .update('/debts/{debtId}/contactRequest/{guid}', { debtId, guid }, data);
+      .update('/debts/{debtId}/contactRequest/{guid}', { debtId, guid }, data)
+      .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

@@ -4,16 +4,18 @@ import { Observable } from 'rxjs/Observable';
 import { IPayment } from './payment.interface';
 
 import { DataService } from '../../../../core/data/data.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class PaymentService {
   constructor(
     private dataService: DataService,
+    private notificationsService: NotificationsService,
   ) {}
 
   create(debtId: number, guid: string, payment: IPayment): Observable<any> {
     return this.dataService
-      // TODO(d.maltsev): error handling
-      .create('/debts/{debtId}/contactRequest/{guid}/payment', { debtId, guid }, payment);
+      .create('/debts/{debtId}/contactRequest/{guid}/payment', { debtId, guid }, payment)
+      .catch(this.notificationsService.createError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 }

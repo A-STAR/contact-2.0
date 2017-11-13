@@ -309,9 +309,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canRegisterContact$(): Observable<boolean> {
+    // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }

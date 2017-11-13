@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,14 +7,12 @@ import 'rxjs/add/observable/of';
 
 import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IPerson } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../debt/debt/debt.service';
-import { DebtorService } from '../../../../../routes/workplaces/debt-processing/debtor/debtor.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -31,6 +29,12 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
+  @Input() action: 'edit';
+  @Input() contactType: number;
+  @Input() debtId: number;
+  @Input() personId: number;
+  @Input() personRole: number;
+
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -82,7 +86,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   phones: Array<IPhone> = [];
 
-  person: IPerson;
   debt: IDebt;
 
   private canViewSubscription: Subscription;
@@ -98,36 +101,28 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     { prop: 'comment' },
   ];
 
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.personId || null;
-  private debtId = this.routeParams.debtId || null;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
-    private debtorService: DebtorService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
-    private route: ActivatedRoute,
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
-    @Inject('contactType') private contactType: number,
-    @Inject('personRole') private personRole: number,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
-      this.debtorService.fetch(this.personId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ debt, person, columns, canViewBlock ]) => {
+    .subscribe(([ debt, columns, canViewBlock ]) => {
       this.debt = debt;
-      this.person = person;
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
@@ -138,9 +133,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.messageBusService
       .select(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
       .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
@@ -171,7 +164,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.onEdit(phone.id);
+    switch (this.action) {
+      case 'edit':
+        this.onEdit(phone.id);
+        break;
+    }
   }
 
   onSelect(phone: IPhone): void {
@@ -265,6 +262,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canRegisterContact$(): Observable<boolean> {
+    // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),

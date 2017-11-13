@@ -78,7 +78,8 @@
         "MAIL": "Mail",
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
-        "HELP": "Help"
+        "HELP": "Help",
+        "INCOMING_CALL": "Incoming Call"
       }
     },
     "messages": {
@@ -127,12 +128,33 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Log Contact",
+          "address": {
+            "title": "Addresses",
+            "button": "Log Selected Address"
+          },
+          "phone": {
+            "title": "Phones",
+            "button": "Log Selected Phone"
+          },
+          "misc": {
+            "title": "Miscellaneous",
+            "buttonMisc": "Miscellaneous",
+            "buttonOfficeVisit": "Office Visit"
+          }
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
         "autoCommentId": "Select Auto Comments",
         "autoComment": "Auto Comments",
-        "comment": "Comments"
+        "comment": "Comments",
+        "errors": {
+          "init": "An error has occurred"
+        }
       },
       "promise": {
         "title": "Promise Registration",
@@ -186,6 +208,60 @@
       },
       "confirm": {
         "title": "Confirmation"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Debt Id",
+          "fullName": "Full Name/Company Name",
+          "contract": "Contract",
+          "account": "Account",
+          "phoneNumber": "Phone Number",
+          "fullAddress": "Address",
+          "docSeries": "Series",
+          "docNumber": "Number",
+          "clientId": "Client Id",
+          "birthDate": "Birth Date",
+          "showDebtors": "Show Debtors",
+          "showGuarantors": "Show Guarantors",
+          "showClosed": "Show Closed Debts"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contact": "Contract",
+          "creditEndDate": "Credit End Date",
+          "creditName": "Credit Name",
+          "creditStartDate": "Credit Start Date",
+          "creditTypeCode": "Credit Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "debtorId": "Debtor Id",
+          "docNumber": "Document #",
+          "fullName": "Full Name/Company Name",
+          "outPortfolioName": "Outgoing Portfolio Name",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start date",
+          "statusCode": "Status"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
@@ -657,6 +733,16 @@
     "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
+    "stringValue1": "String attribute 1",
+    "stringValue2": "String attribute 2",
+    "stringValue3": "String attribute 3",
+    "stringValue4": "String attribute 4",
+    "stringValue5": "String attribute 5",
+    "stringValue6": "String attribute 6",
+    "stringValue7": "String attribute 7",
+    "stringValue8": "String attribute 8",
+    "stringValue9": "String attribute 9",
+    "stringValue10": "String attribute 10",
     "comment": "Comment"
   },
   "debtors": {
@@ -1252,6 +1338,10 @@
           "statusCode": "Select Status",
           "reasonCode": "Select Reason",
           "customStatusCode": "Custom Status",
+          "statusProblematic": "Change status to \"Problematic\"",
+          "statusInfoCollection": "Change status to \"Info Collection\"",
+          "statusFutile": "Change status to \"Futile\"",
+          "statusCustom": "Change to custom status",
           "comment": "Comments"
         },
         "nextCall": {
@@ -1305,12 +1395,15 @@
       "grid": {
         "id": "Id",
         "name": "Name",
-        "propertyType": "Property Type",
+        "typeCode": "Property Type",
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
     },
     "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      },
       "card": {
         "contactNumber": "Order number",
         "contactDateTime": "Contact date",
@@ -1332,7 +1425,23 @@
         "dedbId": "Debt ID",
         "creditName": "Credit name",
         "createDateTime": "Ceate date",
-        "fullName": "Contact person name"
+        "contactType": "Contact type",
+        "fullName": "Contact person name",
+        "personRole": "Роль",
+        "contactDateTime": "Дата контакта",
+        "userFullName": "Оператор",
+        "resultName": "Результат",
+        "promiseDate": "Обещанная дата",
+    "operator": {
+      "dialog": {
+        "title": "Select operator"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "Full name",
+        "debtCnt": "Active debt count",
+        "organization": "Department",
+        "position": "Position"
       }
     }
   },
@@ -1441,7 +1550,7 @@
       "gen": { "singular": "phone number", "plural": "phone numbers" }
     },
     "contacts": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "contact", "plural": "contacts" }
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
@@ -1459,14 +1568,22 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-<<<<<<< HEAD
       "gen": { "singular": "property item", "plural": "property list" }
     },
     "contactLog": {
       "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
-=======
-      "gen": { "singular": "property", "plural": "property list" }
->>>>>>> 88ce9097400f20ed0985b183251379b12277764d
+    },
+    "scenarios": {
+      "gen": { "singular": "scenario", "plural": "scenarios list" }
+    },
+    "autoComments": {
+      "gen": { "singular": "autocomment", "plural": "autocomments list" }
+    },
+    "contactTreeItems": {
+      "gen": { "singular": "contact tree item", "plural": "contact tree" }
+    },
+    "operator": {
+      "gen": { "singular": "operator", "plural": "operators" }
     }
   },
   "errors": {
@@ -1681,6 +1798,10 @@
         "toolPanel": "Tool panel",
         "applyFilter": "Apply filter",
         "filterOoo": "filter..."
+      },
+      "actions": {
+        "statusChange": "Change Status",
+        "showContactHistory": "Contact Log"
       }
     },
     "filter": {
@@ -1690,7 +1811,8 @@
       "empty": "empty"
     },
     "select" : {
-      "empty": "[empty value]"
+      "empty": "[empty value]",
+      "selected": "Items selected"
     },
     "sex": {
       "m": "m",
@@ -1724,6 +1846,12 @@
       "pink": "Pink",
       "yellow": "Yellow"
     },
+    "dialog": {
+      "result": {
+        "title": "Operation result",
+        "message": "Operation was successful for {{successCount}} of {{count}} records"
+      }
+    },
     "NA": "N/A"
   }
-}
+}}}

@@ -1,10 +1,9 @@
-import { Action } from '@ngrx/store';
-
 import { IDictionariesState } from './dictionaries.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { DictionariesService } from './dictionaries.service';
 
-const defaultState: IDictionariesState = {
+export const defaultState: IDictionariesState = {
   dictionaries: [],
   selectedDictionary: null,
   selectedTerm: null,
@@ -14,7 +13,7 @@ const defaultState: IDictionariesState = {
   dialogAction: null
 };
 
-export function dictionariesReducer(state: IDictionariesState = defaultState, action: Action): IDictionariesState {
+export function reducer(state: IDictionariesState = defaultState, action: UnsafeAction): IDictionariesState {
   switch (action.type) {
     case DictionariesService.DICTIONARIES_FETCH_SUCCESS:
       return {

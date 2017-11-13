@@ -4,16 +4,18 @@ import { Observable } from 'rxjs/Observable';
 import { IPromise } from './promise.interface';
 
 import { DataService } from '../../../../core/data/data.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class PromiseService {
   constructor(
     private dataService: DataService,
+    private notificationsService: NotificationsService,
   ) {}
 
   create(debtId: number, guid: string, promise: IPromise): Observable<any> {
     return this.dataService
-      // TODO(d.maltsev): error handling
-      .create('/debts/{debtId}/contactRequest/{guid}/promise', { debtId, guid }, promise);
+      .create('/debts/{debtId}/contactRequest/{guid}/promise', { debtId, guid }, promise)
+      .catch(this.notificationsService.createError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 }

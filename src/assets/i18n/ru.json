@@ -78,7 +78,8 @@
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
-        "HELP": "Помощь"
+        "HELP": "Помощь",
+        "INCOMING_CALL": "Входящий звонок"
       }
     },
     "messages": {
@@ -127,12 +128,33 @@
   },
   "modules": {
     "contactRegistration": {
+      "dialogs": {
+        "contactType": {
+          "title": "Регистрация контакта",
+          "address": {
+            "title": "Адреса",
+            "button": "Зарегистрировать выбранный адрес"
+          },
+          "phone": {
+            "title": "Телефоны",
+            "button": "Зарегистрировать выбранный телефон"
+          },
+          "misc": {
+            "title": "Специальное",
+            "buttonMisc": "Специальное",
+            "buttonOfficeVisit": "Визит в офис"
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
         "autoCommentId": "Выберите автокомментарий",
         "autoComment": "Автокомментарий",
-        "comment": "Комментарий для ввода"
+        "comment": "Комментарий для ввода",
+        "errors": {
+          "init": "Произошла ошибка"
+        }
       },
       "promise": {
         "title": "Регистрация обещания",
@@ -186,6 +208,60 @@
       },
       "confirm": {
         "title": "Подтверждение данных"
+      }
+    },
+    "incomingCall": {
+      "filter": {
+        "form": {
+          "debtId": "Ид долга",
+          "fullName": "ФИО/Название",
+          "contract": "Договор",
+          "account": "Лицевой счет",
+          "phoneNumber": "Номер телефона",
+          "fullAddress": "Адрес",
+          "docSeries": "Серия",
+          "docNumber": "Номер",
+          "clientId": "Ид клиента",
+          "birthDate": "Дата рождения",
+          "showDebtors": "По должникам",
+          "showGuarantors": "По поручителям",
+          "showClosed": "Показывать закрытые долги"
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "Ид долга",
+          "debtorId": "Ид должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
+      },
+      "debtorCard": {
+        "form": {
+          "userFullName": "Ответственный",
+          "organization": "Подразделение",
+          "position": "Должность",
+          "mobPhone": "Мобильный телефон",
+          "workPhone": "Рабочий телефон",
+          "intPhone": "Внутренний номер",
+          "recommendation": "Рекомендация к действию"
+        }
       }
     }
   },
@@ -657,6 +733,16 @@
     "birthPlace": "Место рождения",
     "familyStatusCode": "Семейное положение",
     "educationCode": "Образование",
+    "stringValue1": "Строковый атрибут 1",
+    "stringValue2": "Строковый атрибут 2",
+    "stringValue3": "Строковый атрибут 3",
+    "stringValue4": "Строковый атрибут 4",
+    "stringValue5": "Строковый атрибут 5",
+    "stringValue6": "Строковый атрибут 6",
+    "stringValue7": "Строковый атрибут 7",
+    "stringValue8": "Строковый атрибут 8",
+    "stringValue9": "Строковый атрибут 9",
+    "stringValue10": "Строковый атрибут 10",
     "comment": "Комментарий"
   },
   "debtors": {
@@ -1252,6 +1338,10 @@
           "statusCode": "Выберите статус",
           "reasonCode": "Выберите причину",
           "customStatusCode": "Пользовательский статус",
+          "statusProblematic": "Перевод в статус \"Проблемные\"",
+          "statusInfoCollection": "Перевод в статус \"Поиск информации\"",
+          "statusFutile": "Перевод в статус \"Без перспектив\"",
+          "statusCustom": "Перевод в пользовательский статус",
           "comment": "Комментарий"
         },
         "nextCall": {
@@ -1305,12 +1395,15 @@
       "grid": {
         "id": "Ид",
         "name": "Название",
-        "propertyType": "Тип имущества",
+        "typeCode": "Тип имущества",
         "isConfirmed": "Подтверждено",
         "comment": "Комментарий"
       }
     },
     "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      },
       "card": {
         "contactNumber": "Номер договора",
         "contactDateTime": "Дата контакта",
@@ -1338,7 +1431,17 @@
         "contactDateTime": "Дата контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
-        "promiseDate": "Обещанная дата"
+        "promiseDate": "Обещанная дата",
+    "operator": {
+      "dialog": {
+        "title": "Выбор оператора"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "ФИО",
+        "debtCnt": "Количество активных долгов",
+        "organization": "Подразделение",
+        "position": "Должность"
       }
     }
   },
@@ -1447,7 +1550,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
+      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
@@ -1469,6 +1572,18 @@
     },
     "contactLog": {
       "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
+    },
+    "scenarios": {
+      "gen": { "singular": "сценария", "plural": "списка сценариев" }
+    },
+    "autoComments": {
+      "gen": { "singular": "автокомментария", "plural": "списка автокомментариев" }
+    },
+    "contactTreeItems": {
+      "gen": { "singular": "элемента дерева контактов", "plural": "дерева контактов" }
+    },
+    "operator": {
+      "gen": { "singular": "оператора", "plural": "операторов" }
     }
   },
   "errors": {
@@ -1683,6 +1798,10 @@
         "toolPanel": "Панель инструментов",
         "applyFilter": "Применить",
         "filterOoo": "фильтр..."
+      },
+      "actions": {
+        "statusChange": "Изменить статус",
+        "showContactHistory": "История контактов"
       }
     },
     "filter": {
@@ -1692,7 +1811,8 @@
       "empty": "пусто"
     },
     "select" : {
-      "empty": "[пустое значение]"
+      "empty": "[пустое значение]",
+      "selected": "Выбрано элементов"
     },
     "sex": {
       "m": "м",
@@ -1726,6 +1846,12 @@
       "pink": "Розовый",
       "yellow": "Желтый"
     },
+    "dialog": {
+      "result": {
+        "title": "Результат операции",
+        "message": "Операция выполнена успешно для {{successCount}} из {{count}} записей"
+      }
+    },
     "NA": "Не установлен"
   }
-}
+}}}

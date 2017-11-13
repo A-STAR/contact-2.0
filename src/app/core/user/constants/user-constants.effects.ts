@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IUserConstant } from './user-constants.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -15,7 +15,7 @@ export class UserConstantsEffects {
   @Effect()
   fetchConstants$ = this.actions
     .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       return this.read()
         .map((constants: IUserConstant[]) => ({
           type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
