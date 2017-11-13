@@ -14,6 +14,8 @@ import { DebtGroupService } from './debt-group.service';
   ],
   providers: [
     DebtGroupService,
+    { provide: 'entityTypeId', useValue: DebtGroupService.ENTITY_TYPE_DEBT },
+    { provide: 'manualGroup', useValue: DebtGroupService.MANUAL_GROUP }
   ]
 })
 export class DebtGroupModule { }

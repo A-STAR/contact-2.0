@@ -10,16 +10,16 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 export class EntityGroupService {
   static MESSAGE_ENTITY_GROUP_SELECTED = 'MESSAGE_ENTITY_GROUP_SELECTED';
 
-  private url = '/filters/groups';
+  private url = 'filters/groups?entityTypeIds={entityTypeId}&isManual={isManual}';
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(): Observable<IEntityGroup[]> {
+  fetchAll(entityTypeId: number, isManual: boolean = false): Observable<IEntityGroup[]> {
     return this.dataService
-      .readAll(this.url)
+      .readAll(this.url, { entityTypeId, isManual })
       .catch(this.notificationsService.fetchError().entity('entities.entityGroup.gen.plural').dispatchCallback());
   }
 }

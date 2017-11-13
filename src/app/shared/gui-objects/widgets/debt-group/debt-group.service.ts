@@ -10,9 +10,10 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 @Injectable()
 export class DebtGroupService {
   static ACTION_DEBT_GROUP_ADD = 'objectAddToGroup';
+  static ENTITY_TYPE_DEBT = 19;
+  static MANUAL_GROUP = false;
 
-  private entityTypeId = 19;
-  private url = `mass/entityType/${this.entityTypeId}/groups/{groupId}/add`;
+  private url = `mass/entityType/${DebtGroupService.ENTITY_TYPE_DEBT}/groups/{groupId}/add`;
 
   constructor(
     private dataService: DataService,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
 
 import { IEntityGroup } from '../entity-group.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -29,6 +29,8 @@ export class EntityGroupGridComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private entityGroupService: EntityGroupService,
     private messageBusService: MessageBusService,
+    @Inject('entityTypeId') private entityTypeId: number,
+    @Inject('manualGroup') private manualGroup: boolean,
   ) { }
 
   ngOnInit(): void {
@@ -40,7 +42,7 @@ export class EntityGroupGridComponent implements OnInit {
   }
 
   private fetch(): void {
-    this.entityGroupService.fetchAll().subscribe(groups => {
+    this.entityGroupService.fetchAll(this.entityTypeId, this.manualGroup).subscribe(groups => {
       this.entityGroups = groups;
       this.cdRef.markForCheck();
     });
