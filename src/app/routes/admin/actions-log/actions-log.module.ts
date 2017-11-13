@@ -16,7 +16,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ActionsLogFilterModule,
-    EffectsModule.run(ActionsLogService),
+    EffectsModule.forFeature([ActionsLogService]),
     RouterModule.forChild(routes),
     SharedModule,
   ],

@@ -4,11 +4,12 @@
   </div>
 
   <app-grid
+    *ngIf="contractors"
     columnTranslationKey="contractors"
     selectionType="single"
     [styles]="{height: '200px'}"
     [columns]="columns"
-    [rows]="contractors$ | async"
+    [rows]="contractors"
     [allowDblClick]="false"
     (onSelect)="onSelect($event)">
   </app-grid>

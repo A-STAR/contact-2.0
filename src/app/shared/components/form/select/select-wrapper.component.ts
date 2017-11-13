@@ -16,6 +16,8 @@ import { IOption } from '../../../../core/converter/value-converter.interface';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { toLabeledValues } from '../../../../core/utils';
+
 @Component({
   selector: 'app-select-wrapper',
   templateUrl: 'select-wrapper.component.html',
@@ -30,7 +32,9 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 })
 export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() dictCode: number;
+  @Input() parentCode: number;
   @Input() lookupKey = null as ILookupKey;
+  @Input() nullable = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -38,10 +42,15 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
     private userDictionariesService: UserDictionariesService,
   ) {}
 
+  private _disabled = false;
   private _value: any;
   private _options: IOption[];
 
   private _optionsSubscription: Subscription;
+
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   get value(): any {
     return this._value;
@@ -56,7 +65,11 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
       throw new Error('SelectWrapperComponent must have either dictCode or lookupKey but not both.');
     }
     if (this.dictCode) {
-      this._optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
+      this._optionsSubscription = this.userDictionariesService.getDictionary(this.dictCode)
+        .map(terms => terms
+          .filter(term => !this.parentCode || term.parentCode === this.parentCode)
+          .map(toLabeledValues)
+        )
         .subscribe(this.onOptionsFetch);
     }
     if (this.lookupKey) {
@@ -81,6 +94,11 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   registerOnTouched(): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
+    this.cdRef.markForCheck();
   }
 
   onChange(value: any): void {

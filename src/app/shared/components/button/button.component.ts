@@ -34,4 +34,10 @@ export class ButtonComponent {
   get displayTitle(): string {
     return this.title || this.label || this.buttonService.getLabel(this.type);
   }
+
+  onClick(event: MouseEvent): void {
+    if (this.disabled) {
+      event.stopPropagation();
+    }
+  }
 }

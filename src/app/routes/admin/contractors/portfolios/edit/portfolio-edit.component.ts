@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -13,6 +12,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 @Component({
   selector: 'app-portfolio-edit',
@@ -31,10 +31,10 @@ export class PortfolioEditComponent {
   private portfolioId: number;
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private contentTabService: ContentTabService,
+    private messageBusService: MessageBusService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
     private valueConverterService: ValueConverterService,
@@ -43,17 +43,12 @@ export class PortfolioEditComponent {
     this.contractorId = value.id;
     this.portfolioId = value.portfolioId;
 
-    if (this.contractorId && this.portfolioId) {
-      this.contractorsAndPortfoliosService.fetchPortfolio(this.contractorId, this.portfolioId);
-    }
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       this.contractorId && this.portfolioId
-        ? this.actions.ofType(ContractorsAndPortfoliosService.PORTFOLIO_FETCH)
-            .switchMap(action => this.contractorsAndPortfoliosService.selectedPortfolio$)
+        ? this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId)
         : Observable.of(null)
     )
     .take(1)
@@ -80,13 +75,6 @@ export class PortfolioEditComponent {
       ];
       this.cdRef.markForCheck();
     });
-
-    this.actions.ofType(
-      ContractorsAndPortfoliosService.PORTFOLIO_CREATE_SUCCESS,
-      ContractorsAndPortfoliosService.PORTFOLIO_UPDATE_SUCCESS
-    )
-    .take(1)
-    .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -95,11 +83,13 @@ export class PortfolioEditComponent {
 
   onSubmit(): void {
     const portfolio = this.form.serializedUpdates;
-    if (this.contractorId && this.portfolioId) {
-      this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio);
-    } else {
-      this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio);
-    }
+    ((this.contractorId && this.portfolioId)
+      ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
+      : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio))
+      .subscribe(() => {
+        this.messageBusService.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
+        this.onBack();
+      });
   }
 
   onBack(): void {

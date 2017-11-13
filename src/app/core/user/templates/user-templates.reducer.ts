@@ -1,14 +1,13 @@
-import { Action } from '@ngrx/store';
-
 import { IUserTemplatesState, TemplateStatusEnum } from './user-templates.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { UserTemplatesService } from './user-templates.service';
 
-const defaultState: IUserTemplatesState = {
+export const defaultState: IUserTemplatesState = {
   templates: null
 };
 
-export function userTemplatesReducer(state: IUserTemplatesState = defaultState, action: Action): IUserTemplatesState {
+export function reducer(state: IUserTemplatesState = defaultState, action: UnsafeAction): IUserTemplatesState {
   switch (action.type) {
     case UserTemplatesService.USER_TEMPLATES_FETCH: {
       const { typeCode, recipientTypeCode } = action.payload;

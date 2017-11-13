@@ -1,10 +1,12 @@
-import { Response } from '@angular/http';
-import { Action, Store } from '@ngrx/store';
+import { HttpResponseBase } from '@angular/common/http';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
+
 import {
   IMessageOptions,
   IMessageParams,
@@ -15,7 +17,7 @@ import {
 
 export class NotificationActionBuilder {
   private _prefix: string;
-  private _response: Response;
+  private _response: HttpResponseBase;
   private _params: IMessageParams = {};
   private _alert = true;
 
@@ -31,7 +33,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  response(response: Response): NotificationActionBuilder {
+  response(response: HttpResponseBase): NotificationActionBuilder {
     this._response = response;
     return this;
   }
@@ -51,7 +53,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  action(): Action {
+  action(): UnsafeAction {
     const messageOptions = {
       text: this._text,
       prefix: this._prefix,
@@ -74,12 +76,12 @@ export class NotificationActionBuilder {
     this.store.dispatch(this.action());
   }
 
-  callback(): (response: Response) => Array<Action> {
-    return (response: Response) => [ this.response(response).action() ];
+  callback(): (response: HttpResponseBase) => Array<UnsafeAction> {
+    return (response: HttpResponseBase) => [ this.response(response).action() ];
   }
 
-  dispatchCallback(): (response: Response) => Observable<null> {
-    return (response: Response) => {
+  dispatchCallback(): (response: HttpResponseBase) => Observable<null> {
+    return (response: HttpResponseBase) => {
       this.response(response).dispatch();
       return Observable.throw(response);
     };
@@ -117,7 +119,11 @@ export class NotificationActionBuilder {
         return translatedFallbackMessage;
       }
 
-      return this.translateService.instant(`${message.text}.*`, translatedParams);
+      const translatedGenericMessageKey = `${message.text}.*`;
+      const translatedGenericMessage = this.translateService.instant(translatedGenericMessageKey, translatedParams);
+      if (translatedGenericMessage !== translatedGenericMessageKey) {
+        return translatedGenericMessage;
+      }
     }
 
     return this.translateService.instant(message.text, translatedParams);
@@ -125,13 +131,13 @@ export class NotificationActionBuilder {
 
   private parseMessageResponse(message: IMessageOptions): any {
     try {
-      return message.response.json();
+      return JSON.parse(message.response.statusText);
     } catch (e) {
       return null;
     }
   }
 
-  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): Action {
+  private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {
     return {
       type,
       payload

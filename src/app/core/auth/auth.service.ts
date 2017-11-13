@@ -1,17 +1,19 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
+import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
-export class AuthService implements CanActivate {
+export class AuthService implements CanActivate, OnDestroy, OnInit {
   static TOKEN_NAME = 'auth/token';
   static LANGUAGE_TOKEN = 'auth/language';
 
@@ -28,24 +30,29 @@ export class AuthService implements CanActivate {
   static AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
   static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
 
+  private tokenSubscription: Subscription;
   private tokenTimer = null;
   private url: string = null;
 
   constructor(
-    private jwtHelper: JwtHelper,
+    private jwtHelper: JwtHelperService,
     private router: Router,
     private store: Store<IAppState>,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private zone: NgZone,
-  ) {
-    this.token$
-      .do(token => {
-        if (this.isTokenValid(token)) {
-          this.initTokenTimer(token);
-        }
-      })
-      .subscribe();
+  ) { }
+
+  ngOnInit(): void {
+    this.tokenSubscription = this.token$.subscribe(token => {
+      if (this.isTokenValid(token)) {
+        this.initTokenTimer(token);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.tokenSubscription.unsubscribe();
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -129,7 +136,7 @@ export class AuthService implements CanActivate {
     }
   }
 
-  private createAction(type: string, payload: object = {}): Action {
+  private createAction(type: string, payload: object = {}): UnsafeAction {
     return { type, payload };
   }
 
@@ -140,6 +147,7 @@ export class AuthService implements CanActivate {
   private get token$(): Observable<string> {
     return this.store
       .select(state => state.auth)
+      .filter(Boolean)
       .map(state => state.token)
       .distinctUntilChanged();
   }

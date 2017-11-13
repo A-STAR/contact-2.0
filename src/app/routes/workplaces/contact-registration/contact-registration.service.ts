@@ -27,7 +27,7 @@ export class ContactRegistrationService {
   }
 
   get canAddPayment$(): Observable<boolean> {
-    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.payment));
+    return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.paymentMode));
   }
 
   get canAddNextCall$(): Observable<boolean> {
@@ -64,7 +64,7 @@ export class ContactRegistrationService {
 
   get canAddStatusChangeReason$(): Observable<boolean> {
     return this.selectedNode$
-      .map(node => this.isNodeValid(node) && [2, 3].includes(node.data.statusReasonMode) && !!node.data.statusCode);
+      .map(node => this.isNodeValid(node) && [2, 3].includes(node.data.statusReasonMode) && !!node.data.debtStatusCode);
   }
 
   confirm(debtId: number): Observable<any> {

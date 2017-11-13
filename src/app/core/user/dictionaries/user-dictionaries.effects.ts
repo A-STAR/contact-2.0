@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 import { IUserTerm } from './user-dictionaries.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -14,7 +14,7 @@ export class UserDictionariesEffects {
   @Effect()
   fetchDictionary$ = this.actions
     .ofType(UserDictionariesService.USER_DICTIONARY_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       const { dictionaryId } = action.payload;
       return this.read(dictionaryId)
         .map(terms => {

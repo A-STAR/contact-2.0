@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { IUserTemplate } from './user-templates.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -17,7 +17,7 @@ export class UserTemplatesEffects {
   @Effect()
   fetchDictionary$ = this.actions
     .ofType(UserTemplatesService.USER_TEMPLATES_FETCH)
-    .mergeMap((action: Action) => {
+    .mergeMap((action: UnsafeAction) => {
       const { typeCode, recipientTypeCode } = action.payload;
       return this.read(typeCode, recipientTypeCode)
         .map(templates => {

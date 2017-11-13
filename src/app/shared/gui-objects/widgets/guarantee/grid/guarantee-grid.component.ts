@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 import { Actions } from '@ngrx/effects';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IGuaranteeContract } from '../guarantee.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -12,16 +13,20 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+
+import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-guarantee-grid',
   templateUrl: './guarantee-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuaranteeGridComponent implements OnInit, OnDestroy {
+export class GuaranteeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
 
@@ -33,19 +38,28 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedContract$.value.id),
-      enabled: Observable.combineLatest(
+      action: () => this.onEdit(this.selectedContract$.value),
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.selectedContract$
-      ).map(([canEdit, selectedContract]) => !!canEdit && !!selectedContract)
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      action: () => this.onAddGuarantor(this.selectedContract$.value),
+      label: 'widgets.guaranteeContract.toolbar.add',
+      enabled: combineLatestAnd([
+        this.canEdit$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeGuarantee'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.selectedContract$
-      ).map(([canDelete, selectedContract]) => !!canDelete && !!selectedContract),
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -66,8 +80,8 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
   ];
 
   contracts: Array<IGuaranteeContract> = [];
+  dialog: string;
 
-  private dialog: string;
   private routeParams = (<any>this.route.params).value;
   private debtId = this.routeParams.debtId || null;
 
@@ -81,20 +95,23 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
+    super();
+  }
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .take(1)
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
       });
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
       .subscribe(hasPermission => {
         if (hasPermission) {
@@ -116,43 +133,6 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription.unsubscribe();
   }
 
-  onDoubleClick(contract: IGuaranteeContract): void {
-    this.onEdit(contract.id);
-  }
-
-  onSelect(contract: IGuaranteeContract): void {
-    this.selectedContract$.next(contract);
-  }
-
-  onRemove(): void {
-    const { id: contractId } = this.selectedContract$.value;
-    this.guaranteeService.delete(this.debtId, contractId, this.selectedContract$.value.personId)
-      .subscribe(() => {
-        this.setDialog(null);
-        this.fetch();
-      });
-  }
-
-  isDialog(dialog: string): boolean {
-    return this.dialog === dialog;
-  }
-
-  setDialog(dialog: string): void {
-    this.dialog = dialog;
-  }
-
-  onCancel(): void {
-    this.setDialog(null);
-  }
-
-  private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
-  }
-
-  private onEdit(contractId: number): void {
-    this.router.navigate([ `${this.router.url}/guaranteeContract/${contractId}` ]);
-  }
-
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
@@ -167,6 +147,41 @@ export class GuaranteeGridComponent implements OnInit, OnDestroy {
 
   get canDelete$(): Observable<boolean> {
     return this.userPermissionsService.has('GUARANTEE_DELETE');
+  }
+
+  onDoubleClick(contract: IGuaranteeContract): void {
+    this.onEdit(contract);
+  }
+
+  onSelect(contract: IGuaranteeContract): void {
+    this.selectedContract$.next(contract);
+  }
+
+  onRemove(): void {
+    const { contractId } = this.selectedContract$.value;
+    this.guaranteeService.delete(this.debtId, contractId, this.selectedContract$.value.personId)
+      .subscribe(() => {
+        this.setDialog(null);
+        this.fetch();
+      });
+  }
+
+  onCancel(): void {
+    this.setDialog(null);
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
+  }
+
+  private onAddGuarantor(contract: IGuaranteeContract): void {
+    this.messageBusService.passValue('contract', contract);
+    this.router.navigate([ `${this.router.url}/guaranteeContract/addGuarantor` ]);
+  }
+
+  private onEdit(contract: IGuaranteeContract): void {
+    this.messageBusService.passValue('contract', contract);
+    this.router.navigate([ `${this.router.url}/guaranteeContract/edit` ]);
   }
 
   private fetch(): void {

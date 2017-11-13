@@ -1,4 +1,6 @@
-import { RowNode, ColDef } from 'ag-grid';
+import { RowNode, ColDef, GetContextMenuItemsParams } from 'ag-grid';
+
+import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 
 import { FilterObject } from './filter/grid-filter';
 
@@ -116,4 +118,9 @@ export interface ValueGetterParams {
   data: any;
   getValue: (field: string) => any;
   node: RowNode;
+}
+
+export interface IAGridAction {
+  action: IMetadataAction;
+  params: GetContextMenuItemsParams;
 }

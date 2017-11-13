@@ -7,7 +7,7 @@ import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
 
-import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 
 @Component({
   selector: 'app-debt-processing',
@@ -19,7 +19,7 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 export class DebtProcessingComponent {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
-  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<IDebt>;
 
   rows: IDebt[] = [];
   rowCount = 0;
@@ -45,7 +45,6 @@ export class DebtProcessingComponent {
   onDblClick(debt: IDebt): void {
     const { personId, debtId } = debt;
     this.contentTabService.removeTabByPath(`${this.router.url}\/[0-9]+$`);
-    this.debtProcessingService.changeCurrentDebt(debtId);
     this.router.navigate([ `${this.router.url}/${personId}/${debtId}` ]);
     // const { innerHeight: height, innerWidth: width} = window;
     // const winConfig =
