@@ -10,6 +10,7 @@ import { IContextMenuItem } from '../../../shared/components/grid2/grid2.interfa
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
 import { DebtResponsibleService } from '../../../shared/gui-objects/widgets/debt-responsible/debt-responsible.service';
+import { DebtGroupService } from '../../../shared/gui-objects/widgets/debt-group/debt-group.service';
 
 import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 
@@ -42,6 +43,11 @@ export class DebtProcessingComponent extends DialogFunctions {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR,
       enabled: Observable.combineLatest(this.debtResponsibleService.canClear$, this.selectedDebts$)
         .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0),
+    },
+    {
+      name: DebtGroupService.ACTION_DEBT_GROUP_ADD,
+      enabled: Observable.combineLatest(this.debtGroupService.canAdd$, this.selectedDebts$)
+        .map(([ canAdd, selected ]) => canAdd && !!selected && selected.length > 0)
     }
   ];
 
@@ -50,6 +56,7 @@ export class DebtProcessingComponent extends DialogFunctions {
     private contentTabService: ContentTabService,
     private debtProcessingService: DebtProcessingService,
     private debtResponsibleService: DebtResponsibleService,
+    private debtGroupService: DebtGroupService,
     private router: Router,
   ) {
     super();

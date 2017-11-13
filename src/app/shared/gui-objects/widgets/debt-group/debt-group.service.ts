@@ -22,7 +22,7 @@ export class DebtGroupService {
   ) {}
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADD_TO_GROUP_ENTITY_LIST');
+    return this.userPermissionsService.contains('ADD_TO_GROUP_ENTITY_LIST', DebtGroupService.ENTITY_TYPE_DEBT);
   }
 
   addToGroup(debts: number[], group: IEntityGroup): Observable<any> {

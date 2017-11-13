@@ -1884,7 +1884,8 @@
         "statusChange": "Изменить статус",
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу"
+        "debtClearResponsible": "Снятие ответственного по долгу",
+        "objectAddToGroup": "Добавить в группу"
       }
     },
     "filter": {

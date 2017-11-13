@@ -1884,7 +1884,8 @@
         "statusChange": "Change Status",
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible"
+        "debtClearResponsible": "Clear debt responsible",
+        "objectAddToGroup": "Add to group"
       }
     },
     "filter": {
