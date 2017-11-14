@@ -13,10 +13,15 @@ export class PledgorPropertyService {
     private propertyService: PropertyService,
   ) { }
 
+  fetch(personId: number, propertyId: number): Observable<IPledgorProperty> {
+    return this.propertyService.fetch(personId, propertyId)
+      .map(this.propertyMapper);
+  }
+
   fetchAll(personId: number): Observable<IPledgorProperty[]> {
     return this.propertyService.fetchAll(personId)
-      .map(propertyList => propertyList.map(
-        property => ({ ...property, propertyType: property.typeCode } as IPledgorProperty)
-      ));
+      .map(propertyList => propertyList.map(this.propertyMapper));
   }
+
+  private propertyMapper = property => ({ ...property, propertyType: property.typeCode } as IPledgorProperty);
 }

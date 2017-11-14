@@ -41,7 +41,9 @@ const routes: Routes = [
         ]
       },
       { path: 'pledge', children: [
+          { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPledgeComponent },
+          { path: 'edit', component: DebtorPledgeComponent },
         ]
       },
       { path: 'contact', children: [

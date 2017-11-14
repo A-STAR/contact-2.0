@@ -36,22 +36,25 @@ export interface IPledgeContract {
   currencyId?: number;
 }
 
-export interface IPledgeContractCreation {
+export interface IContractInformation {
   contractNumber: string;
   contractStartDate?: Date | string;
   contractEndDate?: Date | string;
   comment?: string;
-  pledgors: IPledgor[];
 }
 
-export interface IPledgor {
-  personId: number;
-  properties: IProperty[];
+export interface IPledgeContractInformation extends IContractInformation {
+  pledgors: IContractPledgor[];
 }
 
-export interface IProperty {
-  propertyId: number;
-  pledgeValue: number;
-  marketValue: number;
-  currencyId: number;
+export interface IContractPledgor {
+  personId?: number;
+  properties?: IContractProperty[];
+}
+
+export interface IContractProperty {
+  propertyId?: number;
+  pledgeValue?: number;
+  marketValue?: number;
+  currencyId?: number;
 }

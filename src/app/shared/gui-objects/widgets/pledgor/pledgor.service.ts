@@ -16,6 +16,7 @@ export class PledgorService {
   static MESSAGE_PLEDGOR_SELECTION_CHANGED = 'MESSAGE_PLEDGOR_SELECTION_CHANGED';
 
   private url = '/persons/search';
+  private errSingular = 'entities.pledgors.gen.singular';
   private attrListConstants: { [key: string]: string } = {
     '1' : 'Person.Individual.AdditionalAttribute.List',
     '2' : 'Person.LegalEntity.AdditionalAttribute.List',
@@ -60,6 +61,13 @@ export class PledgorService {
 
   isPerson(pledgorTypeCode: number): boolean {
     return pledgorTypeCode === 1;
+  }
+
+  fetch(personId: number): Observable<IPledgor> {
+    return this.dataService
+      .read('/persons/{personId}', { personId })
+      .map(resp => resp || {})
+      .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
   fetchAll(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IPledgor>> {

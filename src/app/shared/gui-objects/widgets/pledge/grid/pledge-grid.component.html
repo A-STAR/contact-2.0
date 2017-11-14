@@ -6,5 +6,7 @@
   [columns]="columns"
   [footerHeight]="false"
   [rows]="contracts"
-  [styles]="{ height: '230px' }">
+  [styles]="{ height: '230px' }"
+  (onDblClick)="onDoubleClick($event)"
+  (onSelect)="onSelect($event)">
 </app-grid>

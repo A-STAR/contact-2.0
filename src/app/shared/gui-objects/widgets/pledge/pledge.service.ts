@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPledgeContract, IPledgeContractCreation } from './pledge.interface';
+import { IPledgeContract, IPledgeContractInformation, IContractInformation, IContractProperty } from './pledge.interface';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -27,12 +27,20 @@ export class PledgeService {
     return this.userPermissionsService.has('PLEDGE_ADD');
   }
 
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('PLEDGE_EDIT');
+  }
+
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('PLEDGE_DELETE');
+  }
+
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
     return this.dataService.readAll(this.baseUrl, { debtId })
       .catch(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.plural').dispatchCallback());
   }
 
-  createPledgeContractCreation(contract: IPledgeContract): IPledgeContractCreation {
+  createPledgeContractInformation(contract: IPledgeContract): IPledgeContractInformation {
     return {
       contractNumber: contract.contractNumber,
       contractStartDate: contract.contractStartDate,
@@ -50,9 +58,26 @@ export class PledgeService {
     };
   }
 
-  create(debtId: number, contract: IPledgeContractCreation): Observable<any> {
+  updateProperty(debtId: number, contractId: number, pledgorId: number,
+    propertyId: number, property: IContractProperty): Observable<any> {
+    return this.dataService
+      .update(
+        `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
+        { debtId, contractId, pledgorId, propertyId },
+        property
+      ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
+  }
+
+  create(debtId: number, contract: IPledgeContractInformation): Observable<any> {
     return this.dataService
       .create(this.baseUrl, { debtId }, contract)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
+  }
+
+  update(debtId: number, contractId: number, pledgorId: number, propertyId: number,
+    contract: IContractInformation, property: IContractProperty): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{contractId}`, { debtId, contractId }, contract).concatMap(
+      () => this.updateProperty(debtId, contractId, pledgorId, propertyId, property)
+    ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 }

@@ -2,12 +2,14 @@ import {
   AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy,
   ChangeDetectorRef, OnInit, OnDestroy
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../pledgor.interface';
+import { IPledgeContract } from '../../pledge/pledge.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -31,6 +33,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private currentTypeCode: number;
+  private canEdit: boolean;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
@@ -43,6 +46,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
     private messageBusService: MessageBusService,
     private pledgorService: PledgorService,
     private pledgeService: PledgeService,
+    private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -50,26 +54,39 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
   }
 
   ngOnInit(): void {
+    const contract = this.messageBusService.takeValue<IPledgeContract>('contract');
+
     Observable.combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      this.pledgeService.canAdd$,
+      contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
+      contract && contract.id ? this.pledgorService.fetch(contract.personId) : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit ]) => {
-      const pledgor = this.getFormData();
+    .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, person ]) => {
+      const pledgor = person || this.getFormData();
       this.initControls(canEdit, this.getFormData(), attributeList, { genderOpts, familyStatusOpts, educationOpts, typeOpts });
       this.pledgor = pledgor;
       this.currentTypeCode = pledgor.typeCode;
+      this.canEdit = canEdit;
       this.cdRef.markForCheck();
     });
   }
 
+  onFormInit(): void {
+    if (this.isRoute('edit') || !this.canEdit) {
+      this.form.form.disable();
+      this.cdRef.detectChanges();
+    }
+  }
+
   ngAfterViewChecked(): void {
     if (this.typeCodeSubscription || !this.form) { return ; }
+
+    this.onFormInit();
 
     this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
       .map(value => value && Array.isArray(value) ? value[0] : {})
@@ -105,7 +122,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
     }
   }
 
-  get canSubmit$(): Observable<boolean> {
+  get canSearch$(): Observable<boolean> {
     return this.pledgeService.canView$
       .map(canView => canView && !!this.form && this.form.canSubmit)
       .distinctUntilChanged();
@@ -203,5 +220,9 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
     return {
       typeCode: 1
     };
+  }
+
+  private isRoute(segment: string): boolean {
+    return this.route.snapshot.url.join('/') === segment;
   }
 }

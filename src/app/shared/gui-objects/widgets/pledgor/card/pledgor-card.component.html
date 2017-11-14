@@ -9,7 +9,7 @@
   <button class="btn btn-default" (click)="onClear()">
     <i class="fa fa-times"></i> {{ 'default.buttons.clear' | translate }}
   </button>
-  <button class="btn btn-default" (click)="onSearch()" [disabled]="!(canSubmit$ | async)">
+  <button class="btn btn-default" (click)="onSearch()" [disabled]="!(canSearch$ | async)">
     <i class="fa fa-search"></i> {{ 'widgets.pledgor.search.title' | translate }}
   </button>
 </div>

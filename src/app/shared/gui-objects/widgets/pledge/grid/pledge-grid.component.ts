@@ -9,8 +9,11 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PledgeService } from '../pledge.service';
 import { GridService } from '../../../../components/grid/grid.service';
+import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-pledge-grid',
@@ -39,6 +42,14 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
       enabled: this.pledgeService.canAdd$,
       action: () => this.onAdd()
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: combineLatestAnd([
+        this.pledgeService.canEdit$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ]),
+      action: () => this.onEdit(this.selectedContract$.value)
+    },
   ];
 
   private _contracts: Array<IPledgeContract> = [];
@@ -46,11 +57,13 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
   private debtId = (this.route.params as any).value.debtId || null;
 
   private viewPermissionSubscription: Subscription;
+  private actionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private pledgeService: PledgeService,
     private gridService: GridService,
+    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -72,6 +85,9 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
         this.notificationsService.error('errors.default.read.403').entity('entities.pledgeContract.gen.plural').dispatch();
       }
     });
+
+    this.actionSubscription = this.messageBusService.select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
+      .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
@@ -86,19 +102,30 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
     this.selectedContract$.next(pledge);
   }
 
+  onDoubleClick(contract: IPledgeContract): void {
+    this.onEdit(contract);
+  }
+
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/pledge/create` ]);
+  }
+
+  private onEdit(contract: IPledgeContract): void {
+    this.messageBusService.passValue('contract', contract);
+    this.router.navigate([ `${this.router.url}/pledge/edit` ]);
   }
 
   private fetch(): void {
     this.pledgeService.fetchAll(this.debtId).subscribe(contracts => {
       this._contracts = contracts;
+      this.selectedContract$.next(null);
       this.cdRef.markForCheck();
     });
   }
 
   private clear(): void {
     this._contracts = [];
+    this.selectedContract$.next(null);
     this.cdRef.markForCheck();
   }
 }

@@ -47,15 +47,17 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const contract = this.messageBusService.takeValue<IPledgeContract>('contract');
+
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      this.pledgeService.canAdd$,
-      Observable.of(this.getFormData())
+      contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
+      Observable.of(contract || this.getFormData())
     )
     .take(1)
-    .subscribe(([ typeOptions, canEdit, contract ]) => {
+    .subscribe(([ typeOptions, canEdit, pledgeContract ]) => {
       this.initControls(canEdit, typeOptions);
-      this.contract = contract;
+      this.contract = pledgeContract;
     });
 
     this.pledgorSelectionSub = this.messageBusService
@@ -98,10 +100,21 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.pledgeService.create(
-      this.debtId,
-      this.pledgeService.createPledgeContractCreation(this.form.serializedUpdates)
-    ).subscribe(() => {
+    const action = this.isRoute('create')
+      ? this.pledgeService.create(
+        this.debtId,
+        this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
+      )
+      : this.pledgeService.update(
+        this.debtId,
+        this.contract.contractId,
+        this.contract.personId,
+        this.contract.propertyId,
+        this.form.serializedUpdates,
+        this.form.serializedUpdates
+      );
+
+    action.subscribe(() => {
       this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
@@ -136,5 +149,9 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     return {
       typeCode: 1
     };
+  }
+
+  private isRoute(segment: string): boolean {
+    return this.route.snapshot.url.join('') === segment;
   }
 }
