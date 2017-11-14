@@ -1,14 +1,15 @@
-<app-dialog (onClose)="cancel()">
+<app-dialog (close)="cancel()">
   <div dialog-header>
     <h3>{{ 'portfolios.move.title' | translate:portfolio }}</h3>
   </div>
 
   <app-grid
+    *ngIf="contractors"
     columnTranslationKey="contractors"
     selectionType="single"
     [styles]="{height: '200px'}"
     [columns]="columns"
-    [rows]="contractors$ | async"
+    [rows]="contractors"
     [allowDblClick]="false"
     (onSelect)="onSelect($event)">
   </app-grid>

@@ -2,7 +2,7 @@ import { Injectable, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/do';
@@ -35,7 +35,7 @@ export class AuthService implements CanActivate, OnDestroy, OnInit {
   private url: string = null;
 
   constructor(
-    private jwtHelper: JwtHelper,
+    private jwtHelper: JwtHelperService,
     private router: Router,
     private store: Store<IAppState>,
     private persistenceService: PersistenceService,
@@ -57,7 +57,6 @@ export class AuthService implements CanActivate, OnDestroy, OnInit {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.token$
-      .do(token => console.log('token', token))
       .map(token => this.isTokenValid(token))
       .do(isTokenValid => {
         if (!isTokenValid) {

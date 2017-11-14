@@ -1,10 +1,7 @@
-import { compose } from '@ngrx/store';
-import { Action, combineReducers } from '@ngrx/store';
-
 import { IAppState } from './state.interface';
 
 import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
-import { auth, resetReducer } from '../auth/auth.reducer';
+import * as auth from '../auth/auth.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
@@ -23,26 +20,35 @@ import * as userDictionaries from '../user/dictionaries/user-dictionaries.reduce
 import * as userPermissions from '../user/permissions/user-permissions.reducer';
 import * as userTemplates from '../user/templates/user-templates.reducer';
 
+// import { AuthService } from '../auth/auth.service';
+
+export function reset(nextReducer: any): any {
+  // return function resetReducer(state: IAppState, action: UnsafeAction): IAppState {
+  //   return nextReducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
+  // };
+  return nextReducer;
+}
+
 export const reducers = {
-  actionsLog: actionsLog.reducer,
+  actionsLog: reset(actionsLog.reducer),
   auth: auth.reducer,
-  contractorsAndPortfolios: contractorsAndPortfolios.reducer,
-  constants: constants.reducer,
-  debtors: debtors.reducer,
-  dictionaries: dictionaries.reducer,
-  entityAttributes: entityAttributes.reducer,
-  guiObjects: guiObjects.reducer,
-  lookup: lookup.reducer,
-  metadata: metadata.reducer,
-  notifications: notifications.reducer,
-  organizations: organizations.reducer,
-  permissions: permissions.reducer,
-  users: users.reducer,
-  userAttributeTypes: userAttributeTypes.reducer,
-  userConstants: userConstants.reducer,
-  userDictionaries: userDictionaries.reducer,
-  userPermissions: userPermissions.reducer,
-  userTemplates: userTemplates.reducer,
+  contractorsAndPortfolios: reset(contractorsAndPortfolios.reducer),
+  constants: reset(constants.reducer),
+  debtors: reset(debtors.reducer),
+  dictionaries: reset(dictionaries.reducer),
+  entityAttributes: reset(entityAttributes.reducer),
+  guiObjects: reset(guiObjects.reducer),
+  lookup: reset(lookup.reducer),
+  metadata: reset(metadata.reducer),
+  notifications: reset(notifications.reducer),
+  organizations: reset(organizations.reducer),
+  permissions: reset(permissions.reducer),
+  users: reset(users.reducer),
+  userAttributeTypes: reset(userAttributeTypes.reducer),
+  userConstants: reset(userConstants.reducer),
+  userDictionaries: reset(userDictionaries.reducer),
+  userPermissions: reset(userPermissions.reducer),
+  userTemplates: reset(userTemplates.reducer),
 };
 
 export const initialState: Partial<IAppState> = {
@@ -65,7 +71,3 @@ export const initialState: Partial<IAppState> = {
   userTemplates: userTemplates.defaultState,
   users: users.defaultState,
 };
-
-export function rootReducer(state: IAppState, action: Action): IAppState {
-  return compose(resetReducer, combineReducers)(reducers)(state, action);
-}

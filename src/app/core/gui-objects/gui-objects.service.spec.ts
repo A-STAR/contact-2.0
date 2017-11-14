@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { AuthHttp, AuthConfig, JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -29,16 +29,9 @@ describe('Service: Menu', () => {
         })
       ],
       providers: [
-        AuthHttp,
+        HttpClient,
         AuthService,
-        {
-          provide: AuthConfig,
-          useValue: new AuthConfig
-        },
-        {
-          provide: JwtHelper,
-          useValue: new JwtHelper
-        },
+        JwtHelperService,
         {
           provide: Router,
           useValue: mockRouter

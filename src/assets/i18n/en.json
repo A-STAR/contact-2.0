@@ -127,6 +127,20 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "grid": {
+        "name": "Name",
+        "comment": "Description"
+      },
+      "tabs": {
+        "phonesAndAddresses": "Phones and Addresses",
+        "debtComponents": "Debt Components",
+        "contacts": "Contacts",
+        "payments": "Payments",
+        "promises": "Promises",
+        "documents": "Documents"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -1026,6 +1040,11 @@
         "comment": "Comment"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      }
+    },
     "contactProperty": {
       "contactType": "Contact Type",
       "treeType": "Tree Type",
@@ -1393,11 +1412,26 @@
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
       }
+    },
+    "operator": {
+      "dialog": {
+        "title": "Select operator"
+      },
+      "grid": {
+        "id": "Id",
+        "fullName": "Full name",
+        "debtCnt": "Active debt count",
+        "organization": "Department",
+        "position": "Position"
+      }
     }
   },
   "entities": {
     "attribute": {
       "gen": { "singular": "attribute", "plural": "attributes" }
+    },
+    "campaign": {
+      "gen": { "singular": "campaign", "plural": "campaigns" }
     },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
@@ -1500,7 +1534,7 @@
       "gen": { "singular": "phone number", "plural": "phone numbers" }
     },
     "contacts": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "contact", "plural": "contacts" }
     },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
@@ -1528,6 +1562,9 @@
     },
     "contactTreeItems": {
       "gen": { "singular": "contact tree item", "plural": "contact tree" }
+    },
+    "operator": {
+      "gen": { "singular": "operator", "plural": "operators" }
     }
   },
   "errors": {
@@ -1745,7 +1782,7 @@
       },
       "actions": {
         "statusChange": "Change Status",
-        "viewContactLog": "Contact Log"
+        "showContactHistory": "Contact Log"
       }
     },
     "filter": {
@@ -1789,6 +1826,12 @@
       "orange": "Orange",
       "pink": "Pink",
       "yellow": "Yellow"
+    },
+    "dialog": {
+      "result": {
+        "title": "Operation result",
+        "message": "Operation was successful for {{successCount}} of {{count}} records"
+      }
     },
     "NA": "N/A"
   }

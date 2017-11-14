@@ -1,19 +1,22 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Actions } from '@ngrx/effects';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../core/converter/value-converter.interface';
-import { UnsafeAction } from '../../../../../../core/state/state.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+
+import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 
 @Component({
   selector: 'app-contractor-manager-edit',
@@ -29,11 +32,14 @@ export class ContractorManagerEditComponent {
 
   private contractorId: number;
   private managerId: number;
+  private needToGoBack$ =  new BehaviorSubject<string>(null);
+  private closeDialogSubscription: Subscription;
 
   constructor(
-    private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private contentTabService: ContentTabService,
+    private messageBusService: MessageBusService,
+    private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -42,16 +48,11 @@ export class ContractorManagerEditComponent {
     this.contractorId = value.id;
     this.managerId = value.managerId;
 
-    if (this.contractorId && this.managerId) {
-      this.contractorsAndPortfoliosService.fetchManager(this.contractorId, this.managerId);
-    }
-
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.contractorId && this.managerId
-        ? this.actions.ofType(ContractorsAndPortfoliosService.MANAGER_FETCH_SUCCESS)
-          .map((action: UnsafeAction) => action.payload.manager)
+        ? this.contractorsAndPortfoliosService.readManager(this.contractorId, this.managerId)
         : Observable.of(null)
     )
     // TODO(d.maltsev): handle errors
@@ -61,12 +62,9 @@ export class ContractorManagerEditComponent {
       this.formData = manager;
     });
 
-    this.actions.ofType(
-      ContractorsAndPortfoliosService.MANAGER_CREATE_SUCCESS,
-      ContractorsAndPortfoliosService.MANAGER_UPDATE_SUCCESS
-    )
-    .take(1)
-    .subscribe(() => this.onBack());
+    this.needToGoBack$
+      .filter(Boolean)
+      .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -75,15 +73,23 @@ export class ContractorManagerEditComponent {
 
   onSubmit(): void {
     const manager = this.getManagerFromFormData();
-    if (this.contractorId && this.managerId) {
-      this.contractorsAndPortfoliosService.updateManager(this.contractorId, this.managerId, manager);
-    } else {
-      this.contractorsAndPortfoliosService.createManager(this.contractorId, manager);
-    }
+    this.closeDialogSubscription = ((this.contractorId && this.managerId)
+      ? this.contractorsAndPortfoliosService
+          .updateManager( this.contractorId, this.managerId, manager)
+      : this.contractorsAndPortfoliosService
+          .createManager(this.contractorId, manager))
+          .subscribe(() => {
+            this.messageBusService.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH);
+            this.onBack();
+          });
   }
 
   onBack(): void {
-    this.contentTabService.navigate(`/admin/contractors/${this.contractorId}/managers`);
+    this.needToGoBack$.unsubscribe();
+    if (this.closeDialogSubscription) {
+      this.closeDialogSubscription.unsubscribe();
+    }
+    this.contentTabService.gotoParent(this.router, 1);
   }
 
   private initFormControls(branchesOptions: Array<IOption>, genderOptions: Array<IOption>): void {

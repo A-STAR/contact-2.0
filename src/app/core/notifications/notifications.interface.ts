@@ -1,4 +1,4 @@
-import { Response } from '@angular/http';
+import { HttpResponseBase } from '@angular/common/http';
 
 export enum NotificationTypeEnum {
   INFO,
@@ -47,7 +47,7 @@ export interface IMessageParams {
 
 export interface IMessageOptions {
   prefix?: string;
-  response?: Response;
+  response?: HttpResponseBase;
   // text and params act as fallback options in case there no response is passed
   text?: string;
   params?: IMessageParams;

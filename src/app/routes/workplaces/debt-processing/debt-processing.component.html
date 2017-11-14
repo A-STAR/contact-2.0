@@ -1,13 +1,10 @@
-<app-grid2
+<app-action-grid
   metadataKey="debtsprocessingall"
   persistenceKey="debtsprocessingall"
   rowIdKey="debtId"
   [ngClass]="'debt-processing-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
-  (onPage)="onRequest()"
-  (onPageSize)="onRequest()"
-  (onSort)="onRequest()"
-  (onFilter)="onRequest()"
-  (onDblClick)="onDblClick($event)">
-</app-grid2>
+  (request)="onRequest()"
+  (dblClick)="onDblClick($event)"
+></app-action-grid>
