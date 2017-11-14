@@ -10,7 +10,7 @@ import { IncomingCallService } from '../incoming-call.service';
   templateUrl: 'phone-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneGridComponent implements OnInit {
+export class PhoneGridComponent implements OnInit, OnDestroy {
   debtId = null;
   personId = null;
 
@@ -55,14 +55,23 @@ export class PhoneGridComponent implements OnInit {
   }
 
   onRegisterContact(): void {
-    this.debtService.navigateToRegistration(1, 1, 1, 1, this.selectedPhoneId);
+    this.navigateToRegistration(1, this.selectedPhoneId);
   }
 
   onRegisterUnidentifiedContact(): void {
-    this.debtService.navigateToRegistration(1, 1, 1, 1, null);
+    this.navigateToRegistration(1, 0);
   }
 
   onRegisterOfficeVisit(): void {
-    this.debtService.navigateToRegistration(1, 1, 1, 1, null);
+    this.navigateToRegistration(8, 0);
+  }
+
+  private navigateToRegistration(contactType: number, contactId: number): void {
+    this.incomingCallService.selectedDebtor$
+      .take(1)
+      .subscribe(debtor => {
+        const { debtId, personId, personRole } = debtor;
+        this.debtService.navigateToRegistration(debtId, personId, personRole, contactType, contactId);
+      });
   }
 }
