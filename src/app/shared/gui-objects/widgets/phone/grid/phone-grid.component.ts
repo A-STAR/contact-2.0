@@ -104,6 +104,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   debt: IDebt;
 
   private canViewSubscription: Subscription;
+  private debtSubscription: Subscription;
   private busSubscription: Subscription;
 
   private _columns: Array<IGridColumn> = [
@@ -130,7 +131,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.debtId$
+    this.debtSubscription = this.debtId$
       .filter(Boolean)
       .flatMap(debtId => this.debtService.fetch(null, debtId))
       .subscribe(debt => {
@@ -138,7 +139,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    Observable
+    this.canViewSubscription = Observable
       .combineLatest(this.canView$, this.personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
@@ -169,6 +170,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.debtSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
 
