@@ -2,10 +2,42 @@
   <b>Должник:</b> {{ fullName$ | async }}
 </div>
 
-<app-phone-grid
-  [contactType]="2"
-  [debtId]="debtId"
-  [personId]="personId"
-  [personRole]="1"
-  [styles]="{ height: '500px' }"
-></app-phone-grid>
+<div class="mb">
+  <app-phone-grid
+    [contactType]="2"
+    [debtId]="debtId"
+    [personId]="personId"
+    [personRole]="1"
+    [styles]="{ height: '420px' }"
+    (select)="onSelect($event)"
+  ></app-phone-grid>
+</div>
+
+<div class="mb">
+  <app-button
+    color="secondary"
+    type="registerContact"
+    label="Регистрация контакта"
+    [disabled]="contactButtonDisabled"
+    (click)="onRegisterContact()"
+  ></app-button>
+</div>
+
+<div class="mb">
+  <app-button
+    color="secondary"
+    type="registerContact"
+    label="Регистрация контакта по неопределенному номеру"
+    (click)="onRegisterUnidentifiedContact()"
+  ></app-button>
+</div>
+
+<div class="mb">
+  <app-button
+    color="secondary"
+    type="registerContact"
+    label="Регистрация визита в офис"
+    [disabled]="officeVisitButtonDisabled$ | async"
+    (click)="onRegisterOfficeVisit()"
+  ></app-button>
+</div>

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -46,6 +55,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   @Input() personRole: number;
   @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
+
+  @Output() select = new EventEmitter<IPhone>();
 
   private debtId$ = new BehaviorSubject<number>(null);
   private personId$ = new BehaviorSubject<number>(null);
@@ -196,6 +207,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(phone: IPhone): void {
+    this.select.emit(phone);
     this.selectedPhoneId$.next(phone.id);
   }
 
