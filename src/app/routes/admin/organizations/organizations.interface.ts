@@ -51,12 +51,9 @@ export interface IOrganizationSelectPayload {
 
 export interface IEmployeeSelectPayload {
   employees?: Array<IEmployeeViewEntity>;
-  notAddedEmployees?: Array<IEmployeeViewEntity>;
   selectedEmployeeUserId: number;
 }
 
-export interface IOrganizationsState extends IOrganizationSelectPayload, IEmployeeSelectPayload {
-  dialogAction: OrganizationDialogActionEnum;
-}
+export type IOrganizationsState = IOrganizationSelectPayload & IEmployeeSelectPayload;
 
 export type IEmployeeUser = IUser & IEmployee;

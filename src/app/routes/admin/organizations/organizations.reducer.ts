@@ -1,6 +1,6 @@
 import { IOrganizationsState } from './organizations.interface';
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 import { OrganizationsService } from './organizations.service';
 
@@ -8,9 +8,7 @@ export const defaultState: IOrganizationsState = {
   organizations: [],
   selectedOrganization: null,
   employees: [],
-  notAddedEmployees: [],
-  selectedEmployeeUserId: null,
-  dialogAction: null
+  selectedEmployeeUserId: null
 };
 
 export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNode: ITreeNode): ITreeNode {
@@ -26,7 +24,7 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
   return result;
 }
 
-export function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
+export function reducer(state: IOrganizationsState = defaultState, action: SafeAction<IOrganizationsState>): IOrganizationsState {
   switch (action.type) {
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
