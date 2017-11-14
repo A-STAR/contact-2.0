@@ -64,7 +64,7 @@ export class DebtService {
     ).map(([ canRegisterClosed, canRegister ]) => (this.isDebtActive(debt) || canRegisterClosed) && canRegister);
   }
 
-  private isDebtActive(debt: IDebt): boolean {
+  isDebtActive(debt: IDebt): boolean {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 

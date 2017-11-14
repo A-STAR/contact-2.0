@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DebtService } from '../../../../../core/debt/debt.service';
-import { DebtorService } from '../debtor.service';
 
 import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';
@@ -25,7 +24,6 @@ export class RegisterContactComponent {
 
   constructor(
     private debtService: DebtService,
-    private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
 

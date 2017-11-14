@@ -1,9 +1,9 @@
-export interface IAddress extends IContact {
-  id: number;
-}
-
 export interface IContact {
   isInactive: boolean | number;
+}
+
+export interface IAddress extends IContact {
+  id: number;
 }
 
 export interface IDebt {
