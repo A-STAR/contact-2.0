@@ -6,7 +6,7 @@
 
 <app-organization-edit
   *ngIf="isEntityBeingEdited"
-  [editedEntity]="selectedOrganization?.data"
+  [editedEntity]="selectedOrganization | async"
   (submit)="updateOrganization($event)"
   (cancel)="cancelAction()">
 </app-organization-edit>

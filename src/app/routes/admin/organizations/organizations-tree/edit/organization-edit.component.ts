@@ -13,7 +13,8 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
   templateUrl: './organization-edit.component.html'
 })
 export class OrganizationEditComponent implements OnInit {
-  @Input() editedEntity: IEmployeeViewEntity;
+  // angular-cli/issues/2034
+  @Input() editedEntity: IEmployeeViewEntity | null;
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -55,7 +56,7 @@ export class OrganizationEditComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return (this.form && this.form.canSubmit) || false;
+    return this.form && this.form.canSubmit;
   }
 
   protected buildControls(branchOptions: Array<IOption>): Array<IDynamicFormControl> {
@@ -65,9 +66,5 @@ export class OrganizationEditComponent implements OnInit {
       { label: 'organizations.organizations.edit.comment', controlName: 'comment', type: 'text' },
       { label: 'organizations.organizations.edit.boxColor', controlName: 'boxColor', type: 'colorpicker' },
     ];
-  }
-
-  protected getControls(): Array<IDynamicFormControl> {
-    return null;
   }
 }

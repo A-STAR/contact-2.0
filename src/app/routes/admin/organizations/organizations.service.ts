@@ -111,9 +111,14 @@ export class OrganizationsService {
       .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
   }
 
-  updateOrganization(organization: ITreeNode): Observable<any> {
-    return this.selectedOrganization
-      .take(1)
+  updateOrganization(organization: ITreeNode, id?: number): Observable<any> {
+    return this.updateOrganizationNoFetch(organization, id)
+      .switchMap(() => this.fetchOrganizations());
+  }
+
+  updateOrganizationNoFetch(organization: ITreeNode, id?: number): Observable<any> {
+    return (id ? Observable.of({ id }) : this.selectedOrganization
+      .take(1))
       .switchMap(selectedOrganization =>
         this.dataService.update(`${this.baseUrl}/{organizationId}`, {
           organizationId: selectedOrganization.id
@@ -183,7 +188,8 @@ export class OrganizationsService {
 
   updateOrganizations(organizations: IOrganization[]): Observable<any> {
     return Observable.forkJoin(organizations
-      .map((organization: IOrganization) => this.updateOrganization(organization)));
+      .map((organization: IOrganization, index: number) =>
+        this.updateOrganizationNoFetch(organization, organization.id)));
   }
 
   clearOrganizations(): Observable<any[]> {

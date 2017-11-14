@@ -12,7 +12,8 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class EmployeeEditComponent implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
-  @Input() editedEntity: IEmployeeViewEntity;
+  // angular-cli/issues/2034
+  @Input() editedEntity: IEmployeeViewEntity | null;
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
