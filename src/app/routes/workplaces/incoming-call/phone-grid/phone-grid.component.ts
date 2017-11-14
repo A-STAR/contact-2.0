@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IncomingCallService } from '../incoming-call.service';
 
@@ -24,5 +25,9 @@ export class PhoneGridComponent implements OnInit {
         this.personId = debtor ? debtor.personId : null;
         this.cdRef.markForCheck();
       });
+  }
+
+  get fullName$(): Observable<string> {
+    return this.incomingCallService.selectedDebtor$.map(debtor => debtor && debtor.fullName);
   }
 }
