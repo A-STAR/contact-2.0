@@ -27,15 +27,7 @@ export class EmployeeAddComponent implements OnInit {
   private selectedEmployees: Array<IEmployeeUser>;
   private employeesSub: Subscription;
   notAddedEmployees: Observable<IEmployee[]>;
-  controls: Array<IDynamicFormControl> = [
-    {
-      label: 'users.edit.role',
-      controlName: 'roleCode',
-      type: 'select',
-      required: true,
-      options: this.employeeRoleOptions
-    },
-  ];
+  controls: Array<IDynamicFormControl>;
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 200 },
@@ -66,6 +58,7 @@ export class EmployeeAddComponent implements OnInit {
     this.gridService.setAllRenderers(this.columns)
       .take(1)
       .subscribe(columns => this.columns = [...columns]);
+    this.setControls();
   }
 
   onSelectEmployees(): void {
@@ -85,5 +78,17 @@ export class EmployeeAddComponent implements OnInit {
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  private setControls(): void {
+    this.controls = [
+      {
+        label: 'users.edit.role',
+        controlName: 'roleCode',
+        type: 'select',
+        required: true,
+        options: this.employeeRoleOptions
+      },
+    ];
   }
 }

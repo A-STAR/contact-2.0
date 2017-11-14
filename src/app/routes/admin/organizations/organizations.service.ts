@@ -79,7 +79,9 @@ export class OrganizationsService {
   fetchEmployees(): Observable<IEmployeeViewEntity[]> {
     return this.selectedOrganization
       .take(1)
-      .switchMap(organization => organization ? this.readEmployees(organization.id) : Observable.of([]))
+      .switchMap(organization => {
+        return organization ? this.readEmployees(organization.id) : Observable.of([]);
+      })
       // because grid component relies on row's property id
       .map(employees => employees.map<IEmployeeViewEntity>(employee => (employee.id = employee.userId) && employee))
       .map(employees => this.selectEmployee(null, employees))
@@ -163,10 +165,11 @@ export class OrganizationsService {
         organizationId: data[0].id,
         userId: data[1]
       }, employee))
+      .switchMap(() => this.fetchEmployees())
       .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
   }
 
-  deleteEmployee(): Observable<any> {
+  removeEmployee(): Observable<any> {
     return Observable.combineLatest(
       this.selectedOrganization,
       this.selectedEmployeeId)
@@ -177,7 +180,8 @@ export class OrganizationsService {
             organizationId: data[0].id,
             userId: data[1]
           })
-        )
+      )
+      .switchMap(() => this.fetchEmployees())
       .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
   }
 
@@ -188,8 +192,7 @@ export class OrganizationsService {
 
   updateOrganizations(organizations: IOrganization[]): Observable<any> {
     return Observable.forkJoin(organizations
-      .map((organization: IOrganization, index: number) =>
-        this.updateOrganizationNoFetch(organization, organization.id)));
+      .map((organization: IOrganization) => this.updateOrganizationNoFetch(organization, organization.id)));
   }
 
   clearOrganizations(): Observable<any[]> {

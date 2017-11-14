@@ -59,7 +59,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.organizationsService.fetchEmployees(),
+      action: () => this.fetchEmployees(),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('ORGANIZATION_VIEW'),
         this.organizationsService.selectedOrganization
@@ -185,11 +185,15 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onRemoveSubmit(data: any): void {
-     this.organizationsService.deleteEmployee().subscribe(() => {});
+     this.organizationsService.removeEmployee().subscribe(() => this.cancelAction());
   }
 
   cancelAction(): void {
     this.currentDialogAction = OrganizationDialogActionEnum.NONE;
     this.onCloseDialog();
+  }
+
+  fetchEmployees(): void {
+    this.organizationsService.fetchEmployees().subscribe(() => this.cancelAction());
   }
 }
