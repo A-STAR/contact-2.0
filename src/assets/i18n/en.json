@@ -1653,6 +1653,10 @@
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
       },
+      "add": {
+        "403": "You don't have permissions to add {{ entity }}",
+        "*": "Could not add {{ entity }}"
+      },
       "upload": {
         "403": "You don't have permissions to upload {{ entity }}",
         "*": "Could not upload {{ entity }}"

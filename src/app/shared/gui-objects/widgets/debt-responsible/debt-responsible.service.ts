@@ -28,13 +28,13 @@ export class DebtResponsibleService {
 
   setResponsible(debts: number[], operator: IOperator): Observable<any> {
     return this.dataService
-      .create('/mass/debts/setResponsible', {}, { idData: debts, actionData: { userId: operator.id } })
-      .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
+      .create('/mass/debts/setResponsible', {}, { idData: { ids: debts }, actionData: { userId: operator.id } })
+      .catch(this.notificationsService.error('errors.default.add').entity('entities.operator.gen.singular').dispatchCallback());
   }
 
   clearResponsible(debts: number[]): Observable<any> {
     return this.dataService
-      .create('/mass/debts/clearResponsible', {}, { idData: debts })
-      .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
+      .create('/mass/debts/clearResponsible', {}, { idData: { ids: debts } })
+      .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
   }
 }
