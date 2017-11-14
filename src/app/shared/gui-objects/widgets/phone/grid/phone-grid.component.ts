@@ -132,8 +132,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.debtSubscription = this.debtId$
-      .filter(Boolean)
-      .flatMap(debtId => this.debtService.fetch(null, debtId))
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
@@ -147,6 +146,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.clear();
         } else if (personId) {
           this.fetch();
+        } else {
+          this.clear();
         }
       });
 

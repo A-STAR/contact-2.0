@@ -40,7 +40,8 @@ export class FilterComponent {
   }
 
   onClearClick(): void {
-    this.form.form.reset();
+    this.incomingCallService.searchParams = null;
+    this.form.reset();
     this.form.markAsPristine();
     this.cdRef.markForCheck();
   }

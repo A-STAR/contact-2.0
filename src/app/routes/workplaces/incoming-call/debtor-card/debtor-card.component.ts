@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from './debtor-card.service';
 import { IncomingCallService } from '../incoming-call.service';
+
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -12,7 +15,7 @@ const labelKey = makeKey('modules.incomingCall.debtorCard.form');
   templateUrl: 'debtor-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorCardComponent implements OnInit {
+export class DebtorCardComponent implements AfterViewInit {
   controls = [
     { label: labelKey('userFullName'), controlName: 'userFullName', type: 'text' },
     { label: labelKey('organization'), controlName: 'organization ', type: 'text' },
@@ -25,21 +28,22 @@ export class DebtorCardComponent implements OnInit {
 
   data = {};
 
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private incomingCallService: IncomingCallService,
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     // TODO(d.maltsev): unsubscribing
     this.incomingCallService.selectedDebtor$
-      .filter(Boolean)
-      .subscribe(debtor => {
-        this.debtorCardService.fetch(debtor.debtId).subscribe(data => {
-          this.data = data;
-          this.cdRef.markForCheck();
-        });
+      .flatMap(debtor => debtor ? this.debtorCardService.fetch(debtor.debtId) : Observable.of(null))
+      .subscribe(data => {
+        this.form.reset();
+        this.data = data;
+        this.cdRef.markForCheck();
       });
   }
 }

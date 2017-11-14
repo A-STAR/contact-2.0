@@ -19,10 +19,9 @@ export class PhoneGridComponent implements OnInit {
   ngOnInit(): void {
     // TODO(d.maltsev): unsubscribing
     this.incomingCallService.selectedDebtor$
-      .filter(Boolean)
       .subscribe(debtor => {
-        this.debtId = debtor.debtId;
-        this.personId = debtor.personId;
+        this.debtId = debtor ? debtor.debtId : null;
+        this.personId = debtor ? debtor.personId : null;
         this.cdRef.markForCheck();
       });
   }

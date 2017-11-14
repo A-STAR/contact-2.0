@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -38,7 +39,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'creditEndDate', minWidth: 220, renderer: 'dateRenderer' },
   ];
 
-  debtors: any[] = [];
+  debtors: any[];
 
   private searchParamsSubscription: Subscription;
 
@@ -58,10 +59,10 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       });
 
     this.searchParamsSubscription = this.incomingCallService.searchParams$
-      .filter(Boolean)
-      .flatMap(params => this.debtorGridService.fetchAll(params))
+      .flatMap(params => params ? this.debtorGridService.fetchAll(params) : Observable.of(null))
       .subscribe(debtors => {
         this.debtors = debtors;
+        this.incomingCallService.selectedDebtor = null;
         this.cdRef.markForCheck();
       });
   }
