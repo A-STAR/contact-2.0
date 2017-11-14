@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/never';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -12,7 +10,6 @@ import {
   IEmployee,
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
-  OrganizationDialogActionEnum,
   IEmployeeSelectPayload,
   IOrganizationSelectPayload,
   IEmployeeViewEntity
@@ -22,7 +19,6 @@ import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode
 import { DataService } from 'app/core/data/data.service';
 import { OrganizationsTreeService } from 'app/routes/admin/organizations/organizations-tree/organizations-tree.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
-import { ISelectItemsPayload } from 'app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 @Injectable()
 export class OrganizationsService {

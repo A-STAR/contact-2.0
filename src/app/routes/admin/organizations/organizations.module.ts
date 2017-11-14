@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { OrganizationsTreeModule } from './organizations-tree/organizations-tree.module';

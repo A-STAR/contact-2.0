@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,8 +15,6 @@ import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree
 
 import { OrganizationsService } from '../organizations.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { EntityBaseComponent } from 'app/shared/components/entity/base.component';
 import { DialogFunctions } from 'app/core/dialog';
 
 @Component({

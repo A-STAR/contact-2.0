@@ -1,16 +1,14 @@
 import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
 
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../../organizations.service';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 import { GridComponent } from '../../../../../shared/components/grid/grid.component';
-import { Subscription } from 'rxjs/Subscription';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
@@ -24,10 +22,9 @@ export class EmployeeAddComponent implements OnInit {
   @ViewChild(GridComponent) addEmployeeGrid: GridComponent;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private selectedEmployees: Array<IEmployeeUser>;
-  private employeesSub: Subscription;
+  private selectedEmployees: Array<IEmployeeUser> = [];
   notAddedEmployees: Observable<IEmployee[]>;
-  controls: Array<IDynamicFormControl>;
+  controls: Array<IDynamicFormControl> = [];
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 200 },
