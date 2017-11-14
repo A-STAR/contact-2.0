@@ -63,11 +63,11 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
       this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
       contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
-      contract && contract.id
+      contract && contract.id && !this.isRoute('pledgor/add')
         ? this.pledgorPropertyService.fetch(contract.personId, contract.propertyId)
           .map(property => this.getFormData(contract, property))
         : Observable.of(this.getFormData()),
-      contract && contract.id
+      contract && contract.id && !this.isRoute('pledgor/add')
         ? this.pledgorService.fetch(contract.personId)
         : Observable.of(null)
     )
@@ -108,7 +108,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
           id: property.id,
           pledgeValue: property.pledgeValue,
           marketValue: property.marketValue,
-          currencyId: property.currencyId.value || property.currencyId
+          currencyId: (property.currencyId || {}).value || property.currencyId
         });
       });
   }

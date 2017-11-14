@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPledgeContract, IPledgeContractInformation, IContractInformation, IContractProperty } from './pledge.interface';
+import { IPledgeContract, IPledgeContractInformation, IContractInformation,
+  IContractProperty, IContractPledgor } from './pledge.interface';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -56,6 +57,24 @@ export class PledgeService {
         }]
       }]
     };
+  }
+
+  createContractPledgor(pledgorId: number, property: IContractProperty): IContractPledgor {
+    return {
+      personId: pledgorId,
+      properties: [{
+        propertyId: property.propertyId,
+        pledgeValue: property.pledgeValue,
+        marketValue: property.marketValue,
+        currencyId: property.currencyId
+      }]
+    };
+  }
+
+  addPledgor(debtId: number, contractId: number, pledgor: IContractPledgor): Observable<any> {
+    return this.dataService
+      .create(`${this.baseUrl}/{contractId}/pledgor`, { debtId, contractId }, pledgor)
+      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
   updateProperty(debtId: number, contractId: number, pledgorId: number,

@@ -50,6 +50,15 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
       ]),
       action: () => this.onEdit(this.selectedContract$.value)
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      action: () => this.onAddPledgor(this.selectedContract$.value),
+      label: 'widgets.pledgeContract.toolbar.add',
+      enabled: combineLatestAnd([
+        this.pledgeService.canEdit$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
+    },
   ];
 
   private _contracts: Array<IPledgeContract> = [];
@@ -108,6 +117,11 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
 
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/pledge/create` ]);
+  }
+
+  private onAddPledgor(contract: IPledgeContract): void {
+    this.messageBusService.passValue('contract', contract);
+    this.router.navigate([ `${this.router.url}/pledge/pledgor/add` ]);
   }
 
   private onEdit(contract: IPledgeContract): void {

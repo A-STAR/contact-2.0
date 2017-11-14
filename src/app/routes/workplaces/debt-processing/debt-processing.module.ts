@@ -44,6 +44,7 @@ const routes: Routes = [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPledgeComponent },
           { path: 'edit', component: DebtorPledgeComponent },
+          { path: 'pledgor/add', component: DebtorPledgeComponent },
         ]
       },
       { path: 'contact', children: [

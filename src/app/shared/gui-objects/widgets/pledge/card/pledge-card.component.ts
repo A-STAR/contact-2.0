@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,9 +27,10 @@ const label = makeKey('widgets.pledgeContract.card');
   selector: 'app-pledge-card',
   templateUrl: './pledge-card.component.html'
 })
-export class PledgeCardComponent implements OnInit, OnDestroy {
+export class PledgeCardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  private canEdit: boolean;
   private routeParams = (<any>this.route.params).value;
   private debtId = this.routeParams.debtId || null;
   private pledgorSelectionSub: Subscription;
@@ -39,6 +40,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   contract: Partial<IPledgeContract>;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
     private pledgeService: PledgeService,
@@ -58,6 +60,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     .subscribe(([ typeOptions, canEdit, pledgeContract ]) => {
       this.initControls(canEdit, typeOptions);
       this.contract = pledgeContract;
+      this.canEdit = canEdit;
     });
 
     this.pledgorSelectionSub = this.messageBusService
@@ -86,13 +89,27 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       });
   }
 
+  ngAfterViewInit(): void {
+    if ((this.isAddingPledgor || !this.canEdit) && this.form) {
+      this.form.form.disable();
+      this.cdRef.detectChanges();
+    }
+  }
+
   ngOnDestroy(): void {
     this.pledgorSelectionSub.unsubscribe();
     this.pledgorPropertySelectionSub.unsubscribe();
   }
 
   get canSubmit(): boolean {
+    if (this.isAddingPledgor && !!this.contract) {
+      return true;
+    }
     return this.form && this.form.canSubmit;
+  }
+
+  get isAddingPledgor(): boolean {
+    return this.isRoute('pledgor/add');
   }
 
   onBack(): void {
@@ -100,19 +117,25 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const action = this.isRoute('create')
-      ? this.pledgeService.create(
-        this.debtId,
-        this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
-      )
-      : this.pledgeService.update(
+    const action = this.isAddingPledgor
+      ? this.pledgeService.addPledgor(
         this.debtId,
         this.contract.contractId,
-        this.contract.personId,
-        this.contract.propertyId,
-        this.form.serializedUpdates,
-        this.form.serializedUpdates
-      );
+        this.pledgeService.createContractPledgor(this.form.getControl('personId').value, this.form.serializedUpdates),
+      )
+      : this.isRoute('create')
+        ? this.pledgeService.create(
+          this.debtId,
+          this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
+        )
+        : this.pledgeService.update(
+          this.debtId,
+          this.contract.contractId,
+          this.contract.personId,
+          this.contract.propertyId,
+          this.form.serializedUpdates,
+          this.form.serializedUpdates
+        );
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
@@ -152,6 +175,6 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('') === segment;
+    return this.route.snapshot.url.join('/') === segment;
   }
 }

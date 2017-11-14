@@ -63,11 +63,13 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
-      contract && contract.id ? this.pledgorService.fetch(contract.personId) : Observable.of(null)
+      contract && contract.id && !this.isRoute('pledgor/add')
+        ? this.pledgorService.fetch(contract.personId)
+        : Observable.of(null)
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, person ]) => {
-      const pledgor = person || this.getFormData();
+      const pledgor = person && !this.isRoute('pledgor/add') ? person : this.getFormData();
       this.initControls(canEdit, this.getFormData(), attributeList, { genderOpts, familyStatusOpts, educationOpts, typeOpts });
       this.pledgor = pledgor;
       this.currentTypeCode = pledgor.typeCode;

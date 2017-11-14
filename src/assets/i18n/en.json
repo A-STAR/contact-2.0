@@ -1487,6 +1487,9 @@
         "contractStartDate": "Start date",
         "contractEndDate": "Expiry date",
         "comment": "Comment"        
+      },
+      "toolbar": {
+        "add": "Add pledgor"
       }
     }
   },
