@@ -4,11 +4,12 @@ export interface IContactLog {
   contactDateTime?: Date | string;
   contactData?: any;
   contactNumber?: string;
+  contactId?: number;
   contactPhone?: string;
   contactType?: number;
   createDateTime?: Date | string;
   creditName?: string;
-  dedbId?: number;
+  debtId?: number;
   fullName?: string;
   personRole?: number;
   promiseAmount?: number;

@@ -31,9 +31,9 @@ export class ContactLogService {
   // }
   static COMMENT_CONTACT_LOG_SAVED = 'COMMENT_CONTACT_LOG_SAVED';
 
-  private baseUrl = '/persons/{personId}/contacts';
-  private extUrlNotSmsMessage = `${this.baseUrl}/contacts/{contactsId}`;
-  private extUrlSmsMessage = `${this.baseUrl}/sms/{contactsId}`;
+  private baseUrl = '/api/persons/{personId}/contacts';
+  private extUrlNotSmsMessage = '/api/debts/{debtId}/contacts/{contactsLogId}';
+  private extUrlSmsMessage = '/api/debts/{debtId}/sms/{contactsLogId}';
 
   constructor(
     private dataService: DataService,
@@ -41,16 +41,18 @@ export class ContactLogService {
   ) {}
 
   fetchAll(personId: number): Observable<Array<IContactLog>> {
-    return this.dataService.readAll(this.baseUrl, { personId })
+    return this.dataService.post(this.baseUrl, { personId }, {})
+      .map(res => res.data)
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.plural').dispatchCallback());
   }
 
-  fetch(personId: number, contactsId: number, contactType: number): Observable<IContactLog> {
+  fetch(debtId: number, contactsLogId: number, contactType: number): Observable<IContactLog> {
+    console.log('start fetch contact', arguments);
     return this.dataService.read(
       contactType < 4
         ? this.extUrlNotSmsMessage
         : this.extUrlSmsMessage,
-      { personId, contactsId })
+      { debtId, contactsLogId })
       .catch(this.notificationsService.error('errors.default.read')
       .entity('entities.contactLog.gen.singular').dispatchCallback());
   }

@@ -26,7 +26,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'debtId' },
-    { prop: 'contactNumber' },
+    { prop: 'contactId' },
     { prop: 'creditName' },
     { prop: 'fullName'},
     { prop: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
@@ -40,7 +40,10 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedProperty$.value),
+      action: () => {
+        console.log(this.selectedProperty$.value);
+        return this.onEdit(this.selectedProperty$.value);
+      },
       enabled: Observable.combineLatest(
         this.canEdit$,
         this.selectedProperty$
@@ -66,6 +69,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log('init contact log');
     this.gridService.setAllRenderers(this.columns)
     .take(1)
     .subscribe(columns => {
@@ -87,6 +91,14 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
     this.viewPermissionSubscription.unsubscribe();
   }
 
+  set contactLogList(val: IContactLog[]) {
+    console.log(val);
+    if (val) {
+      this._contactLogList = [...val];
+    }
+    this.cdRef.markForCheck();
+  }
+
   get contactLogList(): Array<IContactLog> {
     return this._contactLogList;
   }
@@ -100,13 +112,14 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(contactLog: IContactLog): void {
-    this.router.navigate([ `${this.router.url}/contactLog/${contactLog.id}/contactLogType/${contactLog.contactType}`]);
+    console.log(contactLog);
+    this.router.navigate([ `${this.router.url}/contactLog/${contactLog.contactId}/contactLogType/${contactLog.contactType}`]);
   }
 
 
   private fetch(): void {
     this.propertyService.fetchAll(this.personId).subscribe(contactLogList => {
-      this._contactLogList = contactLogList;
+      this.contactLogList = contactLogList;
       this.cdRef.markForCheck();
     });
   }

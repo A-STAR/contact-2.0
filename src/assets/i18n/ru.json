@@ -1422,7 +1422,8 @@
         "startDateTime": "Dispatch date"
       },
       "grid": {
-        "dedbId": "Ид долга",
+        "contactNumber": "Номер договора",
+        "debtId": "Ид долга",
         "creditName": "Название продукта",
         "createDateTime": "Дата создания",
         "contactType": "Тип контакта",

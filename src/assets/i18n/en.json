@@ -1422,16 +1422,17 @@
         "startDateTime": "Dispatch date"
       },
       "grid": {
-        "dedbId": "Debt ID",
+        "contactNumber": "Order number",
+        "debtId": "Debt ID",
         "creditName": "Credit name",
         "createDateTime": "Ceate date",
         "contactType": "Contact type",
         "fullName": "Contact person name",
-        "personRole": "Роль",
-        "contactDateTime": "Дата контакта",
-        "userFullName": "Оператор",
-        "resultName": "Результат",
-        "promiseDate": "Обещанная дата"
+        "personRole": "Person role",
+        "contactDateTime": "Contact date",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "promiseDate": "Promise date"
       }
     },
     "operator": {

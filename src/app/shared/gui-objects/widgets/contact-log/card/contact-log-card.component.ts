@@ -1,4 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import {  ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -21,13 +22,16 @@ const label = makeKey('widgets.contactLog.card');
 
 @Component({
   selector: 'app-contact-log-card',
-  templateUrl: './contact-log-card.component.html'
+  templateUrl: './contact-log-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   private personId = (this.route.params as any).value.personId || null;
-  private contactId= (this.route.params as any).value.contactId || null;
+  private contactId = (this.route.params as any).value.contactLogId || null;
+  private debtId = (this.route.params as any).value.debtId || null;
+  private contactLogType = (this.route.params as any).value.contactLogType || null;
 
   controls: Array<IDynamicFormItem> = null;
   contactLog: IContactLog;
@@ -36,29 +40,34 @@ export class ContactLogCardComponent implements OnInit {
     private contentTabService: ContentTabService,
     private contactLogService: ContactLogService,
     private messageBusService: MessageBusService,
+    private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
+    console.log('stact card on init', this.contactId, this.personId);
+    console.log((this.route.params as any).value);
     Observable.combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
-      this.contactId ? this.contactLogService.fetch(this.personId, this.contactId, 1) : Observable.of(null),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
+      this.contactId ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType) : Observable.of(null),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE),
     )
     .take(1)
     .subscribe(([ canEditComment, contactLog, contactTypeOpts, roleOpts ]) => {
       this.controls = this
-      .initControls(
-        contactTypeOpts,
-        roleOpts,
-        canEditComment,
-        contactLog.contactType,
-        contactLog
-      );
+        .initControls(
+          contactTypeOpts,
+          roleOpts,
+          canEditComment,
+          contactLog.contactType,
+          contactLog
+        );
+        console.log(this.controls);
       this.contactLog = contactLog;
+      this.cdRef.markForCheck();
     });
   }
 
@@ -87,74 +96,77 @@ export class ContactLogCardComponent implements OnInit {
     contactLog: IContactLog
   ): Array<IDynamicFormItem> {
     if (contactType < 4) {
-      const contactDataControlName: string = contactLog.contactType < 3
-              ? 'contactData.address.full_addres'
-              : 'contactData.phone.phone',
-            promiseDate: Date | string = contactLog.promiseDate,
-            promiseAmount: number = contactLog.promiseAmount;
+      console.log(contactTypeOptions);
 
-      return [
-        { label: label('contactNumber'),
-          controlName: 'contactNumber',
-          type: 'text', width: 6, disabled: true },
-        { label: label('contactDateTime'),
-          controlName: 'contactDateTime',
+      const controls =  [
+        { label: label('contract'), controlName: 'contract',
+          type: 'number',  width: 6, disabled: true },
+        { label: label('contactDateTime'), controlName: 'contactDateTime',
           type: 'datepicker', width: 6, disabled: true },
-        { label: label('contactType'),
-          controlName: 'contactType',
-          type: 'select', width: 6, options: contactTypeOptions, disabled: true },
+        { label: label('contactType'), controlName: 'contactType', type: 'select',
+          width: 6, options: contactTypeOptions, disabled: true },
         { label: label('userFullName'), controlName: 'userFullName', type: 'select',
-          options: [{value: contactLog.userFullName, label: contactLog.userFullName}],
-          disabled: true },
-        { label: label('resultName'), controlName: 'resultName', type: 'text', width: 6, disabled: true },
-        { label: label('contactData'),
-          controlName: contactDataControlName,
-          type: 'text', width: 6, disabled: true },
-        promiseDate
-          ? {
-            label: label('promiseDate'), controlName: 'promiseDate', type: 'datepicker',
-            width: 6, disabled: true
-          }
-          : undefined,
-        promiseAmount
-          ? {
-            label: label('promiseAmount'), controlName: 'promiseAmount', type: 'number',
-            width: 6, disabled: true
-          }
-          : undefined,
-        { label: label('comment'),
-          controlName: 'comment',
-          type: 'text', width: 6, disabled: !canEditComment }
-      ];
+          width: 6, options: [{value: contactLog.userFullName, label: contactLog.userFullName}], disabled: true },
+        { label: label('resultName'), controlName: 'resultName', type: 'text',
+          width: 6, disabled: true },
+        { label: label('contactData'), controlName: 'contactData',
+          type: 'text', width: 6, disabled: true }];
+      if (contactLog.promiseDate) {
+        controls.push(
+          { label: label('contactNumber'), controlName: 'contactNumber',
+            type: 'text', width: 6, disabled: true },
+        );
+      }
+      if (contactLog.promiseAmount) {
+        controls.push(
+          { label: label('promiseAmount'), controlName: 'promiseAmount',
+            type: 'text', width: 6, disabled: true}
+        );
+      }
+       controls.push(
+         { label: label('comment'),
+           controlName: 'comment',
+           type: 'text', width: 12, disabled: !canEditComment }
+       );
+      return controls as IDynamicFormItem[];
     } else {
       return [
-        { label: label('contactNumber'),
-          controlName: 'contactNumber',
-          type: 'text', width: 6, disabled: true },
-        { label: label('userFullName'), controlName: 'userFullName', type: 'select',
-          options: [{value: contactLog.userFullName, label: contactLog.userFullName}],
-          disabled: true },
-        { label: label('personRole'),
-          controlName: 'personRole',
-          type: 'text', width: 6, options: roleOpts, disabled: true },
-        { label: label('sentDateTime'),
-          controlName: 'sentDateTime',
-          type: 'datepicker', width: 6, disabled: true },
-        { label: label('contactPhone'),
-          controlName: 'contactPhone',
-          type: 'text', width: 6, disabled: true },
-        { label: label('text'),
-          controlName: 'text',
-          type: 'text', width: 6 , disabled: true },
-        { label: label('status'),
-          controlName: 'status',
-          type: 'text', width: 6, disabled: true},
-        { label: label('userFullName'), controlName: 'userFullName', type: 'select',
-          options: [{value: contactLog.userFullName, label: contactLog.userFullName}],
-          disabled: true },
-        { label: label('startDateTime'),
-          controlName: 'startDateTime',
-          type: 'datepicker', width: 6, disabled: true },
+        // todo start
+        // { label: label('contract'), controlName: 'contract',
+        // type: 'number',  width: 6, disabled: true },
+        // { label: label('userFullName'), controlName: 'userFullName', type: 'select',
+        //   width: 6, options: [{value: contactLog.userFullName, label: contactLog.userFullName}], disabled: true },
+        // { label: label('personRole'), options}
+        // todo end
+
+
+        // { label: label('contactNumber'),
+        //   controlName: 'contactNumber',
+        //   type: 'text', width: 6, disabled: true },
+        // { label: label('userFullName'), controlName: 'userFullName', type: 'select',
+        //   options: [{value: contactLog.userFullName, label: contactLog.userFullName}],
+        //   disabled: true },
+        // { label: label('personRole'),
+        //   controlName: 'personRole',
+        //   type: 'text', width: 6, options: roleOpts, disabled: true },
+        // { label: label('sentDateTime'),
+        //   controlName: 'sentDateTime',
+        //   type: 'datepicker', width: 6, disabled: true },
+        // { label: label('contactPhone'),
+        //   controlName: 'contactPhone',
+        //   type: 'text', width: 6, disabled: true },
+        // { label: label('text'),
+        //   controlName: 'text',
+        //   type: 'text', width: 6 , disabled: true },
+        // { label: label('status'),
+        //   controlName: 'status',
+        //   type: 'text', width: 6, disabled: true},
+        // { label: label('userFullName'), controlName: 'userFullName', type: 'select',
+        //   options: [{value: contactLog.userFullName, label: contactLog.userFullName}],
+        //   disabled: true },
+        // { label: label('startDateTime'),
+        //   controlName: 'startDateTime',
+        //   type: 'datepicker', width: 6, disabled: true },
       ];
     }
   }
