@@ -9,7 +9,7 @@ export class CampaignsEditComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }
