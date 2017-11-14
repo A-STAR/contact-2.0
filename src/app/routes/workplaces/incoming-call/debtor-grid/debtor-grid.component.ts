@@ -38,7 +38,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'creditEndDate', minWidth: 220, renderer: 'dateRenderer' },
   ];
 
-  debtors: any[];
+  debtors: any[] = [];
 
   private searchParamsSubscription: Subscription;
 
@@ -71,7 +71,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(debtor: any): void {
-    this.incomingCallService.selectedDebtorId = debtor.debtorId;
+    this.incomingCallService.selectedDebtor = debtor;
   }
 
   onDoubleClick(debtor: any): void {

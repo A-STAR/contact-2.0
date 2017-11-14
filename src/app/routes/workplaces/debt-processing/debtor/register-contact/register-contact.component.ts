@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { DebtService } from '../../../../../core/debt/debt.service';
 import { DebtorService } from '../debtor.service';
 
 import { AddressGridComponent } from './address/address.component';
@@ -23,6 +24,7 @@ export class RegisterContactComponent {
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
   constructor(
+    private debtService: DebtService,
     private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
@@ -44,15 +46,15 @@ export class RegisterContactComponent {
   }
 
   get canRegisterPhones$(): Observable<boolean> {
-    return this.debtorService.canRegisterPhones$;
+    return this.debtService.canRegisterIncomingCalls$;
   }
 
   get canRegisterAddresses$(): Observable<boolean> {
-    return this.debtorService.canRegisterAddresses$;
+    return this.debtService.canRegisterAddressVisits$;
   }
 
   get canRegisterMisc$(): Observable<boolean> {
-    return this.debtorService.canRegisterMisc$;
+    return this.debtService.canRegisterSpecialOrOfficeVisit$;
   }
 
   onAddressAction(contactId: number): void {

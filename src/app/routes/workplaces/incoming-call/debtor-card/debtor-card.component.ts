@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { DebtorCardService } from './debtor-card.service';
+import { IncomingCallService } from '../incoming-call.service';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -20,15 +21,25 @@ export class DebtorCardComponent implements OnInit {
     { label: labelKey('workPhone'), controlName: 'workPhone', type: 'text' },
     { label: labelKey('intPhone'), controlName: 'intPhone', type: 'text' },
     { label: labelKey('recommendation'), controlName: 'recommendation', type: 'text' },
-  ];
+  ].map(control => ({ ...control, disabled: true }));
 
   data = {};
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
+    private incomingCallService: IncomingCallService,
   ) {}
 
   ngOnInit(): void {
-    this.debtorCardService.fetch(1).subscribe(console.log);
+    // TODO(d.maltsev): unsubscribing
+    this.incomingCallService.selectedDebtor$
+      .filter(Boolean)
+      .subscribe(debtor => {
+        this.debtorCardService.fetch(debtor.debtId).subscribe(data => {
+          this.data = data;
+          this.cdRef.markForCheck();
+        });
+      });
   }
 }
