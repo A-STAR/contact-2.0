@@ -40,19 +40,18 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
   @Input() contactType: number;
-
   @Input('debtId')
   set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-
+  @Input() forCallCenter = false;
+  @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
     this.personId$.next(personId);
     this.cdRef.markForCheck();
   }
-
   @Input() personRole: number;
   @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
 
@@ -213,11 +212,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.phoneService.block(18, this.personId$.value, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.block(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter, code)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.phoneService.unblock(18, this.personId$.value, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.unblock(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onScheduleDialogSubmit(schedule: ISMSSchedule): void {
@@ -231,7 +232,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onRemoveDialogSubmit(): void {
-    this.phoneService.delete(18, this.personId$.value, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.delete(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -315,7 +317,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onEdit(phoneId: number): void {
-    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ]);
+    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ], {
+      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+    });
   }
 
   private onSubmitSuccess(): void {
@@ -324,7 +328,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.phoneService.fetchAll(18, this.personId$.value)
+    this.phoneService.fetchAll(this.entityType, this.personId$.value, this.forCallCenter)
       .subscribe(phones => {
         this.phones = phones;
         this.cdRef.markForCheck();

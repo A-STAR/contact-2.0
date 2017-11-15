@@ -31,6 +31,8 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
   @Input() debtId: number;
+  @Input() forCallCenter = false;
+  @Input() entityType = 18;
   @Input() personId: number;
   @Input() personRole: number;
 
@@ -188,7 +190,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data).subscribe(() => this.onSubmitSuccess());
+    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onDoubleClick(address: IAddress): void {
@@ -205,15 +208,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(18, this.personId, this._selectedAddressId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.addressService.block(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter, code)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.unblock(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(18, this.personId, this._selectedAddressId$.value).subscribe(() => this.onSubmitSuccess());
+    this.addressService.delete(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onCloseDialog(): void {
@@ -316,7 +322,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private onEdit(addressId: number): void {
-    this.router.navigate([ `${this.router.url}/address/${addressId}` ]);
+    this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
+      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+    });
   }
 
   private onSubmitSuccess(): void {
@@ -325,7 +333,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.addressService.fetchAll(18, this.personId)
+    this.addressService.fetchAll(this.entityType, this.personId, this.forCallCenter)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();
