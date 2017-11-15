@@ -24,7 +24,7 @@ export class GridTextFilter implements IFilter {
   doesFilterPass(params: IDoesFilterPassParams): boolean {
     // make sure each separate word passes separately
     // p.e. `Rebecca Show` could be filtered as `re sh`
-    // console.log(`filter text: ${this.filterText}, params: ${this.valueGetter(params)}`);
+    // log(`filter text: ${this.filterText}, params: ${this.valueGetter(params)}`);
     return this.filterText
       .toLowerCase()
       .split(' ')
@@ -51,7 +51,6 @@ export class GridTextFilter implements IFilter {
 
   destroy(): void {
     // this.elFilterText.removeEventListener('input', this.onFilterChanged);
-    console.log('filter destroyed');
   }
 
   // TODO(a.tymchuk): how do we remove the listener, if `destroy` doesn't get called ?

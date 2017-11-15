@@ -60,12 +60,12 @@ export class LayoutComponent {
   }
 
   deactivate(component: any): void {
-    // console.log('deactivated', component.name);
+    // log('deactivated', component.name);
   }
 
   activate(config: any): void {
     const { component, factory, injector } = config;
-    // console.log('activate', component.COMPONENT_NAME);
+    // log('activate', component.COMPONENT_NAME);
     const path: string = this.router.url;
     const key = this.titles[component.COMPONENT_NAME];
     const title: string = key ? `sidebar.nav.menu.${key}` : 'Title';
