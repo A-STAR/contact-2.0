@@ -12,4 +12,8 @@ import { CampaignService } from './campaign.service';
 })
 export class CampaignComponent {
   static COMPONENT_NAME = 'CampaignComponent';
+
+  constructor(
+    private campaignService: CampaignService,
+  ) {}
 }
