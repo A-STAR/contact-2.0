@@ -132,6 +132,50 @@
         "name": "Name",
         "comment": "Description"
       },
+      "overview": {
+        "info": {
+          "title": "Overview",
+          "shortInfo": "Overview"
+        },
+        "debtor": {
+          "title": "Debtor",
+          "personFullName": "Name",
+          "birthDate": "Birthdate",
+          "docNumber": "Document #",
+          "personComment": "Comments"
+        },
+        "debt": {
+          "title": "Debt",
+          "debtId": "Debt Id",
+          "portfolioName": "Portfolio",
+          "bankName": "Bank",
+          "creditTypeCode": "Credit Product Type",
+          "creditName": "Product Name",
+          "contract": "Contract #",
+          "creditStartDate": "Issued On",
+          "creditEndDate": "Ends On",
+          "regionCode": "Region",
+          "branchCode": "Branch",
+          "statusCode": "Status",
+          "debtAmount": "Debt Amount",
+          "totalAmount": "Total Amount",
+          "currencyName": "Currency",
+          "dpd": "DPD",
+          "startDate": "Start Date",
+          "debtReasonCode": "Debt Reason",
+          "dict1Code": "Dictionary Attribute 1",
+          "dict2Code": "Dictionary Attribute 2",
+          "dict3Code": "Dictionary Attribute 3",
+          "dict4Code": "Dictionary Attribute 4",
+          "lastPromStatusCode": "Promise Status",
+          "lastPromDate": "Promise Date",
+          "lastPayDate": "Latest Payment",
+          "lastCallDateTime": "Latest Call",
+          "lastVisitDateTime": "Latest Visit",
+          "nextCallDateTime": "Next Call",
+          "debtComment": "Comments"
+        }
+      },
       "tabs": {
         "phonesAndAddresses": "Phones and Addresses",
         "debtComponents": "Debt Components",

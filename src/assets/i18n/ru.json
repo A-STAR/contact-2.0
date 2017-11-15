@@ -132,6 +132,50 @@
         "name": "Название",
         "comment": "Описание"
       },
+      "overview": {
+        "info": {
+          "title": "Краткая информация",
+          "shortInfo": "Краткая информация"
+        },
+        "debtor": {
+          "title": "Должник",
+          "personFullName": "ФИО",
+          "birthDate": "Дата рождения",
+          "docNumber": "Номер документа",
+          "personComment": "Комментарий"
+        },
+        "debt": {
+          "title": "Долг",
+          "debtId": "Ид долга",
+          "portfolioName": "Портфолио",
+          "bankName": "Банк",
+          "creditTypeCode": "Тип кредитного продукта",
+          "creditName": "Название продукта",
+          "contract": "Номер договора",
+          "creditStartDate": "Дата выдачи",
+          "creditEndDate": "Дата окончания",
+          "regionCode": "Регион",
+          "branchCode": "Филиал",
+          "statusCode": "Статус",
+          "debtAmount": "Сумма просроченного долга",
+          "totalAmount": "Общая сумма кредита",
+          "currencyName": "Валюта",
+          "dpd": "DPD",
+          "startDate": "Дата выхода на просрочку",
+          "debtReasonCode": "Причина возникновения задолженности",
+          "dict1Code": "Словарный атрибут 1",
+          "dict2Code": "Словарный атрибут 2",
+          "dict3Code": "Словарный атрибут 3",
+          "dict4Code": "Словарный атрибут 4",
+          "lastPromStatusCode": "Статус обещания",
+          "lastPromDate": "Обещанная дата",
+          "lastPayDate": "Последний платеж",
+          "lastCallDateTime": "Последний звонок",
+          "lastVisitDateTime": "Последний выезд",
+          "nextCallDateTime": "Следующий звонок",
+          "debtComment": "Комментарий"
+        }
+      },
       "tabs": {
         "phonesAndAddresses": "Телефоны и адреса",
         "debtComponents": "Компоненты долга",

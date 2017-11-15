@@ -78,6 +78,7 @@ export class CampaignService {
       nextCallDateTime: null,
       personComment: 'I am a person comment.',
       personFirstName: 'John',
+      personFullName: 'John Norman Smith',
       personLastName: 'Smith',
       personMiddleName: 'Norman',
       portfolioName: 'Portfolio Name',

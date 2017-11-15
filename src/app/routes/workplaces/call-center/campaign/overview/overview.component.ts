@@ -9,7 +9,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('modules.callCenter.campaign.overview');
+const labelKey = makeKey('modules.callCenter.overview');
 
 @Component({
   selector: 'app-call-center-overview',
@@ -29,7 +29,7 @@ export class OverviewComponent {
       collapsible: true,
       title: labelKey('debtor.title'),
       children: [
-        { label: labelKey('debtor.fullName'), controlName: 'fullName', type: 'text', disabled: true, width: 6 },
+        { label: labelKey('debtor.personFullName'), controlName: 'personFullName', type: 'text', disabled: true, width: 6 },
         { label: labelKey('debtor.birthDate'), controlName: 'birthDate', type: 'datepicker', disabled: true, width: 6 },
         { label: labelKey('debtor.docNumber'), controlName: 'docNumber', type: 'text', disabled: true },
         { label: labelKey('debtor.personComment'), controlName: 'personComment', type: 'textarea', disabled: true },
