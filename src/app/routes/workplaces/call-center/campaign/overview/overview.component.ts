@@ -126,19 +126,15 @@ export class OverviewComponent implements OnInit {
             disabled: true,
             width: 6,
           },
-          ...range(1, 4).map(i => {
-            const attribute = attirbutes[EntityAttributesService[`DICT_VALUE_${i}`]];
-            return {
-              label: labelKey(`debt.dict${i}Code`),
-              controlName: `dict${i}Code`,
-              type: 'selectwrapper',
-              dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
-              disabled: true,
-              display: attribute.isUsed,
-              required: attribute.isMandatory,
-              width: 6,
-            } as IDynamicFormItem;
-          }),
+          ...range(1, 4).map(i => ({
+            label: labelKey(`debt.dict${i}Code`),
+            controlName: `dict${i}Code`,
+            type: 'selectwrapper',
+            dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
+            disabled: true,
+            display: attirbutes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
+            width: 6,
+          } as IDynamicFormItem)),
           {
             label: labelKey('debt.lastPromStatusCode'),
             controlName: 'lastPromStatusCode',
