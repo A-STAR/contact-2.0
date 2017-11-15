@@ -21,7 +21,6 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 })
 export class ContactLogGridComponent implements OnInit, OnDestroy {
 
-  // private selectedProperty$ = new BehaviorSubject<IContactLog>(null);
   selected: IContactLog[];
 
   columns: Array<IGridColumn> = [

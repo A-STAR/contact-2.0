@@ -1415,6 +1415,7 @@
         "title": "История контактов"
       },
       "card": {
+        "contract": "Договор",
         "contactNumber": "Номер договора",
         "contactDateTime": "Дата контакта",
         "contactType": "Тип контакта",
@@ -1432,6 +1433,7 @@
         "startDateTime": "Dispatch date"
       },
       "grid": {
+        "contactId": "Ид контакта",
         "contactNumber": "Номер договора",
         "debtId": "Ид долга",
         "creditName": "Название продукта",

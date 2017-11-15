@@ -33,23 +33,24 @@ export class ContactLogService {
           ? this.extUrlNotSmsMessage
           : this.extUrlSmsMessage,
         { debtId, contactsLogId })
-      // // TODO mock becouse api not ready
-      // .catch(() => Observable.of({
-      //   contract: 564654654,
-      //   fullName: 'Денисов Евгений Викторович',
-      //   personRole: 1,
-      //   sentDateTime: new Date('2017-08-26T21:00:00Z'),
-      //   contactPhone: '6546546546546',
-      //   userFullName: 'Иванов Иван Иванович',
-      //   startDateTime: new Date('2017-07-26T05:00:00Z'),
-      //   comment: 'Контакт. Тестовый. Долг 1  .1033',
-      //   text: 'nsthsnthsou aesnt hant senh aonuh aneh ansh nsauh aneht thnth',
-      //   status: 1,
-      //   contactType: 4,
-      //   userId: 100
-      // }));
-      .catch(this.notificationsService.error('errors.default.read')
-      .entity('entities.contactLog.gen.singular').dispatchCallback());
+      // TODO mock becouse api not ready
+      .catch(() => Observable.of({
+        contract: 564654654,
+        fullName: 'Денисов Евгений Викторович',
+        personRole: 1,
+        sentDateTime: new Date('2017-08-26T21:00:00Z'),
+        contactPhone: '6546546546546',
+        userFullName: 'Иванов Иван Иванович',
+        startDateTime: new Date('2017-07-26T05:00:00Z'),
+        comment: 'Контакт. Тестовый. Долг 1  .1033',
+        text: 'nsthsnthsou aesnt hant senh aonuh aneh ansh nsauh aneht thnth',
+        status: 1,
+        contactType: 4,
+        userId: 100
+      }));
+      // TODO uncomment when unmock
+      // .catch(this.notificationsService.error('errors.default.read')
+      // .entity('entities.contactLog.gen.singular').dispatchCallback());
   }
 
   update(debtId: number, contactsLogId: number, comment: string): Observable<any> {

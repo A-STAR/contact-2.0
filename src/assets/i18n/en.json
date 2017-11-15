@@ -1416,6 +1416,7 @@
         "title": "Contact Log"
       },
       "card": {
+        "contract": "Order",
         "contactNumber": "Order number",
         "contactDateTime": "Contact date",
         "contactType": "Contact type",
@@ -1433,6 +1434,7 @@
         "startDateTime": "Dispatch date"
       },
       "grid": {
+        "contactId": "Contact Id",
         "contactNumber": "Order number",
         "debtId": "Debt ID",
         "creditName": "Credit name",
