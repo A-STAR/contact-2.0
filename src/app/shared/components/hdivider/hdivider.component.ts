@@ -31,7 +31,7 @@ export class HDividerComponent implements OnInit, OnDestroy {
     }
     this.handle = this.element.nativeElement.querySelector('.divider-handle');
     this.dragStart = this.renderer.listen(this.handle, 'dragstart', () => {});
-    // this.drag = this.renderer.listen(this.handle, 'drag', (e) => console.log('y', e.clientY, e.offsetY, e.screenY));
+    // this.drag = this.renderer.listen(this.handle, 'drag', (e) => log('y', e.clientY, e.offsetY, e.screenY));
     this.dragEnd = this.renderer.listen(this.handle, 'dragend', (e) => this.callback(e.offsetY));
   }
 

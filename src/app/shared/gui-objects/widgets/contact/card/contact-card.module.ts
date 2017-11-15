@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { AddressGridModule } from './address-grid/address-grid.module';
 import { ContainerModule } from '../../../container/container.module';
 import { ContactCardComponent } from './contact-card.component';
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
@@ -9,6 +10,7 @@ import { PhoneGridModule } from './phone-grid/phone-grid.module';
 
 @NgModule({
   imports: [
+    AddressGridModule,
     CommonModule,
     ContainerModule,
     DynamicFormModule,

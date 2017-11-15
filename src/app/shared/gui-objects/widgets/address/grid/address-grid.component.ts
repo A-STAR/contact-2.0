@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -29,6 +29,11 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
+  @Input() action: 'edit';
+  @Input() debtId: number;
+  @Input() personId: number;
+  @Input() personRole: number;
+
   private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: IToolbarItem[] = [
@@ -105,7 +110,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
 
   constructor(
     private addressService: AddressService,
@@ -115,11 +119,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-    @Inject('personRole') private _personRole: number,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     Observable.combineLatest(
       this.debtService.fetch(this.personId, this.debtId),
       this.gridService.setDictionaryRenderers(this._columns),
@@ -140,9 +144,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.messageBusService
       .select(AddressService.MESSAGE_ADDRESS_SAVED)
       .subscribe(() => this.fetch());
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
       .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
@@ -158,22 +160,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
-  }
-
-  get personRole(): number {
-    return this._personRole;
-  }
-
-  get personId(): number {
-    return this.routeParams.contactId || this.routeParams.personId || null;
-  }
-
-  get debtorId(): number {
-    return this.routeParams.personId || null;
-  }
-
-  get debtId(): number {
-    return this.routeParams.debtId || null;
   }
 
   get canDisplayGrid(): boolean {
@@ -206,7 +192,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(address: IAddress): void {
-    this.onEdit(address.id);
+    switch (this.action) {
+      case 'edit':
+        this.onEdit(address.id);
+        break;
+    }
   }
 
   onSelect(address: IAddress): void {

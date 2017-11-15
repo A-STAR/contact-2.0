@@ -21,7 +21,7 @@ export class ContactLogGridComponent {
   columnIds = [
     'contactDateTime',
     'contactType',
-    'сontract',
+    'contract',
     'createDateTime',
     'debtId',
     'fullName',

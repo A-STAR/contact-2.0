@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -31,9 +40,26 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
   @Input() contactType: number;
-  @Input() debtId: number;
-  @Input() personId: number;
+
+  @Input('debtId')
+  set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
+
+  @Input('personId')
+  set personId(personId: number) {
+    this.personId$.next(personId);
+    this.cdRef.markForCheck();
+  }
+
   @Input() personRole: number;
+  @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
+
+  @Output() select = new EventEmitter<IPhone>();
+
+  private debtId$ = new BehaviorSubject<number>(null);
+  private personId$ = new BehaviorSubject<number>(null);
 
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
@@ -89,6 +115,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   debt: IDebt;
 
   private canViewSubscription: Subscription;
+  private debtSubscription: Subscription;
   private busSubscription: Subscription;
 
   private _columns: Array<IGridColumn> = [
@@ -115,14 +142,32 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.debtSubscription = this.debtId$
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
+      .subscribe(debt => {
+        this.debt = debt;
+        this.cdRef.markForCheck();
+      });
+
+    this.canViewSubscription = Observable
+      .combineLatest(this.canView$, this.personId$)
+      .subscribe(([ canView, personId ]) => {
+        if (!canView) {
+          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
+          this.clear();
+        } else if (personId) {
+          this.fetch();
+        } else {
+          this.clear();
+        }
+      });
+
     Observable.combineLatest(
-      this.debtService.fetch(this.personId, this.debtId),
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
     .take(1)
-    .subscribe(([ debt, columns, canViewBlock ]) => {
-      this.debt = debt;
+    .subscribe(([ columns, canViewBlock ]) => {
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
@@ -133,21 +178,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.messageBusService
       .select(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
-
-    this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
-          this.clear();
-        }
-      });
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
+    this.debtSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
 
@@ -172,30 +207,31 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(phone: IPhone): void {
+    this.select.emit(phone);
     this.selectedPhoneId$.next(phone.id);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.phoneService.block(18, this.personId, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.block(18, this.personId$.value, this.selectedPhoneId$.value, code).subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.phoneService.unblock(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.unblock(18, this.personId$.value, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onScheduleDialogSubmit(schedule: ISMSSchedule): void {
     const data = {
       ...schedule,
-      personId: this.personId,
+      personId: this.personId$.value,
       personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
     };
-    this.phoneService.scheduleSMS(this.debtId, data).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.scheduleSMS(this.debtId$.value, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.phoneService.delete(18, this.personId, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
+    this.phoneService.delete(18, this.personId$.value, this.selectedPhoneId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -211,8 +247,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .take(1)
       .subscribe(phoneId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
-        const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phoneId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+        const url = `/workplaces/contact-registration/${this.debtId$.value}/${this.contactType}/${phoneId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId$.value, personRole: this.personRole } });
       });
   }
 
@@ -288,7 +324,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.phoneService.fetchAll(18, this.personId)
+    this.phoneService.fetchAll(18, this.personId$.value)
       .subscribe(phones => {
         this.phones = phones;
         this.cdRef.markForCheck();

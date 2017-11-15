@@ -1,6 +1,6 @@
-<app-dialog (onClose)="onClose()">
+<app-dialog (close)="onClose()">
   <div dialog-header>
-    <h3>{{ 'modules.contactRegistration.fileAttach.add' | translate }}</h3>
+    <h3>{{ 'modules.contactRegistration.attachment.add' | translate }}</h3>
   </div>
   <div>
     <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="{}"></app-dynamic-form>

@@ -1,5 +1,5 @@
-import { IUserDictionariesState } from './user-dictionaries.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import { IUserDictionariesState, IUserDictionaryAction } from './user-dictionaries.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 import { UserDictionariesService } from './user-dictionaries.service';
 
@@ -9,7 +9,7 @@ export const defaultState: IUserDictionariesState = {
 
 export function reducer(
   state: IUserDictionariesState = defaultState,
-  action: UnsafeAction
+  action: SafeAction<IUserDictionaryAction>
 ): IUserDictionariesState {
   switch (action.type) {
     case UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS:
@@ -20,8 +20,6 @@ export function reducer(
           [dictionaryId]: terms
         }
       };
-    // NOTE: this should fall back to default
-    // case UserDictionariesService.USER_DICTIONARY_FETCH_FAILURE:
     default:
       return state;
   }
