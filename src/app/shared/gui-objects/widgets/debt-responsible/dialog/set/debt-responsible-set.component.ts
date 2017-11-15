@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { IOperator } from '../../../operator/operator.interface';
 
@@ -22,7 +22,6 @@ export class DebtResponsibleSetComponent extends DialogFunctions {
   successCount: number;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private debtResponsibleService: DebtResponsibleService
   ) {
     super();
@@ -30,12 +29,7 @@ export class DebtResponsibleSetComponent extends DialogFunctions {
 
   onSelect(operator: IOperator): void {
     this.debtResponsibleService.setResponsible(this.debts, operator)
-      .subscribe(result => {
-        this.count = result.count;
-        this.successCount = result.successCount;
-        this.setDialog('setResult');
-        this.cdRef.markForCheck();
-      });
+      .subscribe(() => this.close.emit(true));
   }
 
   onSetResult(): void {
