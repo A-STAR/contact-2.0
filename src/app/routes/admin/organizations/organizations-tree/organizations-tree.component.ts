@@ -60,7 +60,7 @@ export class OrganizationsTreeComponent implements OnDestroy {
       : this.organizationsService.clearOrganizations()
     );
 
-    this.organizations.subscribe(console.log);
+    this.organizations.subscribe(() => {});
   }
 
   ngOnDestroy(): void {

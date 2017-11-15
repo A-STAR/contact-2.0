@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { PersistenceService } from '../persistence/persistence.service';
 import { propOr } from '../utils';
 
+
 @Injectable()
 export class SettingsService {
 

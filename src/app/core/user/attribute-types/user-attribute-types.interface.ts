@@ -22,3 +22,9 @@ export interface IUserAttributeTypes {
 export interface IUserAttributeTypesState {
   attributeTypes: IUserAttributeTypes;
 }
+
+export interface IUserAttributeTypesAction {
+  entityTypeId: number;
+  entitySubtypeCode: number;
+  attributeTypes?: IUserAttributeType[];
+}

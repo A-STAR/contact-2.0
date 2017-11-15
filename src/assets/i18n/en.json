@@ -127,6 +127,20 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "grid": {
+        "name": "Name",
+        "comment": "Description"
+      },
+      "tabs": {
+        "phonesAndAddresses": "Phones and Addresses",
+        "debtComponents": "Debt Components",
+        "contacts": "Contacts",
+        "payments": "Payments",
+        "promises": "Promises",
+        "documents": "Documents"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -219,12 +233,9 @@
           "account": "Account",
           "phoneNumber": "Phone Number",
           "fullAddress": "Address",
-          "docSeries": "Series",
           "docNumber": "Number",
-          "clientId": "Client Id",
           "birthDate": "Birth Date",
-          "showDebtors": "Show Debtors",
-          "showGuarantors": "Show Guarantors",
+          "personRoleCodes": "Role",
           "showClosed": "Show Closed Debts"
         }
       },
@@ -1451,6 +1462,9 @@
   "entities": {
     "attribute": {
       "gen": { "singular": "attribute", "plural": "attributes" }
+    },
+    "campaign": {
+      "gen": { "singular": "campaign", "plural": "campaigns" }
     },
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }

@@ -19,6 +19,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   templateUrl: './contact-log-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+<<<<<<< HEAD
 export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   // private selectedProperty$ = new BehaviorSubject<IContactLog>(null);
@@ -35,6 +36,23 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
     { prop: 'userFullName' },
     { prop: 'resultName' },
     { prop: 'promiseDate' },
+=======
+export class ContactLogGridComponent {
+  @Input() personId: number;
+
+  @ViewChild(Grid2Component) grid: Grid2Component;
+
+  columnIds = [
+    'contactDateTime',
+    'contactType',
+    'contract',
+    'createDateTime',
+    'debtId',
+    'fullName',
+    'personRole',
+    'resultName',
+    'userFullName',
+>>>>>>> 133a44b76ecb9cb95a2b5253cdc14512a7ffe1e2
   ];
 
   toolbarItems: Array<IToolbarItem> = [

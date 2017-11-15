@@ -29,7 +29,7 @@ export class EasypiechartDirective implements OnInit, OnChanges {
 
   constructor(private element: ElementRef) {
     this.percent = this.percent || 0;
-    this.options = $.extend({}, this.defaultOptions, this.options);
+    this.options = Object.assign({}, this.defaultOptions, this.options);
   }
 
   ngOnInit(): void {

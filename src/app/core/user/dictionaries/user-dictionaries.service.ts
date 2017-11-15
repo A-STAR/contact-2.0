@@ -4,8 +4,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
-import { ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm } from './user-dictionaries.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import {
+  ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction
+} from './user-dictionaries.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class UserDictionariesService {
@@ -79,7 +81,7 @@ export class UserDictionariesService {
     this.state$.subscribe(state => this.state = state);
   }
 
-  createRefreshAction(dictionaryId: number): UnsafeAction {
+  createRefreshAction(dictionaryId: number): SafeAction<IUserDictionaryAction> {
     return {
       type: UserDictionariesService.USER_DICTIONARY_FETCH,
       payload: { dictionaryId }
@@ -123,7 +125,6 @@ export class UserDictionariesService {
   }
 
   private get state$(): Observable<IUserDictionariesState> {
-    return this.store.select(state => state.userDictionaries)
-      .filter(Boolean);
+    return this.store.select(state => state.userDictionaries);
   }
 }

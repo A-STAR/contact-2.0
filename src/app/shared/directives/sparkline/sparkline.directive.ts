@@ -36,7 +36,7 @@ export class SparklineDirective implements OnInit, OnDestroy {
       options = data;
     } else if (data) {
       // Data attributes overrides scope options
-      options = {...options, ...data };
+      options = { ...options, ...data };
     }
 
     options.type = options.type || 'bar';
