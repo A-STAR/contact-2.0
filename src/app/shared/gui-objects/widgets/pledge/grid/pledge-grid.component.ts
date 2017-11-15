@@ -110,6 +110,10 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
     this.actionSubscription = this.messageBusService.select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
+
+    this.selectedContract$.subscribe(
+      pledge => this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, null, pledge)
+    );
   }
 
   ngOnDestroy(): void {

@@ -10,6 +10,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 @Injectable()
 export class PledgeService {
   static MESSAGE_PLEDGE_CONTRACT_SAVED = 'MESSAGE_PLEDGE_CONTRACT_SAVED';
+  static MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED = 'MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED';
 
   private baseUrl = '/debts/{debtId}/pledgeContract';
   private errSingular = 'entities.pledgeContract.gen.singular';
