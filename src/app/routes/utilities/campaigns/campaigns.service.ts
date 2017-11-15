@@ -7,8 +7,8 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 import { ICampaign,
          ICampaignsState,
          ICampaignSelectPayload,
-         IParticipantViewEntity,
-         IParticipantSelectPayload } from './campaigns.interface';
+         IParticipantSelectPayload,
+         IParticipant} from './campaigns.interface';
 
 @Injectable()
 export class CampaignsService {
@@ -31,69 +31,35 @@ export class CampaignsService {
 
   get state(): Observable<ICampaignsState> {
     return this.store
-      .select(state => state.campaings)
-      .distinctUntilChanged();
-  }
-
-  get campaigns(): Observable<ICampaign[]> {
-    return this.store
-      .select(state => state.campaings.campaigns)
+      .select(state => state.campaigns)
       .distinctUntilChanged();
   }
 
   get selectedCampaign(): Observable<ICampaign> {
     return this.store
-    .select(state => state.campaings.selectedCampaign);
+    .select(state => state.campaigns.selectedCampaign);
   }
 
-  get selectedParticipant(): Observable<IParticipantViewEntity> {
+  get selectedParticipant(): Observable<IParticipant> {
     return this.store
-    .select(state => state.campaings.selectedParticipant);
+    .select(state => state.campaigns.selectedParticipant);
   }
-  // too much repetative code, how an entity can be parameterized?
+
   selectCampaign(selectedCampaign: ICampaign, campaigns?: ICampaign[]): ICampaignSelectPayload {
-    const onCampaignSelectPayload: ICampaignSelectPayload = {
-      selectedCampaign
-    };
-    if (campaigns) {
-      onCampaignSelectPayload.campaigns = campaigns;
-    }
     this.store.dispatch({
       type: CampaignsService.CAMPAIGN_SELECT,
-      payload: onCampaignSelectPayload
+      payload: { selectedCampaign }
     });
-    return onCampaignSelectPayload;
+    return { selectedCampaign };
   }
 
-  selectParticipant(selectedParticipant: IParticipantViewEntity,
-    participants?: IParticipantViewEntity[]): IParticipantSelectPayload {
-
-    const onParticipantSelectPayload: IParticipantSelectPayload = {
-      selectedParticipant
-    };
-    if (participants) {
-      onParticipantSelectPayload.participants = participants;
-    }
+  selectParticipant(selectedParticipant: IParticipant): IParticipantSelectPayload {
     this.store.dispatch({
       type: CampaignsService.PARTICIPANT_SELECT,
-      payload: onParticipantSelectPayload
+      payload: { selectedParticipant }
     });
-    return onParticipantSelectPayload;
+    return { selectedParticipant };
   }
-
-  /**
-   * Experimental
-   * @param {T} entity Entity to select
-   * @param {T[]} entities Entities collecton
-   * @param {string} selectAction Select action type
-   * @return {U} payload Action's payload
-   */
-  // selectEntity<T, U>(selectAction: string, entity: T, entities?: T[]): U {
-  //   const payload: U = {
-
-  //   }
-  // }
-
 
   private readCampaigns(): Observable<ICampaign[]> {
     // return this.dataService.readAll(this.baseUrl);

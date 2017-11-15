@@ -6,6 +6,7 @@ import { StatisticsComponent } from './statistics.component';
   imports: [
     CommonModule
   ],
+  exports: [StatisticsComponent],
   declarations: [StatisticsComponent]
 })
 export class StatisticsModule { }

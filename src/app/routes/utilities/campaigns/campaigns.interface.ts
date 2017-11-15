@@ -23,10 +23,10 @@ export interface ICampaign {
 
 export interface ICampaignSelectPayload {
   selectedCampaign: ICampaign;
-  campaigns?: ICampaign[];
 }
 
 export interface IParticipant {
+  id?: number;
   userId: number;
   fullName: string;
   // ??
@@ -35,13 +35,8 @@ export interface IParticipant {
   position: string;
 }
 
-export interface IParticipantViewEntity extends IParticipant {
-  id: number;
-}
-
 export interface IParticipantSelectPayload {
-  selectedParticipant: IParticipantViewEntity;
-  participants?: IParticipantViewEntity[];
+  selectedParticipant: IParticipant;
 }
 
 export type ICampaignsState = ICampaignSelectPayload & IParticipantSelectPayload;

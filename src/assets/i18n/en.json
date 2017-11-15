@@ -908,6 +908,10 @@
         "finishDateTime": "Finished",
         "comment": "Commentary",
         "timeZoneUsed": "GMT used"
+      },
+      "tabs": {
+        "participants": "Participants",
+        "statistics": "Statistics"
       }
     }
   },

@@ -46,7 +46,7 @@ export const reducers = {
 
 export const initialState: Partial<IAppState> = {
   actionsLog: actionsLog.defaultState,
-  campaings: campaigns.defaultState,
+  campaigns: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
   debtors: debtors.defaultState,

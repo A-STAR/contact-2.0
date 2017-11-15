@@ -907,6 +907,10 @@
         "finishDateTime": "Дата остановки",
         "comment": "Комментарий",
         "timeZoneUsed": "Учет GMT"
+      },
+      "tabs": {
+        "participants": "Участники",
+        "statistics": "Статистика"
       }
     }
   },

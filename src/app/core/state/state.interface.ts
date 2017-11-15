@@ -40,7 +40,7 @@ export interface IAppState {
   readonly userPermissions: IUserPermissionsState;
   readonly userTemplates: IUserTemplatesState;
   readonly users: IUsersState;
-  readonly campaings: ICampaignsState;
+  readonly campaigns: ICampaignsState;
 }
 
 export interface UnsafeAction extends Action {

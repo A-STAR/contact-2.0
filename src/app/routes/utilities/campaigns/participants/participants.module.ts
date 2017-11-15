@@ -7,6 +7,7 @@ import { ParticipantsComponent } from './participants.component';
   imports: [
     CommonModule
   ],
+  exports: [ParticipantsEditComponent, ParticipantsComponent],
   declarations: [ParticipantsEditComponent, ParticipantsComponent]
 })
 export class ParticipantsModule { }

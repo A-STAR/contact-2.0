@@ -1,5 +1,5 @@
 import { ICampaignsState } from './campaigns.interface';
-import { SafeAction } from '../../../core/state/state.interface';
+import { SafeAction, UnsafeAction } from '../../../core/state/state.interface';
 
 import { CampaignsService } from './campaigns.service';
 
@@ -8,7 +8,7 @@ export const defaultState: ICampaignsState = {
   selectedParticipant: null
 };
 
-export function reducer(state: ICampaignsState = defaultState, action: SafeAction<ICampaignsState>): ICampaignsState {
+export function reducer(state: ICampaignsState = defaultState, action: UnsafeAction): ICampaignsState {
   switch (action.type) {
     case CampaignsService.CAMPAIGN_SELECT:
       return {
