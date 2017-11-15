@@ -1,3 +1,13 @@
+<app-dialog-action
+  *ngIf="isDialog('removePledge')"
+  actionMode="danger"
+  actionTranslationKey="debtor.pledgorsTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.pledgorsTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()">
+</app-dialog-action>
+
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid

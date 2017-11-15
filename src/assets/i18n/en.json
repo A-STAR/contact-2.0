@@ -659,7 +659,11 @@
       }
     },
     "pledgorsTab": {
-      "title": "Pledgors"
+      "title": "Pledgors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this pledge contract?"
+      }
     },
     "guarantorsTab": {
       "title": "Guarantors",

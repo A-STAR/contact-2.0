@@ -13,6 +13,7 @@ import { MessageBusService } from '../../../../../core/message-bus/message-bus.s
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { DialogFunctions } from '../../../../../core/dialog';
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
@@ -20,9 +21,11 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   templateUrl: './pledge-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PledgeGridComponent implements OnInit, OnDestroy {
+export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   private selectedContract$ = new BehaviorSubject<IPledgeContract>(null);
+
+  dialog: string;
 
   columns: Array<IGridColumn> = [
     { prop: 'id' },
@@ -59,6 +62,14 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
         this.selectedContract$.map(selectedContract => !!selectedContract)
       ])
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.setDialog('removePledge'),
+      enabled: combineLatestAnd([
+        this.pledgeService.canDelete$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
+    },
   ];
 
   private _contracts: Array<IPledgeContract> = [];
@@ -76,7 +87,9 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
@@ -113,6 +126,19 @@ export class PledgeGridComponent implements OnInit, OnDestroy {
 
   onDoubleClick(contract: IPledgeContract): void {
     this.onEdit(contract);
+  }
+
+  onRemove(): void {
+    const { contractId, personId, propertyId } = this.selectedContract$.value;
+    this.pledgeService.delete(this.debtId, contractId, personId, propertyId)
+      .subscribe(() => {
+        this.setDialog(null);
+        this.fetch();
+      });
+  }
+
+  onCancel(): void {
+    this.setDialog(null);
   }
 
   private onAdd(): void {

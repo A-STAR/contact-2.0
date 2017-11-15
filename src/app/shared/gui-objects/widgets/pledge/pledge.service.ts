@@ -99,4 +99,12 @@ export class PledgeService {
       () => this.updateProperty(debtId, contractId, pledgorId, propertyId, property)
     ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
+
+  delete(debtId: number, contractId: number, pledgorId: number, propertyId: number): Observable<any> {
+    return this.dataService
+      .delete(
+        `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
+        { debtId, contractId, pledgorId, propertyId }
+      ).catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
+  }
 }
