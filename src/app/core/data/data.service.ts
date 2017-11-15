@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/publishReplay';
@@ -10,6 +10,7 @@ interface RequestOptions {
   headers?: HttpHeaders;
   observe?: 'response' | 'body' | 'events';
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  params?: HttpParams;
 }
 
 @Injectable()
