@@ -1,5 +1,5 @@
 import {  ViewChild } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -28,7 +28,6 @@ const label = makeKey('widgets.contactLog.card');
 export class ContactLogCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private personId = (this.route.params as any).value.personId || null;
   private contactId = (this.route.params as any).value.contactLogId || null;
   private debtId = (this.route.params as any).value.debtId || null;
   private contactLogType = (this.route.params as any).value.contactLogType || null;
@@ -47,18 +46,15 @@ export class ContactLogCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('stact card on init', this.contactId, this.personId);
-    console.log((this.route.params as any).value);
     Observable.combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
       this.contactId ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType) : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
-      // for sms
-      this.contactLogType === 4
-        ? this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
+      Number(this.contactLogType) === 4 ?
+        this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
         : Observable.of(null),
-      this.contactLogType === 4
-        ? this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
+      Number(this.contactLogType) === 4 ?
+         this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
         : Observable.of(null)
     )
     .take(1)
@@ -72,7 +68,6 @@ export class ContactLogCardComponent implements OnInit {
           contactLog.contactType,
           contactLog
         );
-        console.log(this.controls);
       this.contactLog = contactLog;
       this.cdRef.markForCheck();
     });
@@ -83,12 +78,11 @@ export class ContactLogCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action =  this.contactLogService.update(this.personId, this.contactId, this.form.value);
-
-    action.subscribe(() => {
-      this.messageBusService.dispatch(ContactLogService.COMMENT_CONTACT_LOG_SAVED );
-      this.onBack();
-    });
+    this.contactLogService.update(this.debtId, this.contactId, this.form.value.comment)
+      .subscribe(() => {
+        this.messageBusService.dispatch(ContactLogService.COMMENT_CONTACT_LOG_SAVED, null, this.contactId );
+        this.onBack();
+      });
   }
 
   onBack(): void {
@@ -103,9 +97,7 @@ export class ContactLogCardComponent implements OnInit {
     contactType: number,
     contactLog: IContactLog
   ): Array<IDynamicFormItem> {
-    if (contactType < 4) {
-      console.log(contactTypeOptions);
-
+    if (Number(contactType) !== 4) {
       const controls =  [
         { label: label('contract'), controlName: 'contract',
           type: 'number',  width: 6, disabled: true },
@@ -113,46 +105,56 @@ export class ContactLogCardComponent implements OnInit {
           type: 'datepicker', width: 6, disabled: true },
         { label: label('contactType'), controlName: 'contactType', type: 'select',
           width: 6, options: contactTypeOptions, disabled: true },
-        { label: label('userFullName'), controlName: 'userFullName', type: 'select',
-          width: 6, options: [{value: contactLog.userFullName, label: contactLog.userFullName}], disabled: true },
+        { label: label('userFullName'), controlName: 'userFullName', type: 'text',
+          width: 6, disabled: true },
         { label: label('resultName'), controlName: 'resultName', type: 'text',
           width: 6, disabled: true },
         { label: label('contactData'), controlName: 'contactData',
           type: 'text', width: 6, disabled: true }];
+
       if (contactLog.promiseDate) {
         controls.push(
           { label: label('contactNumber'), controlName: 'contactNumber',
             type: 'text', width: 6, disabled: true },
         );
       }
+
       if (contactLog.promiseAmount) {
         controls.push(
           { label: label('promiseAmount'), controlName: 'promiseAmount',
             type: 'text', width: 6, disabled: true}
         );
       }
-       controls.push(
+
+      controls.push(
          { label: label('comment'),
            controlName: 'comment',
            type: 'text', width: 12, disabled: !canEditComment }
        );
-      return controls as IDynamicFormItem[];
+
+       return controls as IDynamicFormItem[];
+
     } else {
+
       return [
         { label: label('contract'), controlName: 'contract',
           type: 'number',  width: 6, disabled: true },
-        { label: label('fullName'), controlName: 'fullName', type: 'select',
-          width: 6, options: [{value: contactLog.userFullName, label: contactLog.userFullName}], disabled: true },
-        { label: label('personRole'), controlName: 'personRole', options: roleOpts,
-          width: 6, disabled: true, type: 'select'},
+        { label: label('userFullName'), controlName: 'userFullName', type: 'text',
+          width: 6,  disabled: true },
         { label: label('sentDateTime'), controlName: 'sentDateTime',
           type: 'datepicker', width: 6, disabled: true },
-        { label: label('contactPhone'), controlName: 'contactPhone',
-          type: 'text', width: 6, disabled: true },
-        { label: label('userFullName'), controlName: 'userFullName', type: 'select',
-          width: 6, options: [{value: contactLog.userFullName, label: contactLog.userFullName}], disabled: true },
         { label: label('startDateTime'), controlName: 'startDateTime',
           type: 'datepicker', width: 6, disabled: true },
+        { label: label('fullName'), controlName: 'fullName', type: 'text',
+          width: 6, disabled: true },
+        { label: label('contactPhone'), controlName: 'contactPhone',
+          type: 'text', width: 6, disabled: true },
+        { label: label('personRole'), controlName: 'personRole', options: roleOpts,
+          width: 6, disabled: true, type: 'select'},
+        { label: label('status'), controlName: 'status', options: smsStatusOpts,
+          width: 6, disabled: true, type: 'select'},
+        { label: label('text'), controlName: 'text',
+          type: 'text', width: 12, disabled: true },
       ];
     }
   }
@@ -160,9 +162,3 @@ export class ContactLogCardComponent implements OnInit {
 
 
 
-//   // private getFormData(): IContactLog {
-//   //   return {
-//   //     contactType: 1
-//   //   };
-//   // }
-// }
