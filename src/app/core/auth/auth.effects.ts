@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -104,13 +104,17 @@ export class AuthEffects {
     private notificationService: NotificationsService,
   ) {}
 
+  private get overrideRequestOptions(): any {
+    return { observe: 'response', responseType: 'json' };
+  }
+
   private login(login: string, password: string): Observable<string> {
-    return this.dataService.post('/auth/login', {}, { login, password })
+    return this.dataService.post('/auth/login', {}, { login, password }, this.overrideRequestOptions)
       .map(response => this.getTokenFromResponse(response));
   }
 
   private refresh(): Observable<string> {
-    return this.dataService.get('/api/refresh', {}, {})
+    return this.dataService.get('/api/refresh', {}, this.overrideRequestOptions)
       .map(response => this.getTokenFromResponse(response));
   }
 
@@ -118,7 +122,7 @@ export class AuthEffects {
     return this.dataService.get('/auth/logout', {});
   }
 
-  private getTokenFromResponse(response: Response): string {
-    return response.headers.get('X-Auth-Token');
+  private getTokenFromResponse(response: HttpResponse<string>): string {
+    return response.headers.get('X-AUTH-TOKEN');
   }
 }

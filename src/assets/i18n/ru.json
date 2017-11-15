@@ -127,6 +127,20 @@
     }
   },
   "modules": {
+    "callCenter": {
+      "grid": {
+        "name": "Название",
+        "comment": "Описание"
+      },
+      "tabs": {
+        "phonesAndAddresses": "Телефоны и адреса",
+        "debtComponents": "Компоненты долга",
+        "contacts": "Контакты",
+        "payments": "Платежи",
+        "promises": "Обещания",
+        "documents": "Документы"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -216,15 +230,11 @@
           "debtId": "Ид долга",
           "fullName": "ФИО/Название",
           "contract": "Договор",
-          "account": "Лицевой счет",
           "phoneNumber": "Номер телефона",
           "fullAddress": "Адрес",
-          "docSeries": "Серия",
-          "docNumber": "Номер",
-          "clientId": "Ид клиента",
+          "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
-          "showDebtors": "По должникам",
-          "showGuarantors": "По поручителям",
+          "personRoleCodes": "Роль",
           "showClosed": "Показывать закрытые долги"
         }
       },
@@ -1029,6 +1039,11 @@
         "comment": "Комментарий"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      }
+    },
     "contactProperty": {
       "contactType": "Тип контакта",
       "treeType": "Тип дерева",
@@ -1414,6 +1429,9 @@
     "attribute": {
       "gen": { "singular": "атрибута", "plural": "списка атрибутов" }
     },
+    "campaign": {
+      "gen": { "singular": "кампании", "plural": "списка кампаний" }
+    },
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
@@ -1515,7 +1533,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица дебитора", "plural": "котнактных лиц дебиторов" }
+      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
@@ -1767,7 +1785,7 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "viewContactLog": "История контактов",
+        "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу"
       }

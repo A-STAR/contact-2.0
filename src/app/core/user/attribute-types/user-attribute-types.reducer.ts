@@ -12,6 +12,7 @@ export function reducer(
   action: UnsafeAction
 ): IUserAttributeTypesState {
   switch (action.type) {
+
     case UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH: {
       const { entityTypeId, entitySubtypeCode } = action.payload;
       const key = `${entityTypeId}/${entitySubtypeCode}`;
@@ -26,6 +27,7 @@ export function reducer(
         }
       };
     }
+
     case UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH_SUCCESS: {
       const { entityTypeId, entitySubtypeCode, attributeTypes } = action.payload;
       const key = `${entityTypeId}/${entitySubtypeCode}`;
@@ -40,6 +42,7 @@ export function reducer(
         }
       };
     }
+
     case UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH_FAILURE: {
       const { entityTypeId, entitySubtypeCode } = action.payload;
       const key = `${entityTypeId}/${entitySubtypeCode}`;
@@ -54,6 +57,7 @@ export function reducer(
         }
       };
     }
+
     default:
       return state;
   }

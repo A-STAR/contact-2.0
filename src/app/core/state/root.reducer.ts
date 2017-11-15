@@ -1,10 +1,7 @@
-import { compose } from '@ngrx/store';
-import { Action, combineReducers } from '@ngrx/store';
-
 import { IAppState } from './state.interface';
 
 import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
-import { auth, resetReducer } from '../auth/auth.reducer';
+import * as auth from '../auth/auth.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
@@ -65,7 +62,3 @@ export const initialState: Partial<IAppState> = {
   userTemplates: userTemplates.defaultState,
   users: users.defaultState,
 };
-
-export function rootReducer(state: IAppState, action: Action): IAppState {
-  return compose(resetReducer, combineReducers)(reducers)(state, action);
-}

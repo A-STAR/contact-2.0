@@ -1,16 +1,11 @@
 import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe } from '@angular/common';
-
-import { JwtHelper } from 'angular2-jwt';
 import { TranslateService } from '@ngx-translate/core';
 
-import { environment } from '../../environments/environment';
-
+import { DebtModule } from './debt/debt.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
-import { AuthHttpService } from './auth/auth-http.service';
-import { AuthService } from './auth/auth.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from './data/data.service';
 import { DictionariesService } from './dictionaries/dictionaries.service';
@@ -28,21 +23,21 @@ import { ThemesService } from './themes/themes.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { ValueConverterService } from './converter/value-converter.service';
 
+import { environment } from '../../environments/environment';
+
 @NgModule({
   imports: [
+    DebtModule,
     UserModule,
   ],
   providers: [
     ActionsLogService,
-    AuthHttpService,
-    AuthService,
     ContentTabService,
     EntityAttributesService,
     EntityTranslationsService,
     DictionariesService,
     DatePipe,
     DataService,
-    JwtHelper,
     LookupService,
     GuiObjectsService,
     MessageBusService,

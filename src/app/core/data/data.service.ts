@@ -1,21 +1,35 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod, ResponseContentType, RequestOptionsArgs, Headers } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/finally';
+import { publishReplay, refCount, finalize } from 'rxjs/operators';
+
+interface RequestOptions {
+  body?: any;
+  headers?: HttpHeaders;
+  observe?: 'response' | 'body' | 'events';
+  responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  params?: HttpParams;
+}
 
 @Injectable()
 export class DataService {
+  static METHOD_GET     = 'GET';
+  static METHOD_POST    = 'POST';
+  static METHOD_PUT     = 'PUT';
+  static METHOD_DELETE  = 'DELETE';
+  static METHOD_OPTIONS = 'OPTIONS';
+
   private nRequests$ = new BehaviorSubject<number>(0);
   private rootUrl$: Observable<string>;
 
-  constructor(private http: AuthHttp) {
+  constructor(private http: HttpClient) {
     this.rootUrl$ = this
       .readLocal('./assets/server/root.json')
-      .publishReplay(1)
-      .refCount()
+      .pipe(
+        publishReplay(1),
+        refCount()
+      )
       .map(response => response.url);
   }
 
@@ -26,7 +40,7 @@ export class DataService {
   }
 
   readLocal(url: string): Observable<any> {
-    return this.http.get(url).map(data => data.json());
+    return this.http.get(url);
   }
 
   /**
@@ -35,70 +49,85 @@ export class DataService {
    *  url = '/roles/{id}/permits', params = { id: 5 }
    *  route = '/roles/5/permits
    */
-  read(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
+  read(url: string, routeParams: object = {}, options: RequestOptions = {}): Observable<any> {
+    return this.jsonRequest(DataService.METHOD_GET, url, routeParams, { ...options })
       .map(response => response.data && response.data[0] || null);
   }
 
-  readAll(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any[]> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Get })
+  readAll(url: string, routeParams: object = {}, options: RequestOptions = {}): Observable<any[]> {
+    return this.jsonRequest(DataService.METHOD_GET, url, routeParams, { ...options })
       .map(response => response.data || []);
   }
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
-    return this.blobRequest(url, routeParams, { method: RequestMethod.Get });
+    return this.blobRequest(DataService.METHOD_GET, url, routeParams);
   }
 
-  create(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Post, body });
+  create(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
+    return this.jsonRequest(DataService.METHOD_POST, url, routeParams, { ...options, body });
   }
 
-  createMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptionsArgs = {}): Observable<any> {
+  createMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptions = {}): Observable<any> {
     const data = this.prepareMultipartFormData(body, file);
-    return this.jsonRequest(url, params, { ...options, method: RequestMethod.Post, body: data });
+    return this.jsonRequest(DataService.METHOD_POST, url, params, { ...options, body: data });
   }
 
   createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
-    return this.blobRequest(url, routeParams, { method: RequestMethod.Post, body });
+    return this.blobRequest(DataService.METHOD_POST, url, routeParams, { body });
   }
 
-  update(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Put, body });
+  update(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
+    return this.jsonRequest(DataService.METHOD_PUT, url, routeParams, { ...options, body });
   }
 
-  updateMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptionsArgs = {}): Observable<any> {
+  updateMultipart(url: string, params: object = {}, body: object, file: File, options: RequestOptions = {}): Observable<any> {
     const data = this.prepareMultipartFormData(body, file);
-    return this.jsonRequest(url, params, { ...options, method: RequestMethod.Put, body: data });
+    return this.jsonRequest(DataService.METHOD_PUT, url, params, { ...options, body: data });
   }
 
-  delete(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.jsonRequest(url, routeParams, { ...options, method: RequestMethod.Delete } );
+  delete(url: string, routeParams: object = {}, options: RequestOptions = {}): Observable<any> {
+    return this.jsonRequest(DataService.METHOD_DELETE, url, routeParams, { ...options } );
   }
 
-  get(url: string, routeParams: object = {}, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.request(url, routeParams, { ...options, method: RequestMethod.Get }, null);
+  get(url: string, routeParams: object = {}, options: RequestOptions = {}): Observable<any> {
+    return this.request(DataService.METHOD_GET, url, routeParams, { ...options }, null);
   }
 
-  post(url: string, routeParams: object = {}, body: object, options: RequestOptionsArgs = {}): Observable<any> {
-    return this.request(url, routeParams, { ...options, method: RequestMethod.Post, body }, null);
+  post(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
+    return this.request(DataService.METHOD_POST, url, routeParams, { ...options, body }, null);
+  }
+  /**
+   * Request that expects JSON for *response*.
+   * Request content type is pre-set to `json`
+   * @param method HTTP method
+   * @param url Endpoint
+   * @param routeParams Params like {id} etc.
+   * @param options Other HTTP options, p.e. `body` etc.
+   */
+  private jsonRequest(method: string, url: string, routeParams: object, options: RequestOptions): Observable<any> {
+    return this.request(method, url, routeParams, { ...options, responseType: 'json' });
+  }
+  /**
+   * Request that expects binary data for *response*.
+   * Request content type can be passed over in the header object, p.e. multipart/form-data, etc.
+   * @param method HTTP method
+   * @param url Endpoint
+   * @param routeParams Params like {id} etc.
+   * @param options Other HTTP options, like `body` etc.
+   */
+  private blobRequest(method: string, url: string, routeParams: object, options: RequestOptions = {}): Observable<Blob> {
+    return this.request(method, url, routeParams, { ...options, responseType: 'blob', observe: 'response' })
+      .map(response => new Blob([ response.body ], { type: response.headers.get('content-type') }));
   }
 
-  // Request that expects JSON for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private jsonRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<any> {
-    return this.request(url, routeParams, options)
-      .map(data => data.json());
-  }
-
-  // Request that expects binary data for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
-  private blobRequest(url: string, routeParams: object, options: RequestOptionsArgs): Observable<Blob> {
-    return this.request(url, routeParams, { ...options, responseType: ResponseContentType.Blob })
-      .map(response => new Blob([ response.blob() ], { type: response.headers.get('content-type') }));
-  }
-
-  private request(url: string, routeParams: object, options: RequestOptionsArgs, prefix: string = '/api'): Observable<any> {
-    const headers = options.headers || new Headers();
+  private request(
+    method: string,
+    url: string,
+    routeParams: object,
+    options: RequestOptions,
+    prefix: string = '/api'
+  ): Observable<any> {
+    const headers = options.headers || new HttpHeaders();
     if (options.body && options.body.constructor === Object) {
       headers.append('Content-Type', 'application/json');
     }
@@ -110,11 +139,13 @@ export class DataService {
         const route = this.createRoute(url, routeParams);
         const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-        return this.http.request(`${rootUrl}${api}`, { ...options, headers });
+        return this.http.request(method, `${rootUrl}${api}`, { ...options, headers });
       })
-      .finally(() => {
-        this.nRequests$.next(this.nRequests$.value - 1);
-      });
+      .pipe(
+        finalize(() => {
+          this.nRequests$.next(this.nRequests$.value - 1);
+        })
+      );
   }
 
   private prepareMultipartFormData(body: object, file: File): FormData {

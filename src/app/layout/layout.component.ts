@@ -13,6 +13,8 @@ import { ContentTabService } from '../shared/components/content-tabstrip/tab/con
 export class LayoutComponent {
   titles = {
     ActionsLogComponent: 'ACTIONS_LOG',
+    CallCenterComponent: 'CALL_CENTER',
+    CampaignComponent: 'CALL_CENTER',
     ConstantsComponent: 'CONSTANTS',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
@@ -58,12 +60,12 @@ export class LayoutComponent {
   }
 
   deactivate(component: any): void {
-    // console.log('deactivated', component.name);
+    // log('deactivated', component.name);
   }
 
   activate(config: any): void {
     const { component, factory, injector } = config;
-    // console.log('activate', component.COMPONENT_NAME);
+    // log('activate', component.COMPONENT_NAME);
     const path: string = this.router.url;
     const key = this.titles[component.COMPONENT_NAME];
     const title: string = key ? `sidebar.nav.menu.${key}` : 'Title';

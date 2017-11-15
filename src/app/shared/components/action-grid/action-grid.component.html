@@ -1,0 +1,22 @@
+<app-contact-log-dialog
+  *ngIf="isDialog('showContactHistory')"
+  [personId]="getDialogParam('personId')"
+  (close)="closeDialog()"
+></app-contact-log-dialog>
+
+<app-grid2
+  [columnIds]="columnIds"
+  [metadataKey]="metadataKey"
+  [ngClass]="ngClass"
+  [persistenceKey]="persistenceKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  [contextMenuItems]="contextMenuItems"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onSelect)="onSelect($event)"
+></app-grid2>

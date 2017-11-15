@@ -1,6 +1,6 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { AuthHttp, AuthConfig, JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -33,17 +33,9 @@ describe('Component: Header', () => {
         })
       ],
       providers: [
-        AuthHttp,
+        HttpClient,
         AuthService,
-        {
-          provide: AuthConfig,
-          useValue: new AuthConfig
-        },
-        {
-          provide: JwtHelper,
-          useValue: new JwtHelper
-        },
-        AuthService,
+        JwtHelperService,
         NotificationsService,
         PersistenceService,
         SettingsService,

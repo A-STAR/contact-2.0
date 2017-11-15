@@ -14,10 +14,9 @@ import {
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnChangeEvent, GetContextMenuItemsParams,
-  GridOptions, ICellRendererParams, MenuItemDef, RowNode,
+  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
-import { PostProcessPopupParams } from 'ag-grid-enterprise';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
@@ -27,7 +26,7 @@ import {
   ToolbarControlEnum
 } from '../toolbar/toolbar.interface';
 import {
-  IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
   IAGridRequest, IAGridSorter, IContextMenuItem } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
@@ -35,11 +34,14 @@ import { FilterObject } from './filter/grid-filter';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
+
+import { UserPermissions } from '../../../core/user/permissions/user-permissions';
 
 interface ITranslations {
   translations: { [index: string]: string };
@@ -69,7 +71,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
+  @Input() columnIds: string[];
   @Input() disableFilters = false;
+  @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
   @Input() headerHeight = 25;
   @Input() metadataKey: string;
@@ -86,7 +90,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
-  @Input() fetchUrl: string;
   @Input() contextMenuItems: IContextMenuItem[] = [];
 
   @Output() onDragStarted = new EventEmitter<null>();
@@ -100,6 +103,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -112,6 +116,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private gridSettings: IAGridSettings;
   private initialized = false;
   private langSubscription: EventEmitter<any>;
+  private userPermissionsBag: UserPermissions;
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
@@ -120,6 +125,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
 
@@ -140,6 +146,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.metadataKey) {
       throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
+
+    // TODO(d.maltsev): subscription
+    this.userPermissionsService.bag()
+      .subscribe(bag => this.userPermissionsBag = bag);
 
     this.gridService
       .getActions(this.metadataKey)
@@ -221,7 +231,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
-    console.log('new page size', newSize);
+    // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
   }
@@ -274,8 +284,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
-              // console.log(column.filterValues);
-              // console.log('model', model);
+              // log(column.filterValues);
+              // log('model', model);
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
             } else {
@@ -574,6 +584,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     };
 
     return this.columns
+      .filter(column => !this.columnIds || this.columnIds.includes(column.colId))
       .filter(column => !!column.label)
       .map(mapColumns)
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
@@ -654,7 +665,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       showToolPanel: false,
       suppressMenuHide: true,
       suppressPaginationPanel: true,
-      suppressRowHoverClass: true,
+      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
@@ -678,16 +689,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private get metadataMenuItems(): MenuItemDef[] {
+  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
     return (this.actions || []).map(action => {
       const contextItem = this.contextMenuItems.find(item => item.name === action.action);
-      if (contextItem) {
-        contextItem.enabled.take(1).subscribe(enabled => contextItem.disabled = !enabled);
-      }
-      return {
-        ...this.contextMenuItems.find(item => item.name === action.action) || {},
-        name: this.translate.instant(`default.grid.actions.${action.action}`)
+      const result: MenuItemDef = {
+        ...(contextItem || {}),
+        name: this.translate.instant(`default.grid.actions.${action.action}`),
+        action: () => this.action.emit({ action, params })
       };
+      if (contextItem && contextItem.enabled) {
+        contextItem.enabled.take(1).subscribe(enabled => result.disabled = !enabled);
+      } else {
+        result.disabled = !this.isContextMenuItemEnabled(action.action);
+      }
+      return result;
     });
   }
 
@@ -703,24 +718,23 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         tooltip: 'Just to test what the tooltip can show'
       },
       'separator',
-      ...this.metadataMenuItems,
-      // {
+      ...this.getMetadataMenuItems(params),      // {
       //   name: 'Person',
       //   subMenu: [
-      //     {name: 'Niall', action: () => {console.log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {console.log('Sean was pressed'); } },
-      //     {name: 'John', action: () => {console.log('John was pressed'); } },
-      //     {name: 'Alberto', action: () => {console.log('Alberto was pressed'); } },
-      //     {name: 'Tony', action: () => {console.log('Tony was pressed'); } },
-      //     {name: 'Andrew', action: () => {console.log('Andrew was pressed'); } },
-      //     {name: 'Lola', action: () => {console.log('Lola was pressed'); } },
+      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
+      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
+      //     {name: 'John', action: () => {log('John was pressed'); } },
+      //     {name: 'Alberto', action: () => {log('Alberto was pressed'); } },
+      //     {name: 'Tony', action: () => {log('Tony was pressed'); } },
+      //     {name: 'Andrew', action: () => {log('Andrew was pressed'); } },
+      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
       //   ]
       // },
       'separator',
       // {
       //   name: 'Checked',
       //   checked: true,
-      //   action: () => { console.log('Checked Selected'); }
+      //   action: () => { log('Checked Selected'); }
       // },
       'copy',
       'copyWithHeaders',
@@ -732,6 +746,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       }
     ];
+  }
+
+  // TODO(d.maltsev): this looks a bit messy.
+  // Maybe we should get permissions from server as well or get all metadata from client service
+  private isContextMenuItemEnabled(action: string): boolean {
+    switch (action) {
+      case 'showContactHistory':
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      default:
+        return true;
+    }
   }
 
   /**
@@ -755,9 +780,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     ePopup.style.left = newLeft + px;
   }
 
-  private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
+  private onColumnRowGroupChanged(event: ColumnRowGroupChangedEvent): void {
     // NOTE: emit colId's only as an array
-    this.onColumnGroup.emit(event.getColumns().map(column => column.getColId()));
+    this.onColumnGroup.emit(event.columns.map(column => column.getColId()));
   }
 
   private calculateGridSettings(): void {

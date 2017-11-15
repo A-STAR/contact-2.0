@@ -29,7 +29,7 @@ export class PaymentComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
-  data = {};
+  data: any = {};
 
   constructor(
     private accordionService: AccordionService,
@@ -66,7 +66,7 @@ export class PaymentComponent implements OnInit {
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.serializedUpdates;
-    this.paymentService.create(this.debtId, guid, rest)
+    this.paymentService.create(this.debtId, guid, { amount: this.data.amount, ...rest })
       .subscribe(() => {
         this.accordionService.next();
         this.cdRef.markForCheck();

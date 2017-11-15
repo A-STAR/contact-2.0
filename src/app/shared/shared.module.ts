@@ -23,6 +23,7 @@ import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.dire
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
+import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
@@ -44,7 +45,6 @@ import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
-import { ResultDialogModule } from './components/dialog/result/result-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { MultiTextModule } from './components/form/multi-text/multi-text.module';
@@ -81,6 +81,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // app modules
     AccordionModule,
     ActionDialogModule,
+    ActionGridModule,
     BlockDialogModule,
     ButtonModule,
     ColorPickerModule,
@@ -101,7 +102,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
-    ResultDialogModule,
     ListModule,
     MultiSelectModule,
     MultiTextModule,
@@ -158,6 +158,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     // App exports
     AccordionModule,
     ActionDialogModule,
+    ActionGridModule,
     BlockDialogModule,
     ButtonModule,
     ColorPickerModule,
@@ -179,7 +180,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HDividerModule,
     ImageUploadModule,
     InfoDialogModule,
-    ResultDialogModule,
     ListModule,
     MultiSelectModule,
     MultiTextModule,
