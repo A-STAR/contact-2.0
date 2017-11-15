@@ -100,7 +100,7 @@ export class ContactLogCardComponent implements OnInit {
     if (Number(contactType) !== 4) {
       const controls =  [
         { label: label('contract'), controlName: 'contract',
-          type: 'number',  width: 6, disabled: true },
+          type: 'text',  width: 6, disabled: true },
         { label: label('contactDateTime'), controlName: 'contactDateTime',
           type: 'datepicker', width: 6, disabled: true },
         { label: label('contactType'), controlName: 'contactType', type: 'select',

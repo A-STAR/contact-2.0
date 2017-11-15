@@ -1416,6 +1416,7 @@
         "title": "Contact Log"
       },
       "card": {
+        "fullName": "Dedtor",
         "contract": "Order",
         "contactNumber": "Order number",
         "contactDateTime": "Contact date",

@@ -1415,6 +1415,7 @@
         "title": "История контактов"
       },
       "card": {
+        "fullName": "Должник",
         "contract": "Договор",
         "contactNumber": "Номер договора",
         "contactDateTime": "Дата контакта",
