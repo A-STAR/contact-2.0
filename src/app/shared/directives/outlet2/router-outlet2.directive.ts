@@ -74,7 +74,7 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    // console.log('destroy outlet', this.name);
+    // log('destroy outlet', this.name);
     this.parentContexts.onChildOutletDestroyed(this.name);
   }
 
@@ -114,7 +114,6 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
     const cmp = this.activated;
     this.activated = null;
     this._activatedRoute = null;
-    console.log('detached');
     return cmp;
   }
 
@@ -125,7 +124,6 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
     this.activated = ref;
     this._activatedRoute = activatedRoute;
     this.location.insert(ref.hostView);
-    console.log('attached');
   }
 
   deactivate(): void {
@@ -145,9 +143,8 @@ export class RouterOutlet2Directive implements OnDestroy, OnInit {
     }
 
     this._activatedRoute = activatedRoute;
-
-    const snapshot = activatedRoute['_futureSnapshot'];
-    const component = <any>snapshot._routeConfig !.component;
+    const snapshot = (<any>activatedRoute)._futureSnapshot;
+    const component = snapshot.routeConfig !.component;
 
     resolver = resolver || this.resolver;
     const factory = resolver.resolveComponentFactory(component) !;

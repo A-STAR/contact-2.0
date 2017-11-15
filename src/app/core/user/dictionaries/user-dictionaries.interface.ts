@@ -20,4 +20,9 @@ export interface IUserDictionariesState {
   };
 }
 
+export interface IUserDictionaryAction {
+  dictionaryId: number;
+  terms?: IUserTerm[];
+}
+
 export type ITransformCallback<T> = (dictionary: IUserTerm) => T;

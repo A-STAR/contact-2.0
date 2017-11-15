@@ -93,11 +93,11 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
   }
 
   onRight(): void {
-    this.ps.scrollToRight();
+    this.ps.directiveRef.scrollToRight(100);
   }
 
   onLeft(): void {
-    this.ps.scrollToLeft();
+    this.ps.directiveRef.scrollToLeft(100);
   }
 
   private getTabIndex(tab: TabComponent): number {

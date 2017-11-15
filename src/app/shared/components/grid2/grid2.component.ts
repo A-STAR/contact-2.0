@@ -14,10 +14,9 @@ import {
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnChangeEvent, GetContextMenuItemsParams,
-  GridOptions, ICellRendererParams, MenuItemDef, RowNode,
+  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
-import { PostProcessPopupParams } from 'ag-grid-enterprise';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
@@ -231,7 +230,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
-    console.log('new page size', newSize);
+    // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
   }
@@ -284,8 +283,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
-              // console.log(column.filterValues);
-              // console.log('model', model);
+              // log(column.filterValues);
+              // log('model', model);
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
             } else {
@@ -665,7 +664,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       showToolPanel: false,
       suppressMenuHide: true,
       suppressPaginationPanel: true,
-      suppressRowHoverClass: true,
+      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
@@ -709,20 +708,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       // {
       //   name: 'Person',
       //   subMenu: [
-      //     {name: 'Niall', action: () => {console.log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {console.log('Sean was pressed'); } },
-      //     {name: 'John', action: () => {console.log('John was pressed'); } },
-      //     {name: 'Alberto', action: () => {console.log('Alberto was pressed'); } },
-      //     {name: 'Tony', action: () => {console.log('Tony was pressed'); } },
-      //     {name: 'Andrew', action: () => {console.log('Andrew was pressed'); } },
-      //     {name: 'Lola', action: () => {console.log('Lola was pressed'); } },
+      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
+      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
+      //     {name: 'John', action: () => {log('John was pressed'); } },
+      //     {name: 'Alberto', action: () => {log('Alberto was pressed'); } },
+      //     {name: 'Tony', action: () => {log('Tony was pressed'); } },
+      //     {name: 'Andrew', action: () => {log('Andrew was pressed'); } },
+      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
       //   ]
       // },
       'separator',
       // {
       //   name: 'Checked',
       //   checked: true,
-      //   action: () => { console.log('Checked Selected'); }
+      //   action: () => { log('Checked Selected'); }
       // },
       'copy',
       'copyWithHeaders',
@@ -768,9 +767,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     ePopup.style.left = newLeft + px;
   }
 
-  private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
+  private onColumnRowGroupChanged(event: ColumnRowGroupChangedEvent): void {
     // NOTE: emit colId's only as an array
-    this.onColumnGroup.emit(event.getColumns().map(column => column.getColId()));
+    this.onColumnGroup.emit(event.columns.map(column => column.getColId()));
   }
 
   private calculateGridSettings(): void {

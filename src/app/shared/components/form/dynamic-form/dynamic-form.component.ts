@@ -154,6 +154,10 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     this.form.markAsPristine();
   }
 
+  reset(): void {
+    this.form.reset();
+  }
+
   private createForm(flatControls: Array<IDynamicFormControl>): FormGroup {
     const controls = flatControls.reduce((acc, control: IDynamicFormControl) => {
       acc[control.controlName] = this.createControl(control);
