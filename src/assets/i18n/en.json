@@ -236,7 +236,7 @@
           "docNumber": "Number",
           "birthDate": "Birth Date",
           "personRoleCodes": "Role",
-          "showClosed": "Show Closed Debts"
+          "isClosedDebt": "Show Closed Debts"
         }
       },
       "debtors": {

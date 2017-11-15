@@ -235,7 +235,7 @@
           "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
-          "showClosed": "Показывать закрытые долги"
+          "isClosedDebt": "Показывать закрытые долги"
         }
       },
       "debtors": {
