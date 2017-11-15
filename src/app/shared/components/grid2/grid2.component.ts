@@ -100,7 +100,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
-  @Output() onContextMenu = new EventEmitter<IMetadataAction>();
 
   columns: IAGridColumn[];
   columnDefs: ColDef[];
@@ -686,7 +685,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         contextItem.enabled.take(1).subscribe(enabled => contextItem.disabled = !enabled);
       }
       return {
-        action: () => this.onContextMenu.emit(action),
         ...this.contextMenuItems.find(item => item.name === action.action) || {},
         name: this.translate.instant(`default.grid.actions.${action.action}`)
       };

@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { IContextMenuItem } from '../../../shared/components/grid2/grid2.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
@@ -33,12 +32,14 @@ export class DebtProcessingComponent extends DialogFunctions {
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET,
       enabled: Observable.combineLatest(this.debtResponsibleService.canSet$, this.selectedDebts$)
-        .map(([ canSet, selected ]) => canSet && !!selected && selected.length > 0)
+        .map(([ canSet, selected ]) => canSet && !!selected && selected.length > 0),
+      action: () => this.setDialog('debtResponsibleSet')
     },
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR,
       enabled: Observable.combineLatest(this.debtResponsibleService.canClear$, this.selectedDebts$)
-        .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0)
+        .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0),
+      action: () => this.setDialog('debtResponsibleClear')
     }
   ];
 
@@ -80,13 +81,6 @@ export class DebtProcessingComponent extends DialogFunctions {
 
   onSelect(selectedDebts: IDebt[]): void {
     this.selectedDebts$.next(selectedDebts);
-  }
-
-  onContextMenu(action: IMetadataAction): void {
-    switch (action.action) {
-      case DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET: this.setDialog('debtResponsibleSet'); break;
-      case DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR: this.setDialog('debtResponsibleClear'); break;
-    }
   }
 
   getRowNodeId(debt: IDebt): number {
