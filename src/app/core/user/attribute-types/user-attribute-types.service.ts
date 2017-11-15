@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserAttributeType, IUserAttributeTypes, UserAttributeTypeStatusEnum } from './user-attribute-types.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import {
+  IUserAttributeType, IUserAttributeTypes, UserAttributeTypeStatusEnum, IUserAttributeTypesAction
+} from './user-attribute-types.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 @Injectable()
 export class UserAttributeTypesService {
@@ -20,7 +21,7 @@ export class UserAttributeTypesService {
     this.attributeTypes$.subscribe(attributeTypes => this.attributeTypes = attributeTypes);
   }
 
-  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): UnsafeAction {
+  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): SafeAction<IUserAttributeTypesAction> {
     return {
       type: UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH,
       payload: {
@@ -50,7 +51,6 @@ export class UserAttributeTypesService {
 
   private get attributeTypes$(): Observable<IUserAttributeTypes> {
     return this.store.select(state => state.userAttributeTypes)
-      .filter(Boolean)
       .map(state => state.attributeTypes);
   }
 }

@@ -44,16 +44,8 @@ export class DebtProcessingComponent {
 
   onDblClick(debt: IDebt): void {
     const { personId, debtId } = debt;
+    console.log('debt', debt);
     this.contentTabService.removeTabByPath(`${this.router.url}\/[0-9]+$`);
     this.router.navigate([ `${this.router.url}/${personId}/${debtId}` ]);
-    // const { innerHeight: height, innerWidth: width} = window;
-    // const winConfig =
-    //  `menubar=no,location=no,resizable=yes,scrollbars=yes,modal=yes,status=no,height=${height},width=${width}`;
-    // const win = window.open(`${this.router.url}/${debtId}`, '_blank', winConfig);
-    // if (win.focus) { win.focus() };
-  }
-
-  getRowNodeId(debt: IDebt): number {
-    return debt.debtId;
   }
 }

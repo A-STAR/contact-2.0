@@ -42,7 +42,7 @@ export class UserPermissions {
   }
 
   containsCustom(name: string): boolean {
-    return this.stringValueContainsAll(name) || this.stringValueContainsAnyCustomNumber(name);
+    return this.stringValueContainsAnyCustomNumber(name);
   }
 
   private getBooleanValue(name: string): boolean {
