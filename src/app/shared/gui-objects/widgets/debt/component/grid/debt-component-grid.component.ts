@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -23,6 +23,9 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponentGridComponent implements OnDestroy {
+  @Input() action: 'edit' = 'edit';
+  @Input() displayToolbar = true;
+
   private debtId = (this.route.params as any).value.debtId || null;
 
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
@@ -126,7 +129,9 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   onDoubleClick(debtComponent: IDebtComponent): void {
-    this.onEdit(debtComponent.id);
+    if (this.action === 'edit') {
+      this.onEdit(debtComponent.id);
+    }
   }
 
   onRemoveSubmit(): void {
