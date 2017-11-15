@@ -24,6 +24,7 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 })
 export class DebtComponentGridComponent implements OnDestroy {
   @Input() action: 'edit' = 'edit';
+  @Input() forCallCenter = false;
   @Input() displayToolbar = true;
 
   private debtId = (this.route.params as any).value.debtId || null;
@@ -135,11 +136,12 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value).subscribe(() => {
-      this.fetch();
-      this.dialog$.next(null);
-      this.selectedDebtComponentId$.next(null);
-    });
+    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value, this.forCallCenter)
+      .subscribe(() => {
+        this.fetch();
+        this.dialog$.next(null);
+        this.selectedDebtComponentId$.next(null);
+      });
   }
 
   onCloseDialog(): void {
@@ -151,14 +153,17 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   private onEdit(debtComponentId: number): void {
-    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ]);
+    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ], {
+      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+    });
   }
 
   private fetch(): void {
-    this.debtComponentService.fetchAll(this.debtId).subscribe(components => {
-      this.components = components;
-      this.cdRef.markForCheck();
-    });
+    this.debtComponentService.fetchAll(this.debtId, this.forCallCenter)
+      .subscribe(components => {
+        this.components = components;
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {
