@@ -26,8 +26,8 @@ export class FilterComponent {
     { controlName: 'fullAddress', type: 'text' },
     { controlName: 'docNumber', type: 'text' },
     { controlName: 'birthDate', type: 'datepicker' },
-    { controlName: 'personRoleCodes', type: 'multiselect', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { controlName: 'showClosed', type: 'checkbox' },
+    { controlName: 'personRoleCodes', type: 'multiselectwrapper', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addLabel('modules.incomingCall.filter.form'));
 
   constructor(
