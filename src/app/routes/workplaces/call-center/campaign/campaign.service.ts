@@ -14,14 +14,16 @@ interface ICampaignRouteParams {
 
 @Injectable()
 export class CampaignService {
+  private _campaignDebt$ = new BehaviorSubject<ICampaignDebt>(null);
+
   constructor(
     // private dataService: DataService,
     // private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-  ) {
-    this.fetchDebtId(this.campaignId)
-      .flatMap(debtId => this.fetchCampaignDebt(this.campaignId, debtId))
-      .subscribe(console.log);
+  ) {}
+
+  get campaignDebt$(): Observable<ICampaignDebt> {
+    return this._campaignDebt$;
   }
 
   get campaignId(): number {
@@ -30,6 +32,12 @@ export class CampaignService {
 
   get routeParams(): ICampaignRouteParams {
     return (this.route.params as BehaviorSubject<ICampaignRouteParams>).value;
+  }
+
+  preloadCampaignDebt(): void {
+    this.fetchDebtId(this.campaignId)
+      .flatMap(debtId => this.fetchCampaignDebt(this.campaignId, debtId))
+      .subscribe(campaignDebt => this._campaignDebt$.next(campaignDebt));
   }
 
   private fetchDebtId(campaignId: number): Observable<number> {
