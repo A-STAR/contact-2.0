@@ -17,7 +17,7 @@ export class OperatorGridComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: Array<IGridColumn> = [
-    { prop: 'id' },
+    { prop: 'id', width: 50 },
     { prop: 'fullName' },
     { prop: 'debtCnt' },
     { prop: 'organization' },
