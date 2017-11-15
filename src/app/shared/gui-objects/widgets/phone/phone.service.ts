@@ -39,14 +39,26 @@ export class PhoneService {
       .catch(this.notificationsService.createError().entity(this.singular).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, phoneId: number, forCallCenter: boolean, phone: Partial<IPhone>): Observable<void> {
+  update(
+    entityType: number,
+    entityId: number,
+    phoneId: number,
+    forCallCenter: boolean,
+    phone: Partial<IPhone>,
+  ): Observable<void> {
     const url = this.getUrl(`${this.baseUrl}/{phoneId}`, forCallCenter);
     return this.dataService
       .update(url, { entityType, entityId, phoneId }, phone)
       .catch(this.notificationsService.updateError().entity(this.singular).dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, phoneId: number, forCallCenter: boolean, inactiveReasonCode: number): Observable<void> {
+  block(
+    entityType: number,
+    entityId: number,
+    phoneId: number,
+    forCallCenter: boolean,
+    inactiveReasonCode: number,
+  ): Observable<void> {
     return this.update(entityType, entityId, phoneId, forCallCenter, { isInactive: 1, inactiveReasonCode });
   }
 
