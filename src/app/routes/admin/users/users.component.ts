@@ -85,7 +85,6 @@ export class UsersComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
   ) {
-    console.log('constructor start');
     this.gridService.setAllRenderers(this.columns)
       .subscribe(columns => {
         this.columns = [ ...columns ];
@@ -166,7 +165,6 @@ export class UsersComponent implements OnDestroy {
   }
 
   private fetch(): void {
-    console.log('fetch start');
     this.usersService.fetch().subscribe(users => {
       this._users = users;
       this.cdRef.markForCheck();
