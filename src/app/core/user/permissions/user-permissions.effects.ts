@@ -23,13 +23,22 @@ export class UserPermissionsEffects {
             data: permissions.reduce((acc, permission) => ({ ...acc, [permission.name]: permission }), {})
           }
         }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.user.permissions.gen.plural').callback());
+        .catch(this.notificationService.fetchError().entity('entities.user.permissions.gen.plural').callback());
+    });
+
+  @Effect()
+  resetUserPermissions$ = this.actions
+    .ofType('AUTH_GLOBAL_RESET')
+    .flatMap(action => {
+      this.userPermissionsService.reset();
+      return Observable.empty();
     });
 
   constructor(
     private actions: Actions,
     private dataService: DataService,
     private notificationService: NotificationsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   private read(): Observable<IUserPermission[]> {

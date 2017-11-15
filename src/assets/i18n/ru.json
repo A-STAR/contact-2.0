@@ -274,15 +274,11 @@
           "debtId": "Ид долга",
           "fullName": "ФИО/Название",
           "contract": "Договор",
-          "account": "Лицевой счет",
           "phoneNumber": "Номер телефона",
           "fullAddress": "Адрес",
-          "docSeries": "Серия",
-          "docNumber": "Номер",
-          "clientId": "Ид клиента",
+          "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
-          "showDebtors": "По должникам",
-          "showGuarantors": "По поручителям",
+          "personRoleCodes": "Роль",
           "showClosed": "Показывать закрытые долги"
         }
       },

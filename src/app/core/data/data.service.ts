@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/finally';
+import { publishReplay, refCount, finalize } from 'rxjs/operators';
 
 interface RequestOptions {
   body?: any;
   headers?: HttpHeaders;
   observe?: 'response' | 'body' | 'events';
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  params?: HttpParams;
 }
 
 @Injectable()
@@ -26,8 +26,10 @@ export class DataService {
   constructor(private http: HttpClient) {
     this.rootUrl$ = this
       .readLocal('./assets/server/root.json')
-      .publishReplay(1)
-      .refCount()
+      .pipe(
+        publishReplay(1),
+        refCount()
+      )
       .map(response => response.url);
   }
 
@@ -94,15 +96,25 @@ export class DataService {
   post(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
     return this.request(DataService.METHOD_POST, url, routeParams, { ...options, body }, null);
   }
-
-  // Request that expects JSON for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
+  /**
+   * Request that expects JSON for *response*.
+   * Request content type is pre-set to `json`
+   * @param method HTTP method
+   * @param url Endpoint
+   * @param routeParams Params like {id} etc.
+   * @param options Other HTTP options, p.e. `body` etc.
+   */
   private jsonRequest(method: string, url: string, routeParams: object, options: RequestOptions): Observable<any> {
     return this.request(method, url, routeParams, { ...options, responseType: 'json' });
   }
-
-  // Request that expects binary data for *response*.
-  // Request content type can be application/json, multipart/form-data, etc.
+  /**
+   * Request that expects binary data for *response*.
+   * Request content type can be passed over in the header object, p.e. multipart/form-data, etc.
+   * @param method HTTP method
+   * @param url Endpoint
+   * @param routeParams Params like {id} etc.
+   * @param options Other HTTP options, like `body` etc.
+   */
   private blobRequest(method: string, url: string, routeParams: object, options: RequestOptions = {}): Observable<Blob> {
     return this.request(method, url, routeParams, { ...options, responseType: 'blob', observe: 'response' })
       .map(response => new Blob([ response.body ], { type: response.headers.get('content-type') }));
@@ -129,9 +141,11 @@ export class DataService {
 
         return this.http.request(method, `${rootUrl}${api}`, { ...options, headers });
       })
-      .finally(() => {
-        this.nRequests$.next(this.nRequests$.value - 1);
-      });
+      .pipe(
+        finalize(() => {
+          this.nRequests$.next(this.nRequests$.value - 1);
+        })
+      );
   }
 
   private prepareMultipartFormData(body: object, file: File): FormData {

@@ -4,9 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { IPhone } from '../../../../../../shared/gui-objects/widgets/phone/phone.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 
+import { DebtService } from '../../../../../../core/debt/debt.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 import { PhoneService } from '../../../../../../shared/gui-objects/widgets/phone/phone.service';
-import { DebtorService } from '../../debtor.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -35,9 +35,9 @@ export class PhoneGridComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private phoneService: PhoneService,
+    private debtService: DebtService,
     private gridService: GridService,
-    private debtorService: DebtorService,
+    private phoneService: PhoneService,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class PhoneGridComponent implements OnInit {
   }
 
   get canRegisterSelectedPhone$(): Observable<boolean> {
-    return this.debtorService.canRegisterPhone$(this.selectedPhone);
+    return this.debtService.canRegisterIncomingCall$(this.selectedPhone);
   }
 
   get selectedPhone(): IPhone {

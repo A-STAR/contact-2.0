@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-import { IUserTerm } from './user-dictionaries.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import { IUserTerm, IUserDictionaryAction } from './user-dictionaries.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -14,7 +14,7 @@ export class UserDictionariesEffects {
   @Effect()
   fetchDictionary$ = this.actions
     .ofType(UserDictionariesService.USER_DICTIONARY_FETCH)
-    .mergeMap((action: UnsafeAction) => {
+    .mergeMap((action: SafeAction<IUserDictionaryAction>) => {
       const { dictionaryId } = action.payload;
       return this.read(dictionaryId)
         .map(terms => {
@@ -34,7 +34,7 @@ export class UserDictionariesEffects {
                 dictionaryId
               }
             },
-            this.notificationService.error('errors.default.read')
+            this.notificationService.fetchError()
               .entity('entities.user.dictionaries.gen.plural')
               .response(error).action()
           ];
