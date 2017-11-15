@@ -81,7 +81,13 @@ export class OverviewComponent implements OnInit {
           },
           { label: labelKey('debt.creditName'), controlName: 'creditName', type: 'text', disabled: true, width: 6 },
           { label: labelKey('debt.contract'), controlName: 'contract', type: 'text', disabled: true, width: 6 },
-          { label: labelKey('debt.creditStartDate'), controlName: 'creditStartDate', type: 'datepicker', disabled: true, width: 6 },
+          {
+            label: labelKey('debt.creditStartDate'),
+            controlName: 'creditStartDate',
+            type: 'datepicker',
+            disabled: true,
+            width: 6,
+          },
           { label: labelKey('debt.creditEndDate'), controlName: 'creditEndDate', type: 'datepicker', disabled: true, width: 6 },
           {
             label: labelKey('debt.regionCode'),
@@ -131,7 +137,7 @@ export class OverviewComponent implements OnInit {
               display: attribute.isUsed,
               required: attribute.isMandatory,
               width: 6,
-            } as IDynamicFormItem
+            } as IDynamicFormItem;
           }),
           {
             label: labelKey('debt.lastPromStatusCode'),
