@@ -4,15 +4,15 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class IncomingCallService {
-  private _selectedDebtorId$ = new BehaviorSubject<number>(null);
+  private _selectedDebtor$ = new BehaviorSubject<any>(null);
   private _searchParams$ = new BehaviorSubject<object>(null);
 
-  get selectedDebtorId$(): Observable<number> {
-    return this._selectedDebtorId$;
+  get selectedDebtor$(): Observable<any> {
+    return this._selectedDebtor$;
   }
 
-  set selectedDebtorId(debtorId: number) {
-    this._selectedDebtorId$.next(debtorId);
+  set selectedDebtor(debtor: any) {
+    this._selectedDebtor$.next(debtor);
   }
 
   get searchParams$(): Observable<object> {
