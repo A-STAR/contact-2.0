@@ -18,6 +18,7 @@ import { IUserPermissionsState } from '../user/permissions/user-permissions.inte
 import { IUserTemplatesState } from '../user/templates/user-templates.interface';
 import { IUsersState } from '../../routes/admin/users/users.interface';
 import { IMetadataState } from '../metadata/metadata.interface';
+import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
 
 export interface IAppState {
   readonly actionsLog: IActionsLogState;
@@ -39,6 +40,7 @@ export interface IAppState {
   readonly userPermissions: IUserPermissionsState;
   readonly userTemplates: IUserTemplatesState;
   readonly users: IUsersState;
+  readonly campaings: ICampaignsState;
 }
 
 export interface UnsafeAction extends Action {

@@ -19,10 +19,12 @@ import * as userConstants from '../user/constants/user-constants.reducer';
 import * as userDictionaries from '../user/dictionaries/user-dictionaries.reducer';
 import * as userPermissions from '../user/permissions/user-permissions.reducer';
 import * as userTemplates from '../user/templates/user-templates.reducer';
+import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 
 export const reducers = {
   actionsLog: actionsLog.reducer,
   auth: auth.reducer,
+  campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
   debtors: debtors.reducer,
@@ -44,6 +46,7 @@ export const reducers = {
 
 export const initialState: Partial<IAppState> = {
   actionsLog: actionsLog.defaultState,
+  campaings: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
   debtors: debtors.defaultState,

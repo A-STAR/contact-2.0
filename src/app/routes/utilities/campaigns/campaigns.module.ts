@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CampaignsComponent } from './campaigns.component';
-import { CampaignsEditComponent } from './campaigns-edit/campaigns-edit.component';
-import { CampaignParticipantsEditComponent } from './campaign-participants-edit/campaign-participants-edit.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
+import { ParticipantsModule } from '../../../routes/utilities/campaigns/participants/participants.module';
+import { StatisticsModule } from '../../../routes/utilities/campaigns/statistics/statistics.module';
 import { CampaignsService } from './campaigns.service';
+import { CampaignsComponent } from './campaigns.component';
+import { CampaignsEditComponent } from './campaigns-edit/campaigns-edit.component';
 
 const routes: Routes = [
   { path: '', component: CampaignsComponent },
@@ -15,6 +16,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     SharedModule,
+    ParticipantsModule,
+    StatisticsModule,
     RouterModule.forChild(routes),
   ],
   exports: [
@@ -22,8 +25,7 @@ const routes: Routes = [
   ],
   declarations: [
     CampaignsComponent,
-    CampaignsEditComponent,
-    CampaignParticipantsEditComponent
+    CampaignsEditComponent
   ],
   providers: [
     CampaignsService

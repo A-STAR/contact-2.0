@@ -896,6 +896,19 @@
       "autoComment": {
         "title": "Auto Comment"
       }
+    },
+    "campaigns": {
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "groupName": "Group",
+        "statusCode": "Status",
+        "typeCode": "Data type",
+        "startDateTime": "Started",
+        "finishDateTime": "Finished",
+        "comment": "Commentary",
+        "timeZoneUsed": "GMT used"
+      }
     }
   },
   "notifications": {
@@ -1738,7 +1751,9 @@
       "unblock": "Unblock",
       "undo": "Undo",
       "upload": "Upload",
-      "visit": "Visit"
+      "visit": "Visit",
+      "start": "Start",
+      "stop": "Stop"
     },
     "dateTimeRange": {
       "from": "From",

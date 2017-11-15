@@ -2,12 +2,10 @@
   class="flat"
   [styles]="{ height: '250px' }"
   [columns]="columns"
-  [columnTranslationKey]="'organizations.employees.add'"
+  [columnTranslationKey]="'utilities.campaigns'"
   [rows]="campaigns | async"
+  selectionType="multiClick"
   (onSelect)="onSelectCampaign($event)">
 </app-grid>
-
-<app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
 </app-toolbar-2>

@@ -895,6 +895,19 @@
       "autoComment": {
         "title": "Автоматический комментарий"
       }
+    },
+    "campaigns": {
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "groupName": "Группа",
+        "statusCode": "Статус",
+        "typeCode": "Тип данных",
+        "startDateTime": "Дата запуска",
+        "finishDateTime": "Дата остановки",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      }
     }
   },
   "notifications": {
@@ -1737,7 +1750,9 @@
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
-      "visit": "Выезд"
+      "visit": "Выезд",
+      "start": "Запустить",
+      "stop": "Остановить"
     },
     "dateTimeRange": {
       "from": "Начало",

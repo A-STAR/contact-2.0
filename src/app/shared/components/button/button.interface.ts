@@ -33,7 +33,9 @@ export type IButtonType =
   'unblock' |
   'undo' |
   'upload' |
-  'visit';
+  'visit'|
+  'start' |
+  'stop';
 
 export type IButtonStylesConfig = {
   [K in IButtonStyle]: string;
