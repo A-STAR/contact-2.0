@@ -10,8 +10,8 @@ import {
   selector: 'app-contact-log',
   templateUrl: './contact-log.component.html'
 })
-export class ContactLogComponent {
-  static COMPONENT_NAME = 'ContactLogComponent';
+export class DebtorContactLogComponent {
+  static COMPONENT_NAME = 'DebtorContactLogComponent';
 
   get node(): INode {
     return {

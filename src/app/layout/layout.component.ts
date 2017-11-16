@@ -27,7 +27,7 @@ export class LayoutComponent {
     DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
     DebtorContactsComponent: 'DEBTOR_DEBT_CONTACTS',
-    DebtorContactLogComponent: 'DEBTOR_CONTACT_LOG',
+    DebtorContactLogComponent: 'DEBTOR_CONTACT_LOG_COMPONENT',
     DebtorDebtComponent: 'DEBTOR_DEBT',
     DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
     DebtorDocumentComponent: 'DEBTOR_DOCUMENT',
