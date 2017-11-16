@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { CampaignService } from './campaign.service';
 
@@ -10,6 +10,14 @@ import { CampaignService } from './campaign.service';
     CampaignService,
   ]
 })
-export class CampaignComponent {
+export class CampaignComponent implements OnInit {
   static COMPONENT_NAME = 'CampaignComponent';
+
+  constructor(
+    private campaignService: CampaignService,
+  ) {}
+
+  ngOnInit(): void {
+    this.campaignService.preloadCampaignDebt();
+  }
 }
