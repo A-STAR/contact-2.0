@@ -17,7 +17,8 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
   @Output() select = new EventEmitter<IOperator>();
 
   private selectedOperator: IOperator;
-  private operatorSubscription: Subscription;
+  private operatorSelectSub: Subscription;
+  private operatorClickSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -25,16 +26,24 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.operatorSubscription = this.messageBusService
-      .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED)
+    this.operatorSelectSub = this.messageBusService
+      .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED, 'select')
       .subscribe(operator => {
         this.selectedOperator = operator;
+        this.cdRef.markForCheck();
+      });
+    this.operatorClickSub = this.messageBusService
+      .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED, 'dblclick')
+      .subscribe(operator => {
+        this.selectedOperator = operator;
+        this.select.emit(this.selectedOperator);
         this.cdRef.markForCheck();
       });
   }
 
   ngOnDestroy(): void {
-    this.operatorSubscription.unsubscribe();
+    this.operatorSelectSub.unsubscribe();
+    this.operatorClickSub.unsubscribe();
   }
 
   get hasSelection(): boolean {

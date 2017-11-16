@@ -19,7 +19,7 @@ export class OperatorGridComponent implements OnInit {
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 50 },
     { prop: 'fullName' },
-    { prop: 'debtCnt' },
+    { prop: 'debtCnt', width: 100 },
     { prop: 'organization' },
     { prop: 'position' }
   ];
@@ -38,7 +38,11 @@ export class OperatorGridComponent implements OnInit {
   }
 
   onSelect(operator: IOperator): void {
-    this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, null, operator);
+    this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, 'select', operator);
+  }
+
+  onDblClick(operator: IOperator): void {
+    this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, 'dblclick', operator);
   }
 
   private fetch(searchParams: object = {}): void {
