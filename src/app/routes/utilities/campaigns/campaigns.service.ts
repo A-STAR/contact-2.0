@@ -45,7 +45,7 @@ export class CampaignsService {
     .select(state => state.campaigns.selectedParticipant);
   }
 
-  selectCampaign(selectedCampaign: ICampaign, campaigns?: ICampaign[]): ICampaignSelectPayload {
+  selectCampaign(selectedCampaign: ICampaign): ICampaignSelectPayload {
     this.store.dispatch({
       type: CampaignsService.CAMPAIGN_SELECT,
       payload: { selectedCampaign }
@@ -62,31 +62,7 @@ export class CampaignsService {
   }
 
   private readCampaigns(): Observable<ICampaign[]> {
-    // return this.dataService.readAll(this.baseUrl);
-    return Observable.of([
-      {
-        id: 1,
-        name: 'Захват мира',
-        groupName: 'Моя группа',
-        statusCode: 1,
-        typeCode: 1,
-        startDateTime: '27.10.2015',
-        finishDateTime: '28.10.2015',
-        comment: 'Мой комментарий',
-        timeZoneUsed: true
-      },
-      {
-        id: 2,
-        name: 'Просто кампания',
-        groupName: 'Моя группа',
-        statusCode: 1,
-        typeCode: 1,
-        startDateTime: '27.10.2015',
-        finishDateTime: '28.10.2015',
-        comment: 'Мой комментарий2',
-        timeZoneUsed: false
-      }
-    ]);
+    return this.dataService.readAll(this.baseUrl);
   }
 
 }

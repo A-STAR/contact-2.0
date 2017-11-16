@@ -38,8 +38,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     { prop: 'timeZoneUsed', minWidth: 150, renderer: 'checkboxRenderer' },
   ];
 
-  private selectedCampaigns: ICampaign[] = [];
-
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -68,17 +66,25 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       enabled: Observable.of(true)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-      action: () => this.onStart(),
-      label: this.translateService.instant('default.buttons.start'),
-      enabled: Observable.of(!!this.selectedCampaigns.length)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_STOP,
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
-      enabled: Observable.of(!!this.selectedCampaigns.length)
-    }
+      align: 'right',
+      enabled: this.campaignsService.selectedCampaign
+        .map(selectedCampaign =>
+          // todo get status code from dict
+          !!selectedCampaign && selectedCampaign.statusCode === 2)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_START,
+      action: () => this.onStart(),
+      label: this.translateService.instant('default.buttons.start'),
+      align: 'right',
+      enabled: this.campaignsService.selectedCampaign
+        .map(selectedCampaign =>
+          // todo get status code from dict
+          !!selectedCampaign && selectedCampaign.statusCode !== 2)
+    },
   ];
 
   private currentDialogAction: CampaignsDialogActionEnum = CampaignsDialogActionEnum.NONE;
@@ -96,6 +102,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     .take(1)
     .subscribe(columns => {
       this.columns = [...columns];
+      this.cdRef.markForCheck();
     });
 
     this.campaigns = this.campaignsService.fetchCampaigns();
@@ -114,9 +121,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     return this.currentDialogAction === CampaignsDialogActionEnum.CAMPAIGN_REMOVE;
   }
 
-
-  onSelectCampaign(): void {
-
+  onSelectCampaign(selection: ICampaign[]): void {
+    this.campaignsService.selectCampaign(selection[0]);
   }
 
   fetchCampaigns(): void {
@@ -129,9 +135,19 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   }
 
   onStart(): void {
-    alert(`Started for ${this.selectedCampaigns.map(campaign => campaign.name).join()}`);
+    this.grid.selected.map(campaign => {
+      // get from dict
+      campaign.statusCode = 2;
+      return campaign;
+    });
+    this.cdRef.markForCheck();
   }
   onStop(): void {
-    alert(`Stopped for ${this.selectedCampaigns.map(campaign => campaign.name).join()}`);
+    this.grid.selected.map(campaign => {
+      // get from dict
+      campaign.statusCode = 4;
+      return campaign;
+    });
+    this.cdRef.markForCheck();
   }
 }
