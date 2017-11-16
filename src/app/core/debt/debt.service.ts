@@ -68,7 +68,7 @@ export class DebtService {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 
-  navigateToDebtorCard(personId: number, debtId: number): void {
+  navigateToDebtorCard(debtId: number, personId: number): void {
     this.contentTabService.removeTabByPath(`\/workplaces\/debt-processing\/(.+)`);
     const url = `/workplaces/debt-processing/${personId}/${debtId}`;
     this.router.navigate([ url ]);
@@ -80,9 +80,10 @@ export class DebtService {
     personRole: number,
     contactType: number,
     contactId: number,
+    campaignId: number = null,
   ): void {
     this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration\/(.+)`);
     const url = `/workplaces/contact-registration/${debtId}/${contactType}/${contactId}`;
-    this.router.navigate([ url ], { queryParams: { personId, personRole } });
+    this.router.navigate([ url ], { queryParams: { campaignId, personId, personRole } });
   }
 }

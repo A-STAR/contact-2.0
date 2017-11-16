@@ -21,7 +21,7 @@ export class ToolbarComponent {
     {
       type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
       label: 'Регистрация контакта с типом "Специальное"',
-      action: () => console.log(),
+      action: () => this.registerSpecial(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
@@ -49,6 +49,12 @@ export class ToolbarComponent {
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
       .take(1)
-      .subscribe(debt => this.debtService.navigateToDebtorCard(debt.personId, debt.debtId));
+      .subscribe(debt => this.debtService.navigateToDebtorCard(debt.debtId, debt.personId));
+  }
+
+  private registerSpecial(): void {
+    this.campaignService.campaignDebt$
+      .take(1)
+      .subscribe(debt => this.debtService.navigateToRegistration(debt.debtId, debt.personId, 1, 7, 0, this.campaignService.campaignId));
   }
 }

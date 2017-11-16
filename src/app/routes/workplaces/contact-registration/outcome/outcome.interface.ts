@@ -1,7 +1,8 @@
 export interface IContactRegistrationData {
-  code: number;
-  phoneId: number;
   addressId: number;
+  campaignId: number;
+  code: number;
   personId: number;
   personRole: number;
+  phoneId: number;
 }
