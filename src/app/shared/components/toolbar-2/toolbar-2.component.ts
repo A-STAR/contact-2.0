@@ -71,4 +71,10 @@ export class Toolbar2Component {
   isDisabled(item: IToolbarItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
   }
+
+  getItemCls(item: IToolbarItem): object {
+    return {
+      'align-right': item.align === 'right'
+    };
+  }
 }

@@ -235,7 +235,7 @@
           "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
-          "showClosed": "Показывать закрытые долги"
+          "isClosedDebt": "Показывать закрытые долги"
         }
       },
       "debtors": {
@@ -1073,7 +1073,7 @@
         "boxColor": "Цвет",
         "commentMode": "Ввод комментария",
         "autoCommentIds": "Ввод автокомментария",
-        "regInvisible": "Добавление файла",
+        "regInvisible": "Не отображается при регистрации контакта",
         "nextCallMode": "Дата повторного звонка",
         "promiseMode": "Ввод обещания",
         "paymentMode": "Ввод неподтверженного платежа",

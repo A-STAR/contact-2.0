@@ -27,6 +27,11 @@ $checkbox-size: 15px;
   &:not(:last-child) {
     margin-right: 8px;
   }
+  &.align-right {
+    float: right;
+    margin-right: 0;
+    padding-left: 8px;
+  }
 }
 
 :host ::ng-deep .btn-default {

@@ -236,7 +236,7 @@
           "docNumber": "Number",
           "birthDate": "Birth Date",
           "personRoleCodes": "Role",
-          "showClosed": "Show Closed Debts"
+          "isClosedDebt": "Show Closed Debts"
         }
       },
       "debtors": {
@@ -1074,7 +1074,7 @@
         "boxColor": "Color",
         "commentMode": "Comment Input Mode",
         "autoCommentIds": "Autocomment input",
-        "regInvisible": "Uploading Files",
+        "regInvisible": "Hidden When Registering Contact",
         "nextCallMode": "Next Call Date",
         "promiseMode": "Promis Input",
         "paymentMode": "Unverified Payment Input",

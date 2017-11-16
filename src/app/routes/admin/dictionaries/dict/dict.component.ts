@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
@@ -16,12 +16,14 @@ import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { combineLatestAnd } from '../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-dict',
   templateUrl: './dict.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DictComponent implements OnDestroy {
+export class DictComponent implements OnDestroy, OnInit {
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -70,8 +72,9 @@ export class DictComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
 
+  ngOnInit(): void {
     this.gridService.setDictionaryRenderers(this.columns)
       .flatMap(columns => {
         this.columns = columns;
@@ -136,19 +139,18 @@ export class DictComponent implements OnDestroy {
   }
 
   get isReadyForCreating(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingCreated,
       this.isDictionaryRelationsReady,
-    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+    ]);
   }
 
   get isReadyForEditing(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingEdited,
       this.isDictionaryRelationsReady,
       this.dictionariesService.isSelectedDictionaryReady,
-    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedDictionaryReady]) =>
-        isEntityBeingEdited && isRelationsReady && isSelectedDictionaryReady);
+    ]);
   }
 
   get canEdit(): Observable<boolean> {
