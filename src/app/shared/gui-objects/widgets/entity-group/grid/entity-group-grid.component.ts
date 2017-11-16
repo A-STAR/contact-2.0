@@ -38,7 +38,11 @@ export class EntityGroupGridComponent implements OnInit {
   }
 
   onSelect(group: IEntityGroup): void {
-    this.messageBusService.dispatch(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, null, group);
+    this.messageBusService.dispatch(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'select', group);
+  }
+
+  onDblClick(group: IEntityGroup): void {
+    this.messageBusService.dispatch(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'dblclick', group);
   }
 
   private fetch(): void {
